@@ -1,0 +1,750 @@
+{
+  "caseId": "d169",
+  "fileNum": "169",
+  "rawText": "我想开通短信提醒，需要带什么证件？",
+  "kenlmInputTexts": [
+    "我想开通短信提醒，需要带什么证件？"
+  ],
+  "kenlmInputCount": 1,
+  "uniqueBeforeCapCount": 1,
+  "assemblyBeforeDedupCount": 1,
+  "stageStats": {
+    "recallCandidates": 2,
+    "compatibilityFail": 0,
+    "compatibilityPass": 2,
+    "domainEligibilityDrop": 0,
+    "domainMembershipDrop": 0,
+    "domainKeep": 2,
+    "budgetDrop": 0,
+    "budgetKeep": 2,
+    "assemblyYes": 2,
+    "assemblyNo": 0,
+    "crossPathDrop": 0,
+    "crossPathKeep": 2,
+    "kenlmYes": 2,
+    "kenlmNo": 0
+  },
+  "paths": [
+    {
+      "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "domainScores": {
+        "tourism_route": 1
+      },
+      "insufficientEvidence": false,
+      "buckets": [
+        {
+          "bucketDomain": "tourism_route",
+          "perSpanLimit": 4,
+          "spans": [
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:0",
+              "raw": "我",
+              "rawRange": [
+                0,
+                1
+              ],
+              "syllableRange": [
+                0,
+                1
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:0",
+                  "termId": null,
+                  "word": "我",
+                  "surface": "我",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:1",
+              "raw": "想",
+              "rawRange": [
+                1,
+                2
+              ],
+              "syllableRange": [
+                1,
+                2
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:1",
+                  "termId": null,
+                  "word": "想",
+                  "surface": "想",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:2",
+              "raw": "开",
+              "rawRange": [
+                2,
+                3
+              ],
+              "syllableRange": [
+                2,
+                3
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:2",
+                  "termId": null,
+                  "word": "开",
+                  "surface": "开",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:3",
+              "raw": "通",
+              "rawRange": [
+                3,
+                4
+              ],
+              "syllableRange": [
+                3,
+                4
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:3",
+                  "termId": null,
+                  "word": "通",
+                  "surface": "通",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:4",
+              "raw": "短",
+              "rawRange": [
+                4,
+                5
+              ],
+              "syllableRange": [
+                4,
+                5
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:4",
+                  "termId": null,
+                  "word": "短",
+                  "surface": "短",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:5",
+              "raw": "信",
+              "rawRange": [
+                5,
+                6
+              ],
+              "syllableRange": [
+                5,
+                6
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:5",
+                  "termId": null,
+                  "word": "信",
+                  "surface": "信",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+              "raw": "提醒",
+              "rawRange": [
+                6,
+                8
+              ],
+              "syllableRange": [
+                6,
+                8
+              ],
+              "recallCandidateCount": 2,
+              "candidates": [
+                {
+                  "candidateId": "6:8:1",
+                  "termId": "ngram:3258",
+                  "word": "提醒",
+                  "surface": "提醒",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 1,
+                  "score": 2.36,
+                  "candidateScore": 2.36,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "tourism_route"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=6:8:1)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                },
+                {
+                  "candidateId": "6:8:2",
+                  "termId": "ngram:3146",
+                  "word": "提醒",
+                  "surface": "提醒",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 2,
+                  "score": 2.35,
+                  "candidateScore": 2.35,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "tourism_route"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=6:8:1)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:7",
+              "raw": "需",
+              "rawRange": [
+                9,
+                10
+              ],
+              "syllableRange": [
+                8,
+                9
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:7",
+                  "termId": null,
+                  "word": "需",
+                  "surface": "需",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:8",
+              "raw": "要",
+              "rawRange": [
+                10,
+                11
+              ],
+              "syllableRange": [
+                9,
+                10
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:8",
+                  "termId": null,
+                  "word": "要",
+                  "surface": "要",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:9",
+              "raw": "带",
+              "rawRange": [
+                11,
+                12
+              ],
+              "syllableRange": [
+                10,
+                11
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:9",
+                  "termId": null,
+                  "word": "带",
+                  "surface": "带",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:10",
+              "raw": "什",
+              "rawRange": [
+                12,
+                13
+              ],
+              "syllableRange": [
+                11,
+                12
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:10",
+                  "termId": null,
+                  "word": "什",
+                  "surface": "什",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:11",
+              "raw": "么",
+              "rawRange": [
+                13,
+                14
+              ],
+              "syllableRange": [
+                12,
+                13
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:11",
+                  "termId": null,
+                  "word": "么",
+                  "surface": "么",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:12",
+              "raw": "证",
+              "rawRange": [
+                14,
+                15
+              ],
+              "syllableRange": [
+                13,
+                14
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:12",
+                  "termId": null,
+                  "word": "证",
+                  "surface": "证",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:13",
+              "raw": "件",
+              "rawRange": [
+                15,
+                16
+              ],
+              "syllableRange": [
+                14,
+                15
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:13",
+                  "termId": null,
+                  "word": "件",
+                  "surface": "件",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            }
+          ],
+          "assemblySentenceCount": 1,
+          "assemblySentences": [
+            "我想开通短信提醒，需要带什么证件？"
+          ]
+        }
+      ]
+    }
+  ],
+  "lists": {
+    "neverAssembly": [],
+    "budgetDropped": [],
+    "domainDropped": [],
+    "crossPathDropped": [],
+    "designPremature": []
+  }
+}

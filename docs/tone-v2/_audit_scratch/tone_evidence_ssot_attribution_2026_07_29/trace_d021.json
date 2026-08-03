@@ -1,0 +1,248 @@
+{
+  "id": "d021",
+  "expected": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+  "asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+  "raw_asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 27,
+    "evidenceProductionCount": 28,
+    "firstSlicePosterior": {
+      "t1": 0.0008551566279493272,
+      "t2": 0.00021499948343262076,
+      "t3": 0.0060934042558074,
+      "t4": 0.9927998781204224,
+      "t5": 0.00003652490704553202
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 27,
+    "wordTimeSpanCount": 28,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "short_duration_skipped": 1,
+      "slice_created": 27
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "新一",
+        "pinyinKey": "xin|yi",
+        "windowTimeRange": {
+          "start": 5.5,
+          "end": 5.880000000000001
+        },
+        "acousticTonePattern": [
+          4,
+          4
+        ]
+      },
+      {
+        "text": "新一版",
+        "pinyinKey": "xin|yi|ban",
+        "windowTimeRange": {
+          "start": 5.5,
+          "end": 5.96
+        },
+        "acousticTonePattern": [
+          4,
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15,
+    "candidateSentenceCount": 15,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 5
+  },
+  "sentenceRerank": {
+    "spanCount": 15,
+    "perSpanLimit": 4,
+    "combinationCount": 4,
+    "kenlmQueryCount": 5,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "会上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 15
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "會上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 15
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 5,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 5 got 0",
+    "allCombinations": [
+      {
+        "sentence": "会上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "會上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "会上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "會上",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "会上",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "提到",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "提到",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "候選",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "候选",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "生成",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "生成",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "連路",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "連路",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "要加",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "要加",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "監",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "監",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "控 通",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "控 通",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

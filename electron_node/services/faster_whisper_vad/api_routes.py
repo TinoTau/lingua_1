@@ -36,7 +36,12 @@ from text_filter import is_meaningless_transcript
 from context import get_text_context
 from tone_module.inference import run_tone_inference
 from tone_module.classifier import get_tone_classifier
-from api_models import UtteranceAcousticTonePayloadModel, AcousticToneSliceModel, TonePosteriorModel
+from api_models import (
+    UtteranceAcousticTonePayloadModel,
+    AcousticToneSliceModel,
+    TonePosteriorModel,
+    ToneEvidenceProductionDiagnosticModel,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +61,10 @@ def _tone_payload_to_model(tone_payload) -> UtteranceAcousticTonePayloadModel:
         sliceCount=tone_payload.slice_count,
         toneConfidenceAvg=tone_payload.tone_confidence_avg,
         skippedReason=tone_payload.skipped_reason,
+        evidenceProduction=[
+            ToneEvidenceProductionDiagnosticModel(**d.as_dict())
+            for d in (getattr(tone_payload, "evidence_production", None) or [])
+        ],
     )
 
 
@@ -289,12 +298,19 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             trace_id=trace_id,
         )
         tone_classifier = get_tone_classifier()
+        evidence_rows = getattr(tone_payload, "evidence_production", None) or []
+        status_counts: Dict[str, int] = {}
+        for row in evidence_rows:
+            key = getattr(row, "status", "unknown")
+            status_counts[key] = int(status_counts.get(key, 0)) + 1
         tone_module_diag: Dict[str, object] = {
             "tone_inference_ms": tone_inference_ms,
             "toneSliceCount": tone_payload.slice_count,
             "toneEnabled": tone_payload.tone_enabled,
             "toneConfidenceAvg": tone_payload.tone_confidence_avg,
             "skippedReason": tone_payload.skipped_reason,
+            "evidenceProductionStatusCounts": status_counts,
+            "evidenceProductionCount": len(evidence_rows),
         }
         if tone_classifier.load_error:
             tone_module_diag["loadError"] = tone_classifier.load_error
@@ -444,6 +460,21 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         update_context_buffer_if_needed(audio, req.use_context_buffer, trace_id)
         
         logger.info(f"[{trace_id}] Step 13: Starting response construction")
+
+        # Batch B: Word Timestamp integrity — Fail Closed if Tone used words but response lost them.
+        tone_slice_count = int(getattr(tone_payload, "slice_count", 0) or 0)
+        word_count = sum(len(getattr(seg, "words", None) or []) for seg in (segments_info or []))
+        if tone_slice_count > 0 and word_count == 0:
+            logger.error(
+                f"[{trace_id}] WordTimestamp integrity failed: "
+                f"toneSliceCount={tone_slice_count} words=0"
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=(
+                    "WordTimestamp integrity failed: ToneSlice>0 but segments.words empty"
+                ),
+            )
         
         # 13. 返回结果
         try:

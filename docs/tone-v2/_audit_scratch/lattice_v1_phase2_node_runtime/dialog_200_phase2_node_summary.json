@@ -1,0 +1,158 @@
+{
+  "environmentClass": "C",
+  "environmentClassLabel": "Offline harness with real SQLite Recall",
+  "environmentNotes": [
+    "LexiconRuntimeV2.loadFromBundleDir(node_runtime/lexicon/v3)",
+    "Electron ABI (ELECTRON_RUN_AS_NODE=1) — project standard for FW/lexicon gates",
+    "NOT Electron GUI npm start production app",
+    "NOT mock / stub recall",
+    "Phase1 harness → recallTopKForWindows → SQLite → buildLexicalEdges → Phase2"
+  ],
+  "harnessOnly": true,
+  "productionCutover": false,
+  "dualChain": false,
+  "mockRecall": false,
+  "completed": 200,
+  "failed": 0,
+  "caseCount": 200,
+  "incompleteRecallCases": 0,
+  "recallableWindowCount": {
+    "sum": 15445,
+    "avg": 77.225
+  },
+  "candidates": {
+    "sum": 2692,
+    "avg": 13.46
+  },
+  "lexicalEdgeCount": {
+    "sum": 1610,
+    "avg": 8.05
+  },
+  "utterancesNeedingFallback": 200,
+  "fallbackInjectionCount": {
+    "sum": 2042,
+    "avg": 10.21
+  },
+  "zeroLexicalOnlyCompletePaths": 200,
+  "retainedPathCount": {
+    "sum": 244,
+    "avg": 1.22
+  },
+  "multiPathUtterances": 28,
+  "fallbackDependencyBuckets": {
+    "0": 0,
+    "1-2": 0,
+    "3-5": 17,
+    "6-10": 115,
+    "11+": 68
+  },
+  "physicalSqlStatementCount": {
+    "sum": 34255,
+    "avg": 171.275
+  },
+  "latencyMs": {
+    "p50": 65.72689998149872,
+    "p95": 122.61839997768402,
+    "p99": 162.0009000301361,
+    "totalMs": 14509.172299981117
+  },
+  "memory": {
+    "heapStartBytes": 77343932,
+    "heapEndBytes": 97501420,
+    "heapDeltaBytes": 20157488
+  },
+  "uniqueBoundaryKeyViolations": 0,
+  "unstablePathIdViolations": 0,
+  "candidateReferenceCopyViolations": 0,
+  "capTriggeredCases": 0,
+  "highPathCountCases": 0,
+  "reasonDistribution": [
+    {
+      "reason": "NO_LEXICON_HIT",
+      "count": 1534,
+      "ratio": 0.7512242899118511,
+      "sentenceCount": 200,
+      "exampleSentenceIds": [
+        "d001",
+        "d002",
+        "d003",
+        "d004",
+        "d005",
+        "d006",
+        "d007",
+        "d008"
+      ]
+    },
+    {
+      "reason": "HARD_BLOCKED_WINDOW",
+      "count": 410,
+      "ratio": 0.2007835455435847,
+      "sentenceCount": 200,
+      "exampleSentenceIds": [
+        "d001",
+        "d002",
+        "d003",
+        "d004",
+        "d005",
+        "d006",
+        "d007",
+        "d008"
+      ]
+    },
+    {
+      "reason": "UNKNOWN",
+      "count": 98,
+      "ratio": 0.047992164544564155,
+      "sentenceCount": 81,
+      "exampleSentenceIds": [
+        "d004",
+        "d006",
+        "d009",
+        "d011",
+        "d015",
+        "d016",
+        "d018",
+        "d021"
+      ]
+    }
+  ],
+  "typicalByReason": {
+    "NO_LEXICON_HIT": {
+      "sentenceId": "d001",
+      "syllableStart": 12,
+      "windowsAtPosition": 5,
+      "recallHitCount": 0,
+      "blockedReasons": [
+        "sentence_boundary",
+        "raw_gap_between_spans"
+      ],
+      "rawTextSnippet": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？"
+    },
+    "HARD_BLOCKED_WINDOW": {
+      "sentenceId": "d001",
+      "syllableStart": 13,
+      "windowsAtPosition": 5,
+      "recallHitCount": 0,
+      "blockedReasons": [
+        "sentence_boundary",
+        "raw_gap_between_spans"
+      ],
+      "rawTextSnippet": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？"
+    },
+    "UNKNOWN": {
+      "sentenceId": "d004",
+      "syllableStart": 27,
+      "windowsAtPosition": 5,
+      "recallHitCount": 1,
+      "blockedReasons": [],
+      "rawTextSnippet": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？"
+    }
+  },
+  "lexicon": {
+    "sqlitePath": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+    "sqliteBytes": 85921792,
+    "bundleVersion": 10,
+    "term": 10061,
+    "term_domain_tags": 1033
+  }
+}

@@ -1,0 +1,1079 @@
+{
+  "utteranceId": "d170",
+  "rawText": "这笔转账显示处理中大概多久能到账",
+  "expectedText": "这笔转账显示处理中，大概多久能到账？",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 15,
+    "asr_word_timestamp_valid_count": 15,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 0,
+    "first_word_start": 0,
+    "last_word_end": 3.12,
+    "audioDurationSec": 3.3088125
+  },
+  "slices": {
+    "total_tone_slice_count": 15,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 0,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.24,
+        "tone": 4,
+        "confidence": 0.9980485439300537,
+        "posterior": {
+          "t1": 0.0018178249010816216,
+          "t2": 0.000052028339268872514,
+          "t3": 0.00007272079528775066,
+          "t4": 0.9980485439300537,
+          "t5": 0.00000891850322659593
+        }
+      },
+      {
+        "start": 0.24,
+        "end": 0.38,
+        "tone": 3,
+        "confidence": 0.8170390725135803,
+        "posterior": {
+          "t1": 0.005377120804041624,
+          "t2": 0.03637823462486267,
+          "t3": 0.8170390725135803,
+          "t4": 0.140057772397995,
+          "t5": 0.0011477001244202256
+        }
+      },
+      {
+        "start": 0.38,
+        "end": 0.58,
+        "tone": 3,
+        "confidence": 0.9863429665565491,
+        "posterior": {
+          "t1": 0.00004845991134061478,
+          "t2": 0.00622702157124877,
+          "t3": 0.9863429665565491,
+          "t4": 0.006882427725940943,
+          "t5": 0.0004992549074813724
+        }
+      },
+      {
+        "start": 0.58,
+        "end": 0.74,
+        "tone": 2,
+        "confidence": 0.9905180335044861,
+        "posterior": {
+          "t1": 0.000287538772681728,
+          "t2": 0.9905180335044861,
+          "t3": 0.00894777849316597,
+          "t4": 0.00007473798905266449,
+          "t5": 0.00017190513608511537
+        }
+      },
+      {
+        "start": 0.74,
+        "end": 0.94,
+        "tone": 3,
+        "confidence": 0.5884461998939514,
+        "posterior": {
+          "t1": 0.0009776527294889092,
+          "t2": 0.0062565915286540985,
+          "t3": 0.5884461998939514,
+          "t4": 0.403032511472702,
+          "t5": 0.0012870122445747256
+        }
+      },
+      {
+        "start": 0.94,
+        "end": 1.18,
+        "tone": 4,
+        "confidence": 0.9997439980506897,
+        "posterior": {
+          "t1": 0.00008756896568229422,
+          "t2": 0.000008025934221222997,
+          "t3": 0.00015993407578207552,
+          "t4": 0.9997439980506897,
+          "t5": 4.666978554723755e-7
+        }
+      },
+      {
+        "start": 1.18,
+        "end": 1.38,
+        "tone": 3,
+        "confidence": 0.8784337043762207,
+        "posterior": {
+          "t1": 0.03309226036071777,
+          "t2": 0.03910078480839729,
+          "t3": 0.8784337043762207,
+          "t4": 0.04849022999405861,
+          "t5": 0.0008829400758258998
+        }
+      },
+      {
+        "start": 1.38,
+        "end": 1.48,
+        "tone": 4,
+        "confidence": 0.9262941479682922,
+        "posterior": {
+          "t1": 0.0015756312059238553,
+          "t2": 0.0030864649452269077,
+          "t3": 0.06749842315912247,
+          "t4": 0.9262941479682922,
+          "t5": 0.001545415841974318
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 15,
+    "skipped": 0,
+    "multi_char_token_count": 1,
+    "single_char_token_count": 14,
+    "samplePairs": [
+      {
+        "rawWord": "这",
+        "rawRange": [
+          0,
+          1
+        ],
+        "charLen": 1,
+        "wordStart": 0,
+        "wordEnd": 0.24,
+        "toneSlice": {
+          "start": 0,
+          "end": 0.24,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "笔",
+        "rawRange": [
+          1,
+          2
+        ],
+        "charLen": 1,
+        "wordStart": 0.24,
+        "wordEnd": 0.38,
+        "toneSlice": {
+          "start": 0.24,
+          "end": 0.38,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "转",
+        "rawRange": [
+          2,
+          3
+        ],
+        "charLen": 1,
+        "wordStart": 0.38,
+        "wordEnd": 0.58,
+        "toneSlice": {
+          "start": 0.38,
+          "end": 0.58,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "账",
+        "rawRange": [
+          3,
+          4
+        ],
+        "charLen": 1,
+        "wordStart": 0.58,
+        "wordEnd": 0.74,
+        "toneSlice": {
+          "start": 0.58,
+          "end": 0.74,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "显",
+        "rawRange": [
+          4,
+          5
+        ],
+        "charLen": 1,
+        "wordStart": 0.74,
+        "wordEnd": 0.94,
+        "toneSlice": {
+          "start": 0.74,
+          "end": 0.94,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "示",
+        "rawRange": [
+          5,
+          6
+        ],
+        "charLen": 1,
+        "wordStart": 0.94,
+        "wordEnd": 1.18,
+        "toneSlice": {
+          "start": 0.94,
+          "end": 1.18,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "处",
+        "rawRange": [
+          6,
+          7
+        ],
+        "charLen": 1,
+        "wordStart": 1.18,
+        "wordEnd": 1.38,
+        "toneSlice": {
+          "start": 1.18,
+          "end": 1.38,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "理",
+        "rawRange": [
+          7,
+          8
+        ],
+        "charLen": 1,
+        "wordStart": 1.38,
+        "wordEnd": 1.48,
+        "toneSlice": {
+          "start": 1.38,
+          "end": 1.48,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "中",
+        "rawRange": [
+          8,
+          9
+        ],
+        "charLen": 1,
+        "wordStart": 1.48,
+        "wordEnd": 1.66,
+        "toneSlice": {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "大概",
+        "rawRange": [
+          9,
+          11
+        ],
+        "charLen": 2,
+        "wordStart": 1.66,
+        "wordEnd": 2.06,
+        "toneSlice": {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "多",
+        "rawRange": [
+          11,
+          12
+        ],
+        "charLen": 1,
+        "wordStart": 2.06,
+        "wordEnd": 2.26,
+        "toneSlice": {
+          "start": 2.06,
+          "end": 2.26,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "久",
+        "rawRange": [
+          12,
+          13
+        ],
+        "charLen": 1,
+        "wordStart": 2.26,
+        "wordEnd": 2.52,
+        "toneSlice": {
+          "start": 2.26,
+          "end": 2.52,
+          "tone": 3
+        }
+      }
+    ],
+    "spans": [
+      {
+        "word": "这",
+        "rawStart": 0,
+        "rawEnd": 1,
+        "start": 0,
+        "end": 0.24,
+        "segmentIndex": 0,
+        "probability": 0.78466796875
+      },
+      {
+        "word": "笔",
+        "rawStart": 1,
+        "rawEnd": 2,
+        "start": 0.24,
+        "end": 0.38,
+        "segmentIndex": 0,
+        "probability": 0.98876953125
+      },
+      {
+        "word": "转",
+        "rawStart": 2,
+        "rawEnd": 3,
+        "start": 0.38,
+        "end": 0.58,
+        "segmentIndex": 0,
+        "probability": 0.997802734375
+      },
+      {
+        "word": "账",
+        "rawStart": 3,
+        "rawEnd": 4,
+        "start": 0.58,
+        "end": 0.74,
+        "segmentIndex": 0,
+        "probability": 0.845703125
+      },
+      {
+        "word": "显",
+        "rawStart": 4,
+        "rawEnd": 5,
+        "start": 0.74,
+        "end": 0.94,
+        "segmentIndex": 0,
+        "probability": 0.997802734375
+      },
+      {
+        "word": "示",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "start": 0.94,
+        "end": 1.18,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "处",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "start": 1.18,
+        "end": 1.38,
+        "segmentIndex": 0,
+        "probability": 0.989501953125
+      },
+      {
+        "word": "理",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "start": 1.38,
+        "end": 1.48,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "中",
+        "rawStart": 8,
+        "rawEnd": 9,
+        "start": 1.48,
+        "end": 1.66,
+        "segmentIndex": 0,
+        "probability": 0.97900390625
+      },
+      {
+        "word": "大概",
+        "rawStart": 9,
+        "rawEnd": 11,
+        "start": 1.66,
+        "end": 2.06,
+        "segmentIndex": 0,
+        "probability": 0.99658203125
+      },
+      {
+        "word": "多",
+        "rawStart": 11,
+        "rawEnd": 12,
+        "start": 2.06,
+        "end": 2.26,
+        "segmentIndex": 0,
+        "probability": 0.998046875
+      },
+      {
+        "word": "久",
+        "rawStart": 12,
+        "rawEnd": 13,
+        "start": 2.26,
+        "end": 2.52,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "能",
+        "rawStart": 13,
+        "rawEnd": 14,
+        "start": 2.52,
+        "end": 2.76,
+        "segmentIndex": 0,
+        "probability": 0.9755859375
+      },
+      {
+        "word": "到",
+        "rawStart": 14,
+        "rawEnd": 15,
+        "start": 2.76,
+        "end": 3,
+        "segmentIndex": 0,
+        "probability": 0.990234375
+      },
+      {
+        "word": "账",
+        "rawStart": 15,
+        "rawEnd": 16,
+        "start": 3,
+        "end": 3.12,
+        "segmentIndex": 0,
+        "probability": 0.99853515625
+      }
+    ]
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 70,
+    "tone_ready_count": 60,
+    "tone_no_pattern_count": 10,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 70,
+    "pattern_ok_count": 60,
+    "char_eq_syl_count": 70,
+    "overlap_eq_char_count": 60,
+    "overlap_eq_syl_count": 60
+  },
+  "byLen": {
+    "1": {
+      "windows": 16,
+      "ready": 16,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 16,
+      "overlap_eq_char": 16,
+      "overlap_eq_syl": 16,
+      "time_range_ok": 16,
+      "pattern_ok": 16
+    },
+    "2": {
+      "windows": 15,
+      "ready": 14,
+      "no_pattern": 1,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 15,
+      "overlap_eq_char": 14,
+      "overlap_eq_syl": 14,
+      "time_range_ok": 15,
+      "pattern_ok": 14
+    },
+    "3": {
+      "windows": 14,
+      "ready": 12,
+      "no_pattern": 2,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 14,
+      "overlap_eq_char": 12,
+      "overlap_eq_syl": 12,
+      "time_range_ok": 14,
+      "pattern_ok": 12
+    },
+    "4": {
+      "windows": 13,
+      "ready": 10,
+      "no_pattern": 3,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 13,
+      "overlap_eq_char": 10,
+      "overlap_eq_syl": 10,
+      "time_range_ok": 13,
+      "pattern_ok": 10
+    },
+    "5": {
+      "windows": 12,
+      "ready": 8,
+      "no_pattern": 4,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 12,
+      "overlap_eq_char": 8,
+      "overlap_eq_syl": 8,
+      "time_range_ok": 12,
+      "pattern_ok": 8
+    }
+  },
+  "failureSamples": [
+    {
+      "utteranceId": "d170",
+      "windowId": "6:11",
+      "windowText": "处理中大概",
+      "rawStart": 6,
+      "rawEnd": 11,
+      "rawSpanLength": 5,
+      "syllableStart": 6,
+      "syllableEnd": 11,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "chu",
+        "li",
+        "zhong",
+        "da",
+        "gai"
+      ],
+      "windowTimeStart": 1.18,
+      "windowTimeEnd": 2.06,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.18,
+          "end": 1.38,
+          "tone": 3,
+          "confidence": 0.8784337043762207
+        },
+        {
+          "start": 1.38,
+          "end": 1.48,
+          "tone": 4,
+          "confidence": 0.9262941479682922
+        },
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "处",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.18,
+          "end": 1.38
+        },
+        {
+          "word": "理",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "charLen": 1,
+          "start": 1.38,
+          "end": 1.48
+        },
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "7:11",
+      "windowText": "理中大概",
+      "rawStart": 7,
+      "rawEnd": 11,
+      "rawSpanLength": 4,
+      "syllableStart": 7,
+      "syllableEnd": 11,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "li",
+        "zhong",
+        "da",
+        "gai"
+      ],
+      "windowTimeStart": 1.38,
+      "windowTimeEnd": 2.06,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 1.38,
+          "end": 1.48,
+          "tone": 4,
+          "confidence": 0.9262941479682922
+        },
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=4; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "理",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "charLen": 1,
+          "start": 1.38,
+          "end": 1.48
+        },
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "7:12",
+      "windowText": "理中大概多",
+      "rawStart": 7,
+      "rawEnd": 12,
+      "rawSpanLength": 5,
+      "syllableStart": 7,
+      "syllableEnd": 12,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "li",
+        "zhong",
+        "da",
+        "gai",
+        "duo"
+      ],
+      "windowTimeStart": 1.38,
+      "windowTimeEnd": 2.26,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.38,
+          "end": 1.48,
+          "tone": 4,
+          "confidence": 0.9262941479682922
+        },
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        },
+        {
+          "start": 2.06,
+          "end": 2.26,
+          "tone": 1,
+          "confidence": 0.7530345320701599
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "理",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "charLen": 1,
+          "start": 1.38,
+          "end": 1.48
+        },
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        },
+        {
+          "word": "多",
+          "rawStart": 11,
+          "rawEnd": 12,
+          "charLen": 1,
+          "start": 2.06,
+          "end": 2.26
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "8:11",
+      "windowText": "中大概",
+      "rawStart": 8,
+      "rawEnd": 11,
+      "rawSpanLength": 3,
+      "syllableStart": 8,
+      "syllableEnd": 11,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "zhong",
+        "da",
+        "gai"
+      ],
+      "windowTimeStart": 1.48,
+      "windowTimeEnd": 2.06,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=3; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "8:12",
+      "windowText": "中大概多",
+      "rawStart": 8,
+      "rawEnd": 12,
+      "rawSpanLength": 4,
+      "syllableStart": 8,
+      "syllableEnd": 12,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "zhong",
+        "da",
+        "gai",
+        "duo"
+      ],
+      "windowTimeStart": 1.48,
+      "windowTimeEnd": 2.26,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        },
+        {
+          "start": 2.06,
+          "end": 2.26,
+          "tone": 1,
+          "confidence": 0.7530345320701599
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=4; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        },
+        {
+          "word": "多",
+          "rawStart": 11,
+          "rawEnd": 12,
+          "charLen": 1,
+          "start": 2.06,
+          "end": 2.26
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "8:13",
+      "windowText": "中大概多久",
+      "rawStart": 8,
+      "rawEnd": 13,
+      "rawSpanLength": 5,
+      "syllableStart": 8,
+      "syllableEnd": 13,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "zhong",
+        "da",
+        "gai",
+        "duo",
+        "jiu"
+      ],
+      "windowTimeStart": 1.48,
+      "windowTimeEnd": 2.52,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.48,
+          "end": 1.66,
+          "tone": 1,
+          "confidence": 0.8299641013145447
+        },
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        },
+        {
+          "start": 2.06,
+          "end": 2.26,
+          "tone": 1,
+          "confidence": 0.7530345320701599
+        },
+        {
+          "start": 2.26,
+          "end": 2.52,
+          "tone": 3,
+          "confidence": 0.9133689403533936
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "中",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.66
+        },
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        },
+        {
+          "word": "多",
+          "rawStart": 11,
+          "rawEnd": 12,
+          "charLen": 1,
+          "start": 2.06,
+          "end": 2.26
+        },
+        {
+          "word": "久",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "charLen": 1,
+          "start": 2.26,
+          "end": 2.52
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "9:11",
+      "windowText": "大概",
+      "rawStart": 9,
+      "rawEnd": 11,
+      "rawSpanLength": 2,
+      "syllableStart": 9,
+      "syllableEnd": 11,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "da",
+        "gai"
+      ],
+      "windowTimeStart": 1.66,
+      "windowTimeEnd": 2.06,
+      "overlapSliceCount": 1,
+      "overlapSlices": [
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=1 != charSpan=2; sylSpan=2; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        }
+      ]
+    },
+    {
+      "utteranceId": "d170",
+      "windowId": "9:12",
+      "windowText": "大概多",
+      "rawStart": 9,
+      "rawEnd": 12,
+      "rawSpanLength": 3,
+      "syllableStart": 9,
+      "syllableEnd": 12,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "da",
+        "gai",
+        "duo"
+      ],
+      "windowTimeStart": 1.66,
+      "windowTimeEnd": 2.26,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 1.66,
+          "end": 2.06,
+          "tone": 3,
+          "confidence": 0.5482819080352783
+        },
+        {
+          "start": 2.06,
+          "end": 2.26,
+          "tone": 1,
+          "confidence": 0.7530345320701599
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=3; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "大概",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "charLen": 2,
+          "start": 1.66,
+          "end": 2.06
+        },
+        {
+          "word": "多",
+          "rawStart": 11,
+          "rawEnd": 12,
+          "charLen": 1,
+          "start": 2.06,
+          "end": 2.26
+        }
+      ]
+    }
+  ],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

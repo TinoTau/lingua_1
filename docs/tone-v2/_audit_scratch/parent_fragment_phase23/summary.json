@@ -1,0 +1,330 @@
+{
+  "totalCases": 200,
+  "completedCases": 200,
+  "failedCases": 0,
+  "parentFragmentCandidateCount": 0,
+  "casesWithParentFragment": 0,
+  "ngramTermIdCount": 0,
+  "formalExactCandidateCount": 0,
+  "latticeUncoveredCount": 0,
+  "kenlmInputCount": 200,
+  "kenlmNoiseEventsTight": 5,
+  "casesWithKenlmNoiseTight": 5,
+  "keyiCandidateCount": 0,
+  "ngramLookupCalls": 0,
+  "ngramApiAbsent": true,
+  "ngramTableCount": 0,
+  "ngramIndexCount": 0,
+  "runtimeIdentity": {
+    "schemaVersion": "lexicon-v3-runtime-v3",
+    "bundleVersion": 11,
+    "checksum": "sha256:d6e77ce9139a489cf17ad0bec83814aa7685d02037bc3870187a80bf47abf34a",
+    "loadedManifestVersion": "lexicon-v3-runtime-v3",
+    "sqlitePath": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+    "fileSize": 10817536
+  },
+  "latency": {
+    "p50": 39.27,
+    "p95": 69.25,
+    "max": 108.69,
+    "totalMs": 8370.26
+  },
+  "exactProbeResults": [
+    {
+      "query": {
+        "word": "候选",
+        "syllables": [
+          "hou",
+          "xuan"
+        ]
+      },
+      "tonePatternUsed": [
+        4,
+        3
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "候选",
+          "termId": "exp-v1_1-alias-houxuan",
+          "hitKind": "exact_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "score": 2.42,
+          "tone": "hou4|xuan3",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "计划",
+        "syllables": [
+          "ji",
+          "hua"
+        ]
+      },
+      "tonePatternUsed": [
+        4,
+        4
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "计划",
+          "termId": "base-rebuild-exp-v1_1-alias-jihua",
+          "hitKind": "exact_term",
+          "domains": [],
+          "score": 2.42,
+          "tone": "ji4|hua4",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "蓝莓",
+        "syllables": [
+          "lan",
+          "mei"
+        ]
+      },
+      "tonePatternUsed": [
+        2,
+        2
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "蓝莓",
+          "termId": "base-rebuild-term-e8939de88e937c6c",
+          "hitKind": "exact_term",
+          "domains": [],
+          "score": 2.35,
+          "tone": "lan2|mei2",
+          "sourceTable": "term/base/domain exact"
+        },
+        {
+          "word": "兰梅",
+          "termId": "base-rebuild-term-e585b0e6a2857c6c",
+          "hitKind": "exact_term",
+          "domains": [],
+          "score": 1.85,
+          "tone": "lan2|mei2",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "马芬",
+        "syllables": [
+          "ma",
+          "fen"
+        ]
+      },
+      "tonePatternUsed": [
+        3,
+        1
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "马芬",
+          "termId": "term-e9a9ace88aac7c6d",
+          "hitKind": "exact_term",
+          "domains": [
+            "bakery"
+          ],
+          "score": 2.35,
+          "tone": "ma3|fen1",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "蓝莓马芬",
+        "syllables": [
+          "lan",
+          "mei",
+          "ma",
+          "fen"
+        ]
+      },
+      "tonePatternUsed": [
+        2,
+        2,
+        3,
+        1
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "蓝莓马芬",
+          "termId": "term-e8939de88e93e9a9",
+          "hitKind": "exact_term",
+          "domains": [
+            "bakery",
+            "food_order"
+          ],
+          "score": 2.4,
+          "tone": "lan2|mei2|ma3|fen1",
+          "sourceTable": "term/base/domain exact"
+        },
+        {
+          "word": "兰梅马芬",
+          "termId": "term-e585b0e6a285e9a9",
+          "hitKind": "exact_term",
+          "domains": [
+            "bakery"
+          ],
+          "score": 1.85,
+          "tone": "lan2|mei2|ma3|fen1",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "医师",
+        "syllables": [
+          "yi",
+          "shi"
+        ]
+      },
+      "tonePatternUsed": [
+        1,
+        1
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "医师",
+          "termId": "term-e58cbbe5b8887c79",
+          "hitKind": "exact_term",
+          "domains": [
+            "medical"
+          ],
+          "score": 2.35,
+          "tone": "yi1|shi1",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    },
+    {
+      "query": {
+        "word": "登机",
+        "syllables": [
+          "deng",
+          "ji"
+        ]
+      },
+      "tonePatternUsed": [
+        1,
+        1
+      ],
+      "parentFragmentHitCount": 0,
+      "hits": [
+        {
+          "word": "登机",
+          "termId": "base-rebuild-term-e799bbe69cba7c64",
+          "hitKind": "exact_term",
+          "domains": [],
+          "score": 2.36,
+          "tone": "deng1|ji1",
+          "sourceTable": "term/base/domain exact"
+        }
+      ],
+      "foundExact": true,
+      "anyExact": true,
+      "inLexicon": true
+    }
+  ],
+  "fragmentZeroResults": [
+    {
+      "label": "可以→科医",
+      "syllables": [
+        "ke",
+        "yi"
+      ],
+      "windowText": "可以",
+      "ban": "科医",
+      "parentFragmentHitCount": 0,
+      "pfHits": 0,
+      "banAsPf": false,
+      "banAsAny": false,
+      "banAsExact": false,
+      "hits": []
+    },
+    {
+      "label": "衣室→议室",
+      "syllables": [
+        "yi",
+        "shi"
+      ],
+      "windowText": "衣室",
+      "ban": "议室",
+      "parentFragmentHitCount": 0,
+      "pfHits": 0,
+      "banAsPf": false,
+      "banAsAny": false,
+      "banAsExact": false,
+      "hits": [
+        {
+          "word": "医师",
+          "hitKind": "exact_term",
+          "termId": "term-e58cbbe5b8887c79"
+        }
+      ]
+    },
+    {
+      "label": "地址→低脂",
+      "syllables": [
+        "di",
+        "zhi"
+      ],
+      "windowText": "地址",
+      "ban": "低脂",
+      "parentFragmentHitCount": 0,
+      "pfHits": 0,
+      "banAsPf": false,
+      "banAsAny": false,
+      "banAsExact": false,
+      "hits": []
+    }
+  ],
+  "failCases": [],
+  "gates": {
+    "completed200": true,
+    "pfZero": true,
+    "ngramIdZero": true,
+    "ngramSqlZero": true,
+    "ngramSchemaAbsent": true,
+    "schemaV3": true,
+    "keyiFragZero": true,
+    "uncoveredZero": true,
+    "exactProbesOk": true,
+    "kenlmIntroducedNoiseZero": true
+  },
+  "kenlmIntroducedNoiseVsRaw": 0
+}

@@ -1,0 +1,797 @@
+{
+  "case": {
+    "id": "d192",
+    "fileNum": "192",
+    "scenario": "hospital",
+    "rawText": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-15|15-16|16-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "这",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "个",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+          "rawRange": [
+            2,
+            4
+          ],
+          "rawText": "检查",
+          "syllableRange": [
+            2,
+            4
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "报",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "告",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "什",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:6",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "么",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:7",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "时",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "候",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:9",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "能",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "出",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+          "rawRange": [
+            14,
+            16
+          ],
+          "rawText": "过敏",
+          "syllableRange": [
+            13,
+            15
+          ],
+          "coarseSpanIds": [
+            "c5"
+          ],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": [
+            "coffee",
+            "food_order"
+          ]
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:13",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "发",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "痒",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:15",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "需",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:16",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "要",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:17",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:18",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "假",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:19",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "休",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:20",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "息",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:21",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "2:4:1",
+          "word": "检查",
+          "surface": "检查",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "2:4:2",
+          "word": "检查",
+          "surface": "检查",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:15:3",
+          "word": "过敏",
+          "surface": "过敏",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "13:15:4",
+          "word": "过敏",
+          "surface": "过敏",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "coffee",
+          "food_order"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "2:4:1",
+                "word": "检查",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "2:4:2",
+                "word": "检查",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "food_order": [
+          {
+            "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:15:3",
+                "word": "过敏",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          }
+        ],
+        "coffee": [
+          {
+            "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:15:4",
+                "word": "过敏",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 1,
+        "food_order": 1,
+        "coffee": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 1,
+          "food_order": 1,
+          "coffee": 1
+        },
+        "retainedDomains": [
+          "coffee",
+          "food_order",
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": true,
+        "utteranceDomain": "coffee",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 4
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 1,
+          "food_order": 1,
+          "coffee": 1
+        },
+        "retainedDomains": [
+          "coffee",
+          "food_order",
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": true,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "coffee",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+              "candidateId": "13:15:4",
+              "word": "过敏"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "food_order",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:12",
+              "candidateId": "13:15:3",
+              "word": "过敏"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 3,
+          "domain": "tech_ai",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+              "candidateId": "2:4:1",
+              "word": "检查"
+            },
+            {
+              "fineSpanId": "fine:fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d:2",
+              "candidateId": "2:4:2",
+              "word": "检查"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "coffee",
+        "food_order",
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "coffee",
+        "food_order",
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "coffee",
+        "food_order",
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 3,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

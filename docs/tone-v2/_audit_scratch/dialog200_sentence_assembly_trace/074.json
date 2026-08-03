@@ -1,0 +1,1129 @@
+{
+  "caseId": "d074",
+  "fileNum": "074",
+  "rawText": "作业是下周一下午交吗？可以电子版提交吗？",
+  "scenario": "classroom",
+  "retainedDomains": [
+    "medical"
+  ],
+  "domainScores": {
+    "medical": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "domainId": "medical",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "作",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "作"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "业是",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+          "sameDomain": [
+            "液室"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "液室",
+            "业是"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "下",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "周",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "一",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "下",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "午",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "午"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "交",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "交"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "吗",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "可以",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+          "sameDomain": [
+            "科医",
+            "科医",
+            "科医"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "科医",
+            "可以"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "电",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "电"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "子",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "版",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "版"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "提",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "提"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "交",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "交"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "吗",
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "作"
+        ],
+        [
+          "液室",
+          "业是"
+        ],
+        [
+          "下"
+        ],
+        [
+          "周"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "午"
+        ],
+        [
+          "交"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "科医",
+          "可以"
+        ],
+        [
+          "电"
+        ],
+        [
+          "子"
+        ],
+        [
+          "版"
+        ],
+        [
+          "提"
+        ],
+        [
+          "交"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "作液室下周一下午交吗？科医电子版提交吗？",
+        "作业是下周一下午交吗？科医电子版提交吗？",
+        "作液室下周一下午交吗？可以电子版提交吗？",
+        "作业是下周一下午交吗？可以电子版提交吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "作液室下周一下午交吗？科医电子版提交吗？",
+    "作业是下周一下午交吗？科医电子版提交吗？",
+    "作液室下周一下午交吗？可以电子版提交吗？",
+    "作业是下周一下午交吗？可以电子版提交吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "作液室下周一下午交吗？科医电子版提交吗？",
+    "作业是下周一下午交吗？科医电子版提交吗？",
+    "作液室下周一下午交吗？可以电子版提交吗？",
+    "作业是下周一下午交吗？可以电子版提交吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "作液室下周一下午交吗？科医电子版提交吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "业是",
+            "start": 1,
+            "end": 3
+          },
+          "word": "液室",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.006,
+          "repairTarget": true,
+          "candidateScore": 2.006
+        },
+        {
+          "span": {
+            "text": "可以",
+            "start": 11,
+            "end": 13
+          },
+          "word": "科医",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "作",
+            "start": 0,
+            "end": 1
+          },
+          "word": "作",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 4,
+            "end": 5
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 5,
+            "end": 6
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 6,
+            "end": 7
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "午",
+            "start": 7,
+            "end": 8
+          },
+          "word": "午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 8,
+            "end": 9
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "电",
+            "start": 13,
+            "end": 14
+          },
+          "word": "电",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 14,
+            "end": 15
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "版",
+            "start": 15,
+            "end": 16
+          },
+          "word": "版",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "提",
+            "start": 16,
+            "end": 17
+          },
+          "word": "提",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 17,
+            "end": 18
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 18,
+            "end": 19
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.366
+    },
+    {
+      "text": "作业是下周一下午交吗？科医电子版提交吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "可以",
+            "start": 11,
+            "end": 13
+          },
+          "word": "科医",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "作",
+            "start": 0,
+            "end": 1
+          },
+          "word": "作",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "业是",
+            "start": 1,
+            "end": 3
+          },
+          "word": "业是",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 4,
+            "end": 5
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 5,
+            "end": 6
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 6,
+            "end": 7
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "午",
+            "start": 7,
+            "end": 8
+          },
+          "word": "午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 8,
+            "end": 9
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "电",
+            "start": 13,
+            "end": 14
+          },
+          "word": "电",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 14,
+            "end": 15
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "版",
+            "start": 15,
+            "end": 16
+          },
+          "word": "版",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "提",
+            "start": 16,
+            "end": 17
+          },
+          "word": "提",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 17,
+            "end": 18
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 18,
+            "end": 19
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    },
+    {
+      "text": "作液室下周一下午交吗？可以电子版提交吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "业是",
+            "start": 1,
+            "end": 3
+          },
+          "word": "液室",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.006,
+          "repairTarget": true,
+          "candidateScore": 2.006
+        },
+        {
+          "span": {
+            "text": "作",
+            "start": 0,
+            "end": 1
+          },
+          "word": "作",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 4,
+            "end": 5
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 5,
+            "end": 6
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 6,
+            "end": 7
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "午",
+            "start": 7,
+            "end": 8
+          },
+          "word": "午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 8,
+            "end": 9
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "可以",
+            "start": 11,
+            "end": 13
+          },
+          "word": "可以",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "电",
+            "start": 13,
+            "end": 14
+          },
+          "word": "电",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 14,
+            "end": 15
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "版",
+            "start": 15,
+            "end": 16
+          },
+          "word": "版",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "提",
+            "start": 16,
+            "end": 17
+          },
+          "word": "提",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 17,
+            "end": 18
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 18,
+            "end": 19
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.006
+    },
+    {
+      "text": "作业是下周一下午交吗？可以电子版提交吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "作",
+            "start": 0,
+            "end": 1
+          },
+          "word": "作",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "业是",
+            "start": 1,
+            "end": 3
+          },
+          "word": "业是",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 4,
+            "end": 5
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 5,
+            "end": 6
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 6,
+            "end": 7
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "午",
+            "start": 7,
+            "end": 8
+          },
+          "word": "午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 8,
+            "end": 9
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "可以",
+            "start": 11,
+            "end": 13
+          },
+          "word": "可以",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "电",
+            "start": 13,
+            "end": 14
+          },
+          "word": "电",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 14,
+            "end": 15
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "版",
+            "start": 15,
+            "end": 16
+          },
+          "word": "版",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "提",
+            "start": 16,
+            "end": 17
+          },
+          "word": "提",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "交",
+            "start": 17,
+            "end": 18
+          },
+          "word": "交",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 18,
+            "end": 19
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 0
+    }
+  ],
+  "kenlmInputTexts": [
+    "作液室下周一下午交吗？科医电子版提交吗？",
+    "作业是下周一下午交吗？科医电子版提交吗？",
+    "作液室下周一下午交吗？可以电子版提交吗？",
+    "作业是下周一下午交吗？可以电子版提交吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "作液室下周一下午交吗？科医电子版提交吗？",
+      "作业是下周一下午交吗？科医电子版提交吗？",
+      "作液室下周一下午交吗？可以电子版提交吗？",
+      "作业是下周一下午交吗？可以电子版提交吗？"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "作业是下周一下午交吗？可以电子版提交吗？",
+      "作液室下周一下午交吗？科医电子版提交吗？",
+      "作业是下周一下午交吗？科医电子版提交吗？",
+      "作液室下周一下午交吗？可以电子版提交吗？"
+    ],
+    "actual": [
+      "作液室下周一下午交吗？科医电子版提交吗？",
+      "作业是下周一下午交吗？科医电子版提交吗？",
+      "作液室下周一下午交吗？可以电子版提交吗？",
+      "作业是下周一下午交吗？可以电子版提交吗？"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

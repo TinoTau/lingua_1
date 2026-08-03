@@ -1,0 +1,347 @@
+{
+  "caseId": "A11",
+  "rawText": "我要一杯低脂牛奶",
+  "windowCount": 30,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "4:6",
+      "syllableStart": 4,
+      "syllableEnd": 6,
+      "text": "低脂",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 3,
+  "bucketCount": 3,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 3,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 3,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "我要一杯低脂牛奶"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "domainId": "bakery",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "我要一杯低脂牛奶",
+      "sourcePathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "sourceDomain": "bakery",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "我",
+          "sourceText": "我"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "杯",
+          "sourceText": "杯"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "低脂",
+          "sourceText": "低脂"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "牛奶",
+          "sourceText": "牛奶"
+        }
+      ],
+      "dedupKey": "我要一杯低脂牛奶",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "我要一杯低脂牛奶",
+      "sourcePathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "sourceDomain": "coffee",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "我",
+          "sourceText": "我"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "杯",
+          "sourceText": "杯"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "低脂",
+          "sourceText": "低脂"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "牛奶",
+          "sourceText": "牛奶"
+        }
+      ],
+      "dedupKey": "我要一杯低脂牛奶",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "我要一杯低脂牛奶",
+      "sourcePathId": "3e8a1acfff68104f28a9eb431f16955102d54b24e1560c9071d3300b33164e8c",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "我",
+          "sourceText": "我"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "杯",
+          "sourceText": "杯"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "低脂",
+          "sourceText": "低脂"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "牛奶",
+          "sourceText": "牛奶"
+        }
+      ],
+      "dedupKey": "我要一杯低脂牛奶",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 30,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 30,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 4
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 30,
+    "sqlQueryCount": 11,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A",
+    "G"
+  ],
+  "why": "di|zhi in 低脂 context",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 18.336999893188477,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

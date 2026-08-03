@@ -1,0 +1,130 @@
+{
+  "caseId": "E02",
+  "rawText": "请检查接口文档",
+  "retainedDomains": [
+    "tech_ai"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查"
+        ],
+        [
+          "接口"
+        ],
+        [
+          "文档"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请检查接口文档"
+      ]
+    },
+    {
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查"
+        ],
+        [
+          "接口文档"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请检查接口文档"
+      ]
+    },
+    {
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        2,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查节",
+          "检查接"
+        ],
+        [
+          "口文档"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请检查节口文档",
+        "请检查接口文档"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "请检查接口文档",
+    "请检查节口文档"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "请检查接口文档",
+    "请检查节口文档"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 25.435100078582764,
+  "groups": [
+    "E"
+  ],
+  "why": "overlap",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "请检查接口文档",
+      "请检查节口文档"
+    ]
+  }
+}

@@ -1,0 +1,523 @@
+{
+  "caseId": "d099",
+  "fileNum": "099",
+  "rawText": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+  "scenario": "taxi",
+  "retainedDomains": [
+    "tourism_transport"
+  ],
+  "domainScores": {
+    "tourism_transport": 2,
+    "transport": 1,
+    "tourism_route": 1,
+    "medical": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c",
+      "domainId": "tourism_transport",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "去",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "去"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "望",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "望"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "京",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "京"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "不",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "走",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "走"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "机场",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:5",
+          "sameDomain": [
+            "机场",
+            "机场",
+            "机场"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "机场"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "高速",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:6",
+          "sameDomain": [
+            "高速",
+            "高速"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "高速"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "可以",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "可以"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "吗",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "那",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "那"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "边",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "边"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "现",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "现"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "在",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "堵",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "堵"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "不",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "堵",
+          "fineSpanId": "fine:ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "堵"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "去"
+        ],
+        [
+          "望"
+        ],
+        [
+          "京"
+        ],
+        [
+          "不"
+        ],
+        [
+          "走"
+        ],
+        [
+          "机场"
+        ],
+        [
+          "高速"
+        ],
+        [
+          "可以"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "那"
+        ],
+        [
+          "边"
+        ],
+        [
+          "现"
+        ],
+        [
+          "在"
+        ],
+        [
+          "堵"
+        ],
+        [
+          "不"
+        ],
+        [
+          "堵"
+        ]
+      ],
+      "assemblyTexts": [
+        "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+      "replacements": [
+        {
+          "span": {
+            "text": "机场",
+            "start": 10,
+            "end": 12
+          },
+          "word": "机场",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "高速",
+            "start": 12,
+            "end": 14
+          },
+          "word": "高速",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "去",
+            "start": 0,
+            "end": 1
+          },
+          "word": "去",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "望",
+            "start": 1,
+            "end": 2
+          },
+          "word": "望",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "京",
+            "start": 2,
+            "end": 3
+          },
+          "word": "京",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 8,
+            "end": 9
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "走",
+            "start": 9,
+            "end": 10
+          },
+          "word": "走",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "可以",
+            "start": 14,
+            "end": 16
+          },
+          "word": "可以",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 16,
+            "end": 17
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "那",
+            "start": 18,
+            "end": 19
+          },
+          "word": "那",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "边",
+            "start": 19,
+            "end": 20
+          },
+          "word": "边",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "现",
+            "start": 20,
+            "end": 21
+          },
+          "word": "现",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 21,
+            "end": 22
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "堵",
+            "start": 22,
+            "end": 23
+          },
+          "word": "堵",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 23,
+            "end": 24
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "堵",
+            "start": 24,
+            "end": 25
+          },
+          "word": "堵",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.8
+    }
+  ],
+  "kenlmInputTexts": [
+    "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+    ],
+    "actual": [
+      "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

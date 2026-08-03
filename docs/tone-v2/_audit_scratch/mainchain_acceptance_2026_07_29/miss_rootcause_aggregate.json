@@ -1,0 +1,51 @@
+{
+  "originalBatch": {
+    "attempt": 288,
+    "hit": 216,
+    "miss": 72,
+    "missCases": 51,
+    "hitAllCases": 149
+  },
+  "missProbe": {
+    "probedCases": 51,
+    "failCounts": {
+      "NO_SLICE_OVERLAP_WORD_TIME": 12
+    },
+    "classifiedMissWindows": 12,
+    "diagOverlapMissSum": 0,
+    "diagMismatchSum": 68
+  },
+  "meaningOf288": "Sum of ngramTonePatternAttemptCount over 200 utterances = count of recallable windows that entered recallTopKForWindows with toneActive (after blockedFilter). NOT total Fine Spans / not all generated sliding windows.",
+  "spanSamples": [
+    "d179",
+    "d011",
+    "d057",
+    "d002",
+    "d044",
+    "d023",
+    "d027",
+    "d013",
+    "d020",
+    "d174",
+    "d200",
+    "d192",
+    "d180",
+    "d151",
+    "d026",
+    "d004",
+    "d041",
+    "d001",
+    "d158",
+    "d160",
+    "d152",
+    "d127",
+    "d108",
+    "d153",
+    "d154",
+    "d014",
+    "d097",
+    "d159",
+    "d067",
+    "d131"
+  ]
+}

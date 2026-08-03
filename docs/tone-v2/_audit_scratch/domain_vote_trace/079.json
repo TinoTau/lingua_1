@@ -1,0 +1,473 @@
+{
+  "case": {
+    "id": "d079",
+    "fileNum": "079",
+    "scenario": "bank",
+    "rawText": "我想开通短信提醒，需要带什么证件？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "想",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "开",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "通",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "短",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "信",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+          "rawRange": [
+            6,
+            8
+          ],
+          "rawText": "提醒",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": [
+            "tourism_route"
+          ]
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:7",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "需",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:8",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "要",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:9",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "带",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:10",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "什",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "么",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "证",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:13",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "件",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "6:8:1",
+          "word": "提醒",
+          "surface": "提醒",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            6,
+            8
+          ],
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_route"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_route"
+          ]
+        },
+        {
+          "candidateId": "6:8:2",
+          "word": "提醒",
+          "surface": "提醒",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            6,
+            8
+          ],
+          "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+          "candidateRank": 2,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_route"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_route"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "tourism_route"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tourism_route": [
+          {
+            "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "6:8:1",
+                "word": "提醒",
+                "domainsAdded": [
+                  "tourism_route"
+                ]
+              },
+              {
+                "candidateId": "6:8:2",
+                "word": "提醒",
+                "domainsAdded": [
+                  "tourism_route"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tourism_route": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "tourism_route": 1
+        },
+        "retainedDomains": [
+          "tourism_route"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tourism_route",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 2
+      },
+      "replayVote": {
+        "domainScores": {
+          "tourism_route": 1
+        },
+        "retainedDomains": [
+          "tourism_route"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tourism_route",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+              "candidateId": "6:8:1",
+              "word": "提醒"
+            },
+            {
+              "fineSpanId": "fine:c14d5f5751216d8790ba33830572c5c91e9e6e8c1beabcfbb3e78f12a3374199:6",
+              "candidateId": "6:8:2",
+              "word": "提醒"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=0.75); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tourism_route"
+      ],
+      "bucketDomainsFromVote": [
+        "tourism_route"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

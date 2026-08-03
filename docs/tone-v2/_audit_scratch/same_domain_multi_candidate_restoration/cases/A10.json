@@ -1,0 +1,69 @@
+{
+  "caseId": "A10",
+  "rawText": "地质结构需要检查",
+  "retainedDomains": [
+    "tech_ai"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "地质"
+        ],
+        [
+          "结构"
+        ],
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "检查"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "地质结构需要检查"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "地质结构需要检查"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "地质结构需要检查"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 31.892199993133545,
+  "groups": [
+    "A",
+    "G"
+  ],
+  "why": "di|zhi in 地质 context",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

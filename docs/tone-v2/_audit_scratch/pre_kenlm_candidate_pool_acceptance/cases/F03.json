@@ -1,0 +1,190 @@
+{
+  "caseId": "F03",
+  "rawText": "帮我准备一杯大杯拿铁",
+  "windowCount": 40,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "帮我准备一杯大杯拿铁"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "b25239206e2cf8040c584bf1e843ae7c9b730454e2d8450d99e46c6d304ff541",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "帮"
+        ],
+        [
+          "我"
+        ],
+        [
+          "准"
+        ],
+        [
+          "备"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "大杯"
+        ],
+        [
+          "拿铁"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "帮我准备一杯大杯拿铁",
+      "sourcePathId": "b25239206e2cf8040c584bf1e843ae7c9b730454e2d8450d99e46c6d304ff541",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "帮",
+          "sourceText": "帮"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "我",
+          "sourceText": "我"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "准",
+          "sourceText": "准"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "备",
+          "sourceText": "备"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "杯",
+          "sourceText": "杯"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "大杯",
+          "sourceText": "大杯"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "拿铁",
+          "sourceText": "拿铁"
+        }
+      ],
+      "dedupKey": "帮我准备一杯大杯拿铁",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 40,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 40,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 6,
+    "edgeCountAfterFallback": 8,
+    "fallbackInjectionCount": 6,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 6
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 40,
+    "sqlQueryCount": 28,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "F"
+  ],
+  "why": "raw-correct cafe",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 28.0492000579834,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

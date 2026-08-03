@@ -1,0 +1,8 @@
+{"raw":"吗？","window":"吗","rawStartEnd":"exclusive end at ？","current":"BLOCK sentence_boundary (rawEnd adjacency)","target":"ALLOW","change":"remove rawEnd adjacency check"}
+{"raw":"？我","window":"我","current":"BLOCK sentence_boundary (rawStart-1 adjacency)","target":"ALLOW","change":"remove rawStart-1 adjacency check"}
+{"raw":"吗？我","window":"吗我","current":"BLOCK punctuation_in_window / sentence_boundary in slice","target":"BLOCK","change":"KEEP slice contains ？"}
+{"raw":"你好。请问","window":"好请","current":"BLOCK (contains 。 or raw_gap)","target":"BLOCK","change":"KEEP"}
+{"raw":"你好。请问","window":"请","current":"may BLOCK via rawStart-1 adjacency","target":"ALLOW","change":"remove adjacency"}
+{"raw":"跨 raw gap","window":"any spanning gap","current":"BLOCK raw_gap_between_spans","target":"BLOCK","change":"KEEP"}
+{"raw":"少糖。","window":"糖","current":"BLOCK rawEnd adjacency","target":"ALLOW","change":"remove adjacency"}
+{"function":"lattice-hard-block-filter.ts::hasSentenceBoundary","deleteChecks":["rawStart-1 is sentence boundary","rawEnd char is sentence boundary"],"keepChecks":["SENTENCE_BOUNDARY_RE.test(slice)","hasPunctuationInWindow","hasRawGapBetweenSpans"]}

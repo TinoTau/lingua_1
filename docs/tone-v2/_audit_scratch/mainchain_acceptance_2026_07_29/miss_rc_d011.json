@@ -1,0 +1,72 @@
+{
+  "id": "d011",
+  "raw": "括號出請問 內客還有號碼 我微不舒服昨晚開始的",
+  "asrToneSliceCount": 19,
+  "diagToneSliceCount": 19,
+  "wordTimeSpanBuilt": 19,
+  "wordTimeSpanMapped": 19,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "開始",
+      "pinyinKey": "kai|shi",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        1,
+        1
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.2,
+        "end": 4.54
+      },
+      "replayWindowTime": {
+        "start": 4.2,
+        "end": 4.54
+      }
+    },
+    {
+      "text": "開始的",
+      "pinyinKey": "kai|shi|de",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        1,
+        1,
+        5
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.2,
+        "end": 4.76
+      },
+      "replayWindowTime": {
+        "start": 4.2,
+        "end": 4.76
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 21,
+    "theoreticalWindows2to5": 74,
+    "theoreticalWindows1to5": 95
+  },
+  "summary": {
+    "spanCount": 12,
+    "candidateCount": 12
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

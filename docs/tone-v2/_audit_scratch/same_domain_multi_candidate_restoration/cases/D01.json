@@ -1,0 +1,148 @@
+{
+  "caseId": "D01",
+  "rawText": "请确认少糖去冰大杯",
+  "retainedDomains": [
+    "coffee",
+    "food_order",
+    "milk_tea"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认少糖去冰大杯"
+      ]
+    },
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认少糖去冰大杯"
+      ]
+    },
+    {
+      "domainId": "milk_tea",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认少糖去冰大杯"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "请确认少糖去冰大杯"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "请确认少糖去冰大杯"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 36.62310004234314,
+  "groups": [
+    "D"
+  ],
+  "why": "multi-domain coffee tags (same-surface multi-identity)",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

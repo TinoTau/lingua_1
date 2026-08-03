@@ -1,0 +1,874 @@
+{
+  "caseId": "d047",
+  "fileNum": "047",
+  "rawText": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+  "kenlmInputTexts": [
+    "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+  ],
+  "kenlmInputCount": 1,
+  "uniqueBeforeCapCount": 1,
+  "assemblyBeforeDedupCount": 1,
+  "stageStats": {
+    "recallCandidates": 6,
+    "compatibilityFail": 0,
+    "compatibilityPass": 6,
+    "domainEligibilityDrop": 0,
+    "domainMembershipDrop": 2,
+    "domainKeep": 4,
+    "budgetDrop": 0,
+    "budgetKeep": 4,
+    "assemblyYes": 4,
+    "assemblyNo": 2,
+    "crossPathDrop": 2,
+    "crossPathKeep": 4,
+    "kenlmYes": 4,
+    "kenlmNo": 2
+  },
+  "paths": [
+    {
+      "pathId": "867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562",
+      "retainedDomains": [
+        "milk_tea"
+      ],
+      "domainScores": {
+        "milk_tea": 3,
+        "bakery": 1,
+        "coffee": 2,
+        "food_order": 2
+      },
+      "insufficientEvidence": false,
+      "buckets": [
+        {
+          "bucketDomain": "milk_tea",
+          "perSpanLimit": 4,
+          "spans": [
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:0",
+              "raw": "麻",
+              "rawRange": [
+                0,
+                1
+              ],
+              "syllableRange": [
+                0,
+                1
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:0",
+                  "termId": null,
+                  "word": "麻",
+                  "surface": "麻",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:1",
+              "raw": "烦",
+              "rawRange": [
+                1,
+                2
+              ],
+              "syllableRange": [
+                1,
+                2
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:1",
+                  "termId": null,
+                  "word": "烦",
+                  "surface": "烦",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:2",
+              "raw": "帮",
+              "rawRange": [
+                2,
+                3
+              ],
+              "syllableRange": [
+                2,
+                3
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:2",
+                  "termId": null,
+                  "word": "帮",
+                  "surface": "帮",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:3",
+              "raw": "我",
+              "rawRange": [
+                3,
+                4
+              ],
+              "syllableRange": [
+                3,
+                4
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:3",
+                  "termId": null,
+                  "word": "我",
+                  "surface": "我",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:4",
+              "raw": "做",
+              "rawRange": [
+                4,
+                5
+              ],
+              "syllableRange": [
+                4,
+                5
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:4",
+                  "termId": null,
+                  "word": "做",
+                  "surface": "做",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:5",
+              "raw": "一",
+              "rawRange": [
+                5,
+                6
+              ],
+              "syllableRange": [
+                5,
+                6
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:5",
+                  "termId": null,
+                  "word": "一",
+                  "surface": "一",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:6",
+              "raw": "杯",
+              "rawRange": [
+                6,
+                7
+              ],
+              "syllableRange": [
+                6,
+                7
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:6",
+                  "termId": null,
+                  "word": "杯",
+                  "surface": "杯",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:7",
+              "raw": "红茶",
+              "rawRange": [
+                7,
+                9
+              ],
+              "syllableRange": [
+                7,
+                9
+              ],
+              "recallCandidateCount": 2,
+              "candidates": [
+                {
+                  "candidateId": "7:9:1",
+                  "termId": "ngram:405",
+                  "word": "红茶",
+                  "surface": "红茶",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 1,
+                  "score": 2.36,
+                  "candidateScore": 2.36,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "milk_tea"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=7:9:1)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                },
+                {
+                  "candidateId": "7:9:2",
+                  "termId": "ngram:3993",
+                  "word": "红茶",
+                  "surface": "红茶",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 2,
+                  "score": 2.36,
+                  "candidateScore": 2.36,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "milk_tea"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=7:9:1)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:8",
+              "raw": "带走",
+              "rawRange": [
+                9,
+                11
+              ],
+              "syllableRange": [
+                9,
+                11
+              ],
+              "recallCandidateCount": 1,
+              "candidates": [
+                {
+                  "candidateId": "9:11:3",
+                  "termId": "ngram:1810",
+                  "word": "带走",
+                  "surface": "带走",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 1,
+                  "score": 2.35,
+                  "candidateScore": 2.35,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "bakery",
+                    "coffee",
+                    "food_order",
+                    "milk_tea"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=9:11:3)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:9",
+              "raw": "大杯",
+              "rawRange": [
+                12,
+                14
+              ],
+              "syllableRange": [
+                11,
+                13
+              ],
+              "recallCandidateCount": 3,
+              "candidates": [
+                {
+                  "candidateId": "11:13:4",
+                  "termId": "ngram:1540",
+                  "word": "大杯",
+                  "surface": "大杯",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 1,
+                  "score": 2.38,
+                  "candidateScore": 2.38,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "coffee",
+                    "food_order",
+                    "milk_tea"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "SameDomain membership (domains includes bucketDomain)",
+                  "budget": "KEEP",
+                  "budgetReason": "in selectedCandidates (perSpanLimit=4; keptId=11:13:4)",
+                  "assembly": "YES",
+                  "assemblyReason": "present in Assembly Grid selectedCandidates for this bucket",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence(s) using this surface survive CrossPath→KenLM (n=1)",
+                  "kenlm": "YES"
+                },
+                {
+                  "candidateId": "11:13:5",
+                  "termId": "ngram:799",
+                  "word": "大杯",
+                  "surface": "大杯",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 2,
+                  "score": 2.36,
+                  "candidateScore": 2.36,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "food_order"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "DROP",
+                  "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+                  "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+                  "budget": "DROP",
+                  "budgetReason": "upstream Domain/Eligibility DROP — Budget 未接收",
+                  "assembly": "NO",
+                  "assemblyReason": "upstream Domain/Eligibility DROP — Budget 未接收",
+                  "crossPath": "DROP",
+                  "crossPathReason": "upstream Assembly Grid 未包含 — CrossPath 未接收该 Candidate",
+                  "kenlm": "NO"
+                },
+                {
+                  "candidateId": "11:13:6",
+                  "termId": "ngram:3070",
+                  "word": "大杯",
+                  "surface": "大杯",
+                  "source": "domain_term",
+                  "graphSourceClass": "domain",
+                  "recallSource": "lexicon_pinyin_topk",
+                  "hitKind": "parent_fragment",
+                  "priority": 3,
+                  "score": 2.36,
+                  "candidateScore": 2.36,
+                  "toneScore": 1,
+                  "toneCompatible": true,
+                  "toneReason": "no_pattern",
+                  "domainTags": [
+                    "food_order"
+                  ],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "isCovered": false
+                  },
+                  "domainFilter": "DROP",
+                  "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+                  "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+                  "budget": "DROP",
+                  "budgetReason": "upstream Domain/Eligibility DROP — Budget 未接收",
+                  "assembly": "NO",
+                  "assemblyReason": "upstream Domain/Eligibility DROP — Budget 未接收",
+                  "crossPath": "DROP",
+                  "crossPathReason": "upstream Assembly Grid 未包含 — CrossPath 未接收该 Candidate",
+                  "kenlm": "NO"
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:10",
+              "raw": "就",
+              "rawRange": [
+                14,
+                15
+              ],
+              "syllableRange": [
+                13,
+                14
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:10",
+                  "termId": null,
+                  "word": "就",
+                  "surface": "就",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:11",
+              "raw": "行",
+              "rawRange": [
+                15,
+                16
+              ],
+              "syllableRange": [
+                14,
+                15
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:11",
+                  "termId": null,
+                  "word": "行",
+                  "surface": "行",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:12",
+              "raw": "谢",
+              "rawRange": [
+                17,
+                18
+              ],
+              "syllableRange": [
+                15,
+                16
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:12",
+                  "termId": null,
+                  "word": "谢",
+                  "surface": "谢",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            },
+            {
+              "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:13",
+              "raw": "谢",
+              "rawRange": [
+                18,
+                19
+              ],
+              "syllableRange": [
+                16,
+                17
+              ],
+              "recallCandidateCount": 0,
+              "candidates": [
+                {
+                  "candidateId": "canonical:fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:13",
+                  "termId": null,
+                  "word": "谢",
+                  "surface": "谢",
+                  "source": "base_term",
+                  "graphSourceClass": "canonical_raw_preservation",
+                  "recallSource": "canonical_exact",
+                  "hitKind": "exact_term",
+                  "priority": null,
+                  "score": 0,
+                  "candidateScore": 0,
+                  "toneScore": null,
+                  "toneCompatible": null,
+                  "toneReason": null,
+                  "domainTags": [],
+                  "compatibility": "PASS",
+                  "compatibilityDetail": {
+                    "note": "canonical not from Recall Compatibility pool"
+                  },
+                  "domainFilter": "KEEP",
+                  "dropReason": null,
+                  "domainModule": "budgetPerSpanCandidates always merges canonical/raw preservation",
+                  "budget": "KEEP",
+                  "budgetReason": "canonical/raw preservation candidate",
+                  "assembly": "YES",
+                  "assemblyReason": "canonical in Assembly Grid",
+                  "crossPath": "KEEP",
+                  "crossPathReason": "sentence using canonical surface in KenLM input",
+                  "kenlm": "YES",
+                  "isCanonical": true
+                }
+              ]
+            }
+          ],
+          "assemblySentenceCount": 1,
+          "assemblySentences": [
+            "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+          ]
+        }
+      ]
+    }
+  ],
+  "lists": {
+    "neverAssembly": [
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:5",
+        "firstDropModule": "DomainFilter",
+        "reason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])"
+      },
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:6",
+        "firstDropModule": "DomainFilter",
+        "reason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])"
+      }
+    ],
+    "budgetDropped": [],
+    "domainDropped": [
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      }
+    ],
+    "crossPathDropped": [],
+    "designPremature": []
+  }
+}

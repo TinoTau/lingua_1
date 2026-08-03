@@ -1,0 +1,414 @@
+{
+  "utteranceId": "d002",
+  "rawText": "麻烦帮我做一杯美式带走大背就行谢",
+  "expectedText": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 0,
+    "asr_word_timestamp_valid_count": 0,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 0,
+    "first_word_start": null,
+    "last_word_end": null,
+    "audioDurationSec": 3.483
+  },
+  "slices": {
+    "total_tone_slice_count": 16,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 0,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.32,
+        "tone": 2,
+        "confidence": 0.9816639423370361,
+        "posterior": {
+          "t1": 0.009974719025194645,
+          "t2": 0.9816639423370361,
+          "t3": 0.008267136290669441,
+          "t4": 0.000017981918063014746,
+          "t5": 0.0000761503615649417
+        }
+      },
+      {
+        "start": 0.32,
+        "end": 0.46,
+        "tone": 3,
+        "confidence": 0.8974340558052063,
+        "posterior": {
+          "t1": 0.00027460194542072713,
+          "t2": 0.049383148550987244,
+          "t3": 0.8974340558052063,
+          "t4": 0.04354702681303024,
+          "t5": 0.009361163713037968
+        }
+      },
+      {
+        "start": 0.46,
+        "end": 0.62,
+        "tone": 4,
+        "confidence": 0.9254060983657837,
+        "posterior": {
+          "t1": 0.05818852037191391,
+          "t2": 0.0013733579544350505,
+          "t3": 0.014892129227519035,
+          "t4": 0.9254060983657837,
+          "t5": 0.00013993015454616398
+        }
+      },
+      {
+        "start": 0.62,
+        "end": 0.82,
+        "tone": 3,
+        "confidence": 0.8956286907196045,
+        "posterior": {
+          "t1": 0.0001442358479835093,
+          "t2": 0.013840443454682827,
+          "t3": 0.8956286907196045,
+          "t4": 0.08937118947505951,
+          "t5": 0.001015430549159646
+        }
+      },
+      {
+        "start": 0.82,
+        "end": 0.9,
+        "tone": 2,
+        "confidence": 0.8490400910377502,
+        "posterior": {
+          "t1": 0.01578143611550331,
+          "t2": 0.8490400910377502,
+          "t3": 0.012101750820875168,
+          "t4": 0.04645311087369919,
+          "t5": 0.07662355154752731
+        }
+      },
+      {
+        "start": 0.9,
+        "end": 1.08,
+        "tone": 1,
+        "confidence": 0.5136507153511047,
+        "posterior": {
+          "t1": 0.5136507153511047,
+          "t2": 0.23254700005054474,
+          "t3": 0.09039127081632614,
+          "t4": 0.1632305085659027,
+          "t5": 0.0001804781350074336
+        }
+      },
+      {
+        "start": 1.08,
+        "end": 1.16,
+        "tone": 3,
+        "confidence": 0.9572548270225525,
+        "posterior": {
+          "t1": 0.00003514068521326408,
+          "t2": 0.0363839790225029,
+          "t3": 0.9572548270225525,
+          "t4": 0.005710420198738575,
+          "t5": 0.0006155075971037149
+        }
+      },
+      {
+        "start": 1.16,
+        "end": 1.32,
+        "tone": 3,
+        "confidence": 0.5820879340171814,
+        "posterior": {
+          "t1": 0.0007505359826609492,
+          "t2": 0.022885985672473907,
+          "t3": 0.5820879340171814,
+          "t4": 0.36773884296417236,
+          "t5": 0.02653663605451584
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 0,
+    "skipped": 0,
+    "multi_char_token_count": 0,
+    "single_char_token_count": 0,
+    "samplePairs": [],
+    "spans": []
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 70,
+    "tone_ready_count": 0,
+    "tone_no_pattern_count": 70,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 0,
+    "pattern_ok_count": 0,
+    "char_eq_syl_count": 70,
+    "overlap_eq_char_count": 0,
+    "overlap_eq_syl_count": 0
+  },
+  "byLen": {
+    "1": {
+      "windows": 16,
+      "ready": 0,
+      "no_pattern": 16,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 16,
+      "overlap_eq_char": 0,
+      "overlap_eq_syl": 0,
+      "time_range_ok": 0,
+      "pattern_ok": 0
+    },
+    "2": {
+      "windows": 15,
+      "ready": 0,
+      "no_pattern": 15,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 15,
+      "overlap_eq_char": 0,
+      "overlap_eq_syl": 0,
+      "time_range_ok": 0,
+      "pattern_ok": 0
+    },
+    "3": {
+      "windows": 14,
+      "ready": 0,
+      "no_pattern": 14,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 14,
+      "overlap_eq_char": 0,
+      "overlap_eq_syl": 0,
+      "time_range_ok": 0,
+      "pattern_ok": 0
+    },
+    "4": {
+      "windows": 13,
+      "ready": 0,
+      "no_pattern": 13,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 13,
+      "overlap_eq_char": 0,
+      "overlap_eq_syl": 0,
+      "time_range_ok": 0,
+      "pattern_ok": 0
+    },
+    "5": {
+      "windows": 12,
+      "ready": 0,
+      "no_pattern": 12,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 12,
+      "overlap_eq_char": 0,
+      "overlap_eq_syl": 0,
+      "time_range_ok": 0,
+      "pattern_ok": 0
+    }
+  },
+  "failureSamples": [
+    {
+      "utteranceId": "d002",
+      "windowId": "0:1",
+      "windowText": "麻",
+      "rawStart": 0,
+      "rawEnd": 1,
+      "rawSpanLength": 1,
+      "syllableStart": 0,
+      "syllableEnd": 1,
+      "syllableSpanLength": 1,
+      "windowPinyin": [
+        "ma"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "0:2",
+      "windowText": "麻烦",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "rawSpanLength": 2,
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "ma",
+        "fan"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "0:3",
+      "windowText": "麻烦帮",
+      "rawStart": 0,
+      "rawEnd": 3,
+      "rawSpanLength": 3,
+      "syllableStart": 0,
+      "syllableEnd": 3,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "ma",
+        "fan",
+        "bang"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "0:4",
+      "windowText": "麻烦帮我",
+      "rawStart": 0,
+      "rawEnd": 4,
+      "rawSpanLength": 4,
+      "syllableStart": 0,
+      "syllableEnd": 4,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "ma",
+        "fan",
+        "bang",
+        "wo"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "0:5",
+      "windowText": "麻烦帮我做",
+      "rawStart": 0,
+      "rawEnd": 5,
+      "rawSpanLength": 5,
+      "syllableStart": 0,
+      "syllableEnd": 5,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "ma",
+        "fan",
+        "bang",
+        "wo",
+        "zuo"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "1:2",
+      "windowText": "烦",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "rawSpanLength": 1,
+      "syllableStart": 1,
+      "syllableEnd": 2,
+      "syllableSpanLength": 1,
+      "windowPinyin": [
+        "fan"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "1:3",
+      "windowText": "烦帮",
+      "rawStart": 1,
+      "rawEnd": 3,
+      "rawSpanLength": 2,
+      "syllableStart": 1,
+      "syllableEnd": 3,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "fan",
+        "bang"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    },
+    {
+      "utteranceId": "d002",
+      "windowId": "1:4",
+      "windowText": "烦帮我",
+      "rawStart": 1,
+      "rawEnd": 4,
+      "rawSpanLength": 3,
+      "syllableStart": 1,
+      "syllableEnd": 4,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "fan",
+        "bang",
+        "wo"
+      ],
+      "windowTimeStart": null,
+      "windowTimeEnd": null,
+      "overlapSliceCount": 0,
+      "overlapSlices": [],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "no_window_time_range",
+      "coveringSpans": []
+    }
+  ],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

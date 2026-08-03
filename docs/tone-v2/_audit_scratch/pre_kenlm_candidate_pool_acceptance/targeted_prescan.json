@@ -1,0 +1,2087 @@
+[
+  {
+    "caseId": "A01",
+    "text": "请确认地址",
+    "groups": [
+      "A",
+      "F"
+    ],
+    "expectedTerms": [
+      "地址"
+    ],
+    "why": "di|zhi → 低脂/地质 (runtime)",
+    "syllableCount": 5,
+    "windowCount": 15,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A02",
+    "text": "请确认客户地址",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "地址"
+    ],
+    "why": "di|zhi surface-distinct",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A03",
+    "text": "新的地址已经更新",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "地址"
+    ],
+    "why": "di|zhi",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A04",
+    "text": "请确认医院",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医院"
+    ],
+    "why": "yi|yuan → 医院/议员",
+    "syllableCount": 5,
+    "windowCount": 15,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A05",
+    "text": "去医院确认一下",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医院"
+    ],
+    "why": "yi|yuan",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A06",
+    "text": "医院就在附近",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医院"
+    ],
+    "why": "yi|yuan",
+    "syllableCount": 6,
+    "windowCount": 20,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A07",
+    "text": "请确认医师",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医师"
+    ],
+    "why": "yi|shi → 医师/议室",
+    "syllableCount": 5,
+    "windowCount": 15,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A08",
+    "text": "需要一位医师",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医师"
+    ],
+    "why": "yi|shi",
+    "syllableCount": 6,
+    "windowCount": 20,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A09",
+    "text": "医师已经到了",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "医师"
+    ],
+    "why": "yi|shi",
+    "syllableCount": 6,
+    "windowCount": 20,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A10",
+    "text": "地质结构需要检查",
+    "groups": [
+      "A",
+      "G"
+    ],
+    "expectedTerms": [
+      "地质"
+    ],
+    "why": "di|zhi in 地质 context",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "地质",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "地质",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A11",
+    "text": "我要一杯低脂牛奶",
+    "groups": [
+      "A",
+      "G"
+    ],
+    "expectedTerms": [
+      "低脂"
+    ],
+    "why": "di|zhi in 低脂 context",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "低脂",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "低脂",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "A12",
+    "text": "议员出席会议",
+    "groups": [
+      "A"
+    ],
+    "expectedTerms": [
+      "议员"
+    ],
+    "why": "yi|yuan alternate surface",
+    "syllableCount": 6,
+    "windowCount": 20,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "议员",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "议员",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B01",
+    "text": "请确认地址和医院",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院"
+    ],
+    "why": "dual di|zhi × yi|yuan",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B02",
+    "text": "请确认地址和医师",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医师"
+    ],
+    "why": "dual di|zhi × yi|shi",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B03",
+    "text": "请确认医院和医师",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "医院",
+      "医师"
+    ],
+    "why": "dual yi|yuan × yi|shi",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B04",
+    "text": "客户地址和医院都要",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院"
+    ],
+    "why": "dual",
+    "syllableCount": 9,
+    "windowCount": 35,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B05",
+    "text": "新地址靠近医院",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院"
+    ],
+    "why": "dual",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B06",
+    "text": "请把地址发给医师",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医师"
+    ],
+    "why": "dual",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B07",
+    "text": "医院地址请确认",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "医院",
+      "地址"
+    ],
+    "why": "dual order swap",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B08",
+    "text": "医师确认了地址",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "医师",
+      "地址"
+    ],
+    "why": "dual",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B09",
+    "text": "医院和医师都已到位",
+    "groups": [
+      "B",
+      "D"
+    ],
+    "expectedTerms": [
+      "医院",
+      "医师"
+    ],
+    "why": "dual",
+    "syllableCount": 9,
+    "windowCount": 35,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "B10",
+    "text": "请核对地址、医院信息",
+    "groups": [
+      "B"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院"
+    ],
+    "why": "dual with punct",
+    "syllableCount": 9,
+    "windowCount": 35,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 4,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "C01",
+    "text": "请确认地址、医院和医师",
+    "groups": [
+      "C"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院",
+      "医师"
+    ],
+    "why": "triple pot up to 2×2×2=8",
+    "syllableCount": 10,
+    "windowCount": 40,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "8:10",
+        "syllableStart": 8,
+        "syllableEnd": 10,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "8:10",
+        "syllableStart": 8,
+        "syllableEnd": 10,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 8,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": true,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "C02",
+    "text": "地址医院医师请一并确认",
+    "groups": [
+      "C"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院",
+      "医师"
+    ],
+    "why": "triple compact",
+    "syllableCount": 11,
+    "windowCount": 45,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 8,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": true,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "C03",
+    "text": "请把地址发给医院的医师",
+    "groups": [
+      "C"
+    ],
+    "expectedTerms": [
+      "地址",
+      "医院",
+      "医师"
+    ],
+    "why": "triple embedded",
+    "syllableCount": 11,
+    "windowCount": 45,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "9:11",
+        "syllableStart": 9,
+        "syllableEnd": 11,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "9:11",
+        "syllableStart": 9,
+        "syllableEnd": 11,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 8,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": true,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "C04",
+    "text": "医师在医院核对地址",
+    "groups": [
+      "C"
+    ],
+    "expectedTerms": [
+      "医师",
+      "医院",
+      "地址"
+    ],
+    "why": "triple reorder",
+    "syllableCount": 9,
+    "windowCount": 35,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "7:9",
+        "syllableStart": 7,
+        "syllableEnd": 9,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "7:9",
+        "syllableStart": 7,
+        "syllableEnd": 9,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 8,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": true,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "C05",
+    "text": "请确认医院地址和医师安排",
+    "groups": [
+      "C"
+    ],
+    "expectedTerms": [
+      "医院",
+      "地址",
+      "医师"
+    ],
+    "why": "triple",
+    "syllableCount": 12,
+    "windowCount": 50,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "8:10",
+        "syllableStart": 8,
+        "syllableEnd": 10,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "text": "医院",
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "identityCount": 3
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      },
+      {
+        "windowId": "8:10",
+        "syllableStart": 8,
+        "syllableEnd": 10,
+        "text": "医师",
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "identityCount": 3
+      }
+    ],
+    "expectedCombinationPotential": 8,
+    "targetTriggered": true,
+    "dualTriggered": true,
+    "tripleTriggered": true,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "D01",
+    "text": "请确认少糖去冰大杯",
+    "groups": [
+      "D"
+    ],
+    "expectedTerms": [
+      "少糖",
+      "去冰",
+      "大杯"
+    ],
+    "why": "multi-domain coffee tags (same-surface multi-identity)",
+    "syllableCount": 9,
+    "windowCount": 35,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "D02",
+    "text": "我想堂食还是带走",
+    "groups": [
+      "D"
+    ],
+    "expectedTerms": [
+      "堂食",
+      "带走"
+    ],
+    "why": "4-domain tags",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "D03",
+    "text": "前台正在确认预订",
+    "groups": [
+      "D"
+    ],
+    "expectedTerms": [
+      "前台",
+      "预订"
+    ],
+    "why": "预订 multi-domain",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "D04",
+    "text": "大杯和小杯都要重新下单",
+    "groups": [
+      "D",
+      "F"
+    ],
+    "expectedTerms": [
+      "大杯",
+      "小杯"
+    ],
+    "why": "cup size multi-domain",
+    "syllableCount": 11,
+    "windowCount": 45,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "D05",
+    "text": "请确认菜单和打包",
+    "groups": [
+      "D"
+    ],
+    "expectedTerms": [
+      "菜单",
+      "打包"
+    ],
+    "why": "food multi-domain",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "E01",
+    "text": "请确认上线计划",
+    "groups": [
+      "E"
+    ],
+    "expectedTerms": [
+      "上线",
+      "计划",
+      "上线计划"
+    ],
+    "why": "overlap path windows",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "E02",
+    "text": "请检查接口文档",
+    "groups": [
+      "E"
+    ],
+    "expectedTerms": [
+      "接口",
+      "文档",
+      "接口文档"
+    ],
+    "why": "overlap",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "E03",
+    "text": "帮我修改预订信息",
+    "groups": [
+      "E"
+    ],
+    "expectedTerms": [
+      "预订",
+      "信息"
+    ],
+    "why": "overlap",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "E04",
+    "text": "大杯拿铁已经下单",
+    "groups": [
+      "E"
+    ],
+    "expectedTerms": [
+      "大杯",
+      "拿铁"
+    ],
+    "why": "overlap + cafe",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "E05",
+    "text": "请确认房间预订",
+    "groups": [
+      "E"
+    ],
+    "expectedTerms": [
+      "房间",
+      "预订"
+    ],
+    "why": "adjacent/overlap",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "F01",
+    "text": "请确认新的地址",
+    "groups": [
+      "F"
+    ],
+    "expectedTerms": [
+      "地址"
+    ],
+    "why": "raw-correct + di|zhi alts",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "text": "地址",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "F02",
+    "text": "我想预订一个房间",
+    "groups": [
+      "F"
+    ],
+    "expectedTerms": [
+      "预订",
+      "房间"
+    ],
+    "why": "raw-correct multi-domain",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "F03",
+    "text": "帮我准备一杯大杯拿铁",
+    "groups": [
+      "F"
+    ],
+    "expectedTerms": [
+      "大杯",
+      "拿铁"
+    ],
+    "why": "raw-correct cafe",
+    "syllableCount": 10,
+    "windowCount": 40,
+    "surfaceDistinctRecallByWindow": [],
+    "eligibleMultiCandidateSpans": [],
+    "expectedCombinationPotential": 0,
+    "targetTriggered": false,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TARGET_NOT_TRIGGERED"
+  },
+  {
+    "caseId": "G01",
+    "text": "请把地质报告发给经理",
+    "groups": [
+      "G"
+    ],
+    "expectedTerms": [
+      "地质"
+    ],
+    "why": "noise/context di|zhi",
+    "syllableCount": 10,
+    "windowCount": 40,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地质",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "text": "地质",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "G02",
+    "text": "我要一杯低脂拿铁",
+    "groups": [
+      "G"
+    ],
+    "expectedTerms": [
+      "低脂",
+      "拿铁"
+    ],
+    "why": "低脂 context",
+    "syllableCount": 8,
+    "windowCount": 30,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "低脂",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "text": "低脂",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  },
+  {
+    "caseId": "G03",
+    "text": "请抵制不良信息",
+    "groups": [
+      "G"
+    ],
+    "expectedTerms": [
+      "抵制"
+    ],
+    "why": "di|zhi alternate 抵制 if recalled",
+    "syllableCount": 7,
+    "windowCount": 25,
+    "surfaceDistinctRecallByWindow": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "抵制",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "eligibleMultiCandidateSpans": [
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "text": "抵制",
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "identityCount": 2
+      }
+    ],
+    "expectedCombinationPotential": 2,
+    "targetTriggered": true,
+    "dualTriggered": false,
+    "tripleTriggered": false,
+    "status": "TRIGGERED"
+  }
+]

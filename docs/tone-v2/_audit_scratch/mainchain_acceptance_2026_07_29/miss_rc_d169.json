@@ -1,0 +1,37 @@
+{
+  "id": "d169",
+  "raw": "我想,开通短信提醒需要带什么证件",
+  "asrToneSliceCount": 12,
+  "diagToneSliceCount": 12,
+  "wordTimeSpanBuilt": 12,
+  "wordTimeSpanMapped": 12,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 1,
+    "miss": 0,
+    "overlapMiss": 0,
+    "overlapMismatch": 0,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "证件",
+      "pinyinKey": "zheng|jian",
+      "result": "HIT",
+      "fail": null
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 15,
+    "theoreticalWindows2to5": 50,
+    "theoreticalWindows1to5": 65
+  },
+  "summary": {
+    "spanCount": 9,
+    "candidateCount": 9
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

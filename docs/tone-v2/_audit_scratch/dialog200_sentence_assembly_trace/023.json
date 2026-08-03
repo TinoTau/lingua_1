@@ -1,0 +1,1978 @@
+{
+  "caseId": "d023",
+  "fileNum": "023",
+  "rawText": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+  "scenario": "customer_service",
+  "retainedDomains": [
+    "coffee",
+    "food_order",
+    "milk_tea",
+    "tourism_route"
+  ],
+  "domainScores": {
+    "coffee": 1,
+    "tourism_route": 1,
+    "food_order": 1,
+    "milk_tea": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "想",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "改",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "改"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "一",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "下",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "收",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "收"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "货",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "货"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "地址",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:6",
+          "sameDomain": [
+            "低脂"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "低脂",
+            "地址"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "还",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "还"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "来",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "来"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "得",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "得"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "及",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "及"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "吗",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "麻",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "麻"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "烦",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "尽",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "尽"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "快",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "快"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "处理",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "想"
+        ],
+        [
+          "改"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "收"
+        ],
+        [
+          "货"
+        ],
+        [
+          "低脂",
+          "地址"
+        ],
+        [
+          "还"
+        ],
+        [
+          "来"
+        ],
+        [
+          "得"
+        ],
+        [
+          "及"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "麻"
+        ],
+        [
+          "烦"
+        ],
+        [
+          "尽"
+        ],
+        [
+          "快"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "谢"
+        ],
+        [
+          "谢"
+        ]
+      ],
+      "assemblyTexts": [
+        "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+        "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+      ]
+    },
+    {
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "domainId": "food_order",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "想",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "改",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "改"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "一",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "下",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "收",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "收"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "货",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "货"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "地址",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "地址"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "还",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "还"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "来",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "来"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "得",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "得"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "及",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "及"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "吗",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "麻",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "麻"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "烦",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "尽",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "尽"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "快",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "快"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "处理",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:16",
+          "sameDomain": [
+            "处理"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "想"
+        ],
+        [
+          "改"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "收"
+        ],
+        [
+          "货"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "还"
+        ],
+        [
+          "来"
+        ],
+        [
+          "得"
+        ],
+        [
+          "及"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "麻"
+        ],
+        [
+          "烦"
+        ],
+        [
+          "尽"
+        ],
+        [
+          "快"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "谢"
+        ],
+        [
+          "谢"
+        ]
+      ],
+      "assemblyTexts": [
+        "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+      ]
+    },
+    {
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "domainId": "milk_tea",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "想",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "改",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "改"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "一",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "下",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "收",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "收"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "货",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "货"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "地址",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "地址"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "还",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "还"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "来",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "来"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "得",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "得"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "及",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "及"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "吗",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "麻",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "麻"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "烦",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "尽",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "尽"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "快",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "快"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "处理",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:16",
+          "sameDomain": [
+            "处理"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "想"
+        ],
+        [
+          "改"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "收"
+        ],
+        [
+          "货"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "还"
+        ],
+        [
+          "来"
+        ],
+        [
+          "得"
+        ],
+        [
+          "及"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "麻"
+        ],
+        [
+          "烦"
+        ],
+        [
+          "尽"
+        ],
+        [
+          "快"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "谢"
+        ],
+        [
+          "谢"
+        ]
+      ],
+      "assemblyTexts": [
+        "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+      ]
+    },
+    {
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "domainId": "tourism_route",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "想",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "改",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "改"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "一",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "下",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "收",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "收"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "货",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "货"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "地址",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:6",
+          "sameDomain": [
+            "地质"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "地质",
+            "地址"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "还",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "还"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "来",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "来"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "得",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "得"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "及",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "及"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "吗",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "麻",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "麻"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "烦",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "尽",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "尽"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "快",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "快"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "处理",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "谢",
+          "fineSpanId": "fine:3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "想"
+        ],
+        [
+          "改"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "收"
+        ],
+        [
+          "货"
+        ],
+        [
+          "地质",
+          "地址"
+        ],
+        [
+          "还"
+        ],
+        [
+          "来"
+        ],
+        [
+          "得"
+        ],
+        [
+          "及"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "麻"
+        ],
+        [
+          "烦"
+        ],
+        [
+          "尽"
+        ],
+        [
+          "快"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "谢"
+        ],
+        [
+          "谢"
+        ]
+      ],
+      "assemblyTexts": [
+        "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。",
+        "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+      "replacements": [
+        {
+          "span": {
+            "text": "地址",
+            "start": 6,
+            "end": 8
+          },
+          "word": "低脂",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "想",
+            "start": 0,
+            "end": 1
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "改",
+            "start": 1,
+            "end": 2
+          },
+          "word": "改",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 2,
+            "end": 3
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "收",
+            "start": 4,
+            "end": 5
+          },
+          "word": "收",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "货",
+            "start": 5,
+            "end": 6
+          },
+          "word": "货",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "还",
+            "start": 9,
+            "end": 10
+          },
+          "word": "还",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "来",
+            "start": 10,
+            "end": 11
+          },
+          "word": "来",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "得",
+            "start": 11,
+            "end": 12
+          },
+          "word": "得",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "及",
+            "start": 12,
+            "end": 13
+          },
+          "word": "及",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 13,
+            "end": 14
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "麻",
+            "start": 15,
+            "end": 16
+          },
+          "word": "麻",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "烦",
+            "start": 16,
+            "end": 17
+          },
+          "word": "烦",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "尽",
+            "start": 17,
+            "end": 18
+          },
+          "word": "尽",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "快",
+            "start": 18,
+            "end": 19
+          },
+          "word": "快",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "处理",
+            "start": 19,
+            "end": 21
+          },
+          "word": "处理",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 22,
+            "end": 23
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 23,
+            "end": 24
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    },
+    {
+      "text": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "replacements": [
+        {
+          "span": {
+            "text": "想",
+            "start": 0,
+            "end": 1
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "改",
+            "start": 1,
+            "end": 2
+          },
+          "word": "改",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 2,
+            "end": 3
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "收",
+            "start": 4,
+            "end": 5
+          },
+          "word": "收",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "货",
+            "start": 5,
+            "end": 6
+          },
+          "word": "货",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "地址",
+            "start": 6,
+            "end": 8
+          },
+          "word": "地址",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "还",
+            "start": 9,
+            "end": 10
+          },
+          "word": "还",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "来",
+            "start": 10,
+            "end": 11
+          },
+          "word": "来",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "得",
+            "start": 11,
+            "end": 12
+          },
+          "word": "得",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "及",
+            "start": 12,
+            "end": 13
+          },
+          "word": "及",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 13,
+            "end": 14
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "麻",
+            "start": 15,
+            "end": 16
+          },
+          "word": "麻",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "烦",
+            "start": 16,
+            "end": 17
+          },
+          "word": "烦",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "尽",
+            "start": 17,
+            "end": 18
+          },
+          "word": "尽",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "快",
+            "start": 18,
+            "end": 19
+          },
+          "word": "快",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "处理",
+            "start": 19,
+            "end": 21
+          },
+          "word": "处理",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 22,
+            "end": 23
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 23,
+            "end": 24
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 0
+    },
+    {
+      "text": "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。",
+      "replacements": [
+        {
+          "span": {
+            "text": "地址",
+            "start": 6,
+            "end": 8
+          },
+          "word": "地质",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "想",
+            "start": 0,
+            "end": 1
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "改",
+            "start": 1,
+            "end": 2
+          },
+          "word": "改",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 2,
+            "end": 3
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 3,
+            "end": 4
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "收",
+            "start": 4,
+            "end": 5
+          },
+          "word": "收",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "货",
+            "start": 5,
+            "end": 6
+          },
+          "word": "货",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "还",
+            "start": 9,
+            "end": 10
+          },
+          "word": "还",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "来",
+            "start": 10,
+            "end": 11
+          },
+          "word": "来",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "得",
+            "start": 11,
+            "end": 12
+          },
+          "word": "得",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "及",
+            "start": 12,
+            "end": 13
+          },
+          "word": "及",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 13,
+            "end": 14
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "麻",
+            "start": 15,
+            "end": 16
+          },
+          "word": "麻",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "烦",
+            "start": 16,
+            "end": 17
+          },
+          "word": "烦",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "尽",
+            "start": 17,
+            "end": 18
+          },
+          "word": "尽",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "快",
+            "start": 18,
+            "end": 19
+          },
+          "word": "快",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "处理",
+            "start": 19,
+            "end": 21
+          },
+          "word": "处理",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 22,
+            "end": 23
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 23,
+            "end": 24
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    }
+  ],
+  "kenlmInputTexts": [
+    "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+    "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": true,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。"
+    ],
+    "actual": [
+      "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

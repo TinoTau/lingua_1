@@ -1,0 +1,595 @@
+{
+  "utteranceId": "d055",
+  "rawText": "醫生您好我這兩天嗓子疼想開電要並做各些常規",
+  "expectedText": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 21,
+    "asr_word_timestamp_valid_count": 21,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 0,
+    "first_word_start": 0,
+    "last_word_end": 4.68,
+    "audioDurationSec": 4.9574375
+  },
+  "slices": {
+    "total_tone_slice_count": 21,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 0,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.3,
+        "tone": 1,
+        "confidence": 0.9480413198471069,
+        "posterior": {
+          "t1": 0.9480413198471069,
+          "t2": 0.00011626160994637758,
+          "t3": 0.00022479213657788932,
+          "t4": 0.05161285027861595,
+          "t5": 0.000004691929007094586
+        }
+      },
+      {
+        "start": 0.3,
+        "end": 0.44,
+        "tone": 4,
+        "confidence": 0.6264253854751587,
+        "posterior": {
+          "t1": 0.0003640330978669226,
+          "t2": 0.051680561155080795,
+          "t3": 0.30694088339805603,
+          "t4": 0.6264253854751587,
+          "t5": 0.014589152298867702
+        }
+      },
+      {
+        "start": 0.44,
+        "end": 0.74,
+        "tone": 2,
+        "confidence": 0.9060201048851013,
+        "posterior": {
+          "t1": 0.000014055661267775577,
+          "t2": 0.9060201048851013,
+          "t3": 0.09379194676876068,
+          "t4": 0.00015467872435692698,
+          "t5": 0.00001922865521919448
+        }
+      },
+      {
+        "start": 0.74,
+        "end": 0.96,
+        "tone": 3,
+        "confidence": 0.8987751007080078,
+        "posterior": {
+          "t1": 0.0028030434623360634,
+          "t2": 0.018508927896618843,
+          "t3": 0.8987751007080078,
+          "t4": 0.07956837862730026,
+          "t5": 0.00034449034137651324
+        }
+      },
+      {
+        "start": 0.96,
+        "end": 1.32,
+        "tone": 4,
+        "confidence": 0.8479282855987549,
+        "posterior": {
+          "t1": 0.04716239124536514,
+          "t2": 0.04612075909972191,
+          "t3": 0.05055792257189751,
+          "t4": 0.8479282855987549,
+          "t5": 0.008230657316744328
+        }
+      },
+      {
+        "start": 1.32,
+        "end": 1.52,
+        "tone": 3,
+        "confidence": 0.8555944561958313,
+        "posterior": {
+          "t1": 0.00010717033001128584,
+          "t2": 0.01655995100736618,
+          "t3": 0.8555944561958313,
+          "t4": 0.12763214111328125,
+          "t5": 0.00010634636419126764
+        }
+      },
+      {
+        "start": 1.52,
+        "end": 1.74,
+        "tone": 1,
+        "confidence": 0.5102519392967224,
+        "posterior": {
+          "t1": 0.5102519392967224,
+          "t2": 0.07476279884576797,
+          "t3": 0.2493555098772049,
+          "t4": 0.1582689881324768,
+          "t5": 0.007360777352005243
+        }
+      },
+      {
+        "start": 1.74,
+        "end": 1.92,
+        "tone": 2,
+        "confidence": 0.5352886915206909,
+        "posterior": {
+          "t1": 0.449235200881958,
+          "t2": 0.5352886915206909,
+          "t3": 0.011381033807992935,
+          "t4": 0.003699669847264886,
+          "t5": 0.0003953578707296401
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 21,
+    "skipped": 0,
+    "multi_char_token_count": 0,
+    "single_char_token_count": 21,
+    "samplePairs": [
+      {
+        "rawWord": "醫",
+        "rawRange": [
+          0,
+          1
+        ],
+        "charLen": 1,
+        "wordStart": 0,
+        "wordEnd": 0.3,
+        "toneSlice": {
+          "start": 0,
+          "end": 0.3,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "生",
+        "rawRange": [
+          1,
+          2
+        ],
+        "charLen": 1,
+        "wordStart": 0.3,
+        "wordEnd": 0.44,
+        "toneSlice": {
+          "start": 0.3,
+          "end": 0.44,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "您",
+        "rawRange": [
+          2,
+          3
+        ],
+        "charLen": 1,
+        "wordStart": 0.44,
+        "wordEnd": 0.74,
+        "toneSlice": {
+          "start": 0.44,
+          "end": 0.74,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "好",
+        "rawRange": [
+          3,
+          4
+        ],
+        "charLen": 1,
+        "wordStart": 0.74,
+        "wordEnd": 0.96,
+        "toneSlice": {
+          "start": 0.74,
+          "end": 0.96,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "我",
+        "rawRange": [
+          4,
+          5
+        ],
+        "charLen": 1,
+        "wordStart": 0.96,
+        "wordEnd": 1.32,
+        "toneSlice": {
+          "start": 0.96,
+          "end": 1.32,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "這",
+        "rawRange": [
+          5,
+          6
+        ],
+        "charLen": 1,
+        "wordStart": 1.32,
+        "wordEnd": 1.52,
+        "toneSlice": {
+          "start": 1.32,
+          "end": 1.52,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "兩",
+        "rawRange": [
+          6,
+          7
+        ],
+        "charLen": 1,
+        "wordStart": 1.52,
+        "wordEnd": 1.74,
+        "toneSlice": {
+          "start": 1.52,
+          "end": 1.74,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "天",
+        "rawRange": [
+          7,
+          8
+        ],
+        "charLen": 1,
+        "wordStart": 1.74,
+        "wordEnd": 1.92,
+        "toneSlice": {
+          "start": 1.74,
+          "end": 1.92,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "嗓",
+        "rawRange": [
+          8,
+          9
+        ],
+        "charLen": 1,
+        "wordStart": 1.92,
+        "wordEnd": 2.12,
+        "toneSlice": {
+          "start": 1.92,
+          "end": 2.12,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "子",
+        "rawRange": [
+          9,
+          10
+        ],
+        "charLen": 1,
+        "wordStart": 2.12,
+        "wordEnd": 2.28,
+        "toneSlice": {
+          "start": 2.12,
+          "end": 2.28,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "疼",
+        "rawRange": [
+          10,
+          11
+        ],
+        "charLen": 1,
+        "wordStart": 2.28,
+        "wordEnd": 2.5,
+        "toneSlice": {
+          "start": 2.28,
+          "end": 2.5,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "想",
+        "rawRange": [
+          11,
+          12
+        ],
+        "charLen": 1,
+        "wordStart": 2.5,
+        "wordEnd": 2.68,
+        "toneSlice": {
+          "start": 2.5,
+          "end": 2.68,
+          "tone": 3
+        }
+      }
+    ],
+    "spans": [
+      {
+        "word": "醫",
+        "rawStart": 0,
+        "rawEnd": 1,
+        "start": 0,
+        "end": 0.3,
+        "segmentIndex": 0,
+        "probability": 0.1826171875
+      },
+      {
+        "word": "生",
+        "rawStart": 1,
+        "rawEnd": 2,
+        "start": 0.3,
+        "end": 0.44,
+        "segmentIndex": 0,
+        "probability": 0.99755859375
+      },
+      {
+        "word": "您",
+        "rawStart": 2,
+        "rawEnd": 3,
+        "start": 0.44,
+        "end": 0.74,
+        "segmentIndex": 0,
+        "probability": 0.8388671875
+      },
+      {
+        "word": "好",
+        "rawStart": 3,
+        "rawEnd": 4,
+        "start": 0.74,
+        "end": 0.96,
+        "segmentIndex": 0,
+        "probability": 0.99951171875
+      },
+      {
+        "word": "我",
+        "rawStart": 4,
+        "rawEnd": 5,
+        "start": 0.96,
+        "end": 1.32,
+        "segmentIndex": 0,
+        "probability": 0.80517578125
+      },
+      {
+        "word": "這",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "start": 1.32,
+        "end": 1.52,
+        "segmentIndex": 0,
+        "probability": 0.74658203125
+      },
+      {
+        "word": "兩",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "start": 1.52,
+        "end": 1.74,
+        "segmentIndex": 0,
+        "probability": 0.9853515625
+      },
+      {
+        "word": "天",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "start": 1.74,
+        "end": 1.92,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "嗓",
+        "rawStart": 8,
+        "rawEnd": 9,
+        "start": 1.92,
+        "end": 2.12,
+        "segmentIndex": 0,
+        "probability": 0.970947265625
+      },
+      {
+        "word": "子",
+        "rawStart": 9,
+        "rawEnd": 10,
+        "start": 2.12,
+        "end": 2.28,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "疼",
+        "rawStart": 10,
+        "rawEnd": 11,
+        "start": 2.28,
+        "end": 2.5,
+        "segmentIndex": 0,
+        "probability": 0.984375
+      },
+      {
+        "word": "想",
+        "rawStart": 11,
+        "rawEnd": 12,
+        "start": 2.5,
+        "end": 2.68,
+        "segmentIndex": 0,
+        "probability": 0.87939453125
+      },
+      {
+        "word": "開",
+        "rawStart": 12,
+        "rawEnd": 13,
+        "start": 2.68,
+        "end": 2.96,
+        "segmentIndex": 0,
+        "probability": 0.9970703125
+      },
+      {
+        "word": "電",
+        "rawStart": 13,
+        "rawEnd": 14,
+        "start": 2.96,
+        "end": 3.24,
+        "segmentIndex": 0,
+        "probability": 0.386962890625
+      },
+      {
+        "word": "要",
+        "rawStart": 14,
+        "rawEnd": 15,
+        "start": 3.24,
+        "end": 3.56,
+        "segmentIndex": 0,
+        "probability": 0.763671875
+      },
+      {
+        "word": "並",
+        "rawStart": 15,
+        "rawEnd": 16,
+        "start": 3.56,
+        "end": 3.72,
+        "segmentIndex": 0,
+        "probability": 0.49560546875
+      },
+      {
+        "word": "做",
+        "rawStart": 16,
+        "rawEnd": 17,
+        "start": 3.72,
+        "end": 3.98,
+        "segmentIndex": 0,
+        "probability": 0.95263671875
+      },
+      {
+        "word": "各",
+        "rawStart": 17,
+        "rawEnd": 18,
+        "start": 3.98,
+        "end": 4.12,
+        "segmentIndex": 0,
+        "probability": 0.70849609375
+      },
+      {
+        "word": "些",
+        "rawStart": 18,
+        "rawEnd": 19,
+        "start": 4.12,
+        "end": 4.32,
+        "segmentIndex": 0,
+        "probability": 0.98779296875
+      },
+      {
+        "word": "常",
+        "rawStart": 19,
+        "rawEnd": 20,
+        "start": 4.32,
+        "end": 4.56,
+        "segmentIndex": 0,
+        "probability": 0.97021484375
+      },
+      {
+        "word": "規",
+        "rawStart": 20,
+        "rawEnd": 21,
+        "start": 4.56,
+        "end": 4.68,
+        "segmentIndex": 0,
+        "probability": 0.999755859375
+      }
+    ]
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 95,
+    "tone_ready_count": 95,
+    "tone_no_pattern_count": 0,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 95,
+    "pattern_ok_count": 95,
+    "char_eq_syl_count": 95,
+    "overlap_eq_char_count": 95,
+    "overlap_eq_syl_count": 95
+  },
+  "byLen": {
+    "1": {
+      "windows": 21,
+      "ready": 21,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 21,
+      "overlap_eq_char": 21,
+      "overlap_eq_syl": 21,
+      "time_range_ok": 21,
+      "pattern_ok": 21
+    },
+    "2": {
+      "windows": 20,
+      "ready": 20,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 20,
+      "overlap_eq_char": 20,
+      "overlap_eq_syl": 20,
+      "time_range_ok": 20,
+      "pattern_ok": 20
+    },
+    "3": {
+      "windows": 19,
+      "ready": 19,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 19,
+      "overlap_eq_char": 19,
+      "overlap_eq_syl": 19,
+      "time_range_ok": 19,
+      "pattern_ok": 19
+    },
+    "4": {
+      "windows": 18,
+      "ready": 18,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 18,
+      "overlap_eq_char": 18,
+      "overlap_eq_syl": 18,
+      "time_range_ok": 18,
+      "pattern_ok": 18
+    },
+    "5": {
+      "windows": 17,
+      "ready": 17,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 17,
+      "overlap_eq_char": 17,
+      "overlap_eq_syl": 17,
+      "time_range_ok": 17,
+      "pattern_ok": 17
+    }
+  },
+  "failureSamples": [],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

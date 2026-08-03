@@ -163,18 +163,13 @@ def update_segments_after_deduplication(
     deduplicated_text: str
 ) -> List[SegmentInfo]:
     """
-    在去重后，重新生成 segments_info（使用去重后的文本）
-    
-    Args:
-        segments_info: 原始segments信息
-        full_text: 原始文本
-        deduplicated_text: 去重后的文本
-    
-    Returns:
-        更新后的segments信息
+    After optional text dedup, keep segment metadata.
+
+    Word Timestamp SSOT = FW WordInfo. Production uses skip_text_dedup=true;
+    never silently drop words=None (Batch B).
     """
     if segments_info and deduplicated_text != full_text:
-        # Dedup changed text — keep segment-level metadata, drop word alignment.
+        # Dedup changed text — preserve word timestamps (do not destroy alignment).
         first = segments_info[0]
         last = segments_info[-1]
         avg_vals = [s.avg_logprob for s in segments_info if s.avg_logprob is not None]
@@ -183,6 +178,10 @@ def update_segments_after_deduplication(
             s.compression_ratio for s in segments_info if s.compression_ratio is not None
         ]
         compression_ratio = compression_vals[0] if compression_vals else first.compression_ratio
+        preserved_words = []
+        for seg in segments_info:
+            if getattr(seg, "words", None):
+                preserved_words.extend(seg.words)
         segments_info = [
             SegmentInfo(
                 text=deduplicated_text,
@@ -191,7 +190,7 @@ def update_segments_after_deduplication(
                 no_speech_prob=first.no_speech_prob,
                 avg_logprob=avg_logprob,
                 compression_ratio=compression_ratio,
-                words=None,
+                words=preserved_words if preserved_words else first.words,
             )
         ]
     elif not segments_info and deduplicated_text:

@@ -1,0 +1,225 @@
+{
+  "caseId": "A01",
+  "rawText": "请确认地址",
+  "windowCount": 15,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "3:5",
+      "syllableStart": 3,
+      "syllableEnd": 5,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认地址"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认地址",
+      "sourcePathId": "f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        }
+      ],
+      "dedupKey": "请确认地址",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认地址",
+      "sourcePathId": "f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        }
+      ],
+      "dedupKey": "请确认地址",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 15,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 15,
+    "lexicalEdgeCount": 1,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 4,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 15,
+    "sqlQueryCount": 2,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A",
+    "F"
+  ],
+  "why": "di|zhi → 低脂/地质 (runtime)",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 19.74650001525879,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

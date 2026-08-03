@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-07-29T01:21:35.631Z",
+  "port": 5020,
+  "projectRoot": "D:\\Programs\\github\\lingua_1",
+  "limit": 200,
+  "summary": {
+    "total": 200,
+    "success": 200,
+    "failure": 0,
+    "fw_triggered": 200,
+    "nmt_nonempty": 0,
+    "tone": {
+      "totalPatternAttempt": 288,
+      "totalPatternHit": 216,
+      "totalPatternMiss": 72,
+      "evidenceCoverage": 0.75,
+      "totalToneExactHit": 16,
+      "totalPlainFallback": 0,
+      "avgSliceCount": 15.885,
+      "avgWordTimeSpanCount": 20.72,
+      "skipReasons": {
+        "none": 200
+      }
+    },
+    "candidates": {
+      "total": 2513,
+      "withTone": 0,
+      "withoutTone": 2513,
+      "avgPerCase": 12.565
+    },
+    "kenlm": {
+      "totalQuery": 520,
+      "totalApproved": 0,
+      "avgQueryPerCase": 2.6
+    },
+    "avgPipelineMs": 6089.965
+  },
+  "failures": [],
+  "traceIds": [
+    "d001",
+    "d004",
+    "d005",
+    "d007",
+    "d013",
+    "d015",
+    "d019",
+    "d020",
+    "d021",
+    "d022",
+    "d025",
+    "d027",
+    "d031",
+    "d037",
+    "d038",
+    "d041",
+    "d043",
+    "d044",
+    "d049",
+    "d055",
+    "d061",
+    "d067",
+    "d073",
+    "d079",
+    "d085",
+    "d091",
+    "d097",
+    "d103",
+    "d109",
+    "d115"
+  ]
+}

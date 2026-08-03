@@ -1,0 +1,144 @@
+{
+  "caseId": "B09",
+  "rawText": "医院和医师都已到位",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医院"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "都"
+        ],
+        [
+          "已"
+        ],
+        [
+          "到"
+        ],
+        [
+          "位"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "医院和医师都已到位"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        2,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "议员",
+          "医院"
+        ],
+        [
+          "和"
+        ],
+        [
+          "议室",
+          "医师"
+        ],
+        [
+          "都"
+        ],
+        [
+          "已"
+        ],
+        [
+          "到"
+        ],
+        [
+          "位"
+        ]
+      ],
+      "theoretical": 4,
+      "generated": 4,
+      "distinct": 4,
+      "texts": [
+        "议员和议室都已到位",
+        "医院和议室都已到位",
+        "议员和医师都已到位",
+        "医院和医师都已到位"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 4,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "医院和医师都已到位",
+    "议员和议室都已到位",
+    "医院和议室都已到位",
+    "议员和医师都已到位"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "医院和医师都已到位",
+    "议员和议室都已到位",
+    "医院和议室都已到位",
+    "议员和医师都已到位"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 48.626999855041504,
+  "groups": [
+    "B",
+    "D"
+  ],
+  "why": "dual",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "医院和医师都已到位",
+      "议员和议室都已到位",
+      "医院和议室都已到位",
+      "议员和医师都已到位"
+    ]
+  }
+}

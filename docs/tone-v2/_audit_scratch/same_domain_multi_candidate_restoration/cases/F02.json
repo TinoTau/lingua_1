@@ -1,0 +1,240 @@
+{
+  "caseId": "F02",
+  "rawText": "我想预订一个房间",
+  "retainedDomains": [
+    "food_order",
+    "medical",
+    "tourism_hotel",
+    "tourism_route",
+    "transport"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "一"
+        ],
+        [
+          "个"
+        ],
+        [
+          "房间"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想预订一个房间"
+      ]
+    },
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "一"
+        ],
+        [
+          "个"
+        ],
+        [
+          "方笺",
+          "房间"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "我想预订一个方笺",
+        "我想预订一个房间"
+      ]
+    },
+    {
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "一"
+        ],
+        [
+          "个"
+        ],
+        [
+          "房间"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想预订一个房间"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "一"
+        ],
+        [
+          "个"
+        ],
+        [
+          "房间"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想预订一个房间"
+      ]
+    },
+    {
+      "domainId": "transport",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "一"
+        ],
+        [
+          "个"
+        ],
+        [
+          "房间"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想预订一个房间"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "我想预订一个房间",
+    "我想预订一个方笺"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "我想预订一个房间",
+    "我想预订一个方笺"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 27.587700128555298,
+  "groups": [
+    "F"
+  ],
+  "why": "raw-correct multi-domain",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "我想预订一个房间",
+      "我想预订一个方笺"
+    ]
+  }
+}

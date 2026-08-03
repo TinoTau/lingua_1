@@ -1,0 +1,72 @@
+{
+  "id": "d146",
+  "raw": "刮号出请问 内刻还有号码 我低哨昨晚开始的",
+  "asrToneSliceCount": 17,
+  "diagToneSliceCount": 17,
+  "wordTimeSpanBuilt": 17,
+  "wordTimeSpanMapped": 17,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "开始",
+      "pinyinKey": "kai|shi",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.6,
+        "end": 4
+      },
+      "replayWindowTime": {
+        "start": 3.6,
+        "end": 4
+      }
+    },
+    {
+      "text": "开始的",
+      "pinyinKey": "kai|shi|de",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2,
+        1
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.6,
+        "end": 4.24
+      },
+      "replayWindowTime": {
+        "start": 3.6,
+        "end": 4.24
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 19,
+    "theoreticalWindows2to5": 66,
+    "theoreticalWindows1to5": 85
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

@@ -1,0 +1,220 @@
+{
+  "id": "d020",
+  "expected": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+  "asr": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+  "raw_asr": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 28,
+    "evidenceProductionCount": 28,
+    "firstSlicePosterior": {
+      "t1": 0.000036184188502375036,
+      "t2": 0.0000015562870885332813,
+      "t3": 0.0000012407660960889189,
+      "t4": 0.9999574422836304,
+      "t5": 0.000003591638460420654
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 28,
+    "wordTimeSpanCount": 28,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 28
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "回归",
+        "pinyinKey": "hui|gui",
+        "windowTimeRange": {
+          "start": 5.24,
+          "end": 5.66
+        },
+        "acousticTonePattern": [
+          3,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16,
+    "candidateSentenceCount": 16,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 16,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "这次发布我们线,对齐商线计划窗口后选生成模块需要连掉别漏掉回归",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 16
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 16
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 3,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+    "allCombinations": [
+      {
+        "sentence": "这次发布我们线,对齐商线计划窗口后选生成模块需要连掉别漏掉回归",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "这次",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "这次",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "发布",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "发布",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我们",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我们",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "线",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "线",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "对其",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "对齐",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "商线",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "商线",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "计划",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "计划",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "窗口",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "窗口",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

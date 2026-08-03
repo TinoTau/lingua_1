@@ -1,0 +1,3536 @@
+{
+  "caseId": "d011",
+  "rawText": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+  "rawTextLength": 24,
+  "syllableCount": 21,
+  "expectedText": null,
+  "sourceManifestEntry": {
+    "id": "d011",
+    "scenario": "hospital",
+    "file": "dialog_d011.wav",
+    "language": "zh"
+  },
+  "coordinate": {
+    "syllableTrace": [
+      {
+        "syllableIndex": 0,
+        "text": "gua",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 1,
+        "text": "hao",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 2,
+        "text": "chu",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 3,
+        "text": "qing",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 4,
+        "text": "wen",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 5,
+        "text": "nei",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 6,
+        "text": "ke",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 7,
+        "text": "hai",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 8,
+        "text": "you",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 9,
+        "text": "hao",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 10,
+        "text": "ma",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 11,
+        "text": "wo",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 12,
+        "text": "wei",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 13,
+        "text": "bu",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 14,
+        "text": "shu",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 15,
+        "text": "fu",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 16,
+        "text": "zuo",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 17,
+        "text": "wan",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 18,
+        "text": "kai",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 19,
+        "text": "shi",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 20,
+        "text": "de",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      }
+    ],
+    "coordinateMappingFailure": 21,
+    "invalidRangeCount": 21,
+    "coverageOk": true
+  },
+  "windows": {
+    "totalWindowCount": 95,
+    "windowLengthDistribution": {
+      "1": 21,
+      "2": 20,
+      "3": 19,
+      "4": 18,
+      "5": 17
+    },
+    "blockedWindowCount": 20,
+    "recallEligibleWindowCount": 75,
+    "windowsPerStartPosition": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 5,
+      "5": 5,
+      "6": 5,
+      "7": 5,
+      "8": 5,
+      "9": 5,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 5,
+      "17": 4,
+      "18": 3,
+      "19": 2,
+      "20": 1
+    },
+    "hasLength1": true,
+    "sample": [
+      {
+        "windowId": "0:1",
+        "syllableStart": 0,
+        "syllableEnd": 1,
+        "windowLength": 1,
+        "textStart": 0,
+        "textEnd": 1,
+        "sourceText": "挂",
+        "pinyin": "gua",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "windowLength": 2,
+        "textStart": 0,
+        "textEnd": 2,
+        "sourceText": "挂号",
+        "pinyin": "gua|hao",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:3",
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "windowLength": 3,
+        "textStart": 0,
+        "textEnd": 3,
+        "sourceText": "挂号处",
+        "pinyin": "gua|hao|chu",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:4",
+        "syllableStart": 0,
+        "syllableEnd": 4,
+        "windowLength": 4,
+        "textStart": 0,
+        "textEnd": 4,
+        "sourceText": "挂号处请",
+        "pinyin": "gua|hao|chu|qing",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:5",
+        "syllableStart": 0,
+        "syllableEnd": 5,
+        "windowLength": 5,
+        "textStart": 0,
+        "textEnd": 5,
+        "sourceText": "挂号处请问",
+        "pinyin": "gua|hao|chu|qing|wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:2",
+        "syllableStart": 1,
+        "syllableEnd": 2,
+        "windowLength": 1,
+        "textStart": 1,
+        "textEnd": 2,
+        "sourceText": "号",
+        "pinyin": "hao",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "windowLength": 2,
+        "textStart": 1,
+        "textEnd": 3,
+        "sourceText": "号处",
+        "pinyin": "hao|chu",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:4",
+        "syllableStart": 1,
+        "syllableEnd": 4,
+        "windowLength": 3,
+        "textStart": 1,
+        "textEnd": 4,
+        "sourceText": "号处请",
+        "pinyin": "hao|chu|qing",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:5",
+        "syllableStart": 1,
+        "syllableEnd": 5,
+        "windowLength": 4,
+        "textStart": 1,
+        "textEnd": 5,
+        "sourceText": "号处请问",
+        "pinyin": "hao|chu|qing|wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:6",
+        "syllableStart": 1,
+        "syllableEnd": 6,
+        "windowLength": 5,
+        "textStart": 1,
+        "textEnd": 6,
+        "sourceText": "号处请问内",
+        "pinyin": "hao|chu|qing|wen|nei",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:3",
+        "syllableStart": 2,
+        "syllableEnd": 3,
+        "windowLength": 1,
+        "textStart": 2,
+        "textEnd": 3,
+        "sourceText": "处",
+        "pinyin": "chu",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "windowLength": 2,
+        "textStart": 2,
+        "textEnd": 4,
+        "sourceText": "处请",
+        "pinyin": "chu|qing",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:5",
+        "syllableStart": 2,
+        "syllableEnd": 5,
+        "windowLength": 3,
+        "textStart": 2,
+        "textEnd": 5,
+        "sourceText": "处请问",
+        "pinyin": "chu|qing|wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:6",
+        "syllableStart": 2,
+        "syllableEnd": 6,
+        "windowLength": 4,
+        "textStart": 2,
+        "textEnd": 6,
+        "sourceText": "处请问内",
+        "pinyin": "chu|qing|wen|nei",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:7",
+        "syllableStart": 2,
+        "syllableEnd": 7,
+        "windowLength": 5,
+        "textStart": 2,
+        "textEnd": 7,
+        "sourceText": "处请问内科",
+        "pinyin": "chu|qing|wen|nei|ke",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:4",
+        "syllableStart": 3,
+        "syllableEnd": 4,
+        "windowLength": 1,
+        "textStart": 3,
+        "textEnd": 4,
+        "sourceText": "请",
+        "pinyin": "qing",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "windowLength": 2,
+        "textStart": 3,
+        "textEnd": 5,
+        "sourceText": "请问",
+        "pinyin": "qing|wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:6",
+        "syllableStart": 3,
+        "syllableEnd": 6,
+        "windowLength": 3,
+        "textStart": 3,
+        "textEnd": 6,
+        "sourceText": "请问内",
+        "pinyin": "qing|wen|nei",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:7",
+        "syllableStart": 3,
+        "syllableEnd": 7,
+        "windowLength": 4,
+        "textStart": 3,
+        "textEnd": 7,
+        "sourceText": "请问内科",
+        "pinyin": "qing|wen|nei|ke",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:8",
+        "syllableStart": 3,
+        "syllableEnd": 8,
+        "windowLength": 5,
+        "textStart": 3,
+        "textEnd": 8,
+        "sourceText": "请问内科还",
+        "pinyin": "qing|wen|nei|ke|hai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:5",
+        "syllableStart": 4,
+        "syllableEnd": 5,
+        "windowLength": 1,
+        "textStart": 4,
+        "textEnd": 5,
+        "sourceText": "问",
+        "pinyin": "wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "windowLength": 2,
+        "textStart": 4,
+        "textEnd": 6,
+        "sourceText": "问内",
+        "pinyin": "wen|nei",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:7",
+        "syllableStart": 4,
+        "syllableEnd": 7,
+        "windowLength": 3,
+        "textStart": 4,
+        "textEnd": 7,
+        "sourceText": "问内科",
+        "pinyin": "wen|nei|ke",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:8",
+        "syllableStart": 4,
+        "syllableEnd": 8,
+        "windowLength": 4,
+        "textStart": 4,
+        "textEnd": 8,
+        "sourceText": "问内科还",
+        "pinyin": "wen|nei|ke|hai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:9",
+        "syllableStart": 4,
+        "syllableEnd": 9,
+        "windowLength": 5,
+        "textStart": 4,
+        "textEnd": 9,
+        "sourceText": "问内科还有",
+        "pinyin": "wen|nei|ke|hai|you",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:6",
+        "syllableStart": 5,
+        "syllableEnd": 6,
+        "windowLength": 1,
+        "textStart": 5,
+        "textEnd": 6,
+        "sourceText": "内",
+        "pinyin": "nei",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "windowLength": 2,
+        "textStart": 5,
+        "textEnd": 7,
+        "sourceText": "内科",
+        "pinyin": "nei|ke",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:8",
+        "syllableStart": 5,
+        "syllableEnd": 8,
+        "windowLength": 3,
+        "textStart": 5,
+        "textEnd": 8,
+        "sourceText": "内科还",
+        "pinyin": "nei|ke|hai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:9",
+        "syllableStart": 5,
+        "syllableEnd": 9,
+        "windowLength": 4,
+        "textStart": 5,
+        "textEnd": 9,
+        "sourceText": "内科还有",
+        "pinyin": "nei|ke|hai|you",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:10",
+        "syllableStart": 5,
+        "syllableEnd": 10,
+        "windowLength": 5,
+        "textStart": 5,
+        "textEnd": 10,
+        "sourceText": "内科还有号",
+        "pinyin": "nei|ke|hai|you|hao",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:7",
+        "syllableStart": 6,
+        "syllableEnd": 7,
+        "windowLength": 1,
+        "textStart": 6,
+        "textEnd": 7,
+        "sourceText": "科",
+        "pinyin": "ke",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "windowLength": 2,
+        "textStart": 6,
+        "textEnd": 8,
+        "sourceText": "科还",
+        "pinyin": "ke|hai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:9",
+        "syllableStart": 6,
+        "syllableEnd": 9,
+        "windowLength": 3,
+        "textStart": 6,
+        "textEnd": 9,
+        "sourceText": "科还有",
+        "pinyin": "ke|hai|you",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:10",
+        "syllableStart": 6,
+        "syllableEnd": 10,
+        "windowLength": 4,
+        "textStart": 6,
+        "textEnd": 10,
+        "sourceText": "科还有号",
+        "pinyin": "ke|hai|you|hao",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:11",
+        "syllableStart": 6,
+        "syllableEnd": 11,
+        "windowLength": 5,
+        "textStart": 6,
+        "textEnd": 11,
+        "sourceText": "科还有号吗",
+        "pinyin": "ke|hai|you|hao|ma",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:8",
+        "syllableStart": 7,
+        "syllableEnd": 8,
+        "windowLength": 1,
+        "textStart": 7,
+        "textEnd": 8,
+        "sourceText": "还",
+        "pinyin": "hai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:9",
+        "syllableStart": 7,
+        "syllableEnd": 9,
+        "windowLength": 2,
+        "textStart": 7,
+        "textEnd": 9,
+        "sourceText": "还有",
+        "pinyin": "hai|you",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:10",
+        "syllableStart": 7,
+        "syllableEnd": 10,
+        "windowLength": 3,
+        "textStart": 7,
+        "textEnd": 10,
+        "sourceText": "还有号",
+        "pinyin": "hai|you|hao",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:11",
+        "syllableStart": 7,
+        "syllableEnd": 11,
+        "windowLength": 4,
+        "textStart": 7,
+        "textEnd": 11,
+        "sourceText": "还有号吗",
+        "pinyin": "hai|you|hao|ma",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:12",
+        "syllableStart": 7,
+        "syllableEnd": 12,
+        "windowLength": 5,
+        "textStart": 7,
+        "textEnd": 13,
+        "sourceText": "还有号吗？我",
+        "pinyin": "hai|you|hao|ma|wo",
+        "blocked": true,
+        "blockReason": "raw_gap_between_spans"
+      }
+    ]
+  },
+  "recall": {
+    "windowsWith0Candidate": 70,
+    "windowsWith1Candidate": 2,
+    "windowsWith2PlusCandidates": 3,
+    "maxCandidatesPerWindow": 3,
+    "averageCandidatesPerWindow": 0.133,
+    "baseCandidateCount": 0,
+    "domainCandidateCount": 10,
+    "multiDomainCandidateCount": 0,
+    "totalCandidates": 10,
+    "sqlQueryCount": 10,
+    "windows": [
+      {
+        "windowId": "0:1",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 1,
+          "text": "挂",
+          "pinyin": "gua"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:2",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "text": "挂号",
+          "pinyin": "gua|hao"
+        },
+        "candidates": [
+          {
+            "candidateId": "0:2:1",
+            "term": "挂号",
+            "termId": "ngram:1054",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          },
+          {
+            "candidateId": "0:2:2",
+            "term": "挂号",
+            "termId": "ngram:2136",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          },
+          {
+            "candidateId": "0:2:3",
+            "term": "挂号",
+            "termId": "ngram:2137",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          }
+        ],
+        "candidateCount": 3,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "0:3",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "text": "挂号处",
+          "pinyin": "gua|hao|chu"
+        },
+        "candidates": [
+          {
+            "candidateId": "0:3:4",
+            "term": "挂号处",
+            "termId": "ngram:8",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.35,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao|chu",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 3,
+            "syllableStart": 0,
+            "syllableEnd": 3
+          }
+        ],
+        "candidateCount": 1,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "0:4",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "text": "挂号处请",
+          "pinyin": "gua|hao|chu|qing"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:5",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "text": "挂号处请问",
+          "pinyin": "gua|hao|chu|qing|wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:2",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "text": "号",
+          "pinyin": "hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:3",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "text": "号处",
+          "pinyin": "hao|chu"
+        },
+        "candidates": [
+          {
+            "candidateId": "1:3:5",
+            "term": "号处",
+            "termId": "ngram:7",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.35,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "hao|chu",
+            "tone": null,
+            "rawStart": 1,
+            "rawEnd": 3,
+            "syllableStart": 1,
+            "syllableEnd": 3
+          }
+        ],
+        "candidateCount": 1,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "1:4",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "text": "号处请",
+          "pinyin": "hao|chu|qing"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:5",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "text": "号处请问",
+          "pinyin": "hao|chu|qing|wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:6",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "text": "号处请问内",
+          "pinyin": "hao|chu|qing|wen|nei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:3",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "text": "处",
+          "pinyin": "chu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:4",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "text": "处请",
+          "pinyin": "chu|qing"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:5",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "text": "处请问",
+          "pinyin": "chu|qing|wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:6",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "text": "处请问内",
+          "pinyin": "chu|qing|wen|nei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:7",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "text": "处请问内科",
+          "pinyin": "chu|qing|wen|nei|ke"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:4",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "text": "请",
+          "pinyin": "qing"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:5",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "请问",
+          "pinyin": "qing|wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:6",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "text": "请问内",
+          "pinyin": "qing|wen|nei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:7",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "text": "请问内科",
+          "pinyin": "qing|wen|nei|ke"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:8",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "text": "请问内科还",
+          "pinyin": "qing|wen|nei|ke|hai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:5",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 5,
+          "text": "问",
+          "pinyin": "wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:6",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 6,
+          "text": "问内",
+          "pinyin": "wen|nei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:7",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "text": "问内科",
+          "pinyin": "wen|nei|ke"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:8",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "text": "问内科还",
+          "pinyin": "wen|nei|ke|hai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:9",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "text": "问内科还有",
+          "pinyin": "wen|nei|ke|hai|you"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:6",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 6,
+          "text": "内",
+          "pinyin": "nei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:7",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "text": "内科",
+          "pinyin": "nei|ke"
+        },
+        "candidates": [
+          {
+            "candidateId": "5:7:6",
+            "term": "内科",
+            "termId": "ngram:610",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          },
+          {
+            "candidateId": "5:7:7",
+            "term": "内科",
+            "termId": "ngram:611",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          },
+          {
+            "candidateId": "5:7:8",
+            "term": "内科",
+            "termId": "ngram:617",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          }
+        ],
+        "candidateCount": 3,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "5:8",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "text": "内科还",
+          "pinyin": "nei|ke|hai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:9",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "text": "内科还有",
+          "pinyin": "nei|ke|hai|you"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:10",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "text": "内科还有号",
+          "pinyin": "nei|ke|hai|you|hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:7",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "text": "科",
+          "pinyin": "ke"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:8",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "text": "科还",
+          "pinyin": "ke|hai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:9",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "text": "科还有",
+          "pinyin": "ke|hai|you"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:10",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "text": "科还有号",
+          "pinyin": "ke|hai|you|hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:11",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "text": "科还有号吗",
+          "pinyin": "ke|hai|you|hao|ma"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:8",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 8,
+          "text": "还",
+          "pinyin": "hai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:9",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "text": "还有",
+          "pinyin": "hai|you"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:10",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "text": "还有号",
+          "pinyin": "hai|you|hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:11",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "text": "还有号吗",
+          "pinyin": "hai|you|hao|ma"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:9",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "text": "有",
+          "pinyin": "you"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:10",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "text": "有号",
+          "pinyin": "you|hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:11",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "text": "有号吗",
+          "pinyin": "you|hao|ma"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:10",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "text": "号",
+          "pinyin": "hao"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:11",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "text": "号吗",
+          "pinyin": "hao|ma"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:11",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 11,
+          "text": "吗",
+          "pinyin": "ma"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:12",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 12,
+          "text": "我",
+          "pinyin": "wo"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:13",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "text": "我胃",
+          "pinyin": "wo|wei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:14",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 14,
+          "text": "我胃不",
+          "pinyin": "wo|wei|bu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:15",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 15,
+          "text": "我胃不舒",
+          "pinyin": "wo|wei|bu|shu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:16",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 16,
+          "text": "我胃不舒服",
+          "pinyin": "wo|wei|bu|shu|fu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "12:13",
+        "query": {
+          "syllableStart": 12,
+          "syllableEnd": 13,
+          "text": "胃",
+          "pinyin": "wei"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "12:14",
+        "query": {
+          "syllableStart": 12,
+          "syllableEnd": 14,
+          "text": "胃不",
+          "pinyin": "wei|bu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "12:15",
+        "query": {
+          "syllableStart": 12,
+          "syllableEnd": 15,
+          "text": "胃不舒",
+          "pinyin": "wei|bu|shu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "12:16",
+        "query": {
+          "syllableStart": 12,
+          "syllableEnd": 16,
+          "text": "胃不舒服",
+          "pinyin": "wei|bu|shu|fu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "13:14",
+        "query": {
+          "syllableStart": 13,
+          "syllableEnd": 14,
+          "text": "不",
+          "pinyin": "bu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "13:15",
+        "query": {
+          "syllableStart": 13,
+          "syllableEnd": 15,
+          "text": "不舒",
+          "pinyin": "bu|shu"
+        },
+        "candidates": [
+          {
+            "candidateId": "13:15:9",
+            "term": "部署",
+            "termId": "ngram:3848",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.4,
+            "domainTags": [
+              "tech_ai"
+            ],
+            "isBase": false,
+            "pinyin": "bu|shu",
+            "tone": null,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "syllableStart": 13,
+            "syllableEnd": 15
+          },
+          {
+            "candidateId": "13:15:10",
+            "term": "部署",
+            "termId": "ngram:3847",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tech_ai"
+            ],
+            "isBase": false,
+            "pinyin": "bu|shu",
+            "tone": null,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "syllableStart": 13,
+            "syllableEnd": 15
+          }
+        ],
+        "candidateCount": 2,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "13:16",
+        "query": {
+          "syllableStart": 13,
+          "syllableEnd": 16,
+          "text": "不舒服",
+          "pinyin": "bu|shu|fu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "14:15",
+        "query": {
+          "syllableStart": 14,
+          "syllableEnd": 15,
+          "text": "舒",
+          "pinyin": "shu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "14:16",
+        "query": {
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "text": "舒服",
+          "pinyin": "shu|fu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "15:16",
+        "query": {
+          "syllableStart": 15,
+          "syllableEnd": 16,
+          "text": "服",
+          "pinyin": "fu"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      }
+    ]
+  },
+  "edges": {
+    "lexicalEdgeCount": 5,
+    "fallbackEdgeCount": 14,
+    "edgesWithMultipleCandidates": 3,
+    "edgeCandidateTotal": 10,
+    "recallCandidateTotal": 10,
+    "edgePreservesMulti": true,
+    "sample": [
+      {
+        "edgeId": "0:2",
+        "edgeKind": "lexical",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "textStart": 0,
+        "textEnd": 2,
+        "sourceText": "挂号",
+        "candidateCount": 3,
+        "candidates": [
+          {
+            "candidateId": "0:2:1",
+            "term": "挂号",
+            "termId": "ngram:1054",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          },
+          {
+            "candidateId": "0:2:2",
+            "term": "挂号",
+            "termId": "ngram:2136",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          },
+          {
+            "candidateId": "0:2:3",
+            "term": "挂号",
+            "termId": "ngram:2137",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 2,
+            "syllableStart": 0,
+            "syllableEnd": 2
+          }
+        ],
+        "sourceWindowIds": [
+          "0:2"
+        ]
+      },
+      {
+        "edgeId": "0:3",
+        "edgeKind": "lexical",
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "textStart": 0,
+        "textEnd": 3,
+        "sourceText": "挂号处",
+        "candidateCount": 1,
+        "candidates": [
+          {
+            "candidateId": "0:3:4",
+            "term": "挂号处",
+            "termId": "ngram:8",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.35,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "gua|hao|chu",
+            "tone": null,
+            "rawStart": 0,
+            "rawEnd": 3,
+            "syllableStart": 0,
+            "syllableEnd": 3
+          }
+        ],
+        "sourceWindowIds": [
+          "0:3"
+        ]
+      },
+      {
+        "edgeId": "1:3",
+        "edgeKind": "lexical",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "textStart": 1,
+        "textEnd": 3,
+        "sourceText": "号处",
+        "candidateCount": 1,
+        "candidates": [
+          {
+            "candidateId": "1:3:5",
+            "term": "号处",
+            "termId": "ngram:7",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.35,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "hao|chu",
+            "tone": null,
+            "rawStart": 1,
+            "rawEnd": 3,
+            "syllableStart": 1,
+            "syllableEnd": 3
+          }
+        ],
+        "sourceWindowIds": [
+          "1:3"
+        ]
+      },
+      {
+        "edgeId": "5:7",
+        "edgeKind": "lexical",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "textStart": 5,
+        "textEnd": 7,
+        "sourceText": "内科",
+        "candidateCount": 3,
+        "candidates": [
+          {
+            "candidateId": "5:7:6",
+            "term": "内科",
+            "termId": "ngram:610",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          },
+          {
+            "candidateId": "5:7:7",
+            "term": "内科",
+            "termId": "ngram:611",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          },
+          {
+            "candidateId": "5:7:8",
+            "term": "内科",
+            "termId": "ngram:617",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "medical"
+            ],
+            "isBase": false,
+            "pinyin": "nei|ke",
+            "tone": null,
+            "rawStart": 5,
+            "rawEnd": 7,
+            "syllableStart": 5,
+            "syllableEnd": 7
+          }
+        ],
+        "sourceWindowIds": [
+          "5:7"
+        ]
+      },
+      {
+        "edgeId": "13:15",
+        "edgeKind": "lexical",
+        "syllableStart": 13,
+        "syllableEnd": 15,
+        "textStart": 14,
+        "textEnd": 16,
+        "sourceText": "不舒",
+        "candidateCount": 2,
+        "candidates": [
+          {
+            "candidateId": "13:15:9",
+            "term": "部署",
+            "termId": "ngram:3848",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.4,
+            "domainTags": [
+              "tech_ai"
+            ],
+            "isBase": false,
+            "pinyin": "bu|shu",
+            "tone": null,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "syllableStart": 13,
+            "syllableEnd": 15
+          },
+          {
+            "candidateId": "13:15:10",
+            "term": "部署",
+            "termId": "ngram:3847",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tech_ai"
+            ],
+            "isBase": false,
+            "pinyin": "bu|shu",
+            "tone": null,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "syllableStart": 13,
+            "syllableEnd": 15
+          }
+        ],
+        "sourceWindowIds": [
+          "13:15"
+        ]
+      },
+      {
+        "edgeId": "fallback:3:4",
+        "edgeKind": "fallback",
+        "syllableStart": 3,
+        "syllableEnd": 4,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:4:5",
+        "edgeKind": "fallback",
+        "syllableStart": 4,
+        "syllableEnd": 5,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:7:8",
+        "edgeKind": "fallback",
+        "syllableStart": 7,
+        "syllableEnd": 8,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:8:9",
+        "edgeKind": "fallback",
+        "syllableStart": 8,
+        "syllableEnd": 9,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:9:10",
+        "edgeKind": "fallback",
+        "syllableStart": 9,
+        "syllableEnd": 10,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:10:11",
+        "edgeKind": "fallback",
+        "syllableStart": 10,
+        "syllableEnd": 11,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:11:12",
+        "edgeKind": "fallback",
+        "syllableStart": 11,
+        "syllableEnd": 12,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:12:13",
+        "edgeKind": "fallback",
+        "syllableStart": 12,
+        "syllableEnd": 13,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:15:16",
+        "edgeKind": "fallback",
+        "syllableStart": 15,
+        "syllableEnd": 16,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:16:17",
+        "edgeKind": "fallback",
+        "syllableStart": 16,
+        "syllableEnd": 17,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:17:18",
+        "edgeKind": "fallback",
+        "syllableStart": 17,
+        "syllableEnd": 18,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:18:19",
+        "edgeKind": "fallback",
+        "syllableStart": 18,
+        "syllableEnd": 19,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:19:20",
+        "edgeKind": "fallback",
+        "syllableStart": 19,
+        "syllableEnd": 20,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:20:21",
+        "edgeKind": "fallback",
+        "syllableStart": 20,
+        "syllableEnd": 21,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      }
+    ]
+  },
+  "paths": {
+    "pathCount": 1,
+    "distinctBoundaryPathCount": 1,
+    "distinctEffectiveCandidatePathCount": 1,
+    "pathCoverageFailure": 0,
+    "pathOverlapFailure": 0,
+    "paths": [
+      {
+        "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+        "edges": [
+          "0:3",
+          "fallback:3:4",
+          "fallback:4:5",
+          "5:7",
+          "fallback:7:8",
+          "fallback:8:9",
+          "fallback:9:10",
+          "fallback:10:11",
+          "fallback:11:12",
+          "fallback:12:13",
+          "13:15",
+          "fallback:15:16",
+          "fallback:16:17",
+          "fallback:17:18",
+          "fallback:18:19",
+          "fallback:19:20",
+          "fallback:20:21"
+        ],
+        "boundaryKey": "0-3|3-4|4-5|5-7|7-8|8-9|9-10|10-11|11-12|12-13|13-15|15-16|16-17|17-18|18-19|19-20|20-21",
+        "edgeSequenceKey": "0:3|3:4|4:5|5:7|7:8|8:9|9:10|10:11|11:12|12:13|13:15|15:16|16:17|17:18|18:19|19:20|20:21",
+        "coverageStart": 0,
+        "coverageEnd": 21,
+        "hasGap": false,
+        "hasOverlap": false,
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 14
+      }
+    ]
+  },
+  "fineSpans": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:0",
+      "textRange": {
+        "start": 0,
+        "end": 3
+      },
+      "syllableRange": {
+        "start": 0,
+        "end": 3
+      },
+      "sourceText": "挂号处",
+      "isFallback": false,
+      "candidateCountBeforeTone": 1,
+      "candidatesBeforeTone": [
+        {
+          "candidateId": "0:3:4",
+          "term": "挂号处",
+          "termId": "ngram:8",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.35,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "gua|hao|chu",
+          "tone": null,
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3
+        }
+      ],
+      "candidateCountAfterTone": 1,
+      "candidatesAfterTone": [
+        {
+          "candidateId": "0:3:4",
+          "term": "挂号处",
+          "termId": "ngram:8",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.35,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "gua|hao|chu",
+          "tone": null,
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3
+        }
+      ],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 0,
+        "pathRawEnd": 3,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:1",
+      "textRange": {
+        "start": 3,
+        "end": 4
+      },
+      "syllableRange": {
+        "start": 3,
+        "end": 4
+      },
+      "sourceText": "请",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 3,
+        "pathRawEnd": 4,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:2",
+      "textRange": {
+        "start": 4,
+        "end": 5
+      },
+      "syllableRange": {
+        "start": 4,
+        "end": 5
+      },
+      "sourceText": "问",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 4,
+        "pathRawEnd": 5,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:3",
+      "textRange": {
+        "start": 5,
+        "end": 7
+      },
+      "syllableRange": {
+        "start": 5,
+        "end": 7
+      },
+      "sourceText": "内科",
+      "isFallback": false,
+      "candidateCountBeforeTone": 3,
+      "candidatesBeforeTone": [
+        {
+          "candidateId": "5:7:6",
+          "term": "内科",
+          "termId": "ngram:610",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:7",
+          "term": "内科",
+          "termId": "ngram:611",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:8",
+          "term": "内科",
+          "termId": "ngram:617",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        }
+      ],
+      "candidateCountAfterTone": 3,
+      "candidatesAfterTone": [
+        {
+          "candidateId": "5:7:6",
+          "term": "内科",
+          "termId": "ngram:610",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:7",
+          "term": "内科",
+          "termId": "ngram:611",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:8",
+          "term": "内科",
+          "termId": "ngram:617",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        }
+      ],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 5,
+        "pathRawEnd": 7,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:4",
+      "textRange": {
+        "start": 7,
+        "end": 8
+      },
+      "syllableRange": {
+        "start": 7,
+        "end": 8
+      },
+      "sourceText": "还",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 7,
+        "pathRawEnd": 8,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:5",
+      "textRange": {
+        "start": 8,
+        "end": 9
+      },
+      "syllableRange": {
+        "start": 8,
+        "end": 9
+      },
+      "sourceText": "有",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 8,
+        "pathRawEnd": 9,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:6",
+      "textRange": {
+        "start": 9,
+        "end": 10
+      },
+      "syllableRange": {
+        "start": 9,
+        "end": 10
+      },
+      "sourceText": "号",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 9,
+        "pathRawEnd": 10,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:7",
+      "textRange": {
+        "start": 10,
+        "end": 11
+      },
+      "syllableRange": {
+        "start": 10,
+        "end": 11
+      },
+      "sourceText": "吗",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 10,
+        "pathRawEnd": 11,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:8",
+      "textRange": {
+        "start": 12,
+        "end": 13
+      },
+      "syllableRange": {
+        "start": 11,
+        "end": 12
+      },
+      "sourceText": "我",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 12,
+        "pathRawEnd": 13,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:9",
+      "textRange": {
+        "start": 13,
+        "end": 14
+      },
+      "syllableRange": {
+        "start": 12,
+        "end": 13
+      },
+      "sourceText": "胃",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 13,
+        "pathRawEnd": 14,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:10",
+      "textRange": {
+        "start": 14,
+        "end": 16
+      },
+      "syllableRange": {
+        "start": 13,
+        "end": 15
+      },
+      "sourceText": "不舒",
+      "isFallback": false,
+      "candidateCountBeforeTone": 2,
+      "candidatesBeforeTone": [
+        {
+          "candidateId": "13:15:9",
+          "term": "部署",
+          "termId": "ngram:3848",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.4,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        },
+        {
+          "candidateId": "13:15:10",
+          "term": "部署",
+          "termId": "ngram:3847",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        }
+      ],
+      "candidateCountAfterTone": 2,
+      "candidatesAfterTone": [
+        {
+          "candidateId": "13:15:9",
+          "term": "部署",
+          "termId": "ngram:3848",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.4,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        },
+        {
+          "candidateId": "13:15:10",
+          "term": "部署",
+          "termId": "ngram:3847",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        }
+      ],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 14,
+        "pathRawEnd": 16,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:11",
+      "textRange": {
+        "start": 16,
+        "end": 17
+      },
+      "syllableRange": {
+        "start": 15,
+        "end": 16
+      },
+      "sourceText": "服",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 16,
+        "pathRawEnd": 17,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:12",
+      "textRange": {
+        "start": 18,
+        "end": 19
+      },
+      "syllableRange": {
+        "start": 16,
+        "end": 17
+      },
+      "sourceText": "昨",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 18,
+        "pathRawEnd": 19,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:13",
+      "textRange": {
+        "start": 19,
+        "end": 20
+      },
+      "syllableRange": {
+        "start": 17,
+        "end": 18
+      },
+      "sourceText": "晚",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 19,
+        "pathRawEnd": 20,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:14",
+      "textRange": {
+        "start": 20,
+        "end": 21
+      },
+      "syllableRange": {
+        "start": 18,
+        "end": 19
+      },
+      "sourceText": "开",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 20,
+        "pathRawEnd": 21,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:15",
+      "textRange": {
+        "start": 21,
+        "end": 22
+      },
+      "syllableRange": {
+        "start": 19,
+        "end": 20
+      },
+      "sourceText": "始",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 21,
+        "pathRawEnd": 22,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:16",
+      "textRange": {
+        "start": 22,
+        "end": 23
+      },
+      "syllableRange": {
+        "start": 20,
+        "end": 21
+      },
+      "sourceText": "的",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 22,
+        "pathRawEnd": 23,
+        "recomputedAfterRebind": true
+      }
+    }
+  ],
+  "toneCandidateDropCount": 0,
+  "votes": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "voteEligibleCandidateCount": 6,
+      "voteEligibleCandidates": [
+        {
+          "candidateId": "0:3:4",
+          "term": "挂号处",
+          "termId": "ngram:8",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.35,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "gua|hao|chu",
+          "tone": null,
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3
+        },
+        {
+          "candidateId": "5:7:6",
+          "term": "内科",
+          "termId": "ngram:610",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:7",
+          "term": "内科",
+          "termId": "ngram:611",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "5:7:8",
+          "term": "内科",
+          "termId": "ngram:617",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "pinyin": "nei|ke",
+          "tone": null,
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7
+        },
+        {
+          "candidateId": "13:15:9",
+          "term": "部署",
+          "termId": "ngram:3848",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.4,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        },
+        {
+          "candidateId": "13:15:10",
+          "term": "部署",
+          "termId": "ngram:3847",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "bu|shu",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 13,
+          "syllableEnd": 15
+        }
+      ],
+      "baseCandidatesExcludedFromVote": [],
+      "fallbackCandidatesExcludedFromVote": [
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:1",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:2",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:4",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:5",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:6",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:7",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:8",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:9",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:11",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:12",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:13",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:14",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:15",
+        "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:16"
+      ],
+      "domainScores": {
+        "medical": 2,
+        "tech_ai": 1
+      },
+      "highestScore": 2,
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "medical"
+      ],
+      "rejectedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false
+    }
+  ],
+  "buckets": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "domainId": "medical",
+      "domainCandidates": [],
+      "baseCandidates": [],
+      "spanCandidateGrid": [
+        [
+          {
+            "word": "挂号处",
+            "start": 0,
+            "end": 3,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "请",
+            "start": 3,
+            "end": 4,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "问",
+            "start": 4,
+            "end": 5,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "内科",
+            "start": 5,
+            "end": 7,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "还",
+            "start": 7,
+            "end": 8,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "有",
+            "start": 8,
+            "end": 9,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "号",
+            "start": 9,
+            "end": 10,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "吗",
+            "start": 10,
+            "end": 11,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "我",
+            "start": 12,
+            "end": 13,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "胃",
+            "start": 13,
+            "end": 14,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "不舒",
+            "start": 14,
+            "end": 16,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "服",
+            "start": 16,
+            "end": 17,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "昨",
+            "start": 18,
+            "end": 19,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "晚",
+            "start": 19,
+            "end": 20,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "开",
+            "start": 20,
+            "end": 21,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "始",
+            "start": 21,
+            "end": 22,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "的",
+            "start": 22,
+            "end": 23,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ]
+      ],
+      "candidateCount": 17,
+      "candidateTerms": [
+        "挂号处",
+        "请",
+        "问",
+        "内科",
+        "还",
+        "有",
+        "号",
+        "吗",
+        "我",
+        "胃",
+        "不舒",
+        "服",
+        "昨",
+        "晚",
+        "开",
+        "始",
+        "的"
+      ],
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "candidateExcludedFromAllBuckets": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:10",
+      "term": "部署",
+      "reason": "not_in_primary_filtered_selectedCandidates"
+    },
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "spanId": "fine:149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37:10",
+      "term": "部署",
+      "reason": "not_in_primary_filtered_selectedCandidates"
+    }
+  ],
+  "assemblies": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "domainId": "medical",
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "naiveCombinationPotential": 1,
+      "validNonOverlappingCombinationPotential": "NOT_OBSERVABLE_WITHOUT_REPLAY",
+      "generatedCombinationCount": 1,
+      "generatedCandidates": [
+        {
+          "text": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+          "replacementOperations": [
+            {
+              "start": 0,
+              "end": 3,
+              "word": "挂号处",
+              "sourceText": "挂号处",
+              "candidateTerm": "挂号处"
+            },
+            {
+              "start": 3,
+              "end": 4,
+              "word": "请",
+              "sourceText": "请",
+              "candidateTerm": "请"
+            },
+            {
+              "start": 4,
+              "end": 5,
+              "word": "问",
+              "sourceText": "问",
+              "candidateTerm": "问"
+            },
+            {
+              "start": 5,
+              "end": 7,
+              "word": "内科",
+              "sourceText": "内科",
+              "candidateTerm": "内科"
+            },
+            {
+              "start": 7,
+              "end": 8,
+              "word": "还",
+              "sourceText": "还",
+              "candidateTerm": "还"
+            },
+            {
+              "start": 8,
+              "end": 9,
+              "word": "有",
+              "sourceText": "有",
+              "candidateTerm": "有"
+            },
+            {
+              "start": 9,
+              "end": 10,
+              "word": "号",
+              "sourceText": "号",
+              "candidateTerm": "号"
+            },
+            {
+              "start": 10,
+              "end": 11,
+              "word": "吗",
+              "sourceText": "吗",
+              "candidateTerm": "吗"
+            },
+            {
+              "start": 12,
+              "end": 13,
+              "word": "我",
+              "sourceText": "我",
+              "candidateTerm": "我"
+            },
+            {
+              "start": 13,
+              "end": 14,
+              "word": "胃",
+              "sourceText": "胃",
+              "candidateTerm": "胃"
+            },
+            {
+              "start": 14,
+              "end": 16,
+              "word": "不舒",
+              "sourceText": "不舒",
+              "candidateTerm": "不舒"
+            },
+            {
+              "start": 16,
+              "end": 17,
+              "word": "服",
+              "sourceText": "服",
+              "candidateTerm": "服"
+            },
+            {
+              "start": 18,
+              "end": 19,
+              "word": "昨",
+              "sourceText": "昨",
+              "candidateTerm": "昨"
+            },
+            {
+              "start": 19,
+              "end": 20,
+              "word": "晚",
+              "sourceText": "晚",
+              "candidateTerm": "晚"
+            },
+            {
+              "start": 20,
+              "end": 21,
+              "word": "开",
+              "sourceText": "开",
+              "candidateTerm": "开"
+            },
+            {
+              "start": 21,
+              "end": 22,
+              "word": "始",
+              "sourceText": "始",
+              "candidateTerm": "始"
+            },
+            {
+              "start": 22,
+              "end": 23,
+              "word": "的",
+              "sourceText": "的",
+              "candidateTerm": "的"
+            }
+          ],
+          "sourceCandidateIds": [],
+          "isRawText": true,
+          "dedupKey": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+          "classification": "NO_OP_REPLACEMENT",
+          "rebuildOk": true
+        }
+      ],
+      "distinctTextCount": 1
+    }
+  ],
+  "crossPath": {
+    "inputCandidateCount": 1,
+    "inputCandidates": [
+      {
+        "text": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+        "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+        "domainId": "medical"
+      }
+    ],
+    "distinctTextsBeforeDedup": 1,
+    "duplicates": [],
+    "uniqueTextsAfterDedup": 1,
+    "cappedCandidateCount": 1,
+    "prefilledCombinations": [
+      "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。"
+    ],
+    "mergeTrace": {
+      "crossPathInputCandidateCount": 1,
+      "crossPathDuplicateCount": 0,
+      "crossPathUniqueCandidateCount": 1,
+      "crossPathOutputCandidateCount": 1,
+      "crossPathTruncatedCount": 0,
+      "globalCandidateCap": 16,
+      "kenlmInputSource": "cross_path_merge",
+      "dedupKey": "exact_text",
+      "duplicateRetention": "first_wins",
+      "collectionOrder": "path_bucket_candidate"
+    }
+  },
+  "quality": {
+    "invalidAssemblyCount": 0,
+    "truncatedTextCount": 0,
+    "noOpReplacementCount": 1,
+    "casesWithRawOnly": true,
+    "casesWithAnyModifiedCandidate": false,
+    "casesWithMultiSpanModifiedCandidate": false,
+    "assemblyComboCount": 1,
+    "assemblyDistinctTextCount": 1
+  },
+  "diversityFlags": {
+    "hasRecallCandidate": true,
+    "hasMultipleRecallCandidates": true,
+    "hasMultiCandidateLexicalEdge": true,
+    "hasMultiplePaths": false,
+    "hasMultipleEffectiveCandidatePaths": false,
+    "hasMultipleRetainedDomains": false,
+    "hasMultipleBuckets": false,
+    "hasMultipleAssemblyCombinations": false,
+    "hasMultipleDistinctAssemblyTexts": false,
+    "hasMultipleDistinctCrossPathTexts": false,
+    "hasKenlmInputNAbove1": false
+  },
+  "firstCollapseLayer": "R9_ASSEMBLY_GENERATES_IDENTICAL_TEXT",
+  "structuralFailures": {
+    "coordinateMappingFailure": 21,
+    "invalidRangeCount": 21,
+    "invalidWindowRange": 0,
+    "pathCoverageFailure": 0,
+    "pathOverlapFailure": 0,
+    "materializationFailure": 0,
+    "undefinedPrefilled": 0,
+    "kenlmInputOver16": 0,
+    "invalidAssembly": 0
+  },
+  "latticeTrace": {
+    "windowCount": 95,
+    "blockedWindowCount": 20,
+    "recallableWindowCount": 75,
+    "lexicalEdgeCount": 5,
+    "fallbackEdgeCount": 14,
+    "edgeCountAfterFallback": 19,
+    "fallbackInjectionCount": 14,
+    "fallbackInjectionRanges": [
+      {
+        "start": 3,
+        "end": 5
+      },
+      {
+        "start": 7,
+        "end": 13
+      },
+      {
+        "start": 15,
+        "end": 21
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 75,
+    "sqlQueryCount": 10,
+    "pathCapEvents": []
+  },
+  "pathAssemblyTraces": [
+    {
+      "pathId": "149552ff4805e58b3b09f4417f9d2d26276516ca341bc6c2b9ceba03938dda37",
+      "boundaryKey": "0-3|3-4|4-5|5-7|7-8|8-9|9-10|10-11|11-12|12-13|13-15|15-16|16-17|17-18|18-19|19-20|20-21",
+      "pathFineSpanCount": 17,
+      "fallbackSpanCount": 14,
+      "toneEvidenceAvailableCount": 0,
+      "toneEvidenceUnavailableCount": 17,
+      "domainScores": {
+        "medical": 2,
+        "tech_ai": 1
+      },
+      "retainedDomains": [
+        "medical"
+      ],
+      "bucketCount": 1,
+      "bucketCandidateCounts": [
+        1
+      ],
+      "assemblyCandidateCount": 1,
+      "toneRebindOk": true
+    }
+  ],
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "metrics": {
+    "coarseSpanCount": 10,
+    "globalWindowGeneratedCount": 95,
+    "blockedWindowCount": 20,
+    "truncatedWindowCount": 0,
+    "logicalWindowRecallCount": 75,
+    "windowCandidatePoolCount": 6,
+    "activeCandidateCount": 6,
+    "compatibilityEdgeCount": 4,
+    "droppedCandidateCount": 0,
+    "coverageCount": 0,
+    "conflictCount": 0,
+    "conflictRelationCount": 0,
+    "hardDropCount": 0,
+    "compatibleCount": 4,
+    "utteranceDomain": "medical",
+    "domainVoteMs": 0,
+    "winnerScore": 2,
+    "runnerUpDomain": "tech_ai",
+    "runnerUpScore": 1,
+    "voteMargin": 1,
+    "assemblyMs": 50,
+    "parentFragmentHitCount": 10,
+    "parentTermVoteCount": 6,
+    "inSpanWindowCount": 3,
+    "boundaryWindowCount": 0,
+    "domainCandidateCount": 0,
+    "baseCandidateCount": 0,
+    "sameDomainCandidateCount": 0,
+    "domainFilteredSpanCount": 17,
+    "selectedCandidatesPerSpanAvg": 1,
+    "domainAssemblyMs": 0,
+    "mainDomainAwareSpanSetsTotal": 17,
+    "retainedBucketCount": 1,
+    "intervalAssemblyCandidateCount": 1,
+    "intervalRejectedOverlapCount": 0,
+    "fallbackCandidateCount": 0,
+    "kenlmPoolCandidateCount": 1,
+    "preFilterCombinationCount": 1,
+    "domainScores": {
+      "medical": 2,
+      "tech_ai": 1
+    },
+    "retainedDomains": [
+      "medical"
+    ],
+    "winningFineDomain": "medical",
+    "insufficientEvidence": false,
+    "domainLookupExecuted": true,
+    "domainLookupDomainCount": 12,
+    "domainRecallHitCount": 6,
+    "voteEligibleDomainCandidateCount": 6,
+    "resolvedRecallDomainScope": [
+      "bakery",
+      "coffee",
+      "food_order",
+      "medical",
+      "meeting",
+      "milk_tea",
+      "tech_ai",
+      "tourism_hotel",
+      "tourism_pickup",
+      "tourism_route",
+      "tourism_transport",
+      "transport"
+    ],
+    "architectureCompliance": {
+      "generatorMode": "multi_path_lattice",
+      "fineSpanOwner": "segmentation_path",
+      "voteScope": "per_path",
+      "assemblyScope": "per_path",
+      "retainedCompletePathCount": 1,
+      "beamEnabled": false,
+      "globalWindowProductionPath": false,
+      "fineSpanPriorSource": "none",
+      "contextPriorDecisionApplied": false,
+      "priorWrittenToEnabledDomains": false,
+      "profileAffectedRecall": false,
+      "votePoolSource": "path_fine_span",
+      "sessionPriorTransport": "audio_chunk_session_snapshot",
+      "topicShiftContractComplete": true,
+      "schedulerDomainInference": false,
+      "toneRecomputedAfterRebind": true,
+      "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+      "candidateCapScope": "global",
+      "candidateCap": 16,
+      "dedupBeforeCap": true,
+      "dedupRetention": "first_wins",
+      "kenlmInputOwner": "cross_path_merge",
+      "prefilledCombinationsRequired": true,
+      "toneEvidenceOwner": "acoustic_tone_slices"
+    },
+    "crossPathInputCandidateCount": 1,
+    "crossPathDuplicateCount": 0,
+    "crossPathUniqueCandidateCount": 1,
+    "crossPathOutputCandidateCount": 1,
+    "crossPathTruncatedCount": 0,
+    "globalCandidateCap": 16,
+    "kenlmInputSource": "cross_path_merge",
+    "recallRequestCount": 75,
+    "uniqueRecallKeyCount": 74,
+    "duplicateRecallKeyCount": 1,
+    "utteranceCacheHitCount": 1,
+    "utteranceCacheMissCount": 74,
+    "cacheHitRatio": 0.013333333333333334,
+    "logicalQueryCount": 75,
+    "physicalSqlStatementCount": 10,
+    "exactQueryCount": 75,
+    "parentQueryCount": 75,
+    "lexiconRecallTotalMs": 38,
+    "recallRequestBuildMs": 1,
+    "utteranceCacheLookupMs": 0,
+    "lexiconFactLookupMs": 36,
+    "windowBindingMs": 1
+  },
+  "timing": {
+    "coordinateMs": 0.2005000114440918,
+    "coarsePartitionMs": 10.455600023269653,
+    "windowBuildMs": 0.30790019035339355,
+    "hardBlockMs": 0.38359999656677246,
+    "recallMs": 54.08279991149902,
+    "edgeBuildMs": 0.03530001640319824,
+    "fallbackMs": 0.08179998397827148,
+    "pathEnumerationMs": 0.1064000129699707,
+    "materializationMs": 0.023599863052368164,
+    "orchestratorMs": 50.47699999809265,
+    "totalObservedMs": 50.47699999809265,
+    "toneRebindMs": "NOT_OBSERVABLE",
+    "domainVoteMs": "NOT_OBSERVABLE",
+    "bucketBuildMs": "NOT_OBSERVABLE",
+    "sentenceAssemblyMs": "NOT_OBSERVABLE",
+    "crossPathMergeMs": "NOT_OBSERVABLE"
+  }
+}

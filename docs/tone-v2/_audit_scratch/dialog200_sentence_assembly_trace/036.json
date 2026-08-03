@@ -1,0 +1,864 @@
+{
+  "caseId": "d036",
+  "fileNum": "036",
+  "rawText": "请问理财产品的风险等级在哪里查看？",
+  "scenario": "bank",
+  "retainedDomains": [
+    "tech_ai",
+    "tourism_pickup"
+  ],
+  "domainScores": {
+    "tourism_pickup": 1,
+    "tech_ai": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "请",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "请"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "问",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "理",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "财",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "财"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "产",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "产"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "品",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "品"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "的",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "风",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "风"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "险",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "险"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "等级",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "等级"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "在",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "哪",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "哪"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "里",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "里"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "查看",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:13",
+          "sameDomain": [
+            "查看"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "查看"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "请"
+        ],
+        [
+          "问"
+        ],
+        [
+          "理"
+        ],
+        [
+          "财"
+        ],
+        [
+          "产"
+        ],
+        [
+          "品"
+        ],
+        [
+          "的"
+        ],
+        [
+          "风"
+        ],
+        [
+          "险"
+        ],
+        [
+          "等级"
+        ],
+        [
+          "在"
+        ],
+        [
+          "哪"
+        ],
+        [
+          "里"
+        ],
+        [
+          "查看"
+        ]
+      ],
+      "assemblyTexts": [
+        "请问理财产品的风险等级在哪里查看？"
+      ]
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tourism_pickup",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "请",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "请"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "问",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "理",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "财",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "财"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "产",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "产"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "品",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "品"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "的",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "风",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "风"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "险",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "险"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "等级",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:9",
+          "sameDomain": [
+            "登机",
+            "登机"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "登机",
+            "等级"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "在",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "哪",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "哪"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "里",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "里"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "查看",
+          "fineSpanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "查看"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "请"
+        ],
+        [
+          "问"
+        ],
+        [
+          "理"
+        ],
+        [
+          "财"
+        ],
+        [
+          "产"
+        ],
+        [
+          "品"
+        ],
+        [
+          "的"
+        ],
+        [
+          "风"
+        ],
+        [
+          "险"
+        ],
+        [
+          "登机",
+          "等级"
+        ],
+        [
+          "在"
+        ],
+        [
+          "哪"
+        ],
+        [
+          "里"
+        ],
+        [
+          "查看"
+        ]
+      ],
+      "assemblyTexts": [
+        "请问理财产品的风险登机在哪里查看？",
+        "请问理财产品的风险等级在哪里查看？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "请问理财产品的风险等级在哪里查看？",
+    "请问理财产品的风险登机在哪里查看？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "请问理财产品的风险等级在哪里查看？",
+    "请问理财产品的风险登机在哪里查看？",
+    "请问理财产品的风险等级在哪里查看？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "请问理财产品的风险等级在哪里查看？",
+      "replacements": [
+        {
+          "span": {
+            "text": "查看",
+            "start": 14,
+            "end": 16
+          },
+          "word": "查看",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "请",
+            "start": 0,
+            "end": 1
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 1,
+            "end": 2
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "理",
+            "start": 2,
+            "end": 3
+          },
+          "word": "理",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "财",
+            "start": 3,
+            "end": 4
+          },
+          "word": "财",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "产",
+            "start": 4,
+            "end": 5
+          },
+          "word": "产",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "品",
+            "start": 5,
+            "end": 6
+          },
+          "word": "品",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 6,
+            "end": 7
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "风",
+            "start": 7,
+            "end": 8
+          },
+          "word": "风",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "险",
+            "start": 8,
+            "end": 9
+          },
+          "word": "险",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "等级",
+            "start": 9,
+            "end": 11
+          },
+          "word": "等级",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 11,
+            "end": 12
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "哪",
+            "start": 12,
+            "end": 13
+          },
+          "word": "哪",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "里",
+            "start": 13,
+            "end": 14
+          },
+          "word": "里",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    },
+    {
+      "text": "请问理财产品的风险登机在哪里查看？",
+      "replacements": [
+        {
+          "span": {
+            "text": "等级",
+            "start": 9,
+            "end": 11
+          },
+          "word": "登机",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "请",
+            "start": 0,
+            "end": 1
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 1,
+            "end": 2
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "理",
+            "start": 2,
+            "end": 3
+          },
+          "word": "理",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "财",
+            "start": 3,
+            "end": 4
+          },
+          "word": "财",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "产",
+            "start": 4,
+            "end": 5
+          },
+          "word": "产",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "品",
+            "start": 5,
+            "end": 6
+          },
+          "word": "品",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 6,
+            "end": 7
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "风",
+            "start": 7,
+            "end": 8
+          },
+          "word": "风",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "险",
+            "start": 8,
+            "end": 9
+          },
+          "word": "险",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 11,
+            "end": 12
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "哪",
+            "start": 12,
+            "end": 13
+          },
+          "word": "哪",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "里",
+            "start": 13,
+            "end": 14
+          },
+          "word": "里",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "查看",
+            "start": 14,
+            "end": 16
+          },
+          "word": "查看",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    }
+  ],
+  "kenlmInputTexts": [
+    "请问理财产品的风险等级在哪里查看？",
+    "请问理财产品的风险登机在哪里查看？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "请问理财产品的风险等级在哪里查看？",
+      "请问理财产品的风险登机在哪里查看？"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "请问理财产品的风险等级在哪里查看？"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "请问理财产品的风险等级在哪里查看？",
+      "请问理财产品的风险登机在哪里查看？"
+    ],
+    "actual": [
+      "请问理财产品的风险等级在哪里查看？",
+      "请问理财产品的风险登机在哪里查看？"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "caseId": "B04",
+  "rawText": "客户地址和医院都要",
+  "retainedDomains": [
+    "coffee",
+    "medical",
+    "meeting",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "低脂",
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "客户低脂和医院都要",
+        "客户地址和医院都要"
+      ]
+    },
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "客户地址和医院都要"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "议员",
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "客户地址和议员都要",
+        "客户地址和医院都要"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地质",
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "客户地质和医院都要",
+        "客户地址和医院都要"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "客户低脂和医院都要",
+    "客户地址和医院都要",
+    "客户地址和议员都要",
+    "客户地质和医院都要"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "客户低脂和医院都要",
+    "客户地址和医院都要",
+    "客户地址和议员都要",
+    "客户地质和医院都要"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 31.63129997253418,
+  "groups": [
+    "B"
+  ],
+  "why": "dual",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "客户低脂和医院都要",
+      "客户地址和医院都要",
+      "客户地址和议员都要",
+      "客户地质和医院都要"
+    ]
+  }
+}

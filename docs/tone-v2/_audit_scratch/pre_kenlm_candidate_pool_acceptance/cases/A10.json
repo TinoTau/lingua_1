@@ -1,0 +1,173 @@
+{
+  "caseId": "A10",
+  "rawText": "地质结构需要检查",
+  "windowCount": 30,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "0:2",
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "text": "地质",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "地质结构需要检查"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "794f58ad47b49d288c73f772dba02053cee8569b7347c0011912fa070bb56377",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "地质"
+        ],
+        [
+          "结构"
+        ],
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "检查"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "地质结构需要检查",
+      "sourcePathId": "794f58ad47b49d288c73f772dba02053cee8569b7347c0011912fa070bb56377",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "地质",
+          "sourceText": "地质"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "结构",
+          "sourceText": "结构"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "需",
+          "sourceText": "需"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "检查",
+          "sourceText": "检查"
+        }
+      ],
+      "dedupKey": "地质结构需要检查",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 30,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 30,
+    "lexicalEdgeCount": 4,
+    "fallbackEdgeCount": 2,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 2,
+    "fallbackInjectionRanges": [
+      {
+        "start": 4,
+        "end": 6
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 30,
+    "sqlQueryCount": 25,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A",
+    "G"
+  ],
+  "why": "di|zhi in 地质 context",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 22.389299869537354,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

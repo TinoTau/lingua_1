@@ -1,0 +1,2501 @@
+{
+  "cases": [
+    {
+      "compound": "单元测试",
+      "sentence": "请在合并前确保单元测试全部通过。",
+      "atoms": [
+        "单元",
+        "测试"
+      ],
+      "tagDump": {
+        "单元测试": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": [
+            "tech_ai"
+          ]
+        },
+        "单元": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        },
+        "测试": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        },
+        "模型": {
+          "inTerm": false,
+          "repairTarget": false,
+          "inBase": false,
+          "domainLexicon": []
+        },
+        "通过": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        }
+      },
+      "runtimeDomainProbe": {
+        "单元测试": [
+          {
+            "word": "单元测试",
+            "domains": [
+              "tech_ai"
+            ],
+            "repairTarget": true,
+            "prior": 0.9
+          }
+        ],
+        "单元": [
+          {
+            "word": "单元",
+            "domains": [],
+            "repairTarget": true,
+            "prior": 0.85
+          }
+        ],
+        "测试": [
+          {
+            "word": "测试",
+            "domains": [],
+            "repairTarget": true,
+            "prior": 0.85
+          }
+        ]
+      },
+      "with": {
+        "label": "WITH",
+        "lattice": {
+          "lexicalEdgeCount": 3,
+          "pathCount": 2,
+          "edgeReplacements": [
+            {
+              "edgeId": "7:9",
+              "replacement": "单元",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "7:11",
+              "replacement": "单元测试",
+              "domains": [
+                "tech_ai"
+              ],
+              "source": "domain_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "9:11",
+              "replacement": "测试",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            }
+          ],
+          "compoundInEdges": true
+        },
+        "pathLogs": [
+          {
+            "pathId": "ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f",
+            "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-11|11-12|12-13|13-14|14-15",
+            "spanCount": 12,
+            "spans": [
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:1",
+                "syllableStart": 1,
+                "syllableEnd": 2,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:2",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:3",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:4",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:5",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:6",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:7",
+                "syllableStart": 7,
+                "syllableEnd": 11,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "单元测试"
+                ]
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:8",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:9",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:10",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:11",
+                "syllableStart": 14,
+                "syllableEnd": 15,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:1",
+                "syllableRange": [
+                  1,
+                  2
+                ],
+                "rawRange": [
+                  1,
+                  2
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:2",
+                "syllableRange": [
+                  2,
+                  3
+                ],
+                "rawRange": [
+                  2,
+                  3
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:3",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:4",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:5",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:6",
+                "syllableRange": [
+                  6,
+                  7
+                ],
+                "rawRange": [
+                  6,
+                  7
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:7",
+                "syllableRange": [
+                  7,
+                  11
+                ],
+                "rawRange": [
+                  7,
+                  11
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:7",
+                    "candidateId": "7:11:2",
+                    "replacement": "单元测试",
+                    "syllableStart": 7,
+                    "syllableEnd": 11,
+                    "source": "domain_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [
+                      "tech_ai"
+                    ],
+                    "fineDomains": [
+                      "tech_ai"
+                    ],
+                    "score": 2.4,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": true,
+                    "votesDomains": [
+                      "tech_ai"
+                    ]
+                  }
+                ],
+                "fineSpanDomainSet": [
+                  "tech_ai"
+                ],
+                "presenceVotes": [
+                  {
+                    "domain": "tech_ai",
+                    "votes": 1
+                  }
+                ]
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:8",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:9",
+                "syllableRange": [
+                  12,
+                  13
+                ],
+                "rawRange": [
+                  12,
+                  13
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:10",
+                "syllableRange": [
+                  13,
+                  14
+                ],
+                "rawRange": [
+                  13,
+                  14
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:11",
+                "syllableRange": [
+                  14,
+                  15
+                ],
+                "rawRange": [
+                  14,
+                  15
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {
+                "tech_ai": 1
+              },
+              "retainedDomains": [
+                "tech_ai"
+              ],
+              "utteranceDomain": "tech_ai",
+              "insufficientEvidence": false,
+              "maxCount": 1,
+              "runnerUpCount": 0,
+              "isTie": false
+            },
+            "bucketCount": 1,
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "eligibleVoters": [
+              {
+                "spanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:7",
+                "candidateId": "7:11:2",
+                "replacement": "单元测试",
+                "syllableStart": 7,
+                "syllableEnd": 11,
+                "source": "domain_term",
+                "recallSource": "lexicon_pinyin_topk",
+                "hitKind": "exact_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "fineDomains": [
+                  "tech_ai"
+                ],
+                "score": 2.4,
+                "repairTarget": true,
+                "isCovered": false,
+                "voteEligible": true,
+                "votesDomains": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "pathId": "1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c",
+            "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-9|9-11|11-12|12-13|13-14|14-15",
+            "spanCount": 13,
+            "spans": [
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:1",
+                "syllableStart": 1,
+                "syllableEnd": 2,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:2",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:3",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:4",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:5",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:6",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                "syllableStart": 7,
+                "syllableEnd": 9,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "单元"
+                ]
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                "syllableStart": 9,
+                "syllableEnd": 11,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "测试"
+                ]
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:9",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:10",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:11",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:12",
+                "syllableStart": 14,
+                "syllableEnd": 15,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:1",
+                "syllableRange": [
+                  1,
+                  2
+                ],
+                "rawRange": [
+                  1,
+                  2
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:2",
+                "syllableRange": [
+                  2,
+                  3
+                ],
+                "rawRange": [
+                  2,
+                  3
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:3",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:4",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:5",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:6",
+                "syllableRange": [
+                  6,
+                  7
+                ],
+                "rawRange": [
+                  6,
+                  7
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                "syllableRange": [
+                  7,
+                  9
+                ],
+                "rawRange": [
+                  7,
+                  9
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                    "candidateId": "7:9:1",
+                    "replacement": "单元",
+                    "syllableStart": 7,
+                    "syllableEnd": 9,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                "syllableRange": [
+                  9,
+                  11
+                ],
+                "rawRange": [
+                  9,
+                  11
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                    "candidateId": "9:11:3",
+                    "replacement": "测试",
+                    "syllableStart": 9,
+                    "syllableEnd": 11,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:9",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:10",
+                "syllableRange": [
+                  12,
+                  13
+                ],
+                "rawRange": [
+                  12,
+                  13
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:11",
+                "syllableRange": [
+                  13,
+                  14
+                ],
+                "rawRange": [
+                  13,
+                  14
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:12",
+                "syllableRange": [
+                  14,
+                  15
+                ],
+                "rawRange": [
+                  14,
+                  15
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {},
+              "retainedDomains": [],
+              "utteranceDomain": "general",
+              "insufficientEvidence": true,
+              "maxCount": 0,
+              "runnerUpCount": 0,
+              "isTie": false
+            },
+            "bucketCount": 1,
+            "bucketDomains": [
+              null
+            ],
+            "eligibleVoters": []
+          }
+        ],
+        "primaryPathVote": {
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "utteranceDomain": "tech_ai",
+          "insufficientEvidence": false,
+          "maxCount": 1,
+          "runnerUpCount": 0,
+          "isTie": false
+        },
+        "primaryEligibleVoters": [
+          {
+            "spanId": "fine:ba4c03fa4879c6501ab272910094c6949dbfa2002bd48f898da345ac37ed644f:7",
+            "candidateId": "7:11:2",
+            "replacement": "单元测试",
+            "syllableStart": 7,
+            "syllableEnd": 11,
+            "source": "domain_term",
+            "recallSource": "lexicon_pinyin_topk",
+            "hitKind": "exact_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "fineDomains": [
+              "tech_ai"
+            ],
+            "score": 2.4,
+            "repairTarget": true,
+            "isCovered": false,
+            "voteEligible": true,
+            "votesDomains": [
+              "tech_ai"
+            ]
+          }
+        ],
+        "orch": {
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "kenlmTop3": [
+            "请在合并前确保单元测试全部通过。"
+          ],
+          "final": "请在合并前确保单元测试全部通过。",
+          "assemblyCount": 1
+        }
+      },
+      "without": {
+        "label": "WITHOUT",
+        "lattice": {
+          "lexicalEdgeCount": 2,
+          "pathCount": 1,
+          "edgeReplacements": [
+            {
+              "edgeId": "7:9",
+              "replacement": "单元",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "9:11",
+              "replacement": "测试",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            }
+          ],
+          "compoundInEdges": false
+        },
+        "pathLogs": [
+          {
+            "pathId": "1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c",
+            "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-9|9-11|11-12|12-13|13-14|14-15",
+            "spanCount": 13,
+            "spans": [
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:1",
+                "syllableStart": 1,
+                "syllableEnd": 2,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:2",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:3",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:4",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:5",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:6",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                "syllableStart": 7,
+                "syllableEnd": 9,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "单元"
+                ]
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                "syllableStart": 9,
+                "syllableEnd": 11,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "测试"
+                ]
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:9",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:10",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:11",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:12",
+                "syllableStart": 14,
+                "syllableEnd": 15,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:1",
+                "syllableRange": [
+                  1,
+                  2
+                ],
+                "rawRange": [
+                  1,
+                  2
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:2",
+                "syllableRange": [
+                  2,
+                  3
+                ],
+                "rawRange": [
+                  2,
+                  3
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:3",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:4",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:5",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:6",
+                "syllableRange": [
+                  6,
+                  7
+                ],
+                "rawRange": [
+                  6,
+                  7
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                "syllableRange": [
+                  7,
+                  9
+                ],
+                "rawRange": [
+                  7,
+                  9
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:7",
+                    "candidateId": "7:9:1",
+                    "replacement": "单元",
+                    "syllableStart": 7,
+                    "syllableEnd": 9,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                "syllableRange": [
+                  9,
+                  11
+                ],
+                "rawRange": [
+                  9,
+                  11
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:8",
+                    "candidateId": "9:11:2",
+                    "replacement": "测试",
+                    "syllableStart": 9,
+                    "syllableEnd": 11,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:9",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:10",
+                "syllableRange": [
+                  12,
+                  13
+                ],
+                "rawRange": [
+                  12,
+                  13
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:11",
+                "syllableRange": [
+                  13,
+                  14
+                ],
+                "rawRange": [
+                  13,
+                  14
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:1e0b6854f177e303ce74229fb99377a068368977c789f3776506d49be288373c:12",
+                "syllableRange": [
+                  14,
+                  15
+                ],
+                "rawRange": [
+                  14,
+                  15
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {},
+              "retainedDomains": [],
+              "utteranceDomain": "general",
+              "insufficientEvidence": true,
+              "maxCount": 0,
+              "runnerUpCount": 0,
+              "isTie": false
+            },
+            "bucketCount": 1,
+            "bucketDomains": [
+              null
+            ],
+            "eligibleVoters": []
+          }
+        ],
+        "primaryPathVote": {
+          "domainScores": {},
+          "retainedDomains": [],
+          "utteranceDomain": "general",
+          "insufficientEvidence": true,
+          "maxCount": 0,
+          "runnerUpCount": 0,
+          "isTie": false
+        },
+        "primaryEligibleVoters": [],
+        "orch": {
+          "retainedDomains": [],
+          "kenlmTop3": [
+            "请在合并前确保单元测试全部通过。"
+          ],
+          "final": "请在合并前确保单元测试全部通过。",
+          "assemblyCount": 1
+        }
+      },
+      "explanation": {
+        "compoundDomains": [
+          "tech_ai"
+        ],
+        "compoundVotesBecause": "compound 若被 Recall 为 domain_term（hotword.domains 含 fine domain），则其所在 FineSpan 的 FineSpanDomainSet 计入 presence +1",
+        "atomsCannotReplace": [
+          {
+            "atom": "单元",
+            "domains": [],
+            "inBase": true,
+            "reason": "no fine domain tag → resolveGraphSource=base_term → Vote 不计票"
+          },
+          {
+            "atom": "测试",
+            "domains": [],
+            "inBase": true,
+            "reason": "no fine domain tag → resolveGraphSource=base_term → Vote 不计票"
+          }
+        ],
+        "contract": "Vote SSOT: domainScores[domain] = distinct FineSpan presence count；仅 source∈{domain_term,passive_domain_weak} 且 domains 含 fine label 才入 set；同 span 同 domain 多候选只计 1 票",
+        "withVsWithout": {
+          "withScores": {
+            "tech_ai": 1
+          },
+          "withRetained": [
+            "tech_ai"
+          ],
+          "withoutScores": {},
+          "withoutRetained": []
+        }
+      }
+    },
+    {
+      "compound": "神经网络",
+      "sentence": "我们正在训练神经网络模型。",
+      "atoms": [
+        "神经",
+        "网络"
+      ],
+      "tagDump": {
+        "神经网络": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": [
+            "tech_ai"
+          ]
+        },
+        "神经": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        },
+        "网络": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        },
+        "模型": {
+          "inTerm": false,
+          "repairTarget": false,
+          "inBase": false,
+          "domainLexicon": []
+        },
+        "通过": {
+          "inTerm": true,
+          "repairTarget": true,
+          "inBase": true,
+          "domainLexicon": []
+        }
+      },
+      "runtimeDomainProbe": {
+        "神经网络": [
+          {
+            "word": "神经网络",
+            "domains": [
+              "tech_ai"
+            ],
+            "repairTarget": true,
+            "prior": 0.86
+          }
+        ],
+        "神经": [
+          {
+            "word": "神经",
+            "domains": [],
+            "repairTarget": true,
+            "prior": 0.85
+          }
+        ],
+        "网络": [
+          {
+            "word": "网络",
+            "domains": [],
+            "repairTarget": true,
+            "prior": 0.85
+          }
+        ]
+      },
+      "with": {
+        "label": "WITH",
+        "lattice": {
+          "lexicalEdgeCount": 4,
+          "pathCount": 2,
+          "edgeReplacements": [
+            {
+              "edgeId": "1:3",
+              "replacement": "闷蒸",
+              "domains": [
+                "coffee"
+              ],
+              "source": "domain_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "6:8",
+              "replacement": "神经",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "6:10",
+              "replacement": "神经网络",
+              "domains": [
+                "tech_ai"
+              ],
+              "source": "domain_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "8:10",
+              "replacement": "网络",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            }
+          ],
+          "compoundInEdges": true
+        },
+        "pathLogs": [
+          {
+            "pathId": "6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe",
+            "boundaryKey": "0-1|1-3|3-4|4-5|5-6|6-10|10-11|11-12",
+            "spanCount": 8,
+            "spans": [
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:1",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "闷蒸"
+                ]
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:2",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:3",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:4",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:5",
+                "syllableStart": 6,
+                "syllableEnd": 10,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "神经网络"
+                ]
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:6",
+                "syllableStart": 10,
+                "syllableEnd": 11,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:7",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:1",
+                "syllableRange": [
+                  1,
+                  3
+                ],
+                "rawRange": [
+                  1,
+                  3
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:1",
+                    "candidateId": "1:3:1",
+                    "replacement": "闷蒸",
+                    "syllableStart": 1,
+                    "syllableEnd": 3,
+                    "source": "domain_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [
+                      "coffee"
+                    ],
+                    "fineDomains": [
+                      "coffee"
+                    ],
+                    "score": 2.36,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": true,
+                    "votesDomains": [
+                      "coffee"
+                    ]
+                  }
+                ],
+                "fineSpanDomainSet": [
+                  "coffee"
+                ],
+                "presenceVotes": [
+                  {
+                    "domain": "coffee",
+                    "votes": 1
+                  }
+                ]
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:2",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:3",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:4",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:5",
+                "syllableRange": [
+                  6,
+                  10
+                ],
+                "rawRange": [
+                  6,
+                  10
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:5",
+                    "candidateId": "6:10:3",
+                    "replacement": "神经网络",
+                    "syllableStart": 6,
+                    "syllableEnd": 10,
+                    "source": "domain_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [
+                      "tech_ai"
+                    ],
+                    "fineDomains": [
+                      "tech_ai"
+                    ],
+                    "score": 2.36,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": true,
+                    "votesDomains": [
+                      "tech_ai"
+                    ]
+                  }
+                ],
+                "fineSpanDomainSet": [
+                  "tech_ai"
+                ],
+                "presenceVotes": [
+                  {
+                    "domain": "tech_ai",
+                    "votes": 1
+                  }
+                ]
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:6",
+                "syllableRange": [
+                  10,
+                  11
+                ],
+                "rawRange": [
+                  10,
+                  11
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:7",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {
+                "coffee": 1,
+                "tech_ai": 1
+              },
+              "retainedDomains": [
+                "coffee",
+                "tech_ai"
+              ],
+              "utteranceDomain": "coffee",
+              "insufficientEvidence": false,
+              "maxCount": 1,
+              "runnerUpCount": 0,
+              "isTie": true
+            },
+            "bucketCount": 2,
+            "bucketDomains": [
+              "coffee",
+              "tech_ai"
+            ],
+            "eligibleVoters": [
+              {
+                "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:1",
+                "candidateId": "1:3:1",
+                "replacement": "闷蒸",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "source": "domain_term",
+                "recallSource": "lexicon_pinyin_topk",
+                "hitKind": "exact_term",
+                "domains": [
+                  "coffee"
+                ],
+                "fineDomains": [
+                  "coffee"
+                ],
+                "score": 2.36,
+                "repairTarget": true,
+                "isCovered": false,
+                "voteEligible": true,
+                "votesDomains": [
+                  "coffee"
+                ]
+              },
+              {
+                "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:5",
+                "candidateId": "6:10:3",
+                "replacement": "神经网络",
+                "syllableStart": 6,
+                "syllableEnd": 10,
+                "source": "domain_term",
+                "recallSource": "lexicon_pinyin_topk",
+                "hitKind": "exact_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "fineDomains": [
+                  "tech_ai"
+                ],
+                "score": 2.36,
+                "repairTarget": true,
+                "isCovered": false,
+                "voteEligible": true,
+                "votesDomains": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "pathId": "95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb",
+            "boundaryKey": "0-1|1-3|3-4|4-5|5-6|6-8|8-10|10-11|11-12",
+            "spanCount": 9,
+            "spans": [
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "闷蒸"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:2",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:3",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:4",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                "syllableStart": 6,
+                "syllableEnd": 8,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "神经"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "网络"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:7",
+                "syllableStart": 10,
+                "syllableEnd": 11,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:8",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "syllableRange": [
+                  1,
+                  3
+                ],
+                "rawRange": [
+                  1,
+                  3
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                    "candidateId": "1:3:1",
+                    "replacement": "闷蒸",
+                    "syllableStart": 1,
+                    "syllableEnd": 3,
+                    "source": "domain_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [
+                      "coffee"
+                    ],
+                    "fineDomains": [
+                      "coffee"
+                    ],
+                    "score": 2.36,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": true,
+                    "votesDomains": [
+                      "coffee"
+                    ]
+                  }
+                ],
+                "fineSpanDomainSet": [
+                  "coffee"
+                ],
+                "presenceVotes": [
+                  {
+                    "domain": "coffee",
+                    "votes": 1
+                  }
+                ]
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:2",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:3",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:4",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                "syllableRange": [
+                  6,
+                  8
+                ],
+                "rawRange": [
+                  6,
+                  8
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                    "candidateId": "6:8:2",
+                    "replacement": "神经",
+                    "syllableStart": 6,
+                    "syllableEnd": 8,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                "syllableRange": [
+                  8,
+                  10
+                ],
+                "rawRange": [
+                  8,
+                  10
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                    "candidateId": "8:10:4",
+                    "replacement": "网络",
+                    "syllableStart": 8,
+                    "syllableEnd": 10,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:7",
+                "syllableRange": [
+                  10,
+                  11
+                ],
+                "rawRange": [
+                  10,
+                  11
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:8",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {
+                "coffee": 1
+              },
+              "retainedDomains": [
+                "coffee"
+              ],
+              "utteranceDomain": "coffee",
+              "insufficientEvidence": false,
+              "maxCount": 1,
+              "runnerUpCount": 0,
+              "isTie": false
+            },
+            "bucketCount": 1,
+            "bucketDomains": [
+              "coffee"
+            ],
+            "eligibleVoters": [
+              {
+                "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "candidateId": "1:3:1",
+                "replacement": "闷蒸",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "source": "domain_term",
+                "recallSource": "lexicon_pinyin_topk",
+                "hitKind": "exact_term",
+                "domains": [
+                  "coffee"
+                ],
+                "fineDomains": [
+                  "coffee"
+                ],
+                "score": 2.36,
+                "repairTarget": true,
+                "isCovered": false,
+                "voteEligible": true,
+                "votesDomains": [
+                  "coffee"
+                ]
+              }
+            ]
+          }
+        ],
+        "primaryPathVote": {
+          "domainScores": {
+            "coffee": 1,
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "coffee",
+            "tech_ai"
+          ],
+          "utteranceDomain": "coffee",
+          "insufficientEvidence": false,
+          "maxCount": 1,
+          "runnerUpCount": 0,
+          "isTie": true
+        },
+        "primaryEligibleVoters": [
+          {
+            "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:1",
+            "candidateId": "1:3:1",
+            "replacement": "闷蒸",
+            "syllableStart": 1,
+            "syllableEnd": 3,
+            "source": "domain_term",
+            "recallSource": "lexicon_pinyin_topk",
+            "hitKind": "exact_term",
+            "domains": [
+              "coffee"
+            ],
+            "fineDomains": [
+              "coffee"
+            ],
+            "score": 2.36,
+            "repairTarget": true,
+            "isCovered": false,
+            "voteEligible": true,
+            "votesDomains": [
+              "coffee"
+            ]
+          },
+          {
+            "spanId": "fine:6a30f0d631e80b1536265f92d74554969c9cb5017aaff04939a72ddb3f9ab6fe:5",
+            "candidateId": "6:10:3",
+            "replacement": "神经网络",
+            "syllableStart": 6,
+            "syllableEnd": 10,
+            "source": "domain_term",
+            "recallSource": "lexicon_pinyin_topk",
+            "hitKind": "exact_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "fineDomains": [
+              "tech_ai"
+            ],
+            "score": 2.36,
+            "repairTarget": true,
+            "isCovered": false,
+            "voteEligible": true,
+            "votesDomains": [
+              "tech_ai"
+            ]
+          }
+        ],
+        "orch": {
+          "retainedDomains": [
+            "coffee",
+            "tech_ai"
+          ],
+          "kenlmTop3": [
+            "我闷蒸在训练神经网络模型。",
+            "我们正在训练神经网络模型。"
+          ],
+          "final": "我闷蒸在训练神经网络模型。",
+          "assemblyCount": 2
+        }
+      },
+      "without": {
+        "label": "WITHOUT",
+        "lattice": {
+          "lexicalEdgeCount": 3,
+          "pathCount": 1,
+          "edgeReplacements": [
+            {
+              "edgeId": "1:3",
+              "replacement": "闷蒸",
+              "domains": [
+                "coffee"
+              ],
+              "source": "domain_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "6:8",
+              "replacement": "神经",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            },
+            {
+              "edgeId": "8:10",
+              "replacement": "网络",
+              "domains": [],
+              "source": "base_term",
+              "repairTarget": true
+            }
+          ],
+          "compoundInEdges": false
+        },
+        "pathLogs": [
+          {
+            "pathId": "95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb",
+            "boundaryKey": "0-1|1-3|3-4|4-5|5-6|6-8|8-10|10-11|11-12",
+            "spanCount": 9,
+            "spans": [
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:0",
+                "syllableStart": 0,
+                "syllableEnd": 1,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "闷蒸"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:2",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:3",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:4",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                "syllableStart": 6,
+                "syllableEnd": 8,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "神经"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "windowSource": "in_span_window",
+                "candidateWords": [
+                  "网络"
+                ]
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:7",
+                "syllableStart": 10,
+                "syllableEnd": 11,
+                "windowSource": "fallback",
+                "candidateWords": []
+              },
+              {
+                "id": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:8",
+                "syllableStart": 11,
+                "syllableEnd": 12,
+                "windowSource": "fallback",
+                "candidateWords": []
+              }
+            ],
+            "spanVoteLogs": [
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:0",
+                "syllableRange": [
+                  0,
+                  1
+                ],
+                "rawRange": [
+                  0,
+                  1
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "syllableRange": [
+                  1,
+                  3
+                ],
+                "rawRange": [
+                  1,
+                  3
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                    "candidateId": "1:3:1",
+                    "replacement": "闷蒸",
+                    "syllableStart": 1,
+                    "syllableEnd": 3,
+                    "source": "domain_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [
+                      "coffee"
+                    ],
+                    "fineDomains": [
+                      "coffee"
+                    ],
+                    "score": 2.36,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": true,
+                    "votesDomains": [
+                      "coffee"
+                    ]
+                  }
+                ],
+                "fineSpanDomainSet": [
+                  "coffee"
+                ],
+                "presenceVotes": [
+                  {
+                    "domain": "coffee",
+                    "votes": 1
+                  }
+                ]
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:2",
+                "syllableRange": [
+                  3,
+                  4
+                ],
+                "rawRange": [
+                  3,
+                  4
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:3",
+                "syllableRange": [
+                  4,
+                  5
+                ],
+                "rawRange": [
+                  4,
+                  5
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:4",
+                "syllableRange": [
+                  5,
+                  6
+                ],
+                "rawRange": [
+                  5,
+                  6
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                "syllableRange": [
+                  6,
+                  8
+                ],
+                "rawRange": [
+                  6,
+                  8
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:5",
+                    "candidateId": "6:8:2",
+                    "replacement": "神经",
+                    "syllableStart": 6,
+                    "syllableEnd": 8,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                "syllableRange": [
+                  8,
+                  10
+                ],
+                "rawRange": [
+                  8,
+                  10
+                ],
+                "candidates": [
+                  {
+                    "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:6",
+                    "candidateId": "8:10:3",
+                    "replacement": "网络",
+                    "syllableStart": 8,
+                    "syllableEnd": 10,
+                    "source": "base_term",
+                    "recallSource": "lexicon_pinyin_topk",
+                    "hitKind": "exact_term",
+                    "domains": [],
+                    "fineDomains": [],
+                    "score": 2.35,
+                    "repairTarget": true,
+                    "isCovered": false,
+                    "voteEligible": false,
+                    "votesDomains": []
+                  }
+                ],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:7",
+                "syllableRange": [
+                  10,
+                  11
+                ],
+                "rawRange": [
+                  10,
+                  11
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              },
+              {
+                "fineSpanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:8",
+                "syllableRange": [
+                  11,
+                  12
+                ],
+                "rawRange": [
+                  11,
+                  12
+                ],
+                "candidates": [],
+                "fineSpanDomainSet": [],
+                "presenceVotes": []
+              }
+            ],
+            "vote": {
+              "domainScores": {
+                "coffee": 1
+              },
+              "retainedDomains": [
+                "coffee"
+              ],
+              "utteranceDomain": "coffee",
+              "insufficientEvidence": false,
+              "maxCount": 1,
+              "runnerUpCount": 0,
+              "isTie": false
+            },
+            "bucketCount": 1,
+            "bucketDomains": [
+              "coffee"
+            ],
+            "eligibleVoters": [
+              {
+                "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+                "candidateId": "1:3:1",
+                "replacement": "闷蒸",
+                "syllableStart": 1,
+                "syllableEnd": 3,
+                "source": "domain_term",
+                "recallSource": "lexicon_pinyin_topk",
+                "hitKind": "exact_term",
+                "domains": [
+                  "coffee"
+                ],
+                "fineDomains": [
+                  "coffee"
+                ],
+                "score": 2.36,
+                "repairTarget": true,
+                "isCovered": false,
+                "voteEligible": true,
+                "votesDomains": [
+                  "coffee"
+                ]
+              }
+            ]
+          }
+        ],
+        "primaryPathVote": {
+          "domainScores": {
+            "coffee": 1
+          },
+          "retainedDomains": [
+            "coffee"
+          ],
+          "utteranceDomain": "coffee",
+          "insufficientEvidence": false,
+          "maxCount": 1,
+          "runnerUpCount": 0,
+          "isTie": false
+        },
+        "primaryEligibleVoters": [
+          {
+            "spanId": "fine:95260b2a981376a037966622319c7efba02d49426ef2068dc101dbaf98ef4dcb:1",
+            "candidateId": "1:3:1",
+            "replacement": "闷蒸",
+            "syllableStart": 1,
+            "syllableEnd": 3,
+            "source": "domain_term",
+            "recallSource": "lexicon_pinyin_topk",
+            "hitKind": "exact_term",
+            "domains": [
+              "coffee"
+            ],
+            "fineDomains": [
+              "coffee"
+            ],
+            "score": 2.36,
+            "repairTarget": true,
+            "isCovered": false,
+            "voteEligible": true,
+            "votesDomains": [
+              "coffee"
+            ]
+          }
+        ],
+        "orch": {
+          "retainedDomains": [
+            "coffee"
+          ],
+          "kenlmTop3": [
+            "我闷蒸在训练神经网络模型。",
+            "我们正在训练神经网络模型。"
+          ],
+          "final": "我闷蒸在训练神经网络模型。",
+          "assemblyCount": 2
+        }
+      },
+      "explanation": {
+        "compoundDomains": [
+          "tech_ai"
+        ],
+        "compoundVotesBecause": "compound 若被 Recall 为 domain_term（hotword.domains 含 fine domain），则其所在 FineSpan 的 FineSpanDomainSet 计入 presence +1",
+        "atomsCannotReplace": [
+          {
+            "atom": "神经",
+            "domains": [],
+            "inBase": true,
+            "reason": "no fine domain tag → resolveGraphSource=base_term → Vote 不计票"
+          },
+          {
+            "atom": "网络",
+            "domains": [],
+            "inBase": true,
+            "reason": "no fine domain tag → resolveGraphSource=base_term → Vote 不计票"
+          }
+        ],
+        "contract": "Vote SSOT: domainScores[domain] = distinct FineSpan presence count；仅 source∈{domain_term,passive_domain_weak} 且 domains 含 fine label 才入 set；同 span 同 domain 多候选只计 1 票",
+        "withVsWithout": {
+          "withScores": {
+            "coffee": 1,
+            "tech_ai": 1
+          },
+          "withRetained": [
+            "coffee",
+            "tech_ai"
+          ],
+          "withoutScores": {
+            "coffee": 1
+          },
+          "withoutRetained": [
+            "coffee"
+          ]
+        }
+      }
+    }
+  ],
+  "rootCause": {
+    "primary": "DOMAIN_TAG",
+    "isDomainTagProblem": true,
+    "isVoteProblem": false,
+    "isCandidateMergeProblem": false,
+    "isWeightProblem": false,
+    "isRuntimeBug": false,
+    "causes": [
+      "DOMAIN_TAG_ON_COMPOUND_ONLY",
+      "ATOMS_LACK_DOMAIN_TAG",
+      "VOTE_SOURCE_GATE_BY_DESIGN"
+    ],
+    "detail": "Compound 在 domain_lexicon / hotword.domains 上挂有 fine domain（如 tech_ai）；原子词（神经/网络、单元/测试）通常仅为 base_term（无 fine domain）→ resolveGraphSource=base_term → Vote 门禁排除。删除 compound 后失去该 FineSpan 的 presence 票，retainedDomains 下降；Assembly 仍可用 base_term/canonical 拼出相同表面，故 KenLM/Final 不变。"
+  }
+}

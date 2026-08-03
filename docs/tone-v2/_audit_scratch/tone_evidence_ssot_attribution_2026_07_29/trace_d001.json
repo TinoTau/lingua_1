@@ -1,0 +1,220 @@
+{
+  "id": "d001",
+  "expected": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+  "asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+  "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 19,
+    "evidenceProductionCount": 19,
+    "firstSlicePosterior": {
+      "t1": 0.006326558534055948,
+      "t2": 0.30165788531303406,
+      "t3": 0.6345226764678955,
+      "t4": 0.05742381885647774,
+      "t5": 0.00006909275543875992
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 19,
+    "wordTimeSpanCount": 19,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 19
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "马分",
+        "pinyinKey": "ma|fen",
+        "windowTimeRange": {
+          "start": 5.42,
+          "end": 5.76
+        },
+        "acousticTonePattern": [
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝莓马分吗?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 3,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+    "allCombinations": [
+      {
+        "sentence": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝莓马分吗?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "你好",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "你好",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我想",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我想",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "點一",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "點一",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "杯熱",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "杯熱",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "拿鐵",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "拿鐵",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "鐘",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "鐘",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "貝少",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "貝少",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "糖 今",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "糖 今",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

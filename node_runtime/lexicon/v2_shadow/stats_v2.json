@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generatedAt": "2026-06-09T03:52:48.844Z",
+  "generatedAt": "2026-08-01T13:27:56.916Z",
   "seed_root": "",
   "seed_inputs": [],
   "tables": {
@@ -37,11 +37,12 @@
       "maxBucketSize": 1,
       "maxBucketKey": "zhong|bei"
     },
-    "term_pinyin_ngrams": {
-      "rowCount": 202138,
-      "pinyinKeyCount": 112215,
-      "maxBucketSize": 164,
-      "maxBucketKey": "bu|ke"
+    "term": {
+      "rowCount": 9,
+      "canonicalCount": 9
+    },
+    "term_domain_tags": {
+      "rowCount": 9
     }
   },
   "rejectedCount": 897,
@@ -64,5 +65,9 @@
     "four_char_non_idiom": 0,
     "unclassified": 0,
     "invalid_prior": 0
-  }
+  },
+  "domainAvailability": {
+    "restaurant": 9
+  },
+  "domainHierarchyVersion": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b"
 }

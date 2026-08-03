@@ -1,0 +1,5471 @@
+{
+  "caseCount": 22,
+  "cases": [
+    {
+      "caseId": "d001",
+      "text": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "syllableCount": 27,
+      "formalCount": 15,
+      "recalledHits": 8,
+      "committedHitKeys": 3,
+      "permanentDropCount": 2,
+      "longerExactPermanentDrops": [
+        {
+          "windowId": "23:25",
+          "word": "莓马",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 25,
+          "domains": [
+            "bakery",
+            "food_order"
+          ],
+          "winnerText": "莓",
+          "winnerRange": [
+            23,
+            24
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        },
+        {
+          "windowId": "23:26",
+          "word": "莓马芬",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 26,
+          "domains": [
+            "bakery",
+            "food_order"
+          ],
+          "winnerText": "莓",
+          "winnerRange": [
+            23,
+            24
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        }
+      ],
+      "permanentDropSample": [
+        {
+          "windowId": "23:25",
+          "word": "莓马",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 25,
+          "domains": [
+            "bakery",
+            "food_order"
+          ],
+          "winnerText": "莓",
+          "winnerRange": [
+            23,
+            24
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        },
+        {
+          "windowId": "23:26",
+          "word": "莓马芬",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 26,
+          "domains": [
+            "bakery",
+            "food_order"
+          ],
+          "winnerText": "莓",
+          "winnerRange": [
+            23,
+            24
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        }
+      ],
+      "overlapTrace": [
+        {
+          "cursor": 6,
+          "options": [
+            {
+              "id": "6:10",
+              "text": "杯热拿铁",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "6:11",
+              "text": "杯热拿铁，中",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "杯热",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 8,
+          "options": [
+            {
+              "id": "8:10",
+              "text": "拿铁",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "8:11",
+              "text": "拿铁，中",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:12",
+              "text": "拿铁，中杯",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:13",
+              "text": "拿铁，中杯，少",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "拿铁",
+            "range": [
+              8,
+              10
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 23,
+          "options": [
+            {
+              "id": "23:25",
+              "text": "莓马",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "23:26",
+              "text": "莓马芬",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "23:27",
+              "text": "莓马芬吗",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "莓",
+            "range": [
+              23,
+              24
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": [
+            {
+              "windowId": "23:25",
+              "word": "莓马",
+              "hitKind": "parent_fragment",
+              "syllableStart": 23,
+              "syllableEnd": 25,
+              "domains": [
+                "bakery",
+                "food_order"
+              ],
+              "winnerText": "莓",
+              "winnerRange": [
+                23,
+                24
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            },
+            {
+              "windowId": "23:26",
+              "word": "莓马芬",
+              "hitKind": "parent_fragment",
+              "syllableStart": 23,
+              "syllableEnd": 26,
+              "domains": [
+                "bakery",
+                "food_order"
+              ],
+              "winnerText": "莓",
+              "winnerRange": [
+                23,
+                24
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            }
+          ]
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:8:10",
+          "text": "拿铁",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:10:12",
+          "text": "中杯",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "中杯",
+              "k": "parent_fragment",
+              "d": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:24:26",
+          "text": "马芬",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "马芬",
+              "k": "parent_fragment",
+              "d": [
+                "bakery",
+                "food_order"
+              ]
+            },
+            {
+              "w": "马芬",
+              "k": "parent_fragment",
+              "d": [
+                "bakery"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 8,
+          "optionTexts": [
+            {
+              "id": "8:10",
+              "text": "拿铁",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "8:11",
+              "text": "拿铁，中",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:12",
+              "text": "拿铁，中杯",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:13",
+              "text": "拿铁，中杯，少",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "拿铁",
+            "range": [
+              8,
+              10
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "8:11",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:12",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:13",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:9",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 10,
+          "optionTexts": [
+            {
+              "id": "10:12",
+              "text": "中杯",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "10:13",
+              "text": "中杯，少",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "10:14",
+              "text": "中杯，少糖",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "10:15",
+              "text": "中杯，少糖。顺",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "中杯",
+            "range": [
+              10,
+              12
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "10:15",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:13",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:14",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:11",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 23,
+          "optionTexts": [
+            {
+              "id": "23:25",
+              "text": "莓马",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "23:26",
+              "text": "莓马芬",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "23:27",
+              "text": "莓马芬吗",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 2,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "莓",
+            "range": [
+              23,
+              24
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "23:25",
+              "reason": "rejected_partial",
+              "lexical": "partial_fragment",
+              "cand": 1
+            },
+            {
+              "windowId": "23:26",
+              "reason": "rejected_partial",
+              "lexical": "partial_fragment",
+              "cand": 1
+            },
+            {
+              "windowId": "23:27",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": [
+            {
+              "windowId": "23:25",
+              "word": "莓马",
+              "hitKind": "parent_fragment",
+              "syllableStart": 23,
+              "syllableEnd": 25,
+              "domains": [
+                "bakery",
+                "food_order"
+              ],
+              "winnerText": "莓",
+              "winnerRange": [
+                23,
+                24
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            },
+            {
+              "windowId": "23:26",
+              "word": "莓马芬",
+              "hitKind": "parent_fragment",
+              "syllableStart": 23,
+              "syllableEnd": 26,
+              "domains": [
+                "bakery",
+                "food_order"
+              ],
+              "winnerText": "莓",
+              "winnerRange": [
+                23,
+                24
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            }
+          ]
+        },
+        {
+          "cursor": 24,
+          "optionTexts": [
+            {
+              "id": "24:26",
+              "text": "马芬",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "24:27",
+              "text": "马芬吗",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "马芬",
+            "range": [
+              24,
+              26
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "24:27",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "24:25",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "coffee",
+        "food_order"
+      ],
+      "voteScores": {
+        "coffee": 2,
+        "food_order": 2,
+        "milk_tea": 1,
+        "bakery": 1
+      },
+      "activeCandidateCount": 6,
+      "recalledHitSample": [
+        {
+          "cursor": 8,
+          "windowId": "8:10",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 8,
+          "windowId": "8:10",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 8,
+          "windowId": "8:10",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "中杯",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "cursor": 23,
+          "windowId": "23:25",
+          "word": "莓马",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 25,
+          "domains": [
+            "bakery",
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 23,
+          "windowId": "23:26",
+          "word": "莓马芬",
+          "hitKind": "parent_fragment",
+          "syllableStart": 23,
+          "syllableEnd": 26,
+          "domains": [
+            "bakery",
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 24,
+          "windowId": "24:26",
+          "word": "马芬",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "bakery",
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 24,
+          "windowId": "24:26",
+          "word": "马芬",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "bakery"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d007",
+      "text": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "syllableCount": 31,
+      "formalCount": 19,
+      "recalledHits": 7,
+      "committedHitKeys": 3,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 7,
+          "options": [
+            {
+              "id": "7:12",
+              "text": "件园，走机场",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "件园",
+            "range": [
+              7,
+              9
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 9,
+          "options": [
+            {
+              "id": "9:12",
+              "text": "走机场",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:13",
+              "text": "走机场高",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "9:14",
+              "text": "走机场高速",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "走",
+            "range": [
+              9,
+              10
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 10,
+          "options": [
+            {
+              "id": "10:12",
+              "text": "机场",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "10:13",
+              "text": "机场高",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "10:14",
+              "text": "机场高速",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "10:15",
+              "text": "机场高速。我",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "机场",
+            "range": [
+              10,
+              12
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 12,
+          "options": [
+            {
+              "id": "12:14",
+              "text": "高速",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "12:15",
+              "text": "高速。我",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "12:16",
+              "text": "高速。我赶",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "12:17",
+              "text": "高速。我赶九",
+              "blocked": true,
+              "cross": 3,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "高速",
+            "range": [
+              12,
+              14
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:10:12",
+          "text": "机场",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "机场",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_transport",
+                "transport"
+              ]
+            },
+            {
+              "w": "机场",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_transport"
+              ]
+            },
+            {
+              "w": "机场",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:16:18",
+          "text": "九点",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:26:28",
+          "text": "提前",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "提前",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 10,
+          "optionTexts": [
+            {
+              "id": "10:12",
+              "text": "机场",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "10:13",
+              "text": "机场高",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "10:14",
+              "text": "机场高速",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "10:15",
+              "text": "机场高速。我",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 2,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "机场",
+            "range": [
+              10,
+              12
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "10:13",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:14",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:15",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:11",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 16,
+          "optionTexts": [
+            {
+              "id": "16:18",
+              "text": "九点",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "16:19",
+              "text": "九点半",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "16:20",
+              "text": "九点半的",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "16:21",
+              "text": "九点半的会",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "九点",
+            "range": [
+              16,
+              18
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "16:19",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:20",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:21",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:17",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 26,
+          "optionTexts": [
+            {
+              "id": "26:28",
+              "text": "提前",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "26:29",
+              "text": "提前跟",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "26:30",
+              "text": "提前跟我",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "26:31",
+              "text": "提前跟我说",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "提前",
+            "range": [
+              26,
+              28
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "26:29",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "26:30",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "26:31",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "26:27",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tourism_hotel"
+      ],
+      "voteScores": {
+        "tourism_transport": 1,
+        "transport": 1,
+        "tourism_hotel": 2
+      },
+      "activeCandidateCount": 7,
+      "recalledHitSample": [
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "机场",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tourism_transport",
+            "transport"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "机场",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tourism_transport"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "机场",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tourism_transport"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 26,
+          "windowId": "26:28",
+          "word": "提前",
+          "hitKind": "parent_fragment",
+          "syllableStart": 26,
+          "syllableEnd": 28,
+          "domains": [
+            "tourism_hotel"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d015",
+      "text": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "syllableCount": 25,
+      "formalCount": 14,
+      "recalledHits": 4,
+      "committedHitKeys": 2,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 6,
+          "options": [
+            {
+              "id": "6:11",
+              "text": "这两款订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "这两",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 8,
+          "options": [
+            {
+              "id": "8:11",
+              "text": "款订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "8:12",
+              "text": "款订单中",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:13",
+              "text": "款订单中台",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "款订",
+            "range": [
+              8,
+              10
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:14:16",
+          "text": "价格",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "价格",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "价格",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_route"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:16:18",
+          "text": "会员",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "会员",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "会员",
+              "k": "parent_fragment",
+              "d": [
+                "meeting"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 14,
+          "optionTexts": [
+            {
+              "id": "14:16",
+              "text": "价格",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "14:17",
+              "text": "价格，会",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:18",
+              "text": "价格，会员",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:19",
+              "text": "价格，会员日",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "价格",
+            "range": [
+              14,
+              16
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "14:17",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:18",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:19",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:15",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 16,
+          "optionTexts": [
+            {
+              "id": "16:18",
+              "text": "会员",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "16:19",
+              "text": "会员日",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "16:20",
+              "text": "会员日能",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "16:21",
+              "text": "会员日能再",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "会员",
+            "range": [
+              16,
+              18
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "16:21",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:19",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:20",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:17",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "coffee",
+        "food_order",
+        "meeting",
+        "tourism_route"
+      ],
+      "voteScores": {
+        "coffee": 1,
+        "tourism_route": 1,
+        "food_order": 1,
+        "meeting": 1
+      },
+      "activeCandidateCount": 4,
+      "recalledHitSample": [
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "价格",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "价格",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "tourism_route"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "会员",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "会员",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "meeting"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d022",
+      "text": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "syllableCount": 25,
+      "formalCount": 14,
+      "recalledHits": 3,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 0,
+          "options": [
+            {
+              "id": "0:5",
+              "text": "您好，我订单",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "您好",
+            "range": [
+              0,
+              2
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 2,
+          "options": [
+            {
+              "id": "2:5",
+              "text": "我订单",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "2:6",
+              "text": "我订单显",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "2:7",
+              "text": "我订单显示",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "我",
+            "range": [
+              2,
+              3
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 3,
+          "options": [
+            {
+              "id": "3:5",
+              "text": "订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "3:6",
+              "text": "订单显",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:7",
+              "text": "订单显示",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:8",
+              "text": "订单显示已",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "订单",
+            "range": [
+              3,
+              5
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:3:5",
+          "text": "订单",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 3,
+          "optionTexts": [
+            {
+              "id": "3:5",
+              "text": "订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "3:6",
+              "text": "订单显",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:7",
+              "text": "订单显示",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:8",
+              "text": "订单显示已",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "订单",
+            "range": [
+              3,
+              5
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "3:6",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:7",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:8",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:4",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "food_order"
+      ],
+      "voteScores": {
+        "food_order": 1
+      },
+      "activeCandidateCount": 3,
+      "recalledHitSample": [
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d031",
+      "text": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "syllableCount": 19,
+      "formalCount": 11,
+      "recalledHits": 5,
+      "committedHitKeys": 2,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 0,
+          "options": [
+            {
+              "id": "0:3",
+              "text": "我预订",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:4",
+              "text": "我预订的",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:5",
+              "text": "我预订的是",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "我预",
+            "range": [
+              0,
+              2
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:6:8",
+          "text": "床房",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "床房",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "床房",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:9:11",
+          "text": "安排",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_transport"
+              ]
+            },
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 6,
+          "optionTexts": [
+            {
+              "id": "6:8",
+              "text": "床房",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "6:9",
+              "text": "床房，能",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "6:10",
+              "text": "床房，能安",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "6:11",
+              "text": "床房，能安排",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "床房",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "6:10",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:11",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:9",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:7",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 9,
+          "optionTexts": [
+            {
+              "id": "9:11",
+              "text": "安排",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "9:12",
+              "text": "安排安",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "9:13",
+              "text": "安排安静",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:14",
+              "text": "安排安静一",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "安排",
+            "range": [
+              9,
+              11
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "9:13",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:14",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:12",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:10",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tourism_hotel"
+      ],
+      "voteScores": {
+        "tourism_hotel": 2,
+        "tourism_transport": 1
+      },
+      "activeCandidateCount": 5,
+      "recalledHitSample": [
+        {
+          "cursor": 6,
+          "windowId": "6:8",
+          "word": "床房",
+          "hitKind": "parent_fragment",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 6,
+          "windowId": "6:8",
+          "word": "床房",
+          "hitKind": "parent_fragment",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "tourism_transport"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "tourism_hotel"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d041",
+      "text": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "syllableCount": 20,
+      "formalCount": 13,
+      "recalledHits": 3,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:11:13",
+          "text": "前台",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "前台",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "前台",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "前台",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 11,
+          "optionTexts": [
+            {
+              "id": "11:13",
+              "text": "前台",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "11:14",
+              "text": "前台能",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "11:15",
+              "text": "前台能帮",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "11:16",
+              "text": "前台能帮忙",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "前台",
+            "range": [
+              11,
+              13
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "11:15",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:16",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:14",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:12",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tourism_hotel"
+      ],
+      "voteScores": {
+        "tourism_hotel": 1
+      },
+      "activeCandidateCount": 3,
+      "recalledHitSample": [
+        {
+          "cursor": 11,
+          "windowId": "11:13",
+          "word": "前台",
+          "hitKind": "parent_fragment",
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 11,
+          "windowId": "11:13",
+          "word": "前台",
+          "hitKind": "parent_fragment",
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 11,
+          "windowId": "11:13",
+          "word": "前台",
+          "hitKind": "parent_fragment",
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "domains": [
+            "tourism_hotel"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d049",
+      "text": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "syllableCount": 33,
+      "formalCount": 17,
+      "recalledHits": 8,
+      "committedHitKeys": 4,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:6:8",
+          "text": "翻译",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "翻译",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:8:10",
+          "text": "引擎",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "引擎",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:10:12",
+          "text": "接口",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "接口",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            },
+            {
+              "w": "接口",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            },
+            {
+              "w": "接口",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:20:22",
+          "text": "缓存",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "缓存",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            },
+            {
+              "w": "缓存",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            },
+            {
+              "w": "缓存",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 6,
+          "optionTexts": [
+            {
+              "id": "6:8",
+              "text": "翻译",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "6:9",
+              "text": "翻译引",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "6:10",
+              "text": "翻译引擎",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "6:11",
+              "text": "翻译引擎接",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "翻译",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "6:9",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:10",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:11",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:7",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 8,
+          "optionTexts": [
+            {
+              "id": "8:10",
+              "text": "引擎",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "8:11",
+              "text": "引擎接",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "8:12",
+              "text": "引擎接口",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "8:13",
+              "text": "引擎接口报",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "引擎",
+            "range": [
+              8,
+              10
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "8:11",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:12",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:13",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "8:9",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 10,
+          "optionTexts": [
+            {
+              "id": "10:12",
+              "text": "接口",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "10:13",
+              "text": "接口报",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "10:14",
+              "text": "接口报错",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "10:15",
+              "text": "接口报错，我",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "接口",
+            "range": [
+              10,
+              12
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "10:15",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:13",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:14",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "10:11",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 20,
+          "optionTexts": [
+            {
+              "id": "20:22",
+              "text": "缓存",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "20:23",
+              "text": "缓存，下",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "20:24",
+              "text": "缓存，下午",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "20:25",
+              "text": "缓存，下午三",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "缓存",
+            "range": [
+              20,
+              22
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "20:23",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:24",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:25",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:21",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tech_ai"
+      ],
+      "voteScores": {
+        "tech_ai": 4
+      },
+      "activeCandidateCount": 8,
+      "recalledHitSample": [
+        {
+          "cursor": 6,
+          "windowId": "6:8",
+          "word": "翻译",
+          "hitKind": "parent_fragment",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 8,
+          "windowId": "8:10",
+          "word": "引擎",
+          "hitKind": "parent_fragment",
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "接口",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "接口",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 10,
+          "windowId": "10:12",
+          "word": "接口",
+          "hitKind": "parent_fragment",
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 20,
+          "windowId": "20:22",
+          "word": "缓存",
+          "hitKind": "parent_fragment",
+          "syllableStart": 20,
+          "syllableEnd": 22,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 20,
+          "windowId": "20:22",
+          "word": "缓存",
+          "hitKind": "parent_fragment",
+          "syllableStart": 20,
+          "syllableEnd": 22,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 20,
+          "windowId": "20:22",
+          "word": "缓存",
+          "hitKind": "parent_fragment",
+          "syllableStart": 20,
+          "syllableEnd": 22,
+          "domains": [
+            "tech_ai"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d055",
+      "text": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+      "syllableCount": 21,
+      "formalCount": 12,
+      "recalledHits": 3,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:0:2",
+          "text": "医生",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "医生",
+              "k": "parent_fragment",
+              "d": [
+                "medical"
+              ]
+            },
+            {
+              "w": "医生",
+              "k": "parent_fragment",
+              "d": [
+                "medical"
+              ]
+            },
+            {
+              "w": "医生",
+              "k": "parent_fragment",
+              "d": [
+                "medical"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 0,
+          "optionTexts": [
+            {
+              "id": "0:2",
+              "text": "医生",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "0:3",
+              "text": "医生您",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:4",
+              "text": "医生您好",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:5",
+              "text": "医生您好，我",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "医生",
+            "range": [
+              0,
+              2
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "0:3",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:4",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:5",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:1",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "medical"
+      ],
+      "voteScores": {
+        "medical": 1
+      },
+      "activeCandidateCount": 3,
+      "recalledHitSample": [
+        {
+          "cursor": 0,
+          "windowId": "0:2",
+          "word": "医生",
+          "hitKind": "parent_fragment",
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "domains": [
+            "medical"
+          ]
+        },
+        {
+          "cursor": 0,
+          "windowId": "0:2",
+          "word": "医生",
+          "hitKind": "parent_fragment",
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "domains": [
+            "medical"
+          ]
+        },
+        {
+          "cursor": 0,
+          "windowId": "0:2",
+          "word": "医生",
+          "hitKind": "parent_fragment",
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "domains": [
+            "medical"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d061",
+      "text": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "syllableCount": 23,
+      "formalCount": 13,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d067",
+      "text": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "syllableCount": 25,
+      "formalCount": 14,
+      "recalledHits": 3,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 0,
+          "options": [
+            {
+              "id": "0:5",
+              "text": "您好，我订单",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "您好",
+            "range": [
+              0,
+              2
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 2,
+          "options": [
+            {
+              "id": "2:5",
+              "text": "我订单",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "2:6",
+              "text": "我订单显",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "2:7",
+              "text": "我订单显示",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "我",
+            "range": [
+              2,
+              3
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 3,
+          "options": [
+            {
+              "id": "3:5",
+              "text": "订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "3:6",
+              "text": "订单显",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:7",
+              "text": "订单显示",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:8",
+              "text": "订单显示已",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "订单",
+            "range": [
+              3,
+              5
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:3:5",
+          "text": "订单",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "订单",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 3,
+          "optionTexts": [
+            {
+              "id": "3:5",
+              "text": "订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "3:6",
+              "text": "订单显",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:7",
+              "text": "订单显示",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:8",
+              "text": "订单显示已",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "订单",
+            "range": [
+              3,
+              5
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "3:6",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:7",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:8",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:4",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "food_order"
+      ],
+      "voteScores": {
+        "food_order": 1
+      },
+      "activeCandidateCount": 3,
+      "recalledHitSample": [
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "订单",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "food_order"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d073",
+      "text": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "syllableCount": 24,
+      "formalCount": 15,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d079",
+      "text": "我想开通短信提醒，需要带什么证件？",
+      "syllableCount": 15,
+      "formalCount": 8,
+      "recalledHits": 2,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:6:8",
+          "text": "提醒",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "提醒",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_route"
+              ]
+            },
+            {
+              "w": "提醒",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_route"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 6,
+          "optionTexts": [
+            {
+              "id": "6:8",
+              "text": "提醒",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "6:9",
+              "text": "提醒，需",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "6:10",
+              "text": "提醒，需要",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "6:11",
+              "text": "提醒，需要带",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "提醒",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "6:9",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:10",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:11",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "6:7",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tourism_route"
+      ],
+      "voteScores": {
+        "tourism_route": 1
+      },
+      "activeCandidateCount": 2,
+      "recalledHitSample": [
+        {
+          "cursor": 6,
+          "windowId": "6:8",
+          "word": "提醒",
+          "hitKind": "parent_fragment",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "domains": [
+            "tourism_route"
+          ]
+        },
+        {
+          "cursor": 6,
+          "windowId": "6:8",
+          "word": "提醒",
+          "hitKind": "parent_fragment",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "domains": [
+            "tourism_route"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d085",
+      "text": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "syllableCount": 18,
+      "formalCount": 10,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d091",
+      "text": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "syllableCount": 26,
+      "formalCount": 15,
+      "recalledHits": 7,
+      "committedHitKeys": 3,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 7,
+          "options": [
+            {
+              "id": "7:11",
+              "text": "燕麦拿铁",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "7:12",
+              "text": "燕麦拿铁，中",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "燕麦",
+            "range": [
+              7,
+              9
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 9,
+          "options": [
+            {
+              "id": "9:11",
+              "text": "拿铁",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "9:12",
+              "text": "拿铁，中",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:13",
+              "text": "拿铁，中杯",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:14",
+              "text": "拿铁，中杯，无",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "拿铁",
+            "range": [
+              9,
+              11
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:7:9",
+          "text": "燕麦",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "燕麦",
+              "k": "parent_fragment",
+              "d": [
+                "bakery"
+              ]
+            },
+            {
+              "w": "燕麦",
+              "k": "parent_fragment",
+              "d": [
+                "bakery"
+              ]
+            },
+            {
+              "w": "燕麦",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:9:11",
+          "text": "拿铁",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "拿铁",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:11:13",
+          "text": "中杯",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "中杯",
+              "k": "parent_fragment",
+              "d": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 7,
+          "optionTexts": [
+            {
+              "id": "7:9",
+              "text": "燕麦",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "7:10",
+              "text": "燕麦拿",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "7:11",
+              "text": "燕麦拿铁",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "7:12",
+              "text": "燕麦拿铁，中",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "燕麦",
+            "range": [
+              7,
+              9
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "7:10",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "7:11",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "7:12",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "7:8",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 9,
+          "optionTexts": [
+            {
+              "id": "9:11",
+              "text": "拿铁",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "9:12",
+              "text": "拿铁，中",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:13",
+              "text": "拿铁，中杯",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:14",
+              "text": "拿铁，中杯，无",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "拿铁",
+            "range": [
+              9,
+              11
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "9:12",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:13",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:14",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:10",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 11,
+          "optionTexts": [
+            {
+              "id": "11:13",
+              "text": "中杯",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "11:14",
+              "text": "中杯，无",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "11:15",
+              "text": "中杯，无糖",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "11:16",
+              "text": "中杯，无糖。顺",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "中杯",
+            "range": [
+              11,
+              13
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "11:16",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:14",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:15",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "11:12",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "coffee"
+      ],
+      "voteScores": {
+        "bakery": 1,
+        "coffee": 3,
+        "food_order": 1,
+        "milk_tea": 1
+      },
+      "activeCandidateCount": 7,
+      "recalledHitSample": [
+        {
+          "cursor": 7,
+          "windowId": "7:9",
+          "word": "燕麦",
+          "hitKind": "parent_fragment",
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "domains": [
+            "bakery"
+          ]
+        },
+        {
+          "cursor": 7,
+          "windowId": "7:9",
+          "word": "燕麦",
+          "hitKind": "parent_fragment",
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "domains": [
+            "bakery"
+          ]
+        },
+        {
+          "cursor": 7,
+          "windowId": "7:9",
+          "word": "燕麦",
+          "hitKind": "parent_fragment",
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "拿铁",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 11,
+          "windowId": "11:13",
+          "word": "中杯",
+          "hitKind": "parent_fragment",
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "domains": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d097",
+      "text": "师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。",
+      "syllableCount": 29,
+      "formalCount": 18,
+      "recalledHits": 4,
+      "committedHitKeys": 2,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:14:16",
+          "text": "九点",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "酒店",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:24:26",
+          "text": "提前",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "提前",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 14,
+          "optionTexts": [
+            {
+              "id": "14:16",
+              "text": "九点",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "14:17",
+              "text": "九点半",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:18",
+              "text": "九点半的",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:19",
+              "text": "九点半的会",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "九点",
+            "range": [
+              14,
+              16
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "14:17",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:18",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:19",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:15",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 24,
+          "optionTexts": [
+            {
+              "id": "24:26",
+              "text": "提前",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "24:27",
+              "text": "提前跟",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "24:28",
+              "text": "提前跟我",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "24:29",
+              "text": "提前跟我说",
+              "blocked": true,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "提前",
+            "range": [
+              24,
+              26
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "24:27",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "24:28",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "24:29",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "24:25",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tourism_hotel"
+      ],
+      "voteScores": {
+        "tourism_hotel": 2
+      },
+      "activeCandidateCount": 4,
+      "recalledHitSample": [
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "酒店",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 24,
+          "windowId": "24:26",
+          "word": "提前",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "tourism_hotel"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d103",
+      "text": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "syllableCount": 20,
+      "formalCount": 12,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d109",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "formalCount": 21,
+      "recalledHits": 9,
+      "committedHitKeys": 4,
+      "permanentDropCount": 2,
+      "longerExactPermanentDrops": [
+        {
+          "windowId": "24:26",
+          "word": "线计",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "tech_ai"
+          ],
+          "winnerText": "线",
+          "winnerRange": [
+            24,
+            25
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        },
+        {
+          "windowId": "24:27",
+          "word": "线计划",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 27,
+          "domains": [
+            "tech_ai"
+          ],
+          "winnerText": "线",
+          "winnerRange": [
+            24,
+            25
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        }
+      ],
+      "permanentDropSample": [
+        {
+          "windowId": "24:26",
+          "word": "线计",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "tech_ai"
+          ],
+          "winnerText": "线",
+          "winnerRange": [
+            24,
+            25
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        },
+        {
+          "windowId": "24:27",
+          "word": "线计划",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 27,
+          "domains": [
+            "tech_ai"
+          ],
+          "winnerText": "线",
+          "winnerRange": [
+            24,
+            25
+          ],
+          "winnerSource": "fallback",
+          "reason": "fallback_single_step"
+        }
+      ],
+      "overlapTrace": [
+        {
+          "cursor": 24,
+          "options": [
+            {
+              "id": "24:26",
+              "text": "线计",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "24:27",
+              "text": "线计化",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "24:28",
+              "text": "线计化安",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "24:29",
+              "text": "线计化安排",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "线",
+            "range": [
+              24,
+              25
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": [
+            {
+              "windowId": "24:26",
+              "word": "线计",
+              "hitKind": "parent_fragment",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "domains": [
+                "tech_ai"
+              ],
+              "winnerText": "线",
+              "winnerRange": [
+                24,
+                25
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            },
+            {
+              "windowId": "24:27",
+              "word": "线计划",
+              "hitKind": "parent_fragment",
+              "syllableStart": 24,
+              "syllableEnd": 27,
+              "domains": [
+                "tech_ai"
+              ],
+              "winnerText": "线",
+              "winnerRange": [
+                24,
+                25
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            }
+          ]
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:9:11",
+          "text": "后选",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "候选",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            },
+            {
+              "w": "候选",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:20:22",
+          "text": "流程",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "流程",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:25:27",
+          "text": "计化",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "计划",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:27:29",
+          "text": "安排",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            },
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_transport"
+              ]
+            },
+            {
+              "w": "安排",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 9,
+          "optionTexts": [
+            {
+              "id": "9:11",
+              "text": "后选",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "9:12",
+              "text": "后选生",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:13",
+              "text": "后选生城",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "9:14",
+              "text": "后选生城相",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "后选",
+            "range": [
+              9,
+              11
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "9:12",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:13",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:14",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "9:10",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 20,
+          "optionTexts": [
+            {
+              "id": "20:22",
+              "text": "流程",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "20:23",
+              "text": "流程和",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "20:24",
+              "text": "流程和上",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "20:25",
+              "text": "流程和上线",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "流程",
+            "range": [
+              20,
+              22
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "20:23",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:24",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:25",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "20:21",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 24,
+          "optionTexts": [
+            {
+              "id": "24:26",
+              "text": "线计",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "24:27",
+              "text": "线计化",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 1
+            },
+            {
+              "id": "24:28",
+              "text": "线计化安",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            },
+            {
+              "id": "24:29",
+              "text": "线计化安排",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 2,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "线",
+            "range": [
+              24,
+              25
+            ],
+            "reason": "fallback_single_step",
+            "source": "fallback",
+            "cand": 0
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "24:26",
+              "reason": "rejected_partial",
+              "lexical": "partial_fragment",
+              "cand": 1
+            },
+            {
+              "windowId": "24:27",
+              "reason": "rejected_partial",
+              "lexical": "partial_fragment",
+              "cand": 1
+            },
+            {
+              "windowId": "24:28",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "24:29",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": [
+            {
+              "windowId": "24:26",
+              "word": "线计",
+              "hitKind": "parent_fragment",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "domains": [
+                "tech_ai"
+              ],
+              "winnerText": "线",
+              "winnerRange": [
+                24,
+                25
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            },
+            {
+              "windowId": "24:27",
+              "word": "线计划",
+              "hitKind": "parent_fragment",
+              "syllableStart": 24,
+              "syllableEnd": 27,
+              "domains": [
+                "tech_ai"
+              ],
+              "winnerText": "线",
+              "winnerRange": [
+                24,
+                25
+              ],
+              "winnerSource": "fallback",
+              "reason": "fallback_single_step"
+            }
+          ]
+        },
+        {
+          "cursor": 25,
+          "optionTexts": [
+            {
+              "id": "25:27",
+              "text": "计化",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "25:28",
+              "text": "计化安",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "25:29",
+              "text": "计化安排",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "25:30",
+              "text": "计化安排，请",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 3,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "计化",
+            "range": [
+              25,
+              27
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "25:28",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "25:29",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "25:30",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "25:26",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 27,
+          "optionTexts": [
+            {
+              "id": "27:29",
+              "text": "安排",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 3
+            },
+            {
+              "id": "27:30",
+              "text": "安排，请",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "27:31",
+              "text": "安排，请研",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "27:32",
+              "text": "安排，请研发",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 3,
+          "winner": {
+            "text": "安排",
+            "range": [
+              27,
+              29
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 3
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "27:30",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "27:31",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "27:32",
+              "reason": "rejected_cross_gt_1",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "27:28",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tech_ai"
+      ],
+      "voteScores": {
+        "tech_ai": 3,
+        "tourism_hotel": 1,
+        "tourism_transport": 1
+      },
+      "activeCandidateCount": 7,
+      "recalledHitSample": [
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "候选",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 9,
+          "windowId": "9:11",
+          "word": "候选",
+          "hitKind": "parent_fragment",
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 20,
+          "windowId": "20:22",
+          "word": "流程",
+          "hitKind": "parent_fragment",
+          "syllableStart": 20,
+          "syllableEnd": 22,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 24,
+          "windowId": "24:26",
+          "word": "线计",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 26,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 24,
+          "windowId": "24:27",
+          "word": "线计划",
+          "hitKind": "parent_fragment",
+          "syllableStart": 24,
+          "syllableEnd": 27,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 25,
+          "windowId": "25:27",
+          "word": "计划",
+          "hitKind": "parent_fragment",
+          "syllableStart": 25,
+          "syllableEnd": 27,
+          "domains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "cursor": 27,
+          "windowId": "27:29",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 27,
+          "syllableEnd": 29,
+          "domains": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "cursor": 27,
+          "windowId": "27:29",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 27,
+          "syllableEnd": 29,
+          "domains": [
+            "tourism_transport"
+          ]
+        },
+        {
+          "cursor": 27,
+          "windowId": "27:29",
+          "word": "安排",
+          "hitKind": "parent_fragment",
+          "syllableStart": 27,
+          "syllableEnd": 29,
+          "domains": [
+            "tourism_hotel"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d115",
+      "text": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+      "syllableCount": 24,
+      "formalCount": 14,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d132",
+      "text": "游泳次卡本月月底到期，续费有优惠吗？",
+      "syllableCount": 16,
+      "formalCount": 9,
+      "recalledHits": 0,
+      "committedHitKeys": 0,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [],
+      "sampleSteps": [],
+      "voteRetained": [],
+      "voteScores": {},
+      "activeCandidateCount": 0,
+      "recalledHitSample": []
+    },
+    {
+      "caseId": "d150",
+      "text": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "syllableCount": 25,
+      "formalCount": 14,
+      "recalledHits": 4,
+      "committedHitKeys": 2,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [
+        {
+          "cursor": 6,
+          "options": [
+            {
+              "id": "6:11",
+              "text": "这两款订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "这两",
+            "range": [
+              6,
+              8
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        },
+        {
+          "cursor": 8,
+          "options": [
+            {
+              "id": "8:11",
+              "text": "款订单",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "8:12",
+              "text": "款订单中",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "8:13",
+              "text": "款订单中台",
+              "blocked": true,
+              "cross": 2,
+              "hitCount": 0
+            }
+          ],
+          "winner": {
+            "text": "款订",
+            "range": [
+              8,
+              10
+            ],
+            "reason": "shorter_exact_tiebreak",
+            "source": "fallback",
+            "cand": 0
+          },
+          "droppedHits": []
+        }
+      ],
+      "formalWithHits": [
+        {
+          "id": "fine:14:16",
+          "text": "价格",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "价格",
+              "k": "parent_fragment",
+              "d": [
+                "coffee"
+              ]
+            },
+            {
+              "w": "价格",
+              "k": "parent_fragment",
+              "d": [
+                "tourism_route"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fine:16:18",
+          "text": "会员",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "会员",
+              "k": "parent_fragment",
+              "d": [
+                "food_order"
+              ]
+            },
+            {
+              "w": "会员",
+              "k": "parent_fragment",
+              "d": [
+                "meeting"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 14,
+          "optionTexts": [
+            {
+              "id": "14:16",
+              "text": "价格",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "14:17",
+              "text": "价格，会",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:18",
+              "text": "价格，会员",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "14:19",
+              "text": "价格，会员日",
+              "blocked": true,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 1,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "价格",
+            "range": [
+              14,
+              16
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "14:17",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:18",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:19",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "14:15",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        },
+        {
+          "cursor": 16,
+          "optionTexts": [
+            {
+              "id": "16:18",
+              "text": "会员",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 2
+            },
+            {
+              "id": "16:19",
+              "text": "会员日",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "16:20",
+              "text": "会员日能",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "16:21",
+              "text": "会员日能再",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 2,
+          "winner": {
+            "text": "会员",
+            "range": [
+              16,
+              18
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 2
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "16:21",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:19",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:20",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "16:17",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "coffee",
+        "food_order",
+        "meeting",
+        "tourism_route"
+      ],
+      "voteScores": {
+        "coffee": 1,
+        "tourism_route": 1,
+        "food_order": 1,
+        "meeting": 1
+      },
+      "activeCandidateCount": 4,
+      "recalledHitSample": [
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "价格",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "coffee"
+          ]
+        },
+        {
+          "cursor": 14,
+          "windowId": "14:16",
+          "word": "价格",
+          "hitKind": "parent_fragment",
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "domains": [
+            "tourism_route"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "会员",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "food_order"
+          ]
+        },
+        {
+          "cursor": 16,
+          "windowId": "16:18",
+          "word": "会员",
+          "hitKind": "parent_fragment",
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "domains": [
+            "meeting"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d168",
+      "text": "房间空调不太制冷，能派人上来看一下吗？",
+      "syllableCount": 17,
+      "formalCount": 10,
+      "recalledHits": 1,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:0:2",
+          "text": "房间",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "方笺",
+              "k": "parent_fragment",
+              "d": [
+                "medical"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 0,
+          "optionTexts": [
+            {
+              "id": "0:2",
+              "text": "房间",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "0:3",
+              "text": "房间空",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:4",
+              "text": "房间空调",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            },
+            {
+              "id": "0:5",
+              "text": "房间空调不",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "房间",
+            "range": [
+              0,
+              2
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "0:3",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:4",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:5",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "0:1",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "medical"
+      ],
+      "voteScores": {
+        "medical": 1
+      },
+      "activeCandidateCount": 1,
+      "recalledHitSample": [
+        {
+          "cursor": 0,
+          "windowId": "0:2",
+          "word": "方笺",
+          "hitKind": "parent_fragment",
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "domains": [
+            "medical"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d186",
+      "text": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "syllableCount": 28,
+      "formalCount": 16,
+      "recalledHits": 1,
+      "committedHitKeys": 1,
+      "permanentDropCount": 0,
+      "longerExactPermanentDrops": [],
+      "permanentDropSample": [],
+      "overlapTrace": [],
+      "formalWithHits": [
+        {
+          "id": "fine:3:5",
+          "text": "系统",
+          "source": "in_span_window",
+          "reason": "fallback_single_step",
+          "words": [
+            {
+              "w": "系统",
+              "k": "parent_fragment",
+              "d": [
+                "tech_ai"
+              ]
+            }
+          ]
+        }
+      ],
+      "sampleSteps": [
+        {
+          "cursor": 3,
+          "optionTexts": [
+            {
+              "id": "3:5",
+              "text": "系统",
+              "blocked": false,
+              "cross": 0,
+              "hitCount": 1
+            },
+            {
+              "id": "3:6",
+              "text": "系统相",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:7",
+              "text": "系统相关",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            },
+            {
+              "id": "3:8",
+              "text": "系统相关的",
+              "blocked": false,
+              "cross": 1,
+              "hitCount": 0
+            }
+          ],
+          "recallable": 4,
+          "recalledHitCount": 1,
+          "winner": {
+            "text": "系统",
+            "range": [
+              3,
+              5
+            ],
+            "reason": "fallback_single_step",
+            "source": "in_span_window",
+            "cand": 1
+          },
+          "rejectedOptions": [
+            {
+              "windowId": "3:6",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:7",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:8",
+              "reason": "rejected_partial",
+              "lexical": "none",
+              "cand": 0
+            },
+            {
+              "windowId": "3:4",
+              "lexical": "none",
+              "cand": 0
+            }
+          ],
+          "droppedHitsAtStep": []
+        }
+      ],
+      "voteRetained": [
+        "tech_ai"
+      ],
+      "voteScores": {
+        "tech_ai": 1
+      },
+      "activeCandidateCount": 1,
+      "recalledHitSample": [
+        {
+          "cursor": 3,
+          "windowId": "3:5",
+          "word": "系统",
+          "hitKind": "parent_fragment",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "domains": [
+            "tech_ai"
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "steps": 304,
+    "optionsGenerated": 1094,
+    "optionsRecalled": 697,
+    "hitsRecalled": 72,
+    "hitsCommitted": 68,
+    "hitsPermanentlyDropped": 4,
+    "exactHitsPermanentlyDropped": 0,
+    "casesWithPermanentDrop": 2,
+    "casesWithLongerExactDropped": 2,
+    "casesWithAnyRecallHit": 16
+  }
+}

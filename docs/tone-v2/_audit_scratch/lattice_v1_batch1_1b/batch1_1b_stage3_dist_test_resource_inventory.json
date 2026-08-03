@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-07-28",
+  "batch": "1.1B",
+  "stage": "3 Functional Test",
+  "build": "npm run build:main",
+  "gateRegression": {
+    "suites": 13,
+    "tests": 175,
+    "result": "PASS"
+  },
+  "patterns": [
+    { "pattern": "length1-real-sqlite.test.helpers", "matches": [], "status": "CLEAN" },
+    { "pattern": "length1-surface-exact.sqlite.integration", "matches": [], "status": "CLEAN" },
+    { "pattern": "batch1-1a-stage4-generalization.audit", "matches": [], "status": "CLEAN" },
+    { "pattern": "length1-truncation.sqlite.integration", "matches": [], "status": "CLEAN" },
+    { "pattern": "surface_rank9_after.json", "matches": [], "status": "CLEAN" }
+  ],
+  "compiledApis": {
+    "lookupBaseByExactSurfaceAndPinyin": true,
+    "lookupBaseByExactSurfacePinyinAndTone": true,
+    "tryExactSurfaceBaseIdentity": true
+  },
+  "overall": "CLEAN"
+}

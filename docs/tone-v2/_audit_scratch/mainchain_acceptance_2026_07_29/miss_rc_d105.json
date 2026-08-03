@@ -1,0 +1,79 @@
+{
+  "id": "d105",
+  "raw": "我想对比一下这两款 在名单中排的加格会员日能再减一点吗?",
+  "asrToneSliceCount": 7,
+  "diagToneSliceCount": 22,
+  "wordTimeSpanBuilt": 23,
+  "wordTimeSpanMapped": 23,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 1,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "减一",
+      "pinyinKey": "jian|yi",
+      "result": "HIT",
+      "fail": null
+    },
+    {
+      "text": "减一点",
+      "pinyinKey": "jian|yi|dian",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "减",
+        "wordTime": [
+          2.38,
+          2.6
+        ],
+        "sliceCount": 7,
+        "nearestSlices": [
+          {
+            "start": 1.66,
+            "end": 1.8,
+            "dist": 0.72
+          },
+          {
+            "start": 1.46,
+            "end": 1.66,
+            "dist": 0.9199999999999999
+          },
+          {
+            "start": 1.12,
+            "end": 1.46,
+            "dist": 1.1400000000000001
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.48,
+        "end": 5
+      },
+      "replayWindowTime": {
+        "start": 2.38,
+        "end": 2.9
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 26,
+    "theoreticalWindows2to5": 94,
+    "theoreticalWindows1to5": 120
+  },
+  "summary": {
+    "spanCount": 14,
+    "candidateCount": 14
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

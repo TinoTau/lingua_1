@@ -1,0 +1,118 @@
+{
+  "caseId": "A08",
+  "rawText": "需要一位医师",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "位"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "需要一位医师"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "位"
+        ],
+        [
+          "议室",
+          "医师"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "需要一位议室",
+        "需要一位医师"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "需要一位医师",
+    "需要一位议室"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "需要一位医师",
+    "需要一位议室"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 25.07669997215271,
+  "groups": [
+    "A"
+  ],
+  "why": "yi|shi",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "需要一位医师",
+      "需要一位议室"
+    ]
+  }
+}

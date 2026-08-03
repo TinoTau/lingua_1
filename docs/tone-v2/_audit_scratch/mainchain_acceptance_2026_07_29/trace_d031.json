@@ -1,0 +1,210 @@
+{
+  "id": "d031",
+  "expected": "我预订的是大床房，能安排安静一点的楼层吗？",
+  "asr": "我预定的十大床房能安排安静一点的楼层吗?",
+  "raw_asr": "我预定的十大床房能安排安静一点的楼层吗?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 18,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.000043444306356832385,
+      "t2": 0.9970523118972778,
+      "t3": 0.0028970250859856606,
+      "t4": 0.000003387751576156006,
+      "t5": 0.0000036304536479292437
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 18,
+    "wordTimeSpanCount": 18,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "的楼",
+        "pinyinKey": "de|lou",
+        "windowTimeRange": {
+          "start": 2.9,
+          "end": 3.28
+        },
+        "acousticTonePattern": [
+          2,
+          2
+        ]
+      },
+      {
+        "text": "的楼层",
+        "pinyinKey": "de|lou|ceng",
+        "windowTimeRange": {
+          "start": 2.9,
+          "end": 3.46
+        },
+        "acousticTonePattern": [
+          2,
+          2,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 10,
+    "candidateCount": 10,
+    "candidateSentenceCount": 10,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 10,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "我预定的十大床房能安排安静一点的楼层吗?",
+        "kenlmScore": -48.440342,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "我预定的十大床房能安排安静一点的楼层吗?",
+        "kenlmScore": -48.440342,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 10
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 694,
+      "queryCount": 2,
+      "avgMs": 347,
+      "p50Ms": 347,
+      "p95Ms": 347,
+      "maxMs": 694
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -48.440342,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 694,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "我预定的十大床房能安排安静一点的楼层吗?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "我预",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我预",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "定的",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "定的",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "十大",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "十大",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "床房",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "床房",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "能安",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "能安",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "排安",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "排安",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "静一",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "静一",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "点",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "点",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

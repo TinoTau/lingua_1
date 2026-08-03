@@ -1,0 +1,72 @@
+{
+  "id": "d138",
+  "raw": "请问,这款美式可以少病吗?我赶时间小背。",
+  "asrToneSliceCount": 15,
+  "diagToneSliceCount": 15,
+  "wordTimeSpanBuilt": 15,
+  "wordTimeSpanMapped": 15,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "时间",
+      "pinyinKey": "shi|jian",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 2.94,
+        "end": 3.3
+      },
+      "replayWindowTime": {
+        "start": 2.94,
+        "end": 3.3
+      }
+    },
+    {
+      "text": "时间小",
+      "pinyinKey": "shi|jian|xiao",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 2.94,
+        "end": 3.6
+      },
+      "replayWindowTime": {
+        "start": 2.94,
+        "end": 3.6
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 17,
+    "theoreticalWindows2to5": 58,
+    "theoreticalWindows1to5": 75
+  },
+  "summary": {
+    "spanCount": 9,
+    "candidateCount": 9
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

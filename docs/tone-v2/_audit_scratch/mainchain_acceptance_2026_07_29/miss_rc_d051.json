@@ -1,0 +1,79 @@
+{
+  "id": "d051",
+  "raw": "跟會員系統相關的訊息 我整理了一版8点前请大家帮忙评审一下",
+  "asrToneSliceCount": 9,
+  "diagToneSliceCount": 25,
+  "wordTimeSpanBuilt": 26,
+  "wordTimeSpanMapped": 26,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 1,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "审一",
+      "pinyinKey": "shen|yi",
+      "result": "HIT",
+      "fail": null
+    },
+    {
+      "text": "审一下",
+      "pinyinKey": "shen|yi|xia",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "审",
+        "wordTime": [
+          3.18,
+          3.32
+        ],
+        "sliceCount": 9,
+        "nearestSlices": [
+          {
+            "start": 1.84,
+            "end": 1.88,
+            "dist": 1.34
+          },
+          {
+            "start": 1.64,
+            "end": 1.84,
+            "dist": 1.4799999999999998
+          },
+          {
+            "start": 1.46,
+            "end": 1.64,
+            "dist": 1.68
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.08,
+        "end": 5.54
+      },
+      "replayWindowTime": {
+        "start": 3.18,
+        "end": 3.64
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 27,
+    "theoreticalWindows2to5": 98,
+    "theoreticalWindows1to5": 125
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

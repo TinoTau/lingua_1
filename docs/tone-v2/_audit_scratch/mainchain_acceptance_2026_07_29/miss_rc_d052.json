@@ -1,0 +1,72 @@
+{
+  "id": "d052",
+  "raw": "市府区浦东张江走沿岸路高架 涡干 9点半的回药师赌车宁提前跟我说",
+  "asrToneSliceCount": 15,
+  "diagToneSliceCount": 29,
+  "wordTimeSpanBuilt": 29,
+  "wordTimeSpanMapped": 29,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "跟我",
+      "pinyinKey": "gen|wo",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.5,
+        "end": 5.779999999999999
+      },
+      "replayWindowTime": {
+        "start": 2,
+        "end": 2.28
+      }
+    },
+    {
+      "text": "跟我说",
+      "pinyinKey": "gen|wo|shuo",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.5,
+        "end": 6.0600000000000005
+      },
+      "replayWindowTime": {
+        "start": 2,
+        "end": 2.56
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 29,
+    "theoreticalWindows2to5": 106,
+    "theoreticalWindows1to5": 135
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

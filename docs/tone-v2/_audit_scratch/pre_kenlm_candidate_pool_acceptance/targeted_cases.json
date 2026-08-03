@@ -1,0 +1,51 @@
+[
+  {"caseId":"A01","group":["A","F"],"text":"请确认地址","expectedTerms":["地址"],"why":"di|zhi → 低脂/地质 (runtime)","lexiconTerms":["低脂","地质"]},
+  {"caseId":"A02","group":["A"],"text":"请确认客户地址","expectedTerms":["地址"],"why":"di|zhi surface-distinct","lexiconTerms":["低脂","地质"]},
+  {"caseId":"A03","group":["A"],"text":"新的地址已经更新","expectedTerms":["地址"],"why":"di|zhi","lexiconTerms":["低脂","地质"]},
+  {"caseId":"A04","group":["A"],"text":"请确认医院","expectedTerms":["医院"],"why":"yi|yuan → 医院/议员","lexiconTerms":["医院","议员"]},
+  {"caseId":"A05","group":["A"],"text":"去医院确认一下","expectedTerms":["医院"],"why":"yi|yuan","lexiconTerms":["医院","议员"]},
+  {"caseId":"A06","group":["A"],"text":"医院就在附近","expectedTerms":["医院"],"why":"yi|yuan","lexiconTerms":["医院","议员"]},
+  {"caseId":"A07","group":["A"],"text":"请确认医师","expectedTerms":["医师"],"why":"yi|shi → 医师/议室","lexiconTerms":["医师","议室"]},
+  {"caseId":"A08","group":["A"],"text":"需要一位医师","expectedTerms":["医师"],"why":"yi|shi","lexiconTerms":["医师","议室"]},
+  {"caseId":"A09","group":["A"],"text":"医师已经到了","expectedTerms":["医师"],"why":"yi|shi","lexiconTerms":["医师","议室"]},
+  {"caseId":"A10","group":["A","G"],"text":"地质结构需要检查","expectedTerms":["地质"],"why":"di|zhi in 地质 context","lexiconTerms":["低脂","地质"]},
+  {"caseId":"A11","group":["A","G"],"text":"我要一杯低脂牛奶","expectedTerms":["低脂"],"why":"di|zhi in 低脂 context","lexiconTerms":["低脂","地质"]},
+  {"caseId":"A12","group":["A"],"text":"议员出席会议","expectedTerms":["议员"],"why":"yi|yuan alternate surface","lexiconTerms":["医院","议员"]},
+
+  {"caseId":"B01","group":["B"],"text":"请确认地址和医院","expectedTerms":["地址","医院"],"why":"dual di|zhi × yi|yuan","lexiconTerms":["低脂","地质","医院","议员"]},
+  {"caseId":"B02","group":["B"],"text":"请确认地址和医师","expectedTerms":["地址","医师"],"why":"dual di|zhi × yi|shi","lexiconTerms":["低脂","地质","医师","议室"]},
+  {"caseId":"B03","group":["B"],"text":"请确认医院和医师","expectedTerms":["医院","医师"],"why":"dual yi|yuan × yi|shi","lexiconTerms":["医院","议员","医师","议室"]},
+  {"caseId":"B04","group":["B"],"text":"客户地址和医院都要","expectedTerms":["地址","医院"],"why":"dual","lexiconTerms":["低脂","地质","医院","议员"]},
+  {"caseId":"B05","group":["B"],"text":"新地址靠近医院","expectedTerms":["地址","医院"],"why":"dual","lexiconTerms":["低脂","地质","医院","议员"]},
+  {"caseId":"B06","group":["B"],"text":"请把地址发给医师","expectedTerms":["地址","医师"],"why":"dual","lexiconTerms":["低脂","地质","医师","议室"]},
+  {"caseId":"B07","group":["B"],"text":"医院地址请确认","expectedTerms":["医院","地址"],"why":"dual order swap","lexiconTerms":["医院","议员","低脂","地质"]},
+  {"caseId":"B08","group":["B"],"text":"医师确认了地址","expectedTerms":["医师","地址"],"why":"dual","lexiconTerms":["医师","议室","低脂","地质"]},
+  {"caseId":"B09","group":["B","D"],"text":"医院和医师都已到位","expectedTerms":["医院","医师"],"why":"dual","lexiconTerms":["医院","议员","医师","议室"]},
+  {"caseId":"B10","group":["B"],"text":"请核对地址、医院信息","expectedTerms":["地址","医院"],"why":"dual with punct","lexiconTerms":["低脂","地质","医院","议员"]},
+
+  {"caseId":"C01","group":["C"],"text":"请确认地址、医院和医师","expectedTerms":["地址","医院","医师"],"why":"triple pot up to 2×2×2=8","lexiconTerms":["低脂","地质","医院","议员","医师","议室"]},
+  {"caseId":"C02","group":["C"],"text":"地址医院医师请一并确认","expectedTerms":["地址","医院","医师"],"why":"triple compact","lexiconTerms":["低脂","地质","医院","议员","医师","议室"]},
+  {"caseId":"C03","group":["C"],"text":"请把地址发给医院的医师","expectedTerms":["地址","医院","医师"],"why":"triple embedded","lexiconTerms":["低脂","地质","医院","议员","医师","议室"]},
+  {"caseId":"C04","group":["C"],"text":"医师在医院核对地址","expectedTerms":["医师","医院","地址"],"why":"triple reorder","lexiconTerms":["医师","议室","医院","议员","低脂","地质"]},
+  {"caseId":"C05","group":["C"],"text":"请确认医院地址和医师安排","expectedTerms":["医院","地址","医师"],"why":"triple","lexiconTerms":["医院","议员","低脂","地质","医师","议室"]},
+
+  {"caseId":"D01","group":["D"],"text":"请确认少糖去冰大杯","expectedTerms":["少糖","去冰","大杯"],"why":"multi-domain coffee tags (same-surface multi-identity)"},
+  {"caseId":"D02","group":["D"],"text":"我想堂食还是带走","expectedTerms":["堂食","带走"],"why":"4-domain tags"},
+  {"caseId":"D03","group":["D"],"text":"前台正在确认预订","expectedTerms":["前台","预订"],"why":"预订 multi-domain"},
+  {"caseId":"D04","group":["D","F"],"text":"大杯和小杯都要重新下单","expectedTerms":["大杯","小杯"],"why":"cup size multi-domain"},
+  {"caseId":"D05","group":["D"],"text":"请确认菜单和打包","expectedTerms":["菜单","打包"],"why":"food multi-domain"},
+
+  {"caseId":"E01","group":["E"],"text":"请确认上线计划","expectedTerms":["上线","计划","上线计划"],"why":"overlap path windows"},
+  {"caseId":"E02","group":["E"],"text":"请检查接口文档","expectedTerms":["接口","文档","接口文档"],"why":"overlap"},
+  {"caseId":"E03","group":["E"],"text":"帮我修改预订信息","expectedTerms":["预订","信息"],"why":"overlap"},
+  {"caseId":"E04","group":["E"],"text":"大杯拿铁已经下单","expectedTerms":["大杯","拿铁"],"why":"overlap + cafe"},
+  {"caseId":"E05","group":["E"],"text":"请确认房间预订","expectedTerms":["房间","预订"],"why":"adjacent/overlap"},
+
+  {"caseId":"F01","group":["F"],"text":"请确认新的地址","expectedTerms":["地址"],"why":"raw-correct + di|zhi alts"},
+  {"caseId":"F02","group":["F"],"text":"我想预订一个房间","expectedTerms":["预订","房间"],"why":"raw-correct multi-domain"},
+  {"caseId":"F03","group":["F"],"text":"帮我准备一杯大杯拿铁","expectedTerms":["大杯","拿铁"],"why":"raw-correct cafe"},
+
+  {"caseId":"G01","group":["G"],"text":"请把地质报告发给经理","expectedTerms":["地质"],"why":"noise/context di|zhi"},
+  {"caseId":"G02","group":["G"],"text":"我要一杯低脂拿铁","expectedTerms":["低脂","拿铁"],"why":"低脂 context"},
+  {"caseId":"G03","group":["G"],"text":"请抵制不良信息","expectedTerms":["抵制"],"why":"di|zhi alternate 抵制 if recalled"}
+]

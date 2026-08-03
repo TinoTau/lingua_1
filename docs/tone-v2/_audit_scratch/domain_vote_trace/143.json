@@ -1,0 +1,809 @@
+{
+  "case": {
+    "id": "d143",
+    "fileNum": "143",
+    "scenario": "taxi",
+    "rawText": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-12|12-13|13-14|14-15|15-16|16-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25|25-26|26-27|27-28|28-29|29-30",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "麻",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "烦",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "送",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "深",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "圳",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:7",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "南",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:8",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "山",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:9",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "科",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+          "rawRange": [
+            10,
+            12
+          ],
+          "rawText": "技园",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": [
+            "meeting",
+            "tourism_pickup"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "南",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:12",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "门",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:13",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "大",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:14",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "概",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:15",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "多",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:16",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "久",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:17",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "能",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:18",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:19",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:20",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "十",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:21",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:22",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "十",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:23",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "分",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:24",
+          "rawRange": [
+            27,
+            28
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            25,
+            26
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:25",
+          "rawRange": [
+            28,
+            29
+          ],
+          "rawText": "个",
+          "syllableRange": [
+            26,
+            27
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:26",
+          "rawRange": [
+            29,
+            30
+          ],
+          "rawText": "电",
+          "syllableRange": [
+            27,
+            28
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:27",
+          "rawRange": [
+            30,
+            31
+          ],
+          "rawText": "话",
+          "syllableRange": [
+            28,
+            29
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:28",
+          "rawRange": [
+            31,
+            32
+          ],
+          "rawText": "会",
+          "syllableRange": [
+            29,
+            30
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "10:12:2",
+          "word": "机员",
+          "surface": "机员",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_pickup"
+          ]
+        },
+        {
+          "candidateId": "10:12:3",
+          "word": "机员",
+          "surface": "机员",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_pickup"
+          ]
+        },
+        {
+          "candidateId": "10:12:4",
+          "word": "记员",
+          "surface": "记员",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "meeting"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "meeting"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "meeting",
+          "tourism_pickup"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tourism_pickup": [
+          {
+            "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:2",
+                "word": "机员",
+                "domainsAdded": [
+                  "tourism_pickup"
+                ]
+              },
+              {
+                "candidateId": "10:12:3",
+                "word": "机员",
+                "domainsAdded": [
+                  "tourism_pickup"
+                ]
+              }
+            ]
+          }
+        ],
+        "meeting": [
+          {
+            "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:4",
+                "word": "记员",
+                "domainsAdded": [
+                  "meeting"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tourism_pickup": 1,
+        "meeting": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "tourism_pickup": 1,
+          "meeting": 1
+        },
+        "retainedDomains": [
+          "meeting",
+          "tourism_pickup"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": true,
+        "utteranceDomain": "meeting",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 3
+      },
+      "replayVote": {
+        "domainScores": {
+          "tourism_pickup": 1,
+          "meeting": 1
+        },
+        "retainedDomains": [
+          "meeting",
+          "tourism_pickup"
+        ],
+        "insufficientEvidence": false,
+        "isTie": true,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "meeting",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+              "candidateId": "10:12:4",
+              "word": "记员"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "tourism_pickup",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+              "candidateId": "10:12:2",
+              "word": "机员"
+            },
+            {
+              "fineSpanId": "fine:d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57:10",
+              "candidateId": "10:12:3",
+              "word": "机员"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "meeting",
+        "tourism_pickup"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "meeting",
+        "tourism_pickup"
+      ],
+      "bucketDomainsFromVote": [
+        "meeting",
+        "tourism_pickup"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 2,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

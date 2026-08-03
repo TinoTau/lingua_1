@@ -1,0 +1,170 @@
+{
+  "caseId": "D03",
+  "rawText": "前台正在确认预订",
+  "windowCount": 30,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "前台正在确认预订"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "cf457b96cd104b7786a46a9f17b263f74f4f6ab985ef41231abd84713e2db75d",
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "前台"
+        ],
+        [
+          "正"
+        ],
+        [
+          "在"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "前台正在确认预订",
+      "sourcePathId": "cf457b96cd104b7786a46a9f17b263f74f4f6ab985ef41231abd84713e2db75d",
+      "sourceDomain": "tourism_hotel",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "前台",
+          "sourceText": "前台"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "正",
+          "sourceText": "正"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "在",
+          "sourceText": "在"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "前台正在确认预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 30,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 30,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 2,
+        "end": 6
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 30,
+    "sqlQueryCount": 25,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "D"
+  ],
+  "why": "预订 multi-domain",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 22.69190001487732,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

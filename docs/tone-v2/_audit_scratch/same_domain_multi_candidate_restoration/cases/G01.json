@@ -1,0 +1,150 @@
+{
+  "caseId": "G01",
+  "rawText": "请把地质报告发给经理",
+  "retainedDomains": [
+    "coffee",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "低脂",
+          "地质"
+        ],
+        [
+          "报"
+        ],
+        [
+          "告"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "经"
+        ],
+        [
+          "理"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请把低脂报告发给经理",
+        "请把地质报告发给经理"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地质"
+        ],
+        [
+          "报"
+        ],
+        [
+          "告"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "经"
+        ],
+        [
+          "理"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请把地质报告发给经理"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "请把低脂报告发给经理",
+    "请把地质报告发给经理"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "请把低脂报告发给经理",
+    "请把地质报告发给经理"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 33.200599908828735,
+  "groups": [
+    "G"
+  ],
+  "why": "noise/context di|zhi",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "请把低脂报告发给经理",
+      "请把地质报告发给经理"
+    ]
+  }
+}

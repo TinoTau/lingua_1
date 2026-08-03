@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-07-27",
+  "keepAsIs": [
+    {
+      "path": "generate-global-windows.test.ts:74-75",
+      "gist": "asserts LTR V4_LIMITS remain 2..5"
+    },
+    {
+      "path": "diff-context-windows.test.ts:28",
+      "gist": "legacy ASR repair allowedWindowLengths 2-5"
+    },
+    {
+      "path": "domain-presence-vote-acceptance / fine-span-domain-presence-vote",
+      "gist": "base_term does not vote — KEEP and extend to len=1 cases"
+    },
+    {
+      "path": "inject-fallback-edges.test.ts",
+      "gist": "edgeKind lexical vs fallback distinction"
+    },
+    {
+      "path": "phase2-path-harness / enumerate tests",
+      "gist": "path accepts 1..5 edge lengths"
+    }
+  ],
+  "modifyOutdated": [
+    {
+      "path": "phase1-window-edge-harness.live.test.ts",
+      "gist": "title claims 1-syllable edge but does not assert hitCount>0 — must fail until recall aligned then pass with real base char"
+    }
+  ],
+  "implicitOnly25": [
+    "Most Phase1/Phase2 fixtures use multi-char domain terms only",
+    "recall-span-topk-v2.test.ts / topkv3.test.ts have no length=1 empty-return lock test"
+  ],
+  "newRequired": [
+    "Build: controlled single-char accepted; unmarked rejected",
+    "Patch: addBaseTerm / empty domain_tags base path",
+    "Recall: length=1 exact base hit; no domain; no fuzzy",
+    "Hard-block: 吗？ allows 吗; blocks 吗？",
+    "Candidate→Edge: len=1 lexical vs fallback distinguishable",
+    "Vote: len=1 base_term contributes 0 domain scores",
+    "Regression: 2-5 recall unchanged; dialog_200 probe; Phase1/2 suites"
+  ]
+}

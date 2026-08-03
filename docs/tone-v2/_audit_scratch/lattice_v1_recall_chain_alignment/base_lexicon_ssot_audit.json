@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-07-27",
+  "verdict": "base_lexicon IS the SSOT for base / connectivity single-character terms",
+  "termRole": "Schema V2 SSOT for domain / multidomain terms only (term + term_domain_tags → rematerialize domain_lexicon)",
+  "evidence": [
+    "Full Build writes base tier to base_lexicon via classifyLexiconV2Row accept('base')",
+    "Patch V3 applyTierOp writes base_lexicon directly (table:'base')",
+    "LexiconRuntimeV2.lookupBaseByPinyinKey SELECTs FROM base_lexicon",
+    "manifest-writer / sqlite-table-stats count base_lexicon rows",
+    "Patch V4 rematerializeTerm requires term_domain_tags — cannot represent pure base"
+  ],
+  "addBaseTermMust": "INSERT/UPDATE base_lexicon; must NOT require domain_tags; must NOT go through rematerializeTerm",
+  "governanceCoverage": {
+    "manifest": "covers base_lexicon",
+    "tableStats": "covers base_lexicon",
+    "aliasHomophoneAudit": "scans base_lexicon",
+    "runtimeGate": "must continue counting base rows after addBaseTerm",
+    "sourceSyncV4": "domain-oriented; addBaseTerm patches should use --source-jsonl only if sync contract extended — defer or document skip for base-only patches"
+  },
+  "forbidden": "second SSOT table; writing base chars only into term without base_lexicon"
+}

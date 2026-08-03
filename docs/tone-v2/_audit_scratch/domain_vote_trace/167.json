@@ -1,0 +1,1061 @@
+{
+  "case": {
+    "id": "d167",
+    "fileNum": "167",
+    "scenario": "hotel",
+    "rawText": "早餐几点开始？退房可以延迟到下午两点吗？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "pathIndex": 0,
+      "boundaryKey": "0-2|2-3|3-4|4-5|5-6|6-8|8-10|10-12|12-13|13-14|14-15|15-16|16-17|17-18",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "rawRange": [
+            0,
+            2
+          ],
+          "rawText": "早餐",
+          "syllableRange": [
+            0,
+            2
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "几",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "开",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "始",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+          "rawRange": [
+            7,
+            9
+          ],
+          "rawText": "退房",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+          "rawRange": [
+            9,
+            11
+          ],
+          "rawText": "可以",
+          "syllableRange": [
+            8,
+            10
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": [
+            "medical"
+          ]
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+          "rawRange": [
+            11,
+            13
+          ],
+          "rawText": "延迟",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c3"
+          ],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "午",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "两",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "0:2:1",
+          "word": "早餐",
+          "surface": "早餐",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            0,
+            2
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "0:2:2",
+          "word": "早餐",
+          "surface": "早餐",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            0,
+            2
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "0:2:3",
+          "word": "早餐",
+          "surface": "早餐",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            0,
+            2
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "6:8:4",
+          "word": "退房",
+          "surface": "退房",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+          "candidateRank": 1,
+          "score": 2.04,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "6:8:5",
+          "word": "退房",
+          "surface": "退房",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+          "candidateRank": 2,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "6:8:6",
+          "word": "退房",
+          "surface": "退房",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+          "candidateRank": 3,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "8:10:7",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            9,
+            11
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+          "candidateRank": 1,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "8:10:8",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            9,
+            11
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+          "candidateRank": 2,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "8:10:9",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            9,
+            11
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+          "candidateRank": 3,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "10:12:10",
+          "word": "延迟",
+          "surface": "延迟",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            11,
+            13
+          ],
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+          "candidateRank": 1,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [
+          "food_order",
+          "tourism_hotel"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [
+          "tourism_hotel"
+        ],
+        [
+          "medical"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "food_order": [
+          {
+            "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "0:2:1",
+                "word": "早餐",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "0:2:2",
+                "word": "早餐",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              },
+              {
+                "candidateId": "0:2:3",
+                "word": "早餐",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          }
+        ],
+        "tourism_hotel": [
+          {
+            "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "0:2:1",
+                "word": "早餐",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "6:8:4",
+                "word": "退房",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "6:8:5",
+                "word": "退房",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "6:8:6",
+                "word": "退房",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          }
+        ],
+        "medical": [
+          {
+            "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "8:10:7",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              },
+              {
+                "candidateId": "8:10:8",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              },
+              {
+                "candidateId": "8:10:9",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              }
+            ]
+          }
+        ],
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:10",
+                "word": "延迟",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "food_order": 1,
+        "tourism_hotel": 2,
+        "medical": 1,
+        "tech_ai": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "food_order": 1,
+          "tourism_hotel": 2,
+          "medical": 1,
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 2,
+        "runnerUpCount": 1,
+        "isTie": false,
+        "utteranceDomain": "tourism_hotel",
+        "winnerScore": 2,
+        "voteMargin": 1,
+        "parentTermVoteCount": 10
+      },
+      "replayVote": {
+        "domainScores": {
+          "food_order": 1,
+          "tourism_hotel": 2,
+          "medical": 1,
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 2
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tourism_hotel",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 4,
+          "evidenceFineSpanList": [
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "candidateId": "0:2:1",
+              "word": "早餐"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "candidateId": "6:8:4",
+              "word": "退房"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "candidateId": "6:8:5",
+              "word": "退房"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "candidateId": "6:8:6",
+              "word": "退房"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 2,
+            "domainScore": 2,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=2"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "food_order",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "candidateId": "0:2:1",
+              "word": "早餐"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "candidateId": "0:2:2",
+              "word": "早餐"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "candidateId": "0:2:3",
+              "word": "早餐"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 2,
+            "domainScore": 1,
+            "scoreRatio": 0.5,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=1"
+          }
+        },
+        {
+          "rank": 3,
+          "domain": "medical",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "candidateId": "8:10:7",
+              "word": "科医"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "candidateId": "8:10:8",
+              "word": "科医"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "candidateId": "8:10:9",
+              "word": "科医"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 2,
+            "domainScore": 1,
+            "scoreRatio": 0.5,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=1"
+          }
+        },
+        {
+          "rank": 4,
+          "domain": "tech_ai",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+              "candidateId": "10:12:10",
+              "word": "延迟"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 2,
+            "domainScore": 1,
+            "scoreRatio": 0.5,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tourism_hotel"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tourism_hotel"
+      ],
+      "bucketDomainsFromVote": [
+        "tourism_hotel"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [
+        {
+          "candidateId": "0:2:1",
+          "word": "早餐",
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        }
+      ],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

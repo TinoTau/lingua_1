@@ -1,0 +1,519 @@
+{
+  "caseId": "d146",
+  "fileNum": "146",
+  "rawText": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+  "scenario": "hospital",
+  "retainedDomains": [
+    "medical"
+  ],
+  "domainScores": {
+    "medical": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1",
+      "domainId": "medical",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "挂号处",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:0",
+          "sameDomain": [
+            "挂号处"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "挂号处"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "请",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "请"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "问",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "内科",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:3",
+          "sameDomain": [
+            "内科",
+            "内科",
+            "内科"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "内科"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "还",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "还"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "有",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "号",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "号"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "吗",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "我",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "低",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "低"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "烧",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烧"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "昨",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "昨"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "晚",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "晚"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "开",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "始",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "始"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "的",
+          "fineSpanId": "fine:64083fb1626180a51550a2e8a10bae9e4241146dd0293d64ec0354cb5447e5d1:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "挂号处"
+        ],
+        [
+          "请"
+        ],
+        [
+          "问"
+        ],
+        [
+          "内科"
+        ],
+        [
+          "还"
+        ],
+        [
+          "有"
+        ],
+        [
+          "号"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "我"
+        ],
+        [
+          "低"
+        ],
+        [
+          "烧"
+        ],
+        [
+          "昨"
+        ],
+        [
+          "晚"
+        ],
+        [
+          "开"
+        ],
+        [
+          "始"
+        ],
+        [
+          "的"
+        ]
+      ],
+      "assemblyTexts": [
+        "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+      "replacements": [
+        {
+          "span": {
+            "text": "挂号处",
+            "start": 0,
+            "end": 3
+          },
+          "word": "挂号处",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "内科",
+            "start": 5,
+            "end": 7
+          },
+          "word": "内科",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "请",
+            "start": 3,
+            "end": 4
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 4,
+            "end": 5
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "还",
+            "start": 7,
+            "end": 8
+          },
+          "word": "还",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 8,
+            "end": 9
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "号",
+            "start": 9,
+            "end": 10
+          },
+          "word": "号",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 10,
+            "end": 11
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 12,
+            "end": 13
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "低",
+            "start": 13,
+            "end": 14
+          },
+          "word": "低",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "烧",
+            "start": 14,
+            "end": 15
+          },
+          "word": "烧",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "昨",
+            "start": 16,
+            "end": 17
+          },
+          "word": "昨",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "晚",
+            "start": 17,
+            "end": 18
+          },
+          "word": "晚",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 18,
+            "end": 19
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "始",
+            "start": 19,
+            "end": 20
+          },
+          "word": "始",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 20,
+            "end": 21
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.71
+    }
+  ],
+  "kenlmInputTexts": [
+    "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+    ],
+    "actual": [
+      "挂号处请问内科还有号吗？我低烧，昨晚开始的。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

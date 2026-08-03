@@ -1,0 +1,110 @@
+{
+  "caseId": "A04",
+  "rawText": "请确认医院",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "医院"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认医院"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "议员",
+          "医院"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请确认议员",
+        "请确认医院"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "请确认医院",
+    "请确认议员"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "请确认医院",
+    "请确认议员"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 18.65630006790161,
+  "groups": [
+    "A"
+  ],
+  "why": "yi|yuan → 医院/议员",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "请确认医院",
+      "请确认议员"
+    ]
+  }
+}

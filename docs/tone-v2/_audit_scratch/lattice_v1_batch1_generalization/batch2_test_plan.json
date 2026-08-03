@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-07-28",
+  "status": "BLOCKED",
+  "prerequisite": "Batch1 repair + re-audit PASS",
+  "deferredPlanSketchOnly": {
+    "patchUnit": ["addBaseTerm valid", "domain_tags rejected", "dry-run", "hash"],
+    "patchMutation": ["update", "disable", "enable", "rollback"],
+    "fullBuild": ["approved accept", "unapproved reject"],
+    "equivalence": ["same row Patch vs Full Build → same runtime lookup"],
+    "runtime": ["temp SQLite + LexiconRuntimeV2 + length=1 Recall"],
+    "note": "Not authorized to start until Batch1 gate PASS"
+  }
+}

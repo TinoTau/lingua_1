@@ -1,0 +1,298 @@
+{
+  "generatedAt": "2026-07-27",
+  "audit": "Length_1_5_Recall_Consistency",
+  "items": [
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/window-construction-core.ts",
+      "lines": "114-115",
+      "symbol": "LATTICE_WINDOW_MIN_SYLLABLES / MAX",
+      "limit": "1..5",
+      "historicalRole": "Lattice Architecture window bounds",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/build-lexical-window-queries.ts",
+      "lines": "30-46",
+      "symbol": "buildLexicalWindowQueries",
+      "limit": "1..5 full utterance",
+      "historicalRole": "Phase 1 Lattice harness window gen",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/v4-limits.ts",
+      "lines": "3-4",
+      "symbol": "V4_LIMITS.windowMin/MaxSyllables",
+      "limit": "2..5",
+      "historicalRole": "LTR Fine Span production windows",
+      "stillReasonable": true,
+      "note": "Must remain 2..5 for LTR until Phase 3 cutover; Lattice uses separate constants",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/generate-global-windows.ts",
+      "lines": "17-20",
+      "symbol": "generateGlobalWindows",
+      "limit": "uses V4_LIMITS 2..5",
+      "historicalRole": "LTR/global window helper",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/ltr-fine-span-generator.ts",
+      "lines": "165-166",
+      "symbol": "generateLocalOptionsAtCursor",
+      "limit": "2..5",
+      "historicalRole": "Production LTR Fine Span",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+      "lines": "255",
+      "symbol": "recallSpanTopKV2",
+      "limit": "rejects syllables.length < 2 || > 5",
+      "historicalRole": "2-5 keyword repair recall",
+      "stillReasonable": false,
+      "note": "Blocks Lattice length=1; must allow 1 with base-only policy",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topkv3.ts",
+      "lines": "230",
+      "symbol": "lookupParentFragments",
+      "limit": "rejects length < 2",
+      "historicalRole": "parent ngram fragments for multi-syllable",
+      "stillReasonable": true,
+      "note": "Parent fragments for len=1 are meaningless; KEEP reject for fragments only",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon/local-span-recall.ts",
+      "lines": "49-50,119",
+      "symbol": "MIN_SYLLABLES / MAX_SYLLABLES",
+      "limit": "2..5",
+      "historicalRole": "Legacy local span recall",
+      "stillReasonable": false,
+      "note": "If still on any Lattice path, align to 1..5; else document TEST-ONLY/legacy",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/fuzzy-pinyin-key-builder.ts",
+      "lines": "60-65",
+      "symbol": "MIN_SYLLABLES / MAX_SYLLABLES",
+      "limit": "2..5 for fuzzy variants",
+      "historicalRole": "Fuzzy expansion only for multi-syllable",
+      "stillReasonable": true,
+      "note": "Single-char must NOT enable fuzzy; KEEP min=2 for fuzzy path",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/pinyin-ime-v2/pinyin-ime-v2-config.ts",
+      "lines": "13-14",
+      "symbol": "DEFAULT_PINYIN_IME_V2.min/maxSyllables",
+      "limit": "2..5",
+      "historicalRole": "IME span normalizer gates",
+      "stillReasonable": true,
+      "note": "Not Lattice Window/Recall SSOT",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/node-config-defaults.ts",
+      "lines": "43,116-117",
+      "symbol": "allowedWindowLengths / minSyllables",
+      "limit": "[2,3,4,5] and min=2",
+      "historicalRole": "ASR repair quality / IME defaults",
+      "stillReasonable": true,
+      "note": "Legacy ASR repair path; do not silently change without Lattice wiring audit",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/asr-repair-quality/quality-config.ts",
+      "lines": "43,87",
+      "symbol": "DEFAULT_ALLOWED_WINDOW_LENGTHS",
+      "limit": "[2,3,4,5]",
+      "historicalRole": "ASR repair window lengths",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon/hotword-recall.ts",
+      "lines": "74-76",
+      "symbol": "recallHotwordsForWindow",
+      "limit": "rejects if length not in allowedWindowLengths",
+      "historicalRole": "Legacy hotword recall",
+      "stillReasonable": true,
+      "note": "Not Lattice Phase1 harness path",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon/diff-context-windows.ts",
+      "lines": "21,135",
+      "symbol": "allowedWindowLengths",
+      "limit": "config-driven, typically 2-5",
+      "historicalRole": "Diff context windows",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/scripts/lexicon/lib/v2-classify-row.mjs",
+      "lines": "79-82,104-109",
+      "symbol": "classifyLexiconV2Row",
+      "limit": "base 2-3; one_char reject; domain 2-5",
+      "historicalRole": "Full Build tier classifier under old 2-5 keyword model",
+      "stillReasonable": false,
+      "note": "Must allow controlled base length=1 only",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-patch-v4/patch-validator-v4.ts",
+      "lines": "30-33,69-70",
+      "symbol": "validateDomainTags / validateGranularity",
+      "limit": "domain_tags required; CJK max 5; no min length",
+      "historicalRole": "Patch V4 domain-term expansion",
+      "stillReasonable": false,
+      "note": "Syntax allows 1-char but forces domain tags → not true base",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-patch-v4/sqlite-applier-v4.ts",
+      "lines": "141-153",
+      "symbol": "addTerm",
+      "limit": "tier hardcoded 'domain'",
+      "historicalRole": "Domain term insert + rematerialize",
+      "stillReasonable": false,
+      "note": "Need addBaseTerm or tier=base path writing base_lexicon",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-patch-v4/patch-types-v4.ts",
+      "lines": "16,100",
+      "symbol": "MAX_EXPANSION_CJK_LEN / DEFAULT_PRIOR",
+      "limit": "max 5; prior 0.85",
+      "historicalRole": "Expansion cap",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/lattice-hard-block-filter.ts",
+      "lines": "46-57",
+      "symbol": "hasSentenceBoundary",
+      "limit": "blocks adjacent sentence boundary via rawStart-1 / rawEnd",
+      "historicalRole": "Prevent crossing sentence punctuation",
+      "stillReasonable": false,
+      "note": "Mis-treats adjacency as crossing; kills length=1 '吗' before '？'",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/build-lexical-edges.ts",
+      "lines": "106-125",
+      "symbol": "buildLexicalEdges",
+      "limit": "no length guard",
+      "historicalRole": "Edge from candidates",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/enumerate-complete-segmentation-paths.ts",
+      "lines": "64-67,37-44,110-112",
+      "symbol": "validateLexicalEdgeGraph / compareBestFirst",
+      "limit": "edge length 1..5; ranks by edgeKind not length",
+      "historicalRole": "Path enum",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/inject-fallback-edges.ts",
+      "lines": "167-196",
+      "symbol": "injectFallbackEdges",
+      "limit": "fallback always length=1; edgeKind=fallback",
+      "historicalRole": "Gap fill",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-shared/utterance-domain-vote.ts",
+      "lines": "47-53",
+      "symbol": "isVoteDomainLabel / isDomainVoteSource",
+      "limit": "skips base_term and general",
+      "historicalRole": "Domain presence vote",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts",
+      "lines": "37-53,355-400",
+      "symbol": "resolveGraphSource / recallTopKForWindows",
+      "limit": "no length filter; calls V3 which rejects <2",
+      "historicalRole": "Lattice recall orchestrator",
+      "stillReasonable": "partial",
+      "note": "MODIFY only if need length-specific TopK / base-only branch",
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts",
+      "lines": "317-323,443-449",
+      "symbol": "stmtBase / lookupBaseByPinyinKey",
+      "limit": "SQL length(word)=? accepts 1",
+      "historicalRole": "Runtime lookup",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/legacy/archive/fw-detector-span/span-detector-hint.ts",
+      "lines": "7-8",
+      "symbol": "MIN_SYLLABLES",
+      "limit": "2..5",
+      "historicalRole": "Archived legacy",
+      "stillReasonable": "n/a",
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/generate-global-windows.test.ts",
+      "lines": "74-75",
+      "symbol": "test asserts V4_LIMITS 2..5",
+      "limit": "2..5",
+      "historicalRole": "LTR limits freeze test",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/lexicon/diff-context-windows.test.ts",
+      "lines": "28",
+      "symbol": "allowedWindowLengths [2,3,4,5]",
+      "limit": "2-5",
+      "historicalRole": "Legacy ASR repair test",
+      "stillReasonable": true,
+      "action": "KEEP"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/phase1-window-edge-harness.live.test.ts",
+      "lines": "55+",
+      "symbol": "1-syllable lexical window can form an edge",
+      "limit": "claims len=1 support without asserting hits>0",
+      "historicalRole": "Harness live test gap",
+      "stillReasonable": false,
+      "action": "MODIFY"
+    },
+    {
+      "path": "electron_node/electron-node/scripts/lexicon/industry_pack_v2/_probe-candidates.mjs",
+      "lines": "19",
+      "symbol": "SQL BETWEEN 2 AND 5",
+      "limit": "2-5",
+      "historicalRole": "Ad-hoc probe",
+      "stillReasonable": true,
+      "action": "TEST-ONLY"
+    },
+    {
+      "path": "docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md",
+      "lines": "26,80,138",
+      "symbol": "Architecture SSOT",
+      "limit": "frozen 1..5 windows; rejects old 2..5-only SSOT",
+      "historicalRole": "Current architecture",
+      "stillReasonable": true,
+      "action": "KEEP"
+    }
+  ]
+}

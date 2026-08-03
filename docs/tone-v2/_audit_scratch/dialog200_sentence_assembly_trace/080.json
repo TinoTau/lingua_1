@@ -1,0 +1,730 @@
+{
+  "caseId": "d080",
+  "fileNum": "080",
+  "rawText": "这笔转账显示处理中，大概多久能到账？",
+  "scenario": "bank",
+  "retainedDomains": [
+    "food_order",
+    "milk_tea"
+  ],
+  "domainScores": {
+    "food_order": 1,
+    "milk_tea": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "domainId": "food_order",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "笔",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "笔"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "转",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "转"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "账",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "账"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "显",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "显"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "示",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "示"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "处理",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:6",
+          "sameDomain": [
+            "处理"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "中",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "大",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "大"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "概",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "概"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "多",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "多"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "久",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "久"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "能",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "到",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "到"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "账",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "账"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "笔"
+        ],
+        [
+          "转"
+        ],
+        [
+          "账"
+        ],
+        [
+          "显"
+        ],
+        [
+          "示"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "中"
+        ],
+        [
+          "大"
+        ],
+        [
+          "概"
+        ],
+        [
+          "多"
+        ],
+        [
+          "久"
+        ],
+        [
+          "能"
+        ],
+        [
+          "到"
+        ],
+        [
+          "账"
+        ]
+      ],
+      "assemblyTexts": [
+        "这笔转账显示处理中，大概多久能到账？"
+      ]
+    },
+    {
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "domainId": "milk_tea",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "笔",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "笔"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "转",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "转"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "账",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "账"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "显",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "显"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "示",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "示"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "处理",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:6",
+          "sameDomain": [
+            "处理"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "处理"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "中",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "大",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "大"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "概",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "概"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "多",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "多"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "久",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "久"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "能",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "到",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "到"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "账",
+          "fineSpanId": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "账"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "笔"
+        ],
+        [
+          "转"
+        ],
+        [
+          "账"
+        ],
+        [
+          "显"
+        ],
+        [
+          "示"
+        ],
+        [
+          "处理"
+        ],
+        [
+          "中"
+        ],
+        [
+          "大"
+        ],
+        [
+          "概"
+        ],
+        [
+          "多"
+        ],
+        [
+          "久"
+        ],
+        [
+          "能"
+        ],
+        [
+          "到"
+        ],
+        [
+          "账"
+        ]
+      ],
+      "assemblyTexts": [
+        "这笔转账显示处理中，大概多久能到账？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "这笔转账显示处理中，大概多久能到账？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "这笔转账显示处理中，大概多久能到账？",
+    "这笔转账显示处理中，大概多久能到账？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "这笔转账显示处理中，大概多久能到账？",
+      "replacements": [
+        {
+          "span": {
+            "text": "处理",
+            "start": 6,
+            "end": 8
+          },
+          "word": "处理",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 0,
+            "end": 1
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "笔",
+            "start": 1,
+            "end": 2
+          },
+          "word": "笔",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "转",
+            "start": 2,
+            "end": 3
+          },
+          "word": "转",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "账",
+            "start": 3,
+            "end": 4
+          },
+          "word": "账",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "显",
+            "start": 4,
+            "end": 5
+          },
+          "word": "显",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "示",
+            "start": 5,
+            "end": 6
+          },
+          "word": "示",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "中",
+            "start": 8,
+            "end": 9
+          },
+          "word": "中",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "大",
+            "start": 10,
+            "end": 11
+          },
+          "word": "大",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "概",
+            "start": 11,
+            "end": 12
+          },
+          "word": "概",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "多",
+            "start": 12,
+            "end": 13
+          },
+          "word": "多",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "久",
+            "start": 13,
+            "end": 14
+          },
+          "word": "久",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 14,
+            "end": 15
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "到",
+            "start": 15,
+            "end": 16
+          },
+          "word": "到",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "账",
+            "start": 16,
+            "end": 17
+          },
+          "word": "账",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    }
+  ],
+  "kenlmInputTexts": [
+    "这笔转账显示处理中，大概多久能到账？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "这笔转账显示处理中，大概多久能到账？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "这笔转账显示处理中，大概多久能到账？"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "这笔转账显示处理中，大概多久能到账？"
+    ],
+    "actual": [
+      "这笔转账显示处理中，大概多久能到账？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "caseId": "A06",
+  "rawText": "医院就在附近",
+  "retainedDomains": [
+    "tourism_hotel"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        2,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医"
+        ],
+        [
+          "园酒",
+          "院就"
+        ],
+        [
+          "在"
+        ],
+        [
+          "附"
+        ],
+        [
+          "近"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "医园酒在附近",
+        "医院就在附近"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "医园酒在附近",
+    "医院就在附近"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "医园酒在附近",
+    "医院就在附近"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 18.418799877166748,
+  "groups": [
+    "A"
+  ],
+  "why": "yi|yuan",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "医园酒在附近",
+      "医院就在附近"
+    ]
+  }
+}

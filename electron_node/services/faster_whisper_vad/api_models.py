@@ -31,12 +31,26 @@ class AcousticToneSliceModel(BaseModel):
     confidence: float
 
 
+class ToneEvidenceProductionDiagnosticModel(BaseModel):
+    word: str
+    startSec: float
+    endSec: float
+    durationSec: float
+    segmentIndex: int
+    status: str
+    errorCode: Optional[str] = None
+    batchIndex: Optional[int] = None
+
+
 class UtteranceAcousticTonePayloadModel(BaseModel):
     toneEnabled: bool
     acousticToneSlices: List[AcousticToneSliceModel] = []
     sliceCount: int = 0
     toneConfidenceAvg: Optional[float] = None
     skippedReason: Optional[str] = None
+    evidenceProduction: List[ToneEvidenceProductionDiagnosticModel] = []
+    model: Optional[str] = None
+    version: Optional[str] = None
 
 
 class UtteranceRequest(BaseModel):
@@ -76,7 +90,7 @@ class UtteranceRequest(BaseModel):
     context_text: Optional[str] = None  # 上下文文本（用于 NMT，ASR 服务不使用）
     # EDGE-4: Padding 配置
     padding_ms: Optional[int] = None  # 尾部静音 padding（毫秒），None 表示不添加 padding
-    skip_text_dedup: bool = False  # P0.5: FW Detector path — keep response.text stable for ASR merge
+    skip_text_dedup: bool = True  # FW Detector production SSOT — preserve WordInfo timestamps
 
 
 class UtteranceResponse(BaseModel):

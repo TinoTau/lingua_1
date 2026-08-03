@@ -1,0 +1,18 @@
+﻿const path=require("path");
+const repo="D:/Programs/github/lingua_1";
+const root=path.join(repo,"electron_node/electron-node");
+process.chdir(root); process.env.PROJECT_ROOT=repo;
+const dist=path.join(root,"dist/main/electron-node/main/src");
+const {LexiconRuntimeV2}=require(path.join(dist,"lexicon-v2/lexicon-runtime-v2.js"));
+const {defaultGeneralProfile}=require(path.join(dist,"lexicon-v2/profile-registry.js"));
+const {resolveRecallScope}=require(path.join(dist,"lexicon-v2/resolve-recall-enabled-fine-domains.js"));
+const {loadFwDetectorRuntimeConfig}=require(path.join(dist,"fw-detector/fw-config.js"));
+const {recallSpanTopKV2}=require(path.join(dist,"lexicon-v2/recall-span-topk-v2.js"));
+const rt=new LexiconRuntimeV2();
+rt.loadFromBundleDir(path.join(repo,"node_runtime/lexicon/_rebuild_candidate"));
+const fw=loadFwDetectorRuntimeConfig();
+const profile=defaultGeneralProfile();
+const domainIds=resolveRecallScope({configEnabledDomains:fw.enabledDomains}).domainIds;
+const syl=["dan","yuan","ce","shi"];
+const r=recallSpanTopKV2(rt,{syllables:syl,windowText:"单元测试",termLength:4,topK:8,profile,domainIds,perSpanLimit:8});
+console.log(JSON.stringify({hitCount:r.hits.length,hits:r.hits.map(h=>({w:h.hotword.word,p:h.hotword.priorScore,s:h.source,score:h.candidateScore,kind:h.recallCandidateKind})),diag:r.diagnostics||r.diag||null},null,2).slice(0,3000));

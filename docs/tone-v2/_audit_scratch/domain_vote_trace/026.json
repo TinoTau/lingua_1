@@ -1,0 +1,610 @@
+{
+  "case": {
+    "id": "d026",
+    "fileNum": "026",
+    "scenario": "interview",
+    "rawText": "你如何看待跨团队协作？遇到需求变更一般怎么处理？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16|16-17|17-18|18-19|19-20|20-22",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "你",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "如",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "何",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "看",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "待",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "跨",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "团",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:7",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "队",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:8",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "协",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:9",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "作",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "遇",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:12",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "需",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:13",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "求",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:14",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "变",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:15",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "更",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:16",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "一",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:17",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "般",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:18",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "怎",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:19",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "么",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+          "rawRange": [
+            21,
+            23
+          ],
+          "rawText": "处理",
+          "syllableRange": [
+            20,
+            22
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+          "fineSpanDomainSet": [
+            "food_order",
+            "milk_tea"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "20:22:1",
+          "word": "处理",
+          "surface": "处理",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            21,
+            23
+          ],
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order",
+            "milk_tea"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "food_order",
+          "milk_tea"
+        ]
+      ],
+      "contributionsByDomain": {
+        "food_order": [
+          {
+            "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "20:22:1",
+                "word": "处理",
+                "domainsAdded": [
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "milk_tea": [
+          {
+            "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "20:22:1",
+                "word": "处理",
+                "domainsAdded": [
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "food_order": 1,
+        "milk_tea": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "food_order": 1,
+          "milk_tea": 1
+        },
+        "retainedDomains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": true,
+        "utteranceDomain": "food_order",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 1
+      },
+      "replayVote": {
+        "domainScores": {
+          "food_order": 1,
+          "milk_tea": 1
+        },
+        "retainedDomains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "insufficientEvidence": false,
+        "isTie": true,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "food_order",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+              "candidateId": "20:22:1",
+              "word": "处理"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "milk_tea",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+              "candidateId": "20:22:1",
+              "word": "处理"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "food_order",
+        "milk_tea"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "food_order",
+        "milk_tea"
+      ],
+      "bucketDomainsFromVote": [
+        "food_order",
+        "milk_tea"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 2,
+      "multiDomainInstances": [
+        {
+          "candidateId": "20:22:1",
+          "word": "处理",
+          "fineSpanId": "fine:b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6:20",
+          "domainTags": [
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        }
+      ],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

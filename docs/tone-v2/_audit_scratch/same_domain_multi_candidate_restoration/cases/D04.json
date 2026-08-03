@@ -1,0 +1,81 @@
+{
+  "caseId": "D04",
+  "rawText": "大杯和小杯都要重新下单",
+  "retainedDomains": [
+    "food_order"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "大杯"
+        ],
+        [
+          "和"
+        ],
+        [
+          "小杯"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ],
+        [
+          "重"
+        ],
+        [
+          "新"
+        ],
+        [
+          "下单"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "大杯和小杯都要重新下单"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "大杯和小杯都要重新下单"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "大杯和小杯都要重新下单"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 52.996700048446655,
+  "groups": [
+    "D",
+    "F"
+  ],
+  "why": "cup size multi-domain",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

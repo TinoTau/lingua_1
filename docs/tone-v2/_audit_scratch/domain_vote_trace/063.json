@@ -1,0 +1,392 @@
+{
+  "case": {
+    "id": "d063",
+    "fileNum": "063",
+    "scenario": "friend",
+    "rawText": "你最近忙不忙？想找你看下手机备份怎么设置。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16|16-17|17-18|18-19",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "你",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "最",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "近",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "忙",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "不",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "忙",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:6",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "想",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:7",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "找",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "你",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:9",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "看",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "手",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:12",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "机",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:13",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "备",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:14",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "份",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:15",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "怎",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:16",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "么",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:17",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "设",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:18",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "置",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {},
+      "reconstructedScores": {},
+      "productionVote": {
+        "domainScores": {},
+        "retainedDomains": [],
+        "insufficientEvidence": true,
+        "maxCount": 0,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "general",
+        "winnerScore": 0,
+        "voteMargin": 0,
+        "parentTermVoteCount": 0
+      },
+      "replayVote": {
+        "domainScores": {},
+        "retainedDomains": [],
+        "insufficientEvidence": true,
+        "isTie": false,
+        "maxCount": 0
+      },
+      "scoreReconcileOk": true,
+      "ranking": [],
+      "retentionRatio": 0.75,
+      "retainedDomains": [],
+      "insufficientEvidence": true,
+      "baseOnly": true,
+      "bucketDomains": [
+        null
+      ],
+      "bucketDomainsFromVote": [],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

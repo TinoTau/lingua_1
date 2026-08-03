@@ -1,0 +1,44 @@
+{
+  "entry": "runSpanAssemblyV4Orchestrator (Step 5 Trace / Contract)",
+  "casesTotal": 200,
+  "orchestratorSuccess": 200,
+  "orchestratorFailure": 0,
+  "latticeTracePresent": 200,
+  "pathAssemblyTracePresent": 200,
+  "crossPathTracePresent": 200,
+  "architectureCompliancePresent": 200,
+  "casesWithLegacyTraceField": 0,
+  "casesWithUndefinedPrefilledCombinations": 0,
+  "casesWithKenlmInputOver16": 0,
+  "casesWithDuplicateKenlmText": 0,
+  "ltrRuntimeCallCount": 0,
+  "hardGatePass": true,
+  "qualityObservation_NOT_STEP5_BLOCKER": {
+    "note": "unique candidate always-1 is a quality observation, not a Step 5 blocker",
+    "uniqueCandidateCountDistribution": {
+      "1": 200
+    },
+    "casesAllUniqueEq1": 200,
+    "pathsPerCaseDistribution": {
+      "1": 170,
+      "2": 21,
+      "4": 9
+    },
+    "pathCandidateCountsDistribution": {
+      "1": 196,
+      "2": 35,
+      "3": 13,
+      "4": 4
+    },
+    "distinctTextsBeforeCrossPathDedupDistribution": {
+      "1": 200
+    }
+  },
+  "latencyMs": {
+    "p50": 69,
+    "p95": 117,
+    "max": 163,
+    "total": 14459
+  },
+  "failCases": []
+}

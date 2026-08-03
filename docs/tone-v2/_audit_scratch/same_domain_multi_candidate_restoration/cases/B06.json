@@ -1,0 +1,212 @@
+{
+  "caseId": "B06",
+  "rawText": "请把地址发给医师",
+  "retainedDomains": [
+    "coffee",
+    "medical",
+    "meeting",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "低脂",
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请把低脂发给医师",
+        "请把地址发给医师"
+      ]
+    },
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请把地址发给医师"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "议室",
+          "医师"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请把地址发给议室",
+        "请把地址发给医师"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地质",
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "请把地质发给医师",
+        "请把地址发给医师"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "请把低脂发给医师",
+    "请把地址发给医师",
+    "请把地址发给议室",
+    "请把地质发给医师"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "请把低脂发给医师",
+    "请把地址发给医师",
+    "请把地址发给议室",
+    "请把地质发给医师"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 28.94289994239807,
+  "groups": [
+    "B"
+  ],
+  "why": "dual",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "请把低脂发给医师",
+      "请把地址发给医师",
+      "请把地址发给议室",
+      "请把地质发给医师"
+    ]
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "id": "d061",
+  "expected": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+  "asr": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+  "raw_asr": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 21,
+    "evidenceProductionCount": 21,
+    "firstSlicePosterior": {
+      "t1": 0.00026512646581977606,
+      "t2": 0.000020248573491699062,
+      "t3": 0.00004999664815841243,
+      "t4": 0.999660849571228,
+      "t5": 0.000003819004632532597
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 21,
+    "wordTimeSpanCount": 21,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 21
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "得带",
+        "pinyinKey": "de|dai",
+        "windowTimeRange": {
+          "start": 4.4399999999999995,
+          "end": 4.84
+        },
+        "acousticTonePattern": [
+          3,
+          3
+        ]
+      },
+      {
+        "text": "得带水",
+        "pinyinKey": "de|dai|shui",
+        "windowTimeRange": {
+          "start": 4.4399999999999995,
+          "end": 4.98
+        },
+        "acousticTonePattern": [
+          3,
+          3,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "众莫",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "众莫",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "要",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "要",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "不要",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "不要",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "去",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "去",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "降",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "降",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "边骑",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "边骑",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "行 天",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "行 天",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "气预",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "气预",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "caseId": "D05",
+  "rawText": "请确认菜单和打包",
+  "retainedDomains": [
+    "bakery",
+    "coffee",
+    "food_order",
+    "milk_tea"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "bakery",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认菜单和打包"
+      ]
+    },
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认菜单和打包"
+      ]
+    },
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认菜单和打包"
+      ]
+    },
+    {
+      "domainId": "milk_tea",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认菜单和打包"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "请确认菜单和打包"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "请确认菜单和打包"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 28.948500156402588,
+  "groups": [
+    "D"
+  ],
+  "why": "food multi-domain",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

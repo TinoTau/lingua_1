@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-07-28",
+  "status": "BLOCKED",
+  "baseSsotTools": [
+    {"tool": "manifest", "whenUnblocked": "MUST cover base_lexicon counts"},
+    {"tool": "source-sync-v4", "whenUnblocked": "EXPLICITLY SKIPPED or SUPPORTED for base ops — never silent"},
+    {"tool": "export/backup/restore/diff/audit/hash/rollback", "whenUnblocked": "verify base_lexicon"},
+    {"tool": "disabled rows", "whenUnblocked": "enable/disableBaseTerm"}
+  ]
+}

@@ -1,0 +1,2345 @@
+{
+  "caseId": "d046",
+  "fileNum": "046",
+  "rawText": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+  "scenario": "cafe",
+  "retainedDomains": [
+    "coffee",
+    "milk_tea"
+  ],
+  "domainScores": {
+    "coffee": 3,
+    "food_order": 2,
+    "milk_tea": 3,
+    "bakery": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布奇诺",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:7",
+          "sameDomain": [
+            "卡布奇诺"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "中杯",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:8",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:9",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "顺",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "便",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "问",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "一",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "下",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "今",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "天",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "有",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "芝士",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "蛋糕",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "吗",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士"
+        ],
+        [
+          "蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    },
+    {
+      "pathId": "dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1",
+      "domainId": "milk_tea",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布奇诺",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "中杯",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:8",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:9",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "顺",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "便",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "问",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "一",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "下",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "今",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "天",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "有",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "芝士",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:18",
+          "sameDomain": [
+            "芝士"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "蛋糕",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "吗",
+          "fineSpanId": "fine:dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士"
+        ],
+        [
+          "蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    },
+    {
+      "pathId": "704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布奇诺",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:7",
+          "sameDomain": [
+            "卡布奇诺"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "中杯",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:8",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:9",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "顺",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "便",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "问",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "一",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "下",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "今",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "天",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "有",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "芝士蛋糕",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "吗",
+          "fineSpanId": "fine:704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    },
+    {
+      "pathId": "f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:7",
+          "sameDomain": [
+            "卡布",
+            "卡布"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "奇诺",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:8",
+          "sameDomain": [
+            "奇诺"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "中杯",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:9",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:10",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "顺",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "便",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "问",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "一",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "下",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "今",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "天",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "有",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "芝士",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "蛋糕",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 22,
+          "spanText": "吗",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:21",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布"
+        ],
+        [
+          "奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士"
+        ],
+        [
+          "蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    },
+    {
+      "pathId": "f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d",
+      "domainId": "milk_tea",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "奇诺",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "中杯",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:9",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:10",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "顺",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "便",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "问",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "一",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "下",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "今",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "天",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "有",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "芝士",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:19",
+          "sameDomain": [
+            "芝士"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "蛋糕",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 22,
+          "spanText": "吗",
+          "fineSpanId": "fine:f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d:21",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布"
+        ],
+        [
+          "奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士"
+        ],
+        [
+          "蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    },
+    {
+      "pathId": "b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "卡布",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:7",
+          "sameDomain": [
+            "卡布",
+            "卡布"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "卡布"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "奇诺",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:8",
+          "sameDomain": [
+            "奇诺"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "奇诺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "中杯",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:9",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "正常糖",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:10",
+          "sameDomain": [
+            "正常糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "正常糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "顺",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "便",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "问",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "一",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "下",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "今",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "天",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "有",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "芝士蛋糕",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "芝士蛋糕"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "吗",
+          "fineSpanId": "fine:b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "卡布"
+        ],
+        [
+          "奇诺"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "正常糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "芝士蛋糕"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "卡布奇诺",
+            "start": 8,
+            "end": 12
+          },
+          "word": "卡布奇诺",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 1.9975,
+          "repairTarget": true,
+          "candidateScore": 1.9975
+        },
+        {
+          "span": {
+            "text": "中杯",
+            "start": 13,
+            "end": 15
+          },
+          "word": "中杯",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "正常糖",
+            "start": 16,
+            "end": 19
+          },
+          "word": "正常糖",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "你",
+            "start": 0,
+            "end": 1
+          },
+          "word": "你",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "好",
+            "start": 1,
+            "end": 2
+          },
+          "word": "好",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 3,
+            "end": 4
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "想",
+            "start": 4,
+            "end": 5
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "点",
+            "start": 5,
+            "end": 6
+          },
+          "word": "点",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 6,
+            "end": 7
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "杯",
+            "start": 7,
+            "end": 8
+          },
+          "word": "杯",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "顺",
+            "start": 20,
+            "end": 21
+          },
+          "word": "顺",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "便",
+            "start": 21,
+            "end": 22
+          },
+          "word": "便",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 22,
+            "end": 23
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 23,
+            "end": 24
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 24,
+            "end": 25
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "今",
+            "start": 25,
+            "end": 26
+          },
+          "word": "今",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 26,
+            "end": 27
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 27,
+            "end": 28
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "芝士",
+            "start": 28,
+            "end": 30
+          },
+          "word": "芝士",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "蛋糕",
+            "start": 30,
+            "end": 32
+          },
+          "word": "蛋糕",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 32,
+            "end": 33
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 6.7475000000000005
+    }
+  ],
+  "kenlmInputTexts": [
+    "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": true,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+    ],
+    "actual": [
+      "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

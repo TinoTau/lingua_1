@@ -1,0 +1,115 @@
+{
+  "id": "d101",
+  "raw": "瓜號出請問內課還要開始嗎? 还有号码 我微不舒服昨晚开始的",
+  "asrToneSliceCount": 8,
+  "diagToneSliceCount": 20,
+  "wordTimeSpanBuilt": 23,
+  "wordTimeSpanMapped": 23,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "开始",
+      "pinyinKey": "kai|shi",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "开始",
+        "wordTime": [
+          2.36,
+          2.72
+        ],
+        "sliceCount": 8,
+        "nearestSlices": [
+          {
+            "start": 1.82,
+            "end": 1.88,
+            "dist": 0.5399999999999998
+          },
+          {
+            "start": 1.64,
+            "end": 1.82,
+            "dist": 0.72
+          },
+          {
+            "start": 1.3,
+            "end": 1.64,
+            "dist": 1.0599999999999998
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.26,
+        "end": 4.62
+      },
+      "replayWindowTime": {
+        "start": 2.36,
+        "end": 2.72
+      }
+    },
+    {
+      "text": "开始的",
+      "pinyinKey": "kai|shi|de",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "开始",
+        "wordTime": [
+          2.36,
+          2.72
+        ],
+        "sliceCount": 8,
+        "nearestSlices": [
+          {
+            "start": 1.82,
+            "end": 1.88,
+            "dist": 0.5399999999999998
+          },
+          {
+            "start": 1.64,
+            "end": 1.82,
+            "dist": 0.72
+          },
+          {
+            "start": 1.3,
+            "end": 1.64,
+            "dist": 1.0599999999999998
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.26,
+        "end": 4.84
+      },
+      "replayWindowTime": {
+        "start": 2.36,
+        "end": 2.94
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 26,
+    "theoreticalWindows2to5": 94,
+    "theoreticalWindows1to5": 120
+  },
+  "summary": {
+    "spanCount": 17,
+    "candidateCount": 17
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

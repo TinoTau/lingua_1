@@ -1,0 +1,222 @@
+{
+  "caseId": "E01",
+  "rawText": "请确认上线计划",
+  "windowCount": 25,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 2,
+  "retainedDomainCount": 1,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认上线计划"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线"
+        ],
+        [
+          "计划"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "a59414b30e0c9286932c56132ca7a83beae7a98a5724ec8904dec01946cf8dc4",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线计划"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认上线计划",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "上线",
+          "sourceText": "上线"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "计划",
+          "sourceText": "计划"
+        }
+      ],
+      "dedupKey": "请确认上线计划",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认上线计划",
+      "sourcePathId": "a59414b30e0c9286932c56132ca7a83beae7a98a5724ec8904dec01946cf8dc4",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 7,
+          "word": "上线计划",
+          "sourceText": "上线计划"
+        }
+      ],
+      "dedupKey": "请确认上线计划",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 25,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 6,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 9,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      }
+    ],
+    "completePathCount": 2,
+    "retainedCompletePathCount": 2,
+    "prunedPathCount": 0,
+    "materializedPathCount": 2,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 22,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 2,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "E"
+  ],
+  "why": "overlap path windows",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 21.354099988937378,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

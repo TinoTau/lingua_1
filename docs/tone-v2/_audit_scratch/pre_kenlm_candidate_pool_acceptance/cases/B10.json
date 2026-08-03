@@ -1,0 +1,603 @@
+{
+  "caseId": "B10",
+  "rawText": "请核对地址、医院信息",
+  "windowCount": 35,
+  "surfaceDistinctRecallCount": 2,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "3:5",
+      "syllableStart": 3,
+      "syllableEnd": 5,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    },
+    {
+      "windowId": "5:7",
+      "syllableStart": 5,
+      "syllableEnd": 7,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 4,
+  "pathCount": 1,
+  "retainedDomainCount": 6,
+  "bucketCount": 6,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 6,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 6,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请核对地址、医院信息"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "tourism_transport",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "medical",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "meeting",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "tourism_hotel",
+      "sourceBucket": 3,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 4,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请核对地址、医院信息",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "tourism_transport",
+      "sourceBucket": 5,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "核",
+          "sourceText": "核"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "对",
+          "sourceText": "对"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "信息",
+          "sourceText": "信息"
+        }
+      ],
+      "dedupKey": "请核对地址、医院信息",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 35,
+    "blockedWindowCount": 10,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 3,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 20,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "B"
+  ],
+  "why": "dual with punct",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 22.415899991989136,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

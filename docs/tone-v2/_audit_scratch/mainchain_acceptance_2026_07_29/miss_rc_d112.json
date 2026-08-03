@@ -1,0 +1,51 @@
+{
+  "id": "d112",
+  "raw": "您好我定但顯示已發貨 今天没更新能帮我查一下吗?",
+  "asrToneSliceCount": 10,
+  "diagToneSliceCount": 20,
+  "wordTimeSpanBuilt": 20,
+  "wordTimeSpanMapped": 20,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        1,
+        1
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.84,
+        "end": 5.12
+      },
+      "replayWindowTime": {
+        "start": 1.64,
+        "end": 1.92
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 22,
+    "theoreticalWindows2to5": 78,
+    "theoreticalWindows1to5": 100
+  },
+  "summary": {
+    "spanCount": 12,
+    "candidateCount": 12
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

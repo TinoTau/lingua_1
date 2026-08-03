@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "lexicon-v3-runtime-v3",
+  "bundleVersion": 11,
+  "bundleTag": "v3-runtime",
+  "buildTime": "2026-08-01T13:33:50.015Z",
+  "checksum": "sha256:d6e77ce9139a489cf17ad0bec83814aa7685d02037bc3870187a80bf47abf34a",
+  "tables": {
+    "base": 10061,
+    "idiom": 22192,
+    "domain": 1033,
+    "routing": 1033,
+    "term": 10061,
+    "term_domain_tags": 1033,
+    "domain_hierarchy": 12
+  },
+  "seedInputs": [
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\base_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\common5_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\domain_patch_multidomain_v1\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\domain_patch_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\idiom_zh_v2\\entries.jsonl"
+  ],
+  "overlayInputs": [],
+  "lastPatchId": "lexicon-domain-hierarchy-completion-v1",
+  "lastAppliedAt": "2026-07-18T12:10:19.840875+00:00",
+  "domainAvailability": {
+    "bakery": 90,
+    "coffee": 107,
+    "food_order": 88,
+    "medical": 178,
+    "meeting": 61,
+    "milk_tea": 53,
+    "tech_ai": 142,
+    "tourism_hotel": 79,
+    "tourism_pickup": 52,
+    "tourism_route": 111,
+    "tourism_transport": 67,
+    "transport": 5
+  },
+  "domainHierarchyVersion": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b",
+  "rebuild": {
+    "mode": "FULL_REBUILD",
+    "patchId": "lexicon-full-rebuild-v1",
+    "sources": [
+      "lexicon_full_corrected_review.csv",
+      "term_domain_tags_corrected.csv",
+      "supplemental_terms.csv"
+    ],
+    "excluded": [
+      "terms_to_remove_or_rebuild.csv"
+    ],
+    "remove_term_excluded_count": 12,
+    "no_merge": true
+  },
+  "hierarchyCompletion": {
+    "migrationId": "lexicon-domain-hierarchy-completion-v1",
+    "addedPairs": [
+      "healthcare|medical",
+      "workplace|meeting",
+      "workplace|tech_ai",
+      "transportation|transport"
+    ],
+    "finalPairs": 12,
+    "profileRegistryUpdated": true
+  },
+  "parentFragmentRetirement": {
+    "mode": "SCHEMA_REBUILD_NO_NGRAMS",
+    "retiredTable": "term_pinyin_ngrams",
+    "priorSchemaVersion": "lexicon-v3-five-table-v2",
+    "priorBundleVersion": 10,
+    "priorChecksum": "sha256:62e04b3a43dfc1927713df0d4e2b9b735d30a6f682e916c42dab47ceef57b4ef",
+    "backupDir": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\_backup_pf_retirement_2026-08-01T13-33-49-242Z"
+  }
+}

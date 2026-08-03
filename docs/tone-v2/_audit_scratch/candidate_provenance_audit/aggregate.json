@@ -1,0 +1,4948 @@
+{
+  "generatedAt": "2026-07-31T09:13:30.189Z",
+  "caseCount": 200,
+  "globalStats": {
+    "recallCandidates": 1432,
+    "compatibilityFail": 0,
+    "compatibilityPass": 1432,
+    "domainEligibilityDrop": 0,
+    "domainMembershipDrop": 492,
+    "domainKeep": 940,
+    "budgetDrop": 0,
+    "budgetKeep": 940,
+    "assemblyYes": 940,
+    "assemblyNo": 492,
+    "crossPathDrop": 561,
+    "crossPathKeep": 871,
+    "kenlmYes": 871,
+    "kenlmNo": 561
+  },
+  "flow": {
+    "Recall": 1432,
+    "CompatibilityPass": 1432,
+    "CompatibilityFail": 0,
+    "DomainKeep": 940,
+    "DomainEligibilityDrop": 0,
+    "DomainMembershipDrop": 492,
+    "BudgetKeep": 940,
+    "BudgetDrop": 0,
+    "AssemblyYes": 940,
+    "AssemblyNo": 492,
+    "CrossPathKeep": 871,
+    "CrossPathDrop": 561,
+    "KenlmYes": 871,
+    "KenlmNo": 561
+  },
+  "samples": {
+    "budgetDropped": [],
+    "domainDroppedEligibility": [],
+    "domainDroppedMembership": [
+      {
+        "caseId": "d001",
+        "bucketDomain": "food_order",
+        "spanRaw": "热拿铁",
+        "word": "热拿铁",
+        "candidateId": "7:10:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "food_order",
+        "spanRaw": "蓝莓",
+        "word": "蓝莓",
+        "candidateId": "22:24:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "food_order",
+        "spanRaw": "马芬",
+        "word": "马芬",
+        "candidateId": "24:26:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "coffee",
+        "spanRaw": "蓝莓",
+        "word": "蓝莓",
+        "candidateId": "22:24:8",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\",\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery",
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "coffee",
+        "spanRaw": "蓝莓",
+        "word": "蓝莓",
+        "candidateId": "22:24:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "coffee",
+        "spanRaw": "马芬",
+        "word": "马芬",
+        "candidateId": "24:26:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\",\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery",
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "coffee",
+        "spanRaw": "马芬",
+        "word": "马芬",
+        "candidateId": "24:26:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "coffee",
+        "spanRaw": "蓝莓马芬",
+        "word": "蓝莓马芬",
+        "candidateId": "22:26:11",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\",\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery",
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d001",
+        "bucketDomain": "food_order",
+        "spanRaw": "热拿铁",
+        "word": "热拿铁",
+        "candidateId": "7:10:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d002",
+        "bucketDomain": "coffee",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d002",
+        "bucketDomain": "coffee",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "燕麦",
+        "word": "燕麦",
+        "candidateId": "4:6:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "燕麦",
+        "word": "燕麦",
+        "candidateId": "4:6:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:8",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "少冰",
+        "word": "少冰",
+        "candidateId": "10:12:11",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "时间",
+        "word": "时间",
+        "candidateId": "15:17:12",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d003",
+        "bucketDomain": "coffee",
+        "spanRaw": "时间",
+        "word": "时间",
+        "candidateId": "15:17:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "food_order",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "food_order",
+        "spanRaw": "系统",
+        "word": "系统",
+        "candidateId": "3:5:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "meeting",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "meeting",
+        "spanRaw": "系统",
+        "word": "系统",
+        "candidateId": "3:5:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d006",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "软件",
+        "word": "软件",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "机场",
+        "word": "机场",
+        "candidateId": "10:12:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\",\"transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport",
+          "transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "机场",
+        "word": "机场",
+        "candidateId": "10:12:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "机场",
+        "word": "机场",
+        "candidateId": "10:12:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "高速",
+        "word": "高速",
+        "candidateId": "12:14:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "高速",
+        "word": "高速",
+        "candidateId": "12:14:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_route\",\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route",
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_transport",
+        "spanRaw": "软件",
+        "word": "软件",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_transport, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_transport",
+        "spanRaw": "九点",
+        "word": "酒店",
+        "candidateId": "16:18:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_transport, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_transport",
+        "spanRaw": "九点",
+        "word": "酒店",
+        "candidateId": "16:18:8",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_transport, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_transport",
+        "spanRaw": "九点",
+        "word": "酒店",
+        "candidateId": "16:18:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_transport, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d007",
+        "bucketDomain": "tourism_transport",
+        "spanRaw": "提前",
+        "word": "提前",
+        "candidateId": "26:28:10",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_transport, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d011",
+        "bucketDomain": "medical",
+        "spanRaw": "不舒",
+        "word": "部署",
+        "candidateId": "13:15:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d011",
+        "bucketDomain": "medical",
+        "spanRaw": "不舒",
+        "word": "部署",
+        "candidateId": "13:15:10",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "coffee",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "coffee",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "coffee",
+        "spanRaw": "过敏",
+        "word": "过敏",
+        "candidateId": "13:15:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "food_order",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "food_order",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "food_order",
+        "spanRaw": "过敏",
+        "word": "过敏",
+        "candidateId": "13:15:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "过敏",
+        "word": "过敏",
+        "candidateId": "13:15:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d012",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "过敏",
+        "word": "过敏",
+        "candidateId": "13:15:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d015",
+        "bucketDomain": "food_order",
+        "spanRaw": "价格",
+        "word": "价格",
+        "candidateId": "14:16:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d015",
+        "bucketDomain": "food_order",
+        "spanRaw": "价格",
+        "word": "价格",
+        "candidateId": "14:16:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d015",
+        "bucketDomain": "food_order",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "16:18:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d020",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "发布",
+        "word": "发布",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d020",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "发布",
+        "word": "发布",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "coffee",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "coffee",
+        "spanRaw": "处理",
+        "word": "处理",
+        "candidateId": "17:19:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "food_order",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "food_order",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "tourism_route",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_route, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d023",
+        "bucketDomain": "tourism_route",
+        "spanRaw": "处理",
+        "word": "处理",
+        "candidateId": "17:19:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_route, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d031",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "9:11:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "早餐",
+        "word": "早餐",
+        "candidateId": "0:2:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "早餐",
+        "word": "早餐",
+        "candidateId": "0:2:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:8",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d032",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "延迟",
+        "word": "延迟",
+        "candidateId": "10:12:10",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d036",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "等级",
+        "word": "登机",
+        "candidateId": "9:11:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d036",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "等级",
+        "word": "登机",
+        "candidateId": "9:11:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d036",
+        "bucketDomain": "tourism_pickup",
+        "spanRaw": "查看",
+        "word": "查看",
+        "candidateId": "14:16:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_pickup, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d037",
+        "bucketDomain": "food_order",
+        "spanRaw": "置吗",
+        "word": "芝麻",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d039",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d039",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d039",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d039",
+        "bucketDomain": "coffee",
+        "spanRaw": "打包",
+        "word": "打包",
+        "candidateId": "2:4:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "medical",
+        "spanRaw": "衣室",
+        "word": "议室",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "medical",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "medical",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "medical",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "meeting",
+        "spanRaw": "衣室",
+        "word": "医师",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "meeting",
+        "spanRaw": "衣室",
+        "word": "医师",
+        "candidateId": "1:3:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "meeting",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "meeting",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "meeting",
+        "spanRaw": "前台",
+        "word": "前台",
+        "candidateId": "11:13:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "衣室",
+        "word": "医师",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "衣室",
+        "word": "议室",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d041",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "衣室",
+        "word": "医师",
+        "candidateId": "1:3:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d043",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "补齐",
+        "word": "布奇",
+        "candidateId": "23:25:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d043",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "补齐",
+        "word": "布奇",
+        "candidateId": "23:25:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:17",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上午",
+        "word": "商务",
+        "candidateId": "22:24:18",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:17",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上午",
+        "word": "商务",
+        "candidateId": "22:24:18",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:17",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上午",
+        "word": "商务",
+        "candidateId": "22:24:18",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:17",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上午",
+        "word": "商务",
+        "candidateId": "22:24:18",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "candidateId": "3:7:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "candidateId": "11:15:11",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "17:19:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:12",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:20",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:21",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:22",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "卡布奇诺",
+        "word": "卡布奇诺",
+        "candidateId": "7:11:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:12",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:20",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:21",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:22",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士蛋糕",
+        "word": "芝士蛋糕",
+        "candidateId": "24:28:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:12",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:20",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:21",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:22",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "candidateId": "7:9:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "candidateId": "7:9:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "奇诺",
+        "word": "奇诺",
+        "candidateId": "9:11:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:12",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "芝士",
+        "word": "芝士",
+        "candidateId": "24:26:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:20",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:21",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "蛋糕",
+        "word": "蛋糕",
+        "candidateId": "26:28:22",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "芝士蛋糕",
+        "word": "芝士蛋糕",
+        "candidateId": "24:28:16",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d047",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "大杯",
+        "word": "大杯",
+        "candidateId": "11:13:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "少冰",
+        "word": "少冰",
+        "candidateId": "10:12:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "时间",
+        "word": "时间",
+        "candidateId": "15:17:6",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d048",
+        "bucketDomain": "coffee",
+        "spanRaw": "时间",
+        "word": "时间",
+        "candidateId": "15:17:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "food_order",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "food_order",
+        "spanRaw": "系统",
+        "word": "系统",
+        "candidateId": "3:5:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "meeting",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "meeting",
+        "spanRaw": "系统",
+        "word": "系统",
+        "candidateId": "3:5:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d051",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d053",
+        "bucketDomain": "meeting",
+        "spanRaw": "技园",
+        "word": "机员",
+        "candidateId": "10:12:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d053",
+        "bucketDomain": "meeting",
+        "spanRaw": "技园",
+        "word": "机员",
+        "candidateId": "10:12:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=meeting, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d053",
+        "bucketDomain": "tourism_pickup",
+        "spanRaw": "技园",
+        "word": "记员",
+        "candidateId": "10:12:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_pickup, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d054",
+        "bucketDomain": "medical",
+        "spanRaw": "西溪",
+        "word": "细吸",
+        "candidateId": "3:5:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d054",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "9:11:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d054",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "9:11:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d054",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "9:11:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d057",
+        "bucketDomain": "medical",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d057",
+        "bucketDomain": "medical",
+        "spanRaw": "检查",
+        "word": "检查",
+        "candidateId": "2:4:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d057",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "咳嗽",
+        "word": "咳嗽",
+        "candidateId": "13:15:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d060",
+        "bucketDomain": "food_order",
+        "spanRaw": "价格",
+        "word": "价格",
+        "candidateId": "14:16:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d060",
+        "bucketDomain": "food_order",
+        "spanRaw": "价格",
+        "word": "价格",
+        "candidateId": "14:16:5",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d060",
+        "bucketDomain": "food_order",
+        "spanRaw": "会员",
+        "word": "会员",
+        "candidateId": "16:18:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:13",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:14",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "27:29:15",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_hotel\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_hotel"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d065",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "发布",
+        "word": "发布",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d065",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "发布",
+        "word": "发布",
+        "candidateId": "2:4:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "coffee",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "coffee",
+        "spanRaw": "处理",
+        "word": "处理",
+        "candidateId": "17:19:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "food_order",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "food_order",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "milk_tea",
+        "spanRaw": "地址",
+        "word": "地质",
+        "candidateId": "6:8:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=milk_tea, candidateDomains=[\"tourism_route\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_route"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "tourism_route",
+        "spanRaw": "地址",
+        "word": "低脂",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_route, candidateDomains=[\"coffee\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "coffee"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d068",
+        "bucketDomain": "tourism_route",
+        "spanRaw": "处理",
+        "word": "处理",
+        "candidateId": "17:19:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_route, candidateDomains=[\"food_order\",\"milk_tea\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order",
+          "milk_tea"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d076",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "安排",
+        "word": "安排",
+        "candidateId": "9:11:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tourism_transport\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_transport"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "早餐",
+        "word": "早餐",
+        "candidateId": "0:2:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "早餐",
+        "word": "早餐",
+        "candidateId": "0:2:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:7",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:8",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "8:10:9",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d077",
+        "bucketDomain": "tourism_hotel",
+        "spanRaw": "延迟",
+        "word": "延迟",
+        "candidateId": "10:12:10",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_hotel, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d081",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "等级",
+        "word": "登机",
+        "candidateId": "9:11:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d081",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "等级",
+        "word": "登机",
+        "candidateId": "9:11:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tech_ai, candidateDomains=[\"tourism_pickup\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tourism_pickup"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d081",
+        "bucketDomain": "tourism_pickup",
+        "spanRaw": "查看",
+        "word": "查看",
+        "candidateId": "14:16:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=tourism_pickup, candidateDomains=[\"tech_ai\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "tech_ai"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d082",
+        "bucketDomain": "food_order",
+        "spanRaw": "置吗",
+        "word": "芝麻",
+        "candidateId": "6:8:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=food_order, candidateDomains=[\"bakery\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "bakery"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d084",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:1",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d084",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d084",
+        "bucketDomain": "coffee",
+        "spanRaw": "可以",
+        "word": "科医",
+        "candidateId": "0:2:3",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"medical\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "medical"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d084",
+        "bucketDomain": "coffee",
+        "spanRaw": "打包",
+        "word": "打包",
+        "candidateId": "2:4:4",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=coffee, candidateDomains=[\"food_order\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "food_order"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      },
+      {
+        "caseId": "d086",
+        "bucketDomain": "medical",
+        "spanRaw": "衣室",
+        "word": "议室",
+        "candidateId": "1:3:2",
+        "dropReason": "DROP_CROSS_DOMAIN_FOR_BUCKET(bucket=medical, candidateDomains=[\"meeting\"])",
+        "domainModule": "filterDomainCandidatesPerSpan SameDomain membership",
+        "domains": [
+          "meeting"
+        ],
+        "source": "domain_term",
+        "hitKind": "parent_fragment"
+      }
+    ],
+    "crossPathDropped": [
+      {
+        "caseId": "d001",
+        "bucketDomain": "food_order",
+        "spanRaw": "蓝莓马芬",
+        "word": "蓝莓马芬",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d019",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计化",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d020",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d021",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d043",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "接口文档",
+        "word": "接口文档",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d044",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d045",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "奇诺",
+        "word": "奇诺",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d046",
+        "bucketDomain": "coffee",
+        "spanRaw": "奇诺",
+        "word": "奇诺",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d064",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计化",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d065",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d066",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d088",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "接口文档",
+        "word": "接口文档",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d089",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d089",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d090",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d109",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计化",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d110",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d111",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d133",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "接口文档",
+        "word": "接口文档",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d134",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d134",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d135",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d154",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计化",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d155",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d156",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d178",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "接口文档",
+        "word": "接口文档",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d179",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d179",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计花",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线",
+        "word": "上线",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "计化",
+        "word": "计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d180",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d181",
+        "bucketDomain": "food_order",
+        "spanRaw": "蓝莓马芬",
+        "word": "蓝莓马芬",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d182",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d182",
+        "bucketDomain": "coffee",
+        "spanRaw": "卡布",
+        "word": "卡布",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d182",
+        "bucketDomain": "coffee",
+        "spanRaw": "奇诺",
+        "word": "奇诺",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d199",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计化",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      },
+      {
+        "caseId": "d200",
+        "bucketDomain": "tech_ai",
+        "spanRaw": "上线计划",
+        "word": "上线计划",
+        "crossPathReason": "EXACT_TEXT_DEDUP first-wins: sentence(s) using this surface removed as duplicate text of an earlier combo"
+      }
+    ],
+    "designPremature": []
+  },
+  "counts": {
+    "budgetDropped": 0,
+    "domainDropped": 492,
+    "crossPathDropped": 69,
+    "designPremature": 0,
+    "neverAssembly": 492
+  },
+  "caseIndex": [
+    {
+      "caseId": "d001",
+      "file": "001.md",
+      "recall": 22,
+      "assemblyYes": 13,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d002",
+      "file": "002.md",
+      "recall": 7,
+      "assemblyYes": 5,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d003",
+      "file": "003.md",
+      "recall": 15,
+      "assemblyYes": 7,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d004",
+      "file": "004.md",
+      "recall": 8,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d005",
+      "file": "005.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d006",
+      "file": "006.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d007",
+      "file": "007.md",
+      "recall": 20,
+      "assemblyYes": 9,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d008",
+      "file": "008.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d009",
+      "file": "009.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d010",
+      "file": "010.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d011",
+      "file": "011.md",
+      "recall": 6,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d012",
+      "file": "012.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d013",
+      "file": "013.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d014",
+      "file": "014.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d015",
+      "file": "015.md",
+      "recall": 7,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d016",
+      "file": "016.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d017",
+      "file": "017.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d018",
+      "file": "018.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d019",
+      "file": "019.md",
+      "recall": 20,
+      "assemblyYes": 14,
+      "kenlmN": 8,
+      "error": false
+    },
+    {
+      "caseId": "d020",
+      "file": "020.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d021",
+      "file": "021.md",
+      "recall": 14,
+      "assemblyYes": 14,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d022",
+      "file": "022.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d023",
+      "file": "023.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d024",
+      "file": "024.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d025",
+      "file": "025.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d026",
+      "file": "026.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d027",
+      "file": "027.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d028",
+      "file": "028.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d029",
+      "file": "029.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d030",
+      "file": "030.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d031",
+      "file": "031.md",
+      "recall": 5,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d032",
+      "file": "032.md",
+      "recall": 10,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d033",
+      "file": "033.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d034",
+      "file": "034.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d035",
+      "file": "035.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d036",
+      "file": "036.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d037",
+      "file": "037.md",
+      "recall": 3,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d038",
+      "file": "038.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d039",
+      "file": "039.md",
+      "recall": 6,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d040",
+      "file": "040.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d041",
+      "file": "041.md",
+      "recall": 18,
+      "assemblyYes": 6,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d042",
+      "file": "042.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d043",
+      "file": "043.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d044",
+      "file": "044.md",
+      "recall": 38,
+      "assemblyYes": 19,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d045",
+      "file": "045.md",
+      "recall": 24,
+      "assemblyYes": 24,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d046",
+      "file": "046.md",
+      "recall": 50,
+      "assemblyYes": 22,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d047",
+      "file": "047.md",
+      "recall": 6,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d048",
+      "file": "048.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d049",
+      "file": "049.md",
+      "recall": 8,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d050",
+      "file": "050.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d051",
+      "file": "051.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d052",
+      "file": "052.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d053",
+      "file": "053.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d054",
+      "file": "054.md",
+      "recall": 8,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d055",
+      "file": "055.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d056",
+      "file": "056.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d057",
+      "file": "057.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d058",
+      "file": "058.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d059",
+      "file": "059.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d060",
+      "file": "060.md",
+      "recall": 7,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d061",
+      "file": "061.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d062",
+      "file": "062.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d063",
+      "file": "063.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d064",
+      "file": "064.md",
+      "recall": 20,
+      "assemblyYes": 14,
+      "kenlmN": 8,
+      "error": false
+    },
+    {
+      "caseId": "d065",
+      "file": "065.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d066",
+      "file": "066.md",
+      "recall": 14,
+      "assemblyYes": 14,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d067",
+      "file": "067.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d068",
+      "file": "068.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d069",
+      "file": "069.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d070",
+      "file": "070.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d071",
+      "file": "071.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d072",
+      "file": "072.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d073",
+      "file": "073.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d074",
+      "file": "074.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d075",
+      "file": "075.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d076",
+      "file": "076.md",
+      "recall": 5,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d077",
+      "file": "077.md",
+      "recall": 10,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d078",
+      "file": "078.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d079",
+      "file": "079.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d080",
+      "file": "080.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d081",
+      "file": "081.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d082",
+      "file": "082.md",
+      "recall": 3,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d083",
+      "file": "083.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d084",
+      "file": "084.md",
+      "recall": 6,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d085",
+      "file": "085.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d086",
+      "file": "086.md",
+      "recall": 18,
+      "assemblyYes": 6,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d087",
+      "file": "087.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d088",
+      "file": "088.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d089",
+      "file": "089.md",
+      "recall": 38,
+      "assemblyYes": 19,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d090",
+      "file": "090.md",
+      "recall": 24,
+      "assemblyYes": 24,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d091",
+      "file": "091.md",
+      "recall": 11,
+      "assemblyYes": 6,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d092",
+      "file": "092.md",
+      "recall": 8,
+      "assemblyYes": 5,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d093",
+      "file": "093.md",
+      "recall": 10,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d094",
+      "file": "094.md",
+      "recall": 8,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d095",
+      "file": "095.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d096",
+      "file": "096.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d097",
+      "file": "097.md",
+      "recall": 5,
+      "assemblyYes": 4,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d098",
+      "file": "098.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d099",
+      "file": "099.md",
+      "recall": 8,
+      "assemblyYes": 5,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d100",
+      "file": "100.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d101",
+      "file": "101.md",
+      "recall": 6,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d102",
+      "file": "102.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d103",
+      "file": "103.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d104",
+      "file": "104.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d105",
+      "file": "105.md",
+      "recall": 7,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d106",
+      "file": "106.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d107",
+      "file": "107.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d108",
+      "file": "108.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d109",
+      "file": "109.md",
+      "recall": 20,
+      "assemblyYes": 14,
+      "kenlmN": 8,
+      "error": false
+    },
+    {
+      "caseId": "d110",
+      "file": "110.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d111",
+      "file": "111.md",
+      "recall": 14,
+      "assemblyYes": 14,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d112",
+      "file": "112.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d113",
+      "file": "113.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d114",
+      "file": "114.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d115",
+      "file": "115.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d116",
+      "file": "116.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d117",
+      "file": "117.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d118",
+      "file": "118.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d119",
+      "file": "119.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d120",
+      "file": "120.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d121",
+      "file": "121.md",
+      "recall": 5,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d122",
+      "file": "122.md",
+      "recall": 10,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d123",
+      "file": "123.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d124",
+      "file": "124.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d125",
+      "file": "125.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d126",
+      "file": "126.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d127",
+      "file": "127.md",
+      "recall": 3,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d128",
+      "file": "128.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d129",
+      "file": "129.md",
+      "recall": 6,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d130",
+      "file": "130.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d131",
+      "file": "131.md",
+      "recall": 18,
+      "assemblyYes": 6,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d132",
+      "file": "132.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d133",
+      "file": "133.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d134",
+      "file": "134.md",
+      "recall": 38,
+      "assemblyYes": 19,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d135",
+      "file": "135.md",
+      "recall": 24,
+      "assemblyYes": 24,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d136",
+      "file": "136.md",
+      "recall": 9,
+      "assemblyYes": 6,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d137",
+      "file": "137.md",
+      "recall": 5,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d138",
+      "file": "138.md",
+      "recall": 12,
+      "assemblyYes": 6,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d139",
+      "file": "139.md",
+      "recall": 8,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d140",
+      "file": "140.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d141",
+      "file": "141.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d142",
+      "file": "142.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d143",
+      "file": "143.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d144",
+      "file": "144.md",
+      "recall": 8,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d145",
+      "file": "145.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d146",
+      "file": "146.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d147",
+      "file": "147.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d148",
+      "file": "148.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d149",
+      "file": "149.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d150",
+      "file": "150.md",
+      "recall": 7,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d151",
+      "file": "151.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d152",
+      "file": "152.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d153",
+      "file": "153.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d154",
+      "file": "154.md",
+      "recall": 20,
+      "assemblyYes": 14,
+      "kenlmN": 8,
+      "error": false
+    },
+    {
+      "caseId": "d155",
+      "file": "155.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d156",
+      "file": "156.md",
+      "recall": 14,
+      "assemblyYes": 14,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d157",
+      "file": "157.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d158",
+      "file": "158.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d159",
+      "file": "159.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d160",
+      "file": "160.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d161",
+      "file": "161.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d162",
+      "file": "162.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d163",
+      "file": "163.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d164",
+      "file": "164.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d165",
+      "file": "165.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d166",
+      "file": "166.md",
+      "recall": 5,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d167",
+      "file": "167.md",
+      "recall": 10,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d168",
+      "file": "168.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d169",
+      "file": "169.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d170",
+      "file": "170.md",
+      "recall": 2,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d171",
+      "file": "171.md",
+      "recall": 6,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d172",
+      "file": "172.md",
+      "recall": 3,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d173",
+      "file": "173.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d174",
+      "file": "174.md",
+      "recall": 6,
+      "assemblyYes": 2,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d175",
+      "file": "175.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d176",
+      "file": "176.md",
+      "recall": 18,
+      "assemblyYes": 6,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d177",
+      "file": "177.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d178",
+      "file": "178.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d179",
+      "file": "179.md",
+      "recall": 38,
+      "assemblyYes": 19,
+      "kenlmN": 3,
+      "error": false
+    },
+    {
+      "caseId": "d180",
+      "file": "180.md",
+      "recall": 24,
+      "assemblyYes": 24,
+      "kenlmN": 4,
+      "error": false
+    },
+    {
+      "caseId": "d181",
+      "file": "181.md",
+      "recall": 22,
+      "assemblyYes": 13,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d182",
+      "file": "182.md",
+      "recall": 12,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d183",
+      "file": "183.md",
+      "recall": 22,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d184",
+      "file": "184.md",
+      "recall": 8,
+      "assemblyYes": 8,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d185",
+      "file": "185.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d186",
+      "file": "186.md",
+      "recall": 9,
+      "assemblyYes": 3,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d187",
+      "file": "187.md",
+      "recall": 20,
+      "assemblyYes": 9,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d188",
+      "file": "188.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d189",
+      "file": "189.md",
+      "recall": 3,
+      "assemblyYes": 3,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d190",
+      "file": "190.md",
+      "recall": 4,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d191",
+      "file": "191.md",
+      "recall": 6,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d192",
+      "file": "192.md",
+      "recall": 12,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d193",
+      "file": "193.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d194",
+      "file": "194.md",
+      "recall": 1,
+      "assemblyYes": 1,
+      "kenlmN": 2,
+      "error": false
+    },
+    {
+      "caseId": "d195",
+      "file": "195.md",
+      "recall": 7,
+      "assemblyYes": 4,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d196",
+      "file": "196.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d197",
+      "file": "197.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d198",
+      "file": "198.md",
+      "recall": 0,
+      "assemblyYes": 0,
+      "kenlmN": 1,
+      "error": false
+    },
+    {
+      "caseId": "d199",
+      "file": "199.md",
+      "recall": 20,
+      "assemblyYes": 14,
+      "kenlmN": 8,
+      "error": false
+    },
+    {
+      "caseId": "d200",
+      "file": "200.md",
+      "recall": 16,
+      "assemblyYes": 14,
+      "kenlmN": 2,
+      "error": false
+    }
+  ]
+}

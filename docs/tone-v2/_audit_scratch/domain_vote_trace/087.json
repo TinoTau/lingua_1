@@ -1,0 +1,344 @@
+{
+  "case": {
+    "id": "d087",
+    "fileNum": "087",
+    "scenario": "gym",
+    "rawText": "游泳次卡本月月底到期，续费有优惠吗？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "游",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "泳",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "次",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "卡",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "本",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "月",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "月",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:7",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "底",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:8",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:9",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "期",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "续",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "费",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:12",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:13",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "优",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:14",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "惠",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:15",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {},
+      "reconstructedScores": {},
+      "productionVote": {
+        "domainScores": {},
+        "retainedDomains": [],
+        "insufficientEvidence": true,
+        "maxCount": 0,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "general",
+        "winnerScore": 0,
+        "voteMargin": 0,
+        "parentTermVoteCount": 0
+      },
+      "replayVote": {
+        "domainScores": {},
+        "retainedDomains": [],
+        "insufficientEvidence": true,
+        "isTie": false,
+        "maxCount": 0
+      },
+      "scoreReconcileOk": true,
+      "ranking": [],
+      "retentionRatio": 0.75,
+      "retainedDomains": [],
+      "insufficientEvidence": true,
+      "baseOnly": true,
+      "bucketDomains": [
+        null
+      ],
+      "bucketDomainsFromVote": [],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

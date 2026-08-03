@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-07-28",
+  "batch": "1.1A",
+  "build": "npm run build:main",
+  "patterns": [
+    {
+      "pattern": "length1-real-sqlite.test.helpers",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "recall-span-topk-v2-length1-truncation.sqlite.integration",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "length1_limit8_real_sqlite_baseline",
+      "matches": [],
+      "status": "CLEAN",
+      "note": "baselines under docs/_audit_scratch only"
+    },
+    {
+      "pattern": "buildSameKeyLength1Rows",
+      "matches": [],
+      "status": "CLEAN"
+    }
+  ],
+  "productionContainsTruncationLogic": true,
+  "productionContainsTestSeeds": false,
+  "overall": "CLEAN"
+}

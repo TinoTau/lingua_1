@@ -1,0 +1,151 @@
+{
+  "caseId": "C05",
+  "rawText": "请确认医院地址和医师安排",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "安排"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请确认医院地址和医师安排"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "议员",
+          "医院"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "议室",
+          "医师"
+        ],
+        [
+          "安排"
+        ]
+      ],
+      "theoretical": 4,
+      "generated": 4,
+      "distinct": 4,
+      "texts": [
+        "请确认议员地址和议室安排",
+        "请确认医院地址和议室安排",
+        "请确认议员地址和医师安排",
+        "请确认医院地址和医师安排"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 4,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "请确认医院地址和医师安排",
+    "请确认议员地址和议室安排",
+    "请确认医院地址和议室安排",
+    "请确认议员地址和医师安排"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "请确认医院地址和医师安排",
+    "请确认议员地址和议室安排",
+    "请确认医院地址和议室安排",
+    "请确认议员地址和医师安排"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 52.69010019302368,
+  "groups": [
+    "C"
+  ],
+  "why": "triple",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "请确认医院地址和医师安排",
+      "请确认议员地址和议室安排",
+      "请确认医院地址和议室安排",
+      "请确认议员地址和医师安排"
+    ]
+  }
+}

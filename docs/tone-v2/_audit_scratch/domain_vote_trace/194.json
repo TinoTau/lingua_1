@@ -1,0 +1,501 @@
+{
+  "case": {
+    "id": "d194",
+    "fileNum": "194",
+    "scenario": "shopping",
+    "rawText": "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-18|18-19|19-20|20-21",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "这",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "双",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "鞋",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "四",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:7",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "十",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:8",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "码",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:9",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "不",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "合",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:12",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "适",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:13",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "三",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:14",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "天",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15",
+          "rawRange": [
+            16,
+            19
+          ],
+          "rawText": "内可以",
+          "syllableRange": [
+            15,
+            18
+          ],
+          "coarseSpanIds": [
+            "c4"
+          ],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": [
+            "medical"
+          ]
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:16",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "退",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:17",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "换",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:18",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "吧",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "15:18:4",
+          "word": "内科医",
+          "surface": "内科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            19
+          ],
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "medical"
+        ],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "medical": [
+          {
+            "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:18:4",
+                "word": "内科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "medical": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "medical": 1
+        },
+        "retainedDomains": [
+          "medical"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "medical",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 1
+      },
+      "replayVote": {
+        "domainScores": {
+          "medical": 1
+        },
+        "retainedDomains": [
+          "medical"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "medical",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15",
+              "candidateId": "15:18:4",
+              "word": "内科医"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=0.75); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "medical"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "medical"
+      ],
+      "bucketDomainsFromVote": [
+        "medical"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

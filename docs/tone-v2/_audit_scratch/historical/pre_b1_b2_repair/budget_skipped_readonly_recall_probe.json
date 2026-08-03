@@ -1,0 +1,1926 @@
+{
+  "auditOnly": true,
+  "maxSqlPerUtterance": 150,
+  "lexicon": {
+    "bundleDir": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3",
+    "status": "ok",
+    "manifestVersion": "lexicon-v3-five-table-v2"
+  },
+  "cases": [
+    {
+      "caseId": "d019",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "generatedWindowCount": 180,
+      "blockedWindowCount": 15,
+      "recallableWindowCount": 165,
+      "attemptedWindowCount": 150,
+      "budgetSkippedWindowCount": 15,
+      "recalledWindowCountIfNoBudgetOnSkipped": 2,
+      "identityCheck": {
+        "blockedPlusRecallable": 180,
+        "equalsGenerated": true,
+        "attemptedPlusSkipped": 165,
+        "equalsRecallable": true
+      },
+      "skipStartDistribution": {
+        "32": 5,
+        "33": 4,
+        "34": 3,
+        "35": 2,
+        "36": 1
+      },
+      "skipLengthDistribution": {
+        "1": 5,
+        "2": 4,
+        "3": 3,
+        "4": 2,
+        "5": 1
+      },
+      "minSkippedStart": 32,
+      "maxSkippedStart": 36,
+      "utteranceLastStart": 37,
+      "skippedWindows": [
+        {
+          "caseId": "d019",
+          "windowId": "32:33",
+          "syllableStart": 32,
+          "syllableEnd": 33,
+          "windowLength": 1,
+          "windowText": "一",
+          "windowPinyinKey": "yi",
+          "coarseBoundaryRefs": [
+            "c14"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 150,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "32:34",
+          "syllableStart": 32,
+          "syllableEnd": 34,
+          "windowLength": 2,
+          "windowText": "一起",
+          "windowPinyinKey": "yi|qi",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 151,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 2,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e4b880e69c9f7c79",
+              "replacement": "一期",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            },
+            {
+              "termId": "base-rebuild-term-e4b880e9bd907c79",
+              "replacement": "一齐",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d019",
+          "windowId": "32:35",
+          "syllableStart": 32,
+          "syllableEnd": 35,
+          "windowLength": 3,
+          "windowText": "一起评",
+          "windowPinyinKey": "yi|qi|ping",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 152,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "32:36",
+          "syllableStart": 32,
+          "syllableEnd": 36,
+          "windowLength": 4,
+          "windowText": "一起评估",
+          "windowPinyinKey": "yi|qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 153,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "32:37",
+          "syllableStart": 32,
+          "syllableEnd": 37,
+          "windowLength": 5,
+          "windowText": "一起评估风",
+          "windowPinyinKey": "yi|qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 154,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "33:34",
+          "syllableStart": 33,
+          "syllableEnd": 34,
+          "windowLength": 1,
+          "windowText": "起",
+          "windowPinyinKey": "qi",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 155,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "33:35",
+          "syllableStart": 33,
+          "syllableEnd": 35,
+          "windowLength": 2,
+          "windowText": "起评",
+          "windowPinyinKey": "qi|ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 156,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "33:36",
+          "syllableStart": 33,
+          "syllableEnd": 36,
+          "windowLength": 3,
+          "windowText": "起评估",
+          "windowPinyinKey": "qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 157,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "33:37",
+          "syllableStart": 33,
+          "syllableEnd": 37,
+          "windowLength": 4,
+          "windowText": "起评估风",
+          "windowPinyinKey": "qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 158,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "34:35",
+          "syllableStart": 34,
+          "syllableEnd": 35,
+          "windowLength": 1,
+          "windowText": "评",
+          "windowPinyinKey": "ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 159,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "34:36",
+          "syllableStart": 34,
+          "syllableEnd": 36,
+          "windowLength": 2,
+          "windowText": "评估",
+          "windowPinyinKey": "ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 160,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 1,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e8af84e4bcb07c70",
+              "replacement": "评估",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d019",
+          "windowId": "34:37",
+          "syllableStart": 34,
+          "syllableEnd": 37,
+          "windowLength": 3,
+          "windowText": "评估风",
+          "windowPinyinKey": "ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 161,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "35:36",
+          "syllableStart": 35,
+          "syllableEnd": 36,
+          "windowLength": 1,
+          "windowText": "估",
+          "windowPinyinKey": "gu",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 162,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "35:37",
+          "syllableStart": 35,
+          "syllableEnd": 37,
+          "windowLength": 2,
+          "windowText": "估风",
+          "windowPinyinKey": "gu|feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 163,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d019",
+          "windowId": "36:37",
+          "syllableStart": 36,
+          "syllableEnd": 37,
+          "windowLength": 1,
+          "windowText": "风",
+          "windowPinyinKey": "feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 164,
+          "relativeStart": 0.9473684210526315,
+          "candidateCount": 0,
+          "candidates": []
+        }
+      ],
+      "skippedWithFormalCandidates": [
+        {
+          "windowId": "32:34",
+          "windowText": "一起",
+          "candidateCount": 2,
+          "replacements": [
+            "一期",
+            "一齐"
+          ]
+        },
+        {
+          "windowId": "34:36",
+          "windowText": "评估",
+          "candidateCount": 1,
+          "replacements": [
+            "评估"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d064",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "generatedWindowCount": 180,
+      "blockedWindowCount": 15,
+      "recallableWindowCount": 165,
+      "attemptedWindowCount": 150,
+      "budgetSkippedWindowCount": 15,
+      "recalledWindowCountIfNoBudgetOnSkipped": 2,
+      "identityCheck": {
+        "blockedPlusRecallable": 180,
+        "equalsGenerated": true,
+        "attemptedPlusSkipped": 165,
+        "equalsRecallable": true
+      },
+      "skipStartDistribution": {
+        "32": 5,
+        "33": 4,
+        "34": 3,
+        "35": 2,
+        "36": 1
+      },
+      "skipLengthDistribution": {
+        "1": 5,
+        "2": 4,
+        "3": 3,
+        "4": 2,
+        "5": 1
+      },
+      "minSkippedStart": 32,
+      "maxSkippedStart": 36,
+      "utteranceLastStart": 37,
+      "skippedWindows": [
+        {
+          "caseId": "d064",
+          "windowId": "32:33",
+          "syllableStart": 32,
+          "syllableEnd": 33,
+          "windowLength": 1,
+          "windowText": "一",
+          "windowPinyinKey": "yi",
+          "coarseBoundaryRefs": [
+            "c14"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 150,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "32:34",
+          "syllableStart": 32,
+          "syllableEnd": 34,
+          "windowLength": 2,
+          "windowText": "一起",
+          "windowPinyinKey": "yi|qi",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 151,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 2,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e4b880e69c9f7c79",
+              "replacement": "一期",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            },
+            {
+              "termId": "base-rebuild-term-e4b880e9bd907c79",
+              "replacement": "一齐",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d064",
+          "windowId": "32:35",
+          "syllableStart": 32,
+          "syllableEnd": 35,
+          "windowLength": 3,
+          "windowText": "一起评",
+          "windowPinyinKey": "yi|qi|ping",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 152,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "32:36",
+          "syllableStart": 32,
+          "syllableEnd": 36,
+          "windowLength": 4,
+          "windowText": "一起评估",
+          "windowPinyinKey": "yi|qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 153,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "32:37",
+          "syllableStart": 32,
+          "syllableEnd": 37,
+          "windowLength": 5,
+          "windowText": "一起评估风",
+          "windowPinyinKey": "yi|qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 154,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "33:34",
+          "syllableStart": 33,
+          "syllableEnd": 34,
+          "windowLength": 1,
+          "windowText": "起",
+          "windowPinyinKey": "qi",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 155,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "33:35",
+          "syllableStart": 33,
+          "syllableEnd": 35,
+          "windowLength": 2,
+          "windowText": "起评",
+          "windowPinyinKey": "qi|ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 156,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "33:36",
+          "syllableStart": 33,
+          "syllableEnd": 36,
+          "windowLength": 3,
+          "windowText": "起评估",
+          "windowPinyinKey": "qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 157,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "33:37",
+          "syllableStart": 33,
+          "syllableEnd": 37,
+          "windowLength": 4,
+          "windowText": "起评估风",
+          "windowPinyinKey": "qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 158,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "34:35",
+          "syllableStart": 34,
+          "syllableEnd": 35,
+          "windowLength": 1,
+          "windowText": "评",
+          "windowPinyinKey": "ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 159,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "34:36",
+          "syllableStart": 34,
+          "syllableEnd": 36,
+          "windowLength": 2,
+          "windowText": "评估",
+          "windowPinyinKey": "ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 160,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 1,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e8af84e4bcb07c70",
+              "replacement": "评估",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d064",
+          "windowId": "34:37",
+          "syllableStart": 34,
+          "syllableEnd": 37,
+          "windowLength": 3,
+          "windowText": "评估风",
+          "windowPinyinKey": "ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 161,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "35:36",
+          "syllableStart": 35,
+          "syllableEnd": 36,
+          "windowLength": 1,
+          "windowText": "估",
+          "windowPinyinKey": "gu",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 162,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "35:37",
+          "syllableStart": 35,
+          "syllableEnd": 37,
+          "windowLength": 2,
+          "windowText": "估风",
+          "windowPinyinKey": "gu|feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 163,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d064",
+          "windowId": "36:37",
+          "syllableStart": 36,
+          "syllableEnd": 37,
+          "windowLength": 1,
+          "windowText": "风",
+          "windowPinyinKey": "feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 164,
+          "relativeStart": 0.9473684210526315,
+          "candidateCount": 0,
+          "candidates": []
+        }
+      ],
+      "skippedWithFormalCandidates": [
+        {
+          "windowId": "32:34",
+          "windowText": "一起",
+          "candidateCount": 2,
+          "replacements": [
+            "一期",
+            "一齐"
+          ]
+        },
+        {
+          "windowId": "34:36",
+          "windowText": "评估",
+          "candidateCount": 1,
+          "replacements": [
+            "评估"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d109",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "generatedWindowCount": 180,
+      "blockedWindowCount": 15,
+      "recallableWindowCount": 165,
+      "attemptedWindowCount": 150,
+      "budgetSkippedWindowCount": 15,
+      "recalledWindowCountIfNoBudgetOnSkipped": 2,
+      "identityCheck": {
+        "blockedPlusRecallable": 180,
+        "equalsGenerated": true,
+        "attemptedPlusSkipped": 165,
+        "equalsRecallable": true
+      },
+      "skipStartDistribution": {
+        "32": 5,
+        "33": 4,
+        "34": 3,
+        "35": 2,
+        "36": 1
+      },
+      "skipLengthDistribution": {
+        "1": 5,
+        "2": 4,
+        "3": 3,
+        "4": 2,
+        "5": 1
+      },
+      "minSkippedStart": 32,
+      "maxSkippedStart": 36,
+      "utteranceLastStart": 37,
+      "skippedWindows": [
+        {
+          "caseId": "d109",
+          "windowId": "32:33",
+          "syllableStart": 32,
+          "syllableEnd": 33,
+          "windowLength": 1,
+          "windowText": "一",
+          "windowPinyinKey": "yi",
+          "coarseBoundaryRefs": [
+            "c14"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 150,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "32:34",
+          "syllableStart": 32,
+          "syllableEnd": 34,
+          "windowLength": 2,
+          "windowText": "一起",
+          "windowPinyinKey": "yi|qi",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 151,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 2,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e4b880e69c9f7c79",
+              "replacement": "一期",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            },
+            {
+              "termId": "base-rebuild-term-e4b880e9bd907c79",
+              "replacement": "一齐",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d109",
+          "windowId": "32:35",
+          "syllableStart": 32,
+          "syllableEnd": 35,
+          "windowLength": 3,
+          "windowText": "一起评",
+          "windowPinyinKey": "yi|qi|ping",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 152,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "32:36",
+          "syllableStart": 32,
+          "syllableEnd": 36,
+          "windowLength": 4,
+          "windowText": "一起评估",
+          "windowPinyinKey": "yi|qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 153,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "32:37",
+          "syllableStart": 32,
+          "syllableEnd": 37,
+          "windowLength": 5,
+          "windowText": "一起评估风",
+          "windowPinyinKey": "yi|qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 154,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "33:34",
+          "syllableStart": 33,
+          "syllableEnd": 34,
+          "windowLength": 1,
+          "windowText": "起",
+          "windowPinyinKey": "qi",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 155,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "33:35",
+          "syllableStart": 33,
+          "syllableEnd": 35,
+          "windowLength": 2,
+          "windowText": "起评",
+          "windowPinyinKey": "qi|ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 156,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "33:36",
+          "syllableStart": 33,
+          "syllableEnd": 36,
+          "windowLength": 3,
+          "windowText": "起评估",
+          "windowPinyinKey": "qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 157,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "33:37",
+          "syllableStart": 33,
+          "syllableEnd": 37,
+          "windowLength": 4,
+          "windowText": "起评估风",
+          "windowPinyinKey": "qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 158,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "34:35",
+          "syllableStart": 34,
+          "syllableEnd": 35,
+          "windowLength": 1,
+          "windowText": "评",
+          "windowPinyinKey": "ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 159,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "34:36",
+          "syllableStart": 34,
+          "syllableEnd": 36,
+          "windowLength": 2,
+          "windowText": "评估",
+          "windowPinyinKey": "ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 160,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 1,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e8af84e4bcb07c70",
+              "replacement": "评估",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d109",
+          "windowId": "34:37",
+          "syllableStart": 34,
+          "syllableEnd": 37,
+          "windowLength": 3,
+          "windowText": "评估风",
+          "windowPinyinKey": "ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 161,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "35:36",
+          "syllableStart": 35,
+          "syllableEnd": 36,
+          "windowLength": 1,
+          "windowText": "估",
+          "windowPinyinKey": "gu",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 162,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "35:37",
+          "syllableStart": 35,
+          "syllableEnd": 37,
+          "windowLength": 2,
+          "windowText": "估风",
+          "windowPinyinKey": "gu|feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 163,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d109",
+          "windowId": "36:37",
+          "syllableStart": 36,
+          "syllableEnd": 37,
+          "windowLength": 1,
+          "windowText": "风",
+          "windowPinyinKey": "feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 164,
+          "relativeStart": 0.9473684210526315,
+          "candidateCount": 0,
+          "candidates": []
+        }
+      ],
+      "skippedWithFormalCandidates": [
+        {
+          "windowId": "32:34",
+          "windowText": "一起",
+          "candidateCount": 2,
+          "replacements": [
+            "一期",
+            "一齐"
+          ]
+        },
+        {
+          "windowId": "34:36",
+          "windowText": "评估",
+          "candidateCount": 1,
+          "replacements": [
+            "评估"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d154",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "generatedWindowCount": 180,
+      "blockedWindowCount": 15,
+      "recallableWindowCount": 165,
+      "attemptedWindowCount": 150,
+      "budgetSkippedWindowCount": 15,
+      "recalledWindowCountIfNoBudgetOnSkipped": 2,
+      "identityCheck": {
+        "blockedPlusRecallable": 180,
+        "equalsGenerated": true,
+        "attemptedPlusSkipped": 165,
+        "equalsRecallable": true
+      },
+      "skipStartDistribution": {
+        "32": 5,
+        "33": 4,
+        "34": 3,
+        "35": 2,
+        "36": 1
+      },
+      "skipLengthDistribution": {
+        "1": 5,
+        "2": 4,
+        "3": 3,
+        "4": 2,
+        "5": 1
+      },
+      "minSkippedStart": 32,
+      "maxSkippedStart": 36,
+      "utteranceLastStart": 37,
+      "skippedWindows": [
+        {
+          "caseId": "d154",
+          "windowId": "32:33",
+          "syllableStart": 32,
+          "syllableEnd": 33,
+          "windowLength": 1,
+          "windowText": "一",
+          "windowPinyinKey": "yi",
+          "coarseBoundaryRefs": [
+            "c14"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 150,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "32:34",
+          "syllableStart": 32,
+          "syllableEnd": 34,
+          "windowLength": 2,
+          "windowText": "一起",
+          "windowPinyinKey": "yi|qi",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 151,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 2,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e4b880e69c9f7c79",
+              "replacement": "一期",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            },
+            {
+              "termId": "base-rebuild-term-e4b880e9bd907c79",
+              "replacement": "一齐",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d154",
+          "windowId": "32:35",
+          "syllableStart": 32,
+          "syllableEnd": 35,
+          "windowLength": 3,
+          "windowText": "一起评",
+          "windowPinyinKey": "yi|qi|ping",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 152,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "32:36",
+          "syllableStart": 32,
+          "syllableEnd": 36,
+          "windowLength": 4,
+          "windowText": "一起评估",
+          "windowPinyinKey": "yi|qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 153,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "32:37",
+          "syllableStart": 32,
+          "syllableEnd": 37,
+          "windowLength": 5,
+          "windowText": "一起评估风",
+          "windowPinyinKey": "yi|qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 154,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "33:34",
+          "syllableStart": 33,
+          "syllableEnd": 34,
+          "windowLength": 1,
+          "windowText": "起",
+          "windowPinyinKey": "qi",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 155,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "33:35",
+          "syllableStart": 33,
+          "syllableEnd": 35,
+          "windowLength": 2,
+          "windowText": "起评",
+          "windowPinyinKey": "qi|ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 156,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "33:36",
+          "syllableStart": 33,
+          "syllableEnd": 36,
+          "windowLength": 3,
+          "windowText": "起评估",
+          "windowPinyinKey": "qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 157,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "33:37",
+          "syllableStart": 33,
+          "syllableEnd": 37,
+          "windowLength": 4,
+          "windowText": "起评估风",
+          "windowPinyinKey": "qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 158,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "34:35",
+          "syllableStart": 34,
+          "syllableEnd": 35,
+          "windowLength": 1,
+          "windowText": "评",
+          "windowPinyinKey": "ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 159,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "34:36",
+          "syllableStart": 34,
+          "syllableEnd": 36,
+          "windowLength": 2,
+          "windowText": "评估",
+          "windowPinyinKey": "ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 160,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 1,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e8af84e4bcb07c70",
+              "replacement": "评估",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d154",
+          "windowId": "34:37",
+          "syllableStart": 34,
+          "syllableEnd": 37,
+          "windowLength": 3,
+          "windowText": "评估风",
+          "windowPinyinKey": "ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 161,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "35:36",
+          "syllableStart": 35,
+          "syllableEnd": 36,
+          "windowLength": 1,
+          "windowText": "估",
+          "windowPinyinKey": "gu",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 162,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "35:37",
+          "syllableStart": 35,
+          "syllableEnd": 37,
+          "windowLength": 2,
+          "windowText": "估风",
+          "windowPinyinKey": "gu|feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 163,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d154",
+          "windowId": "36:37",
+          "syllableStart": 36,
+          "syllableEnd": 37,
+          "windowLength": 1,
+          "windowText": "风",
+          "windowPinyinKey": "feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 164,
+          "relativeStart": 0.9473684210526315,
+          "candidateCount": 0,
+          "candidates": []
+        }
+      ],
+      "skippedWithFormalCandidates": [
+        {
+          "windowId": "32:34",
+          "windowText": "一起",
+          "candidateCount": 2,
+          "replacements": [
+            "一期",
+            "一齐"
+          ]
+        },
+        {
+          "windowId": "34:36",
+          "windowText": "评估",
+          "candidateCount": 1,
+          "replacements": [
+            "评估"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "d199",
+      "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "syllableCount": 38,
+      "generatedWindowCount": 180,
+      "blockedWindowCount": 15,
+      "recallableWindowCount": 165,
+      "attemptedWindowCount": 150,
+      "budgetSkippedWindowCount": 15,
+      "recalledWindowCountIfNoBudgetOnSkipped": 2,
+      "identityCheck": {
+        "blockedPlusRecallable": 180,
+        "equalsGenerated": true,
+        "attemptedPlusSkipped": 165,
+        "equalsRecallable": true
+      },
+      "skipStartDistribution": {
+        "32": 5,
+        "33": 4,
+        "34": 3,
+        "35": 2,
+        "36": 1
+      },
+      "skipLengthDistribution": {
+        "1": 5,
+        "2": 4,
+        "3": 3,
+        "4": 2,
+        "5": 1
+      },
+      "minSkippedStart": 32,
+      "maxSkippedStart": 36,
+      "utteranceLastStart": 37,
+      "skippedWindows": [
+        {
+          "caseId": "d199",
+          "windowId": "32:33",
+          "syllableStart": 32,
+          "syllableEnd": 33,
+          "windowLength": 1,
+          "windowText": "一",
+          "windowPinyinKey": "yi",
+          "coarseBoundaryRefs": [
+            "c14"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 150,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "32:34",
+          "syllableStart": 32,
+          "syllableEnd": 34,
+          "windowLength": 2,
+          "windowText": "一起",
+          "windowPinyinKey": "yi|qi",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 151,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 2,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e4b880e69c9f7c79",
+              "replacement": "一期",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            },
+            {
+              "termId": "base-rebuild-term-e4b880e9bd907c79",
+              "replacement": "一齐",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d199",
+          "windowId": "32:35",
+          "syllableStart": 32,
+          "syllableEnd": 35,
+          "windowLength": 3,
+          "windowText": "一起评",
+          "windowPinyinKey": "yi|qi|ping",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 152,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "32:36",
+          "syllableStart": 32,
+          "syllableEnd": 36,
+          "windowLength": 4,
+          "windowText": "一起评估",
+          "windowPinyinKey": "yi|qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 153,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "32:37",
+          "syllableStart": 32,
+          "syllableEnd": 37,
+          "windowLength": 5,
+          "windowText": "一起评估风",
+          "windowPinyinKey": "yi|qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c14",
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 2,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 154,
+          "relativeStart": 0.8421052631578947,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "33:34",
+          "syllableStart": 33,
+          "syllableEnd": 34,
+          "windowLength": 1,
+          "windowText": "起",
+          "windowPinyinKey": "qi",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 155,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "33:35",
+          "syllableStart": 33,
+          "syllableEnd": 35,
+          "windowLength": 2,
+          "windowText": "起评",
+          "windowPinyinKey": "qi|ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 156,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "33:36",
+          "syllableStart": 33,
+          "syllableEnd": 36,
+          "windowLength": 3,
+          "windowText": "起评估",
+          "windowPinyinKey": "qi|ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 157,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "33:37",
+          "syllableStart": 33,
+          "syllableEnd": 37,
+          "windowLength": 4,
+          "windowText": "起评估风",
+          "windowPinyinKey": "qi|ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 158,
+          "relativeStart": 0.868421052631579,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "34:35",
+          "syllableStart": 34,
+          "syllableEnd": 35,
+          "windowLength": 1,
+          "windowText": "评",
+          "windowPinyinKey": "ping",
+          "coarseBoundaryRefs": [
+            "c15"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 159,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "34:36",
+          "syllableStart": 34,
+          "syllableEnd": 36,
+          "windowLength": 2,
+          "windowText": "评估",
+          "windowPinyinKey": "ping|gu",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 160,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 1,
+          "candidates": [
+            {
+              "termId": "base-rebuild-term-e8af84e4bcb07c70",
+              "replacement": "评估",
+              "domains": [],
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "exact_term",
+              "candidateScore": 2.35,
+              "toneLookupStage": "plain_only_no_pattern",
+              "parentTermId": null
+            }
+          ]
+        },
+        {
+          "caseId": "d199",
+          "windowId": "34:37",
+          "syllableStart": 34,
+          "syllableEnd": 37,
+          "windowLength": 3,
+          "windowText": "评估风",
+          "windowPinyinKey": "ping|gu|feng",
+          "coarseBoundaryRefs": [
+            "c15",
+            "c16"
+          ],
+          "boundaryCrossCount": 1,
+          "crossesCoarseBoundary": true,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 161,
+          "relativeStart": 0.8947368421052632,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "35:36",
+          "syllableStart": 35,
+          "syllableEnd": 36,
+          "windowLength": 1,
+          "windowText": "估",
+          "windowPinyinKey": "gu",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 162,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "35:37",
+          "syllableStart": 35,
+          "syllableEnd": 37,
+          "windowLength": 2,
+          "windowText": "估风",
+          "windowPinyinKey": "gu|feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 163,
+          "relativeStart": 0.9210526315789473,
+          "candidateCount": 0,
+          "candidates": []
+        },
+        {
+          "caseId": "d199",
+          "windowId": "36:37",
+          "syllableStart": 36,
+          "syllableEnd": 37,
+          "windowLength": 1,
+          "windowText": "风",
+          "windowPinyinKey": "feng",
+          "coarseBoundaryRefs": [
+            "c16"
+          ],
+          "boundaryCrossCount": 0,
+          "crossesCoarseBoundary": false,
+          "skipReason": "sql_budget_exhausted",
+          "traversalIndexAmongRecallable": 164,
+          "relativeStart": 0.9473684210526315,
+          "candidateCount": 0,
+          "candidates": []
+        }
+      ],
+      "skippedWithFormalCandidates": [
+        {
+          "windowId": "32:34",
+          "windowText": "一起",
+          "candidateCount": 2,
+          "replacements": [
+            "一期",
+            "一齐"
+          ]
+        },
+        {
+          "windowId": "34:36",
+          "windowText": "评估",
+          "candidateCount": 1,
+          "replacements": [
+            "评估"
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "skippedWindows": 75,
+    "skippedWithCandidates": 10,
+    "skippedCandidateTotal": 15
+  }
+}

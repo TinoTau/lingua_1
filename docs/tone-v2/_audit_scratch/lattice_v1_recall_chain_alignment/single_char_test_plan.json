@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-07-27",
+  "unitRecall": [
+    "recall-span-topk-v2.test.ts — length=1 exact tone base hit",
+    "length=1 unique plain base hit",
+    "length=1 ambiguous plain → empty",
+    "length=1 surface exact unique → hit",
+    "length=1 never calls domain lookup (spy)",
+    "length=1 fuzzy forced off",
+    "length=1 effectiveTopK=1",
+    "length=2..5 regression unchanged"
+  ],
+  "hardBlock": [
+    "lattice-hard-block-filter.test.ts — 吗？ / ？我 allow; cross-boundary block; raw_gap keep"
+  ],
+  "import": [
+    "patch-v4 e2e — addBaseTerm / forbid domain_tags / duplicate / disable / update / dry-run / manifest base count"
+  ],
+  "fullBuild": [
+    "v2-classify-row test — singleCharApproved accept; unmarked reject; base 2-3 unchanged"
+  ],
+  "integration": [
+    "phase1 harness fixture — Window1→Candidate→LexicalEdge edgeKind=lexical",
+    "phase2 — lexical len1 preferred over fallback at same position",
+    "vote — base single char 0 domainScores"
+  ],
+  "regression": [
+    "Phase1/Phase2 jest suites",
+    "freeze-contract (V2 still no parent_fragment)",
+    "dialog_200 LexicalEdge quality probe after Batch3",
+    "node runtime real SQLite"
+  ]
+}

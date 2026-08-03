@@ -1,0 +1,51 @@
+{
+  "id": "d113",
+  "raw": "想改一下收货地址还来得及吗?麻烦尽快处理谢谢",
+  "asrToneSliceCount": 19,
+  "diagToneSliceCount": 19,
+  "wordTimeSpanBuilt": 19,
+  "wordTimeSpanMapped": 19,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "谢谢",
+      "pinyinKey": "xie|xie",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.92,
+        "end": 4.3
+      },
+      "replayWindowTime": {
+        "start": 3.92,
+        "end": 4.3
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 21,
+    "theoreticalWindows2to5": 74,
+    "theoreticalWindows1to5": 95
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

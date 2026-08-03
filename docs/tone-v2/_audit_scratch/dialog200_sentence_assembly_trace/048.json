@@ -1,0 +1,496 @@
+{
+  "caseId": "d048",
+  "fileNum": "048",
+  "rawText": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+  "scenario": "cafe",
+  "retainedDomains": [
+    "coffee"
+  ],
+  "domainScores": {
+    "medical": 1,
+    "coffee": 3,
+    "food_order": 2,
+    "milk_tea": 2,
+    "tourism_hotel": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "请",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "请"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "问",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "这",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "款",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "款"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "热",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "热"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "巧",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "巧"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "克",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "克"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "力",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "力"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "可以",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "可以"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "少冰",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:9",
+          "sameDomain": [
+            "少冰"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "少冰"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "吗",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "我",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "赶",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "赶"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "时间",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:13",
+          "sameDomain": [
+            "时间"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "时间"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "小杯",
+          "fineSpanId": "fine:c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc:14",
+          "sameDomain": [
+            "小杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "小杯"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "请"
+        ],
+        [
+          "问"
+        ],
+        [
+          "这"
+        ],
+        [
+          "款"
+        ],
+        [
+          "热"
+        ],
+        [
+          "巧"
+        ],
+        [
+          "克"
+        ],
+        [
+          "力"
+        ],
+        [
+          "可以"
+        ],
+        [
+          "少冰"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "我"
+        ],
+        [
+          "赶"
+        ],
+        [
+          "时间"
+        ],
+        [
+          "小杯"
+        ]
+      ],
+      "assemblyTexts": [
+        "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "replacements": [
+        {
+          "span": {
+            "text": "少冰",
+            "start": 10,
+            "end": 12
+          },
+          "word": "少冰",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.38,
+          "repairTarget": true,
+          "candidateScore": 2.38
+        },
+        {
+          "span": {
+            "text": "时间",
+            "start": 16,
+            "end": 18
+          },
+          "word": "时间",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.006,
+          "repairTarget": true,
+          "candidateScore": 2.006
+        },
+        {
+          "span": {
+            "text": "小杯",
+            "start": 19,
+            "end": 21
+          },
+          "word": "小杯",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.38,
+          "repairTarget": true,
+          "candidateScore": 2.38
+        },
+        {
+          "span": {
+            "text": "请",
+            "start": 0,
+            "end": 1
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 1,
+            "end": 2
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 2,
+            "end": 3
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "款",
+            "start": 3,
+            "end": 4
+          },
+          "word": "款",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "热",
+            "start": 4,
+            "end": 5
+          },
+          "word": "热",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "巧",
+            "start": 5,
+            "end": 6
+          },
+          "word": "巧",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "克",
+            "start": 6,
+            "end": 7
+          },
+          "word": "克",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "力",
+            "start": 7,
+            "end": 8
+          },
+          "word": "力",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "可以",
+            "start": 8,
+            "end": 10
+          },
+          "word": "可以",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 12,
+            "end": 13
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 14,
+            "end": 15
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "赶",
+            "start": 15,
+            "end": 16
+          },
+          "word": "赶",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 6.765999999999999
+    }
+  ],
+  "kenlmInputTexts": [
+    "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+    ],
+    "actual": [
+      "请问这款热巧克力可以少冰吗？我赶时间，小杯。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

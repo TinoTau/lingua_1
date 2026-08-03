@@ -1,0 +1,205 @@
+{
+  "id": "d085",
+  "expected": "私教课还剩几次？能帮我约明天晚上七点吗？",
+  "asr": "自教课还剩几次,能帮我约明天晚上7点吗?",
+  "raw_asr": "自教课还剩几次,能帮我约明天晚上7点吗?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 17,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.1037873849272728,
+      "t2": 0.00010538847709540278,
+      "t3": 0.0000734676286811009,
+      "t4": 0.8960272669792175,
+      "t5": 0.000006553320417879149
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 17,
+    "wordTimeSpanCount": 17,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 1,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "天晚",
+        "pinyinKey": "tian|wan",
+        "windowTimeRange": {
+          "start": 2.72,
+          "end": 3.3
+        },
+        "acousticTonePattern": [
+          3,
+          3
+        ]
+      },
+      {
+        "text": "天晚上",
+        "pinyinKey": "tian|wan|shang",
+        "windowTimeRange": {
+          "start": 2.72,
+          "end": 3.3
+        }
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 10,
+    "candidateCount": 10,
+    "candidateSentenceCount": 10,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 10,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "自教课还剩几次,能帮我约明天晚上7点吗?",
+        "kenlmScore": -53.224434,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "自教课还剩几次,能帮我约明天晚上7点吗?",
+        "kenlmScore": -53.224434,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 10
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 684,
+      "queryCount": 2,
+      "avgMs": 342,
+      "p50Ms": 342,
+      "p95Ms": 342,
+      "maxMs": 684
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -53.224434,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 684,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "自教课还剩几次,能帮我约明天晚上7点吗?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "自教",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "自教",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "课还",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "课还",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "剩几",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "剩几",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "次,能",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "次,能",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "帮我",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "帮我",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "约明",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "约明",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "天晚",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "天晚",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "上",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "上",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

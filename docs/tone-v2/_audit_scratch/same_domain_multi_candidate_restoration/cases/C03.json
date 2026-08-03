@@ -1,0 +1,151 @@
+{
+  "caseId": "C03",
+  "rawText": "请把地址发给医院的医师",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "的"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "请把地址发给医院的医师"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "议员",
+          "医院"
+        ],
+        [
+          "的"
+        ],
+        [
+          "议室",
+          "医师"
+        ]
+      ],
+      "theoretical": 4,
+      "generated": 4,
+      "distinct": 4,
+      "texts": [
+        "请把地址发给议员的议室",
+        "请把地址发给议员的医师",
+        "请把地址发给医院的议室",
+        "请把地址发给医院的医师"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 4,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "请把地址发给医院的医师",
+    "请把地址发给议员的议室",
+    "请把地址发给议员的医师",
+    "请把地址发给医院的议室"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "请把地址发给医院的医师",
+    "请把地址发给议员的议室",
+    "请把地址发给议员的医师",
+    "请把地址发给医院的议室"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 44.75999999046326,
+  "groups": [
+    "C"
+  ],
+  "why": "triple embedded",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "请把地址发给医院的医师",
+      "请把地址发给议员的议室",
+      "请把地址发给议员的医师",
+      "请把地址发给医院的议室"
+    ]
+  }
+}

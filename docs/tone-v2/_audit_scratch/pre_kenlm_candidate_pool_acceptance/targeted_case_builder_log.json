@@ -1,0 +1,185 @@
+{
+  "singles": 3,
+  "duals": 3,
+  "triples": 1,
+  "cases": 15,
+  "sampleSingles": [
+    {
+      "word": "一世",
+      "pk": "yi|shi",
+      "text": "请确认一世",
+      "hits": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "一世",
+          "surfaces": [
+            "医师",
+            "议室"
+          ]
+        }
+      ]
+    },
+    {
+      "word": "医院",
+      "pk": "yi|yuan",
+      "text": "请确认医院",
+      "hits": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "医院",
+          "surfaces": [
+            "医院",
+            "议员"
+          ]
+        }
+      ]
+    },
+    {
+      "word": "地址",
+      "pk": "di|zhi",
+      "text": "请确认地址",
+      "hits": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "地址",
+          "surfaces": [
+            "低脂",
+            "地质"
+          ]
+        }
+      ]
+    }
+  ],
+  "sampleDuals": [
+    {
+      "text": "请确认一世和医院",
+      "elig": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "一世",
+          "surfaces": [
+            "医师",
+            "议室"
+          ]
+        },
+        {
+          "windowId": "6:8",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "text": "医院",
+          "surfaces": [
+            "医院",
+            "议员"
+          ]
+        }
+      ],
+      "a": "一世",
+      "b": "医院"
+    },
+    {
+      "text": "请确认一世和地址",
+      "elig": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "一世",
+          "surfaces": [
+            "医师",
+            "议室"
+          ]
+        },
+        {
+          "windowId": "6:8",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "text": "地址",
+          "surfaces": [
+            "低脂",
+            "地质"
+          ]
+        }
+      ],
+      "a": "一世",
+      "b": "地址"
+    },
+    {
+      "text": "请确认医院和地址",
+      "elig": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "医院",
+          "surfaces": [
+            "医院",
+            "议员"
+          ]
+        },
+        {
+          "windowId": "6:8",
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "text": "地址",
+          "surfaces": [
+            "低脂",
+            "地质"
+          ]
+        }
+      ],
+      "a": "医院",
+      "b": "地址"
+    }
+  ],
+  "sampleTriples": [
+    {
+      "text": "请确认一世、医院和地址",
+      "elig": [
+        {
+          "windowId": "3:5",
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "一世",
+          "surfaces": [
+            "医师",
+            "议室"
+          ]
+        },
+        {
+          "windowId": "5:7",
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "text": "医院",
+          "surfaces": [
+            "医院",
+            "议员"
+          ]
+        },
+        {
+          "windowId": "8:10",
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "text": "地址",
+          "surfaces": [
+            "低脂",
+            "地质"
+          ]
+        }
+      ],
+      "pot": 8,
+      "words": [
+        "一世",
+        "医院",
+        "地址"
+      ]
+    }
+  ]
+}

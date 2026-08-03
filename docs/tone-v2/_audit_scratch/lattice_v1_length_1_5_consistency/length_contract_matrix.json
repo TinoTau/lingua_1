@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-07-27",
+  "newRequirement": "Window/Recall/Edge length 1-5 with controlled single-char base-only recall",
+  "matrix": [
+    {
+      "layer": "Seed source",
+      "currentAllowed": "effectively 2-5+ (no single-char rows in seeds; one_char reject count historically 0)",
+      "newRequired": "1-5 by tier; controlled base len=1 whitelist only",
+      "consistent": false,
+      "owner": "Lexicon data"
+    },
+    {
+      "layer": "Full Build classifier",
+      "currentAllowed": "reject one_char; base 2-3; domain 2-5",
+      "newRequired": "controlled base len=1 when explicitly marked",
+      "consistent": false,
+      "owner": "Build"
+    },
+    {
+      "layer": "Patch Importer V4",
+      "currentAllowed": "syntax allows len=1 but forces domain_tags → domain tier",
+      "newRequired": "explicit base single-char write without domain tags",
+      "consistent": false,
+      "owner": "Import"
+    },
+    {
+      "layer": "SQLite schema",
+      "currentAllowed": "TEXT word; no CHECK min length",
+      "newRequired": "allow len=1",
+      "consistent": true,
+      "owner": "Schema"
+    },
+    {
+      "layer": "base_lexicon materialization",
+      "currentAllowed": "Full Build base tier only; Patch rematerialize does not write base",
+      "newRequired": "controlled len=1 rows in base_lexicon",
+      "consistent": false,
+      "owner": "Build/Import"
+    },
+    {
+      "layer": "Window generator (Lattice)",
+      "currentAllowed": "1-5",
+      "newRequired": "1-5",
+      "consistent": true,
+      "owner": "Window"
+    },
+    {
+      "layer": "Window generator (LTR production)",
+      "currentAllowed": "2-5",
+      "newRequired": "remain 2-5 until Phase 3 cutover",
+      "consistent": true,
+      "owner": "LTR / Orchestrator"
+    },
+    {
+      "layer": "Hard-block",
+      "currentAllowed": "adjacency to 。！？ blocks len=1",
+      "newRequired": "block crossing/content punct; allow adjacent legal len=1",
+      "consistent": false,
+      "owner": "Boundary"
+    },
+    {
+      "layer": "Recall API (TopKV2)",
+      "currentAllowed": "2-5 only",
+      "newRequired": "1-5",
+      "consistent": false,
+      "owner": "Recall"
+    },
+    {
+      "layer": "Local recall",
+      "currentAllowed": "2-5",
+      "newRequired": "1-5 if on Lattice path",
+      "consistent": false,
+      "owner": "Recall"
+    },
+    {
+      "layer": "Batch recall / recallTopKForWindows",
+      "currentAllowed": "passes all windows; V2 returns empty for len=1",
+      "newRequired": "1-5 with base-only for len=1",
+      "consistent": false,
+      "owner": "Recall"
+    },
+    {
+      "layer": "Recall cache",
+      "currentAllowed": "utterance-scoped; length implicit in pinyinKey",
+      "newRequired": "support len=1 keys; no cross-tier pollution",
+      "consistent": true,
+      "owner": "Cache",
+      "note": "MODIFY only if base-only scope must enter key"
+    },
+    {
+      "layer": "Candidate filter (minPrior)",
+      "currentAllowed": "applies to all lengths",
+      "newRequired": "support len=1; no global minPrior lower",
+      "consistent": true,
+      "owner": "Recall"
+    },
+    {
+      "layer": "Candidate TopK",
+      "currentAllowed": "exactTopK=2 shared",
+      "newRequired": "stricter len=1 cap (≤1 or ≤2)",
+      "consistent": false,
+      "owner": "Candidate control"
+    },
+    {
+      "layer": "Edge Builder",
+      "currentAllowed": "1-5 if candidates exist",
+      "newRequired": "1-5",
+      "consistent": true,
+      "owner": "Edge"
+    },
+    {
+      "layer": "Diagnostics",
+      "currentAllowed": "probe-level singleChar* only; harness lacks formal fields",
+      "newRequired": "distinguish lexical vs fallback len=1",
+      "consistent": false,
+      "owner": "Diagnostics"
+    },
+    {
+      "layer": "Path Enumerator",
+      "currentAllowed": "accepts 1-5; prefers lexical over fallback via edgeKind",
+      "newRequired": "accept len=1 lexical",
+      "consistent": true,
+      "owner": "Path"
+    },
+    {
+      "layer": "Domain Vote",
+      "currentAllowed": "base_term / empty domains do not vote",
+      "newRequired": "base single-char must not vote",
+      "consistent": true,
+      "owner": "Vote"
+    },
+    {
+      "layer": "Regression tests",
+      "currentAllowed": "mostly 2-5; len=1 live test does not assert hits",
+      "newRequired": "cover 1-5 + controlled single-char",
+      "consistent": false,
+      "owner": "Test"
+    }
+  ]
+}

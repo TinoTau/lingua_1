@@ -1,0 +1,1683 @@
+{
+  "caseId": "d122",
+  "fileNum": "122",
+  "scenario": "hotel",
+  "rawText": "早餐几点开始？退房可以延迟到下午两点吗？",
+  "pathCount": 1,
+  "maxSentenceCandidates": 16,
+  "perSpanLimitRule": "getPerSpanCandidateLimit: <=1→8, 2→6, else→4",
+  "v4Limits": {
+    "maxIntervalEnumNodes": 1024,
+    "maxIntervalRepairPicksPerPath": 16
+  },
+  "paths": [
+    {
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "pathIndex": 0,
+      "pathSource": "SegmentationPath/Lattice",
+      "pathScore": "NOT PRESENT IN PRODUCTION TYPE",
+      "boundaryKey": "0-2|2-3|3-4|4-5|5-6|6-8|8-10|10-12|12-13|13-14|14-15|15-16|16-17|17-18",
+      "fineSpanCount": 14,
+      "bucketCount": 1,
+      "retainedDomains": [
+        "tourism_hotel"
+      ],
+      "insufficientEvidence": false,
+      "bucketDomains": [
+        "tourism_hotel"
+      ],
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+          "rawRange": [
+            0,
+            2
+          ],
+          "rawText": "早餐",
+          "syllableRange": [
+            0,
+            2
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 0,
+          "rawOrderIndex": 0
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "几",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 1,
+          "rawOrderIndex": 1
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 2,
+          "rawOrderIndex": 2
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "开",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 3,
+          "rawOrderIndex": 3
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "始",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 4,
+          "rawOrderIndex": 4
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+          "rawRange": [
+            7,
+            9
+          ],
+          "rawText": "退房",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 5,
+          "rawOrderIndex": 5
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+          "rawRange": [
+            9,
+            11
+          ],
+          "rawText": "可以",
+          "syllableRange": [
+            8,
+            10
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 6,
+          "rawOrderIndex": 6
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+          "rawRange": [
+            11,
+            13
+          ],
+          "rawText": "延迟",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c3"
+          ],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 7,
+          "rawOrderIndex": 7
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "到",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 8,
+          "rawOrderIndex": 8
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 9,
+          "rawOrderIndex": 9
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "午",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 10,
+          "rawOrderIndex": 10
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "两",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 11,
+          "rawOrderIndex": 11
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 12,
+          "rawOrderIndex": 12
+        },
+        {
+          "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+          "productionIndex": 13,
+          "rawOrderIndex": 13
+        }
+      ],
+      "pathFineOverlap": [],
+      "buckets": [
+        {
+          "bucketId": "p0_b0",
+          "bucketDomain": "tourism_hotel",
+          "sourceRetainedDomain": "tourism_hotel",
+          "fineSpanIds": [
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+            "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13"
+          ],
+          "baseCandidateCount": 0,
+          "domainCandidateCount": 4,
+          "canonicalCandidateCount": 12,
+          "rawFallbackCount": 0,
+          "assemblyDropTraces": [],
+          "perSpanBudget": [
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "before": [
+                {
+                  "id": "0:2:1",
+                  "word": "早餐",
+                  "score": 2.36
+                }
+              ],
+              "after": [
+                {
+                  "id": "0:2:1",
+                  "word": "早餐",
+                  "score": 2.36
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+                  "word": "几",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+                  "word": "点",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+                  "word": "开",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+                  "word": "始",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "before": [
+                {
+                  "id": "6:8:4",
+                  "word": "退房",
+                  "score": 2.04
+                },
+                {
+                  "id": "6:8:5",
+                  "word": "退房",
+                  "score": 2.006
+                },
+                {
+                  "id": "6:8:6",
+                  "word": "退房",
+                  "score": 2.006
+                }
+              ],
+              "after": [
+                {
+                  "id": "6:8:4",
+                  "word": "退房",
+                  "score": 2.04
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "6:8:5",
+                  "word": "退房",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                },
+                {
+                  "id": "6:8:6",
+                  "word": "退房",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+                  "word": "可以",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+                  "word": "延迟",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+                  "word": "到",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+                  "word": "下",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+                  "word": "午",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+                  "word": "两",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+                  "word": "点",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13",
+                  "word": "吗",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            }
+          ],
+          "perSpanLimit": 4,
+          "gridSlotSizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "generatedSentenceCount": 1,
+          "intervalAssemblyCandidateCount": 4,
+          "intervalRejectedOverlapCount": 0,
+          "limitedSentenceCount": 1,
+          "limitName": "maxSentenceCandidates",
+          "limitValue": 16,
+          "asmReplayMatch": true,
+          "candidates": [
+            {
+              "candidateId": "0:2:1",
+              "matchKey": "0:2:早餐",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "早餐",
+              "surface": "早餐",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e697a9e9a490e588",
+              "rawRange": [
+                0,
+                2
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "food_order",
+                "tourism_hotel"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tourism_hotel",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "0:2:2",
+              "matchKey": "0:2:早餐",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "早餐",
+              "surface": "早餐",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e697a9e9a490e5ba",
+              "rawRange": [
+                0,
+                2
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "food_order"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "0:2:3",
+              "matchKey": "0:2:早餐",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "早餐",
+              "surface": "早餐",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e697a9e9a490e68e",
+              "rawRange": [
+                0,
+                2
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:0",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "food_order"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 3,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:1",
+              "matchKey": "2:3:几",
+              "word": "几",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:2",
+              "matchKey": "3:4:点",
+              "word": "点",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:3",
+              "matchKey": "4:5:开",
+              "word": "开",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:4",
+              "matchKey": "5:6:始",
+              "word": "始",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:4",
+              "matchKey": "7:9:退房",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "退房",
+              "surface": "退房",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e98080e688bfe697",
+              "rawRange": [
+                7,
+                9
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "tourism_hotel"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.04,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tourism_hotel",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:5",
+              "matchKey": "7:9:退房",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "退房",
+              "surface": "退房",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58a9ee79086e980",
+              "rawRange": [
+                7,
+                9
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "tourism_hotel"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tourism_hotel",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:6",
+              "matchKey": "7:9:退房",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "退房",
+              "surface": "退房",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e98080e688bfe58d",
+              "rawRange": [
+                7,
+                9
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:5",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "tourism_hotel"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 3,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tourism_hotel",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "8:10:7",
+              "matchKey": "9:11:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e584bfe7a791e58c",
+              "rawRange": [
+                9,
+                11
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [],
+              "finalStatus": "DROPPED_BUCKET_MISMATCH"
+            },
+            {
+              "candidateId": "8:10:8",
+              "matchKey": "9:11:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58685e7a791e58c",
+              "rawRange": [
+                9,
+                11
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [],
+              "finalStatus": "DROPPED_BUCKET_MISMATCH"
+            },
+            {
+              "candidateId": "8:10:9",
+              "matchKey": "9:11:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e5a496e7a791e58c",
+              "rawRange": [
+                9,
+                11
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 3,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [],
+              "finalStatus": "DROPPED_BUCKET_MISMATCH"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:6",
+              "matchKey": "9:11:可以",
+              "word": "可以",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "10:12:10",
+              "matchKey": "11:13:延迟",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "延迟",
+              "surface": "延迟",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e68ea8e79086e5bb",
+              "rawRange": [
+                11,
+                13
+              ],
+              "fineSpanId": "fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tourism_hotel; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:7",
+              "matchKey": "11:13:延迟",
+              "word": "延迟",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:8",
+              "matchKey": "13:14:到",
+              "word": "到",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:9",
+              "matchKey": "14:15:下",
+              "word": "下",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:10",
+              "matchKey": "15:16:午",
+              "word": "午",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:11",
+              "matchKey": "16:17:两",
+              "word": "两",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:12",
+              "matchKey": "17:18:点",
+              "word": "点",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13:13",
+              "matchKey": "18:19:吗",
+              "word": "吗",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            }
+          ],
+          "sentences": [
+            {
+              "sentenceId": "p0_b0_s0",
+              "bucketId": "p0_b0",
+              "bucketDomain": "tourism_hotel",
+              "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+              "finalText": "早餐几点开始？退房可以延迟到下午两点吗？",
+              "assemblyRank": 1,
+              "assemblyScore": 4.4,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "早餐",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    0,
+                    2
+                  ],
+                  "spanText": "早餐",
+                  "candidateScore": 2.36
+                },
+                {
+                  "candidateId": null,
+                  "word": "退房",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    7,
+                    9
+                  ],
+                  "spanText": "退房",
+                  "candidateScore": 2.04
+                },
+                {
+                  "candidateId": null,
+                  "word": "几",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "spanText": "几",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "点",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "点",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "开",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "开",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "始",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "始",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "可以",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    11
+                  ],
+                  "spanText": "可以",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "延迟",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "spanText": "延迟",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "到",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "到",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "两",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "spanText": "两",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "点",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "点",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "早餐",
+                  "rawRange": [
+                    0,
+                    2
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "几",
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "点",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "开",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "始",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "退房",
+                  "rawRange": [
+                    7,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "可以",
+                  "rawRange": [
+                    9,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "延迟",
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "到",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "两",
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "点",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "早餐几点开始？退房可以延迟到下午两点吗？",
+              "textMatchesFinal": true
+            }
+          ],
+          "bucketDedupe": []
+        }
+      ],
+      "sentenceCandidateCount": 1
+    }
+  ],
+  "crossPath": {
+    "input": [
+      {
+        "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+        "bucketId": "p0_b0",
+        "bucketDomain": "tourism_hotel",
+        "sentenceId": "p0_b0_s0",
+        "text": "早餐几点开始？退房可以延迟到下午两点吗？",
+        "rank": 1
+      }
+    ],
+    "output": [
+      {
+        "globalSentenceId": "cp_0",
+        "sourcePathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s0",
+        "text": "早餐几点开始？退房可以延迟到下午两点吗？"
+      }
+    ],
+    "drops": [],
+    "uniqueBeforeCapCount": 1,
+    "productionTrace": {
+      "crossPathInputCandidateCount": 1,
+      "crossPathDuplicateCount": 0,
+      "crossPathUniqueCandidateCount": 1,
+      "crossPathOutputCandidateCount": 1,
+      "crossPathTruncatedCount": 0,
+      "globalCandidateCap": 16,
+      "kenlmInputSource": "cross_path_merge",
+      "dedupKey": "exact_text",
+      "duplicateRetention": "first_wins",
+      "collectionOrder": "path_bucket_candidate"
+    },
+    "replayMatch": true
+  },
+  "kenlmInputs": [
+    {
+      "kenlmInputIndex": 0,
+      "text": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "sourcePathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s0",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 4.4,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    }
+  ],
+  "stats": {
+    "budgetDropCount": 2,
+    "budgetTriggerSpans": 1,
+    "bucketDropCount": 6,
+    "assemblyEligibleNoSentence": 0,
+    "pathCount": 1,
+    "bucketCount": 1,
+    "bucketSentences": 1,
+    "crossPathOut": 1
+  },
+  "anomalies": {
+    "A1": [],
+    "A2": [],
+    "A3": [],
+    "A4": [],
+    "A5": [],
+    "A6": [],
+    "A7": [],
+    "A8": [],
+    "A9": [],
+    "A10": [],
+    "A11": [],
+    "A12": [],
+    "A13": [],
+    "A14": [],
+    "A15": [],
+    "A16": [],
+    "A17": [],
+    "A18": [],
+    "A19": [
+      {
+        "caseId": "d122",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      }
+    ],
+    "A20": []
+  },
+  "candidateFateGlobal": [
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "0:2:1",
+      "word": "早餐",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "0:2:2",
+      "word": "早餐",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "0:2:3",
+      "word": "早餐",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "6:8:4",
+      "word": "退房",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "6:8:5",
+      "word": "退房",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "6:8:6",
+      "word": "退房",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "8:10:7",
+      "word": "科医",
+      "finalStatus": "DROPPED_BUCKET_MISMATCH"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "8:10:8",
+      "word": "科医",
+      "finalStatus": "DROPPED_BUCKET_MISMATCH"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "8:10:9",
+      "word": "科医",
+      "finalStatus": "DROPPED_BUCKET_MISMATCH"
+    },
+    {
+      "caseId": "d122",
+      "pathId": "03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13",
+      "bucketDomain": "tourism_hotel",
+      "candidateId": "10:12:10",
+      "word": "延迟",
+      "finalStatus": "USED_IN_SENTENCE"
+    }
+  ]
+}

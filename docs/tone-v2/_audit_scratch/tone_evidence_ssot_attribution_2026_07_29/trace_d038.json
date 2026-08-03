@@ -1,0 +1,217 @@
+{
+  "id": "d038",
+  "expected": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+  "asr": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+  "raw_asr": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 19,
+    "evidenceProductionCount": 19,
+    "firstSlicePosterior": {
+      "t1": 0.0005137801636010408,
+      "t2": 0.000024883398509700783,
+      "t3": 0.000008677952791913413,
+      "t4": 0.9994519352912903,
+      "t5": 7.317963195418997e-7
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 19,
+    "wordTimeSpanCount": 19,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 19
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "一壺",
+        "pinyinKey": "yi|hu",
+        "windowTimeRange": {
+          "start": 3.9,
+          "end": 4.18
+        },
+        "acousticTonePattern": [
+          5,
+          2
+        ]
+      },
+      {
+        "text": "一壺茶",
+        "pinyinKey": "yi|hu|cha",
+        "windowTimeRange": {
+          "start": 3.9,
+          "end": 4.42
+        },
+        "acousticTonePattern": [
+          5,
+          2,
+          4
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "這道",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "這道",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "菜大",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "菜大",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "概要",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "概要",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "等多",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "等多",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "久",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "久",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我們",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我們",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "先",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "先",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "點一",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "點一",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

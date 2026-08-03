@@ -1,0 +1,197 @@
+{
+  "id": "d043",
+  "expected": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+  "asr": "我们下午讨论后,选生呈方安线吧! 成的借口文章補齊",
+  "raw_asr": "我们下午讨论后,选生呈方安线吧! 成的借口文章補齊",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 13,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.828647792339325,
+      "t2": 0.015481444075703621,
+      "t3": 0.0074471295811235905,
+      "t4": 0.14771366119384766,
+      "t5": 0.0007099073263816535
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 21,
+    "wordTimeSpanCount": 21,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "補齊",
+        "pinyinKey": "bu|qi",
+        "windowTimeRange": {
+          "start": 5.239999999999999,
+          "end": 5.72
+        },
+        "acousticTonePattern": [
+          3,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 12,
+    "candidateCount": 12,
+    "candidateSentenceCount": 12,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 12,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "我们下午讨论后,选生呈方安线吧! 成的借口文章補齊",
+        "kenlmScore": -74.28397,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "我们下午讨论后,选生呈方安线吧! 成的借口文章補齊",
+        "kenlmScore": -74.28397,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 12
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 695,
+      "queryCount": 2,
+      "avgMs": 347.5,
+      "p50Ms": 347.5,
+      "p95Ms": 347.5,
+      "maxMs": 695
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -74.28397,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 695,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "我们下午讨论后,选生呈方安线吧! 成的借口文章補齊",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "我们",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我们",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "下午",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "下午",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "讨论",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "讨论",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "后,选",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "后,选",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "生呈",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "生呈",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "方安",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "方安",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "线吧",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "线吧",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "成的",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "成的",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

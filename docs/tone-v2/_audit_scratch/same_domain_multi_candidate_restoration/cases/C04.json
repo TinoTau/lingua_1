@@ -1,0 +1,135 @@
+{
+  "caseId": "C04",
+  "rawText": "医师在医院核对地址",
+  "retainedDomains": [
+    "medical",
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "在"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "医师在医院核对地址"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        2,
+        1,
+        2,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "议室",
+          "医师"
+        ],
+        [
+          "在"
+        ],
+        [
+          "议员",
+          "医院"
+        ],
+        [
+          "核"
+        ],
+        [
+          "对"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 4,
+      "generated": 4,
+      "distinct": 4,
+      "texts": [
+        "议室在议员核对地址",
+        "医师在议员核对地址",
+        "议室在医院核对地址",
+        "医师在医院核对地址"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 4,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "医师在医院核对地址",
+    "议室在议员核对地址",
+    "医师在议员核对地址",
+    "议室在医院核对地址"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "医师在医院核对地址",
+    "议室在议员核对地址",
+    "医师在议员核对地址",
+    "议室在医院核对地址"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 42.178200006484985,
+  "groups": [
+    "C"
+  ],
+  "why": "triple reorder",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "医师在医院核对地址",
+      "议室在议员核对地址",
+      "医师在议员核对地址",
+      "议室在医院核对地址"
+    ]
+  }
+}

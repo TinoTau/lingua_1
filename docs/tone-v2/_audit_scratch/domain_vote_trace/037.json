@@ -1,0 +1,566 @@
+{
+  "case": {
+    "id": "d037",
+    "fileNum": "037",
+    "scenario": "restaurant",
+    "rawText": "两位，靠窗有位置吗？不要香菜，微辣就行。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-12|12-14|14-15|15-16",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "两",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "位",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "靠",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "窗",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "位",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6",
+          "rawRange": [
+            7,
+            9
+          ],
+          "rawText": "置吗",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": [
+            "bakery"
+          ]
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:7",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "不",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:8",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "要",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+          "rawRange": [
+            12,
+            14
+          ],
+          "rawText": "香菜",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c4"
+          ],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": [
+            "food_order"
+          ]
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10",
+          "rawRange": [
+            15,
+            17
+          ],
+          "rawText": "微辣",
+          "syllableRange": [
+            12,
+            14
+          ],
+          "coarseSpanIds": [
+            "c6"
+          ],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": [
+            "food_order"
+          ]
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:11",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "就",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:12",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "6:8:1",
+          "word": "芝麻",
+          "surface": "芝麻",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "bakery"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "bakery"
+          ]
+        },
+        {
+          "candidateId": "10:12:2",
+          "word": "香菜",
+          "surface": "香菜",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            12,
+            14
+          ],
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+          "candidateRank": 1,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "12:14:3",
+          "word": "微辣",
+          "surface": "微辣",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            15,
+            17
+          ],
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10",
+          "candidateRank": 1,
+          "score": 2.04,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "bakery"
+        ],
+        [],
+        [],
+        [
+          "food_order"
+        ],
+        [
+          "food_order"
+        ],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "bakery": [
+          {
+            "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "6:8:1",
+                "word": "芝麻",
+                "domainsAdded": [
+                  "bakery"
+                ]
+              }
+            ]
+          }
+        ],
+        "food_order": [
+          {
+            "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:2",
+                "word": "香菜",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "12:14:3",
+                "word": "微辣",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "bakery": 1,
+        "food_order": 2
+      },
+      "productionVote": {
+        "domainScores": {
+          "bakery": 1,
+          "food_order": 2
+        },
+        "retainedDomains": [
+          "food_order"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 2,
+        "runnerUpCount": 1,
+        "isTie": false,
+        "utteranceDomain": "food_order",
+        "winnerScore": 2,
+        "voteMargin": 1,
+        "parentTermVoteCount": 3
+      },
+      "replayVote": {
+        "domainScores": {
+          "bakery": 1,
+          "food_order": 2
+        },
+        "retainedDomains": [
+          "food_order"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 2
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "food_order",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+            "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+              "candidateId": "10:12:2",
+              "word": "香菜"
+            },
+            {
+              "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10",
+              "candidateId": "12:14:3",
+              "word": "微辣"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 2,
+            "domainScore": 2,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=2"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "bakery",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6",
+              "candidateId": "6:8:1",
+              "word": "芝麻"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 2,
+            "domainScore": 1,
+            "scoreRatio": 0.5,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "food_order"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "food_order"
+      ],
+      "bucketDomainsFromVote": [
+        "food_order"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

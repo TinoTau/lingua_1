@@ -1,0 +1,3994 @@
+[
+  {
+    "caseId": "B01",
+    "rawText": "请确认地址和医院",
+    "lifecycle": {
+      "recallCandidates": 5,
+      "recallDistinctSurfaces": 4,
+      "lexicalEdgeCount": 2,
+      "lexicalEdgeCandidateSum": 5,
+      "pathCount": 1,
+      "prefilledCount": 1,
+      "prefilledTexts": [
+        "请确认地址和医院"
+      ]
+    },
+    "recallByWindow": [
+      {
+        "windowId": "3:5",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "windowId": "6:8",
+        "count": 3,
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "cands": [
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "6:8:3",
+            "windowId": "6:8",
+            "termId": "ngram:211",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议员",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "6:8:4",
+            "windowId": "6:8",
+            "termId": "ngram:356",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.35,
+            "candidateId": "6:8:5",
+            "windowId": "6:8",
+            "termId": "ngram:900",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "edgeSummary": [
+      {
+        "edgeId": "3:5",
+        "kind": "lexical",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "edgeId": "6:8",
+        "kind": "lexical",
+        "count": 3,
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "cands": [
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "6:8:3",
+            "windowId": "6:8",
+            "termId": "ngram:211",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议员",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "6:8:4",
+            "windowId": "6:8",
+            "termId": "ngram:356",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.35,
+            "candidateId": "6:8:5",
+            "windowId": "6:8",
+            "termId": "ngram:900",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "pathTraces": [
+      {
+        "pathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+        "fineSpanCount": 6,
+        "pathCandidateCount": 5,
+        "activeCount": 5,
+        "uncoveredCount": 5,
+        "coveredCount": 0,
+        "vote": {
+          "retainedDomains": [
+            "coffee",
+            "medical",
+            "meeting",
+            "tourism_route"
+          ],
+          "domainScores": {
+            "coffee": 1,
+            "tourism_route": 1,
+            "medical": 1,
+            "meeting": 1
+          },
+          "insufficientEvidence": false,
+          "utteranceDomain": "coffee"
+        },
+        "perSpanLimit": 4,
+        "fineSpanDump": [
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+            "raw": [
+              0,
+              1
+            ],
+            "syl": [
+              0,
+              1
+            ],
+            "text": "请",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+            "raw": [
+              1,
+              2
+            ],
+            "syl": [
+              1,
+              2
+            ],
+            "text": "确",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+            "raw": [
+              2,
+              3
+            ],
+            "syl": [
+              2,
+              3
+            ],
+            "text": "认",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+            "raw": [
+              3,
+              5
+            ],
+            "syl": [
+              3,
+              5
+            ],
+            "text": "地址",
+            "windowSource": "in_span_window",
+            "candidateCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+            "raw": [
+              5,
+              6
+            ],
+            "syl": [
+              5,
+              6
+            ],
+            "text": "和",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+            "raw": [
+              6,
+              8
+            ],
+            "syl": [
+              6,
+              8
+            ],
+            "text": "医院",
+            "windowSource": "in_span_window",
+            "candidateCount": 3,
+            "surfaces": [
+              "医院",
+              "议员"
+            ],
+            "cands": [
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "6:8:3",
+                "windowId": "6:8",
+                "termId": "ngram:211",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议员",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "6:8:4",
+                "windowId": "6:8",
+                "termId": "ngram:356",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.35,
+                "candidateId": "6:8:5",
+                "windowId": "6:8",
+                "termId": "ngram:900",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "poolDump": [
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+            "text": "请",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+            "text": "确",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+            "text": "认",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+            "text": "地址",
+            "candidateCount": 2,
+            "uncoveredCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+            "text": "和",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+            "text": "医院",
+            "candidateCount": 3,
+            "uncoveredCount": 3,
+            "surfaces": [
+              "医院",
+              "议员"
+            ],
+            "cands": [
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "6:8:3",
+                "windowId": "6:8",
+                "termId": "ngram:211",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议员",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "6:8:4",
+                "windowId": "6:8",
+                "termId": "ngram:356",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.35,
+                "candidateId": "6:8:5",
+                "windowId": "6:8",
+                "termId": "ngram:900",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "buckets": [
+          {
+            "bucketDomain": "coffee",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医院"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          },
+          {
+            "bucketDomain": "medical",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医院"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          },
+          {
+            "bucketDomain": "meeting",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医院"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          },
+          {
+            "bucketDomain": "tourism_route",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医院"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          }
+        ],
+        "orchBucketSpanSets": [
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医院"
+            ]
+          ],
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医院"
+            ]
+          ],
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医院"
+            ]
+          ],
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医院"
+            ]
+          ]
+        ],
+        "perBucketGeneratedCounts": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "perBucketGeneratedTexts": [
+          [
+            "请确认地址和医院"
+          ],
+          [
+            "请确认地址和医院"
+          ],
+          [
+            "请确认地址和医院"
+          ],
+          [
+            "请确认地址和医院"
+          ]
+        ]
+      }
+    ],
+    "architectureNote": {
+      "ownerHypothesis": "selectPerSpanCandidates owns per-span cap; filterDomainCandidatesPerSpan owns cross-domain drop; canonical fill owns empty→ASR; Assembly only combines selectedCandidates grid",
+      "getPerSpanCandidateLimit": {
+        "span<=1": 8,
+        "span2": 6,
+        "span>=3": 4
+      }
+    }
+  },
+  {
+    "caseId": "C01",
+    "rawText": "请确认地址、医院和医师",
+    "lifecycle": {
+      "recallCandidates": 8,
+      "recallDistinctSurfaces": 6,
+      "lexicalEdgeCount": 3,
+      "lexicalEdgeCandidateSum": 8,
+      "pathCount": 1,
+      "prefilledCount": 1,
+      "prefilledTexts": [
+        "请确认地址、医院和医师"
+      ]
+    },
+    "recallByWindow": [
+      {
+        "windowId": "3:5",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "windowId": "5:7",
+        "count": 3,
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "cands": [
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "5:7:3",
+            "windowId": "5:7",
+            "termId": "ngram:211",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议员",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "5:7:4",
+            "windowId": "5:7",
+            "termId": "ngram:356",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.35,
+            "candidateId": "5:7:5",
+            "windowId": "5:7",
+            "termId": "ngram:900",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "windowId": "8:10",
+        "count": 3,
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "cands": [
+          {
+            "replacement": "医师",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:6",
+            "windowId": "8:10",
+            "termId": "ngram:193",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议室",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:7",
+            "windowId": "8:10",
+            "termId": "ngram:359",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医师",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:8",
+            "windowId": "8:10",
+            "termId": "ngram:425",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "edgeSummary": [
+      {
+        "edgeId": "3:5",
+        "kind": "lexical",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "edgeId": "5:7",
+        "kind": "lexical",
+        "count": 3,
+        "surfaces": [
+          "医院",
+          "议员"
+        ],
+        "cands": [
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "5:7:3",
+            "windowId": "5:7",
+            "termId": "ngram:211",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议员",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "5:7:4",
+            "windowId": "5:7",
+            "termId": "ngram:356",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医院",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.35,
+            "candidateId": "5:7:5",
+            "windowId": "5:7",
+            "termId": "ngram:900",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      },
+      {
+        "edgeId": "8:10",
+        "kind": "lexical",
+        "count": 3,
+        "surfaces": [
+          "医师",
+          "议室"
+        ],
+        "cands": [
+          {
+            "replacement": "医师",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:6",
+            "windowId": "8:10",
+            "termId": "ngram:193",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "议室",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "meeting"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:7",
+            "windowId": "8:10",
+            "termId": "ngram:359",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "医师",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "medical"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.006,
+            "candidateId": "8:10:8",
+            "windowId": "8:10",
+            "termId": "ngram:425",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "pathTraces": [
+      {
+        "pathId": "de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0",
+        "fineSpanCount": 7,
+        "pathCandidateCount": 8,
+        "activeCount": 8,
+        "uncoveredCount": 8,
+        "coveredCount": 0,
+        "vote": {
+          "retainedDomains": [
+            "medical",
+            "meeting"
+          ],
+          "domainScores": {
+            "coffee": 1,
+            "tourism_route": 1,
+            "medical": 2,
+            "meeting": 2
+          },
+          "insufficientEvidence": false,
+          "utteranceDomain": "medical"
+        },
+        "perSpanLimit": 4,
+        "fineSpanDump": [
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+            "raw": [
+              0,
+              1
+            ],
+            "syl": [
+              0,
+              1
+            ],
+            "text": "请",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+            "raw": [
+              1,
+              2
+            ],
+            "syl": [
+              1,
+              2
+            ],
+            "text": "确",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+            "raw": [
+              2,
+              3
+            ],
+            "syl": [
+              2,
+              3
+            ],
+            "text": "认",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+            "raw": [
+              3,
+              5
+            ],
+            "syl": [
+              3,
+              5
+            ],
+            "text": "地址",
+            "windowSource": "in_span_window",
+            "candidateCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+            "raw": [
+              6,
+              8
+            ],
+            "syl": [
+              5,
+              7
+            ],
+            "text": "医院",
+            "windowSource": "in_span_window",
+            "candidateCount": 3,
+            "surfaces": [
+              "医院",
+              "议员"
+            ],
+            "cands": [
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "5:7:3",
+                "windowId": "5:7",
+                "termId": "ngram:211",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议员",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "5:7:4",
+                "windowId": "5:7",
+                "termId": "ngram:356",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.35,
+                "candidateId": "5:7:5",
+                "windowId": "5:7",
+                "termId": "ngram:900",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+            "raw": [
+              8,
+              9
+            ],
+            "syl": [
+              7,
+              8
+            ],
+            "text": "和",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+            "raw": [
+              9,
+              11
+            ],
+            "syl": [
+              8,
+              10
+            ],
+            "text": "医师",
+            "windowSource": "in_span_window",
+            "candidateCount": 3,
+            "surfaces": [
+              "医师",
+              "议室"
+            ],
+            "cands": [
+              {
+                "replacement": "医师",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:6",
+                "windowId": "8:10",
+                "termId": "ngram:193",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议室",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:7",
+                "windowId": "8:10",
+                "termId": "ngram:359",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医师",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:8",
+                "windowId": "8:10",
+                "termId": "ngram:425",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "poolDump": [
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+            "text": "请",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+            "text": "确",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+            "text": "认",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+            "text": "地址",
+            "candidateCount": 2,
+            "uncoveredCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+            "text": "医院",
+            "candidateCount": 3,
+            "uncoveredCount": 3,
+            "surfaces": [
+              "医院",
+              "议员"
+            ],
+            "cands": [
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "5:7:3",
+                "windowId": "5:7",
+                "termId": "ngram:211",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议员",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "5:7:4",
+                "windowId": "5:7",
+                "termId": "ngram:356",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医院",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.35,
+                "candidateId": "5:7:5",
+                "windowId": "5:7",
+                "termId": "ngram:900",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+            "text": "和",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+            "text": "医师",
+            "candidateCount": 3,
+            "uncoveredCount": 3,
+            "surfaces": [
+              "医师",
+              "议室"
+            ],
+            "cands": [
+              {
+                "replacement": "医师",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:6",
+                "windowId": "8:10",
+                "termId": "ngram:193",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "议室",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "meeting"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:7",
+                "windowId": "8:10",
+                "termId": "ngram:359",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "医师",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "medical"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.006,
+                "candidateId": "8:10:8",
+                "windowId": "8:10",
+                "termId": "ngram:425",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "buckets": [
+          {
+            "bucketDomain": "medical",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+                "text": "医师",
+                "beforeUncoveredSurfaces": [
+                  "医师",
+                  "议室"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医师"
+                ],
+                "selected": [
+                  {
+                    "word": "医师",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医师",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议室",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医师",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "医院"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医师"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          },
+          {
+            "bucketDomain": "meeting",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+                "text": "医院",
+                "beforeUncoveredSurfaces": [
+                  "医院",
+                  "议员"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医院"
+                ],
+                "selected": [
+                  {
+                    "word": "医院",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:4",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议员",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医院",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+                "text": "和",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "和"
+                ],
+                "selected": [
+                  {
+                    "word": "和",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:5",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+                "text": "医师",
+                "beforeUncoveredSurfaces": [
+                  "医师",
+                  "议室"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "医师"
+                ],
+                "selected": [
+                  {
+                    "word": "医师",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:de4f57ff891d2124a1c6ce8d4f2c1e6374f615e33f7ef73df141eac14bd093c0:6",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "医师",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "议室",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "医师",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 3,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ],
+              [
+                "医院"
+              ],
+              [
+                "和"
+              ],
+              [
+                "医师"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          }
+        ],
+        "orchBucketSpanSets": [
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "医院"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医师"
+            ]
+          ],
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ],
+            [
+              "医院"
+            ],
+            [
+              "和"
+            ],
+            [
+              "医师"
+            ]
+          ]
+        ],
+        "perBucketGeneratedCounts": [
+          1,
+          1
+        ],
+        "perBucketGeneratedTexts": [
+          [
+            "请确认地址、医院和医师"
+          ],
+          [
+            "请确认地址、医院和医师"
+          ]
+        ]
+      }
+    ],
+    "architectureNote": {
+      "ownerHypothesis": "selectPerSpanCandidates owns per-span cap; filterDomainCandidatesPerSpan owns cross-domain drop; canonical fill owns empty→ASR; Assembly only combines selectedCandidates grid",
+      "getPerSpanCandidateLimit": {
+        "span<=1": 8,
+        "span2": 6,
+        "span>=3": 4
+      }
+    }
+  },
+  {
+    "caseId": "A01",
+    "rawText": "请确认地址",
+    "lifecycle": {
+      "recallCandidates": 2,
+      "recallDistinctSurfaces": 2,
+      "lexicalEdgeCount": 1,
+      "lexicalEdgeCandidateSum": 2,
+      "pathCount": 1,
+      "prefilledCount": 1,
+      "prefilledTexts": [
+        "请确认地址"
+      ]
+    },
+    "recallByWindow": [
+      {
+        "windowId": "3:5",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "edgeSummary": [
+      {
+        "edgeId": "3:5",
+        "kind": "lexical",
+        "count": 2,
+        "surfaces": [
+          "低脂",
+          "地质"
+        ],
+        "cands": [
+          {
+            "replacement": "低脂",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "coffee"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:1",
+            "windowId": "3:5",
+            "termId": "ngram:413",
+            "recallSource": "lexicon_pinyin_topk"
+          },
+          {
+            "replacement": "地质",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "domains": [
+              "tourism_route"
+            ],
+            "isCovered": false,
+            "coveredBy": null,
+            "score": 2.36,
+            "candidateId": "3:5:2",
+            "windowId": "3:5",
+            "termId": "ngram:1430",
+            "recallSource": "lexicon_pinyin_topk"
+          }
+        ]
+      }
+    ],
+    "pathTraces": [
+      {
+        "pathId": "f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e",
+        "fineSpanCount": 4,
+        "pathCandidateCount": 2,
+        "activeCount": 2,
+        "uncoveredCount": 2,
+        "coveredCount": 0,
+        "vote": {
+          "retainedDomains": [
+            "coffee",
+            "tourism_route"
+          ],
+          "domainScores": {
+            "coffee": 1,
+            "tourism_route": 1
+          },
+          "insufficientEvidence": false,
+          "utteranceDomain": "coffee"
+        },
+        "perSpanLimit": 4,
+        "fineSpanDump": [
+          {
+            "spanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+            "raw": [
+              0,
+              1
+            ],
+            "syl": [
+              0,
+              1
+            ],
+            "text": "请",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+            "raw": [
+              1,
+              2
+            ],
+            "syl": [
+              1,
+              2
+            ],
+            "text": "确",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+            "raw": [
+              2,
+              3
+            ],
+            "syl": [
+              2,
+              3
+            ],
+            "text": "认",
+            "windowSource": "fallback",
+            "candidateCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "spanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+            "raw": [
+              3,
+              5
+            ],
+            "syl": [
+              3,
+              5
+            ],
+            "text": "地址",
+            "windowSource": "in_span_window",
+            "candidateCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "poolDump": [
+          {
+            "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+            "text": "请",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+            "text": "确",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+            "text": "认",
+            "candidateCount": 0,
+            "uncoveredCount": 0,
+            "surfaces": [],
+            "cands": []
+          },
+          {
+            "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+            "text": "地址",
+            "candidateCount": 2,
+            "uncoveredCount": 2,
+            "surfaces": [
+              "低脂",
+              "地质"
+            ],
+            "cands": [
+              {
+                "replacement": "低脂",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "coffee"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:1",
+                "windowId": "3:5",
+                "termId": "ngram:413",
+                "recallSource": "lexicon_pinyin_topk"
+              },
+              {
+                "replacement": "地质",
+                "source": "domain_term",
+                "hitKind": "parent_fragment",
+                "domains": [
+                  "tourism_route"
+                ],
+                "isCovered": false,
+                "coveredBy": null,
+                "score": 2.36,
+                "candidateId": "3:5:2",
+                "windowId": "3:5",
+                "termId": "ngram:1430",
+                "recallSource": "lexicon_pinyin_topk"
+              }
+            ]
+          }
+        ],
+        "buckets": [
+          {
+            "bucketDomain": "coffee",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          },
+          {
+            "bucketDomain": "tourism_route",
+            "perSpanLimit": 4,
+            "spans": [
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+                "text": "请",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "请"
+                ],
+                "selected": [
+                  {
+                    "word": "请",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:0",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+                "text": "确",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "确"
+                ],
+                "selected": [
+                  {
+                    "word": "确",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:1",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+                "text": "认",
+                "beforeUncoveredSurfaces": [],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "认"
+                ],
+                "selected": [
+                  {
+                    "word": "认",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:2",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [],
+                "counts": {
+                  "pool": 0,
+                  "uncovered": 0,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 0,
+                  "deletedBySelect": 0
+                }
+              },
+              {
+                "fineSpanId": "fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+                "text": "地址",
+                "beforeUncoveredSurfaces": [
+                  "低脂",
+                  "地质"
+                ],
+                "sameDomain": [],
+                "base": [],
+                "fallback": [],
+                "afterFilterSurfaces": [],
+                "afterSelectSurfaces": [
+                  "地址"
+                ],
+                "selected": [
+                  {
+                    "word": "地址",
+                    "graphSource": "base_term",
+                    "domains": [],
+                    "score": 0,
+                    "candidateId": "canonical:fine:f836a3d39a3a9701efcfb9bc0c9cd32295c76f8236e5bd5e338d90d7b90c4e6e:3",
+                    "recallSource": "canonical_exact"
+                  }
+                ],
+                "canonicalFill": true,
+                "dropTrace": [
+                  {
+                    "replacement": "低脂",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  },
+                  {
+                    "replacement": "地质",
+                    "reason": "windowCandidateToDomainAwarePick_null",
+                    "source": "domain_term",
+                    "hitKind": "parent_fragment"
+                  }
+                ],
+                "counts": {
+                  "pool": 2,
+                  "uncovered": 2,
+                  "sameDomain": 0,
+                  "base": 0,
+                  "fallback": 0,
+                  "afterFilter": 0,
+                  "afterSelect": 1,
+                  "deletedByFilter": 2,
+                  "deletedBySelect": 0
+                }
+              }
+            ],
+            "assemblyGrid": [
+              [
+                "请"
+              ],
+              [
+                "确"
+              ],
+              [
+                "认"
+              ],
+              [
+                "地址"
+              ]
+            ],
+            "theoreticalCombinationCount": 1,
+            "assemblyWouldHaveMultiSpace": false
+          }
+        ],
+        "orchBucketSpanSets": [
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ]
+          ],
+          [
+            [
+              "请"
+            ],
+            [
+              "确"
+            ],
+            [
+              "认"
+            ],
+            [
+              "地址"
+            ]
+          ]
+        ],
+        "perBucketGeneratedCounts": [
+          1,
+          1
+        ],
+        "perBucketGeneratedTexts": [
+          [
+            "请确认地址"
+          ],
+          [
+            "请确认地址"
+          ]
+        ]
+      }
+    ],
+    "architectureNote": {
+      "ownerHypothesis": "selectPerSpanCandidates owns per-span cap; filterDomainCandidatesPerSpan owns cross-domain drop; canonical fill owns empty→ASR; Assembly only combines selectedCandidates grid",
+      "getPerSpanCandidateLimit": {
+        "span<=1": 8,
+        "span2": 6,
+        "span>=3": 4
+      }
+    }
+  }
+]

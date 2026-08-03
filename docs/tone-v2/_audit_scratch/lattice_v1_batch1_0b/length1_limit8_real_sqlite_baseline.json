@@ -1,0 +1,11 @@
+{
+  "databaseCandidateCount": 9,
+  "runtimeReturnedCount": 0,
+  "eligibleVisibleCount": 0,
+  "finalCandidateCount": 0,
+  "surfaceExactAtPosition9Reachable": false,
+  "currentBehavior": "lookupTier termLength<2 returns [] before LIMIT=8 ambiguity logic can run; LIMIT defect not observable until gate fixed",
+  "expectedBatch11Behavior": "Fix termLength gate then re-measure LIMIT=8 false-unique / surface-rank9",
+  "knownDefect": "RUNTIME_TERM_LENGTH_GATE_BLOCKS_LIMIT8_OBSERVATION",
+  "limit8RowsSeeded": 9
+}

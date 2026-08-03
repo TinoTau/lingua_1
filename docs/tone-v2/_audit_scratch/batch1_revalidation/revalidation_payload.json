@@ -1,0 +1,1317 @@
+{
+  "baseline": 74,
+  "violationCount": 29,
+  "violations": [
+    {
+      "surface": "可以吗",
+      "fieldA": "reasonCode=SENTENCE_FRAGMENT",
+      "fieldB": "length=3",
+      "conflict": "C-04",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "可以吗",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=NO_SEGMENTS_FRAGMENT_OK",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "休息时间",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE",
+      "conflict": "C-01",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "休息时间",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "segmentExact has false",
+      "conflict": "C-02",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "休息时间",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=SEGMENTS_INCOMPLETE",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "单元测试",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "回归测试",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "是否",
+      "fieldA": "reasonCode=SENTENCE_FRAGMENT",
+      "fieldB": "length=2",
+      "conflict": "C-04",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "是否",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=NO_SEGMENTS_FRAGMENT_OK",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "检查是否有",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=NO_SEGMENTS_FRAGMENT_OK",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "正则策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE",
+      "conflict": "C-01",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "正则策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "segmentExact has false",
+      "conflict": "C-02",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "正则策略",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=SEGMENTS_INCOMPLETE",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "测试数据",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "熔断策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE",
+      "conflict": "C-01",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "熔断策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "segmentExact has false",
+      "conflict": "C-02",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "熔断策略",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=SEGMENTS_INCOMPLETE",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "特征工程",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "神经网络",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "迷你吧",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "迷你吧",
+      "fieldA": "reasonCode=SENTENCE_FRAGMENT",
+      "fieldB": "length=3",
+      "conflict": "C-04",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "迷你吧",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=NO_SEGMENTS_FRAGMENT_OK",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "邀请函",
+      "fieldA": "reasonCode=SENTENCE_FRAGMENT",
+      "fieldB": "length=3",
+      "conflict": "C-04",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "邀请函",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=NO_SEGMENTS_FRAGMENT_OK",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "配置文件",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "降级策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE",
+      "conflict": "C-01",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "降级策略",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "segmentExact has false",
+      "conflict": "C-02",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "降级策略",
+      "fieldA": "notes claims atomic coverage",
+      "fieldB": "lattice=SEGMENTS_INCOMPLETE",
+      "conflict": "C-05",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    },
+    {
+      "surface": "集成测试",
+      "fieldA": "recommendation=DELETE_CONFIRMED",
+      "fieldB": "domainImpact=DOMAIN_EVIDENCE_LOST",
+      "conflict": "C-03",
+      "originalRecommendation": "DELETE_CONFIRMED"
+    }
+  ],
+  "highRiskCount": 34,
+  "highRisk": [
+    "专家系统",
+    "专题会议",
+    "主持会议",
+    "休息时间",
+    "单元测试",
+    "可以吗",
+    "回归测试",
+    "安检通道",
+    "延误订单",
+    "循环网络",
+    "快速测试",
+    "快速通道",
+    "提示工程",
+    "是否",
+    "正则策略",
+    "注册中心",
+    "流量镜像",
+    "测试数据",
+    "熔断策略",
+    "特征工程",
+    "神经网络",
+    "联系电话",
+    "航班订单",
+    "行李订单",
+    "行程订单",
+    "视频会议",
+    "训练数据",
+    "迁移学习",
+    "迷你吧",
+    "邀请函",
+    "配置中心",
+    "配置文件",
+    "降级策略",
+    "集成测试"
+  ],
+  "counts": {
+    "DELETE_CONFIRMED": 50,
+    "KEEP_AS_EXCEPTION": 22,
+    "VALIDATOR_FALSE_POSITIVE": 1,
+    "INSUFFICIENT_EVIDENCE": 0,
+    "REQUIRES_ATOM_RECALL_FIX": 1
+  },
+  "changedCount": 21,
+  "changed": [
+    {
+      "surface": "休息时间",
+      "from": "DELETE_CONFIRMED",
+      "to": "REQUIRES_ATOM_RECALL_FIX",
+      "reason": "依赖 segment ExactRecall=false（休息）；根因=TONE_DATA_ERROR；修复前不可删"
+    },
+    {
+      "surface": "单元测试",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "回归测试",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "安检通道",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定表达/行业称谓"
+    },
+    {
+      "surface": "循环网络",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "是否",
+      "from": "DELETE_CONFIRMED",
+      "to": "VALIDATOR_FALSE_POSITIVE",
+      "reason": "三字/功能词被误判 SENTENCE_FRAGMENT"
+    },
+    {
+      "surface": "正则策略",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "流量镜像",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "测试数据",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "熔断策略",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "特征工程",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "神经网络",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "联系电话",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定表达/行业称谓"
+    },
+    {
+      "surface": "视频会议",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定表达/行业称谓"
+    },
+    {
+      "surface": "训练数据",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "迁移学习",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "迷你吧",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "行业固定产品 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "邀请函",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "规范三字名词误判为句段"
+    },
+    {
+      "surface": "配置文件",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    {
+      "surface": "降级策略",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语不可按普通组合删除"
+    },
+    {
+      "surface": "集成测试",
+      "from": "DELETE_CONFIRMED",
+      "to": "KEEP_AS_EXCEPTION",
+      "reason": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    }
+  ],
+  "focus": {
+    "迷你吧": {
+      "surface": "迷你吧",
+      "termId": "term-e8bfb7e4bda0e590",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 9129,
+      "reasonCode": "SENTENCE_FRAGMENT",
+      "segments": [],
+      "classification": "FIXED_PRODUCT",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "行业固定产品 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_product",
+      "exceptionReasonRecommendation": "「迷你吧」是酒店客房固定产品/设施名（minibar），完整表达具有独立行业实体身份，拆分或当作句段删除会丢失设施指称；且 Domain=tourism_hotel 仅挂在完整词上。",
+      "compoundDomains": [
+        "tourism_hotel"
+      ],
+      "segmentDomains": [],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "NO_SEGMENTS_FRAGMENT_OK",
+      "pathClass": "NO_ATOMIC_PATH",
+      "duplicatePathImpact": "NO_RUNTIME_DUPLICATION",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "行业固定产品 + DOMAIN_EVIDENCE_LOST"
+    },
+    "邀请函": {
+      "surface": "邀请函",
+      "termId": "term-e98280e8afb7e587",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 9265,
+      "reasonCode": "SENTENCE_FRAGMENT",
+      "segments": [],
+      "classification": "FIXED_EXPRESSION",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "规范三字名词误判为句段",
+      "termTypeRecommendation": "fixed_expression",
+      "exceptionReasonRecommendation": "「邀请函」是规范独立名词（请柬/邀请文书类型），完整形式具有稳定指称，不是 SENTENCE_FRAGMENT；应补例外元数据而非删除。",
+      "compoundDomains": [],
+      "segmentDomains": [],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "NO_SEGMENTS_FRAGMENT_OK",
+      "pathClass": "NO_ATOMIC_PATH",
+      "duplicatePathImpact": "NO_RUNTIME_DUPLICATION",
+      "validatorIssue": "VALIDATOR_RULE_ERROR",
+      "fpKind": "VALIDATOR_RULE_ERROR",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "规范三字名词误判为句段"
+    },
+    "是否": {
+      "surface": "是否",
+      "termId": "term-e698afe590a67c73",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 5397,
+      "reasonCode": "SENTENCE_FRAGMENT",
+      "segments": [],
+      "classification": "FIXED_EXPRESSION",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "VALIDATOR_FALSE_POSITIVE",
+      "changed": true,
+      "changeReason": "三字/功能词被误判 SENTENCE_FRAGMENT",
+      "termTypeRecommendation": "fixed_expression",
+      "exceptionReasonRecommendation": "「是否」是汉语规范功能词/选择疑问成分，具有独立语法指称，不是口语句段碎片；SENTENCE_FRAGMENT 属于通用规则误伤。",
+      "compoundDomains": [],
+      "segmentDomains": [],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "NO_SEGMENTS_FRAGMENT_OK",
+      "pathClass": "NO_ATOMIC_PATH",
+      "duplicatePathImpact": "NO_RUNTIME_DUPLICATION",
+      "validatorIssue": "VALIDATOR_RULE_ERROR",
+      "fpKind": "VALIDATOR_RULE_ERROR",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "三字/功能词被误判 SENTENCE_FRAGMENT"
+    },
+    "单元测试": {
+      "surface": "单元测试",
+      "termId": "term-e58d95e58583e6b5",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 43,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "单元",
+        "测试"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "单元测试 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "单元:",
+        "测试:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "回归测试": {
+      "surface": "回归测试",
+      "termId": "term-e59b9ee5bd92e6b5",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 45,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "回归",
+        "测试"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "回归测试 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "回归:",
+        "测试:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "集成测试": {
+      "surface": "集成测试",
+      "termId": "term-e99b86e68890e6b5",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 44,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "集成",
+        "测试"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "集成测试 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "集成:",
+        "测试:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "神经网络": {
+      "surface": "神经网络",
+      "termId": "term-e7a59ee7bb8fe7bd",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 7300,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "神经",
+        "网络"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "神经网络 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "神经:",
+        "网络:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "迁移学习": {
+      "surface": "迁移学习",
+      "termId": "term-e8bf81e7a7bbe5ad",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 8998,
+      "reasonCode": "ACTION_OBJECT_PHRASE",
+      "segments": [
+        "迁移",
+        "学习"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语不可按普通组合删除",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "迁移学习 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "迁移:",
+        "学习:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语不可按普通组合删除"
+    },
+    "特征工程": {
+      "surface": "特征工程",
+      "termId": "term-e789b9e5be81e5b7",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 6713,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "特征",
+        "工程"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "特征工程 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "特征:",
+        "工程:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "流量镜像": {
+      "surface": "流量镜像",
+      "termId": "term-e6b581e9878fe995",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 6292,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "流量",
+        "镜像"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语不可按普通组合删除",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "流量镜像 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "流量:",
+        "镜像:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语不可按普通组合删除"
+    },
+    "配置文件": {
+      "surface": "配置文件",
+      "termId": "term-e9858de7bdaee696",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 51,
+      "reasonCode": "ACTION_OBJECT_PHRASE",
+      "segments": [
+        "配置",
+        "文件"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语 + DOMAIN_EVIDENCE_LOST",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "配置文件 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "配置:",
+        "文件:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_LOST",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [],
+      "notes": "固定技术术语 + DOMAIN_EVIDENCE_LOST"
+    },
+    "熔断策略": {
+      "surface": "熔断策略",
+      "termId": "term-e78694e696ade7ad",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 6637,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "熔断",
+        "策略"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语不可按普通组合删除",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "熔断策略 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "熔断:",
+        "策略:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_INCOMPLETE",
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "duplicatePathImpact": "SEMANTICALLY_DISTINCT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [
+        "策略"
+      ],
+      "notes": "固定技术术语不可按普通组合删除"
+    },
+    "降级策略": {
+      "surface": "降级策略",
+      "termId": "term-e9998de7baa7e7ad",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 9567,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "降级",
+        "策略"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语不可按普通组合删除",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "降级策略 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "降级:",
+        "策略:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_INCOMPLETE",
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "duplicatePathImpact": "SEMANTICALLY_DISTINCT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [
+        "策略"
+      ],
+      "notes": "固定技术术语不可按普通组合删除"
+    },
+    "正则策略": {
+      "surface": "正则策略",
+      "termId": "term-e6ada3e58899e7ad",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 5928,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "正则",
+        "策略"
+      ],
+      "classification": "FIXED_TECHNICAL_TERM",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "KEEP_AS_EXCEPTION",
+      "changed": true,
+      "changeReason": "固定技术术语不可按普通组合删除",
+      "termTypeRecommendation": "fixed_technical_term",
+      "exceptionReasonRecommendation": "正则策略 是软件工程/AI/基础设施语境中的固定技术术语或标准类型名，完整形式具有独立专业指称；拆成原子词后不能等价替代该标准概念。",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "正则:",
+        "策略:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_INCOMPLETE",
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "duplicatePathImpact": "SEMANTICALLY_DISTINCT_FULL_TERM_PATH",
+      "validatorIssue": "SOURCE_METADATA_MISSING",
+      "fpKind": "SOURCE_METADATA_MISSING",
+      "sourceAction": "ADD_EXCEPTION_METADATA",
+      "highRisk": true,
+      "segExactFails": [
+        "策略"
+      ],
+      "notes": "固定技术术语不可按普通组合删除"
+    },
+    "休息时间": {
+      "surface": "休息时间",
+      "termId": "term-e4bc91e681afe697",
+      "sourceFile": "lexicon_full_corrected_review.csv",
+      "sourceRow": 787,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "休息",
+        "时间"
+      ],
+      "classification": "NOUN_NOUN_BUSINESS_PHRASE",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "REQUIRES_ATOM_RECALL_FIX",
+      "changed": true,
+      "changeReason": "依赖 segment ExactRecall=false（休息）；根因=TONE_DATA_ERROR；修复前不可删",
+      "termTypeRecommendation": "",
+      "exceptionReasonRecommendation": "",
+      "compoundDomains": [],
+      "segmentDomains": [
+        "休息:",
+        "时间:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_INCOMPLETE",
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "duplicatePathImpact": "SEMANTICALLY_DISTINCT_FULL_TERM_PATH",
+      "validatorIssue": "",
+      "fpKind": "",
+      "sourceAction": "KEEP_UNCHANGED",
+      "highRisk": true,
+      "segExactFails": [
+        "休息"
+      ],
+      "notes": "依赖 segment ExactRecall=false（休息）；根因=TONE_DATA_ERROR；修复前不可删"
+    },
+    "上线计划": {
+      "surface": "上线计划",
+      "termId": "term-e4b88ae7babfe8ae",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 41,
+      "reasonCode": "ACTION_OBJECT_PHRASE",
+      "segments": [
+        "上线",
+        "计划"
+      ],
+      "classification": "ACTION_OBJECT_PHRASE",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "DELETE_CONFIRMED",
+      "changed": false,
+      "changeReason": "",
+      "termTypeRecommendation": "",
+      "exceptionReasonRecommendation": "",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "上线:tech_ai",
+        "计划:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "",
+      "fpKind": "",
+      "sourceAction": "DELETE_SOURCE_ROW",
+      "highRisk": false,
+      "segExactFails": [],
+      "notes": "普通业务组合；FULL_ATOMIC_PATH_CONFIRMED"
+    },
+    "接口文档": {
+      "surface": "接口文档",
+      "termId": "term-e68ea5e58fa3e696",
+      "sourceFile": "supplemental_terms.csv",
+      "sourceRow": 40,
+      "reasonCode": "NOUN_NOUN_BUSINESS_PHRASE",
+      "segments": [
+        "接口",
+        "文档"
+      ],
+      "classification": "NOUN_NOUN_BUSINESS_PHRASE",
+      "originalRecommendation": "DELETE_CONFIRMED",
+      "revalidatedRecommendation": "DELETE_CONFIRMED",
+      "changed": false,
+      "changeReason": "",
+      "termTypeRecommendation": "",
+      "exceptionReasonRecommendation": "",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": [
+        "接口:tech_ai",
+        "文档:"
+      ],
+      "domainImpact": "DOMAIN_EVIDENCE_PRESERVED",
+      "latticeCoverageWithoutCompound": "SEGMENTS_CAN_COVER",
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "duplicatePathImpact": "REDUNDANT_FULL_TERM_PATH",
+      "validatorIssue": "",
+      "fpKind": "",
+      "sourceAction": "DELETE_SOURCE_ROW",
+      "highRisk": false,
+      "segExactFails": [],
+      "notes": "普通业务组合；FULL_ATOMIC_PATH_CONFIRMED"
+    }
+  },
+  "exactAnomalies": [
+    {
+      "word": "休息",
+      "category": "TONE_DATA_ERROR",
+      "detail": "tone0 in xiu1|xi0; retry still fail top=[]",
+      "termId": "term-e4bc91e681af7c78",
+      "pinyin_key": "xiu|xi",
+      "tone_pinyin_key": "xiu1|xi0",
+      "basePresent": true,
+      "directFound": false,
+      "directTop": []
+    },
+    {
+      "word": "策略",
+      "category": "PINYIN_DATA_ERROR",
+      "detail": "pinyin_key=ce|le vs tone_pinyin_key=ce4|lüe4",
+      "termId": "term-e7ad96e795a57c63",
+      "pinyin_key": "ce|le",
+      "tone_pinyin_key": "ce4|lüe4",
+      "basePresent": true,
+      "directFound": false,
+      "directTop": []
+    }
+  ],
+  "lists": {
+    "DELETE_CONFIRMED": [
+      "可以吗",
+      "上线计划",
+      "专题会议",
+      "主持会议",
+      "会议通知",
+      "入住时间",
+      "前台信息",
+      "向量状态",
+      "咖啡时间",
+      "审计日志",
+      "延误订单",
+      "当前版本",
+      "快速测试",
+      "快速通道",
+      "接口文档",
+      "接送时间",
+      "提示工程",
+      "文档版本",
+      "日志恢复",
+      "日志系统",
+      "日志记录",
+      "早餐时间",
+      "景区出口",
+      "机场信息",
+      "机场时间",
+      "查看日志",
+      "检查内容",
+      "检查日志",
+      "检查是否有",
+      "正常状态",
+      "环岛时间",
+      "登机时间",
+      "租车提醒",
+      "缆车提醒",
+      "翻译日志",
+      "航班提醒",
+      "航班时间",
+      "航班订单",
+      "节点指标",
+      "节点注册",
+      "节点配置",
+      "行李订单",
+      "行程订单",
+      "训练监控",
+      "转盘出口",
+      "退房时间",
+      "部署脚本",
+      "配置推理",
+      "集合时间",
+      "领域日志"
+    ],
+    "KEEP_AS_EXCEPTION": [
+      "专家系统",
+      "单元测试",
+      "回归测试",
+      "安检通道",
+      "循环网络",
+      "正则策略",
+      "注册中心",
+      "流量镜像",
+      "测试数据",
+      "熔断策略",
+      "特征工程",
+      "神经网络",
+      "联系电话",
+      "视频会议",
+      "训练数据",
+      "迁移学习",
+      "迷你吧",
+      "邀请函",
+      "配置中心",
+      "配置文件",
+      "降级策略",
+      "集成测试"
+    ],
+    "VALIDATOR_FALSE_POSITIVE": [
+      "是否"
+    ],
+    "INSUFFICIENT_EVIDENCE": [],
+    "REQUIRES_ATOM_RECALL_FIX": [
+      "休息时间"
+    ]
+  },
+  "bundle": {
+    "termCount": 10061,
+    "candHash": "2c0088e3983826aa83018f38f2f8ec56cd0ec5bb31a4e824e6a1d2c44a6dca3f",
+    "prodHash": "2c0088e3983826aa83018f38f2f8ec56cd0ec5bb31a4e824e6a1d2c44a6dca3f",
+    "unchanged": true
+  },
+  "cfSample": {
+    "休息时间": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "休息时间"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [
+        {
+          "surface": "休息",
+          "found": false,
+          "top": [],
+          "hitCount": 0,
+          "pinyin_key": "xiu|xi",
+          "tone_pinyin_key": "xiu1|xi0"
+        },
+        {
+          "surface": "时间",
+          "found": true,
+          "top": [
+            {
+              "word": "时间",
+              "id": "base-rebuild-term-e697b6e997b47c73",
+              "score": 2.35
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "shi|jian",
+          "tone_pinyin_key": "shi2|jian1"
+        }
+      ],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    },
+    "熔断策略": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "熔断策略"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [
+        {
+          "surface": "熔断",
+          "found": true,
+          "top": [
+            {
+              "word": "熔断",
+              "id": "base-rebuild-term-e78694e696ad7c72",
+              "score": 2.36
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "rong|duan",
+          "tone_pinyin_key": "rong2|duan4"
+        },
+        {
+          "surface": "策略",
+          "found": false,
+          "top": [],
+          "hitCount": 0,
+          "pinyin_key": "ce|le",
+          "tone_pinyin_key": "ce4|lüe4"
+        }
+      ],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "INCOMPLETE_ATOMIC_PATH",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    },
+    "单元测试": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "单元测试"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [
+        {
+          "surface": "单元",
+          "found": true,
+          "top": [
+            {
+              "word": "单元",
+              "id": "base-rebuild-term-e58d95e585837c64",
+              "score": 2.35
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "dan|yuan",
+          "tone_pinyin_key": "dan1|yuan2"
+        },
+        {
+          "surface": "测试",
+          "found": true,
+          "top": [
+            {
+              "word": "测试",
+              "id": "base-rebuild-term-e6b58be8af957c63",
+              "score": 2.35
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "ce|shi",
+          "tone_pinyin_key": "ce4|shi4"
+        }
+      ],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    },
+    "迷你吧": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "迷你吧"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "NO_ATOMIC_PATH",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    },
+    "上线计划": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "上线计划"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [
+        {
+          "surface": "上线",
+          "found": true,
+          "top": [
+            {
+              "word": "上线",
+              "id": "exp-v1_1-alias-shangxian",
+              "score": 2.42
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "shang|xian",
+          "tone_pinyin_key": "shang4|xian4"
+        },
+        {
+          "surface": "计划",
+          "found": true,
+          "top": [
+            {
+              "word": "计划",
+              "id": "base-rebuild-exp-v1_1-alias-jihua",
+              "score": 2.42
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "ji|hua",
+          "tone_pinyin_key": "ji4|hua4"
+        }
+      ],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    },
+    "神经网络": {
+      "withCompound": {
+        "coverageStatus": "complete",
+        "edgeCount": 0,
+        "edgeWords": [],
+        "pathCount": 0,
+        "uncovered": null,
+        "retainedDomains": [],
+        "sentenceSample": [
+          "神经网络"
+        ],
+        "kenlmInputCount": 1
+      },
+      "segmentExact": [
+        {
+          "surface": "神经",
+          "found": true,
+          "top": [
+            {
+              "word": "神经",
+              "id": "base-rebuild-term-e7a59ee7bb8f7c73",
+              "score": 2.35
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "shen|jing",
+          "tone_pinyin_key": "shen2|jing1"
+        },
+        {
+          "surface": "网络",
+          "found": true,
+          "top": [
+            {
+              "word": "网络",
+              "id": "base-rebuild-term-e7bd91e7bb9c7c77",
+              "score": 2.35
+            }
+          ],
+          "hitCount": 1,
+          "pinyin_key": "wang|luo",
+          "tone_pinyin_key": "wang3|luo4"
+        }
+      ],
+      "edgeHasCompound": false,
+      "edgeHasAllSegs": false,
+      "pathClass": "FULL_ATOMIC_PATH_CONFIRMED",
+      "note": "without-compound uses probe-level segment Exact + edge observation; no SQLite mutation"
+    }
+  }
+}

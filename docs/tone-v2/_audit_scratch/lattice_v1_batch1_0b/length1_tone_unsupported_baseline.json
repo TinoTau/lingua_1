@@ -1,0 +1,10 @@
+{
+  "supportsToneFirstRecallBeforeOverride": true,
+  "override": false,
+  "acousticTonePatternPresent": true,
+  "finalCandidateCount": 0,
+  "toneLookupStage": null,
+  "currentBehavior": "tone-unsupported path would use plain lookup, but termLength<2 gate yields empty before plain SQL",
+  "expectedBatch11Behavior": "After gate fix: document plain fallback vs empty policy for unsupported tone",
+  "knownDefect": "P1_PLUS_TERM_LENGTH_GATE"
+}

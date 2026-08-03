@@ -1,0 +1,102 @@
+{
+  "caseId": "E04",
+  "rawText": "大杯拿铁已经下单",
+  "retainedDomains": [
+    "coffee",
+    "food_order"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "大杯"
+        ],
+        [
+          "拿铁"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "下单"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "大杯拿铁已经下单"
+      ]
+    },
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "大杯"
+        ],
+        [
+          "拿铁"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "下单"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "大杯拿铁已经下单"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "大杯拿铁已经下单"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "大杯拿铁已经下单"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 30.271899938583374,
+  "groups": [
+    "E"
+  ],
+  "why": "overlap + cafe",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

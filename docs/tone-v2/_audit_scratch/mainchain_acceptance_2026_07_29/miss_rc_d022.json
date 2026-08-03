@@ -1,0 +1,51 @@
+{
+  "id": "d022",
+  "raw": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+  "asrToneSliceCount": 14,
+  "diagToneSliceCount": 24,
+  "wordTimeSpanBuilt": 25,
+  "wordTimeSpanMapped": 25,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        3,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.720000000000001,
+        "end": 5
+      },
+      "replayWindowTime": {
+        "start": 1.62,
+        "end": 1.9
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 27,
+    "theoreticalWindows2to5": 98,
+    "theoreticalWindows1to5": 125
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

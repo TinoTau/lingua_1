@@ -21,6 +21,37 @@ Do **not** rely on chat history or dirty uncommitted worktrees.
 
 ---
 
+## Documentation Hierarchy（恢复后阅读顺序）
+
+恢复 Framework 之后，**优先**阅读 CURRENT，不要从历史报告重新设计。
+
+```text
+1. Framework Snapshot（本包）
+   ↓
+2. CURRENT SSOT — docs/current/INDEX.md
+   · docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md
+   · Lattice Architecture / Runtime SSOT / Atomicity / Tone Mapping
+   ↓
+3. Supporting — docs/supporting/INDEX.md
+   （只解释 CURRENT，不重新定义）
+   ↓
+4. Acceptance — docs/acceptance/
+   （Development / Test / Freeze / Regression — 仅验证证据）
+   ↓
+5. Archive — docs/archive/
+   （RETIRED / SUPERSEDED / EXPERIMENT / HISTORICAL — 仅追溯）
+```
+
+| 层级 | 用途 |
+|------|------|
+| CURRENT | 设计与运行权威 |
+| Acceptance | 验证是否达标 |
+| Archive | 追溯为何如此；禁止当作 CURRENT |
+
+入口：[`../../current/INDEX.md`](../../current/INDEX.md) · [`../../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md)
+
+---
+
 ## Steps
 
 1. **Locate freeze point**

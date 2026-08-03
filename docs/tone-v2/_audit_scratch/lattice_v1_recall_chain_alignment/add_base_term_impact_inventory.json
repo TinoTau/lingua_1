@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-07-27",
+  "recommendedOp": "addBaseTerm",
+  "alsoMinimumOpsForBatch2": [
+    "updateBaseTermFields (prior_score, source, tone_pinyin_key, repair_target)",
+    "enableBaseTerm",
+    "disableBaseTerm"
+  ],
+  "defer": [
+    "deleteBaseTerm hard delete (disable sufficient for v1)",
+    "replaceBaseTerm",
+    "base aliases"
+  ],
+  "impactFiles": [
+    {
+      "file": "main/src/lexicon-patch-v4/patch-types-v4.ts",
+      "change": "Add PatchOpV4 'addBaseTerm' | 'updateBaseTermFields' | 'enableBaseTerm' | 'disableBaseTerm'; extend PatchOperationV4"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/patch-validator-v4.ts",
+      "change": "validate addBaseTerm: forbid domain_tags; require pinyin/pinyin_key; word CJK len===1 OR allow 2-3 base words; prior>0"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/patch-hash-v4.ts",
+      "change": "include new ops in hash serialization"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/append-semantics-v4.ts",
+      "change": "ensure no V3-style implicit domain replace; allow base ops"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/sqlite-applier-v4.ts",
+      "change": "INSERT base_lexicon; UPDATE/enable/disable by (pinyin_key,word) PK; collision checks; NO rematerializeTerm"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/term-ref-v4.ts",
+      "change": "optional resolveBaseRef by word+pinyin_key"
+    },
+    {
+      "file": "main/src/lexicon-patch-v4/patch-service-v4.ts",
+      "change": "wire apply; history; thresholds may include base_lexicon"
+    },
+    {
+      "file": "main/src/lexicon-patch-v3/manifest-writer.ts",
+      "change": "KEEP — already recounts base_lexicon after patch"
+    },
+    {
+      "file": "scripts/lexicon/lib/run-lexicon-patch-import-v4.mjs",
+      "change": "dry-run / report must accept new ops (likely automatic)"
+    },
+    {
+      "file": "scripts/lexicon/run-patch-v4-e2e*.mjs / patch-fixtures-v4",
+      "change": "NEW tests for addBaseTerm"
+    }
+  ],
+  "sampleOp": {
+    "op": "addBaseTerm",
+    "word": "我",
+    "pinyin": "wo",
+    "tone_pinyin_key": "wo3",
+    "prior_score": 0.9,
+    "source": "connectivity_base_char_v1",
+    "enabled": true,
+    "repair_target": false
+  },
+  "uniqueKey": "base_lexicon PRIMARY KEY (pinyin_key, word)",
+  "transaction": "existing applyLexiconPatchToSqliteV4 db.transaction",
+  "note": "V3 table:base already writes base_lexicon; Lattice era still standardizes on V4 addBaseTerm — do not revive V3 as primary path"
+}

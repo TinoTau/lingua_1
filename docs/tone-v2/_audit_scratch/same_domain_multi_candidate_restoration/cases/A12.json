@@ -1,0 +1,64 @@
+{
+  "caseId": "A12",
+  "rawText": "议员出席会议",
+  "retainedDomains": [
+    "meeting"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "议员"
+        ],
+        [
+          "出"
+        ],
+        [
+          "席"
+        ],
+        [
+          "会议"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "议员出席会议"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "议员出席会议"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "议员出席会议"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 20.375999927520752,
+  "groups": [
+    "A"
+  ],
+  "why": "yi|yuan alternate surface",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-07-28",
+  "batch": "1.1A",
+  "stage": 4,
+  "build": "npm run build:main",
+  "patterns": [
+    {
+      "pattern": "batch1-1a-stage4-generalization.audit.test",
+      "matches": [],
+      "status": "CLEAN",
+      "note": "*.test.ts / *.audit.test.ts excluded from tsconfig.main"
+    },
+    {
+      "pattern": "stage4_boundary_matrix.json",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "length1-real-sqlite.test.helpers",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "lattice_v1_batch1_1a",
+      "matches": [],
+      "status": "CLEAN"
+    }
+  ],
+  "AUDIT_TEST_IN_DIST": false,
+  "overall": "CLEAN"
+}

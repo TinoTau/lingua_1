@@ -1,0 +1,220 @@
+{
+  "id": "d005",
+  "expected": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+  "asr": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+  "raw_asr": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 29,
+    "evidenceProductionCount": 29,
+    "firstSlicePosterior": {
+      "t1": 0.9557504057884216,
+      "t2": 0.007039271295070648,
+      "t3": 0.0006950456881895661,
+      "t4": 0.0364181213080883,
+      "t5": 0.00009715087071526796
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 29,
+    "wordTimeSpanCount": 29,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 29
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 1,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "风险",
+        "pinyinKey": "feng|xian",
+        "windowTimeRange": {
+          "start": 6.42,
+          "end": 6.86
+        },
+        "acousticTonePattern": [
+          1,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 19,
+    "candidateCount": 19,
+    "candidateSentenceCount": 19,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 19,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "今天德湛会现过一下定,但中台 进度内存占用高这块需要先留保护 大家看一下风险",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 19
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 19
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 3,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+    "allCombinations": [
+      {
+        "sentence": "今天德湛会现过一下定,但中台 进度内存占用高这块需要先留保护 大家看一下风险",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "今天",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "今天",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "德湛",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "德湛",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "会现",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "会现",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "过",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "过",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "一下",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "一下",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "定,但",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "定,但",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "中台",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "中台",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "进",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "进",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

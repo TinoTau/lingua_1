@@ -1,0 +1,142 @@
+[
+  {
+    "compound": "上线计划",
+    "withCompoundExact": true,
+    "withCompoundHits": [
+      {
+        "word": "上线计划",
+        "id": "term-e4b88ae7babfe8ae",
+        "domains": [
+          "tech_ai"
+        ],
+        "score": 2.4
+      }
+    ],
+    "atoms": [
+      {
+        "word": "上线",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "上线",
+            "id": "exp-v1_1-alias-shangxian",
+            "domains": [
+              "tech_ai"
+            ],
+            "score": 2.42
+          }
+        ],
+        "foundSelf": true
+      },
+      {
+        "word": "计划",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "计划",
+            "id": "base-rebuild-exp-v1_1-alias-jihua",
+            "domains": [],
+            "score": 2.42
+          }
+        ],
+        "foundSelf": true
+      }
+    ],
+    "withoutCompoundAtomicCoverage": true,
+    "latticeCoverageClaim": "atomic edges can cover syllable ranges [0,2)+[2,4) if windows emit both; Raw/canonical remain fallback; no need for compound term"
+  },
+  {
+    "compound": "接口文档",
+    "withCompoundExact": true,
+    "withCompoundHits": [
+      {
+        "word": "接口文档",
+        "id": "term-e68ea5e58fa3e696",
+        "domains": [
+          "tech_ai"
+        ],
+        "score": 2.4
+      }
+    ],
+    "atoms": [
+      {
+        "word": "接口",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "接口",
+            "id": "exp-v1_1-alias-jiekou",
+            "domains": [
+              "tech_ai"
+            ],
+            "score": 2.42
+          }
+        ],
+        "foundSelf": true
+      },
+      {
+        "word": "文档",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "文档",
+            "id": "base-rebuild-exp-v1_1-alias-wendang",
+            "domains": [],
+            "score": 2.42
+          }
+        ],
+        "foundSelf": true
+      }
+    ],
+    "withoutCompoundAtomicCoverage": true,
+    "latticeCoverageClaim": "atomic edges can cover syllable ranges [0,2)+[2,4) if windows emit both; Raw/canonical remain fallback; no need for compound term"
+  },
+  {
+    "compound": "内科医生",
+    "withCompoundExact": true,
+    "withCompoundHits": [
+      {
+        "word": "内科医生",
+        "id": "term-e58685e7a791e58c",
+        "domains": [
+          "medical"
+        ],
+        "score": 2.36
+      }
+    ],
+    "atoms": [
+      {
+        "word": "内科",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "内科",
+            "id": "term-e58685e7a7917c6e",
+            "domains": [
+              "medical"
+            ],
+            "score": 2.36
+          }
+        ],
+        "foundSelf": true
+      },
+      {
+        "word": "医生",
+        "hitCount": 1,
+        "hits": [
+          {
+            "word": "医生",
+            "id": "term-e58cbbe7949f7c79",
+            "domains": [
+              "medical"
+            ],
+            "score": 2.35
+          }
+        ],
+        "foundSelf": true
+      }
+    ],
+    "withoutCompoundAtomicCoverage": true,
+    "latticeCoverageClaim": "atomic edges can cover syllable ranges [0,2)+[2,4) if windows emit both; Raw/canonical remain fallback; no need for compound term"
+  }
+]

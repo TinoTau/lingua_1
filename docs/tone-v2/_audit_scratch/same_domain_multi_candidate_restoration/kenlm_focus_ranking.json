@@ -1,0 +1,118 @@
+[
+  {
+    "caseId": "A01",
+    "prefilledCount": 3,
+    "inputTexts": [
+      "请确认低脂",
+      "请确认地址",
+      "请确认地质"
+    ],
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "请确认地址",
+        "score": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true
+      },
+      {
+        "rank": 2,
+        "text": "请确认低脂",
+        "score": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false
+      },
+      {
+        "rank": 3,
+        "text": "请确认地址",
+        "score": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false
+      }
+    ],
+    "top1": "请确认地址",
+    "totalMs": 5032,
+    "kenlmQueryCount": 4,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessErrorReason": "timeout",
+    "pickedIsRaw": true
+  },
+  {
+    "caseId": "B01",
+    "prefilledCount": 4,
+    "inputTexts": [
+      "请确认低脂和医院",
+      "请确认地址和医院",
+      "请确认地址和议员",
+      "请确认地质和医院"
+    ],
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "请确认地址和医院",
+        "score": -21.422215,
+        "deltaVsRaw": 0,
+        "isRaw": true
+      },
+      {
+        "rank": 2,
+        "text": "请确认地址和医院",
+        "score": -21.422215,
+        "deltaVsRaw": 0,
+        "isRaw": false
+      },
+      {
+        "rank": 3,
+        "text": "请确认地质和医院",
+        "score": -22.145193,
+        "deltaVsRaw": -0.7229779999999977,
+        "isRaw": false
+      }
+    ],
+    "top1": "请确认地址和医院",
+    "totalMs": 4269,
+    "kenlmQueryCount": 5,
+    "kenlmSubprocessMs": 4265,
+    "kenlmSubprocessErrorReason": null,
+    "pickedIsRaw": true
+  },
+  {
+    "caseId": "C01",
+    "prefilledCount": 4,
+    "inputTexts": [
+      "请确认地址、医院和医师",
+      "请确认地址、议员和议室",
+      "请确认地址、议员和医师",
+      "请确认地址、医院和议室"
+    ],
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "请确认地址、医院和医师",
+        "score": -28.117214,
+        "deltaVsRaw": 0,
+        "isRaw": true
+      },
+      {
+        "rank": 2,
+        "text": "请确认地址、医院和医师",
+        "score": -28.117214,
+        "deltaVsRaw": 0,
+        "isRaw": false
+      },
+      {
+        "rank": 3,
+        "text": "请确认地址、议员和医师",
+        "score": -30.548111,
+        "deltaVsRaw": -2.430896999999998,
+        "isRaw": false
+      }
+    ],
+    "top1": "请确认地址、医院和医师",
+    "totalMs": 683,
+    "kenlmQueryCount": 5,
+    "kenlmSubprocessMs": 681,
+    "kenlmSubprocessErrorReason": null,
+    "pickedIsRaw": true
+  }
+]

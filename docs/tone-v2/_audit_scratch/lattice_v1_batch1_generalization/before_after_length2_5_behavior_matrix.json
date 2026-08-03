@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-07-28",
+  "method": "static_diff + suite pass; no stored Batch0 golden snapshot for content bytes",
+  "length1BranchIsolation": {
+    "earlyReturnOnlyWhen": "syllables.length === 1",
+    "length2to5Path": "unchanged collectTierCandidatesToneFirst + fuzzy + merge",
+    "sharedHelpersMutated": false
+  },
+  "cases": [
+    {
+      "case": "exact_base_2plus",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "recall-span-topk-v2.test.ts still passes against operational lexicon when available"
+    },
+    {
+      "case": "exact_domain",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "domain-presence / recall tests; domainIds still passed for len>=2 at call-site"
+    },
+    {
+      "case": "tone_exact_2plus",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "tone-first path not entered for length!=1 early branch"
+    },
+    {
+      "case": "fuzzy",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "fuzzy still gated by fuzzyRecallEnabled && length>=2 in V2; length1 forces off at call-site"
+    },
+    {
+      "case": "parent_fragment",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "V3 lookupParentFragments still syllables.length<2 return empty; call-site parentFragmentTopK=0 for len1 only"
+    },
+    {
+      "case": "TopK_2plus",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "V4_LIMITS.exactTopK=2 unchanged for len!=1"
+    },
+    {
+      "case": "repairTarget_2plus",
+      "status": "SUITE_PASS_ONLY",
+      "evidence": "length1 forces false only inside length1 scorer; 2–5 uses hotword.repairTarget"
+    }
+  ],
+  "beforeAfterContentByteCompare": "NOT_AVAILABLE",
+  "verdict": "PARTIAL — regressions green but not content-locked golden diffs"
+}

@@ -1,0 +1,487 @@
+{
+  "caseId": "B04",
+  "rawText": "客户地址和医院都要",
+  "windowCount": 35,
+  "surfaceDistinctRecallCount": 2,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "2:4",
+      "syllableStart": 2,
+      "syllableEnd": 4,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    },
+    {
+      "windowId": "5:7",
+      "syllableStart": 5,
+      "syllableEnd": 7,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 4,
+  "pathCount": 1,
+  "retainedDomainCount": 4,
+  "bucketCount": 4,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 4,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 4,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "客户地址和医院都要"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "客"
+        ],
+        [
+          "户"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "客户地址和医院都要",
+      "sourcePathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "客",
+          "sourceText": "客"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "户",
+          "sourceText": "户"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "要",
+          "sourceText": "要"
+        }
+      ],
+      "dedupKey": "客户地址和医院都要",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "客户地址和医院都要",
+      "sourcePathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "sourceDomain": "medical",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "客",
+          "sourceText": "客"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "户",
+          "sourceText": "户"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "要",
+          "sourceText": "要"
+        }
+      ],
+      "dedupKey": "客户地址和医院都要",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "客户地址和医院都要",
+      "sourcePathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "sourceDomain": "meeting",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "客",
+          "sourceText": "客"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "户",
+          "sourceText": "户"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "要",
+          "sourceText": "要"
+        }
+      ],
+      "dedupKey": "客户地址和医院都要",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "客户地址和医院都要",
+      "sourcePathId": "7bdcaafe086458f2bd60e0d49103df1a964d7fc5cc0721408c9a6026d3943b51",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 3,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "客",
+          "sourceText": "客"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "户",
+          "sourceText": "户"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "要",
+          "sourceText": "要"
+        }
+      ],
+      "dedupKey": "客户地址和医院都要",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 35,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 35,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 5,
+    "edgeCountAfterFallback": 7,
+    "fallbackInjectionCount": 5,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 2
+      },
+      {
+        "start": 4,
+        "end": 5
+      },
+      {
+        "start": 7,
+        "end": 9
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 35,
+    "sqlQueryCount": 15,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "B"
+  ],
+  "why": "dual",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 23.484600067138672,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

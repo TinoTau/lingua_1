@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-07-27",
+  "recommendedValueForConnectivityBaseSingleChar": false,
+  "writers": [
+    "lexicon-runtime-v2 mapTierRows repair_target→repairTarget",
+    "recall-topk-for-windows WindowCandidate.repairTarget",
+    "patch V3/V4 insert/update fields",
+    "assemble-domain-aware-span-sets forces base_term picks repairTarget=false"
+  ],
+  "readersAffectingEligibility": [
+    {
+      "file": "fw-detector/map-sentence-to-approved.ts",
+      "effect": "skips replacements when requireRepairTarget && !repairTarget"
+    },
+    {
+      "file": "fw-detector/build-sentence-candidates.ts",
+      "effect": "canonical vs repair slot partitioning by repairTarget"
+    },
+    {
+      "file": "fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts",
+      "effect": "filters/uses repairTarget on hits"
+    },
+    {
+      "file": "legacy/fw-detector/*",
+      "effect": "legacy scoring boost — not Lattice main chain"
+    }
+  ],
+  "doesNotAffect": [
+    "buildLexicalEdges edge creation",
+    "enumerateCompleteSegmentationPaths fallbackEdgeCount",
+    "Domain Vote (uses source/domains, not repairTarget)"
+  ],
+  "diagnostics": "v4-diagnostics-mappers missing_repair_target",
+  "conclusion": "Connectivity single chars are path glue, not ASR repair replacements → repair_target MUST be false; do not invent new logic depending on this field"
+}

@@ -1,0 +1,51 @@
+{
+  "id": "d168",
+  "raw": "房间空调不太知冷能派人上来看一下吗?",
+  "asrToneSliceCount": 15,
+  "diagToneSliceCount": 15,
+  "wordTimeSpanBuilt": 15,
+  "wordTimeSpanMapped": 15,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 2.52,
+        "end": 2.9
+      },
+      "replayWindowTime": {
+        "start": 2.52,
+        "end": 2.9
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 17,
+    "theoreticalWindows2to5": 58,
+    "theoreticalWindows1to5": 75
+  },
+  "summary": {
+    "spanCount": 10,
+    "candidateCount": 10
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

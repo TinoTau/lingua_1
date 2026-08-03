@@ -1,0 +1,830 @@
+{
+  "caseId": "d149",
+  "fileNum": "149",
+  "rawText": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+  "scenario": "shopping",
+  "retainedDomains": [
+    "medical"
+  ],
+  "domainScores": {
+    "medical": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721",
+      "domainId": "medical",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "请",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "请"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "问",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "这",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "双",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "双"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "鞋",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "鞋"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "有",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "四",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "十",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "十"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "码",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "码"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "吗",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "不",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "合",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "合"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "适",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "适"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "三",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "三"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "天",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "内可以",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:15",
+          "sameDomain": [
+            "内科医"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "内科医",
+            "内可以"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "退",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "退"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "换",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "换"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "吧",
+          "fineSpanId": "fine:273cfbaf61f2e19636f9a795cf32d7cfe4b6575d1affcccfa8a8ee4e6eb56721:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吧"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "请"
+        ],
+        [
+          "问"
+        ],
+        [
+          "这"
+        ],
+        [
+          "双"
+        ],
+        [
+          "鞋"
+        ],
+        [
+          "有"
+        ],
+        [
+          "四"
+        ],
+        [
+          "十"
+        ],
+        [
+          "码"
+        ],
+        [
+          "吗"
+        ],
+        [
+          "不"
+        ],
+        [
+          "合"
+        ],
+        [
+          "适"
+        ],
+        [
+          "三"
+        ],
+        [
+          "天"
+        ],
+        [
+          "内科医",
+          "内可以"
+        ],
+        [
+          "退"
+        ],
+        [
+          "换"
+        ],
+        [
+          "吧"
+        ]
+      ],
+      "assemblyTexts": [
+        "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+        "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+    "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+    "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+      "replacements": [
+        {
+          "span": {
+            "text": "内可以",
+            "start": 16,
+            "end": 19
+          },
+          "word": "内科医",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "请",
+            "start": 0,
+            "end": 1
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 1,
+            "end": 2
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 2,
+            "end": 3
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "双",
+            "start": 3,
+            "end": 4
+          },
+          "word": "双",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "鞋",
+            "start": 4,
+            "end": 5
+          },
+          "word": "鞋",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 5,
+            "end": 6
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "四",
+            "start": 6,
+            "end": 7
+          },
+          "word": "四",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "十",
+            "start": 7,
+            "end": 8
+          },
+          "word": "十",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "码",
+            "start": 8,
+            "end": 9
+          },
+          "word": "码",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 11,
+            "end": 12
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "合",
+            "start": 12,
+            "end": 13
+          },
+          "word": "合",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "适",
+            "start": 13,
+            "end": 14
+          },
+          "word": "适",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "三",
+            "start": 14,
+            "end": 15
+          },
+          "word": "三",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 15,
+            "end": 16
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "退",
+            "start": 19,
+            "end": 20
+          },
+          "word": "退",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "换",
+            "start": 20,
+            "end": 21
+          },
+          "word": "换",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吧",
+            "start": 21,
+            "end": 22
+          },
+          "word": "吧",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    },
+    {
+      "text": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "replacements": [
+        {
+          "span": {
+            "text": "请",
+            "start": 0,
+            "end": 1
+          },
+          "word": "请",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 1,
+            "end": 2
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 2,
+            "end": 3
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "双",
+            "start": 3,
+            "end": 4
+          },
+          "word": "双",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "鞋",
+            "start": 4,
+            "end": 5
+          },
+          "word": "鞋",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 5,
+            "end": 6
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "四",
+            "start": 6,
+            "end": 7
+          },
+          "word": "四",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "十",
+            "start": 7,
+            "end": 8
+          },
+          "word": "十",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "码",
+            "start": 8,
+            "end": 9
+          },
+          "word": "码",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 9,
+            "end": 10
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 11,
+            "end": 12
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "合",
+            "start": 12,
+            "end": 13
+          },
+          "word": "合",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "适",
+            "start": 13,
+            "end": 14
+          },
+          "word": "适",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "三",
+            "start": 14,
+            "end": 15
+          },
+          "word": "三",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 15,
+            "end": 16
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "内可以",
+            "start": 16,
+            "end": 19
+          },
+          "word": "内可以",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "退",
+            "start": 19,
+            "end": 20
+          },
+          "word": "退",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "换",
+            "start": 20,
+            "end": 21
+          },
+          "word": "换",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吧",
+            "start": 21,
+            "end": 22
+          },
+          "word": "吧",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 0
+    }
+  ],
+  "kenlmInputTexts": [
+    "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+    "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+      "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "请问这双鞋有四十码吗？不合适三天内科医退换吧？"
+    ],
+    "actual": [
+      "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+      "请问这双鞋有四十码吗？不合适三天内可以退换吧？"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

@@ -1,0 +1,686 @@
+{
+  "utterances": 200,
+  "completePathRate": 0,
+  "completePathCount": 0,
+  "totalPositions": 4494,
+  "positionsWithNoWindow": 0,
+  "positionsWithOnlyBlockedWindows": 410,
+  "positionsWithRecallableWindows": 4084,
+  "positionsWithLexiconHit": 1460,
+  "positionsWithOutgoingLexicalEdge": 1460,
+  "positionsReachableFromStart": 413,
+  "breakpointDist": {
+    "RECALL_ZERO_HIT": 191,
+    "ALL_WINDOWS_BLOCKED": 9
+  },
+  "blockedReasonDist": {
+    "punctuation_in_window": 1099,
+    "raw_gap_between_spans": 1981,
+    "sentence_boundary": 1945
+  },
+  "edgeLenDist": {
+    "1": 0,
+    "2": 1445,
+    "3": 126,
+    "4": 39,
+    "5": 0
+  },
+  "edgeLenDeadEnd": {
+    "1": 0,
+    "2": 208,
+    "3": 5,
+    "4": 0,
+    "5": 0
+  },
+  "edgeLenOrphan": {
+    "1": 0,
+    "2": 1237,
+    "3": 121,
+    "4": 39,
+    "5": 0
+  },
+  "singleSyllableWindowCount": 4494,
+  "singleSyllableRecallHitCount": 0,
+  "singleSyllableLexicalEdgeCount": 0,
+  "baseEdgeCount": 1222,
+  "domainEdgeCount": 476,
+  "multiDomainEdgeCount": 129,
+  "candidateProducedButNoEdgeCount": 0,
+  "duplicateBoundaryInputCount": 0,
+  "mergedBoundaryCount": 1610,
+  "unknownOriginal": 98,
+  "unknownRemaining": 0,
+  "unknownReclassDist": {
+    "ORPHAN_LEXICAL_EDGE": 94,
+    "DEAD_END_LEXICAL_BRANCH": 4
+  },
+  "fallbackInjectionSum": 2042,
+  "firstBreakpointSentences": {
+    "RECALL_ZERO_HIT": [
+      "d001",
+      "d002",
+      "d003",
+      "d004",
+      "d005",
+      "d006",
+      "d007",
+      "d008",
+      "d009",
+      "d010",
+      "d011",
+      "d012"
+    ],
+    "ALL_WINDOWS_BLOCKED": [
+      "d017",
+      "d039",
+      "d062",
+      "d084",
+      "d107",
+      "d129",
+      "d152",
+      "d174",
+      "d197"
+    ]
+  },
+  "multiPathUtterances": 28,
+  "highFallbackCases": [
+    {
+      "caseId": "d004",
+      "fb": 15,
+      "N": 33,
+      "edges": 11
+    },
+    {
+      "caseId": "d005",
+      "fb": 17,
+      "N": 35,
+      "edges": 9
+    },
+    {
+      "caseId": "d008",
+      "fb": 19,
+      "N": 27,
+      "edges": 5
+    },
+    {
+      "caseId": "d010",
+      "fb": 16,
+      "N": 20,
+      "edges": 2
+    },
+    {
+      "caseId": "d016",
+      "fb": 15,
+      "N": 23,
+      "edges": 5
+    },
+    {
+      "caseId": "d018",
+      "fb": 15,
+      "N": 19,
+      "edges": 3
+    },
+    {
+      "caseId": "d028",
+      "fb": 16,
+      "N": 24,
+      "edges": 4
+    },
+    {
+      "caseId": "d038",
+      "fb": 15,
+      "N": 21,
+      "edges": 3
+    },
+    {
+      "caseId": "d049",
+      "fb": 15,
+      "N": 33,
+      "edges": 11
+    },
+    {
+      "caseId": "d050",
+      "fb": 17,
+      "N": 35,
+      "edges": 9
+    },
+    {
+      "caseId": "d053",
+      "fb": 20,
+      "N": 30,
+      "edges": 7
+    },
+    {
+      "caseId": "d055",
+      "fb": 17,
+      "N": 21,
+      "edges": 2
+    },
+    {
+      "caseId": "d061",
+      "fb": 15,
+      "N": 23,
+      "edges": 5
+    },
+    {
+      "caseId": "d063",
+      "fb": 15,
+      "N": 19,
+      "edges": 3
+    },
+    {
+      "caseId": "d073",
+      "fb": 16,
+      "N": 24,
+      "edges": 4
+    },
+    {
+      "caseId": "d083",
+      "fb": 15,
+      "N": 21,
+      "edges": 3
+    },
+    {
+      "caseId": "d094",
+      "fb": 15,
+      "N": 33,
+      "edges": 11
+    },
+    {
+      "caseId": "d095",
+      "fb": 17,
+      "N": 35,
+      "edges": 9
+    },
+    {
+      "caseId": "d098",
+      "fb": 19,
+      "N": 27,
+      "edges": 5
+    },
+    {
+      "caseId": "d100",
+      "fb": 16,
+      "N": 20,
+      "edges": 2
+    },
+    {
+      "caseId": "d106",
+      "fb": 15,
+      "N": 23,
+      "edges": 5
+    },
+    {
+      "caseId": "d108",
+      "fb": 15,
+      "N": 19,
+      "edges": 3
+    },
+    {
+      "caseId": "d118",
+      "fb": 16,
+      "N": 24,
+      "edges": 4
+    },
+    {
+      "caseId": "d128",
+      "fb": 15,
+      "N": 21,
+      "edges": 3
+    },
+    {
+      "caseId": "d139",
+      "fb": 15,
+      "N": 33,
+      "edges": 11
+    },
+    {
+      "caseId": "d140",
+      "fb": 17,
+      "N": 35,
+      "edges": 9
+    },
+    {
+      "caseId": "d143",
+      "fb": 20,
+      "N": 30,
+      "edges": 7
+    },
+    {
+      "caseId": "d145",
+      "fb": 17,
+      "N": 21,
+      "edges": 2
+    },
+    {
+      "caseId": "d151",
+      "fb": 15,
+      "N": 23,
+      "edges": 5
+    },
+    {
+      "caseId": "d153",
+      "fb": 15,
+      "N": 19,
+      "edges": 3
+    }
+  ],
+  "representative": {
+    "noHit": [
+      "d001",
+      "d001",
+      "d001",
+      "d001",
+      "d001",
+      "d002",
+      "d002",
+      "d002",
+      "d002",
+      "d002"
+    ],
+    "hardBlock": [
+      "d017",
+      "d039",
+      "d062",
+      "d084",
+      "d107",
+      "d129",
+      "d152",
+      "d174",
+      "d197"
+    ],
+    "deadEnd": [],
+    "multiPath": [
+      "d019",
+      "d020",
+      "d021",
+      "d043",
+      "d044",
+      "d045",
+      "d046",
+      "d064",
+      "d065",
+      "d066"
+    ],
+    "highFb": [
+      "d004",
+      "d005",
+      "d008",
+      "d010",
+      "d016",
+      "d018",
+      "d028",
+      "d038",
+      "d049",
+      "d050"
+    ]
+  },
+  "positionLexiconHitRate": 0.32487761459724074,
+  "positionLexicalEdgeRate": 0.32487761459724074,
+  "reachablePositionRate": 0.09190031152647975,
+  "avgFallbackPerSentence": 10.21,
+  "topMissingSurfaces": [
+    {
+      "surface": "我",
+      "count": 32,
+      "sentenceCount": 30,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "wo",
+      "expectedInBase": true
+    },
+    {
+      "surface": "能",
+      "count": 32,
+      "sentenceCount": 32,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "neng",
+      "expectedInBase": true
+    },
+    {
+      "surface": "请",
+      "count": 25,
+      "sentenceCount": 25,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "qing",
+      "expectedInBase": true
+    },
+    {
+      "surface": "的",
+      "count": 25,
+      "sentenceCount": 23,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "de",
+      "expectedInBase": true
+    },
+    {
+      "surface": "点",
+      "count": 22,
+      "sentenceCount": 22,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "dian",
+      "expectedInBase": true
+    },
+    {
+      "surface": "这",
+      "count": 22,
+      "sentenceCount": 22,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "zhe",
+      "expectedInBase": true
+    },
+    {
+      "surface": "要",
+      "count": 20,
+      "sentenceCount": 20,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "yao",
+      "expectedInBase": true
+    },
+    {
+      "surface": "问",
+      "count": 13,
+      "sentenceCount": 13,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "wen",
+      "expectedInBase": true
+    },
+    {
+      "surface": "开",
+      "count": 13,
+      "sentenceCount": 11,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "kai",
+      "expectedInBase": true
+    },
+    {
+      "surface": "想",
+      "count": 10,
+      "sentenceCount": 10,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "xiang",
+      "expectedInBase": true
+    },
+    {
+      "surface": "中",
+      "count": 10,
+      "sentenceCount": 10,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "zhong",
+      "expectedInBase": true
+    },
+    {
+      "surface": "需",
+      "count": 10,
+      "sentenceCount": 10,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "xu",
+      "expectedInBase": true
+    },
+    {
+      "surface": "有",
+      "count": 10,
+      "sentenceCount": 10,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "you",
+      "expectedInBase": true
+    },
+    {
+      "surface": "不",
+      "count": 10,
+      "sentenceCount": 7,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "bu",
+      "expectedInBase": true
+    },
+    {
+      "surface": "你",
+      "count": 10,
+      "sentenceCount": 8,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "ni",
+      "expectedInBase": true
+    },
+    {
+      "surface": "三",
+      "count": 9,
+      "sentenceCount": 9,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "san",
+      "expectedInBase": true
+    },
+    {
+      "surface": "先",
+      "count": 9,
+      "sentenceCount": 9,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "xian",
+      "expectedInBase": true
+    },
+    {
+      "surface": "到",
+      "count": 9,
+      "sentenceCount": 9,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "dao",
+      "expectedInBase": true
+    },
+    {
+      "surface": "多",
+      "count": 9,
+      "sentenceCount": 9,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "duo",
+      "expectedInBase": true
+    },
+    {
+      "surface": "两",
+      "count": 9,
+      "sentenceCount": 9,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "liang",
+      "expectedInBase": true
+    },
+    {
+      "surface": "烦",
+      "count": 8,
+      "sentenceCount": 8,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "fan",
+      "expectedInBase": true
+    },
+    {
+      "surface": "去",
+      "count": 8,
+      "sentenceCount": 8,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "qu",
+      "expectedInBase": true
+    },
+    {
+      "surface": "您",
+      "count": 8,
+      "sentenceCount": 8,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "nin",
+      "expectedInBase": true
+    },
+    {
+      "surface": "周",
+      "count": 8,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "zhou",
+      "expectedInBase": true
+    },
+    {
+      "surface": "帮",
+      "count": 7,
+      "sentenceCount": 7,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "bang",
+      "expectedInBase": true
+    },
+    {
+      "surface": "了",
+      "count": 7,
+      "sentenceCount": 7,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "le",
+      "expectedInBase": true
+    },
+    {
+      "surface": "天",
+      "count": 7,
+      "sentenceCount": 7,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "tian",
+      "expectedInBase": true
+    },
+    {
+      "surface": "麻",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "ma",
+      "expectedInBase": true
+    },
+    {
+      "surface": "做",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "zuo",
+      "expectedInBase": true
+    },
+    {
+      "surface": "前",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "qian",
+      "expectedInBase": true
+    },
+    {
+      "surface": "会",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "hui",
+      "expectedInBase": true
+    },
+    {
+      "surface": "跟",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "gen",
+      "expectedInBase": true
+    },
+    {
+      "surface": "个",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "ge",
+      "expectedInBase": true
+    },
+    {
+      "surface": "穿",
+      "count": 6,
+      "sentenceCount": 3,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "chuan",
+      "expectedInBase": true
+    },
+    {
+      "surface": "菜",
+      "count": 6,
+      "sentenceCount": 4,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "cai",
+      "expectedInBase": true
+    },
+    {
+      "surface": "和",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "he",
+      "expectedInBase": true
+    },
+    {
+      "surface": "一",
+      "count": 6,
+      "sentenceCount": 6,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "yi",
+      "expectedInBase": true
+    },
+    {
+      "surface": "就",
+      "count": 5,
+      "sentenceCount": 5,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "jiu",
+      "expectedInBase": true
+    },
+    {
+      "surface": "谢",
+      "count": 5,
+      "sentenceCount": 5,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "xie",
+      "expectedInBase": true
+    },
+    {
+      "surface": "款",
+      "count": 5,
+      "sentenceCount": 5,
+      "inTerm": 0,
+      "inBase": 0,
+      "samplePinyin": "kuan",
+      "expectedInBase": true
+    }
+  ],
+  "unknownFullyReclassified": 98,
+  "unknownUnresolved": 0
+}

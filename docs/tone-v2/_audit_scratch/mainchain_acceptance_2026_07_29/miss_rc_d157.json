@@ -1,0 +1,79 @@
+{
+  "id": "d157",
+  "raw": "您好我定,但顯示 但物流三天沒更新能幫我查一下嗎?",
+  "asrToneSliceCount": 7,
+  "diagToneSliceCount": 21,
+  "wordTimeSpanBuilt": 21,
+  "wordTimeSpanMapped": 21,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 1,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "查一",
+      "pinyinKey": "cha|yi",
+      "result": "HIT",
+      "fail": null
+    },
+    {
+      "text": "查一下",
+      "pinyinKey": "cha|yi|xia",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "查",
+        "wordTime": [
+          3.08,
+          3.3
+        ],
+        "sliceCount": 7,
+        "nearestSlices": [
+          {
+            "start": 1.54,
+            "end": 1.58,
+            "dist": 1.54
+          },
+          {
+            "start": 1.28,
+            "end": 1.54,
+            "dist": 1.7599999999999998
+          },
+          {
+            "start": 1.14,
+            "end": 1.28,
+            "dist": 1.9400000000000002
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.68,
+        "end": 5.2
+      },
+      "replayWindowTime": {
+        "start": 3.08,
+        "end": 3.6
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 22,
+    "theoreticalWindows2to5": 78,
+    "theoreticalWindows1to5": 100
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

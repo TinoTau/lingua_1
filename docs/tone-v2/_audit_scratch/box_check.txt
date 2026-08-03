@@ -1,0 +1,21 @@
+batch1-1a-stage4-generalization.audit.test.ts box=0 fffd=0
+  104: windowText cps=U+5E9A line=windowText: '庚',
+  146: windowText cps=U+536F line=windowText: '卯',
+  183: windowText cps=U+4EA5 line=windowText: '亥',
+  217: windowText cps=U+0041 line=windowText: 'A',
+  242: windowText cps=U+4E5D line=windowText: '九',
+  275: windowText cps=U+61C2 line=windowText: '懂',
+  308: windowText cps=U+6CD3 line=windowText: '泓',
+  339: windowText cps=U+8934 line=windowText: '褴',
+  373: windowText cps=U+749C line=windowText: '璜',
+  403: windowText cps=U+0051 line=windowText: 'Q',
+  427: windowText cps=U+8822 line=windowText: '蠢',
+  457: windowText cps=U+4E0B line=windowText: '下',
+  494: windowText cps=U+4F2A line=windowText: '伪',
+  558: windowText cps=U+5355 line=windowText: '单',
+  615: windowText cps=U+60F0 line=windowText: '惰',
+  666: windowText cps=U+7396 line=windowText: '玖',
+batch1-1b-stage4-generalization.audit.test.ts box=8 fffd=0
+  305:        { id: 'legalA_absent', surface: '▢', expect: '主' }, // non-truncated unique → A (1.1A)
+  498:      windows.push({ key, surface: '▢' }); // absent — exact miss
+  513:        { surface: '▢' },

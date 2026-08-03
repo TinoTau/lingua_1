@@ -1,0 +1,300 @@
+{
+  "caseId": "B09",
+  "rawText": "医院和医师都已到位",
+  "windowCount": 35,
+  "surfaceDistinctRecallCount": 2,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "0:2",
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    },
+    {
+      "windowId": "3:5",
+      "syllableStart": 3,
+      "syllableEnd": 5,
+      "text": "医师",
+      "surfaces": [
+        "医师",
+        "议室"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 4,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "医院和医师都已到位"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "b8dfb4966235e8cc6faed21a9da578e6d2cc1e7d63093662f53c44ca29f87a1b",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医院"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "都"
+        ],
+        [
+          "已"
+        ],
+        [
+          "到"
+        ],
+        [
+          "位"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "b8dfb4966235e8cc6faed21a9da578e6d2cc1e7d63093662f53c44ca29f87a1b",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医院"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "都"
+        ],
+        [
+          "已"
+        ],
+        [
+          "到"
+        ],
+        [
+          "位"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "医院和医师都已到位",
+      "sourcePathId": "b8dfb4966235e8cc6faed21a9da578e6d2cc1e7d63093662f53c44ca29f87a1b",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "word": "已",
+          "sourceText": "已"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "到",
+          "sourceText": "到"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "位",
+          "sourceText": "位"
+        }
+      ],
+      "dedupKey": "医院和医师都已到位",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "医院和医师都已到位",
+      "sourcePathId": "b8dfb4966235e8cc6faed21a9da578e6d2cc1e7d63093662f53c44ca29f87a1b",
+      "sourceDomain": "meeting",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "word": "已",
+          "sourceText": "已"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "到",
+          "sourceText": "到"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "位",
+          "sourceText": "位"
+        }
+      ],
+      "dedupKey": "医院和医师都已到位",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 35,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 35,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 5,
+    "edgeCountAfterFallback": 7,
+    "fallbackInjectionCount": 5,
+    "fallbackInjectionRanges": [
+      {
+        "start": 2,
+        "end": 3
+      },
+      {
+        "start": 5,
+        "end": 9
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 35,
+    "sqlQueryCount": 22,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "B",
+    "D"
+  ],
+  "why": "dual",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 30.50569987297058,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

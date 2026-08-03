@@ -1,0 +1,196 @@
+{
+  "caseId": "B08",
+  "rawText": "医师确认了地址",
+  "retainedDomains": [
+    "coffee",
+    "medical",
+    "meeting",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "了"
+        ],
+        [
+          "低脂",
+          "地址"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "医师确认了低脂",
+        "医师确认了地址"
+      ]
+    },
+    {
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "了"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "医师确认了地址"
+      ]
+    },
+    {
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "议室",
+          "医师"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "了"
+        ],
+        [
+          "地址"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "议室确认了地址",
+        "医师确认了地址"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "了"
+        ],
+        [
+          "地质",
+          "地址"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "医师确认了地质",
+        "医师确认了地址"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 4,
+  "assemblyTexts": [
+    "医师确认了低脂",
+    "医师确认了地址",
+    "议室确认了地址",
+    "医师确认了地质"
+  ],
+  "crossPathDistinctCount": 4,
+  "prefilledCount": 4,
+  "prefilledDistinct": 4,
+  "prefilledTexts": [
+    "医师确认了低脂",
+    "医师确认了地址",
+    "议室确认了地址",
+    "医师确认了地质"
+  ],
+  "kenlmInputCount": 4,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 25.81280016899109,
+  "groups": [
+    "B"
+  ],
+  "why": "dual",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 4,
+    "inputTexts": [
+      "医师确认了低脂",
+      "医师确认了地址",
+      "议室确认了地址",
+      "医师确认了地质"
+    ]
+  }
+}

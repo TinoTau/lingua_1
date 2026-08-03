@@ -1,0 +1,820 @@
+{
+  "cases": 200,
+  "totals": {
+    "totalCandidates": 1143,
+    "candidateIdsAtPool": 1143,
+    "candidateIdsAfterBucket": 940,
+    "candidateIdsAfterBudget": 6616,
+    "candidateIdsAtDomainAwarePick": 6616,
+    "candidateIdsAtSpanReplacement": 0,
+    "candidateIdsAtSentenceReplacement": 0,
+    "candidateIdsAtCrossPath": 0,
+    "candidateIdsAtKenlmInput": 0,
+    "candidateIdsAtJobResult": 0,
+    "lostAtMapper": 6616,
+    "lostAfterMapper": 0,
+    "nullAtSentence": 11694,
+    "nullAtJobResult": 200,
+    "matchKeyCollisions": 251,
+    "sameRangeSurfaceDifferentId": 251,
+    "sameIdDifferentRange": 0,
+    "sameIdDifferentSurface": 0,
+    "repairReplacementsWithId": 0,
+    "repairReplacementsWithoutId": 1071,
+    "canonicalReplacementsWithId": 0,
+    "gapReplacementsWithoutId": 10623
+  },
+  "anomalies": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 0,
+    "C4": 0,
+    "C5": 6616,
+    "C6": 1071,
+    "C7": 0,
+    "C8": 7102,
+    "C9": 0,
+    "C10": 0,
+    "C11": 0,
+    "C12": 0,
+    "C13": 251,
+    "C14": 0,
+    "C15": 0,
+    "C16": 0,
+    "C17": 10623,
+    "C18": 0
+  },
+  "anomalySamples": [
+    {
+      "type": "C13",
+      "caseId": "d001",
+      "matchKey": "26:28:蓝莓",
+      "ids": [
+        "22:24:8",
+        "22:24:9"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d001",
+      "matchKey": "28:30:马芬",
+      "ids": [
+        "24:26:14",
+        "24:26:15"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d002",
+      "matchKey": "7:9:美式",
+      "ids": [
+        "7:9:1",
+        "7:9:2",
+        "7:9:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d002",
+      "matchKey": "12:14:大杯",
+      "ids": [
+        "11:13:5",
+        "11:13:6",
+        "11:13:7"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d003",
+      "matchKey": "4:6:燕麦",
+      "ids": [
+        "4:6:1",
+        "4:6:2",
+        "4:6:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d003",
+      "matchKey": "6:8:拿铁",
+      "ids": [
+        "6:8:4",
+        "6:8:5",
+        "6:8:6"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d003",
+      "matchKey": "8:10:科医",
+      "ids": [
+        "8:10:7",
+        "8:10:8",
+        "8:10:9"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d003",
+      "matchKey": "10:12:少冰",
+      "ids": [
+        "10:12:10",
+        "10:12:11"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d003",
+      "matchKey": "16:18:时间",
+      "ids": [
+        "15:17:12",
+        "15:17:13",
+        "15:17:14"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d004",
+      "matchKey": "11:13:接口",
+      "ids": [
+        "10:12:3",
+        "10:12:4",
+        "10:12:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d004",
+      "matchKey": "22:24:缓存",
+      "ids": [
+        "20:22:6",
+        "20:22:7",
+        "20:22:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d005",
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d006",
+      "matchKey": "1:3:会员",
+      "ids": [
+        "1:3:1",
+        "1:3:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d007",
+      "matchKey": "12:14:机场",
+      "ids": [
+        "10:12:2",
+        "10:12:3",
+        "10:12:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d007",
+      "matchKey": "14:16:高速",
+      "ids": [
+        "12:14:5",
+        "12:14:6"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d007",
+      "matchKey": "19:21:酒店",
+      "ids": [
+        "16:18:7",
+        "16:18:8",
+        "16:18:9"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d009",
+      "matchKey": "12:14:科医",
+      "ids": [
+        "7:9:1",
+        "7:9:2",
+        "7:9:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d010",
+      "matchKey": "0:2:医生",
+      "ids": [
+        "0:2:1",
+        "0:2:2",
+        "0:2:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d011",
+      "matchKey": "5:7:内科",
+      "ids": [
+        "5:7:6",
+        "5:7:7",
+        "5:7:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d011",
+      "matchKey": "14:16:部署",
+      "ids": [
+        "13:15:9",
+        "13:15:10"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d012",
+      "matchKey": "2:4:检查",
+      "ids": [
+        "2:4:1",
+        "2:4:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d012",
+      "matchKey": "14:16:过敏",
+      "ids": [
+        "13:15:3",
+        "13:15:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d015",
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d015",
+      "matchKey": "14:16:价格",
+      "ids": [
+        "14:16:4",
+        "14:16:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d015",
+      "matchKey": "17:19:会员",
+      "ids": [
+        "16:18:6",
+        "16:18:7"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d019",
+      "matchKey": "9:11:候选",
+      "ids": [
+        "9:11:1",
+        "9:11:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d019",
+      "matchKey": "16:18:候选",
+      "ids": [
+        "16:18:3",
+        "16:18:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d019",
+      "matchKey": "23:25:上线",
+      "ids": [
+        "23:25:6",
+        "23:25:7"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d019",
+      "matchKey": "27:29:安排",
+      "ids": [
+        "27:29:13",
+        "27:29:14",
+        "27:29:15"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d020",
+      "matchKey": "2:4:发布",
+      "ids": [
+        "2:4:1",
+        "2:4:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d020",
+      "matchKey": "9:11:上线",
+      "ids": [
+        "9:11:3",
+        "9:11:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d020",
+      "matchKey": "16:18:候选",
+      "ids": [
+        "15:17:10",
+        "15:17:11"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d021",
+      "matchKey": "4:6:候选",
+      "ids": [
+        "4:6:1",
+        "4:6:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d021",
+      "matchKey": "15:17:上线",
+      "ids": [
+        "14:16:4",
+        "14:16:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d021",
+      "matchKey": "19:21:文档",
+      "ids": [
+        "18:20:11",
+        "18:20:12"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d022",
+      "matchKey": "4:6:订单",
+      "ids": [
+        "3:5:1",
+        "3:5:2",
+        "3:5:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d027",
+      "matchKey": "8:10:科医",
+      "ids": [
+        "8:10:1",
+        "8:10:2",
+        "8:10:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d029",
+      "matchKey": "11:13:科医",
+      "ids": [
+        "10:12:2",
+        "10:12:3",
+        "10:12:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d031",
+      "matchKey": "10:12:安排",
+      "ids": [
+        "9:11:6",
+        "9:11:7",
+        "9:11:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d032",
+      "matchKey": "0:2:早餐",
+      "ids": [
+        "0:2:1",
+        "0:2:2",
+        "0:2:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d032",
+      "matchKey": "7:9:退房",
+      "ids": [
+        "6:8:4",
+        "6:8:5",
+        "6:8:6"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d032",
+      "matchKey": "9:11:科医",
+      "ids": [
+        "8:10:7",
+        "8:10:8",
+        "8:10:9"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d034",
+      "matchKey": "6:8:提醒",
+      "ids": [
+        "6:8:1",
+        "6:8:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d036",
+      "matchKey": "9:11:登机",
+      "ids": [
+        "9:11:1",
+        "9:11:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d039",
+      "matchKey": "0:2:科医",
+      "ids": [
+        "0:2:1",
+        "0:2:2",
+        "0:2:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d039",
+      "matchKey": "2:4:打包",
+      "ids": [
+        "2:4:4",
+        "2:4:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d041",
+      "matchKey": "1:3:医师",
+      "ids": [
+        "1:3:1",
+        "1:3:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d041",
+      "matchKey": "12:14:前台",
+      "ids": [
+        "11:13:4",
+        "11:13:5",
+        "11:13:6"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d043",
+      "matchKey": "6:8:候选",
+      "ids": [
+        "6:8:1",
+        "6:8:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d043",
+      "matchKey": "15:17:候选",
+      "ids": [
+        "14:16:3",
+        "14:16:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d043",
+      "matchKey": "20:22:接口",
+      "ids": [
+        "19:21:5",
+        "19:21:6",
+        "19:21:7"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d043",
+      "matchKey": "22:24:文档",
+      "ids": [
+        "21:23:12",
+        "21:23:13"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d044",
+      "matchKey": "3:5:上线",
+      "ids": [
+        "3:5:1",
+        "3:5:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d044",
+      "matchKey": "12:14:上线",
+      "ids": [
+        "11:13:8",
+        "11:13:9"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d044",
+      "matchKey": "18:20:安排",
+      "ids": [
+        "17:19:15",
+        "17:19:16",
+        "17:19:17"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d045",
+      "matchKey": "2:4:候选",
+      "ids": [
+        "2:4:1",
+        "2:4:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d045",
+      "matchKey": "14:16:上线",
+      "ids": [
+        "13:15:10",
+        "13:15:11"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d045",
+      "matchKey": "7:9:上线",
+      "ids": [
+        "7:9:3",
+        "7:9:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d046",
+      "matchKey": "28:30:芝士",
+      "ids": [
+        "24:26:12",
+        "24:26:13",
+        "24:26:14"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d046",
+      "matchKey": "30:32:蛋糕",
+      "ids": [
+        "26:28:20",
+        "26:28:21",
+        "26:28:22"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d046",
+      "matchKey": "8:10:卡布",
+      "ids": [
+        "7:9:1",
+        "7:9:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d047",
+      "matchKey": "7:9:红茶",
+      "ids": [
+        "7:9:1",
+        "7:9:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d047",
+      "matchKey": "12:14:大杯",
+      "ids": [
+        "11:13:4",
+        "11:13:5",
+        "11:13:6"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d048",
+      "matchKey": "8:10:科医",
+      "ids": [
+        "8:10:1",
+        "8:10:2",
+        "8:10:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d048",
+      "matchKey": "10:12:少冰",
+      "ids": [
+        "10:12:4",
+        "10:12:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d048",
+      "matchKey": "16:18:时间",
+      "ids": [
+        "15:17:6",
+        "15:17:7",
+        "15:17:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d049",
+      "matchKey": "11:13:接口",
+      "ids": [
+        "10:12:3",
+        "10:12:4",
+        "10:12:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d049",
+      "matchKey": "22:24:缓存",
+      "ids": [
+        "20:22:6",
+        "20:22:7",
+        "20:22:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d050",
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d051",
+      "matchKey": "1:3:会员",
+      "ids": [
+        "1:3:1",
+        "1:3:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d052",
+      "matchKey": "18:20:酒店",
+      "ids": [
+        "15:17:1",
+        "15:17:2",
+        "15:17:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d053",
+      "matchKey": "10:12:机员",
+      "ids": [
+        "10:12:2",
+        "10:12:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d054",
+      "matchKey": "10:12:科医",
+      "ids": [
+        "9:11:2",
+        "9:11:3",
+        "9:11:4"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d055",
+      "matchKey": "0:2:医生",
+      "ids": [
+        "0:2:1",
+        "0:2:2",
+        "0:2:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d056",
+      "matchKey": "5:7:内科",
+      "ids": [
+        "5:7:6",
+        "5:7:7",
+        "5:7:8"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d057",
+      "matchKey": "2:4:检查",
+      "ids": [
+        "2:4:1",
+        "2:4:2"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d060",
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d060",
+      "matchKey": "14:16:价格",
+      "ids": [
+        "14:16:4",
+        "14:16:5"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d060",
+      "matchKey": "17:19:会员",
+      "ids": [
+        "16:18:6",
+        "16:18:7"
+      ]
+    },
+    {
+      "type": "C13",
+      "caseId": "d064",
+      "matchKey": "9:11:候选",
+      "ids": [
+        "9:11:1",
+        "9:11:2"
+      ]
+    }
+  ],
+  "casesWithLostAtMapper": 200,
+  "casesWithMatchKeyCollision": 123,
+  "casesWithSameRangeSurfaceDifferentId": 123,
+  "notes": {
+    "generation": "recall-topk-for-windows: `${windowId}:${candidateSeq}` — runtime object id, not DB termId",
+    "uniquenessScope": "per-window recall bind sequence within a path window; not global UUID",
+    "firstLossPoint": "domainAwarePickToSpanReplacementPick (window-candidate-to-pick.ts) — type optional candidateId? exists but mapper omits field",
+    "kenlmIndexMapping": "rerankFwSentences scores by text array index; picked = candidates[bestIndex]; independent of WindowCandidate.candidateId",
+    "jobResult": "extra.fw_detector spreads FwDetectorResult; FwDetectorReplacementDiag has no candidateId; topCandidates.candidateId is candidate:i / raw (synthetic)",
+    "recommendation": "INTERNAL_ONLY (Option A) — passthrough DomainAwarePick→SpanReplacementPick→SentenceReplacement; do not rely on JobResult for provenance"
+  }
+}

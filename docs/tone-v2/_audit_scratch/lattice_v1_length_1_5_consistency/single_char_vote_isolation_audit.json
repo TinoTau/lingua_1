@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-27",
+  "voteModule": "span-assembly-shared/utterance-domain-vote.ts",
+  "rules": {
+    "isDomainVoteSource": ["domain_term", "passive_domain_weak"],
+    "excludedSources": ["base_term"],
+    "excludedDomainLabels": ["general", "base_term"],
+    "emptyDomainsBecome": "resolveGraphSource → base_term → no vote"
+  },
+  "baseSingleCharTarget": {
+    "participateInConnectivity": true,
+    "produceDomainVote": false,
+    "requiredSource": "base_term",
+    "requiredDomains": []
+  },
+  "businessSingleCharWithTags": {
+    "examples": ["杯", "票", "房", "店", "单"],
+    "recommendation": "prefer keep as base for connectivity-first; only add term_domain_tags if Quality Audit proves domain need; never single-domain-only binding",
+    "ifTagged": "multi-row term_domain_tags; vote only if source is domain_term"
+  },
+  "existingTests": [
+    "domain-presence-vote-acceptance.test.ts — base not in domainScores",
+    "fine-span-domain-presence-vote.test.ts — base does not participate",
+    "p5-prior-vote-isolation.test.ts — prior does not change vote"
+  ],
+  "gap": "no explicit test that length=1 base_term edge never votes after recall alignment",
+  "verdict": "Vote isolation already correct IF len=1 candidates are marked base_term with empty domains; do not MODIFY vote formula"
+}

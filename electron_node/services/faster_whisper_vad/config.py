@@ -190,10 +190,15 @@ logger.info(f"ASR Parameters: beam_size={BEAM_SIZE}, temperature={TEMPERATURE}, 
             f"no_speech_threshold={NO_SPEECH_THRESHOLD}")
 
 # ---------------------
-# ToneModule P1 Full Runtime (P10 Direct Replacement)
+# ToneModule — Frozen Production V2 default (Fail Closed; no Tiny fallback)
 # ---------------------
+# Unique production default = Frozen Production V2. TONE_MODEL_PATH is test override only.
 _DEFAULT_TONE_MODEL = os.path.join(
-    os.path.dirname(__file__), "tone_module", "models", "tone_cnn_p1_v1_full.npz"
+    os.path.dirname(__file__),
+    "tone_module",
+    "models",
+    "candidate",
+    "tone_cnn_production_v2_candidate_20260712.npz",
 )
 TONE_MODEL_PATH = os.getenv("TONE_MODEL_PATH", "").strip() or (
     _DEFAULT_TONE_MODEL if os.path.isfile(_DEFAULT_TONE_MODEL) else None

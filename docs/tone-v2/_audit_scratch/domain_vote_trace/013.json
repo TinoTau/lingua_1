@@ -1,0 +1,501 @@
+{
+  "case": {
+    "id": "d013",
+    "fileNum": "013",
+    "scenario": "shopping",
+    "rawText": "这件外套能试穿吗？我穿中码。买两件有没有折扣？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-15|15-16|16-17|17-18|18-19|19-20",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "这",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "件",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "外",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "套",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "能",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "试",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "穿",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:7",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:9",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "穿",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "中",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:11",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "码",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "买",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:13",
+          "rawRange": [
+            15,
+            17
+          ],
+          "rawText": "两件",
+          "syllableRange": [
+            13,
+            15
+          ],
+          "coarseSpanIds": [
+            "c4"
+          ],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:15",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "没",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:16",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:17",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "折",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:18",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "扣",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "13:15:1",
+          "word": "量检",
+          "surface": "量检",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            15,
+            17
+          ],
+          "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:13",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:13",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:15:1",
+                "word": "量检",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tech_ai",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 1
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tech_ai",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:13"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:bf0502a46c3d5c83e4576c1730ccf54b973d21032960d5f734d5d84962bf783f:13",
+              "candidateId": "13:15:1",
+              "word": "量检"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=0.75); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

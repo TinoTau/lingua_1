@@ -1,0 +1,10 @@
+suitesFailed=2 testsFailed=9 passed=245
+length1-recall-edge-path.sqlite.integration.test.ts :: Cache Integration: length=1 key dedupe with real Candidate
+length1-recall-edge-path.sqlite.integration.test.ts :: Edge/Path Integration: length=1 Candidate→Edge→retained Path (点)
+length1-recall-edge-path.sqlite.integration.test.ts :: Edge/Path Integration: length=1 mid-span 丙 with length=2 bridges
+length1-recall-edge-path.sqlite.integration.test.ts :: Vote Integration: base 单字 vote=0; domain 多字 votes
+length1-recall-edge-path.sqlite.integration.test.ts :: Diagnostics: singleChar* counters non-zero on real length=1 windows
+length1-recall-edge-path.sqlite.integration.test.ts :: Hard-block allow + length=1 Recall Candidate (吗)
+phase1-window-edge-harness.live.test.ts :: 1-syllable lexical window can form an edge; empty 1-syllable does not inject fallback
+phase1-window-edge-harness.live.test.ts :: same utterance twice → identical window/edge fingerprints; cache hits on duplicate keys
+phase1-window-edge-harness.live.test.ts :: multi-candidate edge preserves domains[] and termId pass-through when present

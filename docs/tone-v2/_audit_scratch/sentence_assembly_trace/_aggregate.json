@@ -1,0 +1,4394 @@
+{
+  "limits": {
+    "maxSentenceCandidates": 16,
+    "perSpanLimitRule": "<=1→8, ==2→6, else→4",
+    "maxIntervalEnumNodes": 1024,
+    "maxIntervalRepairPicksPerPath": 16
+  },
+  "totals": {
+    "totalCases": 200,
+    "totalPaths": 248,
+    "totalBuckets": 321,
+    "totalCandidatesTracked": 1432,
+    "totalBucketSentences": 550,
+    "totalCrossPathSentences": 337,
+    "totalKenlmInputs": 337,
+    "budgetDropCount": 306,
+    "budgetTriggerSpans": 235,
+    "bucketDropCount": 492,
+    "assemblyEligibleNoSentence": 0
+  },
+  "fateCounts": {
+    "USED_IN_SENTENCE": 792,
+    "DROPPED_BUCKET_MISMATCH": 162,
+    "USED_IN_MULTIPLE_SENTENCES": 478
+  },
+  "multiPath": [
+    {
+      "caseId": "d001",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36",
+          "n": 2
+        },
+        {
+          "pathId": "34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d019",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "e25d32df4a2f13ce5216a81f5af51374a302cd1168c3e874a1547bedd89fd0b8",
+          "n": 8
+        },
+        {
+          "pathId": "982f3f240464b76e9444a459acaf33ee860bc86f3827f03a9ecc863f3bb62ddb",
+          "n": 8
+        }
+      ]
+    },
+    {
+      "caseId": "d020",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "d18e38f8936e3dae9107ea8e2acaf78da3b2472127b9644ea2be67380e9844d7",
+          "n": 2
+        },
+        {
+          "pathId": "d0727a8e1c03785b04ed2877ce853d0488af5bbfebedbe740226ff2cb15c2120",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d021",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "a4c0876153861a0089493877032bd3ee43b5520178506c0cdfc830637f46a8ea",
+          "n": 1
+        },
+        {
+          "pathId": "53fa80de77688323aeb8193f42739986f77dbdf76c39a3718b63b712cb31c9ed",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d043",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "n": 2
+        },
+        {
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d044",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389",
+          "n": 2
+        },
+        {
+          "pathId": "066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f",
+          "n": 2
+        },
+        {
+          "pathId": "57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6",
+          "n": 2
+        },
+        {
+          "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d045",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "n": 4
+        },
+        {
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "n": 4
+        },
+        {
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "n": 4
+        },
+        {
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d046",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1",
+          "n": 2
+        },
+        {
+          "pathId": "704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab",
+          "n": 1
+        },
+        {
+          "pathId": "f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d",
+          "n": 2
+        },
+        {
+          "pathId": "b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d064",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "e25d32df4a2f13ce5216a81f5af51374a302cd1168c3e874a1547bedd89fd0b8",
+          "n": 8
+        },
+        {
+          "pathId": "982f3f240464b76e9444a459acaf33ee860bc86f3827f03a9ecc863f3bb62ddb",
+          "n": 8
+        }
+      ]
+    },
+    {
+      "caseId": "d065",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "d18e38f8936e3dae9107ea8e2acaf78da3b2472127b9644ea2be67380e9844d7",
+          "n": 2
+        },
+        {
+          "pathId": "d0727a8e1c03785b04ed2877ce853d0488af5bbfebedbe740226ff2cb15c2120",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d066",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "a4c0876153861a0089493877032bd3ee43b5520178506c0cdfc830637f46a8ea",
+          "n": 1
+        },
+        {
+          "pathId": "53fa80de77688323aeb8193f42739986f77dbdf76c39a3718b63b712cb31c9ed",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d088",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "n": 2
+        },
+        {
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d089",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389",
+          "n": 2
+        },
+        {
+          "pathId": "066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f",
+          "n": 2
+        },
+        {
+          "pathId": "57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6",
+          "n": 2
+        },
+        {
+          "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d090",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "n": 4
+        },
+        {
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "n": 4
+        },
+        {
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "n": 4
+        },
+        {
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d109",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "e25d32df4a2f13ce5216a81f5af51374a302cd1168c3e874a1547bedd89fd0b8",
+          "n": 8
+        },
+        {
+          "pathId": "982f3f240464b76e9444a459acaf33ee860bc86f3827f03a9ecc863f3bb62ddb",
+          "n": 8
+        }
+      ]
+    },
+    {
+      "caseId": "d110",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "d18e38f8936e3dae9107ea8e2acaf78da3b2472127b9644ea2be67380e9844d7",
+          "n": 2
+        },
+        {
+          "pathId": "d0727a8e1c03785b04ed2877ce853d0488af5bbfebedbe740226ff2cb15c2120",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d111",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "a4c0876153861a0089493877032bd3ee43b5520178506c0cdfc830637f46a8ea",
+          "n": 1
+        },
+        {
+          "pathId": "53fa80de77688323aeb8193f42739986f77dbdf76c39a3718b63b712cb31c9ed",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d133",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "n": 2
+        },
+        {
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d134",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389",
+          "n": 2
+        },
+        {
+          "pathId": "066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f",
+          "n": 2
+        },
+        {
+          "pathId": "57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6",
+          "n": 2
+        },
+        {
+          "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d135",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "n": 4
+        },
+        {
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "n": 4
+        },
+        {
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "n": 4
+        },
+        {
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d154",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "e25d32df4a2f13ce5216a81f5af51374a302cd1168c3e874a1547bedd89fd0b8",
+          "n": 8
+        },
+        {
+          "pathId": "982f3f240464b76e9444a459acaf33ee860bc86f3827f03a9ecc863f3bb62ddb",
+          "n": 8
+        }
+      ]
+    },
+    {
+      "caseId": "d155",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "d18e38f8936e3dae9107ea8e2acaf78da3b2472127b9644ea2be67380e9844d7",
+          "n": 2
+        },
+        {
+          "pathId": "d0727a8e1c03785b04ed2877ce853d0488af5bbfebedbe740226ff2cb15c2120",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d156",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "a4c0876153861a0089493877032bd3ee43b5520178506c0cdfc830637f46a8ea",
+          "n": 1
+        },
+        {
+          "pathId": "53fa80de77688323aeb8193f42739986f77dbdf76c39a3718b63b712cb31c9ed",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d178",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "n": 2
+        },
+        {
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d179",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389",
+          "n": 2
+        },
+        {
+          "pathId": "066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f",
+          "n": 2
+        },
+        {
+          "pathId": "57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6",
+          "n": 2
+        },
+        {
+          "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d180",
+      "pathCount": 4,
+      "sentencesPerPath": [
+        {
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "n": 4
+        },
+        {
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "n": 4
+        },
+        {
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "n": 4
+        },
+        {
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "n": 4
+        }
+      ]
+    },
+    {
+      "caseId": "d181",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36",
+          "n": 2
+        },
+        {
+          "pathId": "34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d182",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "c46ccc49340f7cb86275e5e6630d22b5e936024be72283698eb14d6f44e7284c",
+          "n": 1
+        },
+        {
+          "pathId": "3710d2726d9b83a417e0491e8b96ed9f4eff0bc90b7e7a7b91f4e68d31556789",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d199",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "e25d32df4a2f13ce5216a81f5af51374a302cd1168c3e874a1547bedd89fd0b8",
+          "n": 8
+        },
+        {
+          "pathId": "982f3f240464b76e9444a459acaf33ee860bc86f3827f03a9ecc863f3bb62ddb",
+          "n": 8
+        }
+      ]
+    },
+    {
+      "caseId": "d200",
+      "pathCount": 2,
+      "sentencesPerPath": [
+        {
+          "pathId": "d18e38f8936e3dae9107ea8e2acaf78da3b2472127b9644ea2be67380e9844d7",
+          "n": 2
+        },
+        {
+          "pathId": "d0727a8e1c03785b04ed2877ce853d0488af5bbfebedbe740226ff2cb15c2120",
+          "n": 2
+        }
+      ]
+    }
+  ],
+  "multiBucket": [
+    {
+      "caseId": "d001",
+      "pathId": "dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "coffee",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d001",
+      "pathId": "34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d006",
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "meeting",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d007",
+      "pathId": "ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87",
+      "buckets": [
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_transport",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d012",
+      "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d023",
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 2
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_route",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d024",
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d026",
+      "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d035",
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d036",
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d041",
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d044",
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d046",
+      "pathId": "dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d046",
+      "pathId": "f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d051",
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "meeting",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d053",
+      "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+      "buckets": [
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d054",
+      "pathId": "ab4e09381d1743d1b906dc96cb06dfa63703940f9d50a6e270ce20b4e312fe26",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d057",
+      "pathId": "b6dd9bf159bd6f37accf48512c1d3b164dd9bdb60d1a18d5053e700f027ebaea",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d068",
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 2
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_route",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d069",
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d071",
+      "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d080",
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d081",
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d086",
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d089",
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d096",
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "meeting",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d102",
+      "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d113",
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 2
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_route",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d114",
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d116",
+      "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d125",
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d126",
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d131",
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d134",
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d136",
+      "pathId": "a06b4c93a167bb6f741e0d2b7f2fa3cf1de1c31c7397ed5152e88b59922cac69",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d141",
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "meeting",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d143",
+      "pathId": "d9e028c3cf0bd38c6f8f20b22181fa312da5899e1b990b73516f687aa58fee57",
+      "buckets": [
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d144",
+      "pathId": "517d47c6bc06be41b48765ec4ea593f519ea0fbd8378a2d99469ff2a464751e6",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d147",
+      "pathId": "b6dd9bf159bd6f37accf48512c1d3b164dd9bdb60d1a18d5053e700f027ebaea",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d158",
+      "pathId": "3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 2
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_route",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d159",
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d161",
+      "pathId": "b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d170",
+      "pathId": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d171",
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        },
+        {
+          "domain": "tourism_pickup",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d176",
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "buckets": [
+        {
+          "domain": "medical",
+          "sentences": 2
+        },
+        {
+          "domain": "meeting",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d179",
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "buckets": [
+        {
+          "domain": "tech_ai",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        }
+      ]
+    },
+    {
+      "caseId": "d181",
+      "pathId": "dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "coffee",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d181",
+      "pathId": "34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d183",
+      "pathId": "819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "milk_tea",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d186",
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "buckets": [
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "meeting",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d187",
+      "pathId": "ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87",
+      "buckets": [
+        {
+          "domain": "tourism_hotel",
+          "sentences": 2
+        },
+        {
+          "domain": "tourism_transport",
+          "sentences": 1
+        }
+      ]
+    },
+    {
+      "caseId": "d192",
+      "pathId": "fa8f5c186469a544f504e2b1180e1f88870a9ded26eff5007a876fd7ef34e55d",
+      "buckets": [
+        {
+          "domain": "coffee",
+          "sentences": 1
+        },
+        {
+          "domain": "food_order",
+          "sentences": 1
+        },
+        {
+          "domain": "tech_ai",
+          "sentences": 1
+        }
+      ]
+    }
+  ],
+  "kenlm": {
+    "traced": 337,
+    "untraced": 0,
+    "textMismatch": 0
+  },
+  "anomalies": {
+    "A1": [],
+    "A2": [],
+    "A3": [],
+    "A4": [],
+    "A5": [],
+    "A6": [],
+    "A7": [],
+    "A8": [],
+    "A9": [],
+    "A10": [],
+    "A11": [],
+    "A12": [],
+    "A13": [],
+    "A14": [],
+    "A15": [],
+    "A16": [],
+    "A17": [],
+    "A18": [],
+    "A19": [
+      {
+        "caseId": "d001",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d002",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d003",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d004",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d005",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d006",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d007",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d009",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d010",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d011",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d012",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d013",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d014",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d015",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d019",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d020",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d021",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d022",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d023",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d024",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d025",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d026",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d027",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d029",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d030",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d031",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d032",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d033",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d034",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d035",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d036",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d037",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d039",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d041",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d043",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d044",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d045",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d046",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d047",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d048",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d049",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d050",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d051",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d052",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d053",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d054",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d055",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d056",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d057",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d058",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d059",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d060",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d064",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d065",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d066",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d067",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d068",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d069",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d070",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d071",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d072",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d074",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d075",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d076",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d077",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d078",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d079",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d080",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d081",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d082",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d084",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d086",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d088",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d089",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d090",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d091",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d092",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d093",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d094",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d095",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d096",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d097",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d099",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d100",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d101",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d102",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d103",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d104",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d105",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d109",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d110",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d111",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d112",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d113",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d114",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d115",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d116",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d117",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d119",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d120",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d121",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d122",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d123",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d124",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d125",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d126",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d127",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d129",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d131",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d133",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d134",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d135",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d136",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d137",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d138",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d139",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d140",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d141",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d142",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d143",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d144",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d145",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d146",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d147",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d148",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d149",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d150",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d154",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d155",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d156",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d157",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d158",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d159",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d160",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d161",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d162",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d164",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d165",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d166",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d167",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d168",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d169",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d170",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d171",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d172",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d174",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d176",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d178",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d179",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d180",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d181",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d182",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d183",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d184",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d185",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d186",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d187",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d189",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d190",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d191",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d192",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d193",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d194",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d195",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d199",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      },
+      {
+        "caseId": "d200",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      }
+    ],
+    "A20": []
+  },
+  "cases": [
+    {
+      "caseId": "d001",
+      "fileNum": "001",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d002",
+      "fileNum": "002",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d003",
+      "fileNum": "003",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d004",
+      "fileNum": "004",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 4,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d005",
+      "fileNum": "005",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d006",
+      "fileNum": "006",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d007",
+      "fileNum": "007",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d008",
+      "fileNum": "008",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d009",
+      "fileNum": "009",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d010",
+      "fileNum": "010",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d011",
+      "fileNum": "011",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d012",
+      "fileNum": "012",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d013",
+      "fileNum": "013",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d014",
+      "fileNum": "014",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d015",
+      "fileNum": "015",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d016",
+      "fileNum": "016",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d017",
+      "fileNum": "017",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d018",
+      "fileNum": "018",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d019",
+      "fileNum": "019",
+      "pathCount": 2,
+      "bucketSentences": 16,
+      "kenlmInputs": 8,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d020",
+      "fileNum": "020",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d021",
+      "fileNum": "021",
+      "pathCount": 2,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d022",
+      "fileNum": "022",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d023",
+      "fileNum": "023",
+      "pathCount": 1,
+      "bucketSentences": 6,
+      "kenlmInputs": 3,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d024",
+      "fileNum": "024",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d025",
+      "fileNum": "025",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d026",
+      "fileNum": "026",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d027",
+      "fileNum": "027",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d028",
+      "fileNum": "028",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d029",
+      "fileNum": "029",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 4,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d030",
+      "fileNum": "030",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d031",
+      "fileNum": "031",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d032",
+      "fileNum": "032",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d033",
+      "fileNum": "033",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d034",
+      "fileNum": "034",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d035",
+      "fileNum": "035",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d036",
+      "fileNum": "036",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d037",
+      "fileNum": "037",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d038",
+      "fileNum": "038",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d039",
+      "fileNum": "039",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d040",
+      "fileNum": "040",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d041",
+      "fileNum": "041",
+      "pathCount": 1,
+      "bucketSentences": 5,
+      "kenlmInputs": 3,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d042",
+      "fileNum": "042",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d043",
+      "fileNum": "043",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 7,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d044",
+      "fileNum": "044",
+      "pathCount": 4,
+      "bucketSentences": 10,
+      "kenlmInputs": 3,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d045",
+      "fileNum": "045",
+      "pathCount": 4,
+      "bucketSentences": 16,
+      "kenlmInputs": 4,
+      "budgetDrops": 8,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d046",
+      "fileNum": "046",
+      "pathCount": 4,
+      "bucketSentences": 6,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d047",
+      "fileNum": "047",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d048",
+      "fileNum": "048",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d049",
+      "fileNum": "049",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 4,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d050",
+      "fileNum": "050",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d051",
+      "fileNum": "051",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d052",
+      "fileNum": "052",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d053",
+      "fileNum": "053",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 3,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d054",
+      "fileNum": "054",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 3,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d055",
+      "fileNum": "055",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d056",
+      "fileNum": "056",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d057",
+      "fileNum": "057",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d058",
+      "fileNum": "058",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d059",
+      "fileNum": "059",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d060",
+      "fileNum": "060",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d061",
+      "fileNum": "061",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d062",
+      "fileNum": "062",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d063",
+      "fileNum": "063",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d064",
+      "fileNum": "064",
+      "pathCount": 2,
+      "bucketSentences": 16,
+      "kenlmInputs": 8,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d065",
+      "fileNum": "065",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d066",
+      "fileNum": "066",
+      "pathCount": 2,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d067",
+      "fileNum": "067",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d068",
+      "fileNum": "068",
+      "pathCount": 1,
+      "bucketSentences": 6,
+      "kenlmInputs": 3,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d069",
+      "fileNum": "069",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d070",
+      "fileNum": "070",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d071",
+      "fileNum": "071",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d072",
+      "fileNum": "072",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d073",
+      "fileNum": "073",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d074",
+      "fileNum": "074",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 4,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d075",
+      "fileNum": "075",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d076",
+      "fileNum": "076",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d077",
+      "fileNum": "077",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d078",
+      "fileNum": "078",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d079",
+      "fileNum": "079",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d080",
+      "fileNum": "080",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d081",
+      "fileNum": "081",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d082",
+      "fileNum": "082",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d083",
+      "fileNum": "083",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d084",
+      "fileNum": "084",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d085",
+      "fileNum": "085",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d086",
+      "fileNum": "086",
+      "pathCount": 1,
+      "bucketSentences": 5,
+      "kenlmInputs": 3,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d087",
+      "fileNum": "087",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d088",
+      "fileNum": "088",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 7,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d089",
+      "fileNum": "089",
+      "pathCount": 4,
+      "bucketSentences": 10,
+      "kenlmInputs": 3,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d090",
+      "fileNum": "090",
+      "pathCount": 4,
+      "bucketSentences": 16,
+      "kenlmInputs": 4,
+      "budgetDrops": 8,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d091",
+      "fileNum": "091",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d092",
+      "fileNum": "092",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d093",
+      "fileNum": "093",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d094",
+      "fileNum": "094",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 4,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d095",
+      "fileNum": "095",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d096",
+      "fileNum": "096",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d097",
+      "fileNum": "097",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d098",
+      "fileNum": "098",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d099",
+      "fileNum": "099",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d100",
+      "fileNum": "100",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d101",
+      "fileNum": "101",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d102",
+      "fileNum": "102",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d103",
+      "fileNum": "103",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d104",
+      "fileNum": "104",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d105",
+      "fileNum": "105",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d106",
+      "fileNum": "106",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d107",
+      "fileNum": "107",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d108",
+      "fileNum": "108",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d109",
+      "fileNum": "109",
+      "pathCount": 2,
+      "bucketSentences": 16,
+      "kenlmInputs": 8,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d110",
+      "fileNum": "110",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d111",
+      "fileNum": "111",
+      "pathCount": 2,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d112",
+      "fileNum": "112",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d113",
+      "fileNum": "113",
+      "pathCount": 1,
+      "bucketSentences": 6,
+      "kenlmInputs": 3,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d114",
+      "fileNum": "114",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d115",
+      "fileNum": "115",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d116",
+      "fileNum": "116",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d117",
+      "fileNum": "117",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d118",
+      "fileNum": "118",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d119",
+      "fileNum": "119",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 4,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d120",
+      "fileNum": "120",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d121",
+      "fileNum": "121",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d122",
+      "fileNum": "122",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d123",
+      "fileNum": "123",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d124",
+      "fileNum": "124",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d125",
+      "fileNum": "125",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d126",
+      "fileNum": "126",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d127",
+      "fileNum": "127",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d128",
+      "fileNum": "128",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d129",
+      "fileNum": "129",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d130",
+      "fileNum": "130",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d131",
+      "fileNum": "131",
+      "pathCount": 1,
+      "bucketSentences": 5,
+      "kenlmInputs": 3,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d132",
+      "fileNum": "132",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d133",
+      "fileNum": "133",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 7,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d134",
+      "fileNum": "134",
+      "pathCount": 4,
+      "bucketSentences": 10,
+      "kenlmInputs": 3,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d135",
+      "fileNum": "135",
+      "pathCount": 4,
+      "bucketSentences": 16,
+      "kenlmInputs": 4,
+      "budgetDrops": 8,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d136",
+      "fileNum": "136",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d137",
+      "fileNum": "137",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d138",
+      "fileNum": "138",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d139",
+      "fileNum": "139",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 4,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d140",
+      "fileNum": "140",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d141",
+      "fileNum": "141",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d142",
+      "fileNum": "142",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d143",
+      "fileNum": "143",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 3,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d144",
+      "fileNum": "144",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 3,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d145",
+      "fileNum": "145",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d146",
+      "fileNum": "146",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d147",
+      "fileNum": "147",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d148",
+      "fileNum": "148",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d149",
+      "fileNum": "149",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d150",
+      "fileNum": "150",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d151",
+      "fileNum": "151",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d152",
+      "fileNum": "152",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d153",
+      "fileNum": "153",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d154",
+      "fileNum": "154",
+      "pathCount": 2,
+      "bucketSentences": 16,
+      "kenlmInputs": 8,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d155",
+      "fileNum": "155",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d156",
+      "fileNum": "156",
+      "pathCount": 2,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d157",
+      "fileNum": "157",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d158",
+      "fileNum": "158",
+      "pathCount": 1,
+      "bucketSentences": 6,
+      "kenlmInputs": 3,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d159",
+      "fileNum": "159",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d160",
+      "fileNum": "160",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d161",
+      "fileNum": "161",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d162",
+      "fileNum": "162",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d163",
+      "fileNum": "163",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d164",
+      "fileNum": "164",
+      "pathCount": 1,
+      "bucketSentences": 4,
+      "kenlmInputs": 4,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d165",
+      "fileNum": "165",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d166",
+      "fileNum": "166",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d167",
+      "fileNum": "167",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d168",
+      "fileNum": "168",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d169",
+      "fileNum": "169",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d170",
+      "fileNum": "170",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d171",
+      "fileNum": "171",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d172",
+      "fileNum": "172",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d173",
+      "fileNum": "173",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d174",
+      "fileNum": "174",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d175",
+      "fileNum": "175",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d176",
+      "fileNum": "176",
+      "pathCount": 1,
+      "bucketSentences": 5,
+      "kenlmInputs": 3,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d177",
+      "fileNum": "177",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d178",
+      "fileNum": "178",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 7,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d179",
+      "fileNum": "179",
+      "pathCount": 4,
+      "bucketSentences": 10,
+      "kenlmInputs": 3,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d180",
+      "fileNum": "180",
+      "pathCount": 4,
+      "bucketSentences": 16,
+      "kenlmInputs": 4,
+      "budgetDrops": 8,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d181",
+      "fileNum": "181",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d182",
+      "fileNum": "182",
+      "pathCount": 2,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d183",
+      "fileNum": "183",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d184",
+      "fileNum": "184",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 4,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d185",
+      "fileNum": "185",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d186",
+      "fileNum": "186",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d187",
+      "fileNum": "187",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 2,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d188",
+      "fileNum": "188",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d189",
+      "fileNum": "189",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d190",
+      "fileNum": "190",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d191",
+      "fileNum": "191",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d192",
+      "fileNum": "192",
+      "pathCount": 1,
+      "bucketSentences": 3,
+      "kenlmInputs": 1,
+      "budgetDrops": 1,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d193",
+      "fileNum": "193",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d194",
+      "fileNum": "194",
+      "pathCount": 1,
+      "bucketSentences": 2,
+      "kenlmInputs": 2,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d195",
+      "fileNum": "195",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 2,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d196",
+      "fileNum": "196",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d197",
+      "fileNum": "197",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d198",
+      "fileNum": "198",
+      "pathCount": 1,
+      "bucketSentences": 1,
+      "kenlmInputs": 1,
+      "budgetDrops": 0,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d199",
+      "fileNum": "199",
+      "pathCount": 2,
+      "bucketSentences": 16,
+      "kenlmInputs": 8,
+      "budgetDrops": 5,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    },
+    {
+      "caseId": "d200",
+      "fileNum": "200",
+      "pathCount": 2,
+      "bucketSentences": 4,
+      "kenlmInputs": 2,
+      "budgetDrops": 3,
+      "A1": 0,
+      "A14": 0,
+      "A20": 0
+    }
+  ]
+}

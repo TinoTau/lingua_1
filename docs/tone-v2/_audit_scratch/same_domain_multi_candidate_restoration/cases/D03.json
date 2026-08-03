@@ -1,0 +1,72 @@
+{
+  "caseId": "D03",
+  "rawText": "前台正在确认预订",
+  "retainedDomains": [
+    "tourism_hotel"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "前台"
+        ],
+        [
+          "正"
+        ],
+        [
+          "在"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "前台正在确认预订"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "前台正在确认预订"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "前台正在确认预订"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 29.912400007247925,
+  "groups": [
+    "D"
+  ],
+  "why": "预订 multi-domain",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

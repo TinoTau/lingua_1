@@ -1,0 +1,180 @@
+{
+  "caseId": "A05",
+  "rawText": "去医院确认一下",
+  "windowCount": 25,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "1:3",
+      "syllableStart": 1,
+      "syllableEnd": 3,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "去医院确认一下"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "ff912c14f3be416861bf8acacff12c1911100d81e5837b74b3ebbaaf2dbe7ac2",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "去"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认一"
+        ],
+        [
+          "下"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "去医院确认一下",
+      "sourcePathId": "ff912c14f3be416861bf8acacff12c1911100d81e5837b74b3ebbaaf2dbe7ac2",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "去",
+          "sourceText": "去"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "认一",
+          "sourceText": "认一"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "word": "下",
+          "sourceText": "下"
+        }
+      ],
+      "dedupKey": "去医院确认一下",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 25,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 5,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 1
+      },
+      {
+        "start": 3,
+        "end": 4
+      },
+      {
+        "start": 6,
+        "end": 7
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 18,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A"
+  ],
+  "why": "yi|yuan",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 21.1110999584198,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-07-27",
+  "latticeHarnessPath": "phase1-window-edge-harness → recallTopKForWindows → recallSpanTopKV3 → recallSpanTopKV2",
+  "entrypoints": [
+    {
+      "name": "recallSpanTopKV2",
+      "file": "main/src/lexicon-v2/recall-span-topk-v2.ts",
+      "line": 255,
+      "acceptsLength1": false,
+      "earlyReturn": true,
+      "sqlPath": "would call lookupBase/Domain with termLength if not gated",
+      "sharedConstant": "hardcoded < 2",
+      "productionVsHarness": "same function for both"
+    },
+    {
+      "name": "recallSpanTopKV3",
+      "file": "main/src/lexicon-v2/recall-span-topkv3.ts",
+      "line": "322 calls V2; parent fragments 230",
+      "acceptsLength1": false,
+      "earlyReturn": "via V2; parent fragment KEEP reject len<2",
+      "sqlPath": "V2 tiers + ngrams",
+      "sharedConstant": "hardcoded",
+      "productionVsHarness": "same"
+    },
+    {
+      "name": "recallTopKForWindows",
+      "file": "main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts",
+      "line": "355-400",
+      "acceptsLength1": "passes len=1 windows into V3",
+      "earlyReturn": false,
+      "sqlPath": "indirect",
+      "sharedConstant": "none for min length",
+      "productionVsHarness": "harness uses this; production LTR uses different window set but same V3 for options ≥2"
+    },
+    {
+      "name": "local-span-recall",
+      "file": "main/src/lexicon/local-span-recall.ts",
+      "line": "49-50,119",
+      "acceptsLength1": false,
+      "earlyReturn": true,
+      "sqlPath": "legacy",
+      "sharedConstant": "MIN_SYLLABLES=2",
+      "productionVsHarness": "legacy ASR repair; not Lattice Phase1 primary"
+    },
+    {
+      "name": "hotword-recall",
+      "file": "main/src/lexicon/hotword-recall.ts",
+      "line": 74,
+      "acceptsLength1": false,
+      "earlyReturn": "allowedWindowLengths excludes 1",
+      "sqlPath": "legacy lexicon runtime",
+      "sharedConstant": "quality-config [2,3,4,5]",
+      "productionVsHarness": "legacy"
+    },
+    {
+      "name": "LexiconRuntimeV2.lookupBaseByPinyinKey",
+      "file": "main/src/lexicon-v2/lexicon-runtime-v2.ts",
+      "line": "443-449",
+      "acceptsLength1": true,
+      "earlyReturn": false,
+      "sqlPath": "base_lexicon length(word)=?",
+      "sharedConstant": "none",
+      "productionVsHarness": "same; blocked by callers"
+    },
+    {
+      "name": "utterance recall cache",
+      "file": "main/src/fw-detector/span-assembly-v4/utterance-recall-cache.ts",
+      "line": "111-126",
+      "acceptsLength1": true,
+      "earlyReturn": false,
+      "sqlPath": "n/a",
+      "sharedConstant": "key uses pinyinKey (implicit length)",
+      "productionVsHarness": "utterance lifetime; harness releases after call"
+    },
+    {
+      "name": "fuzzy-pinyin-key-builder",
+      "file": "main/src/lexicon-v2/fuzzy-pinyin-key-builder.ts",
+      "line": "60-65",
+      "acceptsLength1": false,
+      "earlyReturn": "count out of 2..5",
+      "sqlPath": "n/a",
+      "sharedConstant": "MIN_SYLLABLES=2",
+      "productionVsHarness": "KEEP — single-char must not fuzzy-expand"
+    }
+  ],
+  "baseOnlyRecommendation": {
+    "length1Query": ["base_lexicon only"],
+    "doNotQueryByDefault": ["domain_lexicon", "idiom_lexicon", "term_pinyin_ngrams"],
+    "rationale": "Connectivity chars must not invent domain candidates or vote noise"
+  }
+}

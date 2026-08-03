@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-07-28",
+  "purpose": "Batch1补测门禁设计（本轮不实现）",
+  "forbiddenReuseOfFixtureWords": true,
+  "cases": [
+    {"surface": "他", "pinyin": "ta", "tone": "ta1", "expect": "unique_or_surface"},
+    {"surface": "她", "pinyin": "ta", "tone": "ta1", "expect": "ambiguity_empty_unless_surface"},
+    {"surface": "它", "pinyin": "ta", "tone": "ta1", "expect": "ambiguity_empty_unless_surface"},
+    {"surface": "拿", "pinyin": "na", "tone": "na2", "expect": "tone_exact"},
+    {"surface": "哪", "pinyin": "na", "tone": "na3", "expect": "tone_exact"},
+    {"surface": "那", "pinyin": "na", "tone": "na4", "expect": "tone_exact"},
+    {"surface": "吧", "pinyin": "ba", "tone": "ba5", "expect": "neutral_tone"},
+    {"surface": "把", "pinyin": "ba", "tone": "ba3", "expect": "tone_exact"},
+    {"surface": "八", "pinyin": "ba", "tone": "ba1", "expect": "tone_exact"},
+    {"surface": "杯", "pinyin": "bei", "tone": "bei1", "expect": "tone_exact"},
+    {"surface": "被", "pinyin": "bei", "tone": "bei4", "expect": "tone_exact"},
+    {"surface": "北", "pinyin": "bei", "tone": "bei3", "expect": "tone_exact"}
+  ],
+  "propertyTests": {
+    "generate": "20-50 random single-char base rows",
+    "groupBy": ["pinyin_key", "tone_pinyin_key"],
+    "assert": [
+      "unique group → 1 hit",
+      "ambiguous without surface → 0",
+      "surface unique → 1",
+      "hits.length <= 1",
+      "domain lookup never called",
+      "LIMIT truncation never yields false unique"
+    ]
+  },
+  "requiredIntegration": {
+    "tempSqlite": true,
+    "LexiconRuntimeV2.loadFromBundleDir": true,
+    "schema": "real base_lexicon columns including is_alias"
+  }
+}

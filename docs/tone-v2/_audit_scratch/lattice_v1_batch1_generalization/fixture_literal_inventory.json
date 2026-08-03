@@ -1,0 +1,158 @@
+{
+  "generatedAt": "2026-07-28",
+  "audit": "Batch1_Generalization",
+  "summary": {
+    "productionRecallHardcodeCount": 0,
+    "fixtureFileInMainSrc": true,
+    "fixtureImportedByProduction": false,
+    "fixtureCompiledByTsconfigMain": true,
+    "fixturePackagedIfBuilt": true
+  },
+  "entries": [
+    {
+      "literal": "我",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 24,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 in-memory fixture term list"
+    },
+    {
+      "literal": "吗",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 25,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture"
+    },
+    {
+      "literal": "点",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 26,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture"
+    },
+    {
+      "literal": "是",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 27,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture ambiguity pair"
+    },
+    {
+      "literal": "市",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 28,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture ambiguity pair"
+    },
+    {
+      "literal": "我想",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 29,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture path bigram"
+    },
+    {
+      "literal": "拿铁",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 30,
+      "context": "fixture",
+      "allowed": true,
+      "reason": "Batch1 fixture path bigram"
+    },
+    {
+      "literal": "wo3|ma5|dian3|shi4",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": "24-30",
+      "context": "fixture",
+      "allowed": true,
+      "reason": "tone keys only in fixture"
+    },
+    {
+      "literal": "点/我/吗/是/市/我想/拿铁",
+      "file": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2-length1.test.ts",
+      "line": "multi",
+      "context": "test",
+      "allowed": true,
+      "reason": "unit assertions against fixture"
+    },
+    {
+      "literal": "吗？/？我/吗？我",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/lattice-hard-block-filter.test.ts",
+      "line": "multi",
+      "context": "test",
+      "allowed": true,
+      "reason": "HB case strings"
+    },
+    {
+      "literal": "[我想][点][拿铁]",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-length1-chain.test.ts",
+      "line": "path test",
+      "context": "test",
+      "allowed": true,
+      "reason": "hand-built path integration edges"
+    },
+    {
+      "literal": "createBatch1FixtureRuntime",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/connectivity-batch1-fixture.ts",
+      "line": 63,
+      "context": "fixture",
+      "allowed": false,
+      "reason": "NON-test .ts under main/src; tsconfig.main include + electron-builder packs dist/main/**/* — production pollution risk even without current import",
+      "risk": "P0"
+    },
+    {
+      "literal": "(none of fixture words)",
+      "file": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+      "line": null,
+      "context": "production",
+      "allowed": true,
+      "reason": "no fixture literals; length==1 rule only"
+    },
+    {
+      "literal": "(none)",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts",
+      "line": null,
+      "context": "production",
+      "allowed": true,
+      "reason": "syllables.length===1 branch only"
+    },
+    {
+      "literal": "(none)",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/lattice-hard-block-filter.ts",
+      "line": null,
+      "context": "production",
+      "allowed": true,
+      "reason": "regex punctuation only; no 吗-specific branch"
+    },
+    {
+      "literal": "(none)",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/phase1-window-edge-harness.ts",
+      "line": null,
+      "context": "production",
+      "allowed": true,
+      "reason": "diagnostics by span length===1"
+    },
+    {
+      "literal": "(none)",
+      "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/phase2-path-harness.ts",
+      "line": null,
+      "context": "production",
+      "allowed": true,
+      "reason": "diagnostics by edge span length"
+    },
+    {
+      "literal": "燕麦拿铁",
+      "file": "electron_node/electron-node/main/src/lexicon-patch-v4/patch-types-v4.ts",
+      "line": 12,
+      "context": "production",
+      "allowed": true,
+      "reason": "pre-existing EXPANSION_DENY_LIST; unrelated to Batch1 fixture"
+    }
+  ]
+}

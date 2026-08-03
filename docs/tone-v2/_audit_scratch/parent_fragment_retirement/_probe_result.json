@@ -1,0 +1,2542 @@
+{
+  "sqlite": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "schema": {
+    "tables": [
+      "base_lexicon",
+      "domain_hierarchy",
+      "domain_lexicon",
+      "idiom_lexicon",
+      "industry_routing_lexicon",
+      "lexicon_patch_history",
+      "term",
+      "term_domain_tags",
+      "term_pinyin_ngrams"
+    ],
+    "indexes": [
+      {
+        "name": "idx_term_ngram_key",
+        "tbl_name": "term_pinyin_ngrams",
+        "sql": "CREATE INDEX idx_term_ngram_key ON term_pinyin_ngrams(ngram_pinyin_key, enabled)"
+      },
+      {
+        "name": "idx_term_ngram_domain",
+        "tbl_name": "term_pinyin_ngrams",
+        "sql": "CREATE INDEX idx_term_ngram_domain ON term_pinyin_ngrams(ngram_pinyin_key, domain_id, enabled)"
+      },
+      {
+        "name": "idx_term_ngram_parent",
+        "tbl_name": "term_pinyin_ngrams",
+        "sql": "CREATE INDEX idx_term_ngram_parent ON term_pinyin_ngrams(parent_term_id)"
+      },
+      {
+        "name": "idx_term_ngram_parent_range",
+        "tbl_name": "term_pinyin_ngrams",
+        "sql": "CREATE INDEX idx_term_ngram_parent_range ON term_pinyin_ngrams(parent_term_id, ngram_start, ngram_end)"
+      }
+    ],
+    "ngramCols": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "parent_term_id",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "parent_word",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "parent_pinyin_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "parent_tone_pinyin_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "ngram_pinyin_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "ngram_tone_pinyin_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 7,
+        "name": "ngram_start",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 8,
+        "name": "ngram_end",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 9,
+        "name": "fragment_text",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 10,
+        "name": "tier",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 11,
+        "name": "domain_id",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 12,
+        "name": "repair_target",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 13,
+        "name": "prior",
+        "type": "REAL",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 14,
+        "name": "source",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 15,
+        "name": "enabled",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": "1",
+        "pk": 0
+      },
+      {
+        "cid": 16,
+        "name": "is_alias",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": "0",
+        "pk": 0
+      },
+      {
+        "cid": 17,
+        "name": "canonical_word",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "ngramCount": 4200,
+    "parents": 956,
+    "lenDist": [
+      {
+        "L": 2,
+        "c": 2483
+      },
+      {
+        "L": 3,
+        "c": 1238
+      },
+      {
+        "L": 4,
+        "c": 442
+      },
+      {
+        "L": 5,
+        "c": 37
+      }
+    ],
+    "widthDist": [
+      {
+        "W": 2,
+        "c": 2483
+      },
+      {
+        "W": 3,
+        "c": 1238
+      },
+      {
+        "W": 4,
+        "c": 442
+      },
+      {
+        "W": 5,
+        "c": 37
+      }
+    ]
+  },
+  "sampleParents": {
+    "蓝莓马芬": {
+      "asTerm": [
+        {
+          "id": "base-rebuild-term-e8939de88e93e9a9",
+          "word": "蓝莓马芬",
+          "pinyin_key": "lan|mei|ma|fen",
+          "source": "domain_seed_v1"
+        },
+        {
+          "id": "term-e8939de88e93e9a9",
+          "word": "蓝莓马芬",
+          "pinyin_key": "lan|mei|ma|fen",
+          "source": "domain_seed_v1"
+        },
+        {
+          "id": "term-e8939de88e93e9a9",
+          "word": "蓝莓马芬",
+          "pinyin_key": "lan|mei|ma|fen",
+          "source": "domain_seed_v1"
+        }
+      ],
+      "fragmentCount": 24,
+      "fragments": [
+        {
+          "id": 3514,
+          "fragment_text": "蓝莓",
+          "ngram_pinyin_key": "lan|mei",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3520,
+          "fragment_text": "蓝莓",
+          "ngram_pinyin_key": "lan|mei",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3526,
+          "fragment_text": "蓝莓",
+          "ngram_pinyin_key": "lan|mei",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3532,
+          "fragment_text": "蓝莓",
+          "ngram_pinyin_key": "lan|mei",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3517,
+          "fragment_text": "蓝莓马",
+          "ngram_pinyin_key": "lan|mei|ma",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3523,
+          "fragment_text": "蓝莓马",
+          "ngram_pinyin_key": "lan|mei|ma",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3529,
+          "fragment_text": "蓝莓马",
+          "ngram_pinyin_key": "lan|mei|ma",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3535,
+          "fragment_text": "蓝莓马",
+          "ngram_pinyin_key": "lan|mei|ma",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3519,
+          "fragment_text": "蓝莓马芬",
+          "ngram_pinyin_key": "lan|mei|ma|fen",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3525,
+          "fragment_text": "蓝莓马芬",
+          "ngram_pinyin_key": "lan|mei|ma|fen",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3531,
+          "fragment_text": "蓝莓马芬",
+          "ngram_pinyin_key": "lan|mei|ma|fen",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3537,
+          "fragment_text": "蓝莓马芬",
+          "ngram_pinyin_key": "lan|mei|ma|fen",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3515,
+          "fragment_text": "莓马",
+          "ngram_pinyin_key": "mei|ma",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3521,
+          "fragment_text": "莓马",
+          "ngram_pinyin_key": "mei|ma",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3527,
+          "fragment_text": "莓马",
+          "ngram_pinyin_key": "mei|ma",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3533,
+          "fragment_text": "莓马",
+          "ngram_pinyin_key": "mei|ma",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3518,
+          "fragment_text": "莓马芬",
+          "ngram_pinyin_key": "mei|ma|fen",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3524,
+          "fragment_text": "莓马芬",
+          "ngram_pinyin_key": "mei|ma|fen",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3530,
+          "fragment_text": "莓马芬",
+          "ngram_pinyin_key": "mei|ma|fen",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3536,
+          "fragment_text": "莓马芬",
+          "ngram_pinyin_key": "mei|ma|fen",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3516,
+          "fragment_text": "马芬",
+          "ngram_pinyin_key": "ma|fen",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3522,
+          "fragment_text": "马芬",
+          "ngram_pinyin_key": "ma|fen",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3528,
+          "fragment_text": "马芬",
+          "ngram_pinyin_key": "ma|fen",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "bakery",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        },
+        {
+          "id": 3534,
+          "fragment_text": "马芬",
+          "ngram_pinyin_key": "ma|fen",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "food_order",
+          "parent_word": "蓝莓马芬",
+          "parent_term_id": "term-e8939de88e93e9a9"
+        }
+      ]
+    },
+    "草莓马芬": {
+      "asTerm": [],
+      "fragmentCount": 0,
+      "fragments": []
+    },
+    "内科医生": {
+      "asTerm": [
+        {
+          "id": "base-rebuild-term-e58685e7a791e58c",
+          "word": "内科医生",
+          "pinyin_key": "nei|ke|yi|sheng",
+          "source": "industry_pack_v1"
+        },
+        {
+          "id": "term-e58685e7a791e58c",
+          "word": "内科医生",
+          "pinyin_key": "nei|ke|yi|sheng",
+          "source": "industry_pack_v1"
+        }
+      ],
+      "fragmentCount": 6,
+      "fragments": [
+        {
+          "id": 617,
+          "fragment_text": "内科",
+          "ngram_pinyin_key": "nei|ke",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        },
+        {
+          "id": 620,
+          "fragment_text": "内科医",
+          "ngram_pinyin_key": "nei|ke|yi",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        },
+        {
+          "id": 622,
+          "fragment_text": "内科医生",
+          "ngram_pinyin_key": "nei|ke|yi|sheng",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        },
+        {
+          "id": 618,
+          "fragment_text": "科医",
+          "ngram_pinyin_key": "ke|yi",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        },
+        {
+          "id": 621,
+          "fragment_text": "科医生",
+          "ngram_pinyin_key": "ke|yi|sheng",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        },
+        {
+          "id": 619,
+          "fragment_text": "医生",
+          "ngram_pinyin_key": "yi|sheng",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "medical",
+          "parent_word": "内科医生",
+          "parent_term_id": "term-e58685e7a791e58c"
+        }
+      ]
+    },
+    "会议室": {
+      "asTerm": [
+        {
+          "id": "base-rebuild-term-e4bc9ae8aeaee5ae",
+          "word": "会议室",
+          "pinyin_key": "hui|yi|shi",
+          "source": "industry_pack_v1"
+        },
+        {
+          "id": "term-e4bc9ae8aeaee5ae",
+          "word": "会议室",
+          "pinyin_key": "hui|yi|shi",
+          "source": "industry_pack_v1"
+        }
+      ],
+      "fragmentCount": 3,
+      "fragments": [
+        {
+          "id": 358,
+          "fragment_text": "会议",
+          "ngram_pinyin_key": "hui|yi",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "meeting",
+          "parent_word": "会议室",
+          "parent_term_id": "term-e4bc9ae8aeaee5ae"
+        },
+        {
+          "id": 360,
+          "fragment_text": "会议室",
+          "ngram_pinyin_key": "hui|yi|shi",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "meeting",
+          "parent_word": "会议室",
+          "parent_term_id": "term-e4bc9ae8aeaee5ae"
+        },
+        {
+          "id": 359,
+          "fragment_text": "议室",
+          "ngram_pinyin_key": "yi|shi",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "meeting",
+          "parent_word": "会议室",
+          "parent_term_id": "term-e4bc9ae8aeaee5ae"
+        }
+      ]
+    },
+    "低脂奶": {
+      "asTerm": [
+        {
+          "id": "base-rebuild-term-e4bd8ee88482e5a5",
+          "word": "低脂奶",
+          "pinyin_key": "di|zhi|nai",
+          "source": "industry_pack_v1"
+        },
+        {
+          "id": "term-e4bd8ee88482e5a5",
+          "word": "低脂奶",
+          "pinyin_key": "di|zhi|nai",
+          "source": "industry_pack_v1"
+        }
+      ],
+      "fragmentCount": 3,
+      "fragments": [
+        {
+          "id": 413,
+          "fragment_text": "低脂",
+          "ngram_pinyin_key": "di|zhi",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "coffee",
+          "parent_word": "低脂奶",
+          "parent_term_id": "term-e4bd8ee88482e5a5"
+        },
+        {
+          "id": 415,
+          "fragment_text": "低脂奶",
+          "ngram_pinyin_key": "di|zhi|nai",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "coffee",
+          "parent_word": "低脂奶",
+          "parent_term_id": "term-e4bd8ee88482e5a5"
+        },
+        {
+          "id": 414,
+          "fragment_text": "脂奶",
+          "ngram_pinyin_key": "zhi|nai",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "coffee",
+          "parent_word": "低脂奶",
+          "parent_term_id": "term-e4bd8ee88482e5a5"
+        }
+      ]
+    },
+    "上线计划": {
+      "asTerm": [
+        {
+          "id": "base-rebuild-term-e4b88ae7babfe8ae",
+          "word": "上线计划",
+          "pinyin_key": "shang|xian|ji|hua",
+          "source": "external_full_review_supplement_v1"
+        },
+        {
+          "id": "term-e4b88ae7babfe8ae",
+          "word": "上线计划",
+          "pinyin_key": "shang|xian|ji|hua",
+          "source": "external_full_review_supplement_v1"
+        }
+      ],
+      "fragmentCount": 6,
+      "fragments": [
+        {
+          "id": 81,
+          "fragment_text": "上线",
+          "ngram_pinyin_key": "shang|xian",
+          "ngram_start": 0,
+          "ngram_end": 2,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        },
+        {
+          "id": 84,
+          "fragment_text": "上线计",
+          "ngram_pinyin_key": "shang|xian|ji",
+          "ngram_start": 0,
+          "ngram_end": 3,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        },
+        {
+          "id": 86,
+          "fragment_text": "上线计划",
+          "ngram_pinyin_key": "shang|xian|ji|hua",
+          "ngram_start": 0,
+          "ngram_end": 4,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        },
+        {
+          "id": 82,
+          "fragment_text": "线计",
+          "ngram_pinyin_key": "xian|ji",
+          "ngram_start": 1,
+          "ngram_end": 3,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        },
+        {
+          "id": 85,
+          "fragment_text": "线计划",
+          "ngram_pinyin_key": "xian|ji|hua",
+          "ngram_start": 1,
+          "ngram_end": 4,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        },
+        {
+          "id": 83,
+          "fragment_text": "计划",
+          "ngram_pinyin_key": "ji|hua",
+          "ngram_start": 2,
+          "ngram_end": 4,
+          "domain_id": "tech_ai",
+          "parent_word": "上线计划",
+          "parent_term_id": "term-e4b88ae7babfe8ae"
+        }
+      ]
+    }
+  },
+  "fragmentHits": {
+    "科医": [
+      {
+        "id": 512,
+        "parent_word": "儿科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 618,
+        "parent_word": "内科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 1501,
+        "parent_word": "外科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 1611,
+        "parent_word": "妇科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "议室": [
+      {
+        "id": 359,
+        "parent_word": "会议室",
+        "fragment_text": "议室",
+        "ngram_pinyin_key": "yi|shi",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "meeting",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "低脂": [
+      {
+        "id": 413,
+        "parent_word": "低脂奶",
+        "fragment_text": "低脂",
+        "ngram_pinyin_key": "di|zhi",
+        "ngram_start": 0,
+        "ngram_end": 2,
+        "domain_id": "coffee",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "记员": [
+      {
+        "id": 3839,
+        "parent_word": "速记员",
+        "fragment_text": "记员",
+        "ngram_pinyin_key": "ji|yuan",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "meeting",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "机员": [
+      {
+        "id": 2158,
+        "parent_word": "接机员",
+        "fragment_text": "机员",
+        "ngram_pinyin_key": "ji|yuan",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "tourism_pickup",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 3832,
+        "parent_word": "送机员",
+        "fragment_text": "机员",
+        "ngram_pinyin_key": "ji|yuan",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "tourism_pickup",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "线计": [
+      {
+        "id": 82,
+        "parent_word": "上线计划",
+        "fragment_text": "线计",
+        "ngram_pinyin_key": "xian|ji",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "tech_ai",
+        "tier": "domain",
+        "source": "external_full_review_supplement_v1"
+      }
+    ],
+    "莓马": [
+      {
+        "id": 3515,
+        "parent_word": "蓝莓马芬",
+        "fragment_text": "莓马",
+        "ngram_pinyin_key": "mei|ma",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "bakery",
+        "tier": "domain",
+        "source": "domain_seed_v1"
+      },
+      {
+        "id": 3521,
+        "parent_word": "蓝莓马芬",
+        "fragment_text": "莓马",
+        "ngram_pinyin_key": "mei|ma",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "food_order",
+        "tier": "domain",
+        "source": "domain_seed_v1"
+      },
+      {
+        "id": 3527,
+        "parent_word": "蓝莓马芬",
+        "fragment_text": "莓马",
+        "ngram_pinyin_key": "mei|ma",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "bakery",
+        "tier": "domain",
+        "source": "domain_seed_v1"
+      },
+      {
+        "id": 3533,
+        "parent_word": "蓝莓马芬",
+        "fragment_text": "莓马",
+        "ngram_pinyin_key": "mei|ma",
+        "ngram_start": 1,
+        "ngram_end": 3,
+        "domain_id": "food_order",
+        "tier": "domain",
+        "source": "domain_seed_v1"
+      }
+    ],
+    "科医生": [
+      {
+        "id": 515,
+        "parent_word": "儿科医生",
+        "fragment_text": "科医生",
+        "ngram_pinyin_key": "ke|yi|sheng",
+        "ngram_start": 1,
+        "ngram_end": 4,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 621,
+        "parent_word": "内科医生",
+        "fragment_text": "科医生",
+        "ngram_pinyin_key": "ke|yi|sheng",
+        "ngram_start": 1,
+        "ngram_end": 4,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 1504,
+        "parent_word": "外科医生",
+        "fragment_text": "科医生",
+        "ngram_pinyin_key": "ke|yi|sheng",
+        "ngram_start": 1,
+        "ngram_end": 4,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      },
+      {
+        "id": 1614,
+        "parent_word": "妇科医生",
+        "fragment_text": "科医生",
+        "ngram_pinyin_key": "ke|yi|sheng",
+        "ngram_start": 1,
+        "ngram_end": 4,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "内科医": [
+      {
+        "id": 620,
+        "parent_word": "内科医生",
+        "fragment_text": "内科医",
+        "ngram_pinyin_key": "nei|ke|yi",
+        "ngram_start": 0,
+        "ngram_end": 3,
+        "domain_id": "medical",
+        "tier": "domain",
+        "source": "industry_pack_v1"
+      }
+    ],
+    "__pinyin_ke_yi": [
+      {
+        "id": 512,
+        "parent_word": "儿科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "domain_id": "medical"
+      },
+      {
+        "id": 618,
+        "parent_word": "内科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "domain_id": "medical"
+      },
+      {
+        "id": 1501,
+        "parent_word": "外科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "domain_id": "medical"
+      },
+      {
+        "id": 1611,
+        "parent_word": "妇科医生",
+        "fragment_text": "科医",
+        "ngram_pinyin_key": "ke|yi",
+        "domain_id": "medical"
+      }
+    ]
+  },
+  "voteCf": {
+    "voteMdFiles": 201,
+    "casesWithParentFragment": 166,
+    "totalParentFragmentCandidates": 1143,
+    "noiseFragmentCandidates": 97,
+    "topPfSurfaces": [
+      [
+        "候选",
+        140
+      ],
+      [
+        "上线",
+        92
+      ],
+      [
+        "安排",
+        90
+      ],
+      [
+        "科医",
+        78
+      ],
+      [
+        "计划",
+        46
+      ],
+      [
+        "上线计划",
+        46
+      ],
+      [
+        "订单",
+        42
+      ],
+      [
+        "接口",
+        27
+      ],
+      [
+        "文档",
+        24
+      ],
+      [
+        "会员",
+        20
+      ],
+      [
+        "发布",
+        20
+      ],
+      [
+        "大杯",
+        18
+      ],
+      [
+        "商务",
+        16
+      ],
+      [
+        "时间",
+        15
+      ],
+      [
+        "缓存",
+        15
+      ],
+      [
+        "酒店",
+        15
+      ],
+      [
+        "医生",
+        15
+      ],
+      [
+        "内科",
+        15
+      ],
+      [
+        "监控",
+        12
+      ],
+      [
+        "处理",
+        12
+      ],
+      [
+        "早餐",
+        12
+      ],
+      [
+        "退房",
+        12
+      ],
+      [
+        "前台",
+        12
+      ],
+      [
+        "中杯",
+        10
+      ],
+      [
+        "少冰",
+        10
+      ],
+      [
+        "检查",
+        10
+      ],
+      [
+        "价格",
+        10
+      ],
+      [
+        "流程",
+        10
+      ],
+      [
+        "联调",
+        10
+      ],
+      [
+        "回归",
+        10
+      ],
+      [
+        "拿铁",
+        9
+      ],
+      [
+        "机场",
+        9
+      ],
+      [
+        "发票",
+        8
+      ],
+      [
+        "提醒",
+        8
+      ],
+      [
+        "登机",
+        8
+      ],
+      [
+        "打包",
+        8
+      ],
+      [
+        "医师",
+        8
+      ],
+      [
+        "布奇",
+        8
+      ],
+      [
+        "美式",
+        6
+      ],
+      [
+        "带走",
+        6
+      ]
+    ],
+    "domainHitsFromNoiseFragments": [
+      [
+        "medical",
+        83
+      ],
+      [
+        "meeting",
+        6
+      ],
+      [
+        "coffee",
+        4
+      ],
+      [
+        "tourism_pickup",
+        4
+      ]
+    ],
+    "sampleCases": [
+      {
+        "caseId": "d003",
+        "pfCount": 15,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "bakery",
+          "coffee",
+          "medical",
+          "food_order",
+          "milk_tea",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d009",
+        "pfCount": 3,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d014",
+        "pfCount": 1,
+        "noiseWords": [
+          "内科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d023",
+        "pfCount": 3,
+        "noiseWords": [
+          "低脂"
+        ],
+        "domainsOnPf": [
+          "coffee",
+          "tourism_route",
+          "food_order",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "coffee"
+        ]
+      },
+      {
+        "caseId": "d027",
+        "pfCount": 3,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d029",
+        "pfCount": 4,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d032",
+        "pfCount": 10,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "food_order",
+          "tourism_hotel",
+          "medical",
+          "tech_ai"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d039",
+        "pfCount": 6,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "food_order",
+          "bakery",
+          "coffee",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d041",
+        "pfCount": 6,
+        "noiseWords": [
+          "议室"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "meeting",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "meeting"
+        ]
+      },
+      {
+        "caseId": "d048",
+        "pfCount": 9,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d053",
+        "pfCount": 3,
+        "noiseWords": [
+          "机员",
+          "机员",
+          "记员"
+        ],
+        "domainsOnPf": [
+          "tourism_pickup",
+          "meeting"
+        ],
+        "domainsOnNoisePf": [
+          "tourism_pickup",
+          "meeting"
+        ]
+      },
+      {
+        "caseId": "d054",
+        "pfCount": 4,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "milk_tea",
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d059",
+        "pfCount": 1,
+        "noiseWords": [
+          "内科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d068",
+        "pfCount": 3,
+        "noiseWords": [
+          "低脂"
+        ],
+        "domainsOnPf": [
+          "coffee",
+          "tourism_route",
+          "food_order",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "coffee"
+        ]
+      },
+      {
+        "caseId": "d072",
+        "pfCount": 3,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d074",
+        "pfCount": 4,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d077",
+        "pfCount": 10,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "food_order",
+          "tourism_hotel",
+          "medical",
+          "tech_ai"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d084",
+        "pfCount": 6,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "food_order",
+          "bakery",
+          "coffee",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d086",
+        "pfCount": 6,
+        "noiseWords": [
+          "议室"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "meeting",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "meeting"
+        ]
+      },
+      {
+        "caseId": "d093",
+        "pfCount": 10,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "coffee",
+          "medical",
+          "food_order",
+          "milk_tea",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d099",
+        "pfCount": 8,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "tourism_transport",
+          "transport",
+          "tourism_route",
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d104",
+        "pfCount": 1,
+        "noiseWords": [
+          "内科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d113",
+        "pfCount": 3,
+        "noiseWords": [
+          "低脂"
+        ],
+        "domainsOnPf": [
+          "coffee",
+          "tourism_route",
+          "food_order",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "coffee"
+        ]
+      },
+      {
+        "caseId": "d117",
+        "pfCount": 3,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d119",
+        "pfCount": 4,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d122",
+        "pfCount": 10,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "food_order",
+          "tourism_hotel",
+          "medical",
+          "tech_ai"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d129",
+        "pfCount": 6,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "food_order",
+          "bakery",
+          "coffee",
+          "milk_tea"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d131",
+        "pfCount": 6,
+        "noiseWords": [
+          "议室"
+        ],
+        "domainsOnPf": [
+          "medical",
+          "meeting",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "meeting"
+        ]
+      },
+      {
+        "caseId": "d138",
+        "pfCount": 12,
+        "noiseWords": [
+          "科医",
+          "科医",
+          "科医"
+        ],
+        "domainsOnPf": [
+          "coffee",
+          "medical",
+          "food_order",
+          "milk_tea",
+          "tourism_hotel"
+        ],
+        "domainsOnNoisePf": [
+          "medical"
+        ]
+      },
+      {
+        "caseId": "d143",
+        "pfCount": 3,
+        "noiseWords": [
+          "机员",
+          "机员",
+          "记员"
+        ],
+        "domainsOnPf": [
+          "tourism_pickup",
+          "meeting"
+        ],
+        "domainsOnNoisePf": [
+          "tourism_pickup",
+          "meeting"
+        ]
+      }
+    ],
+    "note": "Vote MD lists eligible pool candidates with hitKind; removing ALL parent_fragment is stronger CF than noise-only."
+  },
+  "assemblyCf": {
+    "asmJsonFiles": 201,
+    "kenlmInputTotal": 337,
+    "kenlmInputsContainingNoiseFragment": 117,
+    "casesWithNoiseInKenlm": 51,
+    "noiseUsedInSentenceCounts": [
+      [
+        "科医",
+        24
+      ],
+      [
+        "内科医",
+        5
+      ],
+      [
+        "低脂",
+        4
+      ],
+      [
+        "议室",
+        4
+      ],
+      [
+        "记员",
+        2
+      ],
+      [
+        "机员",
+        4
+      ]
+    ],
+    "noiseUsedSamples": [
+      {
+        "caseId": "d009",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "7:9:1"
+      },
+      {
+        "caseId": "d009",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "7:9:2"
+      },
+      {
+        "caseId": "d009",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "7:9:3"
+      },
+      {
+        "caseId": "d014",
+        "word": "内科医",
+        "bucket": "medical",
+        "candidateId": "15:18:4"
+      },
+      {
+        "caseId": "d023",
+        "word": "低脂",
+        "bucket": "coffee",
+        "candidateId": "6:8:1"
+      },
+      {
+        "caseId": "d027",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:1"
+      },
+      {
+        "caseId": "d027",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:2"
+      },
+      {
+        "caseId": "d027",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:3"
+      },
+      {
+        "caseId": "d041",
+        "word": "议室",
+        "bucket": "meeting",
+        "candidateId": "1:3:2"
+      },
+      {
+        "caseId": "d053",
+        "word": "记员",
+        "bucket": "meeting",
+        "candidateId": "10:12:4"
+      },
+      {
+        "caseId": "d053",
+        "word": "机员",
+        "bucket": "tourism_pickup",
+        "candidateId": "10:12:2"
+      },
+      {
+        "caseId": "d053",
+        "word": "机员",
+        "bucket": "tourism_pickup",
+        "candidateId": "10:12:3"
+      },
+      {
+        "caseId": "d054",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "9:11:2"
+      },
+      {
+        "caseId": "d054",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "9:11:3"
+      },
+      {
+        "caseId": "d054",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "9:11:4"
+      },
+      {
+        "caseId": "d059",
+        "word": "内科医",
+        "bucket": "medical",
+        "candidateId": "15:18:4"
+      },
+      {
+        "caseId": "d068",
+        "word": "低脂",
+        "bucket": "coffee",
+        "candidateId": "6:8:1"
+      },
+      {
+        "caseId": "d072",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:1"
+      },
+      {
+        "caseId": "d072",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:2"
+      },
+      {
+        "caseId": "d072",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:3"
+      },
+      {
+        "caseId": "d086",
+        "word": "议室",
+        "bucket": "meeting",
+        "candidateId": "1:3:2"
+      },
+      {
+        "caseId": "d104",
+        "word": "内科医",
+        "bucket": "medical",
+        "candidateId": "15:18:4"
+      },
+      {
+        "caseId": "d113",
+        "word": "低脂",
+        "bucket": "coffee",
+        "candidateId": "6:8:1"
+      },
+      {
+        "caseId": "d117",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:1"
+      },
+      {
+        "caseId": "d117",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:2"
+      },
+      {
+        "caseId": "d117",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:3"
+      },
+      {
+        "caseId": "d131",
+        "word": "议室",
+        "bucket": "meeting",
+        "candidateId": "1:3:2"
+      },
+      {
+        "caseId": "d143",
+        "word": "记员",
+        "bucket": "meeting",
+        "candidateId": "10:12:4"
+      },
+      {
+        "caseId": "d143",
+        "word": "机员",
+        "bucket": "tourism_pickup",
+        "candidateId": "10:12:2"
+      },
+      {
+        "caseId": "d143",
+        "word": "机员",
+        "bucket": "tourism_pickup",
+        "candidateId": "10:12:3"
+      },
+      {
+        "caseId": "d144",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "12:14:2"
+      },
+      {
+        "caseId": "d144",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "12:14:3"
+      },
+      {
+        "caseId": "d144",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "12:14:4"
+      },
+      {
+        "caseId": "d149",
+        "word": "内科医",
+        "bucket": "medical",
+        "candidateId": "15:18:4"
+      },
+      {
+        "caseId": "d158",
+        "word": "低脂",
+        "bucket": "coffee",
+        "candidateId": "6:8:1"
+      },
+      {
+        "caseId": "d162",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:1"
+      },
+      {
+        "caseId": "d162",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:2"
+      },
+      {
+        "caseId": "d162",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "8:10:3"
+      },
+      {
+        "caseId": "d176",
+        "word": "议室",
+        "bucket": "meeting",
+        "candidateId": "1:3:2"
+      },
+      {
+        "caseId": "d189",
+        "word": "科医",
+        "bucket": "medical",
+        "candidateId": "7:9:1"
+      }
+    ],
+    "kenlmNoiseSamples": [
+      {
+        "caseId": "d001",
+        "text": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "hits": [
+          "莓马"
+        ]
+      },
+      {
+        "caseId": "d009",
+        "text": "去望京SOHO，不走四环科医吗？那边现在堵不堵？",
+        "hits": [
+          "科医"
+        ]
+      },
+      {
+        "caseId": "d014",
+        "text": "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+        "hits": [
+          "科医",
+          "内科医"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论候选生城相关的候选生城流程和上线计划安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论候选生城相关的候选生城流程和上线计化安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论后选生城相关的候选生城流程和上线计划安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论候选生城相关的后选生城流程和上线计划安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论后选生城相关的候选生城流程和上线计化安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论候选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计划安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d019",
+        "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d020",
+        "text": "这次发布我们先对齐上线计划窗口，候选生城模块需要联调，别漏掉回归。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d020",
+        "text": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d021",
+        "text": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d023",
+        "text": "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。",
+        "hits": [
+          "低脂"
+        ]
+      },
+      {
+        "caseId": "d027",
+        "text": "期望薪资这块我们科医再沟通，你最快什么时候能入职？",
+        "hits": [
+          "科医"
+        ]
+      },
+      {
+        "caseId": "d029",
+        "text": "作液室下周一下午交吗？科医电子版提交吗？",
+        "hits": [
+          "科医"
+        ]
+      },
+      {
+        "caseId": "d029",
+        "text": "作业是下周一下午交吗？科医电子版提交吗？",
+        "hits": [
+          "科医"
+        ]
+      },
+      {
+        "caseId": "d041",
+        "text": "更议室柜子钥匙找不到了，前台能帮忙开一下吗？",
+        "hits": [
+          "议室"
+        ]
+      },
+      {
+        "caseId": "d044",
+        "text": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d044",
+        "text": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d044",
+        "text": "这周的上线计花已经确认，上线计划评审安排在周四商务。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d045",
+        "text": "关于候选生城和上线计划，请按上线计划执行，有问题群里说。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d045",
+        "text": "关于候选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hits": [
+          "线计"
+        ]
+      },
+      {
+        "caseId": "d045",
+        "text": "关于后选生城和上线计划，请按上线计划执行，有问题群里说。",
+        "hits": [
+          "线计"
+        ]
+      }
+    ],
+    "exportNoiseHits": 117,
+    "exportNoiseSamples": [
+      {
+        "caseId": "d001",
+        "hits": [
+          "莓马"
+        ],
+        "text": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？"
+      },
+      {
+        "caseId": "d009",
+        "hits": [
+          "科医"
+        ],
+        "text": "去望京SOHO，不走四环科医吗？那边现在堵不堵？"
+      },
+      {
+        "caseId": "d014",
+        "hits": [
+          "科医",
+          "内科医"
+        ],
+        "text": "请问这双鞋有四十码吗？不合适三天内科医退换吧？"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论候选生城相关的候选生城流程和上线计划安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论候选生城相关的候选生城流程和上线计化安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论后选生城相关的候选生城流程和上线计划安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论候选生城相关的后选生城流程和上线计划安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论后选生城相关的候选生城流程和上线计化安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论候选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计划安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d019",
+        "hits": [
+          "线计"
+        ],
+        "text": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。"
+      },
+      {
+        "caseId": "d020",
+        "hits": [
+          "线计"
+        ],
+        "text": "这次发布我们先对齐上线计划窗口，候选生城模块需要联调，别漏掉回归。"
+      },
+      {
+        "caseId": "d020",
+        "hits": [
+          "线计"
+        ],
+        "text": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。"
+      },
+      {
+        "caseId": "d021",
+        "hits": [
+          "线计"
+        ],
+        "text": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。"
+      },
+      {
+        "caseId": "d023",
+        "hits": [
+          "低脂"
+        ],
+        "text": "想改一下收货低脂，还来得及吗？麻烦尽快处理，谢谢。"
+      },
+      {
+        "caseId": "d027",
+        "hits": [
+          "科医"
+        ],
+        "text": "期望薪资这块我们科医再沟通，你最快什么时候能入职？"
+      },
+      {
+        "caseId": "d029",
+        "hits": [
+          "科医"
+        ],
+        "text": "作液室下周一下午交吗？科医电子版提交吗？"
+      },
+      {
+        "caseId": "d029",
+        "hits": [
+          "科医"
+        ],
+        "text": "作业是下周一下午交吗？科医电子版提交吗？"
+      },
+      {
+        "caseId": "d041",
+        "hits": [
+          "议室"
+        ],
+        "text": "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+      },
+      {
+        "caseId": "d044",
+        "hits": [
+          "线计"
+        ],
+        "text": "这周的上线计划已经确认，上线计划评审安排在周四上午。"
+      },
+      {
+        "caseId": "d044",
+        "hits": [
+          "线计"
+        ],
+        "text": "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      },
+      {
+        "caseId": "d044",
+        "hits": [
+          "线计"
+        ],
+        "text": "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+      },
+      {
+        "caseId": "d045",
+        "hits": [
+          "线计"
+        ],
+        "text": "关于候选生城和上线计划，请按上线计划执行，有问题群里说。"
+      },
+      {
+        "caseId": "d045",
+        "hits": [
+          "线计"
+        ],
+        "text": "关于候选生城和上线计化，请按上线计划执行，有问题群里说。"
+      },
+      {
+        "caseId": "d045",
+        "hits": [
+          "线计"
+        ],
+        "text": "关于后选生城和上线计划，请按上线计划执行，有问题群里说。"
+      }
+    ]
+  },
+  "exactVsFragment": {
+    "pfOnlySurfaces": 465,
+    "pfAlsoLikelyExact": 0,
+    "pfOnlyExamples": [
+      {
+        "file": "001.md",
+        "word": "热拿铁"
+      },
+      {
+        "file": "001.md",
+        "word": "中杯"
+      },
+      {
+        "file": "001.md",
+        "word": "少糖"
+      },
+      {
+        "file": "001.md",
+        "word": "蓝莓"
+      },
+      {
+        "file": "001.md",
+        "word": "马芬"
+      },
+      {
+        "file": "001.md",
+        "word": "蓝莓马芬"
+      },
+      {
+        "file": "002.md",
+        "word": "美式"
+      },
+      {
+        "file": "002.md",
+        "word": "带走"
+      },
+      {
+        "file": "002.md",
+        "word": "大杯"
+      },
+      {
+        "file": "003.md",
+        "word": "燕麦"
+      },
+      {
+        "file": "003.md",
+        "word": "拿铁"
+      },
+      {
+        "file": "003.md",
+        "word": "科医"
+      },
+      {
+        "file": "003.md",
+        "word": "少冰"
+      },
+      {
+        "file": "003.md",
+        "word": "时间"
+      },
+      {
+        "file": "003.md",
+        "word": "小杯"
+      },
+      {
+        "file": "004.md",
+        "word": "翻译"
+      },
+      {
+        "file": "004.md",
+        "word": "引擎"
+      },
+      {
+        "file": "004.md",
+        "word": "接口"
+      },
+      {
+        "file": "004.md",
+        "word": "缓存"
+      },
+      {
+        "file": "005.md",
+        "word": "订单"
+      },
+      {
+        "file": "006.md",
+        "word": "会员"
+      },
+      {
+        "file": "006.md",
+        "word": "系统"
+      },
+      {
+        "file": "007.md",
+        "word": "软件"
+      },
+      {
+        "file": "007.md",
+        "word": "机场"
+      },
+      {
+        "file": "007.md",
+        "word": "高速"
+      },
+      {
+        "file": "007.md",
+        "word": "酒店"
+      },
+      {
+        "file": "007.md",
+        "word": "提前"
+      },
+      {
+        "file": "009.md",
+        "word": "科医"
+      },
+      {
+        "file": "010.md",
+        "word": "医生"
+      },
+      {
+        "file": "010.md",
+        "word": "头痛"
+      },
+      {
+        "file": "011.md",
+        "word": "挂号处"
+      },
+      {
+        "file": "011.md",
+        "word": "内科"
+      },
+      {
+        "file": "011.md",
+        "word": "部署"
+      },
+      {
+        "file": "012.md",
+        "word": "检查"
+      },
+      {
+        "file": "012.md",
+        "word": "过敏"
+      },
+      {
+        "file": "013.md",
+        "word": "量检"
+      },
+      {
+        "file": "014.md",
+        "word": "内科医"
+      },
+      {
+        "file": "015.md",
+        "word": "订单"
+      },
+      {
+        "file": "015.md",
+        "word": "价格"
+      },
+      {
+        "file": "015.md",
+        "word": "会员"
+      },
+      {
+        "file": "019.md",
+        "word": "候选"
+      },
+      {
+        "file": "019.md",
+        "word": "流程"
+      },
+      {
+        "file": "019.md",
+        "word": "上线"
+      },
+      {
+        "file": "019.md",
+        "word": "计划"
+      },
+      {
+        "file": "019.md",
+        "word": "安排"
+      },
+      {
+        "file": "019.md",
+        "word": "上线计划"
+      },
+      {
+        "file": "020.md",
+        "word": "发布"
+      },
+      {
+        "file": "020.md",
+        "word": "上线"
+      },
+      {
+        "file": "020.md",
+        "word": "计划"
+      },
+      {
+        "file": "020.md",
+        "word": "候选"
+      }
+    ]
+  },
+  "consumersNote": {
+    "productionReaders": [
+      "recall-span-topkv3.ts::lookupParentFragments",
+      "lexicon-runtime-v2.ts::lookupParentFragmentsByNgramKey",
+      "bindLexiconHitsToWindow replacement=fragmentText"
+    ],
+    "buildOnly": [
+      "materialize-term-ngrams.mjs"
+    ],
+    "patchStats": [
+      "sqlite-table-stats.ts",
+      "manifest-writer.ts"
+    ]
+  }
+}

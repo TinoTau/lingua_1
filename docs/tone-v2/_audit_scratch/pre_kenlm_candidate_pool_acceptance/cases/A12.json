@@ -1,0 +1,162 @@
+{
+  "caseId": "A12",
+  "rawText": "议员出席会议",
+  "windowCount": 20,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "0:2",
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "text": "议员",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "议员出席会议"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "f9582d4b592b3b6f7b3825e2b1957c0b3564781a657a7ea2ec1ed863ed48ca62",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "议员"
+        ],
+        [
+          "出"
+        ],
+        [
+          "席"
+        ],
+        [
+          "会议"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "议员出席会议",
+      "sourcePathId": "f9582d4b592b3b6f7b3825e2b1957c0b3564781a657a7ea2ec1ed863ed48ca62",
+      "sourceDomain": "meeting",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "议员",
+          "sourceText": "议员"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "出",
+          "sourceText": "出"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "席",
+          "sourceText": "席"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "会议",
+          "sourceText": "会议"
+        }
+      ],
+      "dedupKey": "议员出席会议",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 20,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 20,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 2,
+    "edgeCountAfterFallback": 4,
+    "fallbackInjectionCount": 2,
+    "fallbackInjectionRanges": [
+      {
+        "start": 2,
+        "end": 4
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 20,
+    "sqlQueryCount": 19,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A"
+  ],
+  "why": "yi|yuan alternate surface",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 14.476999998092651,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

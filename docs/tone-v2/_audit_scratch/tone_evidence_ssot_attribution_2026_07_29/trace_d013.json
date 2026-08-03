@@ -1,0 +1,217 @@
+{
+  "id": "d013",
+  "expected": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+  "asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+  "raw_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 19,
+    "evidenceProductionCount": 19,
+    "firstSlicePosterior": {
+      "t1": 0.00008058632374741137,
+      "t2": 0.00011986619210802019,
+      "t3": 0.0004564821138046682,
+      "t4": 0.999332845211029,
+      "t5": 0.000010296826985722873
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 19,
+    "wordTimeSpanCount": 19,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 19
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "没有",
+        "pinyinKey": "mei|you",
+        "windowTimeRange": {
+          "start": 4.12,
+          "end": 4.36
+        },
+        "acousticTonePattern": [
+          4,
+          4
+        ]
+      },
+      {
+        "text": "没有折",
+        "pinyinKey": "mei|you|zhe",
+        "windowTimeRange": {
+          "start": 4.12,
+          "end": 4.56
+        },
+        "acousticTonePattern": [
+          4,
+          4,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11,
+    "candidateSentenceCount": 11,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 11,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 11
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "这件",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "这件",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "外套",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "外套",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "能试",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "能试",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "穿吗",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "穿吗",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我穿",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我穿",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "中",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "中",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "码",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "码",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "买两",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "买两",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "id": "d079",
+  "expected": "我想开通短信提醒，需要带什么证件？",
+  "asr": "我想开通短信提醒需要带什么证件",
+  "raw_asr": "我想开通短信提醒需要带什么证件",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 12,
+    "evidenceProductionCount": 12,
+    "firstSlicePosterior": {
+      "t1": 0.0004587790463119745,
+      "t2": 0.022563738748431206,
+      "t3": 0.3928770124912262,
+      "t4": 0.5823059678077698,
+      "t5": 0.0017944471910595894
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 12,
+    "wordTimeSpanCount": 12,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 12
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "证件",
+        "pinyinKey": "zheng|jian",
+        "windowTimeRange": {
+          "start": 2.58,
+          "end": 3.02
+        },
+        "acousticTonePattern": [
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 9,
+    "candidateCount": 9,
+    "candidateSentenceCount": 9,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 9,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "我想开通短信提醒需要带什么证件",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "我想开通短信提醒需要带什么证件",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 9
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "我想开通短信提醒需要带什么证件",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "我想",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我想",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "开通",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "开通",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "短信",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "短信",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "提醒",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "提醒",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "需要",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "需要",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "带",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "带",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "什么",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "什么",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "证",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "证",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+surface,fieldA,fieldB,conflict,originalRecommendation
+可以吗,reasonCode=SENTENCE_FRAGMENT,length=3,C-04,DELETE_CONFIRMED
+可以吗,notes claims atomic coverage,lattice=NO_SEGMENTS_FRAGMENT_OK,C-05,DELETE_CONFIRMED
+休息时间,recommendation=DELETE_CONFIRMED,latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE,C-01,DELETE_CONFIRMED
+休息时间,recommendation=DELETE_CONFIRMED,segmentExact has false,C-02,DELETE_CONFIRMED
+休息时间,notes claims atomic coverage,lattice=SEGMENTS_INCOMPLETE,C-05,DELETE_CONFIRMED
+单元测试,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+回归测试,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+是否,reasonCode=SENTENCE_FRAGMENT,length=2,C-04,DELETE_CONFIRMED
+是否,notes claims atomic coverage,lattice=NO_SEGMENTS_FRAGMENT_OK,C-05,DELETE_CONFIRMED
+检查是否有,notes claims atomic coverage,lattice=NO_SEGMENTS_FRAGMENT_OK,C-05,DELETE_CONFIRMED
+正则策略,recommendation=DELETE_CONFIRMED,latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE,C-01,DELETE_CONFIRMED
+正则策略,recommendation=DELETE_CONFIRMED,segmentExact has false,C-02,DELETE_CONFIRMED
+正则策略,notes claims atomic coverage,lattice=SEGMENTS_INCOMPLETE,C-05,DELETE_CONFIRMED
+测试数据,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+熔断策略,recommendation=DELETE_CONFIRMED,latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE,C-01,DELETE_CONFIRMED
+熔断策略,recommendation=DELETE_CONFIRMED,segmentExact has false,C-02,DELETE_CONFIRMED
+熔断策略,notes claims atomic coverage,lattice=SEGMENTS_INCOMPLETE,C-05,DELETE_CONFIRMED
+特征工程,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+神经网络,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+迷你吧,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+迷你吧,reasonCode=SENTENCE_FRAGMENT,length=3,C-04,DELETE_CONFIRMED
+迷你吧,notes claims atomic coverage,lattice=NO_SEGMENTS_FRAGMENT_OK,C-05,DELETE_CONFIRMED
+邀请函,reasonCode=SENTENCE_FRAGMENT,length=3,C-04,DELETE_CONFIRMED
+邀请函,notes claims atomic coverage,lattice=NO_SEGMENTS_FRAGMENT_OK,C-05,DELETE_CONFIRMED
+配置文件,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED
+降级策略,recommendation=DELETE_CONFIRMED,latticeCoverageWithoutCompound=SEGMENTS_INCOMPLETE,C-01,DELETE_CONFIRMED
+降级策略,recommendation=DELETE_CONFIRMED,segmentExact has false,C-02,DELETE_CONFIRMED
+降级策略,notes claims atomic coverage,lattice=SEGMENTS_INCOMPLETE,C-05,DELETE_CONFIRMED
+集成测试,recommendation=DELETE_CONFIRMED,domainImpact=DOMAIN_EVIDENCE_LOST,C-03,DELETE_CONFIRMED

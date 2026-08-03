@@ -1,0 +1,403 @@
+{
+  "caseId": "B05",
+  "rawText": "新地址靠近医院",
+  "windowCount": 25,
+  "surfaceDistinctRecallCount": 2,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "1:3",
+      "syllableStart": 1,
+      "syllableEnd": 3,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    },
+    {
+      "windowId": "5:7",
+      "syllableStart": 5,
+      "syllableEnd": 7,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 4,
+  "pathCount": 1,
+  "retainedDomainCount": 4,
+  "bucketCount": 4,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 4,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 4,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "新地址靠近医院"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "靠"
+        ],
+        [
+          "近"
+        ],
+        [
+          "医院"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "靠"
+        ],
+        [
+          "近"
+        ],
+        [
+          "医院"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "靠"
+        ],
+        [
+          "近"
+        ],
+        [
+          "医院"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "靠"
+        ],
+        [
+          "近"
+        ],
+        [
+          "医院"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "新地址靠近医院",
+      "sourcePathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "新",
+          "sourceText": "新"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "靠",
+          "sourceText": "靠"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "近",
+          "sourceText": "近"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        }
+      ],
+      "dedupKey": "新地址靠近医院",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "新地址靠近医院",
+      "sourcePathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "sourceDomain": "medical",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "新",
+          "sourceText": "新"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "靠",
+          "sourceText": "靠"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "近",
+          "sourceText": "近"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        }
+      ],
+      "dedupKey": "新地址靠近医院",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "新地址靠近医院",
+      "sourcePathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "sourceDomain": "meeting",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "新",
+          "sourceText": "新"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "靠",
+          "sourceText": "靠"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "近",
+          "sourceText": "近"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        }
+      ],
+      "dedupKey": "新地址靠近医院",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "新地址靠近医院",
+      "sourcePathId": "732b81264d700254db73c51de62299c9a042ecd628f7f481be25fa54b3cd55de",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 3,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "新",
+          "sourceText": "新"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "靠",
+          "sourceText": "靠"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "近",
+          "sourceText": "近"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "医院",
+          "sourceText": "医院"
+        }
+      ],
+      "dedupKey": "新地址靠近医院",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 25,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 5,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 1
+      },
+      {
+        "start": 3,
+        "end": 5
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 21,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "B"
+  ],
+  "why": "dual",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 17.614499807357788,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

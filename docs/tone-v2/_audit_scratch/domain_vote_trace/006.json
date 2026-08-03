@@ -1,0 +1,809 @@
+{
+  "case": {
+    "id": "d006",
+    "fileNum": "006",
+    "scenario": "meeting",
+    "rawText": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-3|3-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16|16-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25|25-26|26-27|27-28",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "跟",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+          "rawRange": [
+            1,
+            3
+          ],
+          "rawText": "会员",
+          "syllableRange": [
+            1,
+            3
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": [
+            "food_order",
+            "meeting"
+          ]
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:2",
+          "rawRange": [
+            3,
+            5
+          ],
+          "rawText": "系统",
+          "syllableRange": [
+            3,
+            5
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:3",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "相",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:4",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "关",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:5",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "的",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:6",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "需",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:7",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "求",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:8",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:9",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "整",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:10",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "理",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "了",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "一",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:13",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "版",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "八",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:15",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "点",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:16",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "前",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:17",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:18",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "大",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:19",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "家",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:20",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "帮",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:21",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "忙",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:22",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "评",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:23",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "审",
+          "syllableRange": [
+            25,
+            26
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:24",
+          "rawRange": [
+            27,
+            28
+          ],
+          "rawText": "一",
+          "syllableRange": [
+            26,
+            27
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:25",
+          "rawRange": [
+            28,
+            29
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            27,
+            28
+          ],
+          "coarseSpanIds": [],
+          "pathId": "54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "1:3:1",
+          "word": "会员",
+          "surface": "会员",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            1,
+            3
+          ],
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "1:3:2",
+          "word": "会员",
+          "surface": "会员",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            1,
+            3
+          ],
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "meeting"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "meeting"
+          ]
+        },
+        {
+          "candidateId": "3:5:3",
+          "word": "系统",
+          "surface": "系统",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            3,
+            5
+          ],
+          "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:2",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [
+          "food_order",
+          "meeting"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "food_order": [
+          {
+            "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "1:3:1",
+                "word": "会员",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          }
+        ],
+        "meeting": [
+          {
+            "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "1:3:2",
+                "word": "会员",
+                "domainsAdded": [
+                  "meeting"
+                ]
+              }
+            ]
+          }
+        ],
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "3:5:3",
+                "word": "系统",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "food_order": 1,
+        "meeting": 1,
+        "tech_ai": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "food_order": 1,
+          "meeting": 1,
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "food_order",
+          "meeting",
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 1,
+        "runnerUpCount": 0,
+        "isTie": true,
+        "utteranceDomain": "food_order",
+        "winnerScore": 1,
+        "voteMargin": 1,
+        "parentTermVoteCount": 3
+      },
+      "replayVote": {
+        "domainScores": {
+          "food_order": 1,
+          "meeting": 1,
+          "tech_ai": 1
+        },
+        "retainedDomains": [
+          "food_order",
+          "meeting",
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": true,
+        "maxCount": 1
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "food_order",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+              "candidateId": "1:3:1",
+              "word": "会员"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "meeting",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:1",
+              "candidateId": "1:3:2",
+              "word": "会员"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        },
+        {
+          "rank": 3,
+          "domain": "tech_ai",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:2"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:54a9f07e03af142eb5a06f0dd3e6a30fb09f82b47cd652dc08d575fdfc606551:2",
+              "candidateId": "3:5:3",
+              "word": "系统"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 1,
+            "domainScore": 1,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 0.75,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(1); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "food_order",
+        "meeting",
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "food_order",
+        "meeting",
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "food_order",
+        "meeting",
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 3,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

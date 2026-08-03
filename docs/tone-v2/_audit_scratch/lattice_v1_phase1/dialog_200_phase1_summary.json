@@ -1,0 +1,138 @@
+{
+  "harnessOnly": true,
+  "productionCutover": false,
+  "note": "Phase 1 Window/Edge harness on dialog_200 GT text — not full production E2E",
+  "completed": 200,
+  "failed": 0,
+  "caseCount": 200,
+  "windowCount": {
+    "sum": 20470,
+    "avg": 102.35,
+    "min": 65,
+    "max": 180
+  },
+  "blockedCount": {
+    "sum": 5025,
+    "avg": 25.125
+  },
+  "uniqueRecallKeys": {
+    "sum": 15161,
+    "avg": 75.805
+  },
+  "cacheHit": {
+    "sum": 284
+  },
+  "cacheMiss": {
+    "sum": 15161
+  },
+  "physicalSql": {
+    "sum": 34255,
+    "avg": 171.275
+  },
+  "edgeCount": {
+    "sum": 1610,
+    "avg": 8.05
+  },
+  "latencyMs": {
+    "p50": 88.88030004501343,
+    "p95": 173.7587000131607,
+    "p99": 202.8837000131607,
+    "totalMs": 19125.173699975014
+  },
+  "memory": {
+    "heapStartBytes": 76559864,
+    "heapEndBytes": 96985240,
+    "heapDeltaBytes": 20425376
+  },
+  "recallCompleteness": {
+    "incompleteRecallCaseCount": 0,
+    "incompleteRecallCases": [],
+    "partialRecallCases": 0
+  },
+  "knownFiveResults": [
+    {
+      "caseId": "d019",
+      "edge_32_34": {
+        "candidateCount": 2,
+        "replacements": [
+          "一期",
+          "一齐"
+        ]
+      },
+      "edge_34_36": {
+        "candidateCount": 1,
+        "replacements": [
+          "评估"
+        ]
+      }
+    },
+    {
+      "caseId": "d064",
+      "edge_32_34": {
+        "candidateCount": 2,
+        "replacements": [
+          "一期",
+          "一齐"
+        ]
+      },
+      "edge_34_36": {
+        "candidateCount": 1,
+        "replacements": [
+          "评估"
+        ]
+      }
+    },
+    {
+      "caseId": "d109",
+      "edge_32_34": {
+        "candidateCount": 2,
+        "replacements": [
+          "一期",
+          "一齐"
+        ]
+      },
+      "edge_34_36": {
+        "candidateCount": 1,
+        "replacements": [
+          "评估"
+        ]
+      }
+    },
+    {
+      "caseId": "d154",
+      "edge_32_34": {
+        "candidateCount": 2,
+        "replacements": [
+          "一期",
+          "一齐"
+        ]
+      },
+      "edge_34_36": {
+        "candidateCount": 1,
+        "replacements": [
+          "评估"
+        ]
+      }
+    },
+    {
+      "caseId": "d199",
+      "edge_32_34": {
+        "candidateCount": 2,
+        "replacements": [
+          "一期",
+          "一齐"
+        ]
+      },
+      "edge_34_36": {
+        "candidateCount": 1,
+        "replacements": [
+          "评估"
+        ]
+      }
+    }
+  ],
+  "logicalWindowRecall": {
+    "sum": 15445,
+    "avg": 77.225
+  }
+}

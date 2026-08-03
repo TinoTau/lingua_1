@@ -1,0 +1,918 @@
+{
+  "case": {
+    "id": "d137",
+    "fileNum": "137",
+    "scenario": "cafe",
+    "rawText": "麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-10|10-12|12-14|14-15|15-16|16-17|17-18",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "麻",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "烦",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "帮",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "做",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "一",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:6",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "杯",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:7",
+          "rawRange": [
+            7,
+            10
+          ],
+          "rawText": "热拿铁",
+          "syllableRange": [
+            7,
+            10
+          ],
+          "coarseSpanIds": [
+            "c4"
+          ],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": [
+            "coffee"
+          ]
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+          "rawRange": [
+            10,
+            12
+          ],
+          "rawText": "带走",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c5"
+          ],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": [
+            "bakery",
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+          "rawRange": [
+            13,
+            15
+          ],
+          "rawText": "大杯",
+          "syllableRange": [
+            12,
+            14
+          ],
+          "coarseSpanIds": [
+            "c6"
+          ],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:10",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "就",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:11",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:12",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "谢",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:13",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "谢",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "7:10:2",
+          "word": "热拿铁",
+          "surface": "热拿铁",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            10
+          ],
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:7",
+          "candidateRank": 1,
+          "score": 1.9975,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "10:12:6",
+          "word": "带走",
+          "surface": "带走",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+          "candidateRank": 1,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "bakery",
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "bakery",
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "candidateId": "12:14:7",
+          "word": "大杯",
+          "surface": "大杯",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            13,
+            15
+          ],
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+          "candidateRank": 1,
+          "score": 2.38,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "candidateId": "12:14:8",
+          "word": "大杯",
+          "surface": "大杯",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            13,
+            15
+          ],
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        },
+        {
+          "candidateId": "12:14:9",
+          "word": "大杯",
+          "surface": "大杯",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            13,
+            15
+          ],
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "coffee"
+        ],
+        [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ],
+        [
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "coffee": [
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "7:10:2",
+                "word": "热拿铁",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:6",
+                "word": "带走",
+                "domainsAdded": [
+                  "bakery",
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "12:14:7",
+                "word": "大杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "bakery": [
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:6",
+                "word": "带走",
+                "domainsAdded": [
+                  "bakery",
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "food_order": [
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:6",
+                "word": "带走",
+                "domainsAdded": [
+                  "bakery",
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "12:14:7",
+                "word": "大杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              },
+              {
+                "candidateId": "12:14:8",
+                "word": "大杯",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              },
+              {
+                "candidateId": "12:14:9",
+                "word": "大杯",
+                "domainsAdded": [
+                  "food_order"
+                ]
+              }
+            ]
+          }
+        ],
+        "milk_tea": [
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:6",
+                "word": "带走",
+                "domainsAdded": [
+                  "bakery",
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "12:14:7",
+                "word": "大杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "coffee": 3,
+        "bakery": 1,
+        "food_order": 2,
+        "milk_tea": 2
+      },
+      "productionVote": {
+        "domainScores": {
+          "coffee": 3,
+          "bakery": 1,
+          "food_order": 2,
+          "milk_tea": 2
+        },
+        "retainedDomains": [
+          "coffee"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 3,
+        "runnerUpCount": 2,
+        "isTie": false,
+        "utteranceDomain": "coffee",
+        "winnerScore": 3,
+        "voteMargin": 1,
+        "parentTermVoteCount": 5
+      },
+      "replayVote": {
+        "domainScores": {
+          "coffee": 3,
+          "bakery": 1,
+          "food_order": 2,
+          "milk_tea": 2
+        },
+        "retainedDomains": [
+          "coffee"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 3
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "coffee",
+          "rawVoteScore": 3,
+          "adjustedScore": 3,
+          "evidenceFineSpanCount": 3,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:7",
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:7",
+              "candidateId": "7:10:2",
+              "word": "热拿铁"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+              "candidateId": "10:12:6",
+              "word": "带走"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+              "candidateId": "12:14:7",
+              "word": "大杯"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 3,
+            "domainScore": 3,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 2.25,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=2.25); this score=3"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "food_order",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 4,
+          "evidenceFineSpanList": [
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+              "candidateId": "10:12:6",
+              "word": "带走"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+              "candidateId": "12:14:7",
+              "word": "大杯"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+              "candidateId": "12:14:8",
+              "word": "大杯"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+              "candidateId": "12:14:9",
+              "word": "大杯"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 3,
+            "domainScore": 2,
+            "scoreRatio": 0.6666666666666666,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 2.25,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=2.25); this score=2"
+          }
+        },
+        {
+          "rank": 3,
+          "domain": "milk_tea",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+              "candidateId": "10:12:6",
+              "word": "带走"
+            },
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+              "candidateId": "12:14:7",
+              "word": "大杯"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 3,
+            "domainScore": 2,
+            "scoreRatio": 0.6666666666666666,
+            "absoluteGap": 1,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 2.25,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=2.25); this score=2"
+          }
+        },
+        {
+          "rank": 4,
+          "domain": "bakery",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 1,
+          "evidenceFineSpanList": [
+            "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+              "candidateId": "10:12:6",
+              "word": "带走"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 3,
+            "domainScore": 1,
+            "scoreRatio": 0.3333333333333333,
+            "absoluteGap": 2,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 2.25,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=2.25); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "coffee"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "coffee"
+      ],
+      "bucketDomainsFromVote": [
+        "coffee"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [
+        {
+          "candidateId": "10:12:6",
+          "word": "带走",
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:8",
+          "domainTags": [
+            "bakery",
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        },
+        {
+          "candidateId": "12:14:7",
+          "word": "大杯",
+          "fineSpanId": "fine:c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995:9",
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        }
+      ],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

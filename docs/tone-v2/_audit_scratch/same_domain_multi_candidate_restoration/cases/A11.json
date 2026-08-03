@@ -1,0 +1,165 @@
+{
+  "caseId": "A11",
+  "rawText": "我要一杯低脂牛奶",
+  "retainedDomains": [
+    "bakery",
+    "coffee",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "bakery",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我要一杯低脂牛奶"
+      ]
+    },
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我要一杯低脂牛奶"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        2,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "地质",
+          "低脂"
+        ],
+        [
+          "牛奶"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "我要一杯地质牛奶",
+        "我要一杯低脂牛奶"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 2,
+  "assemblyTexts": [
+    "我要一杯低脂牛奶",
+    "我要一杯地质牛奶"
+  ],
+  "crossPathDistinctCount": 2,
+  "prefilledCount": 2,
+  "prefilledDistinct": 2,
+  "prefilledTexts": [
+    "我要一杯低脂牛奶",
+    "我要一杯地质牛奶"
+  ],
+  "kenlmInputCount": 2,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 24.932899951934814,
+  "groups": [
+    "A",
+    "G"
+  ],
+  "why": "di|zhi in 低脂 context",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 2,
+    "inputTexts": [
+      "我要一杯低脂牛奶",
+      "我要一杯地质牛奶"
+    ]
+  }
+}

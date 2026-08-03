@@ -1,0 +1,102 @@
+{
+  "targetedN": 43,
+  "errors": 0,
+  "prefilledGt1": 31,
+  "multiGrid": 31,
+  "exactTermOnlyResidual": false,
+  "capViolations": 0,
+  "focus": {
+    "A01": {
+      "prefilledDistinct": 3,
+      "texts": [
+        "请确认低脂",
+        "请确认地址",
+        "请确认地质"
+      ],
+      "multiGrid": true,
+      "kenlm": {
+        "skipped": true,
+        "reason": "KenLM environment/config blocker",
+        "envError": "Cannot read properties of undefined (reading 'replace')",
+        "kenlmRunnable": false,
+        "status": {
+          "enabled": true,
+          "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+          "queryPath": "query.exe",
+          "failOpen": true
+        },
+        "prefilledCount": 3,
+        "inputTexts": [
+          "请确认低脂",
+          "请确认地址",
+          "请确认地质"
+        ]
+      }
+    },
+    "B01": {
+      "prefilledDistinct": 4,
+      "texts": [
+        "请确认低脂和医院",
+        "请确认地址和医院",
+        "请确认地址和议员",
+        "请确认地质和医院"
+      ],
+      "multiGrid": true,
+      "kenlm": {
+        "skipped": true,
+        "reason": "KenLM environment/config blocker",
+        "envError": "Cannot read properties of undefined (reading 'replace')",
+        "kenlmRunnable": false,
+        "status": {
+          "enabled": true,
+          "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+          "queryPath": "query.exe",
+          "failOpen": true
+        },
+        "prefilledCount": 4,
+        "inputTexts": [
+          "请确认低脂和医院",
+          "请确认地址和医院",
+          "请确认地址和议员",
+          "请确认地质和医院"
+        ]
+      }
+    },
+    "C01": {
+      "prefilledDistinct": 4,
+      "texts": [
+        "请确认地址、医院和医师",
+        "请确认地址、议员和议室",
+        "请确认地址、议员和医师",
+        "请确认地址、医院和议室"
+      ],
+      "multiGrid": true,
+      "kenlm": {
+        "skipped": true,
+        "reason": "KenLM environment/config blocker",
+        "envError": "Cannot read properties of undefined (reading 'replace')",
+        "kenlmRunnable": false,
+        "status": {
+          "enabled": true,
+          "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+          "queryPath": "query.exe",
+          "failOpen": true
+        },
+        "prefilledCount": 4,
+        "inputTexts": [
+          "请确认地址、医院和医师",
+          "请确认地址、议员和议室",
+          "请确认地址、议员和医师",
+          "请确认地址、医院和议室"
+        ]
+      }
+    }
+  },
+  "acceptance": {
+    "A01_ge3": true,
+    "B01_ge4": true,
+    "C01_gt1": true,
+    "noExactTermResidual": true,
+    "noCapViolations": true
+  }
+}

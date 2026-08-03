@@ -1,0 +1,244 @@
+{
+  "caseId": "A09",
+  "rawText": "医师已经到了",
+  "windowCount": 20,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "0:2",
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "text": "医师",
+      "surfaces": [
+        "医师",
+        "议室"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "医师已经到了"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "c35f52bba55ec637885d5b2233296de82d6c8278b86be253fe75ccd7ab094f70",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "到"
+        ],
+        [
+          "了"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "c35f52bba55ec637885d5b2233296de82d6c8278b86be253fe75ccd7ab094f70",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "医师"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "到"
+        ],
+        [
+          "了"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "医师已经到了",
+      "sourcePathId": "c35f52bba55ec637885d5b2233296de82d6c8278b86be253fe75ccd7ab094f70",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "已",
+          "sourceText": "已"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "经",
+          "sourceText": "经"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "到",
+          "sourceText": "到"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "了",
+          "sourceText": "了"
+        }
+      ],
+      "dedupKey": "医师已经到了",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "医师已经到了",
+      "sourcePathId": "c35f52bba55ec637885d5b2233296de82d6c8278b86be253fe75ccd7ab094f70",
+      "sourceDomain": "meeting",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "已",
+          "sourceText": "已"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "经",
+          "sourceText": "经"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "到",
+          "sourceText": "到"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "了",
+          "sourceText": "了"
+        }
+      ],
+      "dedupKey": "医师已经到了",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 20,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 20,
+    "lexicalEdgeCount": 1,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 5,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 2,
+        "end": 6
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 20,
+    "sqlQueryCount": 15,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A"
+  ],
+  "why": "yi|shi",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 17.58330011367798,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

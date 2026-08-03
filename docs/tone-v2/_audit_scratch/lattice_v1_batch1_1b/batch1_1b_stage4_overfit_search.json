@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-07-28",
+  "eligibilityReuse": {
+    "sharedFilter": true,
+    "exactDedicatedCopy": false,
+    "architectureDrift": false
+  },
+  "testOnlyAllowed": [
+    "rank9",
+    "rank20",
+    "玖",
+    "length1-surface-exact",
+    "batch1_1b",
+    "surface_rank9",
+    "stage1_schema_explain"
+  ],
+  "productionScanAlreadyAssertedInA": true,
+  "envSpecialCases": {
+    "JEST_WORKER_ID_in_prod_recall_runtime": false,
+    "__TEST__in_prod_recall_runtime": false
+  }
+}

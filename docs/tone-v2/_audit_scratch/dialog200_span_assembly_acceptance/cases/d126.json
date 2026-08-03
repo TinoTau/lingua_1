@@ -1,0 +1,3160 @@
+{
+  "caseId": "d126",
+  "rawText": "请问理财产品的风险等级在哪里查看？",
+  "rawTextLength": 17,
+  "syllableCount": 16,
+  "expectedText": null,
+  "sourceManifestEntry": {
+    "id": "d126",
+    "scenario": "bank",
+    "file": "dialog_d126.wav",
+    "language": "zh"
+  },
+  "coordinate": {
+    "syllableTrace": [
+      {
+        "syllableIndex": 0,
+        "text": "qing",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 1,
+        "text": "wen",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 2,
+        "text": "li",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 3,
+        "text": "cai",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 4,
+        "text": "chan",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 5,
+        "text": "pin",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 6,
+        "text": "de",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 7,
+        "text": "feng",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 8,
+        "text": "xian",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 9,
+        "text": "deng",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 10,
+        "text": "ji",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 11,
+        "text": "zai",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 12,
+        "text": "na",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 13,
+        "text": "li",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 14,
+        "text": "cha",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      },
+      {
+        "syllableIndex": 15,
+        "text": "kan",
+        "textStart": null,
+        "textEnd": null,
+        "pinyin": null
+      }
+    ],
+    "coordinateMappingFailure": 16,
+    "invalidRangeCount": 16,
+    "coverageOk": true
+  },
+  "windows": {
+    "totalWindowCount": 70,
+    "windowLengthDistribution": {
+      "1": 16,
+      "2": 15,
+      "3": 14,
+      "4": 13,
+      "5": 12
+    },
+    "blockedWindowCount": 0,
+    "recallEligibleWindowCount": 70,
+    "windowsPerStartPosition": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 5,
+      "5": 5,
+      "6": 5,
+      "7": 5,
+      "8": 5,
+      "9": 5,
+      "10": 5,
+      "11": 5,
+      "12": 4,
+      "13": 3,
+      "14": 2,
+      "15": 1
+    },
+    "hasLength1": true,
+    "sample": [
+      {
+        "windowId": "0:1",
+        "syllableStart": 0,
+        "syllableEnd": 1,
+        "windowLength": 1,
+        "textStart": 0,
+        "textEnd": 1,
+        "sourceText": "请",
+        "pinyin": "qing",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:2",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "windowLength": 2,
+        "textStart": 0,
+        "textEnd": 2,
+        "sourceText": "请问",
+        "pinyin": "qing|wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:3",
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "windowLength": 3,
+        "textStart": 0,
+        "textEnd": 3,
+        "sourceText": "请问理",
+        "pinyin": "qing|wen|li",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:4",
+        "syllableStart": 0,
+        "syllableEnd": 4,
+        "windowLength": 4,
+        "textStart": 0,
+        "textEnd": 4,
+        "sourceText": "请问理财",
+        "pinyin": "qing|wen|li|cai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "0:5",
+        "syllableStart": 0,
+        "syllableEnd": 5,
+        "windowLength": 5,
+        "textStart": 0,
+        "textEnd": 5,
+        "sourceText": "请问理财产",
+        "pinyin": "qing|wen|li|cai|chan",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:2",
+        "syllableStart": 1,
+        "syllableEnd": 2,
+        "windowLength": 1,
+        "textStart": 1,
+        "textEnd": 2,
+        "sourceText": "问",
+        "pinyin": "wen",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:3",
+        "syllableStart": 1,
+        "syllableEnd": 3,
+        "windowLength": 2,
+        "textStart": 1,
+        "textEnd": 3,
+        "sourceText": "问理",
+        "pinyin": "wen|li",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:4",
+        "syllableStart": 1,
+        "syllableEnd": 4,
+        "windowLength": 3,
+        "textStart": 1,
+        "textEnd": 4,
+        "sourceText": "问理财",
+        "pinyin": "wen|li|cai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:5",
+        "syllableStart": 1,
+        "syllableEnd": 5,
+        "windowLength": 4,
+        "textStart": 1,
+        "textEnd": 5,
+        "sourceText": "问理财产",
+        "pinyin": "wen|li|cai|chan",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "1:6",
+        "syllableStart": 1,
+        "syllableEnd": 6,
+        "windowLength": 5,
+        "textStart": 1,
+        "textEnd": 6,
+        "sourceText": "问理财产品",
+        "pinyin": "wen|li|cai|chan|pin",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:3",
+        "syllableStart": 2,
+        "syllableEnd": 3,
+        "windowLength": 1,
+        "textStart": 2,
+        "textEnd": 3,
+        "sourceText": "理",
+        "pinyin": "li",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:4",
+        "syllableStart": 2,
+        "syllableEnd": 4,
+        "windowLength": 2,
+        "textStart": 2,
+        "textEnd": 4,
+        "sourceText": "理财",
+        "pinyin": "li|cai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:5",
+        "syllableStart": 2,
+        "syllableEnd": 5,
+        "windowLength": 3,
+        "textStart": 2,
+        "textEnd": 5,
+        "sourceText": "理财产",
+        "pinyin": "li|cai|chan",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:6",
+        "syllableStart": 2,
+        "syllableEnd": 6,
+        "windowLength": 4,
+        "textStart": 2,
+        "textEnd": 6,
+        "sourceText": "理财产品",
+        "pinyin": "li|cai|chan|pin",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "2:7",
+        "syllableStart": 2,
+        "syllableEnd": 7,
+        "windowLength": 5,
+        "textStart": 2,
+        "textEnd": 7,
+        "sourceText": "理财产品的",
+        "pinyin": "li|cai|chan|pin|de",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:4",
+        "syllableStart": 3,
+        "syllableEnd": 4,
+        "windowLength": 1,
+        "textStart": 3,
+        "textEnd": 4,
+        "sourceText": "财",
+        "pinyin": "cai",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:5",
+        "syllableStart": 3,
+        "syllableEnd": 5,
+        "windowLength": 2,
+        "textStart": 3,
+        "textEnd": 5,
+        "sourceText": "财产",
+        "pinyin": "cai|chan",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:6",
+        "syllableStart": 3,
+        "syllableEnd": 6,
+        "windowLength": 3,
+        "textStart": 3,
+        "textEnd": 6,
+        "sourceText": "财产品",
+        "pinyin": "cai|chan|pin",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:7",
+        "syllableStart": 3,
+        "syllableEnd": 7,
+        "windowLength": 4,
+        "textStart": 3,
+        "textEnd": 7,
+        "sourceText": "财产品的",
+        "pinyin": "cai|chan|pin|de",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "3:8",
+        "syllableStart": 3,
+        "syllableEnd": 8,
+        "windowLength": 5,
+        "textStart": 3,
+        "textEnd": 8,
+        "sourceText": "财产品的风",
+        "pinyin": "cai|chan|pin|de|feng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:5",
+        "syllableStart": 4,
+        "syllableEnd": 5,
+        "windowLength": 1,
+        "textStart": 4,
+        "textEnd": 5,
+        "sourceText": "产",
+        "pinyin": "chan",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:6",
+        "syllableStart": 4,
+        "syllableEnd": 6,
+        "windowLength": 2,
+        "textStart": 4,
+        "textEnd": 6,
+        "sourceText": "产品",
+        "pinyin": "chan|pin",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:7",
+        "syllableStart": 4,
+        "syllableEnd": 7,
+        "windowLength": 3,
+        "textStart": 4,
+        "textEnd": 7,
+        "sourceText": "产品的",
+        "pinyin": "chan|pin|de",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:8",
+        "syllableStart": 4,
+        "syllableEnd": 8,
+        "windowLength": 4,
+        "textStart": 4,
+        "textEnd": 8,
+        "sourceText": "产品的风",
+        "pinyin": "chan|pin|de|feng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "4:9",
+        "syllableStart": 4,
+        "syllableEnd": 9,
+        "windowLength": 5,
+        "textStart": 4,
+        "textEnd": 9,
+        "sourceText": "产品的风险",
+        "pinyin": "chan|pin|de|feng|xian",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:6",
+        "syllableStart": 5,
+        "syllableEnd": 6,
+        "windowLength": 1,
+        "textStart": 5,
+        "textEnd": 6,
+        "sourceText": "品",
+        "pinyin": "pin",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:7",
+        "syllableStart": 5,
+        "syllableEnd": 7,
+        "windowLength": 2,
+        "textStart": 5,
+        "textEnd": 7,
+        "sourceText": "品的",
+        "pinyin": "pin|de",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:8",
+        "syllableStart": 5,
+        "syllableEnd": 8,
+        "windowLength": 3,
+        "textStart": 5,
+        "textEnd": 8,
+        "sourceText": "品的风",
+        "pinyin": "pin|de|feng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:9",
+        "syllableStart": 5,
+        "syllableEnd": 9,
+        "windowLength": 4,
+        "textStart": 5,
+        "textEnd": 9,
+        "sourceText": "品的风险",
+        "pinyin": "pin|de|feng|xian",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "5:10",
+        "syllableStart": 5,
+        "syllableEnd": 10,
+        "windowLength": 5,
+        "textStart": 5,
+        "textEnd": 10,
+        "sourceText": "品的风险等",
+        "pinyin": "pin|de|feng|xian|deng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:7",
+        "syllableStart": 6,
+        "syllableEnd": 7,
+        "windowLength": 1,
+        "textStart": 6,
+        "textEnd": 7,
+        "sourceText": "的",
+        "pinyin": "de",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:8",
+        "syllableStart": 6,
+        "syllableEnd": 8,
+        "windowLength": 2,
+        "textStart": 6,
+        "textEnd": 8,
+        "sourceText": "的风",
+        "pinyin": "de|feng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:9",
+        "syllableStart": 6,
+        "syllableEnd": 9,
+        "windowLength": 3,
+        "textStart": 6,
+        "textEnd": 9,
+        "sourceText": "的风险",
+        "pinyin": "de|feng|xian",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:10",
+        "syllableStart": 6,
+        "syllableEnd": 10,
+        "windowLength": 4,
+        "textStart": 6,
+        "textEnd": 10,
+        "sourceText": "的风险等",
+        "pinyin": "de|feng|xian|deng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "6:11",
+        "syllableStart": 6,
+        "syllableEnd": 11,
+        "windowLength": 5,
+        "textStart": 6,
+        "textEnd": 11,
+        "sourceText": "的风险等级",
+        "pinyin": "de|feng|xian|deng|ji",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:8",
+        "syllableStart": 7,
+        "syllableEnd": 8,
+        "windowLength": 1,
+        "textStart": 7,
+        "textEnd": 8,
+        "sourceText": "风",
+        "pinyin": "feng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:9",
+        "syllableStart": 7,
+        "syllableEnd": 9,
+        "windowLength": 2,
+        "textStart": 7,
+        "textEnd": 9,
+        "sourceText": "风险",
+        "pinyin": "feng|xian",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:10",
+        "syllableStart": 7,
+        "syllableEnd": 10,
+        "windowLength": 3,
+        "textStart": 7,
+        "textEnd": 10,
+        "sourceText": "风险等",
+        "pinyin": "feng|xian|deng",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:11",
+        "syllableStart": 7,
+        "syllableEnd": 11,
+        "windowLength": 4,
+        "textStart": 7,
+        "textEnd": 11,
+        "sourceText": "风险等级",
+        "pinyin": "feng|xian|deng|ji",
+        "blocked": false,
+        "blockReason": null
+      },
+      {
+        "windowId": "7:12",
+        "syllableStart": 7,
+        "syllableEnd": 12,
+        "windowLength": 5,
+        "textStart": 7,
+        "textEnd": 12,
+        "sourceText": "风险等级在",
+        "pinyin": "feng|xian|deng|ji|zai",
+        "blocked": false,
+        "blockReason": null
+      }
+    ]
+  },
+  "recall": {
+    "windowsWith0Candidate": 68,
+    "windowsWith1Candidate": 1,
+    "windowsWith2PlusCandidates": 1,
+    "maxCandidatesPerWindow": 2,
+    "averageCandidatesPerWindow": 0.043,
+    "baseCandidateCount": 0,
+    "domainCandidateCount": 3,
+    "multiDomainCandidateCount": 0,
+    "totalCandidates": 3,
+    "sqlQueryCount": 3,
+    "windows": [
+      {
+        "windowId": "0:1",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 1,
+          "text": "请",
+          "pinyin": "qing"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:2",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "text": "请问",
+          "pinyin": "qing|wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:3",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "text": "请问理",
+          "pinyin": "qing|wen|li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:4",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "text": "请问理财",
+          "pinyin": "qing|wen|li|cai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "0:5",
+        "query": {
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "text": "请问理财产",
+          "pinyin": "qing|wen|li|cai|chan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:2",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "text": "问",
+          "pinyin": "wen"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:3",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "text": "问理",
+          "pinyin": "wen|li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:4",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "text": "问理财",
+          "pinyin": "wen|li|cai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:5",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "text": "问理财产",
+          "pinyin": "wen|li|cai|chan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "1:6",
+        "query": {
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "text": "问理财产品",
+          "pinyin": "wen|li|cai|chan|pin"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:3",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "text": "理",
+          "pinyin": "li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:4",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "text": "理财",
+          "pinyin": "li|cai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:5",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "text": "理财产",
+          "pinyin": "li|cai|chan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:6",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "text": "理财产品",
+          "pinyin": "li|cai|chan|pin"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "2:7",
+        "query": {
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "text": "理财产品的",
+          "pinyin": "li|cai|chan|pin|de"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:4",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "text": "财",
+          "pinyin": "cai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:5",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "text": "财产",
+          "pinyin": "cai|chan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:6",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "text": "财产品",
+          "pinyin": "cai|chan|pin"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:7",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "text": "财产品的",
+          "pinyin": "cai|chan|pin|de"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "3:8",
+        "query": {
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "text": "财产品的风",
+          "pinyin": "cai|chan|pin|de|feng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:5",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 5,
+          "text": "产",
+          "pinyin": "chan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:6",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 6,
+          "text": "产品",
+          "pinyin": "chan|pin"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:7",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "text": "产品的",
+          "pinyin": "chan|pin|de"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:8",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "text": "产品的风",
+          "pinyin": "chan|pin|de|feng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "4:9",
+        "query": {
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "text": "产品的风险",
+          "pinyin": "chan|pin|de|feng|xian"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:6",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 6,
+          "text": "品",
+          "pinyin": "pin"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:7",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "text": "品的",
+          "pinyin": "pin|de"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:8",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "text": "品的风",
+          "pinyin": "pin|de|feng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:9",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "text": "品的风险",
+          "pinyin": "pin|de|feng|xian"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "5:10",
+        "query": {
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "text": "品的风险等",
+          "pinyin": "pin|de|feng|xian|deng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:7",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "text": "的",
+          "pinyin": "de"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:8",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "text": "的风",
+          "pinyin": "de|feng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:9",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "text": "的风险",
+          "pinyin": "de|feng|xian"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:10",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "text": "的风险等",
+          "pinyin": "de|feng|xian|deng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "6:11",
+        "query": {
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "text": "的风险等级",
+          "pinyin": "de|feng|xian|deng|ji"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:8",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 8,
+          "text": "风",
+          "pinyin": "feng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:9",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "text": "风险",
+          "pinyin": "feng|xian"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:10",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "text": "风险等",
+          "pinyin": "feng|xian|deng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:11",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "text": "风险等级",
+          "pinyin": "feng|xian|deng|ji"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "7:12",
+        "query": {
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "text": "风险等级在",
+          "pinyin": "feng|xian|deng|ji|zai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:9",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "text": "险",
+          "pinyin": "xian"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:10",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "text": "险等",
+          "pinyin": "xian|deng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:11",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "text": "险等级",
+          "pinyin": "xian|deng|ji"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:12",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "text": "险等级在",
+          "pinyin": "xian|deng|ji|zai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "8:13",
+        "query": {
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "text": "险等级在哪",
+          "pinyin": "xian|deng|ji|zai|na"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:10",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "text": "等",
+          "pinyin": "deng"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:11",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "text": "等级",
+          "pinyin": "deng|ji"
+        },
+        "candidates": [
+          {
+            "candidateId": "9:11:1",
+            "term": "登机",
+            "termId": "ngram:3053",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tourism_pickup"
+            ],
+            "isBase": false,
+            "pinyin": "deng|ji",
+            "tone": null,
+            "rawStart": 9,
+            "rawEnd": 11,
+            "syllableStart": 9,
+            "syllableEnd": 11
+          },
+          {
+            "candidateId": "9:11:2",
+            "term": "登机",
+            "termId": "ngram:3056",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tourism_pickup"
+            ],
+            "isBase": false,
+            "pinyin": "deng|ji",
+            "tone": null,
+            "rawStart": 9,
+            "rawEnd": 11,
+            "syllableStart": 9,
+            "syllableEnd": 11
+          }
+        ],
+        "candidateCount": 2,
+        "distinctTerms": 1
+      },
+      {
+        "windowId": "9:12",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "text": "等级在",
+          "pinyin": "deng|ji|zai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:13",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "text": "等级在哪",
+          "pinyin": "deng|ji|zai|na"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "9:14",
+        "query": {
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "text": "等级在哪里",
+          "pinyin": "deng|ji|zai|na|li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:11",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 11,
+          "text": "级",
+          "pinyin": "ji"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:12",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "text": "级在",
+          "pinyin": "ji|zai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:13",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 13,
+          "text": "级在哪",
+          "pinyin": "ji|zai|na"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:14",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 14,
+          "text": "级在哪里",
+          "pinyin": "ji|zai|na|li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "10:15",
+        "query": {
+          "syllableStart": 10,
+          "syllableEnd": 15,
+          "text": "级在哪里查",
+          "pinyin": "ji|zai|na|li|cha"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:12",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 12,
+          "text": "在",
+          "pinyin": "zai"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:13",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "text": "在哪",
+          "pinyin": "zai|na"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:14",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 14,
+          "text": "在哪里",
+          "pinyin": "zai|na|li"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:15",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 15,
+          "text": "在哪里查",
+          "pinyin": "zai|na|li|cha"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      },
+      {
+        "windowId": "11:16",
+        "query": {
+          "syllableStart": 11,
+          "syllableEnd": 16,
+          "text": "在哪里查看",
+          "pinyin": "zai|na|li|cha|kan"
+        },
+        "candidates": [],
+        "candidateCount": 0,
+        "distinctTerms": 0
+      }
+    ]
+  },
+  "edges": {
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 12,
+    "edgesWithMultipleCandidates": 1,
+    "edgeCandidateTotal": 3,
+    "recallCandidateTotal": 3,
+    "edgePreservesMulti": true,
+    "sample": [
+      {
+        "edgeId": "9:11",
+        "edgeKind": "lexical",
+        "syllableStart": 9,
+        "syllableEnd": 11,
+        "textStart": 9,
+        "textEnd": 11,
+        "sourceText": "等级",
+        "candidateCount": 2,
+        "candidates": [
+          {
+            "candidateId": "9:11:1",
+            "term": "登机",
+            "termId": "ngram:3053",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tourism_pickup"
+            ],
+            "isBase": false,
+            "pinyin": "deng|ji",
+            "tone": null,
+            "rawStart": 9,
+            "rawEnd": 11,
+            "syllableStart": 9,
+            "syllableEnd": 11
+          },
+          {
+            "candidateId": "9:11:2",
+            "term": "登机",
+            "termId": "ngram:3056",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tourism_pickup"
+            ],
+            "isBase": false,
+            "pinyin": "deng|ji",
+            "tone": null,
+            "rawStart": 9,
+            "rawEnd": 11,
+            "syllableStart": 9,
+            "syllableEnd": 11
+          }
+        ],
+        "sourceWindowIds": [
+          "9:11"
+        ]
+      },
+      {
+        "edgeId": "14:16",
+        "edgeKind": "lexical",
+        "syllableStart": 14,
+        "syllableEnd": 16,
+        "textStart": 14,
+        "textEnd": 16,
+        "sourceText": "查看",
+        "candidateCount": 1,
+        "candidates": [
+          {
+            "candidateId": "14:16:3",
+            "term": "查看",
+            "termId": "ngram:2668",
+            "source": "domain_term",
+            "hitKind": "parent_fragment",
+            "score": 2.36,
+            "domainTags": [
+              "tech_ai"
+            ],
+            "isBase": false,
+            "pinyin": "cha|kan",
+            "tone": null,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "syllableStart": 14,
+            "syllableEnd": 16
+          }
+        ],
+        "sourceWindowIds": [
+          "14:16"
+        ]
+      },
+      {
+        "edgeId": "fallback:0:1",
+        "edgeKind": "fallback",
+        "syllableStart": 0,
+        "syllableEnd": 1,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:1:2",
+        "edgeKind": "fallback",
+        "syllableStart": 1,
+        "syllableEnd": 2,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:2:3",
+        "edgeKind": "fallback",
+        "syllableStart": 2,
+        "syllableEnd": 3,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:3:4",
+        "edgeKind": "fallback",
+        "syllableStart": 3,
+        "syllableEnd": 4,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:4:5",
+        "edgeKind": "fallback",
+        "syllableStart": 4,
+        "syllableEnd": 5,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:5:6",
+        "edgeKind": "fallback",
+        "syllableStart": 5,
+        "syllableEnd": 6,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:6:7",
+        "edgeKind": "fallback",
+        "syllableStart": 6,
+        "syllableEnd": 7,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:7:8",
+        "edgeKind": "fallback",
+        "syllableStart": 7,
+        "syllableEnd": 8,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:8:9",
+        "edgeKind": "fallback",
+        "syllableStart": 8,
+        "syllableEnd": 9,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:11:12",
+        "edgeKind": "fallback",
+        "syllableStart": 11,
+        "syllableEnd": 12,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:12:13",
+        "edgeKind": "fallback",
+        "syllableStart": 12,
+        "syllableEnd": 13,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      },
+      {
+        "edgeId": "fallback:13:14",
+        "edgeKind": "fallback",
+        "syllableStart": 13,
+        "syllableEnd": 14,
+        "textStart": null,
+        "textEnd": null,
+        "sourceText": "",
+        "candidateCount": 0,
+        "candidates": [],
+        "sourceWindowIds": [
+          "fallback_injection"
+        ]
+      }
+    ]
+  },
+  "paths": {
+    "pathCount": 1,
+    "distinctBoundaryPathCount": 1,
+    "distinctEffectiveCandidatePathCount": 1,
+    "pathCoverageFailure": 0,
+    "pathOverlapFailure": 0,
+    "paths": [
+      {
+        "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+        "edges": [
+          "fallback:0:1",
+          "fallback:1:2",
+          "fallback:2:3",
+          "fallback:3:4",
+          "fallback:4:5",
+          "fallback:5:6",
+          "fallback:6:7",
+          "fallback:7:8",
+          "fallback:8:9",
+          "9:11",
+          "fallback:11:12",
+          "fallback:12:13",
+          "fallback:13:14",
+          "14:16"
+        ],
+        "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-11|11-12|12-13|13-14|14-16",
+        "edgeSequenceKey": "0:1|1:2|2:3|3:4|4:5|5:6|6:7|7:8|8:9|9:11|11:12|12:13|13:14|14:16",
+        "coverageStart": 0,
+        "coverageEnd": 16,
+        "hasGap": false,
+        "hasOverlap": false,
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 12
+      }
+    ]
+  },
+  "fineSpans": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:0",
+      "textRange": {
+        "start": 0,
+        "end": 1
+      },
+      "syllableRange": {
+        "start": 0,
+        "end": 1
+      },
+      "sourceText": "请",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 0,
+        "pathRawEnd": 1,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:1",
+      "textRange": {
+        "start": 1,
+        "end": 2
+      },
+      "syllableRange": {
+        "start": 1,
+        "end": 2
+      },
+      "sourceText": "问",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 1,
+        "pathRawEnd": 2,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:2",
+      "textRange": {
+        "start": 2,
+        "end": 3
+      },
+      "syllableRange": {
+        "start": 2,
+        "end": 3
+      },
+      "sourceText": "理",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 2,
+        "pathRawEnd": 3,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:3",
+      "textRange": {
+        "start": 3,
+        "end": 4
+      },
+      "syllableRange": {
+        "start": 3,
+        "end": 4
+      },
+      "sourceText": "财",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 3,
+        "pathRawEnd": 4,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:4",
+      "textRange": {
+        "start": 4,
+        "end": 5
+      },
+      "syllableRange": {
+        "start": 4,
+        "end": 5
+      },
+      "sourceText": "产",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 4,
+        "pathRawEnd": 5,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:5",
+      "textRange": {
+        "start": 5,
+        "end": 6
+      },
+      "syllableRange": {
+        "start": 5,
+        "end": 6
+      },
+      "sourceText": "品",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 5,
+        "pathRawEnd": 6,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:6",
+      "textRange": {
+        "start": 6,
+        "end": 7
+      },
+      "syllableRange": {
+        "start": 6,
+        "end": 7
+      },
+      "sourceText": "的",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 6,
+        "pathRawEnd": 7,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:7",
+      "textRange": {
+        "start": 7,
+        "end": 8
+      },
+      "syllableRange": {
+        "start": 7,
+        "end": 8
+      },
+      "sourceText": "风",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 7,
+        "pathRawEnd": 8,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:8",
+      "textRange": {
+        "start": 8,
+        "end": 9
+      },
+      "syllableRange": {
+        "start": 8,
+        "end": 9
+      },
+      "sourceText": "险",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 8,
+        "pathRawEnd": 9,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:9",
+      "textRange": {
+        "start": 9,
+        "end": 11
+      },
+      "syllableRange": {
+        "start": 9,
+        "end": 11
+      },
+      "sourceText": "等级",
+      "isFallback": false,
+      "candidateCountBeforeTone": 2,
+      "candidatesBeforeTone": [
+        {
+          "candidateId": "9:11:1",
+          "term": "登机",
+          "termId": "ngram:3053",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        },
+        {
+          "candidateId": "9:11:2",
+          "term": "登机",
+          "termId": "ngram:3056",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        }
+      ],
+      "candidateCountAfterTone": 2,
+      "candidatesAfterTone": [
+        {
+          "candidateId": "9:11:1",
+          "term": "登机",
+          "termId": "ngram:3053",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        },
+        {
+          "candidateId": "9:11:2",
+          "term": "登机",
+          "termId": "ngram:3056",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        }
+      ],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 9,
+        "pathRawEnd": 11,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:10",
+      "textRange": {
+        "start": 11,
+        "end": 12
+      },
+      "syllableRange": {
+        "start": 11,
+        "end": 12
+      },
+      "sourceText": "在",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 11,
+        "pathRawEnd": 12,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:11",
+      "textRange": {
+        "start": 12,
+        "end": 13
+      },
+      "syllableRange": {
+        "start": 12,
+        "end": 13
+      },
+      "sourceText": "哪",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 12,
+        "pathRawEnd": 13,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:12",
+      "textRange": {
+        "start": 13,
+        "end": 14
+      },
+      "syllableRange": {
+        "start": 13,
+        "end": 14
+      },
+      "sourceText": "里",
+      "isFallback": true,
+      "candidateCountBeforeTone": 0,
+      "candidatesBeforeTone": [],
+      "candidateCountAfterTone": 0,
+      "candidatesAfterTone": [],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 13,
+        "pathRawEnd": 14,
+        "recomputedAfterRebind": true
+      }
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:13",
+      "textRange": {
+        "start": 14,
+        "end": 16
+      },
+      "syllableRange": {
+        "start": 14,
+        "end": 16
+      },
+      "sourceText": "查看",
+      "isFallback": false,
+      "candidateCountBeforeTone": 1,
+      "candidatesBeforeTone": [
+        {
+          "candidateId": "14:16:3",
+          "term": "查看",
+          "termId": "ngram:2668",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "cha|kan",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 14,
+          "syllableEnd": 16
+        }
+      ],
+      "candidateCountAfterTone": 1,
+      "candidatesAfterTone": [
+        {
+          "candidateId": "14:16:3",
+          "term": "查看",
+          "termId": "ngram:2668",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "cha|kan",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 14,
+          "syllableEnd": 16
+        }
+      ],
+      "toneEvidenceStatus": "unavailable",
+      "toneEvidence": {
+        "pathRawStart": 14,
+        "pathRawEnd": 16,
+        "recomputedAfterRebind": true
+      }
+    }
+  ],
+  "toneCandidateDropCount": 0,
+  "votes": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "voteEligibleCandidateCount": 3,
+      "voteEligibleCandidates": [
+        {
+          "candidateId": "9:11:1",
+          "term": "登机",
+          "termId": "ngram:3053",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        },
+        {
+          "candidateId": "9:11:2",
+          "term": "登机",
+          "termId": "ngram:3056",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tourism_pickup"
+          ],
+          "isBase": false,
+          "pinyin": "deng|ji",
+          "tone": null,
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11
+        },
+        {
+          "candidateId": "14:16:3",
+          "term": "查看",
+          "termId": "ngram:2668",
+          "source": "domain_term",
+          "hitKind": "parent_fragment",
+          "score": 2.36,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "pinyin": "cha|kan",
+          "tone": null,
+          "rawStart": 14,
+          "rawEnd": 16,
+          "syllableStart": 14,
+          "syllableEnd": 16
+        }
+      ],
+      "baseCandidatesExcludedFromVote": [],
+      "fallbackCandidatesExcludedFromVote": [
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:0",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:1",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:2",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:3",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:4",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:5",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:6",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:7",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:8",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:10",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:11",
+        "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:12"
+      ],
+      "domainScores": {
+        "tourism_pickup": 1,
+        "tech_ai": 1
+      },
+      "highestScore": 1,
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai",
+        "tourism_pickup"
+      ],
+      "rejectedDomains": [],
+      "insufficientEvidence": false
+    }
+  ],
+  "buckets": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tech_ai",
+      "domainCandidates": [],
+      "baseCandidates": [],
+      "spanCandidateGrid": [
+        [
+          {
+            "word": "请",
+            "start": 0,
+            "end": 1,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "问",
+            "start": 1,
+            "end": 2,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "理",
+            "start": 2,
+            "end": 3,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "财",
+            "start": 3,
+            "end": 4,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "产",
+            "start": 4,
+            "end": 5,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "品",
+            "start": 5,
+            "end": 6,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "的",
+            "start": 6,
+            "end": 7,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "风",
+            "start": 7,
+            "end": 8,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "险",
+            "start": 8,
+            "end": 9,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "等级",
+            "start": 9,
+            "end": 11,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "在",
+            "start": 11,
+            "end": 12,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "哪",
+            "start": 12,
+            "end": 13,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "里",
+            "start": 13,
+            "end": 14,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "查看",
+            "start": 14,
+            "end": 16,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ]
+      ],
+      "candidateCount": 14,
+      "candidateTerms": [
+        "请",
+        "问",
+        "理",
+        "财",
+        "产",
+        "品",
+        "的",
+        "风",
+        "险",
+        "等级",
+        "在",
+        "哪",
+        "里",
+        "查看"
+      ],
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tourism_pickup",
+      "domainCandidates": [],
+      "baseCandidates": [],
+      "spanCandidateGrid": [
+        [
+          {
+            "word": "请",
+            "start": 0,
+            "end": 1,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "问",
+            "start": 1,
+            "end": 2,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "理",
+            "start": 2,
+            "end": 3,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "财",
+            "start": 3,
+            "end": 4,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "产",
+            "start": 4,
+            "end": 5,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "品",
+            "start": 5,
+            "end": 6,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "的",
+            "start": 6,
+            "end": 7,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "风",
+            "start": 7,
+            "end": 8,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "险",
+            "start": 8,
+            "end": 9,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "等级",
+            "start": 9,
+            "end": 11,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "在",
+            "start": 11,
+            "end": 12,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "哪",
+            "start": 12,
+            "end": 13,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "里",
+            "start": 13,
+            "end": 14,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ],
+        [
+          {
+            "word": "查看",
+            "start": 14,
+            "end": 16,
+            "source": "canonical_exact",
+            "score": 0
+          }
+        ]
+      ],
+      "candidateCount": 14,
+      "candidateTerms": [
+        "请",
+        "问",
+        "理",
+        "财",
+        "产",
+        "品",
+        "的",
+        "风",
+        "险",
+        "等级",
+        "在",
+        "哪",
+        "里",
+        "查看"
+      ],
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "candidateExcludedFromAllBuckets": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:9",
+      "term": "登机",
+      "reason": "not_in_primary_filtered_selectedCandidates"
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "spanId": "fine:6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb:9",
+      "term": "登机",
+      "reason": "not_in_primary_filtered_selectedCandidates"
+    }
+  ],
+  "assemblies": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tech_ai",
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "naiveCombinationPotential": 1,
+      "validNonOverlappingCombinationPotential": "NOT_OBSERVABLE_WITHOUT_REPLAY",
+      "generatedCombinationCount": 1,
+      "generatedCandidates": [
+        {
+          "text": "请问理财产品的风险等级在哪里查看？",
+          "replacementOperations": [
+            {
+              "start": 0,
+              "end": 1,
+              "word": "请",
+              "sourceText": "请",
+              "candidateTerm": "请"
+            },
+            {
+              "start": 1,
+              "end": 2,
+              "word": "问",
+              "sourceText": "问",
+              "candidateTerm": "问"
+            },
+            {
+              "start": 2,
+              "end": 3,
+              "word": "理",
+              "sourceText": "理",
+              "candidateTerm": "理"
+            },
+            {
+              "start": 3,
+              "end": 4,
+              "word": "财",
+              "sourceText": "财",
+              "candidateTerm": "财"
+            },
+            {
+              "start": 4,
+              "end": 5,
+              "word": "产",
+              "sourceText": "产",
+              "candidateTerm": "产"
+            },
+            {
+              "start": 5,
+              "end": 6,
+              "word": "品",
+              "sourceText": "品",
+              "candidateTerm": "品"
+            },
+            {
+              "start": 6,
+              "end": 7,
+              "word": "的",
+              "sourceText": "的",
+              "candidateTerm": "的"
+            },
+            {
+              "start": 7,
+              "end": 8,
+              "word": "风",
+              "sourceText": "风",
+              "candidateTerm": "风"
+            },
+            {
+              "start": 8,
+              "end": 9,
+              "word": "险",
+              "sourceText": "险",
+              "candidateTerm": "险"
+            },
+            {
+              "start": 9,
+              "end": 11,
+              "word": "等级",
+              "sourceText": "等级",
+              "candidateTerm": "等级"
+            },
+            {
+              "start": 11,
+              "end": 12,
+              "word": "在",
+              "sourceText": "在",
+              "candidateTerm": "在"
+            },
+            {
+              "start": 12,
+              "end": 13,
+              "word": "哪",
+              "sourceText": "哪",
+              "candidateTerm": "哪"
+            },
+            {
+              "start": 13,
+              "end": 14,
+              "word": "里",
+              "sourceText": "里",
+              "candidateTerm": "里"
+            },
+            {
+              "start": 14,
+              "end": 16,
+              "word": "查看",
+              "sourceText": "查看",
+              "candidateTerm": "查看"
+            }
+          ],
+          "sourceCandidateIds": [],
+          "isRawText": true,
+          "dedupKey": "请问理财产品的风险等级在哪里查看？",
+          "classification": "NO_OP_REPLACEMENT",
+          "rebuildOk": true
+        }
+      ],
+      "distinctTextCount": 1
+    },
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "domainId": "tourism_pickup",
+      "inputSpanCandidateCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "naiveCombinationPotential": 1,
+      "validNonOverlappingCombinationPotential": "NOT_OBSERVABLE_WITHOUT_REPLAY",
+      "generatedCombinationCount": 1,
+      "generatedCandidates": [
+        {
+          "text": "请问理财产品的风险等级在哪里查看？",
+          "replacementOperations": [
+            {
+              "start": 0,
+              "end": 1,
+              "word": "请",
+              "sourceText": "请",
+              "candidateTerm": "请"
+            },
+            {
+              "start": 1,
+              "end": 2,
+              "word": "问",
+              "sourceText": "问",
+              "candidateTerm": "问"
+            },
+            {
+              "start": 2,
+              "end": 3,
+              "word": "理",
+              "sourceText": "理",
+              "candidateTerm": "理"
+            },
+            {
+              "start": 3,
+              "end": 4,
+              "word": "财",
+              "sourceText": "财",
+              "candidateTerm": "财"
+            },
+            {
+              "start": 4,
+              "end": 5,
+              "word": "产",
+              "sourceText": "产",
+              "candidateTerm": "产"
+            },
+            {
+              "start": 5,
+              "end": 6,
+              "word": "品",
+              "sourceText": "品",
+              "candidateTerm": "品"
+            },
+            {
+              "start": 6,
+              "end": 7,
+              "word": "的",
+              "sourceText": "的",
+              "candidateTerm": "的"
+            },
+            {
+              "start": 7,
+              "end": 8,
+              "word": "风",
+              "sourceText": "风",
+              "candidateTerm": "风"
+            },
+            {
+              "start": 8,
+              "end": 9,
+              "word": "险",
+              "sourceText": "险",
+              "candidateTerm": "险"
+            },
+            {
+              "start": 9,
+              "end": 11,
+              "word": "等级",
+              "sourceText": "等级",
+              "candidateTerm": "等级"
+            },
+            {
+              "start": 11,
+              "end": 12,
+              "word": "在",
+              "sourceText": "在",
+              "candidateTerm": "在"
+            },
+            {
+              "start": 12,
+              "end": 13,
+              "word": "哪",
+              "sourceText": "哪",
+              "candidateTerm": "哪"
+            },
+            {
+              "start": 13,
+              "end": 14,
+              "word": "里",
+              "sourceText": "里",
+              "candidateTerm": "里"
+            },
+            {
+              "start": 14,
+              "end": 16,
+              "word": "查看",
+              "sourceText": "查看",
+              "candidateTerm": "查看"
+            }
+          ],
+          "sourceCandidateIds": [],
+          "isRawText": true,
+          "dedupKey": "请问理财产品的风险等级在哪里查看？",
+          "classification": "NO_OP_REPLACEMENT",
+          "rebuildOk": true
+        }
+      ],
+      "distinctTextCount": 1
+    }
+  ],
+  "crossPath": {
+    "inputCandidateCount": 2,
+    "inputCandidates": [
+      {
+        "text": "请问理财产品的风险等级在哪里查看？",
+        "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+        "domainId": "tech_ai"
+      },
+      {
+        "text": "请问理财产品的风险等级在哪里查看？",
+        "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+        "domainId": "tourism_pickup"
+      }
+    ],
+    "distinctTextsBeforeDedup": 1,
+    "duplicates": [
+      {
+        "text": "请问理财产品的风险等级在哪里查看？",
+        "count": 2
+      }
+    ],
+    "uniqueTextsAfterDedup": 1,
+    "cappedCandidateCount": 1,
+    "prefilledCombinations": [
+      "请问理财产品的风险等级在哪里查看？"
+    ],
+    "mergeTrace": {
+      "crossPathInputCandidateCount": 2,
+      "crossPathDuplicateCount": 1,
+      "crossPathUniqueCandidateCount": 1,
+      "crossPathOutputCandidateCount": 1,
+      "crossPathTruncatedCount": 0,
+      "globalCandidateCap": 16,
+      "kenlmInputSource": "cross_path_merge",
+      "dedupKey": "exact_text",
+      "duplicateRetention": "first_wins",
+      "collectionOrder": "path_bucket_candidate"
+    }
+  },
+  "quality": {
+    "invalidAssemblyCount": 0,
+    "truncatedTextCount": 0,
+    "noOpReplacementCount": 2,
+    "casesWithRawOnly": true,
+    "casesWithAnyModifiedCandidate": false,
+    "casesWithMultiSpanModifiedCandidate": false,
+    "assemblyComboCount": 2,
+    "assemblyDistinctTextCount": 1
+  },
+  "diversityFlags": {
+    "hasRecallCandidate": true,
+    "hasMultipleRecallCandidates": true,
+    "hasMultiCandidateLexicalEdge": true,
+    "hasMultiplePaths": false,
+    "hasMultipleEffectiveCandidatePaths": false,
+    "hasMultipleRetainedDomains": true,
+    "hasMultipleBuckets": true,
+    "hasMultipleAssemblyCombinations": true,
+    "hasMultipleDistinctAssemblyTexts": false,
+    "hasMultipleDistinctCrossPathTexts": false,
+    "hasKenlmInputNAbove1": false
+  },
+  "firstCollapseLayer": "R9_ASSEMBLY_GENERATES_IDENTICAL_TEXT",
+  "structuralFailures": {
+    "coordinateMappingFailure": 16,
+    "invalidRangeCount": 16,
+    "invalidWindowRange": 0,
+    "pathCoverageFailure": 0,
+    "pathOverlapFailure": 0,
+    "materializationFailure": 0,
+    "undefinedPrefilled": 0,
+    "kenlmInputOver16": 0,
+    "invalidAssembly": 0
+  },
+  "latticeTrace": {
+    "windowCount": 70,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 70,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 12,
+    "edgeCountAfterFallback": 14,
+    "fallbackInjectionCount": 12,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 9
+      },
+      {
+        "start": 11,
+        "end": 14
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 70,
+    "sqlQueryCount": 3,
+    "pathCapEvents": []
+  },
+  "pathAssemblyTraces": [
+    {
+      "pathId": "6bcff49b0914307d218e0a1eff428d5f84a8e0578634047e841739527dddedbb",
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-11|11-12|12-13|13-14|14-16",
+      "pathFineSpanCount": 14,
+      "fallbackSpanCount": 12,
+      "toneEvidenceAvailableCount": 0,
+      "toneEvidenceUnavailableCount": 14,
+      "domainScores": {
+        "tourism_pickup": 1,
+        "tech_ai": 1
+      },
+      "retainedDomains": [
+        "tech_ai",
+        "tourism_pickup"
+      ],
+      "bucketCount": 2,
+      "bucketCandidateCounts": [
+        1,
+        1
+      ],
+      "assemblyCandidateCount": 2,
+      "toneRebindOk": true
+    }
+  ],
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "metrics": {
+    "coarseSpanCount": 7,
+    "globalWindowGeneratedCount": 70,
+    "blockedWindowCount": 0,
+    "truncatedWindowCount": 0,
+    "logicalWindowRecallCount": 70,
+    "windowCandidatePoolCount": 3,
+    "activeCandidateCount": 3,
+    "compatibilityEdgeCount": 1,
+    "droppedCandidateCount": 0,
+    "coverageCount": 0,
+    "conflictCount": 0,
+    "conflictRelationCount": 0,
+    "hardDropCount": 0,
+    "compatibleCount": 1,
+    "utteranceDomain": "tech_ai",
+    "domainVoteMs": 0,
+    "winnerScore": 1,
+    "runnerUpDomain": "general",
+    "runnerUpScore": 0,
+    "voteMargin": 1,
+    "assemblyMs": 47,
+    "parentFragmentHitCount": 3,
+    "parentTermVoteCount": 3,
+    "inSpanWindowCount": 2,
+    "boundaryWindowCount": 0,
+    "domainCandidateCount": 0,
+    "baseCandidateCount": 0,
+    "sameDomainCandidateCount": 0,
+    "domainFilteredSpanCount": 14,
+    "selectedCandidatesPerSpanAvg": 1,
+    "domainAssemblyMs": 0,
+    "mainDomainAwareSpanSetsTotal": 14,
+    "retainedBucketCount": 2,
+    "intervalAssemblyCandidateCount": 2,
+    "intervalRejectedOverlapCount": 0,
+    "fallbackCandidateCount": 0,
+    "kenlmPoolCandidateCount": 1,
+    "preFilterCombinationCount": 2,
+    "domainScores": {
+      "tourism_pickup": 1,
+      "tech_ai": 1
+    },
+    "retainedDomains": [
+      "tech_ai",
+      "tourism_pickup"
+    ],
+    "winningFineDomain": "tech_ai",
+    "insufficientEvidence": false,
+    "domainLookupExecuted": true,
+    "domainLookupDomainCount": 12,
+    "domainRecallHitCount": 3,
+    "voteEligibleDomainCandidateCount": 3,
+    "resolvedRecallDomainScope": [
+      "bakery",
+      "coffee",
+      "food_order",
+      "medical",
+      "meeting",
+      "milk_tea",
+      "tech_ai",
+      "tourism_hotel",
+      "tourism_pickup",
+      "tourism_route",
+      "tourism_transport",
+      "transport"
+    ],
+    "architectureCompliance": {
+      "generatorMode": "multi_path_lattice",
+      "fineSpanOwner": "segmentation_path",
+      "voteScope": "per_path",
+      "assemblyScope": "per_path",
+      "retainedCompletePathCount": 1,
+      "beamEnabled": false,
+      "globalWindowProductionPath": false,
+      "fineSpanPriorSource": "none",
+      "contextPriorDecisionApplied": false,
+      "priorWrittenToEnabledDomains": false,
+      "profileAffectedRecall": false,
+      "votePoolSource": "path_fine_span",
+      "sessionPriorTransport": "audio_chunk_session_snapshot",
+      "topicShiftContractComplete": true,
+      "schedulerDomainInference": false,
+      "toneRecomputedAfterRebind": true,
+      "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+      "candidateCapScope": "global",
+      "candidateCap": 16,
+      "dedupBeforeCap": true,
+      "dedupRetention": "first_wins",
+      "kenlmInputOwner": "cross_path_merge",
+      "prefilledCombinationsRequired": true,
+      "toneEvidenceOwner": "acoustic_tone_slices"
+    },
+    "crossPathInputCandidateCount": 2,
+    "crossPathDuplicateCount": 1,
+    "crossPathUniqueCandidateCount": 1,
+    "crossPathOutputCandidateCount": 1,
+    "crossPathTruncatedCount": 0,
+    "globalCandidateCap": 16,
+    "kenlmInputSource": "cross_path_merge",
+    "recallRequestCount": 70,
+    "uniqueRecallKeyCount": 70,
+    "duplicateRecallKeyCount": 0,
+    "utteranceCacheHitCount": 0,
+    "utteranceCacheMissCount": 70,
+    "cacheHitRatio": 0,
+    "logicalQueryCount": 70,
+    "physicalSqlStatementCount": 3,
+    "exactQueryCount": 70,
+    "parentQueryCount": 70,
+    "lexiconRecallTotalMs": 39,
+    "recallRequestBuildMs": 0,
+    "utteranceCacheLookupMs": 0,
+    "lexiconFactLookupMs": 38,
+    "windowBindingMs": 0
+  },
+  "timing": {
+    "coordinateMs": 0.10850000381469727,
+    "coarsePartitionMs": 6.665599822998047,
+    "windowBuildMs": 0.1240999698638916,
+    "hardBlockMs": 0.0707998275756836,
+    "recallMs": 48.01620006561279,
+    "edgeBuildMs": 0.0176999568939209,
+    "fallbackMs": 0.04739999771118164,
+    "pathEnumerationMs": 0.0466001033782959,
+    "materializationMs": 0.011899948120117188,
+    "orchestratorMs": 46.949300050735474,
+    "totalObservedMs": 46.949300050735474,
+    "toneRebindMs": "NOT_OBSERVABLE",
+    "domainVoteMs": "NOT_OBSERVABLE",
+    "bucketBuildMs": "NOT_OBSERVABLE",
+    "sentenceAssemblyMs": "NOT_OBSERVABLE",
+    "crossPathMergeMs": "NOT_OBSERVABLE"
+  }
+}

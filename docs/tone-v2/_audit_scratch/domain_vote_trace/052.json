@@ -1,0 +1,815 @@
+{
+  "case": {
+    "id": "d052",
+    "fileNum": "052",
+    "scenario": "taxi",
+    "rawText": "师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25|25-27|27-28|28-29|29-30",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "师",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "傅",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "去",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "浦",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "东",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "张",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:6",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "江",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:7",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "走",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:8",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "延",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:9",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "安",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:10",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "路",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "高",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "架",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:13",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "赶",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+          "rawRange": [
+            18,
+            20
+          ],
+          "rawText": "九点",
+          "syllableRange": [
+            15,
+            17
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:16",
+          "rawRange": [
+            20,
+            21
+          ],
+          "rawText": "半",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:17",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "的",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:18",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "会",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:19",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "要",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:20",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "是",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:21",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "堵",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:22",
+          "rawRange": [
+            27,
+            28
+          ],
+          "rawText": "车",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:23",
+          "rawRange": [
+            28,
+            29
+          ],
+          "rawText": "您",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:24",
+          "rawRange": [
+            29,
+            31
+          ],
+          "rawText": "提前",
+          "syllableRange": [
+            25,
+            27
+          ],
+          "coarseSpanIds": [
+            "c12"
+          ],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:25",
+          "rawRange": [
+            31,
+            32
+          ],
+          "rawText": "跟",
+          "syllableRange": [
+            27,
+            28
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:26",
+          "rawRange": [
+            32,
+            33
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            28,
+            29
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:27",
+          "rawRange": [
+            33,
+            34
+          ],
+          "rawText": "说",
+          "syllableRange": [
+            29,
+            30
+          ],
+          "coarseSpanIds": [],
+          "pathId": "1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "15:17:1",
+          "word": "酒店",
+          "surface": "酒店",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            18,
+            20
+          ],
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "15:17:2",
+          "word": "酒店",
+          "surface": "酒店",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            18,
+            20
+          ],
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "15:17:3",
+          "word": "酒店",
+          "surface": "酒店",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            18,
+            20
+          ],
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "25:27:4",
+          "word": "提前",
+          "surface": "提前",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            29,
+            31
+          ],
+          "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:24",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "tourism_hotel"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "tourism_hotel"
+        ],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tourism_hotel": [
+          {
+            "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:17:1",
+                "word": "酒店",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "15:17:2",
+                "word": "酒店",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "15:17:3",
+                "word": "酒店",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:24",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "25:27:4",
+                "word": "提前",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tourism_hotel": 2
+      },
+      "productionVote": {
+        "domainScores": {
+          "tourism_hotel": 2
+        },
+        "retainedDomains": [
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 2,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tourism_hotel",
+        "winnerScore": 2,
+        "voteMargin": 2,
+        "parentTermVoteCount": 4
+      },
+      "replayVote": {
+        "domainScores": {
+          "tourism_hotel": 2
+        },
+        "retainedDomains": [
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 2
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tourism_hotel",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 4,
+          "evidenceFineSpanList": [
+            "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+            "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:24"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+              "candidateId": "15:17:1",
+              "word": "酒店"
+            },
+            {
+              "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+              "candidateId": "15:17:2",
+              "word": "酒店"
+            },
+            {
+              "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:15",
+              "candidateId": "15:17:3",
+              "word": "酒店"
+            },
+            {
+              "fineSpanId": "fine:1fa6f44c10ea630f22077eff5e99ef223b66230c700d442b225df5881d5fc281:24",
+              "candidateId": "25:27:4",
+              "word": "提前"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 2,
+            "domainScore": 2,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=1.5); this score=2"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tourism_hotel"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tourism_hotel"
+      ],
+      "bucketDomainsFromVote": [
+        "tourism_hotel"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

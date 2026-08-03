@@ -1,0 +1,1523 @@
+{
+  "caseId": "d187",
+  "fileNum": "187",
+  "rawText": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+  "scenario": "taxi",
+  "retainedDomains": [
+    "tourism_hotel",
+    "tourism_transport"
+  ],
+  "domainScores": {
+    "tech_ai": 1,
+    "tourism_transport": 2,
+    "transport": 1,
+    "tourism_route": 1,
+    "tourism_hotel": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87",
+      "domainId": "tourism_hotel",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "师",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "师"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "傅",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "傅"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "去",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "去"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "中",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "关",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "关"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "村",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "村"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "软件",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "软件"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "园",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "园"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "走",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "走"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "机场",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "机场"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "高速",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "高速"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "我",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "赶",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "赶"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "九点",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:13",
+          "sameDomain": [
+            "酒店",
+            "酒店",
+            "酒店"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "酒店",
+            "九点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "半",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "半"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "的",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "会",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "会"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "要",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "要"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "是",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "是"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "堵",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "堵"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "车",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "车"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 22,
+          "spanText": "您",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:21",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "您"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 23,
+          "spanText": "提前",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:22",
+          "sameDomain": [
+            "提前"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "提前"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 24,
+          "spanText": "跟",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:23",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "跟"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 25,
+          "spanText": "我",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:24",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 26,
+          "spanText": "说",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:25",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "说"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "师"
+        ],
+        [
+          "傅"
+        ],
+        [
+          "去"
+        ],
+        [
+          "中"
+        ],
+        [
+          "关"
+        ],
+        [
+          "村"
+        ],
+        [
+          "软件"
+        ],
+        [
+          "园"
+        ],
+        [
+          "走"
+        ],
+        [
+          "机场"
+        ],
+        [
+          "高速"
+        ],
+        [
+          "我"
+        ],
+        [
+          "赶"
+        ],
+        [
+          "酒店",
+          "九点"
+        ],
+        [
+          "半"
+        ],
+        [
+          "的"
+        ],
+        [
+          "会"
+        ],
+        [
+          "要"
+        ],
+        [
+          "是"
+        ],
+        [
+          "堵"
+        ],
+        [
+          "车"
+        ],
+        [
+          "您"
+        ],
+        [
+          "提前"
+        ],
+        [
+          "跟"
+        ],
+        [
+          "我"
+        ],
+        [
+          "说"
+        ]
+      ],
+      "assemblyTexts": [
+        "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+        "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+      ]
+    },
+    {
+      "pathId": "ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87",
+      "domainId": "tourism_transport",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "师",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "师"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "傅",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "傅"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "去",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "去"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "中",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "关",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "关"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "村",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "村"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "软件",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "软件"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "园",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "园"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "走",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "走"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "机场",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:9",
+          "sameDomain": [
+            "机场",
+            "机场",
+            "机场"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "机场"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "高速",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:10",
+          "sameDomain": [
+            "高速",
+            "高速"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "高速"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "我",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "赶",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "赶"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "九点",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "九点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "半",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "半"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "的",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "会",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "会"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "要",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "要"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "是",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "是"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "堵",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "堵"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "车",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "车"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 22,
+          "spanText": "您",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:21",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "您"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 23,
+          "spanText": "提前",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:22",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "提前"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 24,
+          "spanText": "跟",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:23",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "跟"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 25,
+          "spanText": "我",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:24",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 26,
+          "spanText": "说",
+          "fineSpanId": "fine:ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87:25",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "说"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "师"
+        ],
+        [
+          "傅"
+        ],
+        [
+          "去"
+        ],
+        [
+          "中"
+        ],
+        [
+          "关"
+        ],
+        [
+          "村"
+        ],
+        [
+          "软件"
+        ],
+        [
+          "园"
+        ],
+        [
+          "走"
+        ],
+        [
+          "机场"
+        ],
+        [
+          "高速"
+        ],
+        [
+          "我"
+        ],
+        [
+          "赶"
+        ],
+        [
+          "九点"
+        ],
+        [
+          "半"
+        ],
+        [
+          "的"
+        ],
+        [
+          "会"
+        ],
+        [
+          "要"
+        ],
+        [
+          "是"
+        ],
+        [
+          "堵"
+        ],
+        [
+          "车"
+        ],
+        [
+          "您"
+        ],
+        [
+          "提前"
+        ],
+        [
+          "跟"
+        ],
+        [
+          "我"
+        ],
+        [
+          "说"
+        ]
+      ],
+      "assemblyTexts": [
+        "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+    "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+    "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+    "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+      "replacements": [
+        {
+          "span": {
+            "text": "九点",
+            "start": 19,
+            "end": 21
+          },
+          "word": "酒店",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "提前",
+            "start": 30,
+            "end": 32
+          },
+          "word": "提前",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "师",
+            "start": 0,
+            "end": 1
+          },
+          "word": "师",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "傅",
+            "start": 1,
+            "end": 2
+          },
+          "word": "傅",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "去",
+            "start": 3,
+            "end": 4
+          },
+          "word": "去",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "中",
+            "start": 4,
+            "end": 5
+          },
+          "word": "中",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "关",
+            "start": 5,
+            "end": 6
+          },
+          "word": "关",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "村",
+            "start": 6,
+            "end": 7
+          },
+          "word": "村",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "软件",
+            "start": 7,
+            "end": 9
+          },
+          "word": "软件",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "园",
+            "start": 9,
+            "end": 10
+          },
+          "word": "园",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "走",
+            "start": 11,
+            "end": 12
+          },
+          "word": "走",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "机场",
+            "start": 12,
+            "end": 14
+          },
+          "word": "机场",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "高速",
+            "start": 14,
+            "end": 16
+          },
+          "word": "高速",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 17,
+            "end": 18
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "赶",
+            "start": 18,
+            "end": 19
+          },
+          "word": "赶",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "半",
+            "start": 21,
+            "end": 22
+          },
+          "word": "半",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 22,
+            "end": 23
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "会",
+            "start": 23,
+            "end": 24
+          },
+          "word": "会",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "要",
+            "start": 25,
+            "end": 26
+          },
+          "word": "要",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "是",
+            "start": 26,
+            "end": 27
+          },
+          "word": "是",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "堵",
+            "start": 27,
+            "end": 28
+          },
+          "word": "堵",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "车",
+            "start": 28,
+            "end": 29
+          },
+          "word": "车",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "您",
+            "start": 29,
+            "end": 30
+          },
+          "word": "您",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "跟",
+            "start": 32,
+            "end": 33
+          },
+          "word": "跟",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 33,
+            "end": 34
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "说",
+            "start": 34,
+            "end": 35
+          },
+          "word": "说",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.72
+    },
+    {
+      "text": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "replacements": [
+        {
+          "span": {
+            "text": "提前",
+            "start": 30,
+            "end": 32
+          },
+          "word": "提前",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "师",
+            "start": 0,
+            "end": 1
+          },
+          "word": "师",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "傅",
+            "start": 1,
+            "end": 2
+          },
+          "word": "傅",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "去",
+            "start": 3,
+            "end": 4
+          },
+          "word": "去",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "中",
+            "start": 4,
+            "end": 5
+          },
+          "word": "中",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "关",
+            "start": 5,
+            "end": 6
+          },
+          "word": "关",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "村",
+            "start": 6,
+            "end": 7
+          },
+          "word": "村",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "软件",
+            "start": 7,
+            "end": 9
+          },
+          "word": "软件",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "园",
+            "start": 9,
+            "end": 10
+          },
+          "word": "园",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "走",
+            "start": 11,
+            "end": 12
+          },
+          "word": "走",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "机场",
+            "start": 12,
+            "end": 14
+          },
+          "word": "机场",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "高速",
+            "start": 14,
+            "end": 16
+          },
+          "word": "高速",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 17,
+            "end": 18
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "赶",
+            "start": 18,
+            "end": 19
+          },
+          "word": "赶",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "九点",
+            "start": 19,
+            "end": 21
+          },
+          "word": "九点",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "半",
+            "start": 21,
+            "end": 22
+          },
+          "word": "半",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 22,
+            "end": 23
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "会",
+            "start": 23,
+            "end": 24
+          },
+          "word": "会",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "要",
+            "start": 25,
+            "end": 26
+          },
+          "word": "要",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "是",
+            "start": 26,
+            "end": 27
+          },
+          "word": "是",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "堵",
+            "start": 27,
+            "end": 28
+          },
+          "word": "堵",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "车",
+            "start": 28,
+            "end": 29
+          },
+          "word": "车",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "您",
+            "start": 29,
+            "end": 30
+          },
+          "word": "您",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "跟",
+            "start": 32,
+            "end": 33
+          },
+          "word": "跟",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 33,
+            "end": 34
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "说",
+            "start": 34,
+            "end": 35
+          },
+          "word": "说",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    }
+  ],
+  "kenlmInputTexts": [
+    "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+    "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+      "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。"
+    ],
+    "actual": [
+      "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+      "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

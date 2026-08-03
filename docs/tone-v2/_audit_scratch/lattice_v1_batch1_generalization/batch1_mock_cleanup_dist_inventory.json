@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-07-28",
+  "build": "npm run build:main (tsc tsconfig.main.json)",
+  "distRoot": "electron_node/electron-node/dist/main",
+  "patterns": [
+    {
+      "pattern": "createBatch1FixtureRuntime",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "connectivity-batch1-fixture",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "BATCH1_BASE_TERMS",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "FakeLexiconRuntime",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "inMemoryLexiconRuntime",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "connectivity-batch1-fixture.js file",
+      "matches": [],
+      "status": "CLEAN",
+      "note": "Test-Path dist/.../connectivity-batch1-fixture.js === false"
+    },
+    {
+      "pattern": "*connectivity-batch1* under dist/main",
+      "matches": [],
+      "status": "CLEAN"
+    }
+  ],
+  "chineseFixtureWordsInDist": {
+    "note": "Not flagged: common CJK may appear in unrelated production/test-compiled strings; fixture-specific ids (b_wo, BATCH1_BASE_TERMS, createBatch1FixtureRuntime) absent",
+    "fixtureSpecificIdsAbsent": true
+  },
+  "electronBuilderInput": {
+    "files": ["dist/main/**/*"],
+    "containsFixture": false
+  },
+  "overall": "CLEAN"
+}

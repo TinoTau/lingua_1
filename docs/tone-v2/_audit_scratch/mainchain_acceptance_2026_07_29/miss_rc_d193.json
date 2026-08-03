@@ -1,0 +1,72 @@
+{
+  "id": "d193",
+  "raw": "这件外套能试穿吗?我串中码,买两件有没有折扣?",
+  "asrToneSliceCount": 19,
+  "diagToneSliceCount": 19,
+  "wordTimeSpanBuilt": 19,
+  "wordTimeSpanMapped": 19,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "没有",
+      "pinyinKey": "mei|you",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.8,
+        "end": 4.04
+      },
+      "replayWindowTime": {
+        "start": 3.8,
+        "end": 4.04
+      }
+    },
+    {
+      "text": "没有折",
+      "pinyinKey": "mei|you|zhe",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.8,
+        "end": 4.28
+      },
+      "replayWindowTime": {
+        "start": 3.8,
+        "end": 4.28
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 20,
+    "theoreticalWindows2to5": 70,
+    "theoreticalWindows1to5": 90
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

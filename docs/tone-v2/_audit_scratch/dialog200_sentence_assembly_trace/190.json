@@ -1,0 +1,573 @@
+{
+  "caseId": "d190",
+  "fileNum": "190",
+  "rawText": "医生您好，我这两天头痛，想开点药并做个血常规。",
+  "scenario": "hospital",
+  "retainedDomains": [
+    "medical"
+  ],
+  "domainScores": {
+    "medical": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534",
+      "domainId": "medical",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "医生",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:0",
+          "sameDomain": [
+            "医生",
+            "医生",
+            "医生"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "医生"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "您",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "您"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "好",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "我",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "这",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "两",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "两"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "天",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "头痛",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:7",
+          "sameDomain": [
+            "头痛"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "头痛"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "想",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "开",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "点",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "药",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "药"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "并",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "并"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "做",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "做"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "个",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "个"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "血",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "血"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "常",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "常"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "规",
+          "fineSpanId": "fine:ee5e0704d1330d3bb9f608b6494272a9fc1dc65bbb9bac1f982062dbf1d15534:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "规"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "医生"
+        ],
+        [
+          "您"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "这"
+        ],
+        [
+          "两"
+        ],
+        [
+          "天"
+        ],
+        [
+          "头痛"
+        ],
+        [
+          "想"
+        ],
+        [
+          "开"
+        ],
+        [
+          "点"
+        ],
+        [
+          "药"
+        ],
+        [
+          "并"
+        ],
+        [
+          "做"
+        ],
+        [
+          "个"
+        ],
+        [
+          "血"
+        ],
+        [
+          "常"
+        ],
+        [
+          "规"
+        ]
+      ],
+      "assemblyTexts": [
+        "医生您好，我这两天头痛，想开点药并做个血常规。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "医生您好，我这两天头痛，想开点药并做个血常规。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "医生您好，我这两天头痛，想开点药并做个血常规。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "replacements": [
+        {
+          "span": {
+            "text": "医生",
+            "start": 0,
+            "end": 2
+          },
+          "word": "医生",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "头痛",
+            "start": 9,
+            "end": 11
+          },
+          "word": "头痛",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "您",
+            "start": 2,
+            "end": 3
+          },
+          "word": "您",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "好",
+            "start": 3,
+            "end": 4
+          },
+          "word": "好",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 5,
+            "end": 6
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 6,
+            "end": 7
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "两",
+            "start": 7,
+            "end": 8
+          },
+          "word": "两",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 8,
+            "end": 9
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "想",
+            "start": 12,
+            "end": 13
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 13,
+            "end": 14
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "点",
+            "start": 14,
+            "end": 15
+          },
+          "word": "点",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "药",
+            "start": 15,
+            "end": 16
+          },
+          "word": "药",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "并",
+            "start": 16,
+            "end": 17
+          },
+          "word": "并",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "做",
+            "start": 17,
+            "end": 18
+          },
+          "word": "做",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "个",
+            "start": 18,
+            "end": 19
+          },
+          "word": "个",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "血",
+            "start": 19,
+            "end": 20
+          },
+          "word": "血",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "常",
+            "start": 20,
+            "end": 21
+          },
+          "word": "常",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "规",
+            "start": 21,
+            "end": 22
+          },
+          "word": "规",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.71
+    }
+  ],
+  "kenlmInputTexts": [
+    "医生您好，我这两天头痛，想开点药并做个血常规。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "医生您好，我这两天头痛，想开点药并做个血常规。"
+    ],
+    "actual": [
+      "医生您好，我这两天头痛，想开点药并做个血常规。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

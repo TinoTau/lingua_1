@@ -1,0 +1,408 @@
+{
+  "caseId": "d162",
+  "rawText": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+  "stages": {
+    "pool": {
+      "present": 3,
+      "absent": 0,
+      "ids": [
+        "8:10:1",
+        "8:10:2",
+        "8:10:3"
+      ]
+    },
+    "bucket": {
+      "present": 3,
+      "absent": 0
+    },
+    "budget": {
+      "present": 23,
+      "absent": 0
+    },
+    "domainAwarePick": {
+      "present": 23,
+      "absent": 0
+    },
+    "spanReplacement": {
+      "present": 0,
+      "absent": 23,
+      "nullish": 23
+    },
+    "sentenceReplacement": {
+      "present": 0,
+      "absent": 44,
+      "nullish": 44,
+      "repairPresent": 0,
+      "repairAbsent": 1
+    },
+    "crossPath": {
+      "present": 0,
+      "absent": 44,
+      "nullish": 44
+    },
+    "kenlmInput": {
+      "present": 0,
+      "absent": 44,
+      "nullish": 44
+    },
+    "jobResultProjection": {
+      "note": "PROBE: no full JobResult; fw_detector.replacements has NO candidateId field; sentenceRerank.topCandidates.candidateId is synthetic candidate:i / raw; sentenceRerank.picked.replacements.candidateId would inherit SpanReplacementPick (currently ABSENT after mapper)",
+      "fwDetectorReplacementDiagHasCandidateId": false,
+      "topCandidatesCandidateIdKind": "SYNTHETIC_INDEX",
+      "pickedReplacementCandidateId": "WOULD_BE_ABSENT_IF_PICKED_FROM_CURRENT_CHAIN",
+      "countPresent": 0
+    }
+  },
+  "mapperLoss": [
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:0",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:0",
+      "inputWord": "期",
+      "inputRange": [
+        0,
+        1
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:1",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:1",
+      "inputWord": "望",
+      "inputRange": [
+        1,
+        2
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:2",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:2",
+      "inputWord": "薪",
+      "inputRange": [
+        2,
+        3
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:3",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:3",
+      "inputWord": "资",
+      "inputRange": [
+        3,
+        4
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:4",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:4",
+      "inputWord": "这",
+      "inputRange": [
+        4,
+        5
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:5",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:5",
+      "inputWord": "块",
+      "inputRange": [
+        5,
+        6
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:6",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:6",
+      "inputWord": "我",
+      "inputRange": [
+        6,
+        7
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:7",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:7",
+      "inputWord": "们",
+      "inputRange": [
+        7,
+        8
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:8",
+      "inputCandidateId": "8:10:1",
+      "inputWord": "科医",
+      "inputRange": [
+        8,
+        10
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:8",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:8",
+      "inputWord": "可以",
+      "inputRange": [
+        8,
+        10
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:9",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:9",
+      "inputWord": "再",
+      "inputRange": [
+        10,
+        11
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:10",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:10",
+      "inputWord": "沟",
+      "inputRange": [
+        11,
+        12
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:11",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:11",
+      "inputWord": "通",
+      "inputRange": [
+        12,
+        13
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:12",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:12",
+      "inputWord": "你",
+      "inputRange": [
+        14,
+        15
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0",
+      "bucketDomain": "medical",
+      "fineSpanId": "fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:13",
+      "inputCandidateId": "canonical:fine:84f36989f411316b0fbb31d26ab28fc8fd7f7901712c880018c446be02dc23a0:13",
+      "inputWord": "最",
+      "inputRange": [
+        15,
+        16
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    }
+  ],
+  "matchKeyCollisions": [
+    {
+      "matchKey": "8:10:科医",
+      "ids": [
+        "8:10:1",
+        "8:10:2",
+        "8:10:3"
+      ]
+    }
+  ],
+  "sameRangeSurfaceDifferentId": [
+    {
+      "matchKey": "8:10:科医",
+      "ids": [
+        "8:10:1",
+        "8:10:2",
+        "8:10:3"
+      ]
+    }
+  ],
+  "sameIdDifferentRange": [],
+  "sameIdDifferentSurface": [],
+  "idStability": {
+    "bucketChanged": 0,
+    "budgetChanged": 0
+  },
+  "pathCount": 1,
+  "kenlmInputCount": 2,
+  "anomalyTypes": [
+    "C5",
+    "C6",
+    "C17",
+    "C8",
+    "C13"
+  ]
+}

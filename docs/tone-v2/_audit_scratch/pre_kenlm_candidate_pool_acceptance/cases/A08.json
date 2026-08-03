@@ -1,0 +1,244 @@
+{
+  "caseId": "A08",
+  "rawText": "需要一位医师",
+  "windowCount": 20,
+  "surfaceDistinctRecallCount": 1,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "4:6",
+      "syllableStart": 4,
+      "syllableEnd": 6,
+      "text": "医师",
+      "surfaces": [
+        "医师",
+        "议室"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 2,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "需要一位医师"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "1189cd8efa1154c83756fb11f03a2723b07a11e06ce5a8b1294a55aec110a299",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "位"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "1189cd8efa1154c83756fb11f03a2723b07a11e06ce5a8b1294a55aec110a299",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "一"
+        ],
+        [
+          "位"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "需要一位医师",
+      "sourcePathId": "1189cd8efa1154c83756fb11f03a2723b07a11e06ce5a8b1294a55aec110a299",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "需",
+          "sourceText": "需"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "位",
+          "sourceText": "位"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "医师",
+          "sourceText": "医师"
+        }
+      ],
+      "dedupKey": "需要一位医师",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "需要一位医师",
+      "sourcePathId": "1189cd8efa1154c83756fb11f03a2723b07a11e06ce5a8b1294a55aec110a299",
+      "sourceDomain": "meeting",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "需",
+          "sourceText": "需"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "一",
+          "sourceText": "一"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "word": "位",
+          "sourceText": "位"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "word": "医师",
+          "sourceText": "医师"
+        }
+      ],
+      "dedupKey": "需要一位医师",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 20,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 20,
+    "lexicalEdgeCount": 1,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 5,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 4
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 20,
+    "sqlQueryCount": 15,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "A"
+  ],
+  "why": "yi|shi",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 14.987900018692017,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

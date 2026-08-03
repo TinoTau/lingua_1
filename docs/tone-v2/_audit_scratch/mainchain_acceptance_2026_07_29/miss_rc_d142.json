@@ -1,0 +1,72 @@
+{
+  "id": "d142",
+  "raw": "市府区浦洞张江走三环 我敢 九点半的回药师堵车您提前跟我说",
+  "asrToneSliceCount": 12,
+  "diagToneSliceCount": 26,
+  "wordTimeSpanBuilt": 26,
+  "wordTimeSpanMapped": 26,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "跟我",
+      "pinyinKey": "gen|wo",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.98,
+        "end": 5.32
+      },
+      "replayWindowTime": {
+        "start": 2.08,
+        "end": 2.42
+      }
+    },
+    {
+      "text": "跟我说",
+      "pinyinKey": "gen|wo|shuo",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        2,
+        2,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.98,
+        "end": 5.58
+      },
+      "replayWindowTime": {
+        "start": 2.08,
+        "end": 2.68
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 27,
+    "theoreticalWindows2to5": 98,
+    "theoreticalWindows1to5": 125
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

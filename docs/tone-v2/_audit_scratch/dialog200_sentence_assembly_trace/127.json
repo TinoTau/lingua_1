@@ -1,0 +1,437 @@
+{
+  "caseId": "d127",
+  "fileNum": "127",
+  "rawText": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+  "scenario": "restaurant",
+  "retainedDomains": [
+    "food_order"
+  ],
+  "domainScores": {
+    "bakery": 1,
+    "food_order": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad",
+      "domainId": "food_order",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "两",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "两"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "位",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "位"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "靠",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "靠"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "窗",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "窗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "有",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "位",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "位"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "置吗",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "置吗"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "不",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "要",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "要"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "香菜",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:9",
+          "sameDomain": [
+            "香菜"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "香菜"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "微辣",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:10",
+          "sameDomain": [
+            "微辣"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "微辣"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "就",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "就"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "行",
+          "fineSpanId": "fine:8b2d9e6e9ba6152b4bfe03dd11061b9ad65e8ae7988e4c6ba683146fc5832aad:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "行"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "两"
+        ],
+        [
+          "位"
+        ],
+        [
+          "靠"
+        ],
+        [
+          "窗"
+        ],
+        [
+          "有"
+        ],
+        [
+          "位"
+        ],
+        [
+          "置吗"
+        ],
+        [
+          "不"
+        ],
+        [
+          "要"
+        ],
+        [
+          "香菜"
+        ],
+        [
+          "微辣"
+        ],
+        [
+          "就"
+        ],
+        [
+          "行"
+        ]
+      ],
+      "assemblyTexts": [
+        "两位，靠窗有位置吗？不要香菜，微辣就行。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "两位，靠窗有位置吗？不要香菜，微辣就行。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "两位，靠窗有位置吗？不要香菜，微辣就行。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "replacements": [
+        {
+          "span": {
+            "text": "香菜",
+            "start": 12,
+            "end": 14
+          },
+          "word": "香菜",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "微辣",
+            "start": 15,
+            "end": 17
+          },
+          "word": "微辣",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.04,
+          "repairTarget": true,
+          "candidateScore": 2.04
+        },
+        {
+          "span": {
+            "text": "两",
+            "start": 0,
+            "end": 1
+          },
+          "word": "两",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "位",
+            "start": 1,
+            "end": 2
+          },
+          "word": "位",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "靠",
+            "start": 3,
+            "end": 4
+          },
+          "word": "靠",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "窗",
+            "start": 4,
+            "end": 5
+          },
+          "word": "窗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 5,
+            "end": 6
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "位",
+            "start": 6,
+            "end": 7
+          },
+          "word": "位",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "置吗",
+            "start": 7,
+            "end": 9
+          },
+          "word": "置吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 10,
+            "end": 11
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "要",
+            "start": 11,
+            "end": 12
+          },
+          "word": "要",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "就",
+            "start": 17,
+            "end": 18
+          },
+          "word": "就",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "行",
+            "start": 18,
+            "end": 19
+          },
+          "word": "行",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.390000000000001
+    }
+  ],
+  "kenlmInputTexts": [
+    "两位，靠窗有位置吗？不要香菜，微辣就行。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "两位，靠窗有位置吗？不要香菜，微辣就行。"
+    ],
+    "actual": [
+      "两位，靠窗有位置吗？不要香菜，微辣就行。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

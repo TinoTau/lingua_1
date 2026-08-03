@@ -1,0 +1,41 @@
+{
+  "entry": "runSpanAssemblyV4Orchestrator + mergeCrossPathSentenceCandidates",
+  "casesTotal": 200,
+  "orchestratorSuccess": 200,
+  "orchestratorFailure": 0,
+  "crossPathInputCandidateCountDistribution": {
+    "1": 128,
+    "2": 44,
+    "3": 13,
+    "4": 10,
+    "5": 4,
+    "6": 1
+  },
+  "duplicateCandidateCountDistribution": {
+    "0": 128,
+    "1": 44,
+    "2": 13,
+    "3": 10,
+    "4": 4,
+    "5": 1
+  },
+  "uniqueCandidateCountDistribution": {
+    "1": 200
+  },
+  "kenlmInputCandidateCountDistribution": {
+    "1": 200
+  },
+  "casesTruncatedTo16": 0,
+  "maxInputCandidateCount": 6,
+  "maxUniqueCandidateCount": 1,
+  "maxKenlmInputCount": 1,
+  "kenlmCallsNote": "KenLM invoked once per utterance in fw-detector-v4-path with prefilledCombinations",
+  "ltrRuntimeCallCount": 0,
+  "latencyMs": {
+    "p50": 46,
+    "p95": 83,
+    "max": 148,
+    "total": 9735
+  },
+  "failCases": []
+}

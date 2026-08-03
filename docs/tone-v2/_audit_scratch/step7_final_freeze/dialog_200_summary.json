@@ -1,0 +1,46 @@
+{
+  "entry": "runSpanAssemblyV4Orchestrator (Step 7 final freeze)",
+  "casesTotal": 200,
+  "orchestratorSuccess": 200,
+  "orchestratorFailure": 0,
+  "latticeGenerationFailure": 0,
+  "coverageFailure": 0,
+  "materializationFailure": 0,
+  "pathCountDistribution": {
+    "1": 170,
+    "2": 21,
+    "4": 9
+  },
+  "fallbackCaseCount": 200,
+  "pathAssemblyFailure": 0,
+  "crossPathInputCountDistribution": {
+    "1": 128,
+    "2": 44,
+    "3": 13,
+    "4": 10,
+    "5": 4,
+    "6": 1
+  },
+  "uniqueCandidateCountDistribution": {
+    "1": 200
+  },
+  "kenlmInputCountDistribution": {
+    "1": 200
+  },
+  "kenlmInputOver16": 0,
+  "duplicateKenlmText": 0,
+  "undefinedPrefilledCombinations": 0,
+  "legacyTraceFieldCount": 0,
+  "legacyModuleAbsent": true,
+  "distinctTextsBeforeDedupEquals1Count": 128,
+  "qualityObservation": "distinctTextsBeforeCrossPathDedup / unique candidate diversity is Quality Observation, not Architecture Freeze Failure",
+  "hardGatePass": true,
+  "latencyMs": {
+    "p50": 66,
+    "p95": 109,
+    "max": 152,
+    "total": 13825
+  },
+  "sqlQueryCount": "NOT_OWNED_HERE (orchestrator probe does not instrument SQLite counters)",
+  "failCases": []
+}

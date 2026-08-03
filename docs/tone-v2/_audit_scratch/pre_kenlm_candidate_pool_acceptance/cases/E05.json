@@ -1,0 +1,448 @@
+{
+  "caseId": "E05",
+  "rawText": "请确认房间预订",
+  "windowCount": 25,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 5,
+  "bucketCount": 5,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 5,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 5,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认房间预订"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "房间"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "房间"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "房间"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "房间"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "domainId": "transport",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "房间"
+        ],
+        [
+          "预订"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认房间预订",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "food_order",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "房间",
+          "sourceText": "房间"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "请确认房间预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认房间预订",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "medical",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "房间",
+          "sourceText": "房间"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "请确认房间预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认房间预订",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "tourism_hotel",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "房间",
+          "sourceText": "房间"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "请确认房间预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认房间预订",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "tourism_route",
+      "sourceBucket": 3,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "房间",
+          "sourceText": "房间"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "请确认房间预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认房间预订",
+      "sourcePathId": "47dab813c7198008a932bbca066b3268999ecdccdd7b304e5c5afbb11e613b5e",
+      "sourceDomain": "transport",
+      "sourceBucket": 4,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "房间",
+          "sourceText": "房间"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "预订",
+          "sourceText": "预订"
+        }
+      ],
+      "dedupKey": "请确认房间预订",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 25,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 3,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 17,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "E"
+  ],
+  "why": "adjacent/overlap",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 19.47699999809265,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-07-28",
+  "batch": "1.0C",
+  "build": "npm run build:main",
+  "patterns": [
+    {
+      "pattern": "length1-real-sqlite.test.helpers",
+      "matches": [],
+      "status": "CLEAN",
+      "note": "*.test.helpers.ts excluded from tsconfig.main; HELPER_IN_DIST=False"
+    },
+    {
+      "pattern": "lexicon-runtime-v2-length1-base.contract.test",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "recall-span-topk-v2-length1.sqlite.integration",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "length1-recall-edge-path.sqlite.integration",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "createLength1TempSqliteBundle",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "batch10bStandardBaseRows",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "length1_limit8_real_sqlite_baseline.json",
+      "matches": [],
+      "status": "CLEAN",
+      "note": "baseline under docs/tone-v2/_audit_scratch; not compiled into dist/main"
+    },
+    {
+      "pattern": "length1_tone_unsupported_baseline.json",
+      "matches": [],
+      "status": "CLEAN"
+    },
+    {
+      "pattern": "b0b_dian / seed test ids",
+      "matches": [],
+      "status": "CLEAN"
+    }
+  ],
+  "unrelatedFilterHits": [
+    "dist/main/.../lexicon-patch-v3/patch-fixtures.js",
+    "dist/main/.../lexicon-patch-v4/patch-fixtures-v4.js"
+  ],
+  "unrelatedFilterHitsNote": "Pre-existing patch fixture modules; not Batch 1.0C length1 test resources",
+  "runtimeJsContainsMinTermLength": true,
+  "overall": "CLEAN"
+}

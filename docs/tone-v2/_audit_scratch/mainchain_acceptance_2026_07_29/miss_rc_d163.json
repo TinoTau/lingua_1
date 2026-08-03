@@ -1,0 +1,72 @@
+{
+  "id": "d163",
+  "raw": "老是知道提的解题不,周能不能再讲一遍? 我没听懂 感谢观众第二点",
+  "asrToneSliceCount": 18,
+  "diagToneSliceCount": 22,
+  "wordTimeSpanBuilt": 25,
+  "wordTimeSpanMapped": 25,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "第二",
+      "pinyinKey": "di|er",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        3,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.52,
+        "end": 4.859999999999999
+      },
+      "replayWindowTime": {
+        "start": 0.22,
+        "end": 0.56
+      }
+    },
+    {
+      "text": "第二点",
+      "pinyinKey": "di|er|dian",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        3,
+        3,
+        3
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.52,
+        "end": 5.22
+      },
+      "replayWindowTime": {
+        "start": 0.22,
+        "end": 0.92
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 28,
+    "theoreticalWindows2to5": 102,
+    "theoreticalWindows1to5": 130
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

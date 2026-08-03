@@ -1,0 +1,734 @@
+{
+  "caseId": "d069",
+  "fileNum": "069",
+  "rawText": "发票抬头开错了，能重新开具电子发票吗？",
+  "scenario": "customer_service",
+  "retainedDomains": [
+    "food_order",
+    "tourism_hotel"
+  ],
+  "domainScores": {
+    "food_order": 2,
+    "tourism_hotel": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "domainId": "food_order",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+          "sameDomain": [
+            "发票"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "发票"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "抬",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "抬"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "头",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "头"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "开",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "错",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "错"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "了",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "了"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "能",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "重",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "重"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "新",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "新"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "开",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "具",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "具"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "电",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "电"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "子",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+          "sameDomain": [
+            "发票"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "发票"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "吗",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "发票"
+        ],
+        [
+          "抬"
+        ],
+        [
+          "头"
+        ],
+        [
+          "开"
+        ],
+        [
+          "错"
+        ],
+        [
+          "了"
+        ],
+        [
+          "能"
+        ],
+        [
+          "重"
+        ],
+        [
+          "新"
+        ],
+        [
+          "开"
+        ],
+        [
+          "具"
+        ],
+        [
+          "电"
+        ],
+        [
+          "子"
+        ],
+        [
+          "发票"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "发票抬头开错了，能重新开具电子发票吗？"
+      ]
+    },
+    {
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "domainId": "tourism_hotel",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+          "sameDomain": [
+            "发票"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "发票"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "抬",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "抬"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "头",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "头"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "开",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "错",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "错"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "了",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "了"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "能",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "重",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "重"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "新",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "新"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "开",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "具",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "具"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "电",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "电"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "子",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+          "sameDomain": [
+            "发票"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "发票"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "吗",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "发票"
+        ],
+        [
+          "抬"
+        ],
+        [
+          "头"
+        ],
+        [
+          "开"
+        ],
+        [
+          "错"
+        ],
+        [
+          "了"
+        ],
+        [
+          "能"
+        ],
+        [
+          "重"
+        ],
+        [
+          "新"
+        ],
+        [
+          "开"
+        ],
+        [
+          "具"
+        ],
+        [
+          "电"
+        ],
+        [
+          "子"
+        ],
+        [
+          "发票"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "发票抬头开错了，能重新开具电子发票吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "发票抬头开错了，能重新开具电子发票吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "发票抬头开错了，能重新开具电子发票吗？",
+    "发票抬头开错了，能重新开具电子发票吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "发票抬头开错了，能重新开具电子发票吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "发票",
+            "start": 0,
+            "end": 2
+          },
+          "word": "发票",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "发票",
+            "start": 15,
+            "end": 17
+          },
+          "word": "发票",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "抬",
+            "start": 2,
+            "end": 3
+          },
+          "word": "抬",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "头",
+            "start": 3,
+            "end": 4
+          },
+          "word": "头",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 4,
+            "end": 5
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "错",
+            "start": 5,
+            "end": 6
+          },
+          "word": "错",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "了",
+            "start": 6,
+            "end": 7
+          },
+          "word": "了",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 8,
+            "end": 9
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "重",
+            "start": 9,
+            "end": 10
+          },
+          "word": "重",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "新",
+            "start": 10,
+            "end": 11
+          },
+          "word": "新",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 11,
+            "end": 12
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "具",
+            "start": 12,
+            "end": 13
+          },
+          "word": "具",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "电",
+            "start": 13,
+            "end": 14
+          },
+          "word": "电",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 14,
+            "end": 15
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 17,
+            "end": 18
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.7
+    }
+  ],
+  "kenlmInputTexts": [
+    "发票抬头开错了，能重新开具电子发票吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "发票抬头开错了，能重新开具电子发票吗？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "发票抬头开错了，能重新开具电子发票吗？"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "发票抬头开错了，能重新开具电子发票吗？"
+    ],
+    "actual": [
+      "发票抬头开错了，能重新开具电子发票吗？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

@@ -1,0 +1,1236 @@
+{
+  "utteranceId": "d010",
+  "rawText": "医生您好,我这两天头痛想开点,要并做个些常规",
+  "expectedText": "医生您好，我这两天头痛，想开点药并做个血常规。",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 20,
+    "asr_word_timestamp_valid_count": 20,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 0,
+    "first_word_start": 0,
+    "last_word_end": 4.52,
+    "audioDurationSec": 4.7949375
+  },
+  "slices": {
+    "total_tone_slice_count": 20,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 2,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.26,
+        "tone": 1,
+        "confidence": 0.8838649988174438,
+        "posterior": {
+          "t1": 0.8838649988174438,
+          "t2": 0.0010172552429139614,
+          "t3": 0.006836188957095146,
+          "t4": 0.10819004476070404,
+          "t5": 0.00009148607932729647
+        }
+      },
+      {
+        "start": 0.26,
+        "end": 0.42,
+        "tone": 3,
+        "confidence": 0.6553709506988525,
+        "posterior": {
+          "t1": 0.00024267267144750804,
+          "t2": 0.32974860072135925,
+          "t3": 0.6553709506988525,
+          "t4": 0.010628958232700825,
+          "t5": 0.004008829593658447
+        }
+      },
+      {
+        "start": 0.42,
+        "end": 0.66,
+        "tone": 2,
+        "confidence": 0.8794897794723511,
+        "posterior": {
+          "t1": 0.00019280942797195166,
+          "t2": 0.8794897794723511,
+          "t3": 0.11998037248849869,
+          "t4": 0.00030488017364405096,
+          "t5": 0.00003220939470338635
+        }
+      },
+      {
+        "start": 0.66,
+        "end": 0.96,
+        "tone": 4,
+        "confidence": 0.8550690412521362,
+        "posterior": {
+          "t1": 0.011948357336223125,
+          "t2": 0.006903358269482851,
+          "t3": 0.11663331836462021,
+          "t4": 0.8550690412521362,
+          "t5": 0.009445972740650177
+        }
+      },
+      {
+        "start": 1.24,
+        "end": 1.34,
+        "tone": 2,
+        "confidence": 0.42547768354415894,
+        "posterior": {
+          "t1": 0.042214568704366684,
+          "t2": 0.42547768354415894,
+          "t3": 0.3971306383609772,
+          "t4": 0.13289004564285278,
+          "t5": 0.002287020441144705
+        }
+      },
+      {
+        "start": 1.34,
+        "end": 1.44,
+        "tone": 5,
+        "confidence": 0.7051892280578613,
+        "posterior": {
+          "t1": 0.0000727622100384906,
+          "t2": 0.004549801349639893,
+          "t3": 0.020837243646383286,
+          "t4": 0.26935097575187683,
+          "t5": 0.7051892280578613
+        }
+      },
+      {
+        "start": 1.44,
+        "end": 1.64,
+        "tone": 2,
+        "confidence": 0.4534408152103424,
+        "posterior": {
+          "t1": 0.14309246838092804,
+          "t2": 0.4534408152103424,
+          "t3": 0.21057693660259247,
+          "t4": 0.18857096135616302,
+          "t5": 0.004318684339523315
+        }
+      },
+      {
+        "start": 1.64,
+        "end": 1.78,
+        "tone": 2,
+        "confidence": 0.8261947631835938,
+        "posterior": {
+          "t1": 0.019883891567587852,
+          "t2": 0.8261947631835938,
+          "t3": 0.14516523480415344,
+          "t4": 0.007118528708815575,
+          "t5": 0.0016376167768612504
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 20,
+    "skipped": 0,
+    "multi_char_token_count": 2,
+    "single_char_token_count": 18,
+    "samplePairs": [
+      {
+        "rawWord": "医",
+        "rawRange": [
+          0,
+          1
+        ],
+        "charLen": 1,
+        "wordStart": 0,
+        "wordEnd": 0.26,
+        "toneSlice": {
+          "start": 0,
+          "end": 0.26,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "生",
+        "rawRange": [
+          1,
+          2
+        ],
+        "charLen": 1,
+        "wordStart": 0.26,
+        "wordEnd": 0.42,
+        "toneSlice": {
+          "start": 0.26,
+          "end": 0.42,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "您",
+        "rawRange": [
+          2,
+          3
+        ],
+        "charLen": 1,
+        "wordStart": 0.42,
+        "wordEnd": 0.66,
+        "toneSlice": {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "好,",
+        "rawRange": [
+          3,
+          5
+        ],
+        "charLen": 2,
+        "wordStart": 0.66,
+        "wordEnd": 0.96,
+        "toneSlice": {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "我",
+        "rawRange": [
+          5,
+          6
+        ],
+        "charLen": 1,
+        "wordStart": 1.24,
+        "wordEnd": 1.34,
+        "toneSlice": {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "这",
+        "rawRange": [
+          6,
+          7
+        ],
+        "charLen": 1,
+        "wordStart": 1.34,
+        "wordEnd": 1.44,
+        "toneSlice": {
+          "start": 1.34,
+          "end": 1.44,
+          "tone": 5
+        }
+      },
+      {
+        "rawWord": "两",
+        "rawRange": [
+          7,
+          8
+        ],
+        "charLen": 1,
+        "wordStart": 1.44,
+        "wordEnd": 1.64,
+        "toneSlice": {
+          "start": 1.44,
+          "end": 1.64,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "天",
+        "rawRange": [
+          8,
+          9
+        ],
+        "charLen": 1,
+        "wordStart": 1.64,
+        "wordEnd": 1.78,
+        "toneSlice": {
+          "start": 1.64,
+          "end": 1.78,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "头",
+        "rawRange": [
+          9,
+          10
+        ],
+        "charLen": 1,
+        "wordStart": 1.78,
+        "wordEnd": 1.94,
+        "toneSlice": {
+          "start": 1.78,
+          "end": 1.94,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "痛",
+        "rawRange": [
+          10,
+          11
+        ],
+        "charLen": 1,
+        "wordStart": 1.94,
+        "wordEnd": 2.18,
+        "toneSlice": {
+          "start": 1.94,
+          "end": 2.18,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "想",
+        "rawRange": [
+          11,
+          12
+        ],
+        "charLen": 1,
+        "wordStart": 2.18,
+        "wordEnd": 2.38,
+        "toneSlice": {
+          "start": 2.18,
+          "end": 2.38,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "开",
+        "rawRange": [
+          12,
+          13
+        ],
+        "charLen": 1,
+        "wordStart": 2.38,
+        "wordEnd": 2.64,
+        "toneSlice": {
+          "start": 2.38,
+          "end": 2.64,
+          "tone": 2
+        }
+      }
+    ],
+    "spans": [
+      {
+        "word": "医",
+        "rawStart": 0,
+        "rawEnd": 1,
+        "start": 0,
+        "end": 0.26,
+        "segmentIndex": 0,
+        "probability": 0.62445068359375
+      },
+      {
+        "word": "生",
+        "rawStart": 1,
+        "rawEnd": 2,
+        "start": 0.26,
+        "end": 0.42,
+        "segmentIndex": 0,
+        "probability": 0.99951171875
+      },
+      {
+        "word": "您",
+        "rawStart": 2,
+        "rawEnd": 3,
+        "start": 0.42,
+        "end": 0.66,
+        "segmentIndex": 0,
+        "probability": 0.91162109375
+      },
+      {
+        "word": "好,",
+        "rawStart": 3,
+        "rawEnd": 5,
+        "start": 0.66,
+        "end": 0.96,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "我",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "start": 1.24,
+        "end": 1.34,
+        "segmentIndex": 0,
+        "probability": 0.984375
+      },
+      {
+        "word": "这",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "start": 1.34,
+        "end": 1.44,
+        "segmentIndex": 0,
+        "probability": 0.994140625
+      },
+      {
+        "word": "两",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "start": 1.44,
+        "end": 1.64,
+        "segmentIndex": 0,
+        "probability": 0.9951171875
+      },
+      {
+        "word": "天",
+        "rawStart": 8,
+        "rawEnd": 9,
+        "start": 1.64,
+        "end": 1.78,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "头",
+        "rawStart": 9,
+        "rawEnd": 10,
+        "start": 1.78,
+        "end": 1.94,
+        "segmentIndex": 0,
+        "probability": 0.99853515625
+      },
+      {
+        "word": "痛",
+        "rawStart": 10,
+        "rawEnd": 11,
+        "start": 1.94,
+        "end": 2.18,
+        "segmentIndex": 0,
+        "probability": 0.9619140625
+      },
+      {
+        "word": "想",
+        "rawStart": 11,
+        "rawEnd": 12,
+        "start": 2.18,
+        "end": 2.38,
+        "segmentIndex": 0,
+        "probability": 0.95654296875
+      },
+      {
+        "word": "开",
+        "rawStart": 12,
+        "rawEnd": 13,
+        "start": 2.38,
+        "end": 2.64,
+        "segmentIndex": 0,
+        "probability": 0.998046875
+      },
+      {
+        "word": "点,",
+        "rawStart": 13,
+        "rawEnd": 15,
+        "start": 2.64,
+        "end": 2.94,
+        "segmentIndex": 0,
+        "probability": 0.740234375
+      },
+      {
+        "word": "要",
+        "rawStart": 15,
+        "rawEnd": 16,
+        "start": 3.24,
+        "end": 3.34,
+        "segmentIndex": 0,
+        "probability": 0.958984375
+      },
+      {
+        "word": "并",
+        "rawStart": 16,
+        "rawEnd": 17,
+        "start": 3.34,
+        "end": 3.58,
+        "segmentIndex": 0,
+        "probability": 0.765625
+      },
+      {
+        "word": "做",
+        "rawStart": 17,
+        "rawEnd": 18,
+        "start": 3.58,
+        "end": 3.8,
+        "segmentIndex": 0,
+        "probability": 0.93994140625
+      },
+      {
+        "word": "个",
+        "rawStart": 18,
+        "rawEnd": 19,
+        "start": 3.8,
+        "end": 3.92,
+        "segmentIndex": 0,
+        "probability": 0.8544921875
+      },
+      {
+        "word": "些",
+        "rawStart": 19,
+        "rawEnd": 20,
+        "start": 3.92,
+        "end": 4.14,
+        "segmentIndex": 0,
+        "probability": 0.51953125
+      },
+      {
+        "word": "常",
+        "rawStart": 20,
+        "rawEnd": 21,
+        "start": 4.14,
+        "end": 4.38,
+        "segmentIndex": 0,
+        "probability": 0.9462890625
+      },
+      {
+        "word": "规",
+        "rawStart": 21,
+        "rawEnd": 22,
+        "start": 4.38,
+        "end": 4.52,
+        "segmentIndex": 0,
+        "probability": 0.99951171875
+      }
+    ]
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 90,
+    "tone_ready_count": 70,
+    "tone_no_pattern_count": 20,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 90,
+    "pattern_ok_count": 70,
+    "char_eq_syl_count": 70,
+    "overlap_eq_char_count": 70,
+    "overlap_eq_syl_count": 90
+  },
+  "byLen": {
+    "1": {
+      "windows": 20,
+      "ready": 20,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 20,
+      "overlap_eq_char": 20,
+      "overlap_eq_syl": 20,
+      "time_range_ok": 20,
+      "pattern_ok": 20
+    },
+    "2": {
+      "windows": 19,
+      "ready": 17,
+      "no_pattern": 2,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 17,
+      "overlap_eq_char": 17,
+      "overlap_eq_syl": 19,
+      "time_range_ok": 19,
+      "pattern_ok": 17
+    },
+    "3": {
+      "windows": 18,
+      "ready": 14,
+      "no_pattern": 4,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 14,
+      "overlap_eq_char": 14,
+      "overlap_eq_syl": 18,
+      "time_range_ok": 18,
+      "pattern_ok": 14
+    },
+    "4": {
+      "windows": 17,
+      "ready": 11,
+      "no_pattern": 6,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 11,
+      "overlap_eq_char": 11,
+      "overlap_eq_syl": 17,
+      "time_range_ok": 17,
+      "pattern_ok": 11
+    },
+    "5": {
+      "windows": 16,
+      "ready": 8,
+      "no_pattern": 8,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 8,
+      "overlap_eq_char": 8,
+      "overlap_eq_syl": 16,
+      "time_range_ok": 16,
+      "pattern_ok": 8
+    }
+  },
+  "failureSamples": [
+    {
+      "utteranceId": "d010",
+      "windowId": "0:5",
+      "windowText": "医生您好,我",
+      "rawStart": 0,
+      "rawEnd": 6,
+      "rawSpanLength": 6,
+      "syllableStart": 0,
+      "syllableEnd": 5,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "yi",
+        "sheng",
+        "nin",
+        "hao",
+        "wo"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 1.34,
+      "overlapSliceCount": 5,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.26,
+          "tone": 1,
+          "confidence": 0.8838649988174438
+        },
+        {
+          "start": 0.26,
+          "end": 0.42,
+          "tone": 3,
+          "confidence": 0.6553709506988525
+        },
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=5 != charSpan=6; sylSpan=5; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "医",
+          "rawStart": 0,
+          "rawEnd": 1,
+          "charLen": 1,
+          "start": 0,
+          "end": 0.26
+        },
+        {
+          "word": "生",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "charLen": 1,
+          "start": 0.26,
+          "end": 0.42
+        },
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "1:5",
+      "windowText": "生您好,我",
+      "rawStart": 1,
+      "rawEnd": 6,
+      "rawSpanLength": 5,
+      "syllableStart": 1,
+      "syllableEnd": 5,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "sheng",
+        "nin",
+        "hao",
+        "wo"
+      ],
+      "windowTimeStart": 0.26,
+      "windowTimeEnd": 1.34,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 0.26,
+          "end": 0.42,
+          "tone": 3,
+          "confidence": 0.6553709506988525
+        },
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=4; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "生",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "charLen": 1,
+          "start": 0.26,
+          "end": 0.42
+        },
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "1:6",
+      "windowText": "生您好,我这",
+      "rawStart": 1,
+      "rawEnd": 7,
+      "rawSpanLength": 6,
+      "syllableStart": 1,
+      "syllableEnd": 6,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "sheng",
+        "nin",
+        "hao",
+        "wo",
+        "zhe"
+      ],
+      "windowTimeStart": 0.26,
+      "windowTimeEnd": 1.44,
+      "overlapSliceCount": 5,
+      "overlapSlices": [
+        {
+          "start": 0.26,
+          "end": 0.42,
+          "tone": 3,
+          "confidence": 0.6553709506988525
+        },
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        },
+        {
+          "start": 1.34,
+          "end": 1.44,
+          "tone": 5,
+          "confidence": 0.7051892280578613
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=5 != charSpan=6; sylSpan=5; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "生",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "charLen": 1,
+          "start": 0.26,
+          "end": 0.42
+        },
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        },
+        {
+          "word": "这",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.34,
+          "end": 1.44
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "2:5",
+      "windowText": "您好,我",
+      "rawStart": 2,
+      "rawEnd": 6,
+      "rawSpanLength": 4,
+      "syllableStart": 2,
+      "syllableEnd": 5,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "nin",
+        "hao",
+        "wo"
+      ],
+      "windowTimeStart": 0.42,
+      "windowTimeEnd": 1.34,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=3; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "2:6",
+      "windowText": "您好,我这",
+      "rawStart": 2,
+      "rawEnd": 7,
+      "rawSpanLength": 5,
+      "syllableStart": 2,
+      "syllableEnd": 6,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "nin",
+        "hao",
+        "wo",
+        "zhe"
+      ],
+      "windowTimeStart": 0.42,
+      "windowTimeEnd": 1.44,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        },
+        {
+          "start": 1.34,
+          "end": 1.44,
+          "tone": 5,
+          "confidence": 0.7051892280578613
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=4; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        },
+        {
+          "word": "这",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.34,
+          "end": 1.44
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "2:7",
+      "windowText": "您好,我这两",
+      "rawStart": 2,
+      "rawEnd": 8,
+      "rawSpanLength": 6,
+      "syllableStart": 2,
+      "syllableEnd": 7,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "nin",
+        "hao",
+        "wo",
+        "zhe",
+        "liang"
+      ],
+      "windowTimeStart": 0.42,
+      "windowTimeEnd": 1.64,
+      "overlapSliceCount": 5,
+      "overlapSlices": [
+        {
+          "start": 0.42,
+          "end": 0.66,
+          "tone": 2,
+          "confidence": 0.8794897794723511
+        },
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        },
+        {
+          "start": 1.34,
+          "end": 1.44,
+          "tone": 5,
+          "confidence": 0.7051892280578613
+        },
+        {
+          "start": 1.44,
+          "end": 1.64,
+          "tone": 2,
+          "confidence": 0.4534408152103424
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=5 != charSpan=6; sylSpan=5; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "您",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "charLen": 1,
+          "start": 0.42,
+          "end": 0.66
+        },
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        },
+        {
+          "word": "这",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.34,
+          "end": 1.44
+        },
+        {
+          "word": "两",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "charLen": 1,
+          "start": 1.44,
+          "end": 1.64
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "3:5",
+      "windowText": "好,我",
+      "rawStart": 3,
+      "rawEnd": 6,
+      "rawSpanLength": 3,
+      "syllableStart": 3,
+      "syllableEnd": 5,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "hao",
+        "wo"
+      ],
+      "windowTimeStart": 0.66,
+      "windowTimeEnd": 1.34,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=2; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        }
+      ]
+    },
+    {
+      "utteranceId": "d010",
+      "windowId": "3:6",
+      "windowText": "好,我这",
+      "rawStart": 3,
+      "rawEnd": 7,
+      "rawSpanLength": 4,
+      "syllableStart": 3,
+      "syllableEnd": 6,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "hao",
+        "wo",
+        "zhe"
+      ],
+      "windowTimeStart": 0.66,
+      "windowTimeEnd": 1.44,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 0.66,
+          "end": 0.96,
+          "tone": 4,
+          "confidence": 0.8550690412521362
+        },
+        {
+          "start": 1.24,
+          "end": 1.34,
+          "tone": 2,
+          "confidence": 0.42547768354415894
+        },
+        {
+          "start": 1.34,
+          "end": 1.44,
+          "tone": 5,
+          "confidence": 0.7051892280578613
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=3; multiCharTokensInUtterance=2",
+      "coveringSpans": [
+        {
+          "word": "好,",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.66,
+          "end": 0.96
+        },
+        {
+          "word": "我",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 1.24,
+          "end": 1.34
+        },
+        {
+          "word": "这",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.34,
+          "end": 1.44
+        }
+      ]
+    }
+  ],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

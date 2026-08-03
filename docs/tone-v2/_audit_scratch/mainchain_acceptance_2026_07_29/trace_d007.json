@@ -1,0 +1,213 @@
+{
+  "id": "d007",
+  "expected": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+  "asr": "市副局仲觀村軟件遠走機場告訴 我敢 9点半的回药师赌车您提前跟我说",
+  "raw_asr": "市副局仲觀村軟件遠走機場告訴 我敢 9点半的回药师赌车您提前跟我说",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 15,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.00005397809582063928,
+      "t2": 0.0000068042850216443185,
+      "t3": 0.000003530302819854114,
+      "t4": 0.9999339580535889,
+      "t5": 0.0000016718884126021294
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 29,
+    "wordTimeSpanCount": 29,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "我说",
+        "pinyinKey": "wo|shuo",
+        "windowTimeRange": {
+          "start": 5.9399999999999995,
+          "end": 6.54
+        },
+        "acousticTonePattern": [
+          4,
+          1
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15,
+    "candidateSentenceCount": 15,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 15,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": true,
+    "maxDelta": 0.8766140000000036,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "candidate:0",
+        "text": "市副局仲觀村軟件遠走机场告訴 我敢 9点半的回药师赌车您提前跟我说",
+        "kenlmScore": -108.931046,
+        "deltaVsRaw": 0.8766140000000036,
+        "isRaw": false,
+        "replacementCount": 15
+      },
+      {
+        "rank": 2,
+        "candidateId": "raw",
+        "text": "市副局仲觀村軟件遠走機場告訴 我敢 9点半的回药师赌车您提前跟我说",
+        "kenlmScore": -109.80766,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "市副局仲觀村軟件遠走機場告訴 我敢 9点半的回药师赌车您提前跟我说",
+        "kenlmScore": -109.80766,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 15
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 681,
+      "queryCount": 3,
+      "avgMs": 227,
+      "p50Ms": 227,
+      "p95Ms": 227,
+      "maxMs": 681
+    },
+    "allCombinationDeltas": [
+      0.8766140000000036,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -109.80766,
+    "maxNormalizedDelta": 0.0000015598445998728077,
+    "kenlmSubprocessMs": 681,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "市副局仲觀村軟件遠走机场告訴 我敢 9点半的回药师赌车您提前跟我说",
+        "delta": 0.8766140000000036,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "市副局仲觀村軟件遠走機場告訴 我敢 9点半的回药师赌车您提前跟我说",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "市副",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "市副",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "局仲",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "局仲",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "觀村",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "觀村",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "軟件",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "軟件",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "遠走",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "遠走",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "機場",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "机场",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "告訴",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "告訴",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我敢",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我敢",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

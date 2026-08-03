@@ -1,0 +1,73 @@
+{
+  "id": "d015",
+  "raw": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+  "asrToneSliceCount": 3,
+  "diagToneSliceCount": 21,
+  "wordTimeSpanBuilt": 21,
+  "wordTimeSpanMapped": 21,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一点",
+      "pinyinKey": "yi|dian",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "一点",
+        "wordTime": [
+          3.72,
+          4.04
+        ],
+        "sliceCount": 3,
+        "nearestSlices": [
+          {
+            "start": 0.52,
+            "end": 0.62,
+            "dist": 3.2
+          },
+          {
+            "start": 0.36,
+            "end": 0.52,
+            "dist": 3.3600000000000003
+          },
+          {
+            "start": 0,
+            "end": 0.36,
+            "dist": 3.68
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.5200000000000005,
+        "end": 4.84
+      },
+      "replayWindowTime": {
+        "start": 3.72,
+        "end": 4.04
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 23,
+    "theoreticalWindows2to5": 82,
+    "theoreticalWindows1to5": 105
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

@@ -1,0 +1,201 @@
+{
+  "id": "d041",
+  "expected": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+  "asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+  "raw_asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 18,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.3728972375392914,
+      "t2": 0.00019837066065520048,
+      "t3": 0.000743172480724752,
+      "t4": 0.6261572241783142,
+      "t5": 0.000003945187927456573
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 18,
+    "wordTimeSpanCount": 18,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 0,
+    "ngramTonePatternMissCount": 2,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "一下",
+        "pinyinKey": "yi|xia",
+        "windowTimeRange": {
+          "start": 3.4,
+          "end": 3.66
+        }
+      },
+      {
+        "text": "一下吗",
+        "pinyinKey": "yi|xia|ma",
+        "windowTimeRange": {
+          "start": 3.4,
+          "end": 3.9
+        }
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 11,
+    "candidateCount": 11,
+    "candidateSentenceCount": 11,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 11,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+        "kenlmScore": -58.421978,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+        "kenlmScore": -58.421978,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 11
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 725,
+      "queryCount": 2,
+      "avgMs": 362.5,
+      "p50Ms": 362.5,
+      "p95Ms": 362.5,
+      "maxMs": 725
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -58.421978,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 725,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "更易",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "更易",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "是龟",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "是龟",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "仔钥",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "仔钥",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "匙找",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "匙找",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "不到",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "不到",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "了前",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "了前",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "台 能",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "台 能",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "帮忙",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "帮忙",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

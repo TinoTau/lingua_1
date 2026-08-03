@@ -1,0 +1,3017 @@
+{
+  "rows": [
+    {
+      "surface": "专家系统",
+      "termId": "term-e4b893e5aeb6e7b3",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "专家",
+        "系统"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "专家",
+          "termId": "term-e4b893e5aeb67c7a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "系统",
+          "termId": "term-e7b3bbe7bb9f7c78",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "专家": [],
+        "系统": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "我们正在升级公司内部的专家系统平台。",
+          "withRetainedDomains": [
+            "coffee"
+          ],
+          "withoutRetainedDomains": [
+            "coffee"
+          ],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [
+            {
+              "surface": "闷蒸",
+              "source": "domain_term",
+              "domains": [
+                "coffee"
+              ],
+              "noise": true
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "闷蒸",
+              "source": "domain_term",
+              "domains": [
+                "coffee"
+              ],
+              "noise": true
+            }
+          ],
+          "withDomainScores": {
+            "coffee": 1
+          },
+          "withoutDomainScores": {
+            "coffee": 1
+          },
+          "withBuckets": [
+            "coffee"
+          ],
+          "withoutBuckets": [
+            "coffee"
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "我闷蒸在升级公司内部的专家系统平台。",
+          "withoutFinal": "我闷蒸在升级公司内部的专家系统平台。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "专家系统已经接入客服知识库并通过验收。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "专家系统一经接入客服知识库并通过验收。",
+          "withoutFinal": "专家系统一经接入客服知识库并通过验收。"
+        }
+      ],
+      "withRetainedDomains": [
+        "coffee"
+      ],
+      "withoutRetainedDomains": [
+        "coffee"
+      ],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "单元测试",
+      "termId": "term-e58d95e58583e6b5",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "单元",
+        "测试"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "单元",
+          "termId": "term-e58d95e585837c64",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "测试",
+          "termId": "term-e6b58be8af957c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "单元": [],
+        "测试": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "开发同学今天补齐了核心模块的单元测试。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "开发同学今天补齐了核心模块的单元测试。",
+          "withoutFinal": "开发同学今天补齐了核心模块的单元测试。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "请在合并前确保单元测试全部通过。",
+          "withRetainedDomains": [
+            "tech_ai"
+          ],
+          "withoutRetainedDomains": [],
+          "lostDomains": [
+            "tech_ai"
+          ],
+          "newDomains": [],
+          "effectiveLost": [
+            "tech_ai"
+          ],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [
+            "tech_ai"
+          ],
+          "atomicVoteContribution": [],
+          "compoundParticipated": true,
+          "withEligible": [
+            {
+              "surface": "单元测试",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [],
+          "withDomainScores": {
+            "tech_ai": 1
+          },
+          "withoutDomainScores": {},
+          "withBuckets": [
+            "tech_ai"
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "changed",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请在合并前确保单元测试全部通过。",
+          "withoutFinal": "请在合并前确保单元测试全部通过。"
+        }
+      ],
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "lostDomains": [
+        "tech_ai"
+      ],
+      "bucketImpact": "changed",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Domain-semantic atomicity: surface recoverable by atoms, but fine domain presence lives only on compound; atom retag would be too broad/ambiguous",
+      "recommendedSourceAction": "KEEP_WITH_DOMAIN_ATOMIC_EXCEPTION",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "回归测试",
+      "termId": "term-e59b9ee5bd92e6b5",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "回归",
+        "测试"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "回归",
+          "termId": "term-e59b9ee5bd927c68",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "测试",
+          "termId": "term-e6b58be8af957c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "回归": [],
+        "测试": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "我们计划在发版前完成完整回归测试。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "我们计划在发版前完成完整回归测试。",
+          "withoutFinal": "我们计划在发版前完成完整回归测试。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "回归测试报告已经同步给质量保障团队。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "回归测试报告已精通步给质量保障团队。",
+          "withoutFinal": "回归测试报告已精通步给质量保障团队。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    },
+    {
+      "surface": "安检通道",
+      "termId": "term-e5ae89e6a380e980",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "安检",
+        "通道"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "安检",
+          "termId": "term-e5ae89e6a3807c61",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "通道",
+          "termId": "term-e9809ae981937c74",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "安检": [],
+        "通道": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "旅客需要提前十分钟到达安检通道排队。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "旅客需要提前十分钟到达安检通道排队。",
+          "withoutFinal": "旅客需要提前十分钟到达安检通道排队。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "安检通道临时关闭请改走二号口。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "安检通道临时关闭请改走二号口。",
+          "withoutFinal": "安检通道临时关闭请改走二号口。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "循环网络",
+      "termId": "term-e5beaae78eafe7bd",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "循环",
+        "网络"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "循环",
+          "termId": "term-e5beaae78eaf7c78",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "网络",
+          "termId": "term-e7bd91e7bb9c7c77",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "循环": [],
+        "网络": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "研究人员正在改进循环网络的训练稳定性。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "研究人员正在改进循环网络的训练稳定性。",
+          "withoutFinal": "研究人员正在改进循环网络的训练稳定性。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "循环网络推理服务已在预发环境上线。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "循环网络推理服务已在预发环境上线。",
+          "withoutFinal": "循环网络推理服务已在预发环境上线。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "正则策略",
+      "termId": "term-e6ada3e58899e7ad",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "no_hit",
+      "segments": [
+        "正则",
+        "策略"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "正则",
+          "termId": "term-e6ada3e588997c7a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "策略",
+          "termId": "term-e7ad96e795a57c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": false,
+          "runtimeSource": "no_hit",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "正则": [],
+        "策略": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "网关侧更新了请求过滤的正则策略。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "网关侧更新了请求过滤的正则策略。",
+          "withoutFinal": "网关侧更新了请求过滤的正则策略。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "请复核线上正则策略是否误伤正常流量。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请复核线上正则策略是否误伤正常流量。",
+          "withoutFinal": "请复核线上正则策略是否误伤正常流量。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "注册中心",
+      "termId": "term-e6b3a8e5868ce4b8",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "注册",
+        "中心"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "注册",
+          "termId": "term-e6b3a8e5868c7c7a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "中心",
+          "termId": "term-e4b8ade5bf837c7a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "注册": [],
+        "中心": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "微服务会定时向注册中心上报健康状态。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "微服务会定时向注册中心上报健康状态。",
+          "withoutFinal": "微服务会定时向注册中心上报健康状态。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "注册中心故障会导致新实例无法发现。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "注册中心故障会导致新实例无法发现。",
+          "withoutFinal": "注册中心故障会导致新实例无法发现。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "流量镜像",
+      "termId": "term-e6b581e9878fe995",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "流量",
+        "镜像"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "流量",
+          "termId": "term-e6b581e9878f7c6c",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "镜像",
+          "termId": "term-e9959ce5838f7c6a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "流量": [],
+        "镜像": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "我们准备对关键接口开启流量镜像。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "我们准备对关键接口开启流量镜像。",
+          "withoutFinal": "我们准备对关键接口开启流量镜像。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "流量镜像已经导向影子集群进行对比验证。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "流量镜像已经导向影子集群进行对比验证。",
+          "withoutFinal": "流量镜像已经导向影子集群进行对比验证。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "测试数据",
+      "termId": "term-e6b58be8af95e695",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "测试",
+        "数据"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "测试",
+          "termId": "term-e6b58be8af957c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "数据",
+          "termId": "term-e695b0e68dae7c73",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "测试": [],
+        "数据": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "请不要把生产订单混入测试数据集合。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请不要把生产订单混入测试数据集合。",
+          "withoutFinal": "请不要把生产订单混入测试数据集合。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "测试数据已脱敏并导入联调环境。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "测试数据依托敏并导入联调环境。",
+          "withoutFinal": "测试数据依托敏并导入联调环境。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    },
+    {
+      "surface": "熔断策略",
+      "termId": "term-e78694e696ade7ad",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "no_hit",
+      "segments": [
+        "熔断",
+        "策略"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "熔断",
+          "termId": "term-e78694e696ad7c72",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "策略",
+          "termId": "term-e7ad96e795a57c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": false,
+          "runtimeSource": "no_hit",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "熔断": [],
+        "策略": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "调用下游超时后会触发熔断策略保护。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "调用下游超时后会出发熔断策略保护。",
+          "withoutFinal": "调用下游超时后会出发熔断策略保护。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "熔断策略阈值已按错误率重新校准。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "熔断策略阈之一按错误率重新校准。",
+          "withoutFinal": "熔断策略阈之一按错误率重新校准。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "特征工程",
+      "termId": "term-e789b9e5be81e5b7",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "特征",
+        "工程"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "特征",
+          "termId": "term-e789b9e5be817c74",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "工程",
+          "termId": "term-e5b7a5e7a88b7c67",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "特征": [],
+        "工程": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "算法同学这周重点优化特征工程流水线。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "算法同学这周重点优化特征工程流水线。",
+          "withoutFinal": "算法同学这周重点优化特征工程流水线。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "特征工程结果已经写入特征存储服务。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "特征工程结果已经写入特征存储服务。",
+          "withoutFinal": "特征工程结果已经写入特征存储服务。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    },
+    {
+      "surface": "神经网络",
+      "termId": "term-e7a59ee7bb8fe7bd",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "神经",
+        "网络"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "神经",
+          "termId": "term-e7a59ee7bb8f7c73",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "网络",
+          "termId": "term-e7bd91e7bb9c7c77",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "神经": [],
+        "网络": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "我们正在训练神经网络模型。",
+          "withRetainedDomains": [
+            "coffee",
+            "tech_ai"
+          ],
+          "withoutRetainedDomains": [
+            "coffee"
+          ],
+          "lostDomains": [
+            "tech_ai"
+          ],
+          "newDomains": [],
+          "effectiveLost": [
+            "tech_ai"
+          ],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [
+            "tech_ai"
+          ],
+          "atomicVoteContribution": [],
+          "compoundParticipated": true,
+          "withEligible": [
+            {
+              "surface": "闷蒸",
+              "source": "domain_term",
+              "domains": [
+                "coffee"
+              ],
+              "noise": true
+            },
+            {
+              "surface": "神经网络",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "闷蒸",
+              "source": "domain_term",
+              "domains": [
+                "coffee"
+              ],
+              "noise": true
+            }
+          ],
+          "withDomainScores": {
+            "coffee": 1,
+            "tech_ai": 1
+          },
+          "withoutDomainScores": {
+            "coffee": 1
+          },
+          "withBuckets": [
+            "coffee",
+            "tech_ai"
+          ],
+          "withoutBuckets": [
+            "coffee"
+          ],
+          "bucketImpact": "changed",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "我闷蒸在训练神经网络模型。",
+          "withoutFinal": "我闷蒸在训练神经网络模型。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "神经网络模型已经部署完成。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "神经网络模型已经部署完成。",
+          "withoutFinal": "神经网络模型已经部署完成。"
+        }
+      ],
+      "withRetainedDomains": [
+        "coffee",
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [
+        "coffee"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ],
+      "bucketImpact": "changed",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Domain-semantic atomicity: surface recoverable by atoms, but fine domain presence lives only on compound; atom retag would be too broad/ambiguous",
+      "recommendedSourceAction": "KEEP_WITH_DOMAIN_ATOMIC_EXCEPTION",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "联系电话",
+      "termId": "term-e88194e7b3bbe794",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "联系",
+        "电话"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "联系",
+          "termId": "term-e88194e7b3bb7c6c",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "电话",
+          "termId": "term-e794b5e8af9d7c64",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "联系": [],
+        "电话": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "请在表单中填写准确的联系电话。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请在表单中填写准确的联系电话。",
+          "withoutFinal": "请在表单中填写准确的联系电话。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "客人的联系电话已同步到前台系统。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "客人的联系电话已同步到前台系统。",
+          "withoutFinal": "客人的联系电话已同步到前台系统。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "视频会议",
+      "termId": "term-e8a786e9a291e4bc",
+      "compoundDomains": [
+        "meeting"
+      ],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "视频",
+        "会议"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "视频",
+          "termId": "term-e8a786e9a2917c73",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "会议",
+          "termId": "term-e4bc9ae8aeae7c68",
+          "domains": [
+            "meeting"
+          ],
+          "domainSources": [
+            "industry_pack_v1"
+          ],
+          "inBaseLexicon": true,
+          "inDomainLexicon": true,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": [
+            "meeting"
+          ]
+        }
+      ],
+      "segmentDomains": {
+        "视频": [],
+        "会议": [
+          "meeting"
+        ]
+      },
+      "segmentDomainsUnion": [
+        "meeting"
+      ],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "下午三点我们安排一次视频会议。",
+          "withRetainedDomains": [
+            "meeting"
+          ],
+          "withoutRetainedDomains": [
+            "meeting"
+          ],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [
+            "meeting"
+          ],
+          "compoundParticipated": false,
+          "withEligible": [
+            {
+              "surface": "会议",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "会议",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "noise": false
+            }
+          ],
+          "withDomainScores": {
+            "meeting": 1
+          },
+          "withoutDomainScores": {
+            "meeting": 1
+          },
+          "withBuckets": [
+            "meeting"
+          ],
+          "withoutBuckets": [
+            "meeting"
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "下午三点我们安排一次视频会议。",
+          "withoutFinal": "下午三点我们安排一次视频会议。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "视频会议链接已经发送给全体参会人。",
+          "withRetainedDomains": [
+            "meeting"
+          ],
+          "withoutRetainedDomains": [
+            "meeting"
+          ],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [
+            "meeting"
+          ],
+          "compoundParticipated": false,
+          "withEligible": [
+            {
+              "surface": "会议",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "会议",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "noise": false
+            }
+          ],
+          "withDomainScores": {
+            "meeting": 1
+          },
+          "withoutDomainScores": {
+            "meeting": 1
+          },
+          "withBuckets": [
+            "meeting"
+          ],
+          "withoutBuckets": [
+            "meeting"
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "视频会议链接已经发送给全体参会人。",
+          "withoutFinal": "视频会议链接已经发送给全体参会人。"
+        }
+      ],
+      "withRetainedDomains": [
+        "meeting"
+      ],
+      "withoutRetainedDomains": [
+        "meeting"
+      ],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "segment domain union already covers compoundDomains; Vote not compound-dependent",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "训练数据",
+      "termId": "term-e8aeade7bb83e695",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "训练",
+        "数据"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "训练",
+          "termId": "term-e8aeade7bb837c78",
+          "domains": [
+            "tech_ai"
+          ],
+          "domainSources": [
+            "industry_pack_v2"
+          ],
+          "inBaseLexicon": true,
+          "inDomainLexicon": true,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": [
+            "tech_ai"
+          ]
+        },
+        {
+          "surface": "数据",
+          "termId": "term-e695b0e68dae7c73",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "训练": [
+          "tech_ai"
+        ],
+        "数据": []
+      },
+      "segmentDomainsUnion": [
+        "tech_ai"
+      ],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "模型效果依赖高质量的训练数据。",
+          "withRetainedDomains": [
+            "tech_ai"
+          ],
+          "withoutRetainedDomains": [
+            "tech_ai"
+          ],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [
+            "tech_ai"
+          ],
+          "compoundParticipated": false,
+          "withEligible": [
+            {
+              "surface": "训练",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "训练",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withDomainScores": {
+            "tech_ai": 1
+          },
+          "withoutDomainScores": {
+            "tech_ai": 1
+          },
+          "withBuckets": [
+            "tech_ai"
+          ],
+          "withoutBuckets": [
+            "tech_ai"
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "模型效果依赖高质量的训练数据。",
+          "withoutFinal": "模型效果依赖高质量的训练数据。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "训练数据批次已完成标注并入库。",
+          "withRetainedDomains": [
+            "tech_ai"
+          ],
+          "withoutRetainedDomains": [
+            "tech_ai"
+          ],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [
+            "tech_ai"
+          ],
+          "compoundParticipated": false,
+          "withEligible": [
+            {
+              "surface": "训练",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withoutEligible": [
+            {
+              "surface": "训练",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "noise": false
+            }
+          ],
+          "withDomainScores": {
+            "tech_ai": 1
+          },
+          "withoutDomainScores": {
+            "tech_ai": 1
+          },
+          "withBuckets": [
+            "tech_ai"
+          ],
+          "withoutBuckets": [
+            "tech_ai"
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "训练数据批次已完成标注并入库。",
+          "withoutFinal": "训练数据批次已完成标注并入库。"
+        }
+      ],
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [
+        "tech_ai"
+      ],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "segment domain union already covers compoundDomains; Vote not compound-dependent",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "迁移学习",
+      "termId": "term-e8bf81e7a7bbe5ad",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "迁移",
+        "学习"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "迁移",
+          "termId": "term-e8bf81e7a7bb7c71",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "学习",
+          "termId": "term-e5ada6e4b9a07c78",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "迁移": [],
+        "学习": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "团队决定采用迁移学习加速冷启动。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "团队决定采用迁移学习加速冷启动。",
+          "withoutFinal": "团队决定采用迁移学习加速冷启动。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "迁移学习实验在验证集上提升明显。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "迁移学习实验在验证集上提升明显。",
+          "withoutFinal": "迁移学习实验在验证集上提升明显。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "迷你吧",
+      "termId": "term-e8bfb7e4bda0e590",
+      "compoundDomains": [
+        "tourism_hotel"
+      ],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "no_hit",
+      "segments": [
+        "迷你",
+        "吧"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "迷你",
+          "termId": "term-e8bfb7e4bda07c6d",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "吧",
+          "termId": "",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": false,
+          "inDomainLexicon": false,
+          "inTerm": false,
+          "compoundSource": "",
+          "repairTarget": false,
+          "exactRecall": false,
+          "runtimeSource": "not_in_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "迷你": [],
+        "吧": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tourism_hotel"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "客房里的迷你吧提供饮料和小食。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "客房里的迷你吧提供饮料和消失。",
+          "withoutFinal": "客房里的迷你吧提供饮料和消失。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "迷你吧消费会自动计入房账。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "迷你吧消费会自动计入房账。",
+          "withoutFinal": "迷你吧消费会自动计入房账。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    },
+    {
+      "surface": "邀请函",
+      "termId": "term-e98280e8afb7e587",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "邀请",
+        "函"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "邀请",
+          "termId": "",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": false,
+          "inDomainLexicon": false,
+          "inTerm": false,
+          "compoundSource": "",
+          "repairTarget": false,
+          "exactRecall": false,
+          "runtimeSource": "not_in_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "函",
+          "termId": "",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": false,
+          "inDomainLexicon": false,
+          "inTerm": false,
+          "compoundSource": "",
+          "repairTarget": false,
+          "exactRecall": false,
+          "runtimeSource": "not_in_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "邀请": [],
+        "函": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "主办方已经寄出纸质邀请函。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "主办方已经寄出纸质邀请函。",
+          "withoutFinal": "主办方已经寄出纸质邀请函。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "请凭邀请函在签到处领取胸卡。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请凭邀请函在签到处领取胸卡。",
+          "withoutFinal": "请凭邀请函在签到处领取胸卡。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "配置中心",
+      "termId": "term-e9858de7bdaee4b8",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "配置",
+        "中心"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "配置",
+          "termId": "term-e9858de7bdae7c70",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "中心",
+          "termId": "term-e4b8ade5bf837c7a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "配置": [],
+        "中心": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "应用启动时会从配置中心拉取参数。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "应用启动时会从配置中心拉取参数。",
+          "withoutFinal": "应用启动时会从配置中心拉取参数。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "配置中心发布后请观察服务是否热更新成功。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "配置中心发布后请观察服务是否热更新成功。",
+          "withoutFinal": "配置中心发布后请观察服务是否热更新成功。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "配置文件",
+      "termId": "term-e9858de7bdaee696",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "配置",
+        "文件"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "配置",
+          "termId": "term-e9858de7bdae7c70",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "文件",
+          "termId": "term-e69687e4bbb67c77",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "配置": [],
+        "文件": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "请检查本地配置文件中的数据库地址。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "请检查本地配置文件中的数据库地址。",
+          "withoutFinal": "请检查本地配置文件中的数据库地址。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "配置文件变更需要走变更审批流程。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "配置文件变更需要走变更审批流程。",
+          "withoutFinal": "配置文件变更需要走变更审批流程。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    },
+    {
+      "surface": "降级策略",
+      "termId": "term-e9998de7baa7e7ad",
+      "compoundDomains": [],
+      "compoundSource": "industry_pack_v1",
+      "compoundInDomainLexicon": false,
+      "compoundRuntimeSource": "no_hit",
+      "segments": [
+        "降级",
+        "策略"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "降级",
+          "termId": "term-e9998de7baa77c6a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v1",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "策略",
+          "termId": "term-e7ad96e795a57c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": false,
+          "runtimeSource": "no_hit",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "降级": [],
+        "策略": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "INSUFFICIENT_EVIDENCE",
+      "atomTagFeasibility": "ATOM_TAG_NOT_APPLICABLE",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "高峰时段会自动启用降级策略。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "高峰时段会自动启用降级策略。",
+          "withoutFinal": "高峰时段会自动启用降级策略。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "降级策略生效后非核心接口将返回缓存结果。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "降级策略生效后非核心接口将返回缓存结果。",
+          "withoutFinal": "降级策略生效后非核心接口将返回缓存结果。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "compoundDomains empty; Domain Vote does not depend on compound; surface already recoverable",
+      "recommendedSourceAction": "DELETE_SOURCE_ROW",
+      "domainFollowUp": "NONE"
+    },
+    {
+      "surface": "集成测试",
+      "termId": "term-e99b86e68890e6b5",
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "compoundSource": "external_full_review_supplement_v1",
+      "compoundInDomainLexicon": true,
+      "compoundRuntimeSource": "base_term",
+      "segments": [
+        "集成",
+        "测试"
+      ],
+      "segmentMetas": [
+        {
+          "surface": "集成",
+          "termId": "term-e99b86e688907c6a",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        },
+        {
+          "surface": "测试",
+          "termId": "term-e6b58be8af957c63",
+          "domains": [],
+          "domainSources": [],
+          "inBaseLexicon": true,
+          "inDomainLexicon": false,
+          "inTerm": true,
+          "compoundSource": "industry_pack_v2",
+          "repairTarget": true,
+          "exactRecall": true,
+          "runtimeSource": "base_term",
+          "runtimeDomains": []
+        }
+      ],
+      "segmentDomains": {
+        "集成": [],
+        "测试": []
+      },
+      "segmentDomainsUnion": [],
+      "segmentDomainsIntersection": [],
+      "missingDomains": [
+        "tech_ai"
+      ],
+      "extraSegmentDomains": [],
+      "compoundDomainValidity": "COMPOUND_DOMAIN_VALID",
+      "atomTagFeasibility": "ATOM_TAG_TOO_BROAD",
+      "sentenceTraces": [
+        {
+          "kind": "陈述",
+          "sentence": "联调阶段必须覆盖主要路径的集成测试。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "联调阶段必须覆盖主要路径的集成测试。",
+          "withoutFinal": "联调阶段必须覆盖主要路径的集成测试。"
+        },
+        {
+          "kind": "业务",
+          "sentence": "集成测试用例已经挂到持续集成流水线。",
+          "withRetainedDomains": [],
+          "withoutRetainedDomains": [],
+          "lostDomains": [],
+          "newDomains": [],
+          "effectiveLost": [],
+          "noiseOnlyLost": [],
+          "compoundVoteContribution": [],
+          "atomicVoteContribution": [],
+          "compoundParticipated": false,
+          "withEligible": [],
+          "withoutEligible": [],
+          "withDomainScores": {},
+          "withoutDomainScores": {},
+          "withBuckets": [
+            null
+          ],
+          "withoutBuckets": [
+            null
+          ],
+          "bucketImpact": "none",
+          "assemblyImpact": "none",
+          "kenlmImpact": "none",
+          "finalImpact": "none",
+          "withFinal": "集成测试用例已经挂到持续集成流水线。",
+          "withoutFinal": "集成测试用例已经挂到持续集成流水线。"
+        }
+      ],
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "lostDomains": [],
+      "bucketImpact": "none",
+      "assemblyImpact": "none",
+      "kenlmImpact": "none",
+      "finalImpact": "none",
+      "classification": "REVIEW_DOMAIN_MODEL",
+      "reason": "compound has valid-looking fine domain tags and atoms cannot safely carry them, but current sentence fixtures did not activate compound as vote-eligible candidate — need clearer Vote Trace",
+      "recommendedSourceAction": "KEEP_PENDING_DOMAIN_REVIEW",
+      "domainFollowUp": "REPROBE_OR_REVIEW_TAG_ACTIVATION"
+    }
+  ],
+  "deleteSafe": [
+    "专家系统",
+    "安检通道",
+    "循环网络",
+    "正则策略",
+    "注册中心",
+    "流量镜像",
+    "熔断策略",
+    "联系电话",
+    "视频会议",
+    "训练数据",
+    "迁移学习",
+    "邀请函",
+    "配置中心",
+    "降级策略"
+  ],
+  "keepAtomic": [
+    "单元测试",
+    "神经网络"
+  ],
+  "review": [
+    "回归测试",
+    "测试数据",
+    "特征工程",
+    "迷你吧",
+    "配置文件",
+    "集成测试"
+  ]
+}

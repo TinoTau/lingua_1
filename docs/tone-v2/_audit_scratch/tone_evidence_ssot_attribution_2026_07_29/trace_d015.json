@@ -1,0 +1,204 @@
+{
+  "id": "d015",
+  "expected": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+  "asr": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+  "raw_asr": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 21,
+    "evidenceProductionCount": 21,
+    "firstSlicePosterior": {
+      "t1": 0.0006086130160838366,
+      "t2": 0.036121517419815063,
+      "t3": 0.9449061155319214,
+      "t4": 0.018172187730669975,
+      "t5": 0.00019143610552418977
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 21,
+    "wordTimeSpanCount": 21,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 21
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "一点",
+        "pinyinKey": "yi|dian",
+        "windowTimeRange": {
+          "start": 4.5200000000000005,
+          "end": 4.84
+        },
+        "acousticTonePattern": [
+          4,
+          4
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "我想",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我想",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "对比",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "对比",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "这两",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "这两",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "款订",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "款订",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "单",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "单",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "中",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "中",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "台的",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "台的",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "价格",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "价格",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

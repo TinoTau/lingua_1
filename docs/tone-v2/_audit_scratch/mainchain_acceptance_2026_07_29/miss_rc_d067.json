@@ -1,0 +1,73 @@
+{
+  "id": "d067",
+  "raw": "您好,我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+  "asrToneSliceCount": 4,
+  "diagToneSliceCount": 24,
+  "wordTimeSpanBuilt": 24,
+  "wordTimeSpanMapped": 24,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "一下",
+        "wordTime": [
+          4.26,
+          4.54
+        ],
+        "sliceCount": 4,
+        "nearestSlices": [
+          {
+            "start": 0.56,
+            "end": 0.62,
+            "dist": 3.6999999999999997
+          },
+          {
+            "start": 0.48,
+            "end": 0.56,
+            "dist": 3.78
+          },
+          {
+            "start": 0.34,
+            "end": 0.48,
+            "dist": 3.92
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.06,
+        "end": 5.34
+      },
+      "replayWindowTime": {
+        "start": 4.26,
+        "end": 4.54
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 25,
+    "theoreticalWindows2to5": 90,
+    "theoreticalWindows1to5": 115
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

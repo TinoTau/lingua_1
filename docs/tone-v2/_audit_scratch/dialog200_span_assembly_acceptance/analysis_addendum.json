@@ -1,0 +1,16 @@
+{
+  "note": "Post-hoc correction of probe coordinate check + surface-distinct analysis (audit-only, no re-run required for structure)",
+  "coordinateMappingFailure_probeBug": {
+    "reported": 4494,
+    "cause": "probe used ranges[].start/end; CharSyllableRange uses charStart/charEnd (run-level, not per-syllable)",
+    "corrected": 0,
+    "evidence": "windows.sample all have textStart < textEnd; orchestrator coverageOk; invalidWindowRange=0"
+  },
+  "surfaceDistinctAlternatives": {
+    "casesWithSurfaceDistinctRecallTermsInSameWindow": 10,
+    "caseIds": ["d023", "d041", "d053", "d068", "d086", "d113", "d131", "d143", "d158", "d176"],
+    "observation": "Alternatives typically lexicon noise (e.g. 地址→低脂/地质). Bucket select leaves 1 pick/slot (naive=1); collapse is R6/R7 before Assembly expand, not R8 first-only.",
+    "multiCandidateEdgesWithSameSurfaceText": "133 cases — distinct termId/domain but identical replacement string (e.g. 拿铁×3)"
+  },
+  "correctedHardStructurePass": true
+}

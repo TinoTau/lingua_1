@@ -1,0 +1,1106 @@
+{
+  "utteranceId": "d120",
+  "rawText": "请问这门课期末是开卷还是闭卷 终点汇化嘛",
+  "expectedText": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 18,
+    "asr_word_timestamp_valid_count": 18,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 0,
+    "first_word_start": 0,
+    "last_word_end": 4.5,
+    "audioDurationSec": 4.609125
+  },
+  "slices": {
+    "total_tone_slice_count": 18,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 0,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.26,
+        "tone": 3,
+        "confidence": 0.9575249552726746,
+        "posterior": {
+          "t1": 0.0001432692224625498,
+          "t2": 0.02952299825847149,
+          "t3": 0.9575249552726746,
+          "t4": 0.012765939347445965,
+          "t5": 0.00004282213922124356
+        }
+      },
+      {
+        "start": 0.26,
+        "end": 0.48,
+        "tone": 3,
+        "confidence": 0.6840833425521851,
+        "posterior": {
+          "t1": 0.08301196247339249,
+          "t2": 0.08511058241128922,
+          "t3": 0.6840833425521851,
+          "t4": 0.08066524565219879,
+          "t5": 0.06712887436151505
+        }
+      },
+      {
+        "start": 0.48,
+        "end": 0.7,
+        "tone": 3,
+        "confidence": 0.6488602757453918,
+        "posterior": {
+          "t1": 0.0021258138585835695,
+          "t2": 0.01492394134402275,
+          "t3": 0.6488602757453918,
+          "t4": 0.18448999524116516,
+          "t5": 0.14959993958473206
+        }
+      },
+      {
+        "start": 0.7,
+        "end": 0.86,
+        "tone": 2,
+        "confidence": 0.9544205069541931,
+        "posterior": {
+          "t1": 0.025040680542588234,
+          "t2": 0.9544205069541931,
+          "t3": 0.017946135252714157,
+          "t4": 0.002358133438974619,
+          "t5": 0.0002345645916648209
+        }
+      },
+      {
+        "start": 0.86,
+        "end": 1.08,
+        "tone": 4,
+        "confidence": 0.8877369165420532,
+        "posterior": {
+          "t1": 0.00029750732937827706,
+          "t2": 0.0026155728846788406,
+          "t3": 0.10926702618598938,
+          "t4": 0.8877369165420532,
+          "t5": 0.00008298640750581399
+        }
+      },
+      {
+        "start": 1.08,
+        "end": 1.26,
+        "tone": 1,
+        "confidence": 0.8006846308708191,
+        "posterior": {
+          "t1": 0.8006846308708191,
+          "t2": 0.04014751687645912,
+          "t3": 0.0015006974572315812,
+          "t4": 0.1568717509508133,
+          "t5": 0.0007954402826726437
+        }
+      },
+      {
+        "start": 1.26,
+        "end": 1.48,
+        "tone": 4,
+        "confidence": 0.813731849193573,
+        "posterior": {
+          "t1": 0.00045745554962195456,
+          "t2": 0.004780946299433708,
+          "t3": 0.18019573390483856,
+          "t4": 0.813731849193573,
+          "t5": 0.0008339609485119581
+        }
+      },
+      {
+        "start": 1.48,
+        "end": 1.64,
+        "tone": 2,
+        "confidence": 0.48200711607933044,
+        "posterior": {
+          "t1": 0.012039893306791782,
+          "t2": 0.48200711607933044,
+          "t3": 0.3926716148853302,
+          "t4": 0.11225736886262894,
+          "t5": 0.0010240966221317649
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 18,
+    "skipped": 0,
+    "multi_char_token_count": 1,
+    "single_char_token_count": 17,
+    "samplePairs": [
+      {
+        "rawWord": "请",
+        "rawRange": [
+          0,
+          1
+        ],
+        "charLen": 1,
+        "wordStart": 0,
+        "wordEnd": 0.26,
+        "toneSlice": {
+          "start": 0,
+          "end": 0.26,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "问",
+        "rawRange": [
+          1,
+          2
+        ],
+        "charLen": 1,
+        "wordStart": 0.26,
+        "wordEnd": 0.48,
+        "toneSlice": {
+          "start": 0.26,
+          "end": 0.48,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "这",
+        "rawRange": [
+          2,
+          3
+        ],
+        "charLen": 1,
+        "wordStart": 0.48,
+        "wordEnd": 0.7,
+        "toneSlice": {
+          "start": 0.48,
+          "end": 0.7,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "门",
+        "rawRange": [
+          3,
+          4
+        ],
+        "charLen": 1,
+        "wordStart": 0.7,
+        "wordEnd": 0.86,
+        "toneSlice": {
+          "start": 0.7,
+          "end": 0.86,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "课",
+        "rawRange": [
+          4,
+          5
+        ],
+        "charLen": 1,
+        "wordStart": 0.86,
+        "wordEnd": 1.08,
+        "toneSlice": {
+          "start": 0.86,
+          "end": 1.08,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "期",
+        "rawRange": [
+          5,
+          6
+        ],
+        "charLen": 1,
+        "wordStart": 1.08,
+        "wordEnd": 1.26,
+        "toneSlice": {
+          "start": 1.08,
+          "end": 1.26,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "末",
+        "rawRange": [
+          6,
+          7
+        ],
+        "charLen": 1,
+        "wordStart": 1.26,
+        "wordEnd": 1.48,
+        "toneSlice": {
+          "start": 1.26,
+          "end": 1.48,
+          "tone": 4
+        }
+      },
+      {
+        "rawWord": "是",
+        "rawRange": [
+          7,
+          8
+        ],
+        "charLen": 1,
+        "wordStart": 1.48,
+        "wordEnd": 1.64,
+        "toneSlice": {
+          "start": 1.48,
+          "end": 1.64,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "开",
+        "rawRange": [
+          8,
+          9
+        ],
+        "charLen": 1,
+        "wordStart": 1.64,
+        "wordEnd": 1.86,
+        "toneSlice": {
+          "start": 1.64,
+          "end": 1.86,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "卷",
+        "rawRange": [
+          9,
+          10
+        ],
+        "charLen": 1,
+        "wordStart": 1.86,
+        "wordEnd": 2.1,
+        "toneSlice": {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "还是",
+        "rawRange": [
+          10,
+          12
+        ],
+        "charLen": 2,
+        "wordStart": 2.1,
+        "wordEnd": 2.4,
+        "toneSlice": {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "闭",
+        "rawRange": [
+          12,
+          13
+        ],
+        "charLen": 1,
+        "wordStart": 2.4,
+        "wordEnd": 2.68,
+        "toneSlice": {
+          "start": 2.4,
+          "end": 2.68,
+          "tone": 4
+        }
+      }
+    ],
+    "spans": [
+      {
+        "word": "请",
+        "rawStart": 0,
+        "rawEnd": 1,
+        "start": 0,
+        "end": 0.26,
+        "segmentIndex": 0,
+        "probability": 0.82861328125
+      },
+      {
+        "word": "问",
+        "rawStart": 1,
+        "rawEnd": 2,
+        "start": 0.26,
+        "end": 0.48,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "这",
+        "rawStart": 2,
+        "rawEnd": 3,
+        "start": 0.48,
+        "end": 0.7,
+        "segmentIndex": 0,
+        "probability": 0.84228515625
+      },
+      {
+        "word": "门",
+        "rawStart": 3,
+        "rawEnd": 4,
+        "start": 0.7,
+        "end": 0.86,
+        "segmentIndex": 0,
+        "probability": 0.995849609375
+      },
+      {
+        "word": "课",
+        "rawStart": 4,
+        "rawEnd": 5,
+        "start": 0.86,
+        "end": 1.08,
+        "segmentIndex": 0,
+        "probability": 0.85546875
+      },
+      {
+        "word": "期",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "start": 1.08,
+        "end": 1.26,
+        "segmentIndex": 0,
+        "probability": 0.96240234375
+      },
+      {
+        "word": "末",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "start": 1.26,
+        "end": 1.48,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "是",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "start": 1.48,
+        "end": 1.64,
+        "segmentIndex": 0,
+        "probability": 0.77392578125
+      },
+      {
+        "word": "开",
+        "rawStart": 8,
+        "rawEnd": 9,
+        "start": 1.64,
+        "end": 1.86,
+        "segmentIndex": 0,
+        "probability": 0.978515625
+      },
+      {
+        "word": "卷",
+        "rawStart": 9,
+        "rawEnd": 10,
+        "start": 1.86,
+        "end": 2.1,
+        "segmentIndex": 0,
+        "probability": 0.7587890625
+      },
+      {
+        "word": "还是",
+        "rawStart": 10,
+        "rawEnd": 12,
+        "start": 2.1,
+        "end": 2.4,
+        "segmentIndex": 0,
+        "probability": 0.9609375
+      },
+      {
+        "word": "闭",
+        "rawStart": 12,
+        "rawEnd": 13,
+        "start": 2.4,
+        "end": 2.68,
+        "segmentIndex": 0,
+        "probability": 0.95361328125
+      },
+      {
+        "word": "卷",
+        "rawStart": 13,
+        "rawEnd": 14,
+        "start": 2.68,
+        "end": 3.24,
+        "segmentIndex": 0,
+        "probability": 0.99951171875
+      },
+      {
+        "word": "终",
+        "rawStart": 15,
+        "rawEnd": 16,
+        "start": 3.24,
+        "end": 3.58,
+        "segmentIndex": 1,
+        "probability": 0.532684326171875
+      },
+      {
+        "word": "点",
+        "rawStart": 16,
+        "rawEnd": 17,
+        "start": 3.58,
+        "end": 3.8,
+        "segmentIndex": 1,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "汇",
+        "rawStart": 17,
+        "rawEnd": 18,
+        "start": 3.8,
+        "end": 4.02,
+        "segmentIndex": 1,
+        "probability": 0.79638671875
+      },
+      {
+        "word": "化",
+        "rawStart": 18,
+        "rawEnd": 19,
+        "start": 4.02,
+        "end": 4.22,
+        "segmentIndex": 1,
+        "probability": 0.365966796875
+      },
+      {
+        "word": "嘛",
+        "rawStart": 19,
+        "rawEnd": 20,
+        "start": 4.22,
+        "end": 4.5,
+        "segmentIndex": 1,
+        "probability": 0.37890625
+      }
+    ]
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 85,
+    "tone_ready_count": 66,
+    "tone_no_pattern_count": 19,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 85,
+    "pattern_ok_count": 66,
+    "char_eq_syl_count": 75,
+    "overlap_eq_char_count": 66,
+    "overlap_eq_syl_count": 75
+  },
+  "byLen": {
+    "1": {
+      "windows": 19,
+      "ready": 19,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 19,
+      "overlap_eq_char": 19,
+      "overlap_eq_syl": 19,
+      "time_range_ok": 19,
+      "pattern_ok": 19
+    },
+    "2": {
+      "windows": 18,
+      "ready": 16,
+      "no_pattern": 2,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 17,
+      "overlap_eq_char": 16,
+      "overlap_eq_syl": 17,
+      "time_range_ok": 18,
+      "pattern_ok": 16
+    },
+    "3": {
+      "windows": 17,
+      "ready": 13,
+      "no_pattern": 4,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 15,
+      "overlap_eq_char": 13,
+      "overlap_eq_syl": 15,
+      "time_range_ok": 17,
+      "pattern_ok": 13
+    },
+    "4": {
+      "windows": 16,
+      "ready": 10,
+      "no_pattern": 6,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 13,
+      "overlap_eq_char": 10,
+      "overlap_eq_syl": 13,
+      "time_range_ok": 16,
+      "pattern_ok": 10
+    },
+    "5": {
+      "windows": 15,
+      "ready": 8,
+      "no_pattern": 7,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 11,
+      "overlap_eq_char": 8,
+      "overlap_eq_syl": 11,
+      "time_range_ok": 15,
+      "pattern_ok": 8
+    }
+  },
+  "failureSamples": [
+    {
+      "utteranceId": "d120",
+      "windowId": "7:12",
+      "windowText": "是开卷还是",
+      "rawStart": 7,
+      "rawEnd": 12,
+      "rawSpanLength": 5,
+      "syllableStart": 7,
+      "syllableEnd": 12,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "shi",
+        "kai",
+        "juan",
+        "hai",
+        "shi"
+      ],
+      "windowTimeStart": 1.48,
+      "windowTimeEnd": 2.4,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.48,
+          "end": 1.64,
+          "tone": 2,
+          "confidence": 0.48200711607933044
+        },
+        {
+          "start": 1.64,
+          "end": 1.86,
+          "tone": 2,
+          "confidence": 0.7742517590522766
+        },
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "是",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "charLen": 1,
+          "start": 1.48,
+          "end": 1.64
+        },
+        {
+          "word": "开",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.64,
+          "end": 1.86
+        },
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "8:12",
+      "windowText": "开卷还是",
+      "rawStart": 8,
+      "rawEnd": 12,
+      "rawSpanLength": 4,
+      "syllableStart": 8,
+      "syllableEnd": 12,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "kai",
+        "juan",
+        "hai",
+        "shi"
+      ],
+      "windowTimeStart": 1.64,
+      "windowTimeEnd": 2.4,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 1.64,
+          "end": 1.86,
+          "tone": 2,
+          "confidence": 0.7742517590522766
+        },
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=4; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "开",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.64,
+          "end": 1.86
+        },
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "8:13",
+      "windowText": "开卷还是闭",
+      "rawStart": 8,
+      "rawEnd": 13,
+      "rawSpanLength": 5,
+      "syllableStart": 8,
+      "syllableEnd": 13,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "kai",
+        "juan",
+        "hai",
+        "shi",
+        "bi"
+      ],
+      "windowTimeStart": 1.64,
+      "windowTimeEnd": 2.68,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.64,
+          "end": 1.86,
+          "tone": 2,
+          "confidence": 0.7742517590522766
+        },
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        },
+        {
+          "start": 2.4,
+          "end": 2.68,
+          "tone": 4,
+          "confidence": 0.9493253231048584
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "开",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "charLen": 1,
+          "start": 1.64,
+          "end": 1.86
+        },
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        },
+        {
+          "word": "闭",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "charLen": 1,
+          "start": 2.4,
+          "end": 2.68
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "9:12",
+      "windowText": "卷还是",
+      "rawStart": 9,
+      "rawEnd": 12,
+      "rawSpanLength": 3,
+      "syllableStart": 9,
+      "syllableEnd": 12,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "juan",
+        "hai",
+        "shi"
+      ],
+      "windowTimeStart": 1.86,
+      "windowTimeEnd": 2.4,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=3; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "9:13",
+      "windowText": "卷还是闭",
+      "rawStart": 9,
+      "rawEnd": 13,
+      "rawSpanLength": 4,
+      "syllableStart": 9,
+      "syllableEnd": 13,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "juan",
+        "hai",
+        "shi",
+        "bi"
+      ],
+      "windowTimeStart": 1.86,
+      "windowTimeEnd": 2.68,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        },
+        {
+          "start": 2.4,
+          "end": 2.68,
+          "tone": 4,
+          "confidence": 0.9493253231048584
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=4; sylSpan=4; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        },
+        {
+          "word": "闭",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "charLen": 1,
+          "start": 2.4,
+          "end": 2.68
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "9:14",
+      "windowText": "卷还是闭卷",
+      "rawStart": 9,
+      "rawEnd": 14,
+      "rawSpanLength": 5,
+      "syllableStart": 9,
+      "syllableEnd": 14,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "juan",
+        "hai",
+        "shi",
+        "bi",
+        "juan"
+      ],
+      "windowTimeStart": 1.86,
+      "windowTimeEnd": 3.24,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 1.86,
+          "end": 2.1,
+          "tone": 2,
+          "confidence": 0.8664572238922119
+        },
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        },
+        {
+          "start": 2.4,
+          "end": 2.68,
+          "tone": 4,
+          "confidence": 0.9493253231048584
+        },
+        {
+          "start": 2.68,
+          "end": 3.24,
+          "tone": 2,
+          "confidence": 0.4003981649875641
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=5; sylSpan=5; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "卷",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "charLen": 1,
+          "start": 1.86,
+          "end": 2.1
+        },
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        },
+        {
+          "word": "闭",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "charLen": 1,
+          "start": 2.4,
+          "end": 2.68
+        },
+        {
+          "word": "卷",
+          "rawStart": 13,
+          "rawEnd": 14,
+          "charLen": 1,
+          "start": 2.68,
+          "end": 3.24
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "10:12",
+      "windowText": "还是",
+      "rawStart": 10,
+      "rawEnd": 12,
+      "rawSpanLength": 2,
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "hai",
+        "shi"
+      ],
+      "windowTimeStart": 2.1,
+      "windowTimeEnd": 2.4,
+      "overlapSliceCount": 1,
+      "overlapSlices": [
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=1 != charSpan=2; sylSpan=2; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        }
+      ]
+    },
+    {
+      "utteranceId": "d120",
+      "windowId": "10:13",
+      "windowText": "还是闭",
+      "rawStart": 10,
+      "rawEnd": 13,
+      "rawSpanLength": 3,
+      "syllableStart": 10,
+      "syllableEnd": 13,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "hai",
+        "shi",
+        "bi"
+      ],
+      "windowTimeStart": 2.1,
+      "windowTimeEnd": 2.68,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 2.1,
+          "end": 2.4,
+          "tone": 2,
+          "confidence": 0.5671728849411011
+        },
+        {
+          "start": 2.4,
+          "end": 2.68,
+          "tone": 4,
+          "confidence": 0.9493253231048584
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=3; multiCharTokensInUtterance=1",
+      "coveringSpans": [
+        {
+          "word": "还是",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "charLen": 2,
+          "start": 2.1,
+          "end": 2.4
+        },
+        {
+          "word": "闭",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "charLen": 1,
+          "start": 2.4,
+          "end": 2.68
+        }
+      ]
+    }
+  ],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

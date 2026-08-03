@@ -1,0 +1,330 @@
+{
+  "caseId": "C05",
+  "rawText": "请确认医院地址和医师安排",
+  "windowCount": 50,
+  "surfaceDistinctRecallCount": 3,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "3:5",
+      "syllableStart": 3,
+      "syllableEnd": 5,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    },
+    {
+      "windowId": "5:7",
+      "syllableStart": 5,
+      "syllableEnd": 7,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    },
+    {
+      "windowId": "8:10",
+      "syllableStart": 8,
+      "syllableEnd": 10,
+      "text": "医师",
+      "surfaces": [
+        "医师",
+        "议室"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 8,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认医院地址和医师安排"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "2e488f1049bea0631d32e4fe92d20b4715eaeb33e002a965af869f920339a1e5",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "安排"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "2e488f1049bea0631d32e4fe92d20b4715eaeb33e002a965af869f920339a1e5",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "和"
+        ],
+        [
+          "医师"
+        ],
+        [
+          "安排"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认医院地址和医师安排",
+      "sourcePathId": "2e488f1049bea0631d32e4fe92d20b4715eaeb33e002a965af869f920339a1e5",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 10,
+          "end": 12,
+          "word": "安排",
+          "sourceText": "安排"
+        }
+      ],
+      "dedupKey": "请确认医院地址和医师安排",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认医院地址和医师安排",
+      "sourcePathId": "2e488f1049bea0631d32e4fe92d20b4715eaeb33e002a965af869f920339a1e5",
+      "sourceDomain": "meeting",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "word": "医师",
+          "sourceText": "医师"
+        },
+        {
+          "start": 10,
+          "end": 12,
+          "word": "安排",
+          "sourceText": "安排"
+        }
+      ],
+      "dedupKey": "请确认医院地址和医师安排",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 50,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 50,
+    "lexicalEdgeCount": 5,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 9,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      },
+      {
+        "start": 7,
+        "end": 8
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 50,
+    "sqlQueryCount": 26,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "C"
+  ],
+  "why": "triple",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 42.28830003738403,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

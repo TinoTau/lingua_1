@@ -1,0 +1,197 @@
+{
+  "id": "d091",
+  "expected": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+  "asr": "你好,我想点一杯烟麦拿铁中备无糖 今天有被裹嗎?",
+  "raw_asr": "你好,我想点一杯烟麦拿铁中备无糖 今天有被裹嗎?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 13,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.011928444728255272,
+      "t2": 0.7972719669342041,
+      "t3": 0.1858706921339035,
+      "t4": 0.004808866884559393,
+      "t5": 0.0001200758051709272
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 18,
+    "wordTimeSpanCount": 18,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "被裹",
+        "pinyinKey": "bei|guo",
+        "windowTimeRange": {
+          "start": 5.5,
+          "end": 5.86
+        },
+        "acousticTonePattern": [
+          2,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "你好,我想点一杯烟麦拿铁中备无糖 今天有被裹嗎?",
+        "kenlmScore": -65.30178,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "你好,我想点一杯烟麦拿铁中备无糖 今天有被裹嗎?",
+        "kenlmScore": -65.30178,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 670,
+      "queryCount": 2,
+      "avgMs": 335,
+      "p50Ms": 335,
+      "p95Ms": 335,
+      "maxMs": 670
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -65.30178,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 670,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "你好,我想点一杯烟麦拿铁中备无糖 今天有被裹嗎?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "你好",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "你好",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我想",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我想",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "点一",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "点一",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "杯烟",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "杯烟",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "麦拿",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "麦拿",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "铁",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "铁",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "中",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "中",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "备无",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "备无",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "timestamp": "2026-07-29T05:31:00.155Z",
+  "port": 5020,
+  "projectRoot": "D:\\Programs\\github\\lingua_1",
+  "limit": 200,
+  "summary": {
+    "total": 200,
+    "success": 200,
+    "failure": 0,
+    "fw_triggered": 200,
+    "nmt_nonempty": 0,
+    "batchCountSum": 274,
+    "tone": {
+      "totalToneEvidenceSliceCount": 4080,
+      "totalApiToneSliceCount": 4080,
+      "ssotApiMismatchCases": 0,
+      "totalWordTimeSpanCount": 4155,
+      "totalPatternAttempt": 289,
+      "totalPatternHit": 288,
+      "totalPatternMiss": 1,
+      "totalTonePatternMappingMiss": 1,
+      "evidenceCoverage": 0.9965397923875432,
+      "totalToneExactHit": 13,
+      "totalPlainFallback": 0,
+      "avgSliceCount": 20.4,
+      "avgWordTimeSpanCount": 20.775,
+      "skipReasons": {
+        "none": 200
+      },
+      "evidenceProductionStatusCounts": {
+        "slice_created": 4080,
+        "short_duration_skipped": 75
+      },
+      "mappingMissReasonCounts": {
+        "no_slice_overlap_word_time": 1
+      },
+      "mappingMissAttributionCounts": {
+        "slice_exists_but_no_overlap": 1
+      },
+      "attributionTable": [
+        {
+          "cause": "slice_exists_but_no_overlap",
+          "count": 1,
+          "pctOfMappingMiss": 1
+        }
+      ]
+    },
+    "candidates": {
+      "total": 2525,
+      "withTone": 0,
+      "withoutTone": 2525,
+      "avgPerCase": 12.625
+    },
+    "kenlm": {
+      "totalQuery": 518,
+      "totalApproved": 0,
+      "avgQueryPerCase": 2.59
+    },
+    "avgPipelineMs": 9867.535
+  },
+  "failures": [],
+  "traceIds": [
+    "d001",
+    "d004",
+    "d005",
+    "d007",
+    "d013",
+    "d015",
+    "d019",
+    "d020",
+    "d021",
+    "d022",
+    "d025",
+    "d027",
+    "d031",
+    "d037",
+    "d038",
+    "d041",
+    "d043",
+    "d044",
+    "d049",
+    "d055",
+    "d061",
+    "d067",
+    "d073",
+    "d079",
+    "d085",
+    "d091",
+    "d097",
+    "d103",
+    "d109",
+    "d115"
+  ]
+}

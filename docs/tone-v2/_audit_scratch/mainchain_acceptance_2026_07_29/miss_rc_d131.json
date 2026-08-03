@@ -1,0 +1,72 @@
+{
+  "id": "d131",
+  "raw": "更意識規則要是找不到了前台,能幫忙看一下嗎?",
+  "asrToneSliceCount": 17,
+  "diagToneSliceCount": 17,
+  "wordTimeSpanBuilt": 17,
+  "wordTimeSpanMapped": 17,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 2,
+    "hit": 0,
+    "miss": 2,
+    "overlapMiss": 0,
+    "overlapMismatch": 2,
+    "windowTimeAttempt": 2,
+    "windowTimeHit": 2
+  },
+  "windowClassifications": [
+    {
+      "text": "看一",
+      "pinyinKey": "kan|yi",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.14,
+        "end": 3.5
+      },
+      "replayWindowTime": {
+        "start": 3.14,
+        "end": 3.5
+      }
+    },
+    {
+      "text": "看一下",
+      "pinyinKey": "kan|yi|xia",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        4,
+        4,
+        4
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 3.14,
+        "end": 3.5
+      },
+      "replayWindowTime": {
+        "start": 3.14,
+        "end": 3.5
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 20,
+    "theoreticalWindows2to5": 70,
+    "theoreticalWindows1to5": 90
+  },
+  "summary": {
+    "spanCount": 12,
+    "candidateCount": 12
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-07-27",
+  "latticeHarness": {
+    "chain": [
+      "buildLexicalWindowQueries (1..5)",
+      "latticeHardBlockFilter",
+      "recallTopKForWindows",
+      "recallSpanTopKV3",
+      "recallSpanTopKV2",
+      "LexiconRuntimeV2.lookupBase/Domain/Idiom",
+      "map → WindowCandidate",
+      "buildLexicalEdges",
+      "injectFallbackEdges (Phase2)",
+      "enumerateCompleteSegmentationPaths (Phase2)"
+    ],
+    "entryFiles": [
+      "span-assembly-v4/phase1-window-edge-harness.ts",
+      "span-assembly-v4/phase2-path-harness.ts",
+      "span-assembly-v4/recall-topk-for-windows.ts",
+      "lexicon-v2/recall-span-topkv3.ts",
+      "lexicon-v2/recall-span-topk-v2.ts"
+    ]
+  },
+  "productionV4": {
+    "chain": [
+      "span-assembly-v4-orchestrator",
+      "runLtrFineSpanGeneration (windows 2..5 via V4_LIMITS)",
+      "blockedFilter (LTR, not latticeHardBlockFilter)",
+      "recallTopKForWindows",
+      "recallSpanTopKV3 → recallSpanTopKV2",
+      "commitBestFormalFineSpan",
+      "Domain Vote / Assembly / KenLM"
+    ],
+    "note": "Production still LTR Fine Span SSOT until Phase 3; shares Recall V2/V3 with Lattice harness"
+  },
+  "localSpanRecall": {
+    "file": "lexicon/local-span-recall.ts",
+    "minSyllables": 2,
+    "calls": "recallSpanTopKV2",
+    "callers": [
+      "legacy/fw-detector/fw-topk-decision-pipeline.ts"
+    ],
+    "onLatticeMainChain": false,
+    "onProductionV4Orchestrator": false,
+    "ownershipVerdict": "B",
+    "action": "KEEP / Legacy — do not modify for Lattice alignment",
+    "evidence": "freeze-contract.test.ts: legacy pipeline archived; orchestrator must not reference fw-topk-decision-pipeline"
+  },
+  "uniqueRecallEntryForLength1Alignment": "recallSpanTopKV2 (shared by Lattice harness + Production LTR recall path + local-span-recall wrapper)"
+}

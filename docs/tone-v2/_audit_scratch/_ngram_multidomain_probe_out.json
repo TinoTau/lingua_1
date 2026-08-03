@@ -1,0 +1,107 @@
+[
+  {
+    "word": "预订",
+    "scopeSize": 12,
+    "enrichmentViaParentId": [
+      "food_order",
+      "tourism_hotel",
+      "tourism_route",
+      "transport"
+    ],
+    "hits": [
+      {
+        "hitKind": "parent_fragment",
+        "word": "预订",
+        "domains": [
+          "food_order",
+          "tourism_hotel",
+          "tourism_route",
+          "transport"
+        ],
+        "parentTerm": "预订",
+        "parentTermId": "term-e9a284e8aea27c79",
+        "source": "lexicon_pinyin_topk"
+      }
+    ],
+    "emptyScopeFragmentDomains": []
+  },
+  {
+    "word": "中杯",
+    "scopeSize": 12,
+    "enrichmentViaParentId": [
+      "coffee",
+      "food_order",
+      "milk_tea"
+    ],
+    "hits": [
+      {
+        "hitKind": "parent_fragment",
+        "word": "中杯",
+        "domains": [
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ],
+        "parentTerm": "中杯",
+        "parentTermId": "term-e4b8ade69daf7c7a",
+        "source": "lexicon_pinyin_topk"
+      }
+    ],
+    "emptyScopeFragmentDomains": []
+  },
+  {
+    "word": "发票",
+    "scopeSize": 12,
+    "enrichmentViaParentId": [
+      "food_order",
+      "tourism_hotel"
+    ],
+    "hits": [
+      {
+        "hitKind": "parent_fragment",
+        "word": "发票",
+        "domains": [
+          "food_order",
+          "tourism_hotel"
+        ],
+        "parentTerm": "发票",
+        "parentTermId": "term-e58f91e7a5a87c66",
+        "source": "lexicon_pinyin_topk"
+      }
+    ],
+    "emptyScopeFragmentDomains": []
+  },
+  {
+    "word": "打包",
+    "scopeSize": 12,
+    "enrichmentViaParentId": [
+      "food_order"
+    ],
+    "hits": [
+      {
+        "hitKind": "parent_fragment",
+        "word": "打包",
+        "domains": [
+          "food_order"
+        ],
+        "parentTerm": "打包盒",
+        "parentTermId": "term-e68993e58c85e79b",
+        "source": "lexicon_pinyin_topk"
+      },
+      {
+        "hitKind": "parent_fragment",
+        "word": "打包",
+        "domains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ],
+        "parentTerm": "打包",
+        "parentTermId": "term-e68993e58c857c64",
+        "source": "lexicon_pinyin_topk"
+      }
+    ],
+    "emptyScopeFragmentDomains": []
+  }
+]

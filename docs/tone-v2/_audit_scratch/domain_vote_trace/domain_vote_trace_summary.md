@@ -1,0 +1,529 @@
+# domain_vote_trace_summary
+
+READ ONLY objective aggregate — no semantic domain judgment.
+
+## A. Each Case retainedDomains (path 0)
+
+- 001 / d001: ranking=[{"domain":"food_order","score":4},{"domain":"coffee","score":3},{"domain":"bakery","score":2},{"domain":"milk_tea","score":2}] retained=["food_order","coffee"] reasons=["food_order:WITHIN_RATIO_THRESHOLD","coffee:WITHIN_RATIO_THRESHOLD"] insufficient=false
+- 002 / d002: ranking=[{"domain":"coffee","score":3},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"bakery","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 003 / d003: ranking=[{"domain":"coffee","score":5},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"bakery","score":1},{"domain":"medical","score":1},{"domain":"tourism_hotel","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 004 / d004: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 005 / d005: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 006 / d006: ranking=[{"domain":"food_order","score":1},{"domain":"meeting","score":1},{"domain":"tech_ai","score":1}] retained=["food_order","meeting","tech_ai"] reasons=["food_order:TIED_TOP","meeting:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 007 / d007: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":2},{"domain":"tech_ai","score":1},{"domain":"tourism_route","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel","tourism_transport"] reasons=["tourism_hotel:TIED_TOP","tourism_transport:TIED_TOP"] insufficient=false
+- 008 / d008: ranking=[] retained=[] reasons=[] insufficient=true
+- 009 / d009: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 010 / d010: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 011 / d011: ranking=[{"domain":"medical","score":2},{"domain":"tech_ai","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 012 / d012: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"tech_ai","score":1}] retained=["coffee","food_order","tech_ai"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 013 / d013: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 014 / d014: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 015 / d015: ranking=[{"domain":"food_order","score":2},{"domain":"coffee","score":1},{"domain":"meeting","score":1},{"domain":"tourism_route","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 016 / d016: ranking=[] retained=[] reasons=[] insufficient=true
+- 017 / d017: ranking=[] retained=[] reasons=[] insufficient=true
+- 018 / d018: ranking=[] retained=[] reasons=[] insufficient=true
+- 019 / d019: ranking=[{"domain":"tech_ai","score":5},{"domain":"tourism_hotel","score":1},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 020 / d020: ranking=[{"domain":"tech_ai","score":6},{"domain":"meeting","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 021 / d021: ranking=[{"domain":"tech_ai","score":5}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 022 / d022: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 023 / d023: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"milk_tea","score":1},{"domain":"tourism_route","score":1}] retained=["coffee","food_order","milk_tea","tourism_route"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","milk_tea:TIED_TOP","tourism_route:TIED_TOP"] insufficient=false
+- 024 / d024: ranking=[{"domain":"food_order","score":2},{"domain":"tourism_hotel","score":2}] retained=["food_order","tourism_hotel"] reasons=["food_order:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 025 / d025: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 026 / d026: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 027 / d027: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 028 / d028: ranking=[] retained=[] reasons=[] insufficient=true
+- 029 / d029: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 030 / d030: ranking=[{"domain":"tourism_hotel","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 031 / d031: ranking=[{"domain":"tourism_hotel","score":3},{"domain":"food_order","score":1},{"domain":"tourism_route","score":1},{"domain":"tourism_transport","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 032 / d032: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 033 / d033: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 034 / d034: ranking=[{"domain":"tourism_route","score":1}] retained=["tourism_route"] reasons=["tourism_route:UNIQUE_TOP"] insufficient=false
+- 035 / d035: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 036 / d036: ranking=[{"domain":"tech_ai","score":1},{"domain":"tourism_pickup","score":1}] retained=["tech_ai","tourism_pickup"] reasons=["tech_ai:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 037 / d037: ranking=[{"domain":"food_order","score":2},{"domain":"bakery","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 038 / d038: ranking=[] retained=[] reasons=[] insufficient=true
+- 039 / d039: ranking=[{"domain":"coffee","score":2},{"domain":"bakery","score":1},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 040 / d040: ranking=[] retained=[] reasons=[] insufficient=true
+- 041 / d041: ranking=[{"domain":"medical","score":1},{"domain":"meeting","score":1},{"domain":"tourism_hotel","score":1}] retained=["medical","meeting","tourism_hotel"] reasons=["medical:TIED_TOP","meeting:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 042 / d042: ranking=[] retained=[] reasons=[] insufficient=true
+- 043 / d043: ranking=[{"domain":"tech_ai","score":4},{"domain":"coffee","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 044 / d044: ranking=[{"domain":"tech_ai","score":4},{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 045 / d045: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 046 / d046: ranking=[{"domain":"coffee","score":3},{"domain":"milk_tea","score":3},{"domain":"bakery","score":2},{"domain":"food_order","score":2}] retained=["coffee","milk_tea"] reasons=["coffee:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 047 / d047: ranking=[{"domain":"milk_tea","score":3},{"domain":"coffee","score":2},{"domain":"food_order","score":2},{"domain":"bakery","score":1}] retained=["milk_tea"] reasons=["milk_tea:UNIQUE_TOP"] insufficient=false
+- 048 / d048: ranking=[{"domain":"coffee","score":3},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"medical","score":1},{"domain":"tourism_hotel","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 049 / d049: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 050 / d050: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 051 / d051: ranking=[{"domain":"food_order","score":1},{"domain":"meeting","score":1},{"domain":"tech_ai","score":1}] retained=["food_order","meeting","tech_ai"] reasons=["food_order:TIED_TOP","meeting:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 052 / d052: ranking=[{"domain":"tourism_hotel","score":2}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 053 / d053: ranking=[{"domain":"meeting","score":1},{"domain":"tourism_pickup","score":1}] retained=["meeting","tourism_pickup"] reasons=["meeting:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 054 / d054: ranking=[{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["medical","milk_tea"] reasons=["medical:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 055 / d055: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 056 / d056: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 057 / d057: ranking=[{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["medical","tech_ai"] reasons=["medical:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 058 / d058: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 059 / d059: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 060 / d060: ranking=[{"domain":"food_order","score":2},{"domain":"coffee","score":1},{"domain":"meeting","score":1},{"domain":"tourism_route","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 061 / d061: ranking=[] retained=[] reasons=[] insufficient=true
+- 062 / d062: ranking=[] retained=[] reasons=[] insufficient=true
+- 063 / d063: ranking=[] retained=[] reasons=[] insufficient=true
+- 064 / d064: ranking=[{"domain":"tech_ai","score":5},{"domain":"tourism_hotel","score":1},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 065 / d065: ranking=[{"domain":"tech_ai","score":6},{"domain":"meeting","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 066 / d066: ranking=[{"domain":"tech_ai","score":5}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 067 / d067: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 068 / d068: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"milk_tea","score":1},{"domain":"tourism_route","score":1}] retained=["coffee","food_order","milk_tea","tourism_route"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","milk_tea:TIED_TOP","tourism_route:TIED_TOP"] insufficient=false
+- 069 / d069: ranking=[{"domain":"food_order","score":2},{"domain":"tourism_hotel","score":2}] retained=["food_order","tourism_hotel"] reasons=["food_order:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 070 / d070: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 071 / d071: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 072 / d072: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 073 / d073: ranking=[] retained=[] reasons=[] insufficient=true
+- 074 / d074: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 075 / d075: ranking=[{"domain":"tourism_hotel","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 076 / d076: ranking=[{"domain":"tourism_hotel","score":3},{"domain":"food_order","score":1},{"domain":"tourism_route","score":1},{"domain":"tourism_transport","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 077 / d077: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 078 / d078: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 079 / d079: ranking=[{"domain":"tourism_route","score":1}] retained=["tourism_route"] reasons=["tourism_route:UNIQUE_TOP"] insufficient=false
+- 080 / d080: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 081 / d081: ranking=[{"domain":"tech_ai","score":1},{"domain":"tourism_pickup","score":1}] retained=["tech_ai","tourism_pickup"] reasons=["tech_ai:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 082 / d082: ranking=[{"domain":"food_order","score":2},{"domain":"bakery","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 083 / d083: ranking=[] retained=[] reasons=[] insufficient=true
+- 084 / d084: ranking=[{"domain":"coffee","score":2},{"domain":"bakery","score":1},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 085 / d085: ranking=[] retained=[] reasons=[] insufficient=true
+- 086 / d086: ranking=[{"domain":"medical","score":1},{"domain":"meeting","score":1},{"domain":"tourism_hotel","score":1}] retained=["medical","meeting","tourism_hotel"] reasons=["medical:TIED_TOP","meeting:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 087 / d087: ranking=[] retained=[] reasons=[] insufficient=true
+- 088 / d088: ranking=[{"domain":"tech_ai","score":4},{"domain":"coffee","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 089 / d089: ranking=[{"domain":"tech_ai","score":4},{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 090 / d090: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 091 / d091: ranking=[{"domain":"coffee","score":4},{"domain":"bakery","score":2},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 092 / d092: ranking=[{"domain":"coffee","score":3},{"domain":"bakery","score":2},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 093 / d093: ranking=[{"domain":"coffee","score":4},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"medical","score":1},{"domain":"tourism_hotel","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 094 / d094: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 095 / d095: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 096 / d096: ranking=[{"domain":"food_order","score":1},{"domain":"meeting","score":1},{"domain":"tech_ai","score":1}] retained=["food_order","meeting","tech_ai"] reasons=["food_order:TIED_TOP","meeting:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 097 / d097: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"tech_ai","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 098 / d098: ranking=[] retained=[] reasons=[] insufficient=true
+- 099 / d099: ranking=[{"domain":"tourism_transport","score":2},{"domain":"medical","score":1},{"domain":"tourism_route","score":1},{"domain":"transport","score":1}] retained=["tourism_transport"] reasons=["tourism_transport:UNIQUE_TOP"] insufficient=false
+- 100 / d100: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 101 / d101: ranking=[{"domain":"medical","score":2},{"domain":"tech_ai","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 102 / d102: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"tech_ai","score":1}] retained=["coffee","food_order","tech_ai"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 103 / d103: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 104 / d104: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 105 / d105: ranking=[{"domain":"food_order","score":2},{"domain":"coffee","score":1},{"domain":"meeting","score":1},{"domain":"tourism_route","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 106 / d106: ranking=[] retained=[] reasons=[] insufficient=true
+- 107 / d107: ranking=[] retained=[] reasons=[] insufficient=true
+- 108 / d108: ranking=[] retained=[] reasons=[] insufficient=true
+- 109 / d109: ranking=[{"domain":"tech_ai","score":5},{"domain":"tourism_hotel","score":1},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 110 / d110: ranking=[{"domain":"tech_ai","score":6},{"domain":"meeting","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 111 / d111: ranking=[{"domain":"tech_ai","score":5}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 112 / d112: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 113 / d113: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"milk_tea","score":1},{"domain":"tourism_route","score":1}] retained=["coffee","food_order","milk_tea","tourism_route"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","milk_tea:TIED_TOP","tourism_route:TIED_TOP"] insufficient=false
+- 114 / d114: ranking=[{"domain":"food_order","score":2},{"domain":"tourism_hotel","score":2}] retained=["food_order","tourism_hotel"] reasons=["food_order:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 115 / d115: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 116 / d116: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 117 / d117: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 118 / d118: ranking=[] retained=[] reasons=[] insufficient=true
+- 119 / d119: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 120 / d120: ranking=[{"domain":"tourism_hotel","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 121 / d121: ranking=[{"domain":"tourism_hotel","score":3},{"domain":"food_order","score":1},{"domain":"tourism_route","score":1},{"domain":"tourism_transport","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 122 / d122: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 123 / d123: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 124 / d124: ranking=[{"domain":"tourism_route","score":1}] retained=["tourism_route"] reasons=["tourism_route:UNIQUE_TOP"] insufficient=false
+- 125 / d125: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 126 / d126: ranking=[{"domain":"tech_ai","score":1},{"domain":"tourism_pickup","score":1}] retained=["tech_ai","tourism_pickup"] reasons=["tech_ai:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 127 / d127: ranking=[{"domain":"food_order","score":2},{"domain":"bakery","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 128 / d128: ranking=[] retained=[] reasons=[] insufficient=true
+- 129 / d129: ranking=[{"domain":"coffee","score":2},{"domain":"bakery","score":1},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 130 / d130: ranking=[] retained=[] reasons=[] insufficient=true
+- 131 / d131: ranking=[{"domain":"medical","score":1},{"domain":"meeting","score":1},{"domain":"tourism_hotel","score":1}] retained=["medical","meeting","tourism_hotel"] reasons=["medical:TIED_TOP","meeting:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 132 / d132: ranking=[] retained=[] reasons=[] insufficient=true
+- 133 / d133: ranking=[{"domain":"tech_ai","score":4},{"domain":"coffee","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 134 / d134: ranking=[{"domain":"tech_ai","score":4},{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 135 / d135: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 136 / d136: ranking=[{"domain":"coffee","score":2},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"bakery","score":1}] retained=["coffee","food_order","milk_tea"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 137 / d137: ranking=[{"domain":"coffee","score":3},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"bakery","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 138 / d138: ranking=[{"domain":"coffee","score":4},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"medical","score":1},{"domain":"tourism_hotel","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 139 / d139: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 140 / d140: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 141 / d141: ranking=[{"domain":"food_order","score":1},{"domain":"meeting","score":1},{"domain":"tech_ai","score":1}] retained=["food_order","meeting","tech_ai"] reasons=["food_order:TIED_TOP","meeting:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 142 / d142: ranking=[{"domain":"tourism_hotel","score":2}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 143 / d143: ranking=[{"domain":"meeting","score":1},{"domain":"tourism_pickup","score":1}] retained=["meeting","tourism_pickup"] reasons=["meeting:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 144 / d144: ranking=[{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["medical","milk_tea"] reasons=["medical:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 145 / d145: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 146 / d146: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 147 / d147: ranking=[{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["medical","tech_ai"] reasons=["medical:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 148 / d148: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 149 / d149: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 150 / d150: ranking=[{"domain":"food_order","score":2},{"domain":"coffee","score":1},{"domain":"meeting","score":1},{"domain":"tourism_route","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 151 / d151: ranking=[] retained=[] reasons=[] insufficient=true
+- 152 / d152: ranking=[] retained=[] reasons=[] insufficient=true
+- 153 / d153: ranking=[] retained=[] reasons=[] insufficient=true
+- 154 / d154: ranking=[{"domain":"tech_ai","score":5},{"domain":"tourism_hotel","score":1},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 155 / d155: ranking=[{"domain":"tech_ai","score":6},{"domain":"meeting","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 156 / d156: ranking=[{"domain":"tech_ai","score":5}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 157 / d157: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 158 / d158: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"milk_tea","score":1},{"domain":"tourism_route","score":1}] retained=["coffee","food_order","milk_tea","tourism_route"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","milk_tea:TIED_TOP","tourism_route:TIED_TOP"] insufficient=false
+- 159 / d159: ranking=[{"domain":"food_order","score":2},{"domain":"tourism_hotel","score":2}] retained=["food_order","tourism_hotel"] reasons=["food_order:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 160 / d160: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 161 / d161: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 162 / d162: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 163 / d163: ranking=[] retained=[] reasons=[] insufficient=true
+- 164 / d164: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 165 / d165: ranking=[{"domain":"tourism_hotel","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 166 / d166: ranking=[{"domain":"tourism_hotel","score":3},{"domain":"food_order","score":1},{"domain":"tourism_route","score":1},{"domain":"tourism_transport","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 167 / d167: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"tech_ai","score":1}] retained=["tourism_hotel"] reasons=["tourism_hotel:UNIQUE_TOP"] insufficient=false
+- 168 / d168: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 169 / d169: ranking=[{"domain":"tourism_route","score":1}] retained=["tourism_route"] reasons=["tourism_route:UNIQUE_TOP"] insufficient=false
+- 170 / d170: ranking=[{"domain":"food_order","score":1},{"domain":"milk_tea","score":1}] retained=["food_order","milk_tea"] reasons=["food_order:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 171 / d171: ranking=[{"domain":"tech_ai","score":1},{"domain":"tourism_pickup","score":1}] retained=["tech_ai","tourism_pickup"] reasons=["tech_ai:TIED_TOP","tourism_pickup:TIED_TOP"] insufficient=false
+- 172 / d172: ranking=[{"domain":"food_order","score":2},{"domain":"bakery","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 173 / d173: ranking=[] retained=[] reasons=[] insufficient=true
+- 174 / d174: ranking=[{"domain":"coffee","score":2},{"domain":"bakery","score":1},{"domain":"food_order","score":1},{"domain":"medical","score":1},{"domain":"milk_tea","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 175 / d175: ranking=[] retained=[] reasons=[] insufficient=true
+- 176 / d176: ranking=[{"domain":"medical","score":1},{"domain":"meeting","score":1},{"domain":"tourism_hotel","score":1}] retained=["medical","meeting","tourism_hotel"] reasons=["medical:TIED_TOP","meeting:TIED_TOP","tourism_hotel:TIED_TOP"] insufficient=false
+- 177 / d177: ranking=[] retained=[] reasons=[] insufficient=true
+- 178 / d178: ranking=[{"domain":"tech_ai","score":4},{"domain":"coffee","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 179 / d179: ranking=[{"domain":"tech_ai","score":4},{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 180 / d180: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 181 / d181: ranking=[{"domain":"food_order","score":4},{"domain":"coffee","score":3},{"domain":"bakery","score":2},{"domain":"milk_tea","score":2}] retained=["food_order","coffee"] reasons=["food_order:WITHIN_RATIO_THRESHOLD","coffee:WITHIN_RATIO_THRESHOLD"] insufficient=false
+- 182 / d182: ranking=[{"domain":"coffee","score":3},{"domain":"food_order","score":2},{"domain":"milk_tea","score":2},{"domain":"bakery","score":1}] retained=["coffee"] reasons=["coffee:UNIQUE_TOP"] insufficient=false
+- 183 / d183: ranking=[{"domain":"coffee","score":3},{"domain":"milk_tea","score":3},{"domain":"food_order","score":2},{"domain":"medical","score":1},{"domain":"tourism_hotel","score":1}] retained=["coffee","milk_tea"] reasons=["coffee:TIED_TOP","milk_tea:TIED_TOP"] insufficient=false
+- 184 / d184: ranking=[{"domain":"tech_ai","score":4}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 185 / d185: ranking=[{"domain":"food_order","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 186 / d186: ranking=[{"domain":"food_order","score":1},{"domain":"meeting","score":1},{"domain":"tech_ai","score":1}] retained=["food_order","meeting","tech_ai"] reasons=["food_order:TIED_TOP","meeting:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 187 / d187: ranking=[{"domain":"tourism_hotel","score":2},{"domain":"tourism_transport","score":2},{"domain":"tech_ai","score":1},{"domain":"tourism_route","score":1},{"domain":"transport","score":1}] retained=["tourism_hotel","tourism_transport"] reasons=["tourism_hotel:TIED_TOP","tourism_transport:TIED_TOP"] insufficient=false
+- 188 / d188: ranking=[] retained=[] reasons=[] insufficient=true
+- 189 / d189: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 190 / d190: ranking=[{"domain":"medical","score":2}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 191 / d191: ranking=[{"domain":"medical","score":2},{"domain":"tech_ai","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 192 / d192: ranking=[{"domain":"coffee","score":1},{"domain":"food_order","score":1},{"domain":"tech_ai","score":1}] retained=["coffee","food_order","tech_ai"] reasons=["coffee:TIED_TOP","food_order:TIED_TOP","tech_ai:TIED_TOP"] insufficient=false
+- 193 / d193: ranking=[{"domain":"tech_ai","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 194 / d194: ranking=[{"domain":"medical","score":1}] retained=["medical"] reasons=["medical:UNIQUE_TOP"] insufficient=false
+- 195 / d195: ranking=[{"domain":"food_order","score":2},{"domain":"coffee","score":1},{"domain":"meeting","score":1},{"domain":"tourism_route","score":1}] retained=["food_order"] reasons=["food_order:UNIQUE_TOP"] insufficient=false
+- 196 / d196: ranking=[] retained=[] reasons=[] insufficient=true
+- 197 / d197: ranking=[] retained=[] reasons=[] insufficient=true
+- 198 / d198: ranking=[] retained=[] reasons=[] insufficient=true
+- 199 / d199: ranking=[{"domain":"tech_ai","score":5},{"domain":"tourism_hotel","score":1},{"domain":"tourism_transport","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+- 200 / d200: ranking=[{"domain":"tech_ai","score":6},{"domain":"meeting","score":1}] retained=["tech_ai"] reasons=["tech_ai:UNIQUE_TOP"] insufficient=false
+
+## B. No domain evidence
+
+count=34
+- 008: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 016: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 017: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 018: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 028: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 038: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 040: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 042: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 061: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 062: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 063: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 073: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 083: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 085: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 087: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 098: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 106: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 107: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 108: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 118: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 128: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 130: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 132: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 151: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 152: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 153: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 163: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 173: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 175: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 177: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 188: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 196: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 197: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+- 198: selectRetainedDomains: ranked.length===0 → insufficientEvidence scores={}
+
+## C. Multi-domain retained
+
+count=45
+- 001: retained=["food_order","coffee"] reason=WITHIN_RATIO_THRESHOLD isTie=false maxCount=4 scores={"coffee":3,"food_order":4,"milk_tea":2,"bakery":2}
+- 006: retained=["food_order","meeting","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"meeting":1,"tech_ai":1}
+- 007: retained=["tourism_hotel","tourism_transport"] reason=TIED_TOP isTie=true maxCount=2 scores={"tech_ai":1,"tourism_transport":2,"transport":1,"tourism_route":1,"tourism_hotel":2}
+- 012: retained=["coffee","food_order","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"tech_ai":1,"food_order":1,"coffee":1}
+- 023: retained=["coffee","food_order","milk_tea","tourism_route"] reason=TIED_TOP isTie=true maxCount=1 scores={"coffee":1,"tourism_route":1,"food_order":1,"milk_tea":1}
+- 024: retained=["food_order","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=2 scores={"food_order":2,"tourism_hotel":2}
+- 026: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 035: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 036: retained=["tech_ai","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"tech_ai":1}
+- 041: retained=["medical","meeting","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=1 scores={"medical":1,"meeting":1,"tourism_hotel":1}
+- 046: retained=["coffee","milk_tea"] reason=TIED_TOP isTie=true maxCount=3 scores={"coffee":3,"food_order":2,"milk_tea":3,"bakery":2}
+- 051: retained=["food_order","meeting","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"meeting":1,"tech_ai":1}
+- 053: retained=["meeting","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"meeting":1}
+- 054: retained=["medical","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"milk_tea":1,"medical":1}
+- 057: retained=["medical","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"tech_ai":1,"medical":1}
+- 068: retained=["coffee","food_order","milk_tea","tourism_route"] reason=TIED_TOP isTie=true maxCount=1 scores={"coffee":1,"tourism_route":1,"food_order":1,"milk_tea":1}
+- 069: retained=["food_order","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=2 scores={"food_order":2,"tourism_hotel":2}
+- 071: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 080: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 081: retained=["tech_ai","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"tech_ai":1}
+- 086: retained=["medical","meeting","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=1 scores={"medical":1,"meeting":1,"tourism_hotel":1}
+- 096: retained=["food_order","meeting","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"meeting":1,"tech_ai":1}
+- 102: retained=["coffee","food_order","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"tech_ai":1,"food_order":1,"coffee":1}
+- 113: retained=["coffee","food_order","milk_tea","tourism_route"] reason=TIED_TOP isTie=true maxCount=1 scores={"coffee":1,"tourism_route":1,"food_order":1,"milk_tea":1}
+- 114: retained=["food_order","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=2 scores={"food_order":2,"tourism_hotel":2}
+- 116: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 125: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 126: retained=["tech_ai","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"tech_ai":1}
+- 131: retained=["medical","meeting","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=1 scores={"medical":1,"meeting":1,"tourism_hotel":1}
+- 136: retained=["coffee","food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=2 scores={"coffee":2,"food_order":2,"milk_tea":2,"bakery":1}
+- 141: retained=["food_order","meeting","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"meeting":1,"tech_ai":1}
+- 143: retained=["meeting","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"meeting":1}
+- 144: retained=["medical","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"milk_tea":1,"medical":1}
+- 147: retained=["medical","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"tech_ai":1,"medical":1}
+- 158: retained=["coffee","food_order","milk_tea","tourism_route"] reason=TIED_TOP isTie=true maxCount=1 scores={"coffee":1,"tourism_route":1,"food_order":1,"milk_tea":1}
+- 159: retained=["food_order","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=2 scores={"food_order":2,"tourism_hotel":2}
+- 161: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 170: retained=["food_order","milk_tea"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"milk_tea":1}
+- 171: retained=["tech_ai","tourism_pickup"] reason=TIED_TOP isTie=true maxCount=1 scores={"tourism_pickup":1,"tech_ai":1}
+- 176: retained=["medical","meeting","tourism_hotel"] reason=TIED_TOP isTie=true maxCount=1 scores={"medical":1,"meeting":1,"tourism_hotel":1}
+- 181: retained=["food_order","coffee"] reason=WITHIN_RATIO_THRESHOLD isTie=false maxCount=4 scores={"coffee":3,"food_order":4,"milk_tea":2,"bakery":2}
+- 183: retained=["coffee","milk_tea"] reason=TIED_TOP isTie=true maxCount=3 scores={"milk_tea":3,"medical":1,"coffee":3,"food_order":2,"tourism_hotel":1}
+- 186: retained=["food_order","meeting","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"food_order":1,"meeting":1,"tech_ai":1}
+- 187: retained=["tourism_hotel","tourism_transport"] reason=TIED_TOP isTie=true maxCount=2 scores={"tech_ai":1,"tourism_transport":2,"transport":1,"tourism_route":1,"tourism_hotel":2}
+- 192: retained=["coffee","food_order","tech_ai"] reason=TIED_TOP isTie=true maxCount=1 scores={"tech_ai":1,"food_order":1,"coffee":1}
+
+## D. Single-domain retained
+
+count=121
+- 002: retained=["coffee"] max=3 runnerUp=2 scores={"coffee":3,"bakery":1,"food_order":2,"milk_tea":2}
+- 003: retained=["coffee"] max=5 runnerUp=2 scores={"bakery":1,"coffee":5,"medical":1,"food_order":2,"milk_tea":2,"tourism_hotel":1}
+- 004: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 005: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 009: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 010: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 011: retained=["medical"] max=2 runnerUp=1 scores={"medical":2,"tech_ai":1}
+- 013: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 014: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 015: retained=["food_order"] max=2 runnerUp=1 scores={"food_order":2,"coffee":1,"tourism_route":1,"meeting":1}
+- 019: retained=["tech_ai"] max=5 runnerUp=1 scores={"tech_ai":5,"tourism_hotel":1,"tourism_transport":1}
+- 020: retained=["tech_ai"] max=6 runnerUp=1 scores={"meeting":1,"tech_ai":6}
+- 021: retained=["tech_ai"] max=5 runnerUp=0 scores={"tech_ai":5}
+- 022: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 025: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 027: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 029: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 030: retained=["tourism_hotel"] max=1 runnerUp=0 scores={"tourism_hotel":1}
+- 031: retained=["tourism_hotel"] max=3 runnerUp=1 scores={"food_order":1,"tourism_hotel":3,"tourism_route":1,"transport":1,"tourism_transport":1}
+- 032: retained=["tourism_hotel"] max=2 runnerUp=1 scores={"food_order":1,"tourism_hotel":2,"medical":1,"tech_ai":1}
+- 033: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 034: retained=["tourism_route"] max=1 runnerUp=0 scores={"tourism_route":1}
+- 037: retained=["food_order"] max=2 runnerUp=1 scores={"bakery":1,"food_order":2}
+- 039: retained=["coffee"] max=2 runnerUp=1 scores={"medical":1,"food_order":1,"bakery":1,"coffee":2,"milk_tea":1}
+- 043: retained=["tech_ai"] max=4 runnerUp=1 scores={"tech_ai":4,"coffee":1}
+- 044: retained=["tech_ai"] max=4 runnerUp=2 scores={"tech_ai":4,"tourism_hotel":2,"tourism_transport":1}
+- 045: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 047: retained=["milk_tea"] max=3 runnerUp=2 scores={"milk_tea":3,"bakery":1,"coffee":2,"food_order":2}
+- 048: retained=["coffee"] max=3 runnerUp=2 scores={"medical":1,"coffee":3,"food_order":2,"milk_tea":2,"tourism_hotel":1}
+- 049: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 050: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 052: retained=["tourism_hotel"] max=2 runnerUp=0 scores={"tourism_hotel":2}
+- 055: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 056: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 058: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 059: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 060: retained=["food_order"] max=2 runnerUp=1 scores={"food_order":2,"coffee":1,"tourism_route":1,"meeting":1}
+- 064: retained=["tech_ai"] max=5 runnerUp=1 scores={"tech_ai":5,"tourism_hotel":1,"tourism_transport":1}
+- 065: retained=["tech_ai"] max=6 runnerUp=1 scores={"meeting":1,"tech_ai":6}
+- 066: retained=["tech_ai"] max=5 runnerUp=0 scores={"tech_ai":5}
+- 067: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 070: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 072: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 074: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 075: retained=["tourism_hotel"] max=1 runnerUp=0 scores={"tourism_hotel":1}
+- 076: retained=["tourism_hotel"] max=3 runnerUp=1 scores={"food_order":1,"tourism_hotel":3,"tourism_route":1,"transport":1,"tourism_transport":1}
+- 077: retained=["tourism_hotel"] max=2 runnerUp=1 scores={"food_order":1,"tourism_hotel":2,"medical":1,"tech_ai":1}
+- 078: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 079: retained=["tourism_route"] max=1 runnerUp=0 scores={"tourism_route":1}
+- 082: retained=["food_order"] max=2 runnerUp=1 scores={"bakery":1,"food_order":2}
+- 084: retained=["coffee"] max=2 runnerUp=1 scores={"medical":1,"food_order":1,"bakery":1,"coffee":2,"milk_tea":1}
+- 088: retained=["tech_ai"] max=4 runnerUp=1 scores={"tech_ai":4,"coffee":1}
+- 089: retained=["tech_ai"] max=4 runnerUp=2 scores={"tech_ai":4,"tourism_hotel":2,"tourism_transport":1}
+- 090: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 091: retained=["coffee"] max=4 runnerUp=2 scores={"bakery":2,"coffee":4,"food_order":2,"milk_tea":2}
+- 092: retained=["coffee"] max=3 runnerUp=2 scores={"bakery":2,"coffee":3,"food_order":2,"milk_tea":2}
+- 093: retained=["coffee"] max=4 runnerUp=2 scores={"coffee":4,"medical":1,"food_order":2,"milk_tea":2,"tourism_hotel":1}
+- 094: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 095: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 097: retained=["tourism_hotel"] max=2 runnerUp=1 scores={"tech_ai":1,"tourism_hotel":2}
+- 099: retained=["tourism_transport"] max=2 runnerUp=1 scores={"tourism_transport":2,"transport":1,"tourism_route":1,"medical":1}
+- 100: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 101: retained=["medical"] max=2 runnerUp=1 scores={"medical":2,"tech_ai":1}
+- 103: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 104: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 105: retained=["food_order"] max=2 runnerUp=1 scores={"food_order":2,"coffee":1,"tourism_route":1,"meeting":1}
+- 109: retained=["tech_ai"] max=5 runnerUp=1 scores={"tech_ai":5,"tourism_hotel":1,"tourism_transport":1}
+- 110: retained=["tech_ai"] max=6 runnerUp=1 scores={"meeting":1,"tech_ai":6}
+- 111: retained=["tech_ai"] max=5 runnerUp=0 scores={"tech_ai":5}
+- 112: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 115: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 117: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 119: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 120: retained=["tourism_hotel"] max=1 runnerUp=0 scores={"tourism_hotel":1}
+- 121: retained=["tourism_hotel"] max=3 runnerUp=1 scores={"food_order":1,"tourism_hotel":3,"tourism_route":1,"transport":1,"tourism_transport":1}
+- 122: retained=["tourism_hotel"] max=2 runnerUp=1 scores={"food_order":1,"tourism_hotel":2,"medical":1,"tech_ai":1}
+- 123: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 124: retained=["tourism_route"] max=1 runnerUp=0 scores={"tourism_route":1}
+- 127: retained=["food_order"] max=2 runnerUp=1 scores={"bakery":1,"food_order":2}
+- 129: retained=["coffee"] max=2 runnerUp=1 scores={"medical":1,"food_order":1,"bakery":1,"coffee":2,"milk_tea":1}
+- 133: retained=["tech_ai"] max=4 runnerUp=1 scores={"tech_ai":4,"coffee":1}
+- 134: retained=["tech_ai"] max=4 runnerUp=2 scores={"tech_ai":4,"tourism_hotel":2,"tourism_transport":1}
+- 135: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 137: retained=["coffee"] max=3 runnerUp=2 scores={"coffee":3,"bakery":1,"food_order":2,"milk_tea":2}
+- 138: retained=["coffee"] max=4 runnerUp=2 scores={"coffee":4,"medical":1,"food_order":2,"milk_tea":2,"tourism_hotel":1}
+- 139: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 140: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 142: retained=["tourism_hotel"] max=2 runnerUp=0 scores={"tourism_hotel":2}
+- 145: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 146: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 148: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 149: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 150: retained=["food_order"] max=2 runnerUp=1 scores={"food_order":2,"coffee":1,"tourism_route":1,"meeting":1}
+- 154: retained=["tech_ai"] max=5 runnerUp=1 scores={"tech_ai":5,"tourism_hotel":1,"tourism_transport":1}
+- 155: retained=["tech_ai"] max=6 runnerUp=1 scores={"meeting":1,"tech_ai":6}
+- 156: retained=["tech_ai"] max=5 runnerUp=0 scores={"tech_ai":5}
+- 157: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 160: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 162: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 164: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 165: retained=["tourism_hotel"] max=1 runnerUp=0 scores={"tourism_hotel":1}
+- 166: retained=["tourism_hotel"] max=3 runnerUp=1 scores={"food_order":1,"tourism_hotel":3,"tourism_route":1,"transport":1,"tourism_transport":1}
+- 167: retained=["tourism_hotel"] max=2 runnerUp=1 scores={"food_order":1,"tourism_hotel":2,"medical":1,"tech_ai":1}
+- 168: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 169: retained=["tourism_route"] max=1 runnerUp=0 scores={"tourism_route":1}
+- 172: retained=["food_order"] max=2 runnerUp=1 scores={"bakery":1,"food_order":2}
+- 174: retained=["coffee"] max=2 runnerUp=1 scores={"medical":1,"food_order":1,"bakery":1,"coffee":2,"milk_tea":1}
+- 178: retained=["tech_ai"] max=4 runnerUp=1 scores={"tech_ai":4,"coffee":1}
+- 179: retained=["tech_ai"] max=4 runnerUp=2 scores={"tech_ai":4,"tourism_hotel":2,"tourism_transport":1}
+- 180: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 182: retained=["coffee"] max=3 runnerUp=2 scores={"coffee":3,"bakery":1,"food_order":2,"milk_tea":2}
+- 184: retained=["tech_ai"] max=4 runnerUp=0 scores={"tech_ai":4}
+- 185: retained=["food_order"] max=1 runnerUp=0 scores={"food_order":1}
+- 189: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 190: retained=["medical"] max=2 runnerUp=0 scores={"medical":2}
+- 191: retained=["medical"] max=2 runnerUp=1 scores={"medical":2,"tech_ai":1}
+- 193: retained=["tech_ai"] max=1 runnerUp=0 scores={"tech_ai":1}
+- 194: retained=["medical"] max=1 runnerUp=0 scores={"medical":1}
+- 195: retained=["food_order"] max=2 runnerUp=1 scores={"food_order":2,"coffee":1,"tourism_route":1,"meeting":1}
+- 199: retained=["tech_ai"] max=5 runnerUp=1 scores={"tech_ai":5,"tourism_hotel":1,"tourism_transport":1}
+- 200: retained=["tech_ai"] max=6 runnerUp=1 scores={"meeting":1,"tech_ai":6}
+
+## E. Prior-changed ranking
+
+count=0 — Vote function does not accept domainPriors; dialog_200 probe passed domainPriors:[]. Counterfactual N/A inside Vote.
+
+## F. LLM-adjusted
+
+count=0 — LLM did not participate in Vote.
+
+## G. Multi-domain word contributions
+
+count=91
+- d001/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d001/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 少糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d001/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 蓝莓 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d001/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 马芬 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d001/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d001/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 少糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d001/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 蓝莓马芬 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d002/867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d002/867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d003/d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9: 少冰 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d003/d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9: 少冰 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d003/d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9: 小杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d007/ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87: 机场 tags=["tourism_transport","transport"] enteredSet=true weightSplit=false
+- d007/ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87: 高速 tags=["tourism_route","tourism_transport"] enteredSet=true weightSplit=false
+- d023/3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d024/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d024/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d026/b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d031/0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0: 预订 tags=["food_order","tourism_hotel","tourism_route","transport"] enteredSet=true weightSplit=false
+- d032/03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13: 早餐 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d035/2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d039/91229dfa9d5be6b38b9f08e170cff33f5d2bdef0d0cb6c73fdb7cf999d70ca76: 打包 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/dd88f4c1999c8c4a6dc2a146d96c228be385aecd3ea8f0fe1fd2abf72a4966b1: 正常糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/704f98b82a57f8aa19f954c6a5b2d95560dbc90e65e43a6e72fc56256c16c5ab: 正常糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/f25c790ab3feecb08234a9eb9296f94b017f8b895a73a294adf352766678e47d: 正常糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d046/b381ed15660cc47935a5acdc3d6802646a22eae9a515096a636b6002db634b39: 正常糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d047/867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d047/867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d048/c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc: 少冰 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d048/c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc: 少冰 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d048/c0c12254e0997270a617b73b67642b820f52208b1f604c672cf01739be7a81dc: 小杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d068/3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d069/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d069/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d071/b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d076/0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0: 预订 tags=["food_order","tourism_hotel","tourism_route","transport"] enteredSet=true weightSplit=false
+- d077/03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13: 早餐 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d080/2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d084/91229dfa9d5be6b38b9f08e170cff33f5d2bdef0d0cb6c73fdb7cf999d70ca76: 打包 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d091/4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d091/4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d: 无糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d092/3710d2726d9b83a417e0491e8b96ed9f4eff0bc90b7e7a7b91f4e68d31556789: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d092/3710d2726d9b83a417e0491e8b96ed9f4eff0bc90b7e7a7b91f4e68d31556789: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d093/b5fb4e06c6d554f84aad68793f1d47bfbcfc1534650747732e1622e2b49069b5: 少冰 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d093/b5fb4e06c6d554f84aad68793f1d47bfbcfc1534650747732e1622e2b49069b5: 少冰 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d093/b5fb4e06c6d554f84aad68793f1d47bfbcfc1534650747732e1622e2b49069b5: 小杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d099/ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c: 机场 tags=["tourism_transport","transport"] enteredSet=true weightSplit=false
+- d099/ddfbac6f9296824f691d630acfe7f183ecc93ff378f768bc7526ebaf4a41fc0c: 高速 tags=["tourism_route","tourism_transport"] enteredSet=true weightSplit=false
+- d113/3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d114/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d114/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d116/b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d121/0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0: 预订 tags=["food_order","tourism_hotel","tourism_route","transport"] enteredSet=true weightSplit=false
+- d122/03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13: 早餐 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d125/2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d129/91229dfa9d5be6b38b9f08e170cff33f5d2bdef0d0cb6c73fdb7cf999d70ca76: 打包 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d136/a06b4c93a167bb6f741e0d2b7f2fa3cf1de1c31c7397ed5152e88b59922cac69: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d136/a06b4c93a167bb6f741e0d2b7f2fa3cf1de1c31c7397ed5152e88b59922cac69: 半糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d137/c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d137/c997d4717cc122902c16f0968e80bb659cf5054e671498183d28129659cdd995: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d138/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 少冰 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d138/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 少冰 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d138/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 小杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d158/3827924af8b5fc1e5dcc9c033f608a7c7a11790e401302ab152418017fcb5359: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d159/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d159/b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6: 发票 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d161/b12f3cf0aef86ec71cf7ca92007b4ed2b271c07b66773e2211895464537dd8e6: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d166/0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0: 预订 tags=["food_order","tourism_hotel","tourism_route","transport"] enteredSet=true weightSplit=false
+- d167/03e1aa8d5789d78feb7b3931f6588e562f01a298a0136c39d7b213cfeacb5a13: 早餐 tags=["food_order","tourism_hotel"] enteredSet=true weightSplit=false
+- d170/2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b: 处理 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d174/91229dfa9d5be6b38b9f08e170cff33f5d2bdef0d0cb6c73fdb7cf999d70ca76: 打包 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d181/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d181/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 少糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d181/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 蓝莓 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d181/dfdf9f0cedb03c87e0d1f43c670ec66222f45ae24de8fb942124a8ed4d139e36: 马芬 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d181/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 中杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d181/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 少糖 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d181/34555bf4cfbd5917bf1089256ee6a3ad60e9757d24216598cdf06ef883136d03: 蓝莓马芬 tags=["bakery","food_order"] enteredSet=true weightSplit=false
+- d182/c46ccc49340f7cb86275e5e6630d22b5e936024be72283698eb14d6f44e7284c: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d182/c46ccc49340f7cb86275e5e6630d22b5e936024be72283698eb14d6f44e7284c: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d182/3710d2726d9b83a417e0491e8b96ed9f4eff0bc90b7e7a7b91f4e68d31556789: 带走 tags=["bakery","coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d182/3710d2726d9b83a417e0491e8b96ed9f4eff0bc90b7e7a7b91f4e68d31556789: 大杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d183/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 少冰 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d183/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 少冰 tags=["food_order","milk_tea"] enteredSet=true weightSplit=false
+- d183/819a6a7ddd4888a146f863e457a08cf1078f08698b4916903b0ec22023229386: 小杯 tags=["coffee","food_order","milk_tea"] enteredSet=true weightSplit=false
+- d187/ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87: 机场 tags=["tourism_transport","transport"] enteredSet=true weightSplit=false
+- d187/ce61e4f57b177b95d39665e0aa77ec09fca042ee22c72a2f8e6f99c0e9df5c87: 高速 tags=["tourism_route","tourism_transport"] enteredSet=true weightSplit=false
+
+## H. Unreconciled scores
+
+count=0
+
+## I. Vote vs Bucket mismatch
+
+count=0

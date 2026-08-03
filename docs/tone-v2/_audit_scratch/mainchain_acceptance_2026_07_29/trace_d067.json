@@ -1,0 +1,193 @@
+{
+  "id": "d067",
+  "expected": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+  "asr": "您好,我定位了 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+  "raw_asr": "您好,我定位了 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 3,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.000021887281036470085,
+      "t2": 0.9997043013572693,
+      "t3": 0.0002644360065460205,
+      "t4": 0.000009053395842784084,
+      "t5": 2.413182187410712e-7
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 23,
+    "wordTimeSpanCount": 26,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 0,
+    "ngramTonePatternMissCount": 1,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "一下",
+        "pinyinKey": "yi|xia",
+        "windowTimeRange": {
+          "start": 5.06,
+          "end": 5.34
+        }
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15,
+    "candidateSentenceCount": 15,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 15,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "您好,我定位了 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+        "kenlmScore": -87.59712,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "您好,我定位了 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+        "kenlmScore": -87.59712,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 15
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 716,
+      "queryCount": 2,
+      "avgMs": 358,
+      "p50Ms": 358,
+      "p95Ms": 358,
+      "maxMs": 716
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -87.59712,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 716,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "您好,我定位了 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "您好",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "您好",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我定",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我定",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "位",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "位",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "了",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "了",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "但顯",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "但顯",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "示已",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "示已",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "發貨",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "發貨",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "但物",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "但物",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

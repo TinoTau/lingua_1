@@ -1,0 +1,73 @@
+{
+  "id": "d141",
+  "raw": "更會員 相關的需求,我整理了一版八點前請大家幫忙評審一下",
+  "asrToneSliceCount": 3,
+  "diagToneSliceCount": 24,
+  "wordTimeSpanBuilt": 24,
+  "wordTimeSpanMapped": 24,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "一下",
+        "wordTime": [
+          5,
+          5.38
+        ],
+        "sliceCount": 3,
+        "nearestSlices": [
+          {
+            "start": 0.44,
+            "end": 0.62,
+            "dist": 4.56
+          },
+          {
+            "start": 0.28,
+            "end": 0.44,
+            "dist": 4.72
+          },
+          {
+            "start": 0,
+            "end": 0.28,
+            "dist": 5
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.8,
+        "end": 6.18
+      },
+      "replayWindowTime": {
+        "start": 5,
+        "end": 5.38
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 26,
+    "theoreticalWindows2to5": 94,
+    "theoreticalWindows1to5": 120
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

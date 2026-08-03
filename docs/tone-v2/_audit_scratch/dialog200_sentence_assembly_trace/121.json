@@ -1,0 +1,497 @@
+{
+  "caseId": "d121",
+  "fileNum": "121",
+  "rawText": "我预订的是大床房，能安排安静一点的楼层吗？",
+  "scenario": "hotel",
+  "retainedDomains": [
+    "tourism_hotel"
+  ],
+  "domainScores": {
+    "food_order": 1,
+    "tourism_hotel": 3,
+    "tourism_route": 1,
+    "transport": 1,
+    "tourism_transport": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "domainId": "tourism_hotel",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "我",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "预订",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:1",
+          "sameDomain": [
+            "预订"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "预订"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "是",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "是"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "大床房",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:4",
+          "sameDomain": [
+            "大床房"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "大床房"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "能",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "安排",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:6",
+          "sameDomain": [
+            "安排",
+            "安排"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "安",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "静",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "静"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "一",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "点",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "的",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "楼",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "楼"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "层",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "层"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "吗",
+          "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "我"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "的"
+        ],
+        [
+          "是"
+        ],
+        [
+          "大床房"
+        ],
+        [
+          "能"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "安"
+        ],
+        [
+          "静"
+        ],
+        [
+          "一"
+        ],
+        [
+          "点"
+        ],
+        [
+          "的"
+        ],
+        [
+          "楼"
+        ],
+        [
+          "层"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "我预订的是大床房，能安排安静一点的楼层吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "我预订的是大床房，能安排安静一点的楼层吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "我预订的是大床房，能安排安静一点的楼层吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "预订",
+            "start": 1,
+            "end": 3
+          },
+          "word": "预订",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.38,
+          "repairTarget": true,
+          "candidateScore": 2.38
+        },
+        {
+          "span": {
+            "text": "大床房",
+            "start": 5,
+            "end": 8
+          },
+          "word": "大床房",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "安排",
+            "start": 10,
+            "end": 12
+          },
+          "word": "安排",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 0,
+            "end": 1
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 3,
+            "end": 4
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "是",
+            "start": 4,
+            "end": 5
+          },
+          "word": "是",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 9,
+            "end": 10
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "安",
+            "start": 12,
+            "end": 13
+          },
+          "word": "安",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "静",
+            "start": 13,
+            "end": 14
+          },
+          "word": "静",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 14,
+            "end": 15
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "点",
+            "start": 15,
+            "end": 16
+          },
+          "word": "点",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 16,
+            "end": 17
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "楼",
+            "start": 17,
+            "end": 18
+          },
+          "word": "楼",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "层",
+            "start": 18,
+            "end": 19
+          },
+          "word": "层",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 19,
+            "end": 20
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 7.1
+    }
+  ],
+  "kenlmInputTexts": [
+    "我预订的是大床房，能安排安静一点的楼层吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "我预订的是大床房，能安排安静一点的楼层吗？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "我预订的是大床房，能安排安静一点的楼层吗？"
+    ],
+    "actual": [
+      "我预订的是大床房，能安排安静一点的楼层吗？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

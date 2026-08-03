@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-07-28",
+  "batch": "1.1A",
+  "stage": "5 Final Gate",
+  "build": "npm run build:main",
+  "gateRegression": {
+    "suites": 12,
+    "tests": 161,
+    "result": "PASS"
+  },
+  "patterns": [
+    { "pattern": "length1-real-sqlite.test.helpers", "matches": [], "status": "CLEAN" },
+    { "pattern": "batch1-1a-stage4-generalization.audit", "matches": [], "status": "CLEAN" },
+    { "pattern": "length1-truncation.sqlite.integration", "matches": [], "status": "CLEAN" },
+    { "pattern": "stage4_boundary_matrix.json", "matches": [], "status": "CLEAN" },
+    { "pattern": "length1_limit8_real_sqlite_baseline", "matches": [], "status": "CLEAN" }
+  ],
+  "overall": "CLEAN"
+}

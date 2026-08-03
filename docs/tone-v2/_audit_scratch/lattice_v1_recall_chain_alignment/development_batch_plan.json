@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-07-27",
+  "batches": [
+    {
+      "id": "Batch1",
+      "name": "Recall Chain Alignment",
+      "dependsOn": [],
+      "inputs": ["Change Record 1.0.2 draft", "fixture base_lexicon rows in tests"],
+      "work": [
+        "Contract Change Record 1.0.2",
+        "recallSpanTopKV2 length=1 base-only branch + ambiguity policy",
+        "recallTopKForWindows exactTopK=1 for len=1",
+        "latticeHardBlockFilter adjacency fix",
+        "Phase1/2 diagnostics singleChar* fields",
+        "unit + integration tests with fixtures"
+      ],
+      "outputs": ["green tests", "len=1 recall works on fixtures", "吗？ allow"],
+      "doneWhen": [
+        "unit tests pass",
+        "Phase1/2 suites pass",
+        "fixture utterance produces singleCharLexicalEdgeCount>0",
+        "2-5 regression unchanged"
+      ],
+      "rollback": "revert PR; no operational bundle change",
+      "allowsFormalLexiconGeneration": false
+    },
+    {
+      "id": "Batch2",
+      "name": "Lexicon Write Capability",
+      "dependsOn": ["Batch1"],
+      "inputs": ["Batch1 merged"],
+      "work": [
+        "addBaseTerm + update/enable/disable",
+        "Full Build singleCharApproved",
+        "manifest/gate coverage checks",
+        "import e2e"
+      ],
+      "outputs": ["dry-run import path for base chars"],
+      "doneWhen": ["addBaseTerm e2e PASS", "unapproved one_char still rejected", "backup+dry-run documented"],
+      "rollback": "revert PR; restore v3 from backup if any trial apply",
+      "allowsFormalLexiconGeneration": true
+    },
+    {
+      "id": "Batch3",
+      "name": "Data Patch and Acceptance",
+      "dependsOn": ["Batch2"],
+      "inputs": ["50-100 whitelist", "spoken 2-3 terms", "麻烦 fix"],
+      "work": ["import patches", "dialog_200 probe", "quality gates"],
+      "outputs": ["operational bundle bump", "quality summary"],
+      "doneWhen": [
+        "singleCharHitCount>0 on dialog_200",
+        "completePathRate improves vs baseline",
+        "domainVoteContributionFromBaseSingleChars=0",
+        "Phase1/2 still green"
+      ],
+      "rollback": "restore node_runtime/lexicon/v3 backup directory",
+      "allowsFormalLexiconGeneration": "executes generation"
+    }
+  ]
+}

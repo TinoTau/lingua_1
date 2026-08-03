@@ -1,0 +1,197 @@
+{
+  "id": "d037",
+  "expected": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+  "asr": "两位靠窗有位直麻 不要像蔡薇拉就行",
+  "raw_asr": "两位靠窗有位直麻 不要像蔡薇拉就行",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 15,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.012274161912500858,
+      "t2": 0.649597704410553,
+      "t3": 0.22623196244239807,
+      "t4": 0.11156602948904037,
+      "t5": 0.00033014954533427954
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 15,
+    "wordTimeSpanCount": 15,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "就行",
+        "pinyinKey": "jiu|xing",
+        "windowTimeRange": {
+          "start": 2.96,
+          "end": 3.38
+        },
+        "acousticTonePattern": [
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 8,
+    "candidateCount": 8,
+    "candidateSentenceCount": 8,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 8,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "两位靠窗有位直麻 不要像蔡薇拉就行",
+        "kenlmScore": -55.417297,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "两位靠窗有位直麻 不要像蔡薇拉就行",
+        "kenlmScore": -55.417297,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 8
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 747,
+      "queryCount": 2,
+      "avgMs": 373.5,
+      "p50Ms": 373.5,
+      "p95Ms": 373.5,
+      "maxMs": 747
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -55.417297,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 747,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "两位靠窗有位直麻 不要像蔡薇拉就行",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "两位",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "两位",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "靠窗",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "靠窗",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "有位",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "有位",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "直麻",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "直麻",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "不要",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "不要",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "像蔡",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "像蔡",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "薇拉",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "薇拉",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "就行",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "就行",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

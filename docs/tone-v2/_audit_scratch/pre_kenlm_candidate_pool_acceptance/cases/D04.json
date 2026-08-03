@@ -1,0 +1,195 @@
+{
+  "caseId": "D04",
+  "rawText": "大杯和小杯都要重新下单",
+  "windowCount": 45,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 1,
+  "bucketCount": 1,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 1,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "大杯和小杯都要重新下单"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "57f1a3912fe3f40c7bbac7922f8262f846e447352982b8097223e3ab6549492a",
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "大杯"
+        ],
+        [
+          "和"
+        ],
+        [
+          "小杯"
+        ],
+        [
+          "都"
+        ],
+        [
+          "要"
+        ],
+        [
+          "重"
+        ],
+        [
+          "新"
+        ],
+        [
+          "下单"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "大杯和小杯都要重新下单",
+      "sourcePathId": "57f1a3912fe3f40c7bbac7922f8262f846e447352982b8097223e3ab6549492a",
+      "sourceDomain": "food_order",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 2,
+          "word": "大杯",
+          "sourceText": "大杯"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "小杯",
+          "sourceText": "小杯"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "都",
+          "sourceText": "都"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "word": "要",
+          "sourceText": "要"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "word": "重",
+          "sourceText": "重"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "新",
+          "sourceText": "新"
+        },
+        {
+          "start": 9,
+          "end": 11,
+          "word": "下单",
+          "sourceText": "下单"
+        }
+      ],
+      "dedupKey": "大杯和小杯都要重新下单",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 45,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 45,
+    "lexicalEdgeCount": 3,
+    "fallbackEdgeCount": 5,
+    "edgeCountAfterFallback": 8,
+    "fallbackInjectionCount": 5,
+    "fallbackInjectionRanges": [
+      {
+        "start": 2,
+        "end": 3
+      },
+      {
+        "start": 5,
+        "end": 9
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 45,
+    "sqlQueryCount": 37,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "D",
+    "F"
+  ],
+  "why": "cup size multi-domain",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 39.38570022583008,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

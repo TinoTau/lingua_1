@@ -1,0 +1,661 @@
+{
+  "caseId": "d091",
+  "fileNum": "091",
+  "rawText": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+  "scenario": "cafe",
+  "retainedDomains": [
+    "coffee"
+  ],
+  "domainScores": {
+    "bakery": 2,
+    "coffee": 4,
+    "food_order": 2,
+    "milk_tea": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d",
+      "domainId": "coffee",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "你",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "你"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "好",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "好"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "我",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "想",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "想"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "点",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "点"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "燕麦",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:7",
+          "sameDomain": [
+            "燕麦"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "燕麦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "拿铁",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:8",
+          "sameDomain": [
+            "拿铁",
+            "拿铁",
+            "拿铁"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "拿铁"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "中杯",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:9",
+          "sameDomain": [
+            "中杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "无糖",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:10",
+          "sameDomain": [
+            "无糖"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "无糖"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "顺",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "顺"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "便",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "便"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "问",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "问"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "一",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "下",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "今",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "天",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "有",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "有"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "贝果",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "贝果"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "吗",
+          "fineSpanId": "fine:4669c9d2c2d898bd20ef91a3f6d00db29f118dc25b2df01550d959e1e091614d:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "你"
+        ],
+        [
+          "好"
+        ],
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "点"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "燕麦"
+        ],
+        [
+          "拿铁"
+        ],
+        [
+          "中杯"
+        ],
+        [
+          "无糖"
+        ],
+        [
+          "顺"
+        ],
+        [
+          "便"
+        ],
+        [
+          "问"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "有"
+        ],
+        [
+          "贝果"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "燕麦",
+            "start": 8,
+            "end": 10
+          },
+          "word": "燕麦",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "拿铁",
+            "start": 10,
+            "end": 12
+          },
+          "word": "拿铁",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "中杯",
+            "start": 13,
+            "end": 15
+          },
+          "word": "中杯",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "无糖",
+            "start": 16,
+            "end": 18
+          },
+          "word": "无糖",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "你",
+            "start": 0,
+            "end": 1
+          },
+          "word": "你",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "好",
+            "start": 1,
+            "end": 2
+          },
+          "word": "好",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 3,
+            "end": 4
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "想",
+            "start": 4,
+            "end": 5
+          },
+          "word": "想",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "点",
+            "start": 5,
+            "end": 6
+          },
+          "word": "点",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 6,
+            "end": 7
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "杯",
+            "start": 7,
+            "end": 8
+          },
+          "word": "杯",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "顺",
+            "start": 19,
+            "end": 20
+          },
+          "word": "顺",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "便",
+            "start": 20,
+            "end": 21
+          },
+          "word": "便",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "问",
+            "start": 21,
+            "end": 22
+          },
+          "word": "问",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 22,
+            "end": 23
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 23,
+            "end": 24
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "今",
+            "start": 24,
+            "end": 25
+          },
+          "word": "今",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 25,
+            "end": 26
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "有",
+            "start": 26,
+            "end": 27
+          },
+          "word": "有",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "贝果",
+            "start": 27,
+            "end": 29
+          },
+          "word": "贝果",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 29,
+            "end": 30
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 9.459999999999999
+    }
+  ],
+  "kenlmInputTexts": [
+    "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+    ],
+    "actual": [
+      "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

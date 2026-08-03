@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-07-28",
+  "compare": {
+    "fixture": "createBatch1FixtureRuntime",
+    "runtime": "LexiconRuntimeV2",
+    "operational": "node_runtime/lexicon/v3/lexicon.sqlite via LexiconRuntimeV2"
+  },
+  "rows": [
+    {
+      "aspect": "lookupBaseByPinyinKey(signature)",
+      "status": "EQUIVALENT",
+      "note": "fixture mirrors (key, termLength, sqlLimit)"
+    },
+    {
+      "aspect": "lookupBaseByPinyinAndToneKey(signature)",
+      "status": "EQUIVALENT",
+      "note": "fixture mirrors composite key"
+    },
+    {
+      "aspect": "SQL ORDER BY prior_score DESC",
+      "status": "NOT REPRESENTED",
+      "note": "fixture returns insertion-order Map lists; real SQLite sorts by prior"
+    },
+    {
+      "aspect": "SQL enabled=1 filter",
+      "status": "PARTIAL",
+      "note": "real SQL filters enabled; fixture returns all then recall filters enabled"
+    },
+    {
+      "aspect": "length(word)=? SQL filter",
+      "status": "PARTIAL",
+      "note": "fixture keys by termLength; recall also filters word.length===1"
+    },
+    {
+      "aspect": "LIMIT truncation semantics",
+      "status": "PARTIAL",
+      "note": "fixture slice(0,limit) but no ORDER BY; cannot reproduce limit+prior interaction"
+    },
+    {
+      "aspect": "is_alias column → isAlias",
+      "status": "EQUIVALENT",
+      "note": "real mapTierRowToHotword sets isAlias from is_alias===1; fixture can set isAlias"
+    },
+    {
+      "aspect": "domains empty for base",
+      "status": "EQUIVALENT",
+      "note": "real base map uses domains=[]; length=1 scorer also forces domains=[]"
+    },
+    {
+      "aspect": "repair_target mapping",
+      "status": "PARTIAL",
+      "note": "real maps repair_target; length=1 scorer FORCES repairTarget=false (connectivity policy)"
+    },
+    {
+      "aspect": "aliases JSON expansion",
+      "status": "NOT REPRESENTED",
+      "note": "length=1 never expands aliases; fixture rarely sets aliases field"
+    },
+    {
+      "aspect": "homophone_variant",
+      "status": "NOT REPRESENTED",
+      "note": "no variant expansion path in length=1; operational may have alias rows only"
+    },
+    {
+      "aspect": "checksum / manifest / bundle load",
+      "status": "NOT REPRESENTED",
+      "note": "fixture bypasses LexiconRuntimeV2.loadFromBundleDir entirely"
+    },
+    {
+      "aspect": "physical SQL statement counters",
+      "status": "PARTIAL",
+      "note": "fixture increments tierSqlQueries manually; not better-sqlite3"
+    },
+    {
+      "aspect": "domain/idiom lookup stubs",
+      "status": "PARTIAL",
+      "note": "return []; real would query tables — OK for proving length=1 never calls them via spy"
+    },
+    {
+      "aspect": "tone key normalization",
+      "status": "NOT REPRESENTED",
+      "note": "fixture stores exact keys; no malformed tone_pinyin_key rows"
+    },
+    {
+      "aspect": "duplicate pinyin >8 candidates",
+      "status": "NOT REPRESENTED",
+      "note": "CRITICAL gap vs LIMIT=8 ambiguity risk"
+    },
+    {
+      "aspect": "malformed / disabled / prior<=0 rows",
+      "status": "PARTIAL",
+      "note": "only alias filter tested; enabled=false / prior<=0 not systematically tested"
+    },
+    {
+      "aspect": "supportsToneFirstRecall=false",
+      "status": "NOT REPRESENTED",
+      "note": "fixture always returns true"
+    },
+    {
+      "aspect": "overall contract for Batch1 gate",
+      "status": "CONFLICT",
+      "note": "bypassing real LexiconRuntimeV2+SQLite means Batch1 cannot claim runtime-equivalent proof; user gate requires CONDITIONAL"
+    }
+  ]
+}

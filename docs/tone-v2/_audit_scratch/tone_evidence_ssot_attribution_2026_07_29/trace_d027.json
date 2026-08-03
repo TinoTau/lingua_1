@@ -1,0 +1,217 @@
+{
+  "id": "d027",
+  "expected": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+  "asr": "期望性自这块我们可以再沟通你最快什么时候能入职",
+  "raw_asr": "期望性自这块我们可以再沟通你最快什么时候能入职",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 19,
+    "evidenceProductionCount": 19,
+    "firstSlicePosterior": {
+      "t1": 0.44491758942604065,
+      "t2": 0.013701062649488449,
+      "t3": 0.013186481781303883,
+      "t4": 0.527937650680542,
+      "t5": 0.0002572854282334447
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 19,
+    "wordTimeSpanCount": 19,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "slice_created": 19
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "能入",
+        "pinyinKey": "neng|ru",
+        "windowTimeRange": {
+          "start": 4.06,
+          "end": 4.48
+        },
+        "acousticTonePattern": [
+          2,
+          4
+        ]
+      },
+      {
+        "text": "能入职",
+        "pinyinKey": "neng|ru|zhi",
+        "windowTimeRange": {
+          "start": 4.06,
+          "end": 4.68
+        },
+        "acousticTonePattern": [
+          2,
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "期望性自这块我们可以再沟通你最快什么时候能入职",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "期望性自这块我们可以再沟通你最快什么时候能入职",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "期望性自这块我们可以再沟通你最快什么时候能入职",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "期望",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "期望",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "性",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "性",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "自这",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "自这",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "块我",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "块我",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "们",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "们",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "可以",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "可以",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "再沟",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "再沟",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "通你",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "通你",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

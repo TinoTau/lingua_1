@@ -1,0 +1,997 @@
+{
+  "results": [
+    {
+      "surface": "回归测试",
+      "segments": [
+        "回归",
+        "测试"
+      ],
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": {
+        "回归": [],
+        "测试": []
+      },
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Forced activation: compound enters domain_term Vote; deleting loses fine-domain presence; atoms cannot safely carry tags",
+      "with": {
+        "pinyin_key": "hui|gui|ce|shi",
+        "tone_pinyin_key": "hui2|gui1|ce4|shi4",
+        "exactRecall": true,
+        "exactHit": {
+          "termId": "term-e59b9ee5bd92e6b5",
+          "domains": [
+            "tech_ai"
+          ],
+          "repairTarget": true,
+          "prior": 0.9
+        },
+        "edgeHits": [
+          {
+            "edgeId": "0:4",
+            "range": "0:4",
+            "source": "domain_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "termId": "term-e59b9ee5bd92e6b5",
+            "hitKind": "exact_term"
+          }
+        ],
+        "compoundInEdges": true,
+        "pathCount": 2,
+        "compoundPath": {
+          "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+          "includesCompoundEdge": true,
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "bucketDomains": [
+            "tech_ai"
+          ],
+          "bucketCount": 1,
+          "eligible": [
+            {
+              "replacement": "回归测试",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "range": "0:4",
+              "isCompound": true,
+              "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+              "domainSet": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          },
+          {
+            "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+            "includesCompoundEdge": true,
+            "domainScores": {
+              "tech_ai": 1
+            },
+            "retainedDomains": [
+              "tech_ai"
+            ],
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "bucketCount": 1,
+            "eligible": [
+              {
+                "replacement": "回归测试",
+                "source": "domain_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "range": "0:4",
+                "isCompound": true,
+                "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+                "domainSet": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "orchDomains": [],
+        "final": "回归测试"
+      },
+      "without": {
+        "pinyin_key": "hui|gui|ce|shi",
+        "tone_pinyin_key": "hui2|gui1|ce4|shi4",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "回归测试"
+      },
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {
+        "tech_ai": 1
+      },
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [
+        {
+          "replacement": "回归测试",
+          "source": "domain_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "range": "0:4",
+          "isCompound": true,
+          "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+          "domainSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "effectiveLost": [
+        "tech_ai"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "surface": "测试数据",
+      "segments": [
+        "测试",
+        "数据"
+      ],
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": {
+        "测试": [],
+        "数据": []
+      },
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Forced activation: compound enters domain_term Vote; deleting loses fine-domain presence; atoms cannot safely carry tags",
+      "with": {
+        "pinyin_key": "ce|shi|shu|ju",
+        "tone_pinyin_key": "ce4|shi4|shu4|ju4",
+        "exactRecall": true,
+        "exactHit": {
+          "termId": "term-e6b58be8af95e695",
+          "domains": [
+            "tech_ai"
+          ],
+          "repairTarget": true,
+          "prior": 0.9
+        },
+        "edgeHits": [
+          {
+            "edgeId": "0:4",
+            "range": "0:4",
+            "source": "domain_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "termId": "term-e6b58be8af95e695",
+            "hitKind": "exact_term"
+          }
+        ],
+        "compoundInEdges": true,
+        "pathCount": 2,
+        "compoundPath": {
+          "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+          "includesCompoundEdge": true,
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "bucketDomains": [
+            "tech_ai"
+          ],
+          "bucketCount": 1,
+          "eligible": [
+            {
+              "replacement": "测试数据",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "range": "0:4",
+              "isCompound": true,
+              "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+              "domainSet": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          },
+          {
+            "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+            "includesCompoundEdge": true,
+            "domainScores": {
+              "tech_ai": 1
+            },
+            "retainedDomains": [
+              "tech_ai"
+            ],
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "bucketCount": 1,
+            "eligible": [
+              {
+                "replacement": "测试数据",
+                "source": "domain_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "range": "0:4",
+                "isCompound": true,
+                "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+                "domainSet": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "orchDomains": [],
+        "final": "测试数据"
+      },
+      "without": {
+        "pinyin_key": "ce|shi|shu|ju",
+        "tone_pinyin_key": "ce4|shi4|shu4|ju4",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "测试数据"
+      },
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {
+        "tech_ai": 1
+      },
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [
+        {
+          "replacement": "测试数据",
+          "source": "domain_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "range": "0:4",
+          "isCompound": true,
+          "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+          "domainSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "effectiveLost": [
+        "tech_ai"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "surface": "特征工程",
+      "segments": [
+        "特征",
+        "工程"
+      ],
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": {
+        "特征": [],
+        "工程": []
+      },
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Forced activation: compound enters domain_term Vote; deleting loses fine-domain presence; atoms cannot safely carry tags",
+      "with": {
+        "pinyin_key": "te|zheng|gong|cheng",
+        "tone_pinyin_key": "te4|zheng1|gong1|cheng2",
+        "exactRecall": true,
+        "exactHit": {
+          "termId": "term-e789b9e5be81e5b7",
+          "domains": [
+            "tech_ai"
+          ],
+          "repairTarget": true,
+          "prior": 0.86
+        },
+        "edgeHits": [
+          {
+            "edgeId": "0:4",
+            "range": "0:4",
+            "source": "domain_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "termId": "term-e789b9e5be81e5b7",
+            "hitKind": "exact_term"
+          }
+        ],
+        "compoundInEdges": true,
+        "pathCount": 2,
+        "compoundPath": {
+          "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+          "includesCompoundEdge": true,
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "bucketDomains": [
+            "tech_ai"
+          ],
+          "bucketCount": 1,
+          "eligible": [
+            {
+              "replacement": "特征工程",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "range": "0:4",
+              "isCompound": true,
+              "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+              "domainSet": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          },
+          {
+            "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+            "includesCompoundEdge": true,
+            "domainScores": {
+              "tech_ai": 1
+            },
+            "retainedDomains": [
+              "tech_ai"
+            ],
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "bucketCount": 1,
+            "eligible": [
+              {
+                "replacement": "特征工程",
+                "source": "domain_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "range": "0:4",
+                "isCompound": true,
+                "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+                "domainSet": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "orchDomains": [],
+        "final": "特征工程"
+      },
+      "without": {
+        "pinyin_key": "te|zheng|gong|cheng",
+        "tone_pinyin_key": "te4|zheng1|gong1|cheng2",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "特征工程"
+      },
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {
+        "tech_ai": 1
+      },
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [
+        {
+          "replacement": "特征工程",
+          "source": "domain_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "range": "0:4",
+          "isCompound": true,
+          "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+          "domainSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "effectiveLost": [
+        "tech_ai"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "surface": "迷你吧",
+      "segments": [
+        "迷你",
+        "吧"
+      ],
+      "compoundDomains": [
+        "tourism_hotel"
+      ],
+      "segmentDomains": {
+        "迷你": [],
+        "吧": []
+      },
+      "classification": "DELETE_DOMAIN_SAFE",
+      "reason": "Compound has domain tags but Exact Recall fails under legal tone/pinyin — cannot produce effective domain vote in production path",
+      "with": {
+        "pinyin_key": "mi|ni|ba",
+        "tone_pinyin_key": "mi2|ni3|ba0",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "3e0a49548322d79246e42fee27fbc5c84f16d998a7149f6dc8d236604cbd1126",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "3e0a49548322d79246e42fee27fbc5c84f16d998a7149f6dc8d236604cbd1126",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "迷你吧"
+      },
+      "without": {
+        "pinyin_key": "mi|ni|ba",
+        "tone_pinyin_key": "mi2|ni3|ba0",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "3e0a49548322d79246e42fee27fbc5c84f16d998a7149f6dc8d236604cbd1126",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "3e0a49548322d79246e42fee27fbc5c84f16d998a7149f6dc8d236604cbd1126",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "迷你吧"
+      },
+      "withRetainedDomains": [],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {},
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [],
+      "effectiveLost": [],
+      "lostDomains": []
+    },
+    {
+      "surface": "配置文件",
+      "segments": [
+        "配置",
+        "文件"
+      ],
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": {
+        "配置": [],
+        "文件": []
+      },
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Forced activation: compound enters domain_term Vote; deleting loses fine-domain presence; atoms cannot safely carry tags",
+      "with": {
+        "pinyin_key": "pei|zhi|wen|jian",
+        "tone_pinyin_key": "pei4|zhi4|wen2|jian4",
+        "exactRecall": true,
+        "exactHit": {
+          "termId": "term-e9858de7bdaee696",
+          "domains": [
+            "tech_ai"
+          ],
+          "repairTarget": true,
+          "prior": 0.9
+        },
+        "edgeHits": [
+          {
+            "edgeId": "0:4",
+            "range": "0:4",
+            "source": "domain_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "termId": "term-e9858de7bdaee696",
+            "hitKind": "exact_term"
+          }
+        ],
+        "compoundInEdges": true,
+        "pathCount": 2,
+        "compoundPath": {
+          "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+          "includesCompoundEdge": true,
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "bucketDomains": [
+            "tech_ai"
+          ],
+          "bucketCount": 1,
+          "eligible": [
+            {
+              "replacement": "配置文件",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "range": "0:4",
+              "isCompound": true,
+              "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+              "domainSet": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          },
+          {
+            "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+            "includesCompoundEdge": true,
+            "domainScores": {
+              "tech_ai": 1
+            },
+            "retainedDomains": [
+              "tech_ai"
+            ],
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "bucketCount": 1,
+            "eligible": [
+              {
+                "replacement": "配置文件",
+                "source": "domain_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "range": "0:4",
+                "isCompound": true,
+                "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+                "domainSet": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "orchDomains": [],
+        "final": "配置文件"
+      },
+      "without": {
+        "pinyin_key": "pei|zhi|wen|jian",
+        "tone_pinyin_key": "pei4|zhi4|wen2|jian4",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "配置文件"
+      },
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {
+        "tech_ai": 1
+      },
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [
+        {
+          "replacement": "配置文件",
+          "source": "domain_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "range": "0:4",
+          "isCompound": true,
+          "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+          "domainSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "effectiveLost": [
+        "tech_ai"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "surface": "集成测试",
+      "segments": [
+        "集成",
+        "测试"
+      ],
+      "compoundDomains": [
+        "tech_ai"
+      ],
+      "segmentDomains": {
+        "集成": [],
+        "测试": []
+      },
+      "classification": "KEEP_DOMAIN_ATOMIC",
+      "reason": "Forced activation: compound enters domain_term Vote; deleting loses fine-domain presence; atoms cannot safely carry tags",
+      "with": {
+        "pinyin_key": "ji|cheng|ce|shi",
+        "tone_pinyin_key": "ji2|cheng2|ce4|shi4",
+        "exactRecall": true,
+        "exactHit": {
+          "termId": "term-e99b86e68890e6b5",
+          "domains": [
+            "tech_ai"
+          ],
+          "repairTarget": true,
+          "prior": 0.9
+        },
+        "edgeHits": [
+          {
+            "edgeId": "0:4",
+            "range": "0:4",
+            "source": "domain_term",
+            "domains": [
+              "tech_ai"
+            ],
+            "termId": "term-e99b86e68890e6b5",
+            "hitKind": "exact_term"
+          }
+        ],
+        "compoundInEdges": true,
+        "pathCount": 2,
+        "compoundPath": {
+          "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+          "includesCompoundEdge": true,
+          "domainScores": {
+            "tech_ai": 1
+          },
+          "retainedDomains": [
+            "tech_ai"
+          ],
+          "bucketDomains": [
+            "tech_ai"
+          ],
+          "bucketCount": 1,
+          "eligible": [
+            {
+              "replacement": "集成测试",
+              "source": "domain_term",
+              "domains": [
+                "tech_ai"
+              ],
+              "range": "0:4",
+              "isCompound": true,
+              "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+              "domainSet": [
+                "tech_ai"
+              ]
+            }
+          ]
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          },
+          {
+            "pathId": "7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab",
+            "includesCompoundEdge": true,
+            "domainScores": {
+              "tech_ai": 1
+            },
+            "retainedDomains": [
+              "tech_ai"
+            ],
+            "bucketDomains": [
+              "tech_ai"
+            ],
+            "bucketCount": 1,
+            "eligible": [
+              {
+                "replacement": "集成测试",
+                "source": "domain_term",
+                "domains": [
+                  "tech_ai"
+                ],
+                "range": "0:4",
+                "isCompound": true,
+                "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+                "domainSet": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ],
+        "orchDomains": [],
+        "final": "集成测试"
+      },
+      "without": {
+        "pinyin_key": "ji|cheng|ce|shi",
+        "tone_pinyin_key": "ji2|cheng2|ce4|shi4",
+        "exactRecall": false,
+        "exactHit": null,
+        "edgeHits": [],
+        "compoundInEdges": false,
+        "pathCount": 1,
+        "compoundPath": {
+          "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+          "includesCompoundEdge": false,
+          "domainScores": {},
+          "retainedDomains": [],
+          "bucketDomains": [
+            null
+          ],
+          "bucketCount": 1,
+          "eligible": []
+        },
+        "pathTraces": [
+          {
+            "pathId": "61a38ac6e35dade13b0351b557b7dae4dc64cddd3d007acdc9f08d951a7e14ef",
+            "includesCompoundEdge": false,
+            "domainScores": {},
+            "retainedDomains": [],
+            "bucketDomains": [
+              null
+            ],
+            "bucketCount": 1,
+            "eligible": []
+          }
+        ],
+        "orchDomains": [],
+        "final": "集成测试"
+      },
+      "withRetainedDomains": [
+        "tech_ai"
+      ],
+      "withoutRetainedDomains": [],
+      "withDomainScores": {
+        "tech_ai": 1
+      },
+      "withoutDomainScores": {},
+      "compoundVoteEligible": [
+        {
+          "replacement": "集成测试",
+          "source": "domain_term",
+          "domains": [
+            "tech_ai"
+          ],
+          "range": "0:4",
+          "isCompound": true,
+          "fineSpanId": "fine:7e492b9f7c5c219a02bf13efb3a312379224b371a02db537dda37c690882d8ab:0",
+          "domainSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "effectiveLost": [
+        "tech_ai"
+      ],
+      "lostDomains": [
+        "tech_ai"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4587 @@
+{
+  "harnessOnly": true,
+  "productionCutover": false,
+  "dualChain": false,
+  "note": "Phase 2 Path Enumeration harness on dialog_200 GT text — LTR production untouched",
+  "completed": 200,
+  "failed": 0,
+  "caseCount": 200,
+  "utterancesWithNoLexicalCompletePathCount": 200,
+  "utterancesWithNoLexicalCompletePath": [
+    "d001",
+    "d002",
+    "d003",
+    "d004",
+    "d005",
+    "d006",
+    "d007",
+    "d008",
+    "d009",
+    "d010",
+    "d011",
+    "d012",
+    "d013",
+    "d014",
+    "d015",
+    "d016",
+    "d017",
+    "d018",
+    "d019",
+    "d020",
+    "d021",
+    "d022",
+    "d023",
+    "d024",
+    "d025",
+    "d026",
+    "d027",
+    "d028",
+    "d029",
+    "d030",
+    "d031",
+    "d032",
+    "d033",
+    "d034",
+    "d035",
+    "d036",
+    "d037",
+    "d038",
+    "d039",
+    "d040",
+    "d041",
+    "d042",
+    "d043",
+    "d044",
+    "d045",
+    "d046",
+    "d047",
+    "d048",
+    "d049",
+    "d050",
+    "d051",
+    "d052",
+    "d053",
+    "d054",
+    "d055",
+    "d056",
+    "d057",
+    "d058",
+    "d059",
+    "d060",
+    "d061",
+    "d062",
+    "d063",
+    "d064",
+    "d065",
+    "d066",
+    "d067",
+    "d068",
+    "d069",
+    "d070",
+    "d071",
+    "d072",
+    "d073",
+    "d074",
+    "d075",
+    "d076",
+    "d077",
+    "d078",
+    "d079",
+    "d080",
+    "d081",
+    "d082",
+    "d083",
+    "d084",
+    "d085",
+    "d086",
+    "d087",
+    "d088",
+    "d089",
+    "d090",
+    "d091",
+    "d092",
+    "d093",
+    "d094",
+    "d095",
+    "d096",
+    "d097",
+    "d098",
+    "d099",
+    "d100",
+    "d101",
+    "d102",
+    "d103",
+    "d104",
+    "d105",
+    "d106",
+    "d107",
+    "d108",
+    "d109",
+    "d110",
+    "d111",
+    "d112",
+    "d113",
+    "d114",
+    "d115",
+    "d116",
+    "d117",
+    "d118",
+    "d119",
+    "d120",
+    "d121",
+    "d122",
+    "d123",
+    "d124",
+    "d125",
+    "d126",
+    "d127",
+    "d128",
+    "d129",
+    "d130",
+    "d131",
+    "d132",
+    "d133",
+    "d134",
+    "d135",
+    "d136",
+    "d137",
+    "d138",
+    "d139",
+    "d140",
+    "d141",
+    "d142",
+    "d143",
+    "d144",
+    "d145",
+    "d146",
+    "d147",
+    "d148",
+    "d149",
+    "d150",
+    "d151",
+    "d152",
+    "d153",
+    "d154",
+    "d155",
+    "d156",
+    "d157",
+    "d158",
+    "d159",
+    "d160",
+    "d161",
+    "d162",
+    "d163",
+    "d164",
+    "d165",
+    "d166",
+    "d167",
+    "d168",
+    "d169",
+    "d170",
+    "d171",
+    "d172",
+    "d173",
+    "d174",
+    "d175",
+    "d176",
+    "d177",
+    "d178",
+    "d179",
+    "d180",
+    "d181",
+    "d182",
+    "d183",
+    "d184",
+    "d185",
+    "d186",
+    "d187",
+    "d188",
+    "d189",
+    "d190",
+    "d191",
+    "d192",
+    "d193",
+    "d194",
+    "d195",
+    "d196",
+    "d197",
+    "d198",
+    "d199",
+    "d200"
+  ],
+  "utterancesWithFallbackCount": 200,
+  "utterancesWithFallback": [
+    {
+      "caseId": "d001",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 5
+        },
+        {
+          "start": 12,
+          "end": 16
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d002",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 13,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d003",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 17,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d004",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 28
+        },
+        {
+          "start": 30,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "caseId": "d005",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 30,
+          "end": 31
+        },
+        {
+          "start": 33,
+          "end": 35
+        }
+      ]
+    },
+    {
+      "caseId": "d006",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "caseId": "d007",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 8,
+          "end": 10
+        },
+        {
+          "start": 12,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 25,
+          "end": 26
+        },
+        {
+          "start": 28,
+          "end": 31
+        }
+      ]
+    },
+    {
+      "caseId": "d008",
+      "fallbackInjectionCount": 19,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 18
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d009",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 9,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d010",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d011",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d012",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 13
+        },
+        {
+          "start": 17,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d013",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d014",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 6
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        },
+        {
+          "start": 18,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d015",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 6,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d016",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d017",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 8
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d018",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d019",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 15,
+          "end": 16
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 29,
+          "end": 30
+        },
+        {
+          "start": 36,
+          "end": 38
+        }
+      ]
+    },
+    {
+      "caseId": "d020",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 19,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d021",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 20,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d022",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 22
+        },
+        {
+          "start": 24,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d023",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 12,
+          "end": 15
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d024",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d025",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d026",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 5,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 18,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d027",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d028",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d029",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d030",
+      "fallbackInjectionCount": 11,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d031",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d032",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 15,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d033",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d034",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        }
+      ]
+    },
+    {
+      "caseId": "d035",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d036",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d037",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d038",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d039",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d040",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 6,
+          "end": 11
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d041",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d042",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d043",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d044",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 19,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d045",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d046",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 5
+        },
+        {
+          "start": 15,
+          "end": 18
+        },
+        {
+          "start": 28,
+          "end": 29
+        }
+      ]
+    },
+    {
+      "caseId": "d047",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 13,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d048",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 17,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d049",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 28
+        },
+        {
+          "start": 30,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "caseId": "d050",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 30,
+          "end": 31
+        },
+        {
+          "start": 33,
+          "end": 35
+        }
+      ]
+    },
+    {
+      "caseId": "d051",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "caseId": "d052",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d053",
+      "fallbackInjectionCount": 20,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 10
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 21
+        },
+        {
+          "start": 25,
+          "end": 27
+        },
+        {
+          "start": 29,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d054",
+      "fallbackInjectionCount": 11,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d055",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d056",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d057",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d058",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d059",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 6
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        },
+        {
+          "start": 18,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d060",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 6,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d061",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d062",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 8
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d063",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d064",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 15,
+          "end": 16
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 29,
+          "end": 30
+        },
+        {
+          "start": 36,
+          "end": 38
+        }
+      ]
+    },
+    {
+      "caseId": "d065",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 19,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d066",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 20,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d067",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 22
+        },
+        {
+          "start": 24,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d068",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 12,
+          "end": 15
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d069",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d070",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d071",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 5,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 18,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d072",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d073",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d074",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d075",
+      "fallbackInjectionCount": 11,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d076",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d077",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 15,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d078",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d079",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        }
+      ]
+    },
+    {
+      "caseId": "d080",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d081",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d082",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d083",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d084",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d085",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 6,
+          "end": 11
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d086",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d087",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d088",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d089",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 19,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d090",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d091",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 5
+        },
+        {
+          "start": 13,
+          "end": 17
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 26
+        }
+      ]
+    },
+    {
+      "caseId": "d092",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 15,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d093",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 11,
+          "end": 13
+        },
+        {
+          "start": 16,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d094",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 28
+        },
+        {
+          "start": 30,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "caseId": "d095",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 30,
+          "end": 31
+        },
+        {
+          "start": 33,
+          "end": 35
+        }
+      ]
+    },
+    {
+      "caseId": "d096",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "caseId": "d097",
+      "fallbackInjectionCount": 12,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 19
+        },
+        {
+          "start": 23,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 29
+        }
+      ]
+    },
+    {
+      "caseId": "d098",
+      "fallbackInjectionCount": 19,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 18
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d099",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d100",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d101",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d102",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 13
+        },
+        {
+          "start": 17,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d103",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d104",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 6
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        },
+        {
+          "start": 18,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d105",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 6,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d106",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d107",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 8
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d108",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d109",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 15,
+          "end": 16
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 29,
+          "end": 30
+        },
+        {
+          "start": 36,
+          "end": 38
+        }
+      ]
+    },
+    {
+      "caseId": "d110",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 19,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d111",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 20,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d112",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 22
+        },
+        {
+          "start": 24,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d113",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 12,
+          "end": 15
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d114",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d115",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d116",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 5,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 18,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d117",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d118",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d119",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d120",
+      "fallbackInjectionCount": 11,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d121",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d122",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 15,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d123",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d124",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        }
+      ]
+    },
+    {
+      "caseId": "d125",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d126",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d127",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d128",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d129",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d130",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 6,
+          "end": 11
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d131",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d132",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d133",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d134",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 19,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d135",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d136",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 13,
+          "end": 17
+        },
+        {
+          "start": 25,
+          "end": 26
+        }
+      ]
+    },
+    {
+      "caseId": "d137",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 14,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d138",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 15,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d139",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 28
+        },
+        {
+          "start": 30,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "caseId": "d140",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 30,
+          "end": 31
+        },
+        {
+          "start": 33,
+          "end": 35
+        }
+      ]
+    },
+    {
+      "caseId": "d141",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "caseId": "d142",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 17
+        },
+        {
+          "start": 21,
+          "end": 22
+        },
+        {
+          "start": 24,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d143",
+      "fallbackInjectionCount": 20,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 10
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 21
+        },
+        {
+          "start": 25,
+          "end": 27
+        },
+        {
+          "start": 29,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d144",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 7
+        },
+        {
+          "start": 9,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 18
+        },
+        {
+          "start": 20,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d145",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d146",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d147",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d148",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d149",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 6
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        },
+        {
+          "start": 18,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d150",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 6,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d151",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d152",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 8
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d153",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d154",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 15,
+          "end": 16
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 29,
+          "end": 30
+        },
+        {
+          "start": 36,
+          "end": 38
+        }
+      ]
+    },
+    {
+      "caseId": "d155",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 19,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "caseId": "d156",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 20,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d157",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 22
+        },
+        {
+          "start": 24,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d158",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 12,
+          "end": 15
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d159",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d160",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d161",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 5,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 18,
+          "end": 22
+        }
+      ]
+    },
+    {
+      "caseId": "d162",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d163",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d164",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d165",
+      "fallbackInjectionCount": 11,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d166",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d167",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 15,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d168",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d169",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 8,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        }
+      ]
+    },
+    {
+      "caseId": "d170",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d171",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 9,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d172",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 10
+        },
+        {
+          "start": 14,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d173",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d174",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 16,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d175",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 6,
+          "end": 11
+        },
+        {
+          "start": 17,
+          "end": 18
+        }
+      ]
+    },
+    {
+      "caseId": "d176",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d177",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 4
+        },
+        {
+          "start": 8,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 16
+        }
+      ]
+    },
+    {
+      "caseId": "d178",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 19
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d179",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 3
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 19,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d180",
+      "fallbackInjectionCount": 7,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d181",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 5
+        },
+        {
+          "start": 12,
+          "end": 16
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d182",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 5
+        },
+        {
+          "start": 15,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d183",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 4
+        },
+        {
+          "start": 10,
+          "end": 12
+        },
+        {
+          "start": 15,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d184",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 4,
+          "end": 6
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 17
+        },
+        {
+          "start": 19,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 28
+        },
+        {
+          "start": 30,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "caseId": "d185",
+      "fallbackInjectionCount": 17,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 7
+        },
+        {
+          "start": 11,
+          "end": 15
+        },
+        {
+          "start": 17,
+          "end": 20
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 30,
+          "end": 31
+        },
+        {
+          "start": 33,
+          "end": 35
+        }
+      ]
+    },
+    {
+      "caseId": "d186",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 14
+        },
+        {
+          "start": 16,
+          "end": 20
+        },
+        {
+          "start": 24,
+          "end": 25
+        },
+        {
+          "start": 27,
+          "end": 28
+        }
+      ]
+    },
+    {
+      "caseId": "d187",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 8,
+          "end": 10
+        },
+        {
+          "start": 12,
+          "end": 16
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 25,
+          "end": 26
+        },
+        {
+          "start": 28,
+          "end": 31
+        }
+      ]
+    },
+    {
+      "caseId": "d188",
+      "fallbackInjectionCount": 19,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 18
+        },
+        {
+          "start": 22,
+          "end": 24
+        },
+        {
+          "start": 26,
+          "end": 27
+        }
+      ]
+    },
+    {
+      "caseId": "d189",
+      "fallbackInjectionCount": 9,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 9,
+          "end": 13
+        },
+        {
+          "start": 15,
+          "end": 17
+        }
+      ]
+    },
+    {
+      "caseId": "d190",
+      "fallbackInjectionCount": 16,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d191",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 3,
+          "end": 5
+        },
+        {
+          "start": 7,
+          "end": 8
+        },
+        {
+          "start": 10,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d192",
+      "fallbackInjectionCount": 8,
+      "fallbackInjectionRanges": [
+        {
+          "start": 10,
+          "end": 13
+        },
+        {
+          "start": 17,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "caseId": "d193",
+      "fallbackInjectionCount": 14,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 13
+        },
+        {
+          "start": 19,
+          "end": 20
+        }
+      ]
+    },
+    {
+      "caseId": "d194",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 6
+        },
+        {
+          "start": 9,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 15
+        },
+        {
+          "start": 18,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d195",
+      "fallbackInjectionCount": 13,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 2
+        },
+        {
+          "start": 6,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 14
+        },
+        {
+          "start": 18,
+          "end": 21
+        },
+        {
+          "start": 23,
+          "end": 25
+        }
+      ]
+    },
+    {
+      "caseId": "d196",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 2,
+          "end": 3
+        },
+        {
+          "start": 5,
+          "end": 12
+        },
+        {
+          "start": 14,
+          "end": 19
+        },
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    {
+      "caseId": "d197",
+      "fallbackInjectionCount": 5,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 8
+        },
+        {
+          "start": 12,
+          "end": 14
+        },
+        {
+          "start": 20,
+          "end": 21
+        }
+      ]
+    },
+    {
+      "caseId": "d198",
+      "fallbackInjectionCount": 15,
+      "fallbackInjectionRanges": [
+        {
+          "start": 0,
+          "end": 1
+        },
+        {
+          "start": 3,
+          "end": 11
+        },
+        {
+          "start": 13,
+          "end": 19
+        }
+      ]
+    },
+    {
+      "caseId": "d199",
+      "fallbackInjectionCount": 6,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 15,
+          "end": 16
+        },
+        {
+          "start": 22,
+          "end": 23
+        },
+        {
+          "start": 29,
+          "end": 30
+        },
+        {
+          "start": 36,
+          "end": 38
+        }
+      ]
+    },
+    {
+      "caseId": "d200",
+      "fallbackInjectionCount": 10,
+      "fallbackInjectionRanges": [
+        {
+          "start": 6,
+          "end": 7
+        },
+        {
+          "start": 19,
+          "end": 23
+        },
+        {
+          "start": 25,
+          "end": 30
+        }
+      ]
+    }
+  ],
+  "fallbackEdgeCount": {
+    "sum": 2042,
+    "avg": 10.21
+  },
+  "completePathCountBeforePruneDistribution": {
+    "1": 172,
+    "2": 20,
+    "4": 8
+  },
+  "retainedPathCountDistribution": {
+    "1": 172,
+    "2": 20,
+    "4": 8
+  },
+  "capTriggeredCasesCount": 0,
+  "capTriggeredCases": [],
+  "perPositionCapTriggeredCasesCount": 0,
+  "perPositionCapTriggeredCases": [],
+  "completeCapTriggeredCasesCount": 0,
+  "completeCapTriggeredCases": [],
+  "zeroCompletePathCases": [],
+  "highPathCountCases": [],
+  "uniqueBoundaryKeyViolations": [],
+  "unstablePathIdViolations": [],
+  "candidateReferenceCopyViolations": [],
+  "latencyMs": {
+    "p50": 87.56679999828339,
+    "p95": 153.9675999879837,
+    "p99": 196.1349000930786,
+    "totalMs": 18851.045699954033
+  },
+  "memory": {
+    "heapStartBytes": 76707260,
+    "heapEndBytes": 96301060,
+    "heapDeltaBytes": 19593800
+  }
+}

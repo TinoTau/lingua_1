@@ -1,0 +1,1543 @@
+{
+  "case": {
+    "id": "d003",
+    "fileNum": "003",
+    "scenario": "cafe",
+    "rawText": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-6|6-8|8-10|10-12|12-13|13-14|14-15|15-17|17-19",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "这",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "款",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+          "rawRange": [
+            4,
+            6
+          ],
+          "rawText": "燕麦",
+          "syllableRange": [
+            4,
+            6
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "bakery",
+            "coffee"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+          "rawRange": [
+            6,
+            8
+          ],
+          "rawText": "拿铁",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "coffee"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+          "rawRange": [
+            8,
+            10
+          ],
+          "rawText": "可以",
+          "syllableRange": [
+            8,
+            10
+          ],
+          "coarseSpanIds": [
+            "c2"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "medical"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+          "rawRange": [
+            10,
+            12
+          ],
+          "rawText": "少冰",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c3"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:8",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:9",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:10",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "赶",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+          "rawRange": [
+            16,
+            18
+          ],
+          "rawText": "时间",
+          "syllableRange": [
+            15,
+            17
+          ],
+          "coarseSpanIds": [
+            "c6"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "coffee",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+          "rawRange": [
+            19,
+            21
+          ],
+          "rawText": "小杯",
+          "syllableRange": [
+            17,
+            19
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "pathId": "d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9",
+          "fineSpanDomainSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "4:6:1",
+          "word": "燕麦",
+          "surface": "燕麦",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            4,
+            6
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "bakery"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "bakery"
+          ]
+        },
+        {
+          "candidateId": "4:6:2",
+          "word": "燕麦",
+          "surface": "燕麦",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            4,
+            6
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "bakery"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "bakery"
+          ]
+        },
+        {
+          "candidateId": "4:6:3",
+          "word": "燕麦",
+          "surface": "燕麦",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            4,
+            6
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+          "candidateRank": 3,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "6:8:4",
+          "word": "拿铁",
+          "surface": "拿铁",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            6,
+            8
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "6:8:5",
+          "word": "拿铁",
+          "surface": "拿铁",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            6,
+            8
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "6:8:6",
+          "word": "拿铁",
+          "surface": "拿铁",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            6,
+            8
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "8:10:7",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            8,
+            10
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+          "candidateRank": 1,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "8:10:8",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            8,
+            10
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "8:10:9",
+          "word": "科医",
+          "surface": "科医",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            8,
+            10
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+          "candidateRank": 3,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "medical"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "medical"
+          ]
+        },
+        {
+          "candidateId": "10:12:10",
+          "word": "少冰",
+          "surface": "少冰",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+          "candidateRank": 1,
+          "score": 2.38,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "candidateId": "10:12:11",
+          "word": "少冰",
+          "surface": "少冰",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            10,
+            12
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+          "candidateRank": 2,
+          "score": 2.36,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order",
+            "milk_tea"
+          ]
+        },
+        {
+          "candidateId": "15:17:12",
+          "word": "时间",
+          "surface": "时间",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            18
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+          "candidateRank": 1,
+          "score": 2.04,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "15:17:13",
+          "word": "时间",
+          "surface": "时间",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            18
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+          "candidateRank": 2,
+          "score": 2.04,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "15:17:14",
+          "word": "时间",
+          "surface": "时间",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            18
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+          "candidateRank": 3,
+          "score": 2.006,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee"
+          ]
+        },
+        {
+          "candidateId": "17:19:15",
+          "word": "小杯",
+          "surface": "小杯",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            19,
+            21
+          ],
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+          "candidateRank": 1,
+          "score": 2.38,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [],
+        [],
+        [
+          "bakery",
+          "coffee"
+        ],
+        [
+          "coffee"
+        ],
+        [
+          "medical"
+        ],
+        [
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ],
+        [],
+        [],
+        [],
+        [
+          "coffee",
+          "tourism_hotel"
+        ],
+        [
+          "coffee",
+          "food_order",
+          "milk_tea"
+        ]
+      ],
+      "contributionsByDomain": {
+        "bakery": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "4:6:1",
+                "word": "燕麦",
+                "domainsAdded": [
+                  "bakery"
+                ]
+              },
+              {
+                "candidateId": "4:6:2",
+                "word": "燕麦",
+                "domainsAdded": [
+                  "bakery"
+                ]
+              }
+            ]
+          }
+        ],
+        "coffee": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "4:6:3",
+                "word": "燕麦",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "6:8:4",
+                "word": "拿铁",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              },
+              {
+                "candidateId": "6:8:5",
+                "word": "拿铁",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              },
+              {
+                "candidateId": "6:8:6",
+                "word": "拿铁",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:10",
+                "word": "少冰",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:17:14",
+                "word": "时间",
+                "domainsAdded": [
+                  "coffee"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "17:19:15",
+                "word": "小杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "medical": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "8:10:7",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              },
+              {
+                "candidateId": "8:10:8",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              },
+              {
+                "candidateId": "8:10:9",
+                "word": "科医",
+                "domainsAdded": [
+                  "medical"
+                ]
+              }
+            ]
+          }
+        ],
+        "food_order": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:10",
+                "word": "少冰",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              },
+              {
+                "candidateId": "10:12:11",
+                "word": "少冰",
+                "domainsAdded": [
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "17:19:15",
+                "word": "小杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "milk_tea": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "10:12:10",
+                "word": "少冰",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              },
+              {
+                "candidateId": "10:12:11",
+                "word": "少冰",
+                "domainsAdded": [
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "17:19:15",
+                "word": "小杯",
+                "domainsAdded": [
+                  "coffee",
+                  "food_order",
+                  "milk_tea"
+                ]
+              }
+            ]
+          }
+        ],
+        "tourism_hotel": [
+          {
+            "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:17:12",
+                "word": "时间",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              },
+              {
+                "candidateId": "15:17:13",
+                "word": "时间",
+                "domainsAdded": [
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "bakery": 1,
+        "coffee": 5,
+        "medical": 1,
+        "food_order": 2,
+        "milk_tea": 2,
+        "tourism_hotel": 1
+      },
+      "productionVote": {
+        "domainScores": {
+          "bakery": 1,
+          "coffee": 5,
+          "medical": 1,
+          "food_order": 2,
+          "milk_tea": 2,
+          "tourism_hotel": 1
+        },
+        "retainedDomains": [
+          "coffee"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 5,
+        "runnerUpCount": 2,
+        "isTie": false,
+        "utteranceDomain": "coffee",
+        "winnerScore": 5,
+        "voteMargin": 3,
+        "parentTermVoteCount": 15
+      },
+      "replayVote": {
+        "domainScores": {
+          "bakery": 1,
+          "coffee": 5,
+          "medical": 1,
+          "food_order": 2,
+          "milk_tea": 2,
+          "tourism_hotel": 1
+        },
+        "retainedDomains": [
+          "coffee"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 5
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "coffee",
+          "rawVoteScore": 5,
+          "adjustedScore": 5,
+          "evidenceFineSpanCount": 5,
+          "evidenceCandidateCount": 7,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+              "candidateId": "4:6:3",
+              "word": "燕麦"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+              "candidateId": "6:8:4",
+              "word": "拿铁"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+              "candidateId": "6:8:5",
+              "word": "拿铁"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:5",
+              "candidateId": "6:8:6",
+              "word": "拿铁"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+              "candidateId": "10:12:10",
+              "word": "少冰"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+              "candidateId": "15:17:14",
+              "word": "时间"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+              "candidateId": "17:19:15",
+              "word": "小杯"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 5,
+            "domainScore": 5,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=5"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "food_order",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+              "candidateId": "10:12:10",
+              "word": "少冰"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+              "candidateId": "10:12:11",
+              "word": "少冰"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+              "candidateId": "17:19:15",
+              "word": "小杯"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 5,
+            "domainScore": 2,
+            "scoreRatio": 0.4,
+            "absoluteGap": 3,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=2"
+          }
+        },
+        {
+          "rank": 3,
+          "domain": "milk_tea",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+              "candidateId": "10:12:10",
+              "word": "少冰"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+              "candidateId": "10:12:11",
+              "word": "少冰"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+              "candidateId": "17:19:15",
+              "word": "小杯"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 5,
+            "domainScore": 2,
+            "scoreRatio": 0.4,
+            "absoluteGap": 3,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=2"
+          }
+        },
+        {
+          "rank": 4,
+          "domain": "bakery",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+              "candidateId": "4:6:1",
+              "word": "燕麦"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:4",
+              "candidateId": "4:6:2",
+              "word": "燕麦"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 5,
+            "domainScore": 1,
+            "scoreRatio": 0.2,
+            "absoluteGap": 4,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=1"
+          }
+        },
+        {
+          "rank": 5,
+          "domain": "medical",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 3,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+              "candidateId": "8:10:7",
+              "word": "科医"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+              "candidateId": "8:10:8",
+              "word": "科医"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:6",
+              "candidateId": "8:10:9",
+              "word": "科医"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 5,
+            "domainScore": 1,
+            "scoreRatio": 0.2,
+            "absoluteGap": 4,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=1"
+          }
+        },
+        {
+          "rank": 6,
+          "domain": "tourism_hotel",
+          "rawVoteScore": 1,
+          "adjustedScore": 1,
+          "evidenceFineSpanCount": 1,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+              "candidateId": "15:17:12",
+              "word": "时间"
+            },
+            {
+              "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:11",
+              "candidateId": "15:17:13",
+              "word": "时间"
+            }
+          ],
+          "retention": {
+            "retained": "NO",
+            "reasonCode": "BELOW_RATIO_THRESHOLD",
+            "topScore": 5,
+            "domainScore": 1,
+            "scoreRatio": 0.2,
+            "absoluteGap": 4,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=1"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "coffee"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "coffee"
+      ],
+      "bucketDomainsFromVote": [
+        "coffee"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [
+        {
+          "candidateId": "10:12:10",
+          "word": "少冰",
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        },
+        {
+          "candidateId": "10:12:11",
+          "word": "少冰",
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:7",
+          "domainTags": [
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        },
+        {
+          "candidateId": "17:19:15",
+          "word": "小杯",
+          "fineSpanId": "fine:d3b0c80be0f5aa88906967ab1e839c46c7e72e06bd780e4feff1fa08a9f6b0a9:12",
+          "domainTags": [
+            "coffee",
+            "food_order",
+            "milk_tea"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        }
+      ],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

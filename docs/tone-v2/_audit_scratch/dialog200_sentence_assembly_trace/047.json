@@ -1,0 +1,469 @@
+{
+  "caseId": "d047",
+  "fileNum": "047",
+  "rawText": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+  "scenario": "cafe",
+  "retainedDomains": [
+    "milk_tea"
+  ],
+  "domainScores": {
+    "milk_tea": 3,
+    "bakery": 1,
+    "coffee": 2,
+    "food_order": 2
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562",
+      "domainId": "milk_tea",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "麻",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "麻"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "烦",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "烦"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "帮",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "帮"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "我",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "我"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "做",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "做"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "一",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "杯",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "红茶",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:7",
+          "sameDomain": [
+            "红茶",
+            "红茶"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "红茶"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "带走",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:8",
+          "sameDomain": [
+            "带走"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "带走"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "大杯",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:9",
+          "sameDomain": [
+            "大杯"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "大杯"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "就",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "就"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "行",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "行"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "谢",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "谢",
+          "fineSpanId": "fine:867a50d5d8c7de1e31ac489575a564e7821f7fb90f30c806fe07ede6f7d3e562:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "谢"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "麻"
+        ],
+        [
+          "烦"
+        ],
+        [
+          "帮"
+        ],
+        [
+          "我"
+        ],
+        [
+          "做"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "红茶"
+        ],
+        [
+          "带走"
+        ],
+        [
+          "大杯"
+        ],
+        [
+          "就"
+        ],
+        [
+          "行"
+        ],
+        [
+          "谢"
+        ],
+        [
+          "谢"
+        ]
+      ],
+      "assemblyTexts": [
+        "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+      "replacements": [
+        {
+          "span": {
+            "text": "红茶",
+            "start": 7,
+            "end": 9
+          },
+          "word": "红茶",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "带走",
+            "start": 9,
+            "end": 11
+          },
+          "word": "带走",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "大杯",
+            "start": 12,
+            "end": 14
+          },
+          "word": "大杯",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.38,
+          "repairTarget": true,
+          "candidateScore": 2.38
+        },
+        {
+          "span": {
+            "text": "麻",
+            "start": 0,
+            "end": 1
+          },
+          "word": "麻",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "烦",
+            "start": 1,
+            "end": 2
+          },
+          "word": "烦",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "帮",
+            "start": 2,
+            "end": 3
+          },
+          "word": "帮",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我",
+            "start": 3,
+            "end": 4
+          },
+          "word": "我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "做",
+            "start": 4,
+            "end": 5
+          },
+          "word": "做",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 5,
+            "end": 6
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "杯",
+            "start": 6,
+            "end": 7
+          },
+          "word": "杯",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "就",
+            "start": 14,
+            "end": 15
+          },
+          "word": "就",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "行",
+            "start": 15,
+            "end": 16
+          },
+          "word": "行",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 17,
+            "end": 18
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "谢",
+            "start": 18,
+            "end": 19
+          },
+          "word": "谢",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 7.09
+    }
+  ],
+  "kenlmInputTexts": [
+    "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+    ],
+    "actual": [
+      "麻烦帮我做一杯红茶带走，大杯就行，谢谢。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

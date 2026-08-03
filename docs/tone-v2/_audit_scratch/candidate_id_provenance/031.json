@@ -1,0 +1,410 @@
+{
+  "caseId": "d031",
+  "rawText": "我预订的是大床房，能安排安静一点的楼层吗？",
+  "stages": {
+    "pool": {
+      "present": 5,
+      "absent": 0,
+      "ids": [
+        "1:3:1",
+        "5:8:3",
+        "9:11:6",
+        "9:11:7",
+        "9:11:8"
+      ]
+    },
+    "bucket": {
+      "present": 4,
+      "absent": 0
+    },
+    "budget": {
+      "present": 15,
+      "absent": 0
+    },
+    "domainAwarePick": {
+      "present": 15,
+      "absent": 0
+    },
+    "spanReplacement": {
+      "present": 0,
+      "absent": 15,
+      "nullish": 15
+    },
+    "sentenceReplacement": {
+      "present": 0,
+      "absent": 15,
+      "nullish": 15,
+      "repairPresent": 0,
+      "repairAbsent": 3
+    },
+    "crossPath": {
+      "present": 0,
+      "absent": 15,
+      "nullish": 15
+    },
+    "kenlmInput": {
+      "present": 0,
+      "absent": 15,
+      "nullish": 15
+    },
+    "jobResultProjection": {
+      "note": "PROBE: no full JobResult; fw_detector.replacements has NO candidateId field; sentenceRerank.topCandidates.candidateId is synthetic candidate:i / raw; sentenceRerank.picked.replacements.candidateId would inherit SpanReplacementPick (currently ABSENT after mapper)",
+      "fwDetectorReplacementDiagHasCandidateId": false,
+      "topCandidatesCandidateIdKind": "SYNTHETIC_INDEX",
+      "pickedReplacementCandidateId": "WOULD_BE_ABSENT_IF_PICKED_FROM_CURRENT_CHAIN",
+      "countPresent": 0
+    }
+  },
+  "mapperLoss": [
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:0",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:0",
+      "inputWord": "我",
+      "inputRange": [
+        0,
+        1
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:1",
+      "inputCandidateId": "1:3:1",
+      "inputWord": "预订",
+      "inputRange": [
+        1,
+        3
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:2",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:2",
+      "inputWord": "的",
+      "inputRange": [
+        3,
+        4
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:3",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:3",
+      "inputWord": "是",
+      "inputRange": [
+        4,
+        5
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:4",
+      "inputCandidateId": "5:8:3",
+      "inputWord": "大床房",
+      "inputRange": [
+        5,
+        8
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:5",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:5",
+      "inputWord": "能",
+      "inputRange": [
+        9,
+        10
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:6",
+      "inputCandidateId": "9:11:6",
+      "inputWord": "安排",
+      "inputRange": [
+        10,
+        12
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:7",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:7",
+      "inputWord": "安",
+      "inputRange": [
+        12,
+        13
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:8",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:8",
+      "inputWord": "静",
+      "inputRange": [
+        13,
+        14
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:9",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:9",
+      "inputWord": "一",
+      "inputRange": [
+        14,
+        15
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:10",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:10",
+      "inputWord": "点",
+      "inputRange": [
+        15,
+        16
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:11",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:11",
+      "inputWord": "的",
+      "inputRange": [
+        16,
+        17
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:12",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:12",
+      "inputWord": "楼",
+      "inputRange": [
+        17,
+        18
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:13",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:13",
+      "inputWord": "层",
+      "inputRange": [
+        18,
+        19
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0",
+      "bucketDomain": "tourism_hotel",
+      "fineSpanId": "fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:14",
+      "inputCandidateId": "canonical:fine:0f1b0bab3dbe84cb6e062d9358983f0b8121ebf7757d2db143133f0308c372c0:14",
+      "inputWord": "吗",
+      "inputRange": [
+        19,
+        20
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    }
+  ],
+  "matchKeyCollisions": [
+    {
+      "matchKey": "10:12:安排",
+      "ids": [
+        "9:11:6",
+        "9:11:7",
+        "9:11:8"
+      ]
+    }
+  ],
+  "sameRangeSurfaceDifferentId": [
+    {
+      "matchKey": "10:12:安排",
+      "ids": [
+        "9:11:6",
+        "9:11:7",
+        "9:11:8"
+      ]
+    }
+  ],
+  "sameIdDifferentRange": [],
+  "sameIdDifferentSurface": [],
+  "idStability": {
+    "bucketChanged": 0,
+    "budgetChanged": 0
+  },
+  "pathCount": 1,
+  "kenlmInputCount": 1,
+  "anomalyTypes": [
+    "C5",
+    "C6",
+    "C17",
+    "C8",
+    "C13"
+  ]
+}

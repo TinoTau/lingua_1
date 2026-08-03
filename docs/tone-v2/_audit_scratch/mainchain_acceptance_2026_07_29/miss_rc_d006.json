@@ -1,0 +1,51 @@
+{
+  "id": "d006",
+  "raw": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+  "asrToneSliceCount": 26,
+  "diagToneSliceCount": 26,
+  "wordTimeSpanBuilt": 26,
+  "wordTimeSpanMapped": 26,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一下",
+      "pinyinKey": "yi|xia",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        1,
+        1
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 5.36,
+        "end": 5.74
+      },
+      "replayWindowTime": {
+        "start": 5.36,
+        "end": 5.74
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 28,
+    "theoreticalWindows2to5": 102,
+    "theoreticalWindows1to5": 130
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

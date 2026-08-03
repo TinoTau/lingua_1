@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-07-27",
+  "uniqueEntry": "recallSpanTopKV2",
+  "file": "main/src/lexicon-v2/recall-span-topk-v2.ts",
+  "pseudocode": [
+    "if topK<=0 or syllables empty: return empty",
+    "if length < 1 or length > 5: return empty",
+    "if length == 1:",
+    "  effectiveTopK = min(topK, 1)  // hard max 2 only if explicitly requested later; default 1",
+    "  fuzzyRecallEnabled forced false",
+    "  variants = [exact only]",
+    "  baseHits = lookupBaseByPinyinKey(+ optional tone composite)",
+    "  filter: enabled, word.length===1, prior>0, prior>=caller minPrior applied downstream",
+    "  ambiguity policy:",
+    "    if tone_exact available: keep tone_exact winners only, cap 1",
+    "    else if surfaceText exact match unique among baseHits: keep that one",
+    "    else if plain pinyin unique after prior/enabled filter: keep that one",
+    "    else: return empty (ambiguous plain)",
+    "  map hits with recallCandidateKind=exact_base; no domain merge",
+    "  return",
+    "else: // 2..5",
+    "  existing flow unchanged (fuzzy optional, collectTier base+domain+idiom, etc.)"
+  ],
+  "reuse": [
+    "LexiconRuntimeV2.lookupBaseByPinyinKey",
+    "lookupBaseByPinyinKeyToneComposite if tone pattern present",
+    "scoreHotword / computeCandidateScore for exact_base",
+    "resolveWindowCandidateSource"
+  ],
+  "mustNotUseForLength1": [
+    "lookupDomainByPinyinKey / lookupDomainsByPinyinKeyMulti",
+    "lookupIdiomByPinyinKey",
+    "buildFuzzyPinyinVariants / fuzzy path",
+    "lookupParentFragments (V3) — already gated <2 KEEP"
+  ],
+  "parameters": {
+    "noNewPublicAPIRequired": true,
+    "callSiteHint": "recallTopKForWindows should pass exactTopK=1 for syllableLength===1 so cache key matches cap"
+  },
+  "candidateShape": {
+    "replacement": "我",
+    "source": "base_term",
+    "domains": "undefined or empty → resolveGraphSource → base_term",
+    "hitKind": "exact_term",
+    "recallCandidateKind": "exact_base",
+    "repairTarget": false,
+    "syllableStart_end": "window range length 1",
+    "note": "WindowCandidate has source: GraphEdgeSource, not a domain field named domain"
+  },
+  "candidateCapLocation": {
+    "uniqueChoice": "A",
+    "primary": "recallSpanTopKV2 length==1 branch forces effectiveTopK<=1",
+    "secondary": "recallTopKForWindows passes exactTopK=1 for len=1 (cache key + diagnostics)",
+    "reject": "C post-truncation alone (wastes SQL; unstable if SQL returns >1 then truncate without ambiguity rule)"
+  },
+  "tonePlainPolicy": {
+    "withToneEvidence": "tone_exact first; cap 1",
+    "withoutToneSurfaceExact": "keep if unique surface match",
+    "plainUnique": "allow",
+    "plainAmbiguousCountGt1": "return none — do not Top1 guess",
+    "fuzzy": "off",
+    "alias": "off",
+    "homophone_variant": "off"
+  }
+}

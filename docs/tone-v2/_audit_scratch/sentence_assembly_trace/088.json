@@ -1,0 +1,5049 @@
+{
+  "caseId": "d088",
+  "fileNum": "088",
+  "scenario": "lexicon_homophone",
+  "rawText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+  "pathCount": 2,
+  "maxSentenceCandidates": 16,
+  "perSpanLimitRule": "getPerSpanCandidateLimit: <=1→8, 2→6, else→4",
+  "v4Limits": {
+    "maxIntervalEnumNodes": 1024,
+    "maxIntervalRepairPicksPerPath": 16
+  },
+  "paths": [
+    {
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "pathIndex": 0,
+      "pathSource": "SegmentationPath/Lattice",
+      "pathScore": "NOT PRESENT IN PRODUCTION TYPE",
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-13|13-14|14-16|16-17|17-18|18-19|19-21|21-23|23-25",
+      "fineSpanCount": 20,
+      "bucketCount": 1,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 0,
+          "rawOrderIndex": 0
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "们",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 1,
+          "rawOrderIndex": 1
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 2,
+          "rawOrderIndex": 2
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "午",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 3,
+          "rawOrderIndex": 3
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "讨",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 4,
+          "rawOrderIndex": 4
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "论",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 5,
+          "rawOrderIndex": 5
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+          "rawRange": [
+            6,
+            8
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c3"
+          ],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 6,
+          "rawOrderIndex": 6
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:7",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "声",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 7,
+          "rawOrderIndex": 7
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 8,
+          "rawOrderIndex": 8
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:9",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "方",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 9,
+          "rawOrderIndex": 9
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "案",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 10,
+          "rawOrderIndex": 10
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "先",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 11,
+          "rawOrderIndex": 11
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "把",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 12,
+          "rawOrderIndex": 12
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:13",
+          "rawRange": [
+            15,
+            17
+          ],
+          "rawText": "候选",
+          "syllableRange": [
+            14,
+            16
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 13,
+          "rawOrderIndex": 13
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 14,
+          "rawOrderIndex": 14
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:15",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "成",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 15,
+          "rawOrderIndex": 15
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:16",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "的",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 16,
+          "rawOrderIndex": 16
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+          "rawRange": [
+            20,
+            22
+          ],
+          "rawText": "接口",
+          "syllableRange": [
+            19,
+            21
+          ],
+          "coarseSpanIds": [
+            "c9"
+          ],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 17,
+          "rawOrderIndex": 17
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:18",
+          "rawRange": [
+            22,
+            24
+          ],
+          "rawText": "文档",
+          "syllableRange": [
+            21,
+            23
+          ],
+          "coarseSpanIds": [
+            "c10"
+          ],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 18,
+          "rawOrderIndex": 18
+        },
+        {
+          "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19",
+          "rawRange": [
+            24,
+            26
+          ],
+          "rawText": "补齐",
+          "syllableRange": [
+            23,
+            25
+          ],
+          "coarseSpanIds": [
+            "c11"
+          ],
+          "overlapGroupId": null,
+          "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+          "productionIndex": 19,
+          "rawOrderIndex": 19
+        }
+      ],
+      "pathFineOverlap": [],
+      "buckets": [
+        {
+          "bucketId": "p0_b0",
+          "bucketDomain": "tech_ai",
+          "sourceRetainedDomain": "tech_ai",
+          "fineSpanIds": [
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:0",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:1",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:2",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:3",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:4",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:5",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:7",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:8",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:9",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:10",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:11",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:12",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:13",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:14",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:15",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:16",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:18",
+            "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19"
+          ],
+          "baseCandidateCount": 0,
+          "domainCandidateCount": 9,
+          "canonicalCandidateCount": 17,
+          "rawFallbackCount": 0,
+          "assemblyDropTraces": [],
+          "perSpanBudget": [
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:0",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:0",
+                  "word": "我",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:1",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:1",
+                  "word": "们",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:2",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:2",
+                  "word": "下",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:3",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:3",
+                  "word": "午",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:4",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:4",
+                  "word": "讨",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:5",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:5",
+                  "word": "论",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+              "before": [
+                {
+                  "id": "6:8:1",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "6:8:2",
+                  "word": "候选",
+                  "score": 2.35
+                }
+              ],
+              "after": [
+                {
+                  "id": "6:8:1",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+                  "word": "后选",
+                  "score": 0
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "6:8:2",
+                  "word": "候选",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:7",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:7",
+                  "word": "声",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:8",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:8",
+                  "word": "城",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:9",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:9",
+                  "word": "方",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:10",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:10",
+                  "word": "案",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:11",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:11",
+                  "word": "先",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:12",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:12",
+                  "word": "把",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:13",
+              "before": [
+                {
+                  "id": "14:16:3",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "14:16:4",
+                  "word": "候选",
+                  "score": 2.35
+                }
+              ],
+              "after": [
+                {
+                  "id": "14:16:3",
+                  "word": "候选",
+                  "score": 2.42
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "14:16:4",
+                  "word": "候选",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:14",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:14",
+                  "word": "生",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:15",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:15",
+                  "word": "成",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:16",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:16",
+                  "word": "的",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+              "before": [
+                {
+                  "id": "19:21:5",
+                  "word": "接口",
+                  "score": 2.42
+                },
+                {
+                  "id": "19:21:6",
+                  "word": "接口",
+                  "score": 2.4
+                },
+                {
+                  "id": "19:21:7",
+                  "word": "接口",
+                  "score": 2.4
+                }
+              ],
+              "after": [
+                {
+                  "id": "19:21:5",
+                  "word": "接口",
+                  "score": 2.42
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "19:21:6",
+                  "word": "接口",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                },
+                {
+                  "id": "19:21:7",
+                  "word": "接口",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:18",
+              "before": [
+                {
+                  "id": "21:23:12",
+                  "word": "文档",
+                  "score": 2.4
+                },
+                {
+                  "id": "21:23:13",
+                  "word": "文档",
+                  "score": 2.36
+                }
+              ],
+              "after": [
+                {
+                  "id": "21:23:12",
+                  "word": "文档",
+                  "score": 2.4
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "21:23:13",
+                  "word": "文档",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19",
+                  "word": "补齐",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            }
+          ],
+          "perSpanLimit": 4,
+          "gridSlotSizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "generatedSentenceCount": 2,
+          "intervalAssemblyCandidateCount": 16,
+          "intervalRejectedOverlapCount": 0,
+          "limitedSentenceCount": 2,
+          "limitName": "maxSentenceCandidates",
+          "limitValue": 16,
+          "asmReplayMatch": true,
+          "candidates": [
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:0",
+              "matchKey": "0:1:我",
+              "word": "我",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:1",
+              "matchKey": "1:2:们",
+              "word": "们",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:2",
+              "matchKey": "2:3:下",
+              "word": "下",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:3",
+              "matchKey": "3:4:午",
+              "word": "午",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:4",
+              "matchKey": "4:5:讨",
+              "word": "讨",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:5",
+              "matchKey": "5:6:论",
+              "word": "论",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:1",
+              "matchKey": "6:8:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "exp-v1_1-alias-houxuan",
+              "rawRange": [
+                6,
+                8
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.42,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:2",
+              "matchKey": "6:8:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58099e98089e4ba",
+              "rawRange": [
+                6,
+                8
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:6",
+              "matchKey": "6:8:后选",
+              "word": "后选",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:7",
+              "matchKey": "8:9:声",
+              "word": "声",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:8",
+              "matchKey": "9:10:城",
+              "word": "城",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:9",
+              "matchKey": "10:11:方",
+              "word": "方",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:10",
+              "matchKey": "11:12:案",
+              "word": "案",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:11",
+              "matchKey": "13:14:先",
+              "word": "先",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:12",
+              "matchKey": "14:15:把",
+              "word": "把",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "14:16:3",
+              "matchKey": "15:17:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "exp-v1_1-alias-houxuan",
+              "rawRange": [
+                15,
+                17
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:13",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.42,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "14:16:4",
+              "matchKey": "15:17:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58099e98089e4ba",
+              "rawRange": [
+                15,
+                17
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:13",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:14",
+              "matchKey": "17:18:生",
+              "word": "生",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:15",
+              "matchKey": "18:19:成",
+              "word": "成",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:16",
+              "matchKey": "19:20:的",
+              "word": "的",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "19:21:5",
+              "matchKey": "20:22:接口",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "接口",
+              "surface": "接口",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "exp-v1_1-alias-jiekou",
+              "rawRange": [
+                20,
+                22
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.42,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "19:21:6",
+              "matchKey": "20:22:接口",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "接口",
+              "surface": "接口",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e68ea5e58fa3e696",
+              "rawRange": [
+                20,
+                22
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.4,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "19:21:7",
+              "matchKey": "20:22:接口",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "接口",
+              "surface": "接口",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e69c8de58aa1e68e",
+              "rawRange": [
+                20,
+                22
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:17",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 3,
+              "candidateScore": 2.4,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "21:23:12",
+              "matchKey": "22:24:文档",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "文档",
+              "surface": "文档",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e68ea5e58fa3e696",
+              "rawRange": [
+                22,
+                24
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:18",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.4,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "21:23:13",
+              "matchKey": "22:24:文档",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "文档",
+              "surface": "文档",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e69687e6a1a3e789",
+              "rawRange": [
+                22,
+                24
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:18",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "23:25:14",
+              "matchKey": "24:26:布奇",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "布奇",
+              "surface": "布奇",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58da1e5b883e5a5",
+              "rawRange": [
+                24,
+                26
+              ],
+              "fineSpanId": "fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "domains": [
+                "coffee"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tech_ai; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [],
+              "finalStatus": "DROPPED_BUCKET_MISMATCH"
+            },
+            {
+              "candidateId": "canonical:fine:86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42:19",
+              "matchKey": "24:26:补齐",
+              "word": "补齐",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            }
+          ],
+          "sentences": [
+            {
+              "sentenceId": "p0_b0_s0",
+              "bucketId": "p0_b0",
+              "bucketDomain": "tech_ai",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "finalText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+              "assemblyRank": 1,
+              "assemblyScore": 9.66,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "spanText": "后选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "spanText": "候选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "接口",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    20,
+                    22
+                  ],
+                  "spanText": "接口",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "文档",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    22,
+                    24
+                  ],
+                  "spanText": "文档",
+                  "candidateScore": 2.4
+                },
+                {
+                  "candidateId": null,
+                  "word": "我",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "我",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "们",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "spanText": "们",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "讨",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "讨",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "论",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "论",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "声",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "声",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "城",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "城",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "方",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "spanText": "方",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "案",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "spanText": "案",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "先",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "先",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "把",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "把",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "生",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "生",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "成",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "成",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "的",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "spanText": "的",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "补齐",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "spanText": "补齐",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "我",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "们",
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "讨",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "论",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "声",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "城",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "方",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "案",
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "，",
+                  "rawRange": [
+                    12,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "先",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "把",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "生",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "成",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "的",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "接口",
+                  "rawRange": [
+                    20,
+                    22
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "文档",
+                  "rawRange": [
+                    22,
+                    24
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "补齐",
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "。",
+                  "rawRange": [
+                    26,
+                    27
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+              "textMatchesFinal": true
+            },
+            {
+              "sentenceId": "p0_b0_s1",
+              "bucketId": "p0_b0",
+              "bucketDomain": "tech_ai",
+              "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+              "finalText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+              "assemblyRank": 2,
+              "assemblyScore": 7.24,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "spanText": "候选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "接口",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    20,
+                    22
+                  ],
+                  "spanText": "接口",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "文档",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    22,
+                    24
+                  ],
+                  "spanText": "文档",
+                  "candidateScore": 2.4
+                },
+                {
+                  "candidateId": null,
+                  "word": "我",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "我",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "们",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "spanText": "们",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "讨",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "讨",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "论",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "论",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "后选",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "spanText": "后选",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "声",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "声",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "城",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "城",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "方",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "spanText": "方",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "案",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "spanText": "案",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "先",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "先",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "把",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "把",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "生",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "生",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "成",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "成",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "的",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "spanText": "的",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "补齐",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "spanText": "补齐",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "我",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "们",
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "讨",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "论",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "后选",
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "声",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "城",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "方",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "案",
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "，",
+                  "rawRange": [
+                    12,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "先",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "把",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "生",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "成",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "的",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "接口",
+                  "rawRange": [
+                    20,
+                    22
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "文档",
+                  "rawRange": [
+                    22,
+                    24
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "补齐",
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "。",
+                  "rawRange": [
+                    26,
+                    27
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+              "textMatchesFinal": true
+            }
+          ],
+          "bucketDedupe": []
+        }
+      ],
+      "sentenceCandidateCount": 2
+    },
+    {
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "pathIndex": 1,
+      "pathSource": "SegmentationPath/Lattice",
+      "pathScore": "NOT PRESENT IN PRODUCTION TYPE",
+      "boundaryKey": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-13|13-14|14-16|16-17|17-18|18-19|19-23|23-25",
+      "fineSpanCount": 19,
+      "bucketCount": 1,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "我",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 0,
+          "rawOrderIndex": 0
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "们",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 1,
+          "rawOrderIndex": 1
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:2",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 2,
+          "rawOrderIndex": 2
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:3",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "午",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 3,
+          "rawOrderIndex": 3
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:4",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "讨",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 4,
+          "rawOrderIndex": 4
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:5",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "论",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 5,
+          "rawOrderIndex": 5
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+          "rawRange": [
+            6,
+            8
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            6,
+            8
+          ],
+          "coarseSpanIds": [
+            "c3"
+          ],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 6,
+          "rawOrderIndex": 6
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:7",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "声",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 7,
+          "rawOrderIndex": 7
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 8,
+          "rawOrderIndex": 8
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:9",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "方",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 9,
+          "rawOrderIndex": 9
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:10",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "案",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 10,
+          "rawOrderIndex": 10
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "先",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 11,
+          "rawOrderIndex": 11
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "把",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 12,
+          "rawOrderIndex": 12
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:13",
+          "rawRange": [
+            15,
+            17
+          ],
+          "rawText": "候选",
+          "syllableRange": [
+            14,
+            16
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 13,
+          "rawOrderIndex": 13
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 14,
+          "rawOrderIndex": 14
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:15",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "成",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 15,
+          "rawOrderIndex": 15
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:16",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "的",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 16,
+          "rawOrderIndex": 16
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:17",
+          "rawRange": [
+            20,
+            24
+          ],
+          "rawText": "接口文档",
+          "syllableRange": [
+            19,
+            23
+          ],
+          "coarseSpanIds": [
+            "c10"
+          ],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 17,
+          "rawOrderIndex": 17
+        },
+        {
+          "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18",
+          "rawRange": [
+            24,
+            26
+          ],
+          "rawText": "补齐",
+          "syllableRange": [
+            23,
+            25
+          ],
+          "coarseSpanIds": [
+            "c11"
+          ],
+          "overlapGroupId": null,
+          "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+          "productionIndex": 18,
+          "rawOrderIndex": 18
+        }
+      ],
+      "pathFineOverlap": [],
+      "buckets": [
+        {
+          "bucketId": "p1_b0",
+          "bucketDomain": "tech_ai",
+          "sourceRetainedDomain": "tech_ai",
+          "fineSpanIds": [
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:0",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:1",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:2",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:3",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:4",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:5",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:7",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:8",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:9",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:10",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:11",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:12",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:13",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:14",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:15",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:16",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:17",
+            "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18"
+          ],
+          "baseCandidateCount": 0,
+          "domainCandidateCount": 5,
+          "canonicalCandidateCount": 17,
+          "rawFallbackCount": 0,
+          "assemblyDropTraces": [],
+          "perSpanBudget": [
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:0",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:0",
+                  "word": "我",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:1",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:1",
+                  "word": "们",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:2",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:2",
+                  "word": "下",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:3",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:3",
+                  "word": "午",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:4",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:4",
+                  "word": "讨",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:5",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:5",
+                  "word": "论",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+              "before": [
+                {
+                  "id": "6:8:1",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "6:8:2",
+                  "word": "候选",
+                  "score": 2.35
+                }
+              ],
+              "after": [
+                {
+                  "id": "6:8:1",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+                  "word": "后选",
+                  "score": 0
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "6:8:2",
+                  "word": "候选",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:7",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:7",
+                  "word": "声",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:8",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:8",
+                  "word": "城",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:9",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:9",
+                  "word": "方",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:10",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:10",
+                  "word": "案",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:11",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:11",
+                  "word": "先",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:12",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:12",
+                  "word": "把",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:13",
+              "before": [
+                {
+                  "id": "14:16:3",
+                  "word": "候选",
+                  "score": 2.42
+                },
+                {
+                  "id": "14:16:4",
+                  "word": "候选",
+                  "score": 2.35
+                }
+              ],
+              "after": [
+                {
+                  "id": "14:16:3",
+                  "word": "候选",
+                  "score": 2.42
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "14:16:4",
+                  "word": "候选",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:14",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:14",
+                  "word": "生",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:15",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:15",
+                  "word": "成",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:16",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:16",
+                  "word": "的",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:17",
+              "before": [
+                {
+                  "id": "19:23:9",
+                  "word": "接口文档",
+                  "score": 2.04
+                }
+              ],
+              "after": [
+                {
+                  "id": "19:23:9",
+                  "word": "接口文档",
+                  "score": 2.04
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18",
+                  "word": "补齐",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            }
+          ],
+          "perSpanLimit": 4,
+          "gridSlotSizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "generatedSentenceCount": 2,
+          "intervalAssemblyCandidateCount": 8,
+          "intervalRejectedOverlapCount": 0,
+          "limitedSentenceCount": 2,
+          "limitName": "maxSentenceCandidates",
+          "limitValue": 16,
+          "asmReplayMatch": true,
+          "candidates": [
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:0",
+              "matchKey": "0:1:我",
+              "word": "我",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:1",
+              "matchKey": "1:2:们",
+              "word": "们",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:2",
+              "matchKey": "2:3:下",
+              "word": "下",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:3",
+              "matchKey": "3:4:午",
+              "word": "午",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:4",
+              "matchKey": "4:5:讨",
+              "word": "讨",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:5",
+              "matchKey": "5:6:论",
+              "word": "论",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:1",
+              "matchKey": "6:8:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "exp-v1_1-alias-houxuan",
+              "rawRange": [
+                6,
+                8
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.42,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "6:8:2",
+              "matchKey": "6:8:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58099e98089e4ba",
+              "rawRange": [
+                6,
+                8
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p1_b0_s0"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:6",
+              "matchKey": "6:8:后选",
+              "word": "后选",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:7",
+              "matchKey": "8:9:声",
+              "word": "声",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:8",
+              "matchKey": "9:10:城",
+              "word": "城",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:9",
+              "matchKey": "10:11:方",
+              "word": "方",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:10",
+              "matchKey": "11:12:案",
+              "word": "案",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:11",
+              "matchKey": "13:14:先",
+              "word": "先",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:12",
+              "matchKey": "14:15:把",
+              "word": "把",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "14:16:3",
+              "matchKey": "15:17:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "exp-v1_1-alias-houxuan",
+              "rawRange": [
+                15,
+                17
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:13",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.42,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "14:16:4",
+              "matchKey": "15:17:候选",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "候选",
+              "surface": "候选",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58099e98089e4ba",
+              "rawRange": [
+                15,
+                17
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:13",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:14",
+              "matchKey": "17:18:生",
+              "word": "生",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:15",
+              "matchKey": "18:19:成",
+              "word": "成",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:16",
+              "matchKey": "19:20:的",
+              "word": "的",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "19:23:9",
+              "matchKey": "20:24:接口文档",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "接口文档",
+              "surface": "接口文档",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e68ea5e58fa3e696",
+              "rawRange": [
+                20,
+                24
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:17",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "tech_ai"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.04,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=tech_ai",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "23:25:14",
+              "matchKey": "24:26:布奇",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "布奇",
+              "surface": "布奇",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58da1e5b883e5a5",
+              "rawRange": [
+                24,
+                26
+              ],
+              "fineSpanId": "fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "domains": [
+                "coffee"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.35,
+              "tonePenalty": 1,
+              "bucketEligible": "NO",
+              "reasonCode": "DROP_CROSS_DOMAIN_FOR_BUCKET",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "cross-domain exclusion",
+              "reasonDetail": "domain_term/passive not including bucketDomain=tech_ai; intentionally excluded",
+              "inBeforeBudget": false,
+              "inAfterBudget": false,
+              "sentenceIds": [],
+              "finalStatus": "DROPPED_BUCKET_MISMATCH"
+            },
+            {
+              "candidateId": "canonical:fine:eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9:18",
+              "matchKey": "24:26:补齐",
+              "word": "补齐",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p1_b0_s0",
+                "p1_b0_s1"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            }
+          ],
+          "sentences": [
+            {
+              "sentenceId": "p1_b0_s0",
+              "bucketId": "p1_b0",
+              "bucketDomain": "tech_ai",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "finalText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+              "assemblyRank": 1,
+              "assemblyScore": 6.88,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "spanText": "后选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "spanText": "候选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "接口文档",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    20,
+                    24
+                  ],
+                  "spanText": "接口文档",
+                  "candidateScore": 2.04
+                },
+                {
+                  "candidateId": null,
+                  "word": "我",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "我",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "们",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "spanText": "们",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "讨",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "讨",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "论",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "论",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "声",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "声",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "城",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "城",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "方",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "spanText": "方",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "案",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "spanText": "案",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "先",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "先",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "把",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "把",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "生",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "生",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "成",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "成",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "的",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "spanText": "的",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "补齐",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "spanText": "补齐",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "我",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "们",
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "讨",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "论",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "声",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "城",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "方",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "案",
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "，",
+                  "rawRange": [
+                    12,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "先",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "把",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "生",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "成",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "的",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "接口文档",
+                  "rawRange": [
+                    20,
+                    24
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "补齐",
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "。",
+                  "rawRange": [
+                    26,
+                    27
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+              "textMatchesFinal": true
+            },
+            {
+              "sentenceId": "p1_b0_s1",
+              "bucketId": "p1_b0",
+              "bucketDomain": "tech_ai",
+              "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+              "finalText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+              "assemblyRank": 2,
+              "assemblyScore": 4.46,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "候选",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "spanText": "候选",
+                  "candidateScore": 2.42
+                },
+                {
+                  "candidateId": null,
+                  "word": "接口文档",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    20,
+                    24
+                  ],
+                  "spanText": "接口文档",
+                  "candidateScore": 2.04
+                },
+                {
+                  "candidateId": null,
+                  "word": "我",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "我",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "们",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "spanText": "们",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "讨",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "讨",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "论",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "论",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "后选",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "spanText": "后选",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "声",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "声",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "城",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "城",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "方",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "spanText": "方",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "案",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "spanText": "案",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "先",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "先",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "把",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "把",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "生",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "生",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "成",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "成",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "的",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "spanText": "的",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "补齐",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "spanText": "补齐",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "我",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "们",
+                  "rawRange": [
+                    1,
+                    2
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    2,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "讨",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "论",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "后选",
+                  "rawRange": [
+                    6,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "声",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "城",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "方",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "案",
+                  "rawRange": [
+                    11,
+                    12
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "，",
+                  "rawRange": [
+                    12,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "先",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "把",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "候选",
+                  "rawRange": [
+                    15,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "生",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "成",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "的",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "接口文档",
+                  "rawRange": [
+                    20,
+                    24
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "补齐",
+                  "rawRange": [
+                    24,
+                    26
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "。",
+                  "rawRange": [
+                    26,
+                    27
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+              "textMatchesFinal": true
+            }
+          ],
+          "bucketDedupe": []
+        }
+      ],
+      "sentenceCandidateCount": 2
+    }
+  ],
+  "crossPath": {
+    "input": [
+      {
+        "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+        "bucketId": "p0_b0",
+        "bucketDomain": "tech_ai",
+        "sentenceId": "p0_b0_s0",
+        "text": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rank": 1
+      },
+      {
+        "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+        "bucketId": "p0_b0",
+        "bucketDomain": "tech_ai",
+        "sentenceId": "p0_b0_s1",
+        "text": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "rank": 2
+      },
+      {
+        "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+        "bucketId": "p1_b0",
+        "bucketDomain": "tech_ai",
+        "sentenceId": "p1_b0_s0",
+        "text": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rank": 1
+      },
+      {
+        "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+        "bucketId": "p1_b0",
+        "bucketDomain": "tech_ai",
+        "sentenceId": "p1_b0_s1",
+        "text": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "rank": 2
+      }
+    ],
+    "output": [
+      {
+        "globalSentenceId": "cp_0",
+        "sourcePathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s0",
+        "text": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。"
+      },
+      {
+        "globalSentenceId": "cp_1",
+        "sourcePathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s1",
+        "text": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。"
+      }
+    ],
+    "drops": [
+      {
+        "ownerModule": "merge-cross-path-sentence-candidates",
+        "decisionFunction": "mergeCrossPathSentenceCandidates",
+        "reasonCode": "DROP_EXACT_TEXT_DUPLICATE_FIRST_WINS",
+        "dedupeKey": "exact_text",
+        "keptSentenceId": "cp_0",
+        "droppedSentenceId": "p1_b0_s0",
+        "text": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。"
+      },
+      {
+        "ownerModule": "merge-cross-path-sentence-candidates",
+        "decisionFunction": "mergeCrossPathSentenceCandidates",
+        "reasonCode": "DROP_EXACT_TEXT_DUPLICATE_FIRST_WINS",
+        "dedupeKey": "exact_text",
+        "keptSentenceId": "cp_1",
+        "droppedSentenceId": "p1_b0_s1",
+        "text": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。"
+      }
+    ],
+    "uniqueBeforeCapCount": 2,
+    "productionTrace": {
+      "crossPathInputCandidateCount": 4,
+      "crossPathDuplicateCount": 2,
+      "crossPathUniqueCandidateCount": 2,
+      "crossPathOutputCandidateCount": 2,
+      "crossPathTruncatedCount": 0,
+      "globalCandidateCap": 16,
+      "kenlmInputSource": "cross_path_merge",
+      "dedupKey": "exact_text",
+      "duplicateRetention": "first_wins",
+      "collectionOrder": "path_bucket_candidate"
+    },
+    "replayMatch": true
+  },
+  "kenlmInputs": [
+    {
+      "kenlmInputIndex": 0,
+      "text": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+      "sourcePathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s0",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 9.66,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    },
+    {
+      "kenlmInputIndex": 1,
+      "text": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "sourcePathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s1",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 7.24,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    }
+  ],
+  "stats": {
+    "budgetDropCount": 7,
+    "budgetTriggerSpans": 6,
+    "bucketDropCount": 2,
+    "assemblyEligibleNoSentence": 0,
+    "pathCount": 2,
+    "bucketCount": 2,
+    "bucketSentences": 4,
+    "crossPathOut": 2
+  },
+  "anomalies": {
+    "A1": [],
+    "A2": [],
+    "A3": [],
+    "A4": [],
+    "A5": [],
+    "A6": [],
+    "A7": [],
+    "A8": [],
+    "A9": [],
+    "A10": [],
+    "A11": [],
+    "A12": [],
+    "A13": [],
+    "A14": [],
+    "A15": [],
+    "A16": [],
+    "A17": [],
+    "A18": [],
+    "A19": [
+      {
+        "caseId": "d088",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      }
+    ],
+    "A20": []
+  },
+  "candidateFateGlobal": [
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "6:8:1",
+      "word": "候选",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "6:8:2",
+      "word": "候选",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "14:16:3",
+      "word": "候选",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "14:16:4",
+      "word": "候选",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "19:21:5",
+      "word": "接口",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "19:21:6",
+      "word": "接口",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "19:21:7",
+      "word": "接口",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "21:23:12",
+      "word": "文档",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "21:23:13",
+      "word": "文档",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "86bbdea09331c4feb5a8c0ad9881f21444a7ba7ae866222c8b4c24b3fba4ce42",
+      "bucketDomain": "tech_ai",
+      "candidateId": "23:25:14",
+      "word": "布奇",
+      "finalStatus": "DROPPED_BUCKET_MISMATCH"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "6:8:1",
+      "word": "候选",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "6:8:2",
+      "word": "候选",
+      "finalStatus": "USED_IN_SENTENCE"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "14:16:3",
+      "word": "候选",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "14:16:4",
+      "word": "候选",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "19:23:9",
+      "word": "接口文档",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d088",
+      "pathId": "eefbde0a8d0d9a4bd706030008aee9a3ba8aef276637bb189b65c4365acf56c9",
+      "bucketDomain": "tech_ai",
+      "candidateId": "23:25:14",
+      "word": "布奇",
+      "finalStatus": "DROPPED_BUCKET_MISMATCH"
+    }
+  ]
+}

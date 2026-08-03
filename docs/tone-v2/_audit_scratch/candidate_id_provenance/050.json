@@ -1,0 +1,408 @@
+{
+  "caseId": "d050",
+  "rawText": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+  "stages": {
+    "pool": {
+      "present": 3,
+      "absent": 0,
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    },
+    "bucket": {
+      "present": 3,
+      "absent": 0
+    },
+    "budget": {
+      "present": 34,
+      "absent": 0
+    },
+    "domainAwarePick": {
+      "present": 34,
+      "absent": 0
+    },
+    "spanReplacement": {
+      "present": 0,
+      "absent": 34,
+      "nullish": 34
+    },
+    "sentenceReplacement": {
+      "present": 0,
+      "absent": 34,
+      "nullish": 34,
+      "repairPresent": 0,
+      "repairAbsent": 1
+    },
+    "crossPath": {
+      "present": 0,
+      "absent": 34,
+      "nullish": 34
+    },
+    "kenlmInput": {
+      "present": 0,
+      "absent": 34,
+      "nullish": 34
+    },
+    "jobResultProjection": {
+      "note": "PROBE: no full JobResult; fw_detector.replacements has NO candidateId field; sentenceRerank.topCandidates.candidateId is synthetic candidate:i / raw; sentenceRerank.picked.replacements.candidateId would inherit SpanReplacementPick (currently ABSENT after mapper)",
+      "fwDetectorReplacementDiagHasCandidateId": false,
+      "topCandidatesCandidateIdKind": "SYNTHETIC_INDEX",
+      "pickedReplacementCandidateId": "WOULD_BE_ABSENT_IF_PICKED_FROM_CURRENT_CHAIN",
+      "countPresent": 0
+    }
+  },
+  "mapperLoss": [
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:0",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:0",
+      "inputWord": "今",
+      "inputRange": [
+        0,
+        1
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:1",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:1",
+      "inputWord": "天",
+      "inputRange": [
+        1,
+        2
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:2",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:2",
+      "inputWord": "的",
+      "inputRange": [
+        2,
+        3
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:3",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:3",
+      "inputWord": "站",
+      "inputRange": [
+        3,
+        4
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:4",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:4",
+      "inputWord": "会",
+      "inputRange": [
+        4,
+        5
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:5",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:5",
+      "inputWord": "先",
+      "inputRange": [
+        5,
+        6
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:6",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:6",
+      "inputWord": "过",
+      "inputRange": [
+        6,
+        7
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:7",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:7",
+      "inputWord": "一",
+      "inputRange": [
+        7,
+        8
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:8",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:8",
+      "inputWord": "下",
+      "inputRange": [
+        8,
+        9
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:9",
+      "inputCandidateId": "9:11:1",
+      "inputWord": "订单",
+      "inputRange": [
+        9,
+        11
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:10",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:10",
+      "inputWord": "中",
+      "inputRange": [
+        11,
+        12
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:11",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:11",
+      "inputWord": "台",
+      "inputRange": [
+        12,
+        13
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:12",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:12",
+      "inputWord": "进",
+      "inputRange": [
+        13,
+        14
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:13",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:13",
+      "inputWord": "度",
+      "inputRange": [
+        14,
+        15
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "bucketDomain": "food_order",
+      "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:14",
+      "inputCandidateId": "canonical:fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:14",
+      "inputWord": "内",
+      "inputRange": [
+        16,
+        17
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    }
+  ],
+  "matchKeyCollisions": [
+    {
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    }
+  ],
+  "sameRangeSurfaceDifferentId": [
+    {
+      "matchKey": "9:11:订单",
+      "ids": [
+        "9:11:1",
+        "9:11:2",
+        "9:11:3"
+      ]
+    }
+  ],
+  "sameIdDifferentRange": [],
+  "sameIdDifferentSurface": [],
+  "idStability": {
+    "bucketChanged": 0,
+    "budgetChanged": 0
+  },
+  "pathCount": 1,
+  "kenlmInputCount": 1,
+  "anomalyTypes": [
+    "C5",
+    "C6",
+    "C17",
+    "C8",
+    "C13"
+  ]
+}

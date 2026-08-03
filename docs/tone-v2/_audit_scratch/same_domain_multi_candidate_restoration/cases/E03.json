@@ -1,0 +1,72 @@
+{
+  "caseId": "E03",
+  "rawText": "帮我修改预订信息",
+  "retainedDomains": [
+    "tourism_hotel"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "tourism_hotel",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "帮"
+        ],
+        [
+          "我"
+        ],
+        [
+          "修"
+        ],
+        [
+          "改"
+        ],
+        [
+          "预订"
+        ],
+        [
+          "信息"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "帮我修改预订信息"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "帮我修改预订信息"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "帮我修改预订信息"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 23.8895001411438,
+  "groups": [
+    "E"
+  ],
+  "why": "overlap",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

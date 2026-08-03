@@ -1,0 +1,139 @@
+{
+  "caseId": "A03",
+  "rawText": "新的地址已经更新",
+  "retainedDomains": [
+    "coffee",
+    "tourism_route"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "的"
+        ],
+        [
+          "低脂",
+          "地址"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "更"
+        ],
+        [
+          "新"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "新的低脂已经更新",
+        "新的地址已经更新"
+      ]
+    },
+    {
+      "domainId": "tourism_route",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "新"
+        ],
+        [
+          "的"
+        ],
+        [
+          "地质",
+          "地址"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "更"
+        ],
+        [
+          "新"
+        ]
+      ],
+      "theoretical": 2,
+      "generated": 2,
+      "distinct": 2,
+      "texts": [
+        "新的地质已经更新",
+        "新的地址已经更新"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 2,
+  "assemblyDistinctTextCount": 3,
+  "assemblyTexts": [
+    "新的低脂已经更新",
+    "新的地址已经更新",
+    "新的地质已经更新"
+  ],
+  "crossPathDistinctCount": 3,
+  "prefilledCount": 3,
+  "prefilledDistinct": 3,
+  "prefilledTexts": [
+    "新的低脂已经更新",
+    "新的地址已经更新",
+    "新的地质已经更新"
+  ],
+  "kenlmInputCount": 3,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": true,
+  "capOk": true,
+  "orchMs": 41.41910004615784,
+  "groups": [
+    "A"
+  ],
+  "why": "di|zhi",
+  "kenlm": {
+    "skipped": true,
+    "reason": "KenLM environment/config blocker",
+    "envError": "Cannot read properties of undefined (reading 'replace')",
+    "kenlmRunnable": false,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "prefilledCount": 3,
+    "inputTexts": [
+      "新的低脂已经更新",
+      "新的地址已经更新",
+      "新的地质已经更新"
+    ]
+  }
+}

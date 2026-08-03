@@ -1,0 +1,2084 @@
+{
+  "caseId": "d089",
+  "fileNum": "089",
+  "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+  "scenario": "lexicon_homophone",
+  "retainedDomains": [
+    "tech_ai"
+  ],
+  "domainScores": {
+    "tech_ai": 4,
+    "tourism_hotel": 2,
+    "tourism_transport": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "周",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "上线",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:3",
+          "sameDomain": [
+            "上线",
+            "上线"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "计花",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:4",
+          "sameDomain": [
+            "计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "计划",
+            "计花"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "已",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "已"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "经",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "经"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "确",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "确"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "认",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "认"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "上线",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:9",
+          "sameDomain": [
+            "上线",
+            "上线"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "计划",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:10",
+          "sameDomain": [
+            "计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "计划"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "评",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "评"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "审",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "审"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "安排",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "在",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "周",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "四",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "上午",
+          "fineSpanId": "fine:3a7c0ec19c68211cdf24335825c8d37e4aa2134e2fc89f2e63c8e4317cc94389:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上午"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "周"
+        ],
+        [
+          "的"
+        ],
+        [
+          "上线"
+        ],
+        [
+          "计划",
+          "计花"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线"
+        ],
+        [
+          "计划"
+        ],
+        [
+          "评"
+        ],
+        [
+          "审"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "在"
+        ],
+        [
+          "周"
+        ],
+        [
+          "四"
+        ],
+        [
+          "上午"
+        ]
+      ],
+      "assemblyTexts": [
+        "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      ]
+    },
+    {
+      "pathId": "066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "周",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "上线",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:3",
+          "sameDomain": [
+            "上线",
+            "上线"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "计花",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:4",
+          "sameDomain": [
+            "计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "计划",
+            "计花"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "已",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "已"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "经",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "经"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "确",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "确"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "认",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "认"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "上线计划",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:9",
+          "sameDomain": [
+            "上线计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计划"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "评",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "评"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "审",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "审"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "安排",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "在",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "周",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "四",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "上午",
+          "fineSpanId": "fine:066ebc94f339a351afffd32d14f7e56193e4b7aea663b15d787ffdc5993bda0f:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上午"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "周"
+        ],
+        [
+          "的"
+        ],
+        [
+          "上线"
+        ],
+        [
+          "计划",
+          "计花"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线计划"
+        ],
+        [
+          "评"
+        ],
+        [
+          "审"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "在"
+        ],
+        [
+          "周"
+        ],
+        [
+          "四"
+        ],
+        [
+          "上午"
+        ]
+      ],
+      "assemblyTexts": [
+        "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      ]
+    },
+    {
+      "pathId": "57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "周",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "上线计花",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:3",
+          "sameDomain": [
+            "上线计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计划",
+            "上线计花"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "已",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "已"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "经",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "经"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "确",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "确"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "认",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "认"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "上线",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:8",
+          "sameDomain": [
+            "上线",
+            "上线"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "计划",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:9",
+          "sameDomain": [
+            "计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "计划"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "评",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "评"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "审",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "审"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "安排",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "在",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "周",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "四",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "上午",
+          "fineSpanId": "fine:57ea9b89e4fc35be95b82fbc831b7f5c4c7f6f5fe37c7010697f3f088ac465f6:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上午"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "周"
+        ],
+        [
+          "的"
+        ],
+        [
+          "上线计划",
+          "上线计花"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线"
+        ],
+        [
+          "计划"
+        ],
+        [
+          "评"
+        ],
+        [
+          "审"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "在"
+        ],
+        [
+          "周"
+        ],
+        [
+          "四"
+        ],
+        [
+          "上午"
+        ]
+      ],
+      "assemblyTexts": [
+        "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      ]
+    },
+    {
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "周",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "上线计花",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:3",
+          "sameDomain": [
+            "上线计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计划",
+            "上线计花"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "已",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "已"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "经",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "经"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "确",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "确"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "认",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "认"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "上线计划",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:8",
+          "sameDomain": [
+            "上线计划"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计划"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "评",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "评"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "审",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "审"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "安排",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "在",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "周",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "四",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "上午",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上午"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "周"
+        ],
+        [
+          "的"
+        ],
+        [
+          "上线计划",
+          "上线计花"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线计划"
+        ],
+        [
+          "评"
+        ],
+        [
+          "审"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "在"
+        ],
+        [
+          "周"
+        ],
+        [
+          "四"
+        ],
+        [
+          "上午"
+        ]
+      ],
+      "assemblyTexts": [
+        "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      ]
+    },
+    {
+      "pathId": "1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008",
+      "domainId": "tourism_hotel",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "这",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "周",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "上线计花",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计花"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "已",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "已"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "经",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "经"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "确",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "确"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "认",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "认"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "上线计划",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上线计划"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "评",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "评"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "审",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "审"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "安排",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:11",
+          "sameDomain": [
+            "安排",
+            "安排"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "安排"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "在",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "在"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "周",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "周"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "四",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "四"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "上午",
+          "fineSpanId": "fine:1e01ba7584d9e3d132a29bce455c9f9262f69591509b4623fd5d51aae06b8008:15",
+          "sameDomain": [
+            "商务"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "商务",
+            "上午"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "这"
+        ],
+        [
+          "周"
+        ],
+        [
+          "的"
+        ],
+        [
+          "上线计花"
+        ],
+        [
+          "已"
+        ],
+        [
+          "经"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "上线计划"
+        ],
+        [
+          "评"
+        ],
+        [
+          "审"
+        ],
+        [
+          "安排"
+        ],
+        [
+          "在"
+        ],
+        [
+          "周"
+        ],
+        [
+          "四"
+        ],
+        [
+          "商务",
+          "上午"
+        ]
+      ],
+      "assemblyTexts": [
+        "这周的上线计花已经确认，上线计划评审安排在周四商务。",
+        "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四商务。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+      "replacements": [
+        {
+          "span": {
+            "text": "上线",
+            "start": 3,
+            "end": 5
+          },
+          "word": "上线",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "计花",
+            "start": 5,
+            "end": 7
+          },
+          "word": "计划",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "上线",
+            "start": 12,
+            "end": 14
+          },
+          "word": "上线",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "计划",
+            "start": 14,
+            "end": 16
+          },
+          "word": "计划",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 0,
+            "end": 1
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 1,
+            "end": 2
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 2,
+            "end": 3
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "已",
+            "start": 7,
+            "end": 8
+          },
+          "word": "已",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "经",
+            "start": 8,
+            "end": 9
+          },
+          "word": "经",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "确",
+            "start": 9,
+            "end": 10
+          },
+          "word": "确",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "认",
+            "start": 10,
+            "end": 11
+          },
+          "word": "认",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "评",
+            "start": 16,
+            "end": 17
+          },
+          "word": "评",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "审",
+            "start": 17,
+            "end": 18
+          },
+          "word": "审",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "安排",
+            "start": 18,
+            "end": 20
+          },
+          "word": "安排",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 20,
+            "end": 21
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 21,
+            "end": 22
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "四",
+            "start": 22,
+            "end": 23
+          },
+          "word": "四",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上午",
+            "start": 23,
+            "end": 25
+          },
+          "word": "上午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 9.64
+    },
+    {
+      "text": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "replacements": [
+        {
+          "span": {
+            "text": "上线",
+            "start": 3,
+            "end": 5
+          },
+          "word": "上线",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "上线",
+            "start": 12,
+            "end": 14
+          },
+          "word": "上线",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "计划",
+            "start": 14,
+            "end": 16
+          },
+          "word": "计划",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 0,
+            "end": 1
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 1,
+            "end": 2
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 2,
+            "end": 3
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "计花",
+            "start": 5,
+            "end": 7
+          },
+          "word": "计花",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "已",
+            "start": 7,
+            "end": 8
+          },
+          "word": "已",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "经",
+            "start": 8,
+            "end": 9
+          },
+          "word": "经",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "确",
+            "start": 9,
+            "end": 10
+          },
+          "word": "确",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "认",
+            "start": 10,
+            "end": 11
+          },
+          "word": "认",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "评",
+            "start": 16,
+            "end": 17
+          },
+          "word": "评",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "审",
+            "start": 17,
+            "end": 18
+          },
+          "word": "审",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "安排",
+            "start": 18,
+            "end": 20
+          },
+          "word": "安排",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 20,
+            "end": 21
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 21,
+            "end": 22
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "四",
+            "start": 22,
+            "end": 23
+          },
+          "word": "四",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上午",
+            "start": 23,
+            "end": 25
+          },
+          "word": "上午",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 7.24
+    },
+    {
+      "text": "这周的上线计花已经确认，上线计划评审安排在周四商务。",
+      "replacements": [
+        {
+          "span": {
+            "text": "安排",
+            "start": 18,
+            "end": 20
+          },
+          "word": "安排",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "上午",
+            "start": 23,
+            "end": 25
+          },
+          "word": "商务",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 0,
+            "end": 1
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 1,
+            "end": 2
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 2,
+            "end": 3
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上线计花",
+            "start": 3,
+            "end": 7
+          },
+          "word": "上线计花",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "已",
+            "start": 7,
+            "end": 8
+          },
+          "word": "已",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "经",
+            "start": 8,
+            "end": 9
+          },
+          "word": "经",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "确",
+            "start": 9,
+            "end": 10
+          },
+          "word": "确",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "认",
+            "start": 10,
+            "end": 11
+          },
+          "word": "认",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上线计划",
+            "start": 12,
+            "end": 16
+          },
+          "word": "上线计划",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "评",
+            "start": 16,
+            "end": 17
+          },
+          "word": "评",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "审",
+            "start": 17,
+            "end": 18
+          },
+          "word": "审",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "在",
+            "start": 20,
+            "end": 21
+          },
+          "word": "在",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "周",
+            "start": 21,
+            "end": 22
+          },
+          "word": "周",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "四",
+            "start": 22,
+            "end": 23
+          },
+          "word": "四",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 4.72
+    }
+  ],
+  "kenlmInputTexts": [
+    "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": true,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四上午。"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+    ],
+    "actual": [
+      "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "这周的上线计花已经确认，上线计划评审安排在周四商务。"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

@@ -1,0 +1,622 @@
+{
+  "case": {
+    "id": "d069",
+    "fileNum": "069",
+    "scenario": "customer_service",
+    "rawText": "发票抬头开错了，能重新开具电子发票吗？"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+      "pathIndex": 0,
+      "boundaryKey": "0-2|2-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-11|11-12|12-13|13-14|14-16|16-17",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+          "rawRange": [
+            0,
+            2
+          ],
+          "rawText": "发票",
+          "syllableRange": [
+            0,
+            2
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:1",
+          "rawRange": [
+            2,
+            3
+          ],
+          "rawText": "抬",
+          "syllableRange": [
+            2,
+            3
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "头",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "开",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "错",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "了",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:6",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "能",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:7",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "重",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:8",
+          "rawRange": [
+            10,
+            11
+          ],
+          "rawText": "新",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:9",
+          "rawRange": [
+            11,
+            12
+          ],
+          "rawText": "开",
+          "syllableRange": [
+            10,
+            11
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:10",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "具",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:11",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "电",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:12",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "子",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+          "rawRange": [
+            15,
+            17
+          ],
+          "rawText": "发票",
+          "syllableRange": [
+            14,
+            16
+          ],
+          "coarseSpanIds": [
+            "c7"
+          ],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "pathId": "b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "0:2:1",
+          "word": "发票",
+          "surface": "发票",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            0,
+            2
+          ],
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+          "candidateRank": 1,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        },
+        {
+          "candidateId": "14:16:2",
+          "word": "发票",
+          "surface": "发票",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            15,
+            17
+          ],
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+          "candidateRank": 1,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "food_order",
+            "tourism_hotel"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [
+          "food_order",
+          "tourism_hotel"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "food_order",
+          "tourism_hotel"
+        ],
+        []
+      ],
+      "contributionsByDomain": {
+        "food_order": [
+          {
+            "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "0:2:1",
+                "word": "发票",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "14:16:2",
+                "word": "发票",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          }
+        ],
+        "tourism_hotel": [
+          {
+            "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "0:2:1",
+                "word": "发票",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "14:16:2",
+                "word": "发票",
+                "domainsAdded": [
+                  "food_order",
+                  "tourism_hotel"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "food_order": 2,
+        "tourism_hotel": 2
+      },
+      "productionVote": {
+        "domainScores": {
+          "food_order": 2,
+          "tourism_hotel": 2
+        },
+        "retainedDomains": [
+          "food_order",
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 2,
+        "runnerUpCount": 0,
+        "isTie": true,
+        "utteranceDomain": "food_order",
+        "winnerScore": 2,
+        "voteMargin": 2,
+        "parentTermVoteCount": 1
+      },
+      "replayVote": {
+        "domainScores": {
+          "food_order": 2,
+          "tourism_hotel": 2
+        },
+        "retainedDomains": [
+          "food_order",
+          "tourism_hotel"
+        ],
+        "insufficientEvidence": false,
+        "isTie": true,
+        "maxCount": 2
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "food_order",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+            "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+              "candidateId": "0:2:1",
+              "word": "发票"
+            },
+            {
+              "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+              "candidateId": "14:16:2",
+              "word": "发票"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 2,
+            "domainScore": 2,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(2); this score=2"
+          }
+        },
+        {
+          "rank": 2,
+          "domain": "tourism_hotel",
+          "rawVoteScore": 2,
+          "adjustedScore": 2,
+          "evidenceFineSpanCount": 2,
+          "evidenceCandidateCount": 2,
+          "evidenceFineSpanList": [
+            "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+            "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+              "candidateId": "0:2:1",
+              "word": "发票"
+            },
+            {
+              "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+              "candidateId": "14:16:2",
+              "word": "发票"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "TIED_TOP",
+            "topScore": 2,
+            "domainScore": 2,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 1.5,
+            "isTie": true,
+            "actualComparisonResult": "isTie: retain all with count===maxCount(2); this score=2"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "food_order",
+        "tourism_hotel"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "food_order",
+        "tourism_hotel"
+      ],
+      "bucketDomainsFromVote": [
+        "food_order",
+        "tourism_hotel"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 2,
+      "multiDomainInstances": [
+        {
+          "candidateId": "0:2:1",
+          "word": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:0",
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        },
+        {
+          "candidateId": "14:16:2",
+          "word": "发票",
+          "fineSpanId": "fine:b40add9c18b994f3214720b91c9e39c1ec9a08acd66742f9b51723c5d1d357f6:13",
+          "domainTags": [
+            "food_order",
+            "tourism_hotel"
+          ],
+          "votesEachDomainSeparately": true,
+          "eachDomainSamePresenceContribution": true,
+          "weightSplit": false,
+          "normalized": false,
+          "top1Truncate": false,
+          "enteredSet": true,
+          "structuralDedupeSkip": false
+        }
+      ],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-07-27",
+  "currentSharedTopK": {
+    "exactTopK": 2,
+    "parentFragmentTopK": 3,
+    "maxSentenceCandidates": 16,
+    "maxActivePathsPerPosition": 8,
+    "maxCompleteSegmentationPaths": 8
+  },
+  "length1Risk": {
+    "homophoneExplosion": "high if fuzzy or domain multi-hit enabled",
+    "pathBranchGrowth": "moderate if every position has multiple len=1 lexical edges overlapping 2-5",
+    "voteNoise": "low if base_term source preserved"
+  },
+  "recommendedCaps": {
+    "length1PerWindowMaxCandidates": 1,
+    "length1PerWindowHardMax": 2,
+    "length1Fuzzy": false,
+    "length1DomainLookup": false,
+    "length1HomophoneVariant": false,
+    "length1Alias": false
+  },
+  "rationale": "Connectivity needs at most one canonical base char per syllable window; exactTopK=2 is already enough for 2-5 but too loose if combined with fuzzy for len=1",
+  "existingProtection": [
+    "exactTopK=2",
+    "path caps 8/8",
+    "maxSentenceCandidates=16",
+    "fuzzy gated and currently min syllables 2"
+  ],
+  "missingProtection": [
+    "no length-specific TopK",
+    "no whitelist enforcement at recall",
+    "no diagnostic for singleCharCandidateTotal"
+  ]
+}

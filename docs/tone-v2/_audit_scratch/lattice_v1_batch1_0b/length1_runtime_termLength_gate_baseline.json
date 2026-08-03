@@ -1,0 +1,9 @@
+{
+  "knownDefect": "LexiconRuntimeV2.lookupTier returns [] when termLength < 2",
+  "file": "lexicon-runtime-v2.ts lookupTier",
+  "sqliteEnabledLength1CountForDian": 2,
+  "runtimeLookupBasePlainCount": 0,
+  "runtimeLookupBaseToneCount": 0,
+  "expectedBatch11Behavior": "Allow termLength=1 for base lookups used by Lattice length=1 Recall",
+  "blocksLength1RecallCandidate": true
+}

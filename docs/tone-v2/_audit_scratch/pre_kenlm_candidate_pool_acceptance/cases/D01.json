@@ -1,0 +1,334 @@
+{
+  "caseId": "D01",
+  "rawText": "请确认少糖去冰大杯",
+  "windowCount": 35,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 3,
+  "bucketCount": 3,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 3,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 3,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认少糖去冰大杯"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "domainId": "milk_tea",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "少糖"
+        ],
+        [
+          "去冰"
+        ],
+        [
+          "大杯"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认少糖去冰大杯",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "coffee",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "少糖",
+          "sourceText": "少糖"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "去冰",
+          "sourceText": "去冰"
+        },
+        {
+          "start": 7,
+          "end": 9,
+          "word": "大杯",
+          "sourceText": "大杯"
+        }
+      ],
+      "dedupKey": "请确认少糖去冰大杯",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认少糖去冰大杯",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "food_order",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "少糖",
+          "sourceText": "少糖"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "去冰",
+          "sourceText": "去冰"
+        },
+        {
+          "start": 7,
+          "end": 9,
+          "word": "大杯",
+          "sourceText": "大杯"
+        }
+      ],
+      "dedupKey": "请确认少糖去冰大杯",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认少糖去冰大杯",
+      "sourcePathId": "79ea96b8b5012b57c1289b40f76c907548ba848672083a46064109eac68302b8",
+      "sourceDomain": "milk_tea",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "少糖",
+          "sourceText": "少糖"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "去冰",
+          "sourceText": "去冰"
+        },
+        {
+          "start": 7,
+          "end": 9,
+          "word": "大杯",
+          "sourceText": "大杯"
+        }
+      ],
+      "dedupKey": "请确认少糖去冰大杯",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 35,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 35,
+    "lexicalEdgeCount": 3,
+    "fallbackEdgeCount": 3,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 3,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 35,
+    "sqlQueryCount": 28,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "D"
+  ],
+  "why": "multi-domain coffee tags (same-surface multi-identity)",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 28.941099882125854,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

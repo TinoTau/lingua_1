@@ -1,0 +1,218 @@
+{
+  "id": "d049",
+  "expected": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+  "asr": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+  "raw_asr": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 31,
+    "evidenceProductionCount": 32,
+    "firstSlicePosterior": {
+      "t1": 0.00024549616500735283,
+      "t2": 0.012713261879980564,
+      "t3": 0.7367709279060364,
+      "t4": 0.25024986267089844,
+      "t5": 0.00002039261016761884
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 31,
+    "wordTimeSpanCount": 32,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "tonePatternMappingMissCount": 0,
+    "evidenceProductionStatusCounts": {
+      "short_duration_skipped": 1,
+      "slice_created": 31
+    },
+    "mappingMissReasonCounts": {},
+    "mappingMissAttributionCounts": {},
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "发群",
+        "pinyinKey": "fa|qun",
+        "windowTimeRange": {
+          "start": 7.04,
+          "end": 7.42
+        },
+        "acousticTonePattern": [
+          2,
+          2
+        ]
+      },
+      {
+        "text": "发群里",
+        "pinyinKey": "fa|qun|li",
+        "windowTimeRange": {
+          "start": 7.04,
+          "end": 7.6
+        },
+        "acousticTonePattern": [
+          2,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 17,
+    "candidateCount": 17,
+    "candidateSentenceCount": 17,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 17,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+        "kenlmScore": 0,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 17
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 0,
+      "queryCount": 2,
+      "avgMs": 0,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "maxMs": 0
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": 0,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 0,
+    "kenlmSubprocessCount": 0,
+    "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+    "allCombinations": [
+      {
+        "sentence": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "理工",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "理工",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "科互",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "科互",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "反馈",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "反馈",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "翻译",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "翻译",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "引擎",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "引擎",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "接口",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "接口",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "包错",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "包错",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我们",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我们",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

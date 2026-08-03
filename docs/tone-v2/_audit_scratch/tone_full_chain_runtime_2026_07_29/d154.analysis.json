@@ -1,0 +1,1200 @@
+{
+  "utteranceId": "d154",
+  "rawText": "今天,我们团队要讨论后选生成相关的后选生成流程和上线计划安排,请研发一起评估风险。",
+  "expectedText": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+  "toneEnabled": true,
+  "skippedReason": null,
+  "asr": {
+    "asr_word_count": 35,
+    "asr_word_timestamp_valid_count": 35,
+    "invalid_timestamp_count": 0,
+    "overlap_count": 0,
+    "gap_count": 1,
+    "first_word_start": 0,
+    "last_word_end": 7.68,
+    "audioDurationSec": 7.8715625
+  },
+  "slices": {
+    "total_tone_slice_count": 35,
+    "invalid_posterior_count": 0,
+    "invalid_tone_value_count": 0,
+    "slice_overlap_count": 0,
+    "slice_gap_count": 1,
+    "sample": [
+      {
+        "start": 0,
+        "end": 0.44,
+        "tone": 1,
+        "confidence": 0.9997195601463318,
+        "posterior": {
+          "t1": 0.9997195601463318,
+          "t2": 0.000012335148312558886,
+          "t3": 3.303258040432411e-7,
+          "t4": 0.000266264338279143,
+          "t5": 0.0000013767815971732489
+        }
+      },
+      {
+        "start": 0.84,
+        "end": 0.92,
+        "tone": 5,
+        "confidence": 0.8511765003204346,
+        "posterior": {
+          "t1": 0.03966463357210159,
+          "t2": 0.02284117043018341,
+          "t3": 0.03344946354627609,
+          "t4": 0.05286821722984314,
+          "t5": 0.8511765003204346
+        }
+      },
+      {
+        "start": 0.92,
+        "end": 1.12,
+        "tone": 2,
+        "confidence": 0.9775052666664124,
+        "posterior": {
+          "t1": 0.00031800763099454343,
+          "t2": 0.9775052666664124,
+          "t3": 0.021883221343159676,
+          "t4": 0.0002830539597198367,
+          "t5": 0.000010495458809600677
+        }
+      },
+      {
+        "start": 1.12,
+        "end": 1.32,
+        "tone": 3,
+        "confidence": 0.6015768051147461,
+        "posterior": {
+          "t1": 0.00013078772462904453,
+          "t2": 0.011903555132448673,
+          "t3": 0.6015768051147461,
+          "t4": 0.38021963834762573,
+          "t5": 0.006169205065816641
+        }
+      },
+      {
+        "start": 1.32,
+        "end": 1.54,
+        "tone": 1,
+        "confidence": 0.8824705481529236,
+        "posterior": {
+          "t1": 0.8824705481529236,
+          "t2": 0.1042381301522255,
+          "t3": 0.0066401283256709576,
+          "t4": 0.0049838712438941,
+          "t5": 0.001667253440245986
+        }
+      },
+      {
+        "start": 1.54,
+        "end": 1.72,
+        "tone": 2,
+        "confidence": 0.692824125289917,
+        "posterior": {
+          "t1": 0.003977582789957523,
+          "t2": 0.692824125289917,
+          "t3": 0.29362282156944275,
+          "t4": 0.009427350014448166,
+          "t5": 0.0001480528590036556
+        }
+      },
+      {
+        "start": 1.72,
+        "end": 1.88,
+        "tone": 5,
+        "confidence": 0.3383313715457916,
+        "posterior": {
+          "t1": 0.10101336985826492,
+          "t2": 0.267672061920166,
+          "t3": 0.10632652789354324,
+          "t4": 0.18665669858455658,
+          "t5": 0.3383313715457916
+        }
+      },
+      {
+        "start": 1.88,
+        "end": 2.16,
+        "tone": 3,
+        "confidence": 0.5256338715553284,
+        "posterior": {
+          "t1": 0.00033442192943766713,
+          "t2": 0.0036861938424408436,
+          "t3": 0.5256338715553284,
+          "t4": 0.4699723422527313,
+          "t5": 0.00037318014074116945
+        }
+      }
+    ]
+  },
+  "wordTimeSpans": {
+    "count": 35,
+    "skipped": 0,
+    "multi_char_token_count": 5,
+    "single_char_token_count": 30,
+    "samplePairs": [
+      {
+        "rawWord": "今天,",
+        "rawRange": [
+          0,
+          3
+        ],
+        "charLen": 3,
+        "wordStart": 0,
+        "wordEnd": 0.44,
+        "toneSlice": {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "我们",
+        "rawRange": [
+          3,
+          5
+        ],
+        "charLen": 2,
+        "wordStart": 0.84,
+        "wordEnd": 0.92,
+        "toneSlice": {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5
+        }
+      },
+      {
+        "rawWord": "团",
+        "rawRange": [
+          5,
+          6
+        ],
+        "charLen": 1,
+        "wordStart": 0.92,
+        "wordEnd": 1.12,
+        "toneSlice": {
+          "start": 0.92,
+          "end": 1.12,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "队",
+        "rawRange": [
+          6,
+          7
+        ],
+        "charLen": 1,
+        "wordStart": 1.12,
+        "wordEnd": 1.32,
+        "toneSlice": {
+          "start": 1.12,
+          "end": 1.32,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "要",
+        "rawRange": [
+          7,
+          8
+        ],
+        "charLen": 1,
+        "wordStart": 1.32,
+        "wordEnd": 1.54,
+        "toneSlice": {
+          "start": 1.32,
+          "end": 1.54,
+          "tone": 1
+        }
+      },
+      {
+        "rawWord": "讨",
+        "rawRange": [
+          8,
+          9
+        ],
+        "charLen": 1,
+        "wordStart": 1.54,
+        "wordEnd": 1.72,
+        "toneSlice": {
+          "start": 1.54,
+          "end": 1.72,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "论",
+        "rawRange": [
+          9,
+          10
+        ],
+        "charLen": 1,
+        "wordStart": 1.72,
+        "wordEnd": 1.88,
+        "toneSlice": {
+          "start": 1.72,
+          "end": 1.88,
+          "tone": 5
+        }
+      },
+      {
+        "rawWord": "后",
+        "rawRange": [
+          10,
+          11
+        ],
+        "charLen": 1,
+        "wordStart": 1.88,
+        "wordEnd": 2.16,
+        "toneSlice": {
+          "start": 1.88,
+          "end": 2.16,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "选",
+        "rawRange": [
+          11,
+          12
+        ],
+        "charLen": 1,
+        "wordStart": 2.16,
+        "wordEnd": 2.36,
+        "toneSlice": {
+          "start": 2.16,
+          "end": 2.36,
+          "tone": 3
+        }
+      },
+      {
+        "rawWord": "生",
+        "rawRange": [
+          12,
+          13
+        ],
+        "charLen": 1,
+        "wordStart": 2.36,
+        "wordEnd": 2.56,
+        "toneSlice": {
+          "start": 2.36,
+          "end": 2.56,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "成",
+        "rawRange": [
+          13,
+          14
+        ],
+        "charLen": 1,
+        "wordStart": 2.56,
+        "wordEnd": 2.76,
+        "toneSlice": {
+          "start": 2.56,
+          "end": 2.76,
+          "tone": 2
+        }
+      },
+      {
+        "rawWord": "相",
+        "rawRange": [
+          14,
+          15
+        ],
+        "charLen": 1,
+        "wordStart": 2.76,
+        "wordEnd": 3,
+        "toneSlice": {
+          "start": 2.76,
+          "end": 3,
+          "tone": 3
+        }
+      }
+    ],
+    "spans": [
+      {
+        "word": "今天,",
+        "rawStart": 0,
+        "rawEnd": 3,
+        "start": 0,
+        "end": 0.44,
+        "segmentIndex": 0,
+        "probability": 0.96923828125
+      },
+      {
+        "word": "我们",
+        "rawStart": 3,
+        "rawEnd": 5,
+        "start": 0.84,
+        "end": 0.92,
+        "segmentIndex": 0,
+        "probability": 0.6640625
+      },
+      {
+        "word": "团",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "start": 0.92,
+        "end": 1.12,
+        "segmentIndex": 0,
+        "probability": 0.99365234375
+      },
+      {
+        "word": "队",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "start": 1.12,
+        "end": 1.32,
+        "segmentIndex": 0,
+        "probability": 0.999755859375
+      },
+      {
+        "word": "要",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "start": 1.32,
+        "end": 1.54,
+        "segmentIndex": 0,
+        "probability": 0.98876953125
+      },
+      {
+        "word": "讨",
+        "rawStart": 8,
+        "rawEnd": 9,
+        "start": 1.54,
+        "end": 1.72,
+        "segmentIndex": 0,
+        "probability": 0.9833984375
+      },
+      {
+        "word": "论",
+        "rawStart": 9,
+        "rawEnd": 10,
+        "start": 1.72,
+        "end": 1.88,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "后",
+        "rawStart": 10,
+        "rawEnd": 11,
+        "start": 1.88,
+        "end": 2.16,
+        "segmentIndex": 0,
+        "probability": 0.319580078125
+      },
+      {
+        "word": "选",
+        "rawStart": 11,
+        "rawEnd": 12,
+        "start": 2.16,
+        "end": 2.36,
+        "segmentIndex": 0,
+        "probability": 0.9853515625
+      },
+      {
+        "word": "生",
+        "rawStart": 12,
+        "rawEnd": 13,
+        "start": 2.36,
+        "end": 2.56,
+        "segmentIndex": 0,
+        "probability": 0.87841796875
+      },
+      {
+        "word": "成",
+        "rawStart": 13,
+        "rawEnd": 14,
+        "start": 2.56,
+        "end": 2.76,
+        "segmentIndex": 0,
+        "probability": 0.89990234375
+      },
+      {
+        "word": "相",
+        "rawStart": 14,
+        "rawEnd": 15,
+        "start": 2.76,
+        "end": 3,
+        "segmentIndex": 0,
+        "probability": 0.8671875
+      },
+      {
+        "word": "关",
+        "rawStart": 15,
+        "rawEnd": 16,
+        "start": 3,
+        "end": 3.16,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      },
+      {
+        "word": "的",
+        "rawStart": 16,
+        "rawEnd": 17,
+        "start": 3.16,
+        "end": 3.34,
+        "segmentIndex": 0,
+        "probability": 0.95947265625
+      },
+      {
+        "word": "后",
+        "rawStart": 17,
+        "rawEnd": 18,
+        "start": 3.34,
+        "end": 3.48,
+        "segmentIndex": 0,
+        "probability": 0.83740234375
+      },
+      {
+        "word": "选",
+        "rawStart": 18,
+        "rawEnd": 19,
+        "start": 3.48,
+        "end": 3.74,
+        "segmentIndex": 0,
+        "probability": 0.996826171875
+      },
+      {
+        "word": "生",
+        "rawStart": 19,
+        "rawEnd": 20,
+        "start": 3.74,
+        "end": 4,
+        "segmentIndex": 0,
+        "probability": 0.98974609375
+      },
+      {
+        "word": "成",
+        "rawStart": 20,
+        "rawEnd": 21,
+        "start": 4,
+        "end": 4.26,
+        "segmentIndex": 0,
+        "probability": 0.98828125
+      },
+      {
+        "word": "流",
+        "rawStart": 21,
+        "rawEnd": 22,
+        "start": 4.26,
+        "end": 4.44,
+        "segmentIndex": 0,
+        "probability": 0.78271484375
+      },
+      {
+        "word": "程",
+        "rawStart": 22,
+        "rawEnd": 23,
+        "start": 4.44,
+        "end": 4.68,
+        "segmentIndex": 0,
+        "probability": 0.99951171875
+      },
+      {
+        "word": "和",
+        "rawStart": 23,
+        "rawEnd": 24,
+        "start": 4.68,
+        "end": 4.9,
+        "segmentIndex": 0,
+        "probability": 0.9921875
+      },
+      {
+        "word": "上",
+        "rawStart": 24,
+        "rawEnd": 25,
+        "start": 4.9,
+        "end": 5.12,
+        "segmentIndex": 0,
+        "probability": 0.99755859375
+      },
+      {
+        "word": "线",
+        "rawStart": 25,
+        "rawEnd": 26,
+        "start": 5.12,
+        "end": 5.24,
+        "segmentIndex": 0,
+        "probability": 0.8525390625
+      },
+      {
+        "word": "计",
+        "rawStart": 26,
+        "rawEnd": 27,
+        "start": 5.24,
+        "end": 5.48,
+        "segmentIndex": 0,
+        "probability": 0.997802734375
+      },
+      {
+        "word": "划",
+        "rawStart": 27,
+        "rawEnd": 28,
+        "start": 5.48,
+        "end": 5.6,
+        "segmentIndex": 0,
+        "probability": 0.99609375
+      },
+      {
+        "word": "安",
+        "rawStart": 28,
+        "rawEnd": 29,
+        "start": 5.6,
+        "end": 5.8,
+        "segmentIndex": 0,
+        "probability": 0.78857421875
+      },
+      {
+        "word": "排,",
+        "rawStart": 29,
+        "rawEnd": 31,
+        "start": 5.8,
+        "end": 5.98,
+        "segmentIndex": 0,
+        "probability": 1
+      },
+      {
+        "word": "请",
+        "rawStart": 31,
+        "rawEnd": 32,
+        "start": 5.98,
+        "end": 6.2,
+        "segmentIndex": 0,
+        "probability": 0.97314453125
+      },
+      {
+        "word": "研",
+        "rawStart": 32,
+        "rawEnd": 33,
+        "start": 6.2,
+        "end": 6.44,
+        "segmentIndex": 0,
+        "probability": 0.946533203125
+      },
+      {
+        "word": "发",
+        "rawStart": 33,
+        "rawEnd": 34,
+        "start": 6.44,
+        "end": 6.6,
+        "segmentIndex": 0,
+        "probability": 0.99560546875
+      },
+      {
+        "word": "一起",
+        "rawStart": 34,
+        "rawEnd": 36,
+        "start": 6.6,
+        "end": 6.92,
+        "segmentIndex": 0,
+        "probability": 0.93212890625
+      },
+      {
+        "word": "评",
+        "rawStart": 36,
+        "rawEnd": 37,
+        "start": 6.92,
+        "end": 7.22,
+        "segmentIndex": 0,
+        "probability": 0.99560546875
+      },
+      {
+        "word": "估",
+        "rawStart": 37,
+        "rawEnd": 38,
+        "start": 7.22,
+        "end": 7.36,
+        "segmentIndex": 0,
+        "probability": 0.9912109375
+      },
+      {
+        "word": "风",
+        "rawStart": 38,
+        "rawEnd": 39,
+        "start": 7.36,
+        "end": 7.58,
+        "segmentIndex": 0,
+        "probability": 0.9921875
+      },
+      {
+        "word": "险。",
+        "rawStart": 39,
+        "rawEnd": 41,
+        "start": 7.58,
+        "end": 7.68,
+        "segmentIndex": 0,
+        "probability": 0.9990234375
+      }
+    ]
+  },
+  "toneState": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true
+  },
+  "totals": {
+    "total_window_count": 180,
+    "tone_ready_count": 148,
+    "tone_no_pattern_count": 32,
+    "tone_invalid_pattern_count": 0,
+    "tone_caller_disabled_count": 0,
+    "tone_runtime_unsupported_count": 0,
+    "window_time_range_success_count": 180,
+    "pattern_ok_count": 148,
+    "char_eq_syl_count": 163,
+    "overlap_eq_char_count": 148,
+    "overlap_eq_syl_count": 159
+  },
+  "byLen": {
+    "1": {
+      "windows": 38,
+      "ready": 38,
+      "no_pattern": 0,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 38,
+      "overlap_eq_char": 38,
+      "overlap_eq_syl": 38,
+      "time_range_ok": 38,
+      "pattern_ok": 38
+    },
+    "2": {
+      "windows": 37,
+      "ready": 32,
+      "no_pattern": 5,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 35,
+      "overlap_eq_char": 32,
+      "overlap_eq_syl": 34,
+      "time_range_ok": 37,
+      "pattern_ok": 32
+    },
+    "3": {
+      "windows": 36,
+      "ready": 29,
+      "no_pattern": 7,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 32,
+      "overlap_eq_char": 29,
+      "overlap_eq_syl": 31,
+      "time_range_ok": 36,
+      "pattern_ok": 29
+    },
+    "4": {
+      "windows": 35,
+      "ready": 26,
+      "no_pattern": 9,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 30,
+      "overlap_eq_char": 26,
+      "overlap_eq_syl": 29,
+      "time_range_ok": 35,
+      "pattern_ok": 26
+    },
+    "5": {
+      "windows": 34,
+      "ready": 23,
+      "no_pattern": 11,
+      "invalid_pattern": 0,
+      "caller_disabled": 0,
+      "runtime_unsupported": 0,
+      "char_eq_syl": 28,
+      "overlap_eq_char": 23,
+      "overlap_eq_syl": 27,
+      "time_range_ok": 34,
+      "pattern_ok": 23
+    }
+  },
+  "failureSamples": [
+    {
+      "utteranceId": "d154",
+      "windowId": "0:2",
+      "windowText": "今天",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "rawSpanLength": 2,
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "jin",
+        "tian"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 0.44,
+      "overlapSliceCount": 1,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=1 != charSpan=2; sylSpan=2; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "0:3",
+      "windowText": "今天,我",
+      "rawStart": 0,
+      "rawEnd": 4,
+      "rawSpanLength": 4,
+      "syllableStart": 0,
+      "syllableEnd": 3,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "jin",
+        "tian",
+        "wo"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 0.92,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=4; sylSpan=3; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "0:4",
+      "windowText": "今天,我们",
+      "rawStart": 0,
+      "rawEnd": 5,
+      "rawSpanLength": 5,
+      "syllableStart": 0,
+      "syllableEnd": 4,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "jin",
+        "tian",
+        "wo",
+        "men"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 0.92,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=5; sylSpan=4; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "0:5",
+      "windowText": "今天,我们团",
+      "rawStart": 0,
+      "rawEnd": 6,
+      "rawSpanLength": 6,
+      "syllableStart": 0,
+      "syllableEnd": 5,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "jin",
+        "tian",
+        "wo",
+        "men",
+        "tuan"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 1.12,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        },
+        {
+          "start": 0.92,
+          "end": 1.12,
+          "tone": 2,
+          "confidence": 0.9775052666664124
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=6; sylSpan=5; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        },
+        {
+          "word": "团",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 0.92,
+          "end": 1.12
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "1:3",
+      "windowText": "天,我",
+      "rawStart": 1,
+      "rawEnd": 4,
+      "rawSpanLength": 3,
+      "syllableStart": 1,
+      "syllableEnd": 3,
+      "syllableSpanLength": 2,
+      "windowPinyin": [
+        "tian",
+        "wo"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 0.92,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=3; sylSpan=2; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "1:4",
+      "windowText": "天,我们",
+      "rawStart": 1,
+      "rawEnd": 5,
+      "rawSpanLength": 4,
+      "syllableStart": 1,
+      "syllableEnd": 4,
+      "syllableSpanLength": 3,
+      "windowPinyin": [
+        "tian",
+        "wo",
+        "men"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 0.92,
+      "overlapSliceCount": 2,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=2 != charSpan=4; sylSpan=3; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "1:5",
+      "windowText": "天,我们团",
+      "rawStart": 1,
+      "rawEnd": 6,
+      "rawSpanLength": 5,
+      "syllableStart": 1,
+      "syllableEnd": 5,
+      "syllableSpanLength": 4,
+      "windowPinyin": [
+        "tian",
+        "wo",
+        "men",
+        "tuan"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 1.12,
+      "overlapSliceCount": 3,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        },
+        {
+          "start": 0.92,
+          "end": 1.12,
+          "tone": 2,
+          "confidence": 0.9775052666664124
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=3 != charSpan=5; sylSpan=4; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        },
+        {
+          "word": "团",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 0.92,
+          "end": 1.12
+        }
+      ]
+    },
+    {
+      "utteranceId": "d154",
+      "windowId": "1:6",
+      "windowText": "天,我们团队",
+      "rawStart": 1,
+      "rawEnd": 7,
+      "rawSpanLength": 6,
+      "syllableStart": 1,
+      "syllableEnd": 6,
+      "syllableSpanLength": 5,
+      "windowPinyin": [
+        "tian",
+        "wo",
+        "men",
+        "tuan",
+        "dui"
+      ],
+      "windowTimeStart": 0,
+      "windowTimeEnd": 1.32,
+      "overlapSliceCount": 4,
+      "overlapSlices": [
+        {
+          "start": 0,
+          "end": 0.44,
+          "tone": 1,
+          "confidence": 0.9997195601463318
+        },
+        {
+          "start": 0.84,
+          "end": 0.92,
+          "tone": 5,
+          "confidence": 0.8511765003204346
+        },
+        {
+          "start": 0.92,
+          "end": 1.12,
+          "tone": 2,
+          "confidence": 0.9775052666664124
+        },
+        {
+          "start": 1.12,
+          "end": 1.32,
+          "tone": 3,
+          "confidence": 0.6015768051147461
+        }
+      ],
+      "tonePattern": null,
+      "readiness": "no_pattern",
+      "failureReason": "overlap=4 != charSpan=6; sylSpan=5; multiCharTokensInUtterance=5",
+      "coveringSpans": [
+        {
+          "word": "今天,",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "charLen": 3,
+          "start": 0,
+          "end": 0.44
+        },
+        {
+          "word": "我们",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "charLen": 2,
+          "start": 0.84,
+          "end": 0.92
+        },
+        {
+          "word": "团",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "charLen": 1,
+          "start": 0.92,
+          "end": 1.12
+        },
+        {
+          "word": "队",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "charLen": 1,
+          "start": 1.12,
+          "end": 1.32
+        }
+      ]
+    }
+  ],
+  "grainNote": "AcousticToneSlice grain = one per ASR word token (after short-slice skip). WordTimeSpan raw span = token UTF-16 length. Pattern gate uses rawEnd-rawStart vs overlap slice count."
+}

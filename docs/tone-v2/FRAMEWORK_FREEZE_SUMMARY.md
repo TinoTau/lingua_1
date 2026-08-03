@@ -5,3 +5,5 @@
 | Snapshot | Verdict |
 |----------|---------|
 | FW_V4_FREEZE_2026_08_03 | **CURRENT RECOVERY BASELINE** |
+
+文档层级入口：[`../current/INDEX.md`](../current/INDEX.md) · [`RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](./RUNTIME_DOMAIN_DOCUMENT_INDEX.md)

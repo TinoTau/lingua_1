@@ -1,0 +1,334 @@
+{
+  "caseId": "C03",
+  "rawText": "请把地址发给医院的医师",
+  "windowCount": 45,
+  "surfaceDistinctRecallCount": 3,
+  "eligibleMultiCandidateSpans": [
+    {
+      "windowId": "2:4",
+      "syllableStart": 2,
+      "syllableEnd": 4,
+      "text": "地址",
+      "surfaces": [
+        "低脂",
+        "地质"
+      ],
+      "identityCount": 2
+    },
+    {
+      "windowId": "6:8",
+      "syllableStart": 6,
+      "syllableEnd": 8,
+      "text": "医院",
+      "surfaces": [
+        "医院",
+        "议员"
+      ],
+      "identityCount": 3
+    },
+    {
+      "windowId": "9:11",
+      "syllableStart": 9,
+      "syllableEnd": 11,
+      "text": "医师",
+      "surfaces": [
+        "医师",
+        "议室"
+      ],
+      "identityCount": 3
+    }
+  ],
+  "expectedCombinationPotential": 8,
+  "pathCount": 1,
+  "retainedDomainCount": 2,
+  "bucketCount": 2,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 2,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 2,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请把地址发给医院的医师"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "BUCKET",
+  "bucketDetails": [
+    {
+      "pathId": "3fd7bc7a1e6fb0b59a20dc55c19296612cba0c19ae0f4eff24df3d720c06ccf4",
+      "domainId": "medical",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "的"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "3fd7bc7a1e6fb0b59a20dc55c19296612cba0c19ae0f4eff24df3d720c06ccf4",
+      "domainId": "meeting",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "把"
+        ],
+        [
+          "地址"
+        ],
+        [
+          "发"
+        ],
+        [
+          "给"
+        ],
+        [
+          "医院"
+        ],
+        [
+          "的"
+        ],
+        [
+          "医师"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请把地址发给医院的医师",
+      "sourcePathId": "3fd7bc7a1e6fb0b59a20dc55c19296612cba0c19ae0f4eff24df3d720c06ccf4",
+      "sourceDomain": "medical",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "把",
+          "sourceText": "把"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "发",
+          "sourceText": "发"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "给",
+          "sourceText": "给"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "的",
+          "sourceText": "的"
+        },
+        {
+          "start": 9,
+          "end": 11,
+          "word": "医师",
+          "sourceText": "医师"
+        }
+      ],
+      "dedupKey": "请把地址发给医院的医师",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请把地址发给医院的医师",
+      "sourcePathId": "3fd7bc7a1e6fb0b59a20dc55c19296612cba0c19ae0f4eff24df3d720c06ccf4",
+      "sourceDomain": "meeting",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "把",
+          "sourceText": "把"
+        },
+        {
+          "start": 2,
+          "end": 4,
+          "word": "地址",
+          "sourceText": "地址"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "word": "发",
+          "sourceText": "发"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "给",
+          "sourceText": "给"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "医院",
+          "sourceText": "医院"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "word": "的",
+          "sourceText": "的"
+        },
+        {
+          "start": 9,
+          "end": 11,
+          "word": "医师",
+          "sourceText": "医师"
+        }
+      ],
+      "dedupKey": "请把地址发给医院的医师",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 45,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 45,
+    "lexicalEdgeCount": 3,
+    "fallbackEdgeCount": 5,
+    "edgeCountAfterFallback": 8,
+    "fallbackInjectionCount": 5,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 2
+      },
+      {
+        "start": 4,
+        "end": 6
+      },
+      {
+        "start": 8,
+        "end": 9
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 45,
+    "sqlQueryCount": 22,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "C"
+  ],
+  "why": "triple embedded",
+  "prescanStatus": "TRIGGERED",
+  "orchMs": 36.83369994163513,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

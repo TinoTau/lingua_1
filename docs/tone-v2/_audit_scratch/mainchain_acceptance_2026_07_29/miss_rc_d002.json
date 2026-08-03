@@ -1,0 +1,51 @@
+{
+  "id": "d002",
+  "raw": "麻烦帮我做一杯美式带走大背就行谢谢",
+  "asrToneSliceCount": 16,
+  "diagToneSliceCount": 16,
+  "wordTimeSpanBuilt": 16,
+  "wordTimeSpanMapped": 16,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "谢谢",
+      "pinyinKey": "xie|xie",
+      "result": "HIT_REPLAY",
+      "fail": null,
+      "detail": {},
+      "pattern": [
+        1,
+        1
+      ],
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 2.8,
+        "end": 3.1
+      },
+      "replayWindowTime": {
+        "start": 2.8,
+        "end": 3.1
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 17,
+    "theoreticalWindows2to5": 58,
+    "theoreticalWindows1to5": 75
+  },
+  "summary": {
+    "spanCount": 9,
+    "candidateCount": 9
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

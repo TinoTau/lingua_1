@@ -1,0 +1,213 @@
+{
+  "id": "d019",
+  "expected": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+  "asr": "今天,我們團體 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+  "raw_asr": "今天,我們團體 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 3,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.999127209186554,
+      "t2": 0.0000953265480347909,
+      "t3": 0.00000555410815650248,
+      "t4": 0.0007561009260825813,
+      "t5": 0.000015865032764850184
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 34,
+    "wordTimeSpanCount": 35,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 1,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "风险",
+        "pinyinKey": "feng|xian",
+        "windowTimeRange": {
+          "start": 7.44,
+          "end": 7.86
+        },
+        "acousticTonePattern": [
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 21,
+    "candidateCount": 21,
+    "candidateSentenceCount": 21,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 21,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": true,
+    "maxDelta": 1.132594999999995,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "candidate:0",
+        "text": "今天,我們團體 要讨论候选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+        "kenlmScore": -90.623085,
+        "deltaVsRaw": 1.132594999999995,
+        "isRaw": false,
+        "replacementCount": 21
+      },
+      {
+        "rank": 2,
+        "candidateId": "raw",
+        "text": "今天,我們團體 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+        "kenlmScore": -91.75568,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "今天,我們團體 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+        "kenlmScore": -91.75568,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 21
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 677,
+      "queryCount": 3,
+      "avgMs": 225.66666666666666,
+      "p50Ms": 225.66666666666666,
+      "p95Ms": 225.66666666666666,
+      "maxMs": 677
+    },
+    "allCombinationDeltas": [
+      1.132594999999995,
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -91.75568,
+    "maxNormalizedDelta": 0.000012413860426653827,
+    "kenlmSubprocessMs": 677,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "今天,我們團體 要讨论候选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+        "delta": 1.132594999999995,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      },
+      {
+        "sentence": "今天,我們團體 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "今天",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "今天",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我們",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我們",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "團體",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "團體",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "要讨",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "要讨",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "论",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "论",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "后选",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "候选",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "生",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "生",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "成相",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "成相",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

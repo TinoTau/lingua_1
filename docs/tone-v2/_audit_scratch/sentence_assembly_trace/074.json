@@ -1,0 +1,2992 @@
+{
+  "caseId": "d074",
+  "fileNum": "074",
+  "scenario": "classroom",
+  "rawText": "作业是下周一下午交吗？可以电子版提交吗？",
+  "pathCount": 1,
+  "maxSentenceCandidates": 16,
+  "perSpanLimitRule": "getPerSpanCandidateLimit: <=1→8, 2→6, else→4",
+  "v4Limits": {
+    "maxIntervalEnumNodes": 1024,
+    "maxIntervalRepairPicksPerPath": 16
+  },
+  "paths": [
+    {
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "pathIndex": 0,
+      "pathSource": "SegmentationPath/Lattice",
+      "pathScore": "NOT PRESENT IN PRODUCTION TYPE",
+      "boundaryKey": "0-1|1-3|3-4|4-5|5-6|6-7|7-8|8-9|9-10|10-12|12-13|13-14|14-15|15-16|16-17|17-18",
+      "fineSpanCount": 16,
+      "bucketCount": 1,
+      "retainedDomains": [
+        "medical"
+      ],
+      "insufficientEvidence": false,
+      "bucketDomains": [
+        "medical"
+      ],
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "作",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 0,
+          "rawOrderIndex": 0
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+          "rawRange": [
+            1,
+            3
+          ],
+          "rawText": "业是",
+          "syllableRange": [
+            1,
+            3
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 1,
+          "rawOrderIndex": 1
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+          "rawRange": [
+            3,
+            4
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            3,
+            4
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 2,
+          "rawOrderIndex": 2
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "周",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 3,
+          "rawOrderIndex": 3
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "一",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 4,
+          "rawOrderIndex": 4
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "下",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 5,
+          "rawOrderIndex": 5
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+          "rawRange": [
+            7,
+            8
+          ],
+          "rawText": "午",
+          "syllableRange": [
+            7,
+            8
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 6,
+          "rawOrderIndex": 6
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+          "rawRange": [
+            8,
+            9
+          ],
+          "rawText": "交",
+          "syllableRange": [
+            8,
+            9
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 7,
+          "rawOrderIndex": 7
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+          "rawRange": [
+            9,
+            10
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            9,
+            10
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 8,
+          "rawOrderIndex": 8
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+          "rawRange": [
+            11,
+            13
+          ],
+          "rawText": "可以",
+          "syllableRange": [
+            10,
+            12
+          ],
+          "coarseSpanIds": [
+            "c5"
+          ],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 9,
+          "rawOrderIndex": 9
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "电",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 10,
+          "rawOrderIndex": 10
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+          "rawRange": [
+            14,
+            15
+          ],
+          "rawText": "子",
+          "syllableRange": [
+            13,
+            14
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 11,
+          "rawOrderIndex": 11
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+          "rawRange": [
+            15,
+            16
+          ],
+          "rawText": "版",
+          "syllableRange": [
+            14,
+            15
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 12,
+          "rawOrderIndex": 12
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+          "rawRange": [
+            16,
+            17
+          ],
+          "rawText": "提",
+          "syllableRange": [
+            15,
+            16
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 13,
+          "rawOrderIndex": 13
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+          "rawRange": [
+            17,
+            18
+          ],
+          "rawText": "交",
+          "syllableRange": [
+            16,
+            17
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 14,
+          "rawOrderIndex": 14
+        },
+        {
+          "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "吗",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "overlapGroupId": null,
+          "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+          "productionIndex": 15,
+          "rawOrderIndex": 15
+        }
+      ],
+      "pathFineOverlap": [],
+      "buckets": [
+        {
+          "bucketId": "p0_b0",
+          "bucketDomain": "medical",
+          "sourceRetainedDomain": "medical",
+          "fineSpanIds": [
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+            "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15"
+          ],
+          "baseCandidateCount": 0,
+          "domainCandidateCount": 4,
+          "canonicalCandidateCount": 16,
+          "rawFallbackCount": 0,
+          "assemblyDropTraces": [],
+          "perSpanBudget": [
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+                  "word": "作",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+              "before": [
+                {
+                  "id": "1:3:1",
+                  "word": "液室",
+                  "score": 2.006
+                }
+              ],
+              "after": [
+                {
+                  "id": "1:3:1",
+                  "word": "液室",
+                  "score": 2.006
+                },
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+                  "word": "业是",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+                  "word": "下",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+                  "word": "周",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+                  "word": "一",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+                  "word": "下",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+                  "word": "午",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+                  "word": "交",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+                  "word": "吗",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+              "before": [
+                {
+                  "id": "10:12:2",
+                  "word": "科医",
+                  "score": 2.36
+                },
+                {
+                  "id": "10:12:3",
+                  "word": "科医",
+                  "score": 2.36
+                },
+                {
+                  "id": "10:12:4",
+                  "word": "科医",
+                  "score": 2.36
+                }
+              ],
+              "after": [
+                {
+                  "id": "10:12:2",
+                  "word": "科医",
+                  "score": 2.36
+                },
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+                  "word": "可以",
+                  "score": 0
+                }
+              ],
+              "dropped": [
+                {
+                  "id": "10:12:3",
+                  "word": "科医",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                },
+                {
+                  "id": "10:12:4",
+                  "word": "科医",
+                  "reason": "DROP_PER_SPAN_BUDGET"
+                }
+              ],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+                  "word": "电",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+                  "word": "子",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+                  "word": "版",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+                  "word": "提",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+                  "word": "交",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            },
+            {
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15",
+              "before": [],
+              "after": [
+                {
+                  "id": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15",
+                  "word": "吗",
+                  "score": 0
+                }
+              ],
+              "dropped": [],
+              "perSpanLimit": 4,
+              "sortKey": "score desc, candidateId asc (stableSortPicks); order sameDomain→base→fallback→canonical; surface dedupe",
+              "priorQuota": "NOT_APPLIED (domainPriors=[])"
+            }
+          ],
+          "perSpanLimit": 4,
+          "gridSlotSizes": [
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "generatedSentenceCount": 4,
+          "intervalAssemblyCandidateCount": 4,
+          "intervalRejectedOverlapCount": 0,
+          "limitedSentenceCount": 4,
+          "limitName": "maxSentenceCandidates",
+          "limitValue": 16,
+          "asmReplayMatch": true,
+          "candidates": [
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:0",
+              "matchKey": "0:1:作",
+              "word": "作",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "1:3:1",
+              "matchKey": "1:3:液室",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "液室",
+              "surface": "液室",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e8be93e6b6b2e5ae",
+              "rawRange": [
+                1,
+                3
+              ],
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.006,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=medical",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s2"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:1",
+              "matchKey": "1:3:业是",
+              "word": "业是",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s1",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:2",
+              "matchKey": "3:4:下",
+              "word": "下",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:3",
+              "matchKey": "4:5:周",
+              "word": "周",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:4",
+              "matchKey": "5:6:一",
+              "word": "一",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:5",
+              "matchKey": "6:7:下",
+              "word": "下",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:6",
+              "matchKey": "7:8:午",
+              "word": "午",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:7",
+              "matchKey": "8:9:交",
+              "word": "交",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:8",
+              "matchKey": "9:10:吗",
+              "word": "吗",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "10:12:2",
+              "matchKey": "11:13:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e584bfe7a791e58c",
+              "rawRange": [
+                11,
+                13
+              ],
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 1,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=medical",
+              "inBeforeBudget": true,
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "10:12:3",
+              "matchKey": "11:13:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e58685e7a791e58c",
+              "rawRange": [
+                11,
+                13
+              ],
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 2,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=medical",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "10:12:4",
+              "matchKey": "11:13:科医",
+              "provenanceNote": "Sentence.replacements.candidateId stripped in assembleDomainAwareSpanSets; matched by rawRange+surface",
+              "word": "科医",
+              "surface": "科医",
+              "source": "domain_term",
+              "recallSource": "lexicon_pinyin_topk",
+              "hitKind": "parent_fragment",
+              "parentTermId": "term-e5a496e7a791e58c",
+              "rawRange": [
+                11,
+                13
+              ],
+              "fineSpanId": "fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "domains": [
+                "medical"
+              ],
+              "isBase": false,
+              "isCovered": false,
+              "isCanonical": false,
+              "compatibilityStatus": "active",
+              "candidateRank": 3,
+              "candidateScore": 2.36,
+              "tonePenalty": 1,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_DOMAIN_MATCH",
+              "ownerModule": "assemble-domain-aware-span-sets.filterDomainCandidatesPerSpan",
+              "decisionFunction": "isSameDomainCandidate",
+              "reasonDetail": "domains includes bucketDomain=medical",
+              "inBeforeBudget": true,
+              "inAfterBudget": false,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1"
+              ],
+              "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:9",
+              "matchKey": "11:13:可以",
+              "word": "可以",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:10",
+              "matchKey": "13:14:电",
+              "word": "电",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:11",
+              "matchKey": "14:15:子",
+              "word": "子",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:12",
+              "matchKey": "15:16:版",
+              "word": "版",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:13",
+              "matchKey": "16:17:提",
+              "word": "提",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:14",
+              "matchKey": "17:18:交",
+              "word": "交",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            },
+            {
+              "candidateId": "canonical:fine:cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05:15",
+              "matchKey": "18:19:吗",
+              "word": "吗",
+              "isCanonical": true,
+              "bucketEligible": "YES",
+              "reasonCode": "KEEP_CANONICAL_PRESERVATION",
+              "ownerModule": "budgetPerSpanCandidates",
+              "decisionFunction": "domainAwareCanonicalFromPathFineSpan",
+              "inAfterBudget": true,
+              "sentenceIds": [
+                "p0_b0_s0",
+                "p0_b0_s1",
+                "p0_b0_s2",
+                "p0_b0_s3"
+              ],
+              "finalStatus": "USED_IN_SENTENCE"
+            }
+          ],
+          "sentences": [
+            {
+              "sentenceId": "p0_b0_s0",
+              "bucketId": "p0_b0",
+              "bucketDomain": "medical",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "finalText": "作液室下周一下午交吗？科医电子版提交吗？",
+              "assemblyRank": 1,
+              "assemblyScore": 4.366,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "液室",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "spanText": "业是",
+                  "candidateScore": 2.006
+                },
+                {
+                  "candidateId": null,
+                  "word": "科医",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "spanText": "可以",
+                  "candidateScore": 2.36
+                },
+                {
+                  "candidateId": null,
+                  "word": "作",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "作",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "周",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "周",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "一",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "一",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "电",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "电",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "子",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "子",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "版",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "spanText": "版",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "提",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "spanText": "提",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "作",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "液室",
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "周",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "一",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "科医",
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "电",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "子",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "版",
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "提",
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "作液室下周一下午交吗？科医电子版提交吗？",
+              "textMatchesFinal": true
+            },
+            {
+              "sentenceId": "p0_b0_s1",
+              "bucketId": "p0_b0",
+              "bucketDomain": "medical",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "finalText": "作业是下周一下午交吗？科医电子版提交吗？",
+              "assemblyRank": 2,
+              "assemblyScore": 2.36,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "科医",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "spanText": "可以",
+                  "candidateScore": 2.36
+                },
+                {
+                  "candidateId": null,
+                  "word": "作",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "作",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "业是",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "spanText": "业是",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "周",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "周",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "一",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "一",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "电",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "电",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "子",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "子",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "版",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "spanText": "版",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "提",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "spanText": "提",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "作",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "业是",
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "周",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "一",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "科医",
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "电",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "子",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "版",
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "提",
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "作业是下周一下午交吗？科医电子版提交吗？",
+              "textMatchesFinal": true
+            },
+            {
+              "sentenceId": "p0_b0_s2",
+              "bucketId": "p0_b0",
+              "bucketDomain": "medical",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "finalText": "作液室下周一下午交吗？可以电子版提交吗？",
+              "assemblyRank": 3,
+              "assemblyScore": 2.006,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "液室",
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true,
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "spanText": "业是",
+                  "candidateScore": 2.006
+                },
+                {
+                  "candidateId": null,
+                  "word": "作",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "作",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "周",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "周",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "一",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "一",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "可以",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "spanText": "可以",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "电",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "电",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "子",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "子",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "版",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "spanText": "版",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "提",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "spanText": "提",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "作",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "DOMAIN_OR_BASE",
+                  "text": "液室",
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "lexicon_pinyin_topk",
+                  "repairTarget": true
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "周",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "一",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "可以",
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "电",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "子",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "版",
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "提",
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "作液室下周一下午交吗？可以电子版提交吗？",
+              "textMatchesFinal": true
+            },
+            {
+              "sentenceId": "p0_b0_s3",
+              "bucketId": "p0_b0",
+              "bucketDomain": "medical",
+              "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+              "finalText": "作业是下周一下午交吗？可以电子版提交吗？",
+              "assemblyRank": 4,
+              "assemblyScore": 0,
+              "replacements": [
+                {
+                  "candidateId": null,
+                  "word": "作",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "spanText": "作",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "业是",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "spanText": "业是",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "周",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "spanText": "周",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "一",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "spanText": "一",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "下",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "spanText": "下",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "午",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "spanText": "午",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "可以",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "spanText": "可以",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "电",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "spanText": "电",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "子",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "spanText": "子",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "版",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "spanText": "版",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "提",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "spanText": "提",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "交",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "spanText": "交",
+                  "candidateScore": 0
+                },
+                {
+                  "candidateId": null,
+                  "word": "吗",
+                  "source": "canonical_exact",
+                  "repairTarget": false,
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "spanText": "吗",
+                  "candidateScore": 0
+                }
+              ],
+              "segments": [
+                {
+                  "type": "RAW",
+                  "text": "作",
+                  "rawRange": [
+                    0,
+                    1
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "业是",
+                  "rawRange": [
+                    1,
+                    3
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    3,
+                    4
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "周",
+                  "rawRange": [
+                    4,
+                    5
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "一",
+                  "rawRange": [
+                    5,
+                    6
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "下",
+                  "rawRange": [
+                    6,
+                    7
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "午",
+                  "rawRange": [
+                    7,
+                    8
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    8,
+                    9
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    9,
+                    10
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    10,
+                    11
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_gap_owner:buildSentenceCandidates.buildGapCanonicalPicks/uncovered"
+                },
+                {
+                  "type": "RAW",
+                  "text": "可以",
+                  "rawRange": [
+                    11,
+                    13
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "电",
+                  "rawRange": [
+                    13,
+                    14
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "子",
+                  "rawRange": [
+                    14,
+                    15
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "版",
+                  "rawRange": [
+                    15,
+                    16
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "提",
+                  "rawRange": [
+                    16,
+                    17
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "交",
+                  "rawRange": [
+                    17,
+                    18
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "吗",
+                  "rawRange": [
+                    18,
+                    19
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "canonical_exact",
+                  "repairTarget": false
+                },
+                {
+                  "type": "RAW",
+                  "text": "？",
+                  "rawRange": [
+                    19,
+                    20
+                  ],
+                  "fineSpanId": null,
+                  "candidateId": null,
+                  "source": "raw_tail"
+                }
+              ],
+              "reconstructedText": "作业是下周一下午交吗？可以电子版提交吗？",
+              "textMatchesFinal": true
+            }
+          ],
+          "bucketDedupe": []
+        }
+      ],
+      "sentenceCandidateCount": 4
+    }
+  ],
+  "crossPath": {
+    "input": [
+      {
+        "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "bucketId": "p0_b0",
+        "bucketDomain": "medical",
+        "sentenceId": "p0_b0_s0",
+        "text": "作液室下周一下午交吗？科医电子版提交吗？",
+        "rank": 1
+      },
+      {
+        "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "bucketId": "p0_b0",
+        "bucketDomain": "medical",
+        "sentenceId": "p0_b0_s1",
+        "text": "作业是下周一下午交吗？科医电子版提交吗？",
+        "rank": 2
+      },
+      {
+        "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "bucketId": "p0_b0",
+        "bucketDomain": "medical",
+        "sentenceId": "p0_b0_s2",
+        "text": "作液室下周一下午交吗？可以电子版提交吗？",
+        "rank": 3
+      },
+      {
+        "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "bucketId": "p0_b0",
+        "bucketDomain": "medical",
+        "sentenceId": "p0_b0_s3",
+        "text": "作业是下周一下午交吗？可以电子版提交吗？",
+        "rank": 4
+      }
+    ],
+    "output": [
+      {
+        "globalSentenceId": "cp_0",
+        "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s0",
+        "text": "作液室下周一下午交吗？科医电子版提交吗？"
+      },
+      {
+        "globalSentenceId": "cp_1",
+        "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s1",
+        "text": "作业是下周一下午交吗？科医电子版提交吗？"
+      },
+      {
+        "globalSentenceId": "cp_2",
+        "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s2",
+        "text": "作液室下周一下午交吗？可以电子版提交吗？"
+      },
+      {
+        "globalSentenceId": "cp_3",
+        "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+        "sourceBucketId": "p0_b0",
+        "sourceSentenceId": "p0_b0_s3",
+        "text": "作业是下周一下午交吗？可以电子版提交吗？"
+      }
+    ],
+    "drops": [],
+    "uniqueBeforeCapCount": 4,
+    "productionTrace": {
+      "crossPathInputCandidateCount": 4,
+      "crossPathDuplicateCount": 0,
+      "crossPathUniqueCandidateCount": 4,
+      "crossPathOutputCandidateCount": 4,
+      "crossPathTruncatedCount": 0,
+      "globalCandidateCap": 16,
+      "kenlmInputSource": "cross_path_merge",
+      "dedupKey": "exact_text",
+      "duplicateRetention": "first_wins",
+      "collectionOrder": "path_bucket_candidate"
+    },
+    "replayMatch": true
+  },
+  "kenlmInputs": [
+    {
+      "kenlmInputIndex": 0,
+      "text": "作液室下周一下午交吗？科医电子版提交吗？",
+      "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s0",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 4.366,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    },
+    {
+      "kenlmInputIndex": 1,
+      "text": "作业是下周一下午交吗？科医电子版提交吗？",
+      "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s1",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 2.36,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    },
+    {
+      "kenlmInputIndex": 2,
+      "text": "作液室下周一下午交吗？可以电子版提交吗？",
+      "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s2",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 2.006,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    },
+    {
+      "kenlmInputIndex": 3,
+      "text": "作业是下周一下午交吗？可以电子版提交吗？",
+      "sourcePathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "sourceBucketId": "p0_b0",
+      "sourceSentenceId": "p0_b0_s3",
+      "candidateIds": [],
+      "traced": true,
+      "textEqualsCrossPath": true,
+      "assemblyScore": 0,
+      "kenlmScore": null,
+      "kenlmRank": null,
+      "note": "KenLM subprocess not required for input provenance; input list = CrossPath combinations"
+    }
+  ],
+  "stats": {
+    "budgetDropCount": 2,
+    "budgetTriggerSpans": 1,
+    "bucketDropCount": 0,
+    "assemblyEligibleNoSentence": 0,
+    "pathCount": 1,
+    "bucketCount": 1,
+    "bucketSentences": 4,
+    "crossPathOut": 4
+  },
+  "anomalies": {
+    "A1": [],
+    "A2": [],
+    "A3": [],
+    "A4": [],
+    "A5": [],
+    "A6": [],
+    "A7": [],
+    "A8": [],
+    "A9": [],
+    "A10": [],
+    "A11": [],
+    "A12": [],
+    "A13": [],
+    "A14": [],
+    "A15": [],
+    "A16": [],
+    "A17": [],
+    "A18": [],
+    "A19": [
+      {
+        "caseId": "d074",
+        "note": "PRODUCTION: domainAwarePickToSpanReplacementPick omits candidateId; reverse map uses rawRange+surface",
+        "owner": "window-candidate-to-pick.ts::domainAwarePickToSpanReplacementPick"
+      }
+    ],
+    "A20": []
+  },
+  "candidateFateGlobal": [
+    {
+      "caseId": "d074",
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "bucketDomain": "medical",
+      "candidateId": "1:3:1",
+      "word": "液室",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d074",
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "bucketDomain": "medical",
+      "candidateId": "10:12:2",
+      "word": "科医",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d074",
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "bucketDomain": "medical",
+      "candidateId": "10:12:3",
+      "word": "科医",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    },
+    {
+      "caseId": "d074",
+      "pathId": "cfa8bb1a264544e0081de7f7df6ddab5a810d642a10eb16e14969796fff1dc05",
+      "bucketDomain": "medical",
+      "candidateId": "10:12:4",
+      "word": "科医",
+      "finalStatus": "USED_IN_MULTIPLE_SENTENCES"
+    }
+  ]
+}

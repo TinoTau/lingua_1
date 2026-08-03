@@ -1,0 +1,210 @@
+{
+  "id": "d044",
+  "expected": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+  "asr": "这周的上限计划已经全任上限计划评审安排在周四上午",
+  "raw_asr": "这周的上限计划已经全任上限计划评审安排在周四上午",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 23,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.002478634938597679,
+      "t2": 0.00003401891081011854,
+      "t3": 0.000025880519388010725,
+      "t4": 0.9973992109298706,
+      "t5": 0.00006231239240150899
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 23,
+    "wordTimeSpanCount": 23,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "四上",
+        "pinyinKey": "si|shang",
+        "windowTimeRange": {
+          "start": 4.22,
+          "end": 4.62
+        },
+        "acousticTonePattern": [
+          4,
+          3
+        ]
+      },
+      {
+        "text": "四上午",
+        "pinyinKey": "si|shang|wu",
+        "windowTimeRange": {
+          "start": 4.22,
+          "end": 4.76
+        },
+        "acousticTonePattern": [
+          4,
+          3,
+          3
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 13,
+    "candidateCount": 13,
+    "candidateSentenceCount": 13,
+    "appliedCount": 0,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 0,
+    "kenlmQueryCount": 2
+  },
+  "sentenceRerank": {
+    "spanCount": 13,
+    "perSpanLimit": 4,
+    "combinationCount": 1,
+    "kenlmQueryCount": 2,
+    "pickedIsRaw": true,
+    "maxDelta": 0,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "这周的上限计划已经全任上限计划评审安排在周四上午",
+        "kenlmScore": -55.16886,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:0",
+        "text": "这周的上限计划已经全任上限计划评审安排在周四上午",
+        "kenlmScore": -55.16886,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 13
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 666,
+      "queryCount": 2,
+      "avgMs": 333,
+      "p50Ms": 333,
+      "p95Ms": 333,
+      "maxMs": 666
+    },
+    "allCombinationDeltas": [
+      0
+    ],
+    "picked": null,
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -55.16886,
+    "maxNormalizedDelta": 0,
+    "kenlmSubprocessMs": 666,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "这周的上限计划已经全任上限计划评审安排在周四上午",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "picked_raw"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "这周",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "这周",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "的",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "的",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "上限",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "上限",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "计划",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "计划",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "已经",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "已经",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "全任",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "全任",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "上限",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "上限",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "计划",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "计划",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

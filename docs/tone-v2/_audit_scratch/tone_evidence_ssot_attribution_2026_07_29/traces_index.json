@@ -1,0 +1,6483 @@
+[
+  {
+    "id": "d001",
+    "expected": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+    "asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+    "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 19,
+      "evidenceProductionCount": 19,
+      "firstSlicePosterior": {
+        "t1": 0.006326558534055948,
+        "t2": 0.30165788531303406,
+        "t3": 0.6345226764678955,
+        "t4": 0.05742381885647774,
+        "t5": 0.00006909275543875992
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 19,
+      "wordTimeSpanCount": 19,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 19
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "马分",
+          "pinyinKey": "ma|fen",
+          "windowTimeRange": {
+            "start": 5.42,
+            "end": 5.76
+          },
+          "acousticTonePattern": [
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝莓马分吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝莓马分吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "你好",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "你好",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我想",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我想",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "點一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "點一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "杯熱",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "杯熱",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "拿鐵",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "拿鐵",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "鐘",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "鐘",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "貝少",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "貝少",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "糖 今",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "糖 今",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d004",
+    "expected": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+    "asr": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+    "raw_asr": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 31,
+      "evidenceProductionCount": 31,
+      "firstSlicePosterior": {
+        "t1": 0.0012153908610343933,
+        "t2": 0.07020698487758636,
+        "t3": 0.8705276250839233,
+        "t4": 0.05796610191464424,
+        "t5": 0.00008383589738514274
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 31,
+      "wordTimeSpanCount": 31,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 31
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "群裡",
+          "pinyinKey": "qun|li",
+          "windowTimeRange": {
+            "start": 6.62,
+            "end": 6.98
+          },
+          "acousticTonePattern": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 17,
+      "candidateCount": 17,
+      "candidateSentenceCount": 17,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 17,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 17
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "小城",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "小城",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "客户",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "客户",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "反馈",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "反馈",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "翻译",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "翻译",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "引擎",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "引擎",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "接口",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "接口",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "报错",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "报错",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我们",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d005",
+    "expected": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+    "asr": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+    "raw_asr": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 29,
+      "evidenceProductionCount": 29,
+      "firstSlicePosterior": {
+        "t1": 0.9557504057884216,
+        "t2": 0.007039271295070648,
+        "t3": 0.0006950456881895661,
+        "t4": 0.0364181213080883,
+        "t5": 0.00009715087071526796
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 29,
+      "wordTimeSpanCount": 29,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 29
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 1,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "风险",
+          "pinyinKey": "feng|xian",
+          "windowTimeRange": {
+            "start": 6.42,
+            "end": 6.86
+          },
+          "acousticTonePattern": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 19,
+      "candidateCount": 19,
+      "candidateSentenceCount": 19,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 19,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "今天德湛会现过一下定,但中台 进度内存占用高这块需要先留保护 大家看一下风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 19
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 19
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "今天德湛会现过一下定,但中台 进度内存占用高这块需要先留保护 大家看一下风险",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护 大家看一下风险",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "今天",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "今天",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "德湛",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "德湛",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "会现",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "会现",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "过",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "过",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "一下",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "一下",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "定,但",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "定,但",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "中台",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "中台",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "进",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "进",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d007",
+    "expected": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+    "asr": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车您提前跟我说",
+    "raw_asr": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车您提前跟我说",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 29,
+      "evidenceProductionCount": 29,
+      "firstSlicePosterior": {
+        "t1": 0.00011345469829393551,
+        "t2": 0.000013684028999705333,
+        "t3": 0.000005607645107374992,
+        "t4": 0.9998650550842285,
+        "t5": 0.000002204969177910243
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 29,
+      "wordTimeSpanCount": 29,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 29
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "我说",
+          "pinyinKey": "wo|shuo",
+          "windowTimeRange": {
+            "start": 5.9399999999999995,
+            "end": 6.54
+          },
+          "acousticTonePattern": [
+            4,
+            1
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 15,
+      "candidateCount": 15,
+      "candidateSentenceCount": 15,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 15,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车您提前跟我说",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "市副局仲觀村軟件遠走机场告訴 我幹 9点半的回药师赌车您提前跟我说",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 15
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车您提前跟我说",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 15
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "市副局仲觀村軟件遠走机场告訴 我幹 9点半的回药师赌车您提前跟我说",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车您提前跟我说",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "市副",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "市副",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "局仲",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "局仲",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "觀村",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "觀村",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "軟件",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "軟件",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "遠走",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "遠走",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "機場",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "机场",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "告訴",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "告訴",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我幹",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我幹",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d013",
+    "expected": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+    "asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+    "raw_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 19,
+      "evidenceProductionCount": 19,
+      "firstSlicePosterior": {
+        "t1": 0.00008058632374741137,
+        "t2": 0.00011986619210802019,
+        "t3": 0.0004564821138046682,
+        "t4": 0.999332845211029,
+        "t5": 0.000010296826985722873
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 19,
+      "wordTimeSpanCount": 19,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 19
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "没有",
+          "pinyinKey": "mei|you",
+          "windowTimeRange": {
+            "start": 4.12,
+            "end": 4.36
+          },
+          "acousticTonePattern": [
+            4,
+            4
+          ]
+        },
+        {
+          "text": "没有折",
+          "pinyinKey": "mei|you|zhe",
+          "windowTimeRange": {
+            "start": 4.12,
+            "end": 4.56
+          },
+          "acousticTonePattern": [
+            4,
+            4,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 11,
+      "candidateCount": 11,
+      "candidateSentenceCount": 11,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 11,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 11
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "这件",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "这件",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "外套",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "外套",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "能试",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "能试",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "穿吗",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "穿吗",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我穿",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我穿",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "中",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "中",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "码",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "码",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "买两",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "买两",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d015",
+    "expected": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+    "asr": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+    "raw_asr": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 21,
+      "evidenceProductionCount": 21,
+      "firstSlicePosterior": {
+        "t1": 0.0006086130160838366,
+        "t2": 0.036121517419815063,
+        "t3": 0.9449061155319214,
+        "t4": 0.018172187730669975,
+        "t5": 0.00019143610552418977
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 21,
+      "wordTimeSpanCount": 21,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 21
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "一点",
+          "pinyinKey": "yi|dian",
+          "windowTimeRange": {
+            "start": 4.5200000000000005,
+            "end": 4.84
+          },
+          "acousticTonePattern": [
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "我想",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我想",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "对比",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "对比",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "这两",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "这两",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "款订",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "款订",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "单",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "单",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "中",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "中",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "台的",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "台的",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "价格",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "价格",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d019",
+    "expected": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+    "asr": "今天,我們團隊 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+    "raw_asr": "今天,我們團隊 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 35,
+      "evidenceProductionCount": 36,
+      "firstSlicePosterior": {
+        "t1": 0.9976363182067871,
+        "t2": 0.0003839305427391082,
+        "t3": 0.00003071187893510796,
+        "t4": 0.0019042037893086672,
+        "t5": 0.0000449707149527967
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 35,
+      "wordTimeSpanCount": 36,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "short_duration_skipped": 1,
+        "slice_created": 35
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "风险",
+          "pinyinKey": "feng|xian",
+          "windowTimeRange": {
+            "start": 7.44,
+            "end": 7.86
+          },
+          "acousticTonePattern": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 21,
+      "candidateCount": 21,
+      "candidateSentenceCount": 21,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 21,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "今天,我們團隊 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "今天,我們團隊 对要讨论候选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 21
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "今天,我們團隊 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 21
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "今天,我們團隊 对要讨论候选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "今天,我們團隊 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "今天",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "今天",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我們",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我們",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "團隊",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "團隊",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "对要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "对要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "讨论",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "讨论",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "后选",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "候选",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "生成",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "生成",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "相关",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "相关",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d020",
+    "expected": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+    "asr": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+    "raw_asr": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 28,
+      "evidenceProductionCount": 28,
+      "firstSlicePosterior": {
+        "t1": 0.000036184188502375036,
+        "t2": 0.0000015562870885332813,
+        "t3": 0.0000012407660960889189,
+        "t4": 0.9999574422836304,
+        "t5": 0.000003591638460420654
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 28,
+      "wordTimeSpanCount": 28,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 28
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "回归",
+          "pinyinKey": "hui|gui",
+          "windowTimeRange": {
+            "start": 5.24,
+            "end": 5.66
+          },
+          "acousticTonePattern": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 16,
+      "candidateCount": 16,
+      "candidateSentenceCount": 16,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 16,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "这次发布我们线,对齐商线计划窗口后选生成模块需要连掉别漏掉回归",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "这次发布我们线,对齐商线计划窗口后选生成模块需要连掉别漏掉回归",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "这次",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "这次",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "发布",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "发布",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我们",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "线",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "线",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "对其",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "对齐",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "商线",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "商线",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "计划",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "计划",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "窗口",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "窗口",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d021",
+    "expected": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+    "asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+    "raw_asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 27,
+      "evidenceProductionCount": 28,
+      "firstSlicePosterior": {
+        "t1": 0.0008551566279493272,
+        "t2": 0.00021499948343262076,
+        "t3": 0.0060934042558074,
+        "t4": 0.9927998781204224,
+        "t5": 0.00003652490704553202
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 27,
+      "wordTimeSpanCount": 28,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "short_duration_skipped": 1,
+        "slice_created": 27
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "新一",
+          "pinyinKey": "xin|yi",
+          "windowTimeRange": {
+            "start": 5.5,
+            "end": 5.880000000000001
+          },
+          "acousticTonePattern": [
+            4,
+            4
+          ]
+        },
+        {
+          "text": "新一版",
+          "pinyinKey": "xin|yi|ban",
+          "windowTimeRange": {
+            "start": 5.5,
+            "end": 5.96
+          },
+          "acousticTonePattern": [
+            4,
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 15,
+      "candidateCount": 15,
+      "candidateSentenceCount": 15,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 5
+    },
+    "sentenceRerank": {
+      "spanCount": 15,
+      "perSpanLimit": 4,
+      "combinationCount": 4,
+      "kenlmQueryCount": 5,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "会上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 15
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "會上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 15
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 5,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 5 got 0",
+      "allCombinations": [
+        {
+          "sentence": "会上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "會上提到候选生成連路 要加監控 通上限期画文当我下午更新一版",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "会上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "會上",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "会上",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "提到",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "提到",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "候選",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "候选",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "生成",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "生成",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "連路",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "連路",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "要加",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "要加",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "監",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "監",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "控 通",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "控 通",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d022",
+    "expected": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+    "asr": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+    "raw_asr": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 24,
+      "evidenceProductionCount": 25,
+      "firstSlicePosterior": {
+        "t1": 0.000005536438948183786,
+        "t2": 0.9994577765464783,
+        "t3": 0.0005340726347640157,
+        "t4": 0.0000025531464871164644,
+        "t5": 1.6763779342454654e-7
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 24,
+      "wordTimeSpanCount": 25,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "short_duration_skipped": 1,
+        "slice_created": 24
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "一下",
+          "pinyinKey": "yi|xia",
+          "windowTimeRange": {
+            "start": 4.720000000000001,
+            "end": 5
+          },
+          "acousticTonePattern": [
+            3,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 16,
+      "candidateCount": 16,
+      "candidateSentenceCount": 16,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 16,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "您好我定,但顯示已發貨,耽误留三天。 今天美更新能幫我查一下嗎?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "您好我定,但顯示已發貨,耽误留三天。 今天美更新能幫我查一下嗎?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "您好",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "您好",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我定",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我定",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "但顯",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "但顯",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "示已",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "示已",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "發",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "發",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "貨",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "貨",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "但務",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "耽误",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "留三",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "留三",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d025",
+    "expected": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+    "asr": "请简单介绍一下 你上一段视频 一段项目里负责的核心模块和难点",
+    "raw_asr": "请简单介绍一下 你上一段视频 一段项目里负责的核心模块和难点",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 23,
+      "evidenceProductionCount": 27,
+      "firstSlicePosterior": {
+        "t1": 0.003332501742988825,
+        "t2": 0.12603262066841125,
+        "t3": 0.8133497834205627,
+        "t4": 0.05502691492438316,
+        "t5": 0.002258139196783304
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 23,
+      "wordTimeSpanCount": 27,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "short_duration_skipped": 4,
+        "slice_created": 23
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "难点",
+          "pinyinKey": "nan|dian",
+          "windowTimeRange": {
+            "start": 4.46,
+            "end": 4.78
+          },
+          "acousticTonePattern": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 15,
+      "candidateCount": 15,
+      "candidateSentenceCount": 15,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 15,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "请简单介绍一下 你上一段视频 一段项目里负责的核心模块和难点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "请简单介绍一下 你上一段视频 一段项目里负责的核心模块和难点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 15
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "请简单介绍一下 你上一段视频 一段项目里负责的核心模块和难点",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "请简",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "请简",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "单介",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "单介",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "绍一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "绍一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "下",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "下",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "你",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "你",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "上一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "上一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "段视",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "段视",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "频 一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "频 一",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d027",
+    "expected": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+    "asr": "期望性自这块我们可以再沟通你最快什么时候能入职",
+    "raw_asr": "期望性自这块我们可以再沟通你最快什么时候能入职",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 19,
+      "evidenceProductionCount": 19,
+      "firstSlicePosterior": {
+        "t1": 0.44491758942604065,
+        "t2": 0.013701062649488449,
+        "t3": 0.013186481781303883,
+        "t4": 0.527937650680542,
+        "t5": 0.0002572854282334447
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 19,
+      "wordTimeSpanCount": 19,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 19
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "能入",
+          "pinyinKey": "neng|ru",
+          "windowTimeRange": {
+            "start": 4.06,
+            "end": 4.48
+          },
+          "acousticTonePattern": [
+            2,
+            4
+          ]
+        },
+        {
+          "text": "能入职",
+          "pinyinKey": "neng|ru|zhi",
+          "windowTimeRange": {
+            "start": 4.06,
+            "end": 4.68
+          },
+          "acousticTonePattern": [
+            2,
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "期望性自这块我们可以再沟通你最快什么时候能入职",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "期望性自这块我们可以再沟通你最快什么时候能入职",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "期望性自这块我们可以再沟通你最快什么时候能入职",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "期望",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "期望",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "性",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "性",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "自这",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "自这",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "块我",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "块我",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "们",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "可以",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "可以",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "再沟",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "再沟",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "通你",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "通你",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d031",
+    "expected": "我预订的是大床房，能安排安静一点的楼层吗？",
+    "asr": "我预定的十大床房能安排安静一点的楼层吗?",
+    "raw_asr": "我预定的十大床房能安排安静一点的楼层吗?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 18,
+      "evidenceProductionCount": 18,
+      "firstSlicePosterior": {
+        "t1": 0.00002874877827707678,
+        "t2": 0.9968440532684326,
+        "t3": 0.0031209359876811504,
+        "t4": 0.000003195608996975352,
+        "t5": 0.0000030982241696619894
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 18,
+      "wordTimeSpanCount": 18,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 18
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "的楼",
+          "pinyinKey": "de|lou",
+          "windowTimeRange": {
+            "start": 2.9,
+            "end": 3.26
+          },
+          "acousticTonePattern": [
+            2,
+            1
+          ]
+        },
+        {
+          "text": "的楼层",
+          "pinyinKey": "de|lou|ceng",
+          "windowTimeRange": {
+            "start": 2.9,
+            "end": 3.46
+          },
+          "acousticTonePattern": [
+            2,
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 10,
+      "candidateCount": 10,
+      "candidateSentenceCount": 10,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 10,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "我预定的十大床房能安排安静一点的楼层吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "我预定的十大床房能安排安静一点的楼层吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 10
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "我预定的十大床房能安排安静一点的楼层吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "我预",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我预",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "定的",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "定的",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "十大",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "十大",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "床房",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "床房",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "能安",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "能安",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "排安",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "排安",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "静一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "静一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "点",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "点",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d037",
+    "expected": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+    "asr": "两位靠窗有位直麻 不要像蔡薇拉就行",
+    "raw_asr": "两位靠窗有位直麻 不要像蔡薇拉就行",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 15,
+      "evidenceProductionCount": 15,
+      "firstSlicePosterior": {
+        "t1": 0.008881988003849983,
+        "t2": 0.6605212092399597,
+        "t3": 0.23575110733509064,
+        "t4": 0.09455916285514832,
+        "t5": 0.00028653175104409456
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 15,
+      "wordTimeSpanCount": 15,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 15
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "就行",
+          "pinyinKey": "jiu|xing",
+          "windowTimeRange": {
+            "start": 2.96,
+            "end": 3.42
+          },
+          "acousticTonePattern": [
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 8,
+      "candidateCount": 8,
+      "candidateSentenceCount": 8,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 8,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "两位靠窗有位直麻 不要像蔡薇拉就行",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "两位靠窗有位直麻 不要像蔡薇拉就行",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 8
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "两位靠窗有位直麻 不要像蔡薇拉就行",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "两位",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "两位",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "靠窗",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "靠窗",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "有位",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "有位",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "直麻",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "直麻",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "不要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "不要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "像蔡",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "像蔡",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "薇拉",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "薇拉",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "就行",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "就行",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d038",
+    "expected": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+    "asr": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+    "raw_asr": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 19,
+      "evidenceProductionCount": 19,
+      "firstSlicePosterior": {
+        "t1": 0.0005137801636010408,
+        "t2": 0.000024883398509700783,
+        "t3": 0.000008677952791913413,
+        "t4": 0.9994519352912903,
+        "t5": 7.317963195418997e-7
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 19,
+      "wordTimeSpanCount": 19,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 19
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "一壺",
+          "pinyinKey": "yi|hu",
+          "windowTimeRange": {
+            "start": 3.9,
+            "end": 4.18
+          },
+          "acousticTonePattern": [
+            5,
+            2
+          ]
+        },
+        {
+          "text": "一壺茶",
+          "pinyinKey": "yi|hu|cha",
+          "windowTimeRange": {
+            "start": 3.9,
+            "end": 4.42
+          },
+          "acousticTonePattern": [
+            5,
+            2,
+            4
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "這道",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "這道",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "菜大",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "菜大",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "概要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "概要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "等多",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "等多",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "久",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "久",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我們",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我們",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "先",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "先",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "點一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "點一",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d041",
+    "expected": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+    "raw_asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 18,
+      "evidenceProductionCount": 18,
+      "firstSlicePosterior": {
+        "t1": 0.22516317665576935,
+        "t2": 0.00016718803090043366,
+        "t3": 0.000524451257660985,
+        "t4": 0.7741413712501526,
+        "t5": 0.00000390197237720713
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 18,
+      "wordTimeSpanCount": 18,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 18
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "一下",
+          "pinyinKey": "yi|xia",
+          "windowTimeRange": {
+            "start": 3.4,
+            "end": 3.66
+          },
+          "acousticTonePattern": [
+            3,
+            3
+          ]
+        },
+        {
+          "text": "一下吗",
+          "pinyinKey": "yi|xia|ma",
+          "windowTimeRange": {
+            "start": 3.4,
+            "end": 3.9
+          },
+          "acousticTonePattern": [
+            3,
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 11,
+      "candidateCount": 11,
+      "candidateSentenceCount": 11,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 11,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 11
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "更易",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "更易",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "是龟",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "是龟",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "仔钥",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "仔钥",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "匙找",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "匙找",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "不到",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "不到",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "了前",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "了前",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "台 能",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "台 能",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "帮忙",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "帮忙",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d043",
+    "expected": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+    "asr": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+    "raw_asr": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 21,
+      "evidenceProductionCount": 21,
+      "firstSlicePosterior": {
+        "t1": 0.7478516101837158,
+        "t2": 0.039399970322847366,
+        "t3": 0.025045471265912056,
+        "t4": 0.1862044781446457,
+        "t5": 0.001498407102189958
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 21,
+      "wordTimeSpanCount": 21,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 21
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "補齊",
+          "pinyinKey": "bu|qi",
+          "windowTimeRange": {
+            "start": 5.239999999999999,
+            "end": 5.72
+          },
+          "acousticTonePattern": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 12,
+      "candidateCount": 12,
+      "candidateSentenceCount": 12,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 12,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 12
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "我们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我们",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "下午",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "下午",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "讨论",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "讨论",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "后,选",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "后,选",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "生呈",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "生呈",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "方安",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "方安",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "线吧",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "线吧",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "成的",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "成的",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d044",
+    "expected": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+    "asr": "這周的上限計劃已盡,全任上限計劃評審安排在周四上午",
+    "raw_asr": "這周的上限計劃已盡,全任上限計劃評審安排在周四上午",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 24,
+      "evidenceProductionCount": 24,
+      "firstSlicePosterior": {
+        "t1": 0.016438506543636322,
+        "t2": 0.000040759172406978905,
+        "t3": 0.00003160529013257474,
+        "t4": 0.9834814667701721,
+        "t5": 0.000007602360255987151
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 24,
+      "wordTimeSpanCount": 24,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 24
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "上午",
+          "pinyinKey": "shang|wu",
+          "windowTimeRange": {
+            "start": 4.38,
+            "end": 4.76
+          },
+          "acousticTonePattern": [
+            3,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "這周的上限計劃已盡,全任上限計劃評審安排在周四上午",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "這周的上限計劃已盡,全任上限計劃評審安排在周四上午",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "這周的上限計劃已盡,全任上限計劃評審安排在周四上午",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "這周",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "這周",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "的上",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "的上",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "限",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "限",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "計",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "計",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "劃已",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "劃已",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "盡,全",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "盡,全",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "任上",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "任上",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "限計",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "限計",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d049",
+    "expected": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+    "asr": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+    "raw_asr": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 31,
+      "evidenceProductionCount": 32,
+      "firstSlicePosterior": {
+        "t1": 0.00024549616500735283,
+        "t2": 0.012713261879980564,
+        "t3": 0.7367709279060364,
+        "t4": 0.25024986267089844,
+        "t5": 0.00002039261016761884
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 31,
+      "wordTimeSpanCount": 32,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "short_duration_skipped": 1,
+        "slice_created": 31
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "发群",
+          "pinyinKey": "fa|qun",
+          "windowTimeRange": {
+            "start": 7.04,
+            "end": 7.42
+          },
+          "acousticTonePattern": [
+            2,
+            2
+          ]
+        },
+        {
+          "text": "发群里",
+          "pinyinKey": "fa|qun|li",
+          "windowTimeRange": {
+            "start": 7.04,
+            "end": 7.6
+          },
+          "acousticTonePattern": [
+            2,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 17,
+      "candidateCount": 17,
+      "candidateSentenceCount": 17,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 17,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 17
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "理工",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "理工",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "科互",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "科互",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "反馈",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "反馈",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "翻译",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "翻译",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "引擎",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "引擎",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "接口",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "接口",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "包错",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "包错",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我们",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d055",
+    "expected": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+    "asr": "一聲您好我這兩天嗓子疼想開店要並做各些常規",
+    "raw_asr": "一聲您好我這兩天嗓子疼想開店要並做各些常規",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 21,
+      "evidenceProductionCount": 21,
+      "firstSlicePosterior": {
+        "t1": 0.9757591485977173,
+        "t2": 0.0002452522167004645,
+        "t3": 0.00010717168333940208,
+        "t4": 0.02386002615094185,
+        "t5": 0.000028473978090914898
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 21,
+      "wordTimeSpanCount": 21,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 21
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "些常",
+          "pinyinKey": "xie|chang",
+          "windowTimeRange": {
+            "start": 4.04,
+            "end": 4.5
+          },
+          "acousticTonePattern": [
+            1,
+            2
+          ]
+        },
+        {
+          "text": "些常規",
+          "pinyinKey": "xie|chang|gui",
+          "windowTimeRange": {
+            "start": 4.04,
+            "end": 4.62
+          },
+          "acousticTonePattern": [
+            1,
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "一聲您好我這兩天嗓子疼想開店要並做各些常規",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "一聲您好我這兩天嗓子疼想開店要並做各些常規",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "一聲您好我這兩天嗓子疼想開店要並做各些常規",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "一聲",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "一聲",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "您好",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "您好",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "這",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "這",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "兩天",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "兩天",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "嗓子",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "嗓子",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "疼",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "疼",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "想",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "想",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d061",
+    "expected": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+    "asr": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+    "raw_asr": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 21,
+      "evidenceProductionCount": 21,
+      "firstSlicePosterior": {
+        "t1": 0.00026512646581977606,
+        "t2": 0.000020248573491699062,
+        "t3": 0.00004999664815841243,
+        "t4": 0.999660849571228,
+        "t5": 0.000003819004632532597
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 21,
+      "wordTimeSpanCount": 21,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 21
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "得带",
+          "pinyinKey": "de|dai",
+          "windowTimeRange": {
+            "start": 4.4399999999999995,
+            "end": 4.84
+          },
+          "acousticTonePattern": [
+            3,
+            3
+          ]
+        },
+        {
+          "text": "得带水",
+          "pinyinKey": "de|dai|shui",
+          "windowTimeRange": {
+            "start": 4.4399999999999995,
+            "end": 4.98
+          },
+          "acousticTonePattern": [
+            3,
+            3,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "众莫要不要去降边骑行 天气预报 周日多云记得带水",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "众莫",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "众莫",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "不要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "不要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "去",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "去",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "降",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "降",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "边骑",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "边骑",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "行 天",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "行 天",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "气预",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "气预",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d067",
+    "expected": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+    "asr": "您好我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+    "raw_asr": "您好我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 24,
+      "evidenceProductionCount": 24,
+      "firstSlicePosterior": {
+        "t1": 0.000016131260053953156,
+        "t2": 0.9996169805526733,
+        "t3": 0.0003611814754549414,
+        "t4": 0.000005502314252225915,
+        "t5": 2.697628644909855e-7
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 24,
+      "wordTimeSpanCount": 24,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 24
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "一下",
+          "pinyinKey": "yi|xia",
+          "windowTimeRange": {
+            "start": 5.06,
+            "end": 5.34
+          },
+          "acousticTonePattern": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "您好我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "您好我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "您好我弟 但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "您好",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "您好",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我弟",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我弟",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "但顯",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "但顯",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "示已",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "示已",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "發貨",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "發貨",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "但物",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "但物",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "流三",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "流三",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "天沒",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "天沒",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d073",
+    "expected": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+    "asr": "老是這道題的解題步 周能不能 我没听懂第二点",
+    "raw_asr": "老是這道題的解題步 周能不能 我没听懂第二点",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 18,
+      "evidenceProductionCount": 18,
+      "firstSlicePosterior": {
+        "t1": 0.06941752135753632,
+        "t2": 0.8037071228027344,
+        "t3": 0.12258099019527435,
+        "t4": 0.0039160181768238544,
+        "t5": 0.00037839749711565673
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 18,
+      "wordTimeSpanCount": 18,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 18
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "第二",
+          "pinyinKey": "di|er",
+          "windowTimeRange": {
+            "start": 4.720000000000001,
+            "end": 5.0600000000000005
+          },
+          "acousticTonePattern": [
+            4,
+            4
+          ]
+        },
+        {
+          "text": "第二点",
+          "pinyinKey": "di|er|dian",
+          "windowTimeRange": {
+            "start": 4.720000000000001,
+            "end": 5.32
+          },
+          "acousticTonePattern": [
+            4,
+            4,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 11,
+      "candidateCount": 11,
+      "candidateSentenceCount": 11,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 11,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "老是這道題的解題步 周能不能 我没听懂第二点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "老是這道題的解題步 周能不能 我没听懂第二点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 11
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "老是這道題的解題步 周能不能 我没听懂第二点",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "老是",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "老是",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "這道",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "這道",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "題的",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "題的",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "解題",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "解題",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "步 周",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "步 周",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "能不",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "能不",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "能 我",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "能 我",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "没听",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "没听",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d079",
+    "expected": "我想开通短信提醒，需要带什么证件？",
+    "asr": "我想开通短信提醒需要带什么证件",
+    "raw_asr": "我想开通短信提醒需要带什么证件",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 12,
+      "evidenceProductionCount": 12,
+      "firstSlicePosterior": {
+        "t1": 0.0004587790463119745,
+        "t2": 0.022563738748431206,
+        "t3": 0.3928770124912262,
+        "t4": 0.5823059678077698,
+        "t5": 0.0017944471910595894
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 12,
+      "wordTimeSpanCount": 12,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 12
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "证件",
+          "pinyinKey": "zheng|jian",
+          "windowTimeRange": {
+            "start": 2.58,
+            "end": 3.02
+          },
+          "acousticTonePattern": [
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 9,
+      "candidateCount": 9,
+      "candidateSentenceCount": 9,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 9,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "我想开通短信提醒需要带什么证件",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "我想开通短信提醒需要带什么证件",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 9
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "我想开通短信提醒需要带什么证件",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "我想",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我想",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "开通",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "开通",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "短信",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "短信",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "提醒",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "提醒",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "需要",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "需要",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "带",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "带",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "什么",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "什么",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "证",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "证",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d085",
+    "expected": "私教课还剩几次？能帮我约明天晚上七点吗？",
+    "asr": "自教课还剩几次 能帮我约明天晚上7点吗?",
+    "raw_asr": "自教课还剩几次 能帮我约明天晚上7点吗?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 17,
+      "evidenceProductionCount": 17,
+      "firstSlicePosterior": {
+        "t1": 0.11827914416790009,
+        "t2": 0.00005574569877353497,
+        "t3": 0.000043583306251093745,
+        "t4": 0.8816186189651489,
+        "t5": 0.000002920177848864114
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 17,
+      "wordTimeSpanCount": 17,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 17
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "天晚",
+          "pinyinKey": "tian|wan",
+          "windowTimeRange": {
+            "start": 2.72,
+            "end": 3.3
+          },
+          "acousticTonePattern": [
+            3,
+            3
+          ]
+        },
+        {
+          "text": "天晚上",
+          "pinyinKey": "tian|wan|shang",
+          "windowTimeRange": {
+            "start": 2.72,
+            "end": 3.3
+          },
+          "acousticTonePattern": [
+            3,
+            3,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 10,
+      "candidateCount": 10,
+      "candidateSentenceCount": 10,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 10,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "自教课还剩几次 能帮我约明天晚上7点吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "自教课还剩几次 能帮我约明天晚上7点吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 10
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "自教课还剩几次 能帮我约明天晚上7点吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "自教",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "自教",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "课还",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "课还",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "剩几",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "剩几",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "次 能",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "次 能",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "帮我",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "帮我",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "约明",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "约明",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "天晚",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "天晚",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "上",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "上",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d091",
+    "expected": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+    "asr": "你好,我想点一杯烟麦拿铁中备无糖 今天有背果吗?",
+    "raw_asr": "你好,我想点一杯烟麦拿铁中备无糖 今天有背果吗?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 18,
+      "evidenceProductionCount": 18,
+      "firstSlicePosterior": {
+        "t1": 0.011408308520913124,
+        "t2": 0.7641673684120178,
+        "t3": 0.2202877253293991,
+        "t4": 0.004038674291223288,
+        "t5": 0.00009799701365409419
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 18,
+      "wordTimeSpanCount": 18,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 18
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "背果",
+          "pinyinKey": "bei|guo",
+          "windowTimeRange": {
+            "start": 5.5,
+            "end": 5.86
+          },
+          "acousticTonePattern": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 13,
+      "candidateCount": 13,
+      "candidateSentenceCount": 13,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 13,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "你好,我想点一杯烟麦拿铁中备无糖 今天有背果吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "你好,我想点一杯烟麦拿铁中备无糖 今天有背果吗?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 13
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "你好,我想点一杯烟麦拿铁中备无糖 今天有背果吗?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "你好",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "你好",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我想",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我想",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "点一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "点一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "杯烟",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "杯烟",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "麦拿",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "麦拿",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "铁",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "铁",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "中",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "中",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "备无",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "备无",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d097",
+    "expected": "师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。",
+    "asr": "是付去中官村軟件遠走私環 我幹 19點半的會要是堵車 您提前跟我說",
+    "raw_asr": "是付去中官村軟件遠走私環 我幹 19點半的會要是堵車 您提前跟我說",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 28,
+      "evidenceProductionCount": 28,
+      "firstSlicePosterior": {
+        "t1": 0.00003016891423612833,
+        "t2": 0.0000071994259087659884,
+        "t3": 0.000006610617674596142,
+        "t4": 0.9999548196792603,
+        "t5": 0.00000118769401069585
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 28,
+      "wordTimeSpanCount": 28,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 28
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "跟我",
+          "pinyinKey": "gen|wo",
+          "windowTimeRange": {
+            "start": 5.5600000000000005,
+            "end": 6.0600000000000005
+          },
+          "acousticTonePattern": [
+            1,
+            4
+          ]
+        },
+        {
+          "text": "跟我說",
+          "pinyinKey": "gen|wo|shuo",
+          "windowTimeRange": {
+            "start": 5.5600000000000005,
+            "end": 6.0600000000000005
+          },
+          "acousticTonePattern": [
+            1,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 16,
+      "candidateCount": 16,
+      "candidateSentenceCount": 16,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 16,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "是付去中官村軟件遠走私環 我幹 19點半的會要是堵車 您提前跟我說",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "是付去中官村軟件遠走四环 我幹 19點半的會要是堵車 您提前跟我說",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "是付去中官村軟件遠走私環 我幹 19點半的會要是堵車 您提前跟我說",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 16
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "是付去中官村軟件遠走四环 我幹 19點半的會要是堵車 您提前跟我說",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "是付去中官村軟件遠走私環 我幹 19點半的會要是堵車 您提前跟我說",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "是付",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "是付",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "去中",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "去中",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "官村",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "官村",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "軟件",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "軟件",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "遠走",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "遠走",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "私環",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "四环",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "幹 19點",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "幹 19點",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d103",
+    "expected": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+    "asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+    "raw_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 19,
+      "evidenceProductionCount": 19,
+      "firstSlicePosterior": {
+        "t1": 0.0000633609015494585,
+        "t2": 0.00007285899482667446,
+        "t3": 0.0002715261944103986,
+        "t4": 0.9995753169059753,
+        "t5": 0.000016969805074040778
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 19,
+      "wordTimeSpanCount": 19,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 19
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "没有",
+          "pinyinKey": "mei|you",
+          "windowTimeRange": {
+            "start": 3.98,
+            "end": 4.22
+          },
+          "acousticTonePattern": [
+            4,
+            4
+          ]
+        },
+        {
+          "text": "没有折",
+          "pinyinKey": "mei|you|zhe",
+          "windowTimeRange": {
+            "start": 3.98,
+            "end": 4.46
+          },
+          "acousticTonePattern": [
+            4,
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 11,
+      "candidateCount": 11,
+      "candidateSentenceCount": 11,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 11,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "这件外套能试穿吗?我穿中码,买两兼有没有折扣?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 11
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 11
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "这件外套能试穿吗?我穿中码,买两兼有没有折扣?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "这件",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "这件",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "外套",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "外套",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "能试",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "能试",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "穿吗",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "穿吗",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我穿",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我穿",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "中",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "中",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "码",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "码",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "买两",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "买两",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d109",
+    "expected": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+    "asr": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+    "raw_asr": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 35,
+      "evidenceProductionCount": 35,
+      "firstSlicePosterior": {
+        "t1": 0.9909846782684326,
+        "t2": 0.000012666057955357246,
+        "t3": 0.0000011933450423384784,
+        "t4": 0.008998132310807705,
+        "t5": 0.0000034153167689510155
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 35,
+      "wordTimeSpanCount": 35,
+      "ngramTonePatternAttemptCount": 2,
+      "ngramTonePatternHitCount": 2,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 35
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "评估",
+          "pinyinKey": "ping|gu",
+          "windowTimeRange": {
+            "start": 6.52,
+            "end": 6.96
+          },
+          "acousticTonePattern": [
+            2,
+            4
+          ]
+        },
+        {
+          "text": "评估风",
+          "pinyinKey": "ping|gu|feng",
+          "windowTimeRange": {
+            "start": 6.52,
+            "end": 7.24
+          },
+          "acousticTonePattern": [
+            2,
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 19,
+      "candidateCount": 19,
+      "candidateSentenceCount": 19,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 3
+    },
+    "sentenceRerank": {
+      "spanCount": 19,
+      "perSpanLimit": 4,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "今天,我们团队要讨论候选生丞相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 19
+        },
+        {
+          "rank": 3,
+          "candidateId": "candidate:1",
+          "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 19
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 3,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0,
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 3 got 0",
+      "allCombinations": [
+        {
+          "sentence": "今天,我们团队要讨论候选生丞相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        },
+        {
+          "sentence": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "今天",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "今天",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "我们",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "我们",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "团队",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "团队",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "要讨",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "要讨",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "论候",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "论候",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "选生",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "选生",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "成相",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "丞相",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "关的",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "关的",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d115",
+    "expected": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+    "asr": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+    "raw_asr": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+    "asr_service_id": "faster-whisper-vad",
+    "utterance_tone": {
+      "toneEnabled": true,
+      "sliceCount": 23,
+      "evidenceProductionCount": 23,
+      "firstSlicePosterior": {
+        "t1": 0.009569506160914898,
+        "t2": 0.9096242189407349,
+        "t3": 0.07712293416261673,
+        "t4": 0.003349008271470666,
+        "t5": 0.0003343007410876453
+      }
+    },
+    "toneDiag": {
+      "toneEnabled": true,
+      "toneSliceCount": 23,
+      "wordTimeSpanCount": 23,
+      "ngramTonePatternAttemptCount": 1,
+      "ngramTonePatternHitCount": 1,
+      "ngramTonePatternMissCount": 0,
+      "tonePatternMappingMissCount": 0,
+      "evidenceProductionStatusCounts": {
+        "slice_created": 23
+      },
+      "mappingMissReasonCounts": {},
+      "mappingMissAttributionCounts": {},
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 0,
+      "exampleToneWindows": [
+        {
+          "text": "难点",
+          "pinyinKey": "nan|dian",
+          "windowTimeRange": {
+            "start": 4.52,
+            "end": 4.82
+          },
+          "acousticTonePattern": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "summary": {
+      "spanCount": 12,
+      "candidateCount": 12,
+      "candidateSentenceCount": 12,
+      "appliedCount": 0,
+      "kenlmApprovedCount": 0,
+      "kenlmVetoedCount": 0,
+      "pickedTopKWinCount": 0,
+      "kenlmQueryCount": 2
+    },
+    "sentenceRerank": {
+      "spanCount": 12,
+      "perSpanLimit": 4,
+      "combinationCount": 1,
+      "kenlmQueryCount": 2,
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "minDeltaToReplace": 3,
+      "topCandidates": [
+        {
+          "rank": 1,
+          "candidateId": "raw",
+          "text": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": true,
+          "replacementCount": 0
+        },
+        {
+          "rank": 2,
+          "candidateId": "candidate:0",
+          "text": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+          "kenlmScore": 0,
+          "deltaVsRaw": 0,
+          "isRaw": false,
+          "replacementCount": 12
+        }
+      ],
+      "kenlmTiming": {
+        "batchMs": 0,
+        "queryCount": 2,
+        "avgMs": 0,
+        "p50Ms": 0,
+        "p95Ms": 0,
+        "maxMs": 0
+      },
+      "allCombinationDeltas": [
+        0
+      ],
+      "picked": null,
+      "scoreMode": "raw_log_delta",
+      "baselineRawScore": 0,
+      "maxNormalizedDelta": 0,
+      "kenlmSubprocessMs": 0,
+      "kenlmSubprocessCount": 0,
+      "kenlmSubprocessErrorReason": "parse_mismatch: expected 2 got 0",
+      "allCombinations": [
+        {
+          "sentence": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+          "delta": 0,
+          "approved": false,
+          "rejectedReason": "picked_raw"
+        }
+      ]
+    },
+    "spans": [
+      {
+        "text": "请简",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "请简",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "单介",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "单介",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "绍一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "绍一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "下你",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "下你",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "上一",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "上一",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "段项",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "段项",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "目里",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "目里",
+            "domainIds": []
+          }
+        ]
+      },
+      {
+        "text": "负责",
+        "applied": false,
+        "candidateCount": 1,
+        "sampleCandidates": [
+          {
+            "replacement": "负责",
+            "domainIds": []
+          }
+        ]
+      }
+    ]
+  }
+]

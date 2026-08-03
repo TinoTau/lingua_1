@@ -1,0 +1,406 @@
+{
+  "id": "d022",
+  "expected": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+  "asr": "您好我定,但顯示已發貨,但物流三天。 今天美更新能幫我查一下嗎?",
+  "raw_asr": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 14,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.000008929217074182816,
+      "t2": 0.9993628859519958,
+      "t3": 0.0006244772812351584,
+      "t4": 0.000003440993623371469,
+      "t5": 2.648421286721714e-7
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 24,
+    "wordTimeSpanCount": 25,
+    "ngramTonePatternAttemptCount": 1,
+    "ngramTonePatternHitCount": 0,
+    "ngramTonePatternMissCount": 1,
+    "toneExactHitCount": 0,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "一下",
+        "pinyinKey": "yi|xia",
+        "windowTimeRange": {
+          "start": 4.720000000000001,
+          "end": 5
+        }
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 16,
+    "candidateCount": 16,
+    "candidateSentenceCount": 16,
+    "appliedCount": 1,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 1,
+    "kenlmQueryCount": 3
+  },
+  "sentenceRerank": {
+    "spanCount": 16,
+    "perSpanLimit": 4,
+    "combinationCount": 2,
+    "kenlmQueryCount": 3,
+    "pickedIsRaw": false,
+    "maxDelta": 4.386299999999991,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "candidate:0",
+        "text": "您好我定,但顯示已發貨,但物流三天。 今天美更新能幫我查一下嗎?",
+        "kenlmScore": -91.48582,
+        "deltaVsRaw": 4.386299999999991,
+        "isRaw": false,
+        "replacementCount": 16
+      },
+      {
+        "rank": 2,
+        "candidateId": "raw",
+        "text": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+        "kenlmScore": -95.87212,
+        "deltaVsRaw": 0,
+        "isRaw": true,
+        "replacementCount": 0
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+        "kenlmScore": -95.87212,
+        "deltaVsRaw": 0,
+        "isRaw": false,
+        "replacementCount": 16
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 647,
+      "queryCount": 3,
+      "avgMs": 215.66666666666666,
+      "p50Ms": 215.66666666666666,
+      "p95Ms": 215.66666666666666,
+      "maxMs": 647
+    },
+    "allCombinationDeltas": [
+      4.386299999999991,
+      0
+    ],
+    "picked": {
+      "text": "您好我定,但顯示已發貨,但物流三天。 今天美更新能幫我查一下嗎?",
+      "replacements": [
+        {
+          "span": {
+            "text": "務留",
+            "start": 13,
+            "end": 15
+          },
+          "word": "物流",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "您好",
+            "start": 0,
+            "end": 2
+          },
+          "word": "您好",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我定",
+            "start": 2,
+            "end": 4
+          },
+          "word": "我定",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "但顯",
+            "start": 5,
+            "end": 7
+          },
+          "word": "但顯",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "示已",
+            "start": 7,
+            "end": 9
+          },
+          "word": "示已",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "發",
+            "start": 9,
+            "end": 10
+          },
+          "word": "發",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "貨",
+            "start": 10,
+            "end": 11
+          },
+          "word": "貨",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "但",
+            "start": 12,
+            "end": 13
+          },
+          "word": "但",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "三天",
+            "start": 15,
+            "end": 17
+          },
+          "word": "三天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "今天",
+            "start": 19,
+            "end": 21
+          },
+          "word": "今天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "美更",
+            "start": 21,
+            "end": 23
+          },
+          "word": "美更",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "新能",
+            "start": 23,
+            "end": 25
+          },
+          "word": "新能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "幫我",
+            "start": 25,
+            "end": 27
+          },
+          "word": "幫我",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "查",
+            "start": 27,
+            "end": 28
+          },
+          "word": "查",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一下",
+            "start": 28,
+            "end": 30
+          },
+          "word": "一下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "嗎",
+            "start": 30,
+            "end": 31
+          },
+          "word": "嗎",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.35
+    },
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -95.87212,
+    "pickedRawScore": -91.48582,
+    "maxNormalizedDelta": 0.00003776350827941371,
+    "kenlmSubprocessMs": 647,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "您好我定,但顯示已發貨,但物流三天。 今天美更新能幫我查一下嗎?",
+        "delta": 4.386299999999991,
+        "approved": true
+      },
+      {
+        "sentence": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+        "delta": 0,
+        "approved": false,
+        "rejectedReason": "below_min_delta"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "您好",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "您好",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "我定",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "我定",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "但顯",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "但顯",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "示已",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "示已",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "發",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "發",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "貨",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "貨",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "但",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "但",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "務留",
+      "applied": true,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "物流",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

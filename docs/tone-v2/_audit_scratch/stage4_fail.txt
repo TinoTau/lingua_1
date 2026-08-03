@@ -1,0 +1,206 @@
+﻿electron.exe : ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you sh
+ould consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See 
+https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperabi
+lity for more information.
+所在位置 C:\Users\tinot\AppData\Local\Temp\ps-script-9f6ed324-2350-46b3-9d47-159253ed6f95.ps1:128 字符: 32
++ ... S_NODE='1'; & .\node_modules\electron\dist\electron.exe .\node_module ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ts-jest[config]...re information.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  console.log
+    [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+FAIL main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts (47.409 s)
+  Batch 1.1B Stage 4 generalization audit (SQLite)
+    鈭?A: parameterized rank matrix (2,3,5,7,10,12,16,24,32) + search no hardcoded ranks in production (10963 ms)
+    鈭?B: multi-key / multi-surface character generalization (7606 ms)
+    脳 C: Ambiguity 脳 Exact decision matrix (1173 ms)
+    脳 D: SQL trigger rate on parameterized corpus (+ length1 substitute for dialog_200) (7628 ms)
+    鈭?E/F: cache key isolation and metamorphic order (1273 ms)
+    鈭?G: bundle reload must not reuse exact hit/miss (5452 ms)
+    鈭?H: plain/tone isolation + EXPLAIN QUERY PLAN (no SCAN) (1437 ms)
+    鈭?I: exact reuses filterEligibleBaseSingleChar (no duplicate eligibility) (1392 ms)
+    脳 J: Unicode/string exact semantics (no normalization) (1380 ms)
+    鈭?K: rank1 fetched-page vs rank20 independent exact Candidate parity (1371 ms)
+    脳 L: rank1 / deep surface 鈫?Edge 鈫?Path structure parity (1394 ms)
+    鈭?M: overfitting classification for test vs production (2 ms)
+    脳 N: failure injection 鈥?closed runtime / empty / invalid keys (1414 ms)
+    鈭?O: 1.1A truncation reject preserved; identity accept is independent (4090 ms)
+
+  鈼?Batch 1.1B Stage 4 generalization audit (SQLite) 鈥?C: Ambiguity 脳 Exact decision matrix
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "涓?
+    Received: undefined
+
+      322 |           sql: stats.sqlQueries,
+      323 |         });
+    > 324 |         expect(hits[0]?.hotword.word).toBe(c.expect);
+          |                                       ^
+      325 |       }
+      326 |       // unique non-truncated with absent surface still returns residual A (priority: no override path)
+      327 |       expect(recall1(rt, 'da', '鈻?)[0]?.hotword.word).toBe('涓?);
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts:324:39)
+
+  鈼?Batch 1.1B Stage 4 generalization audit (SQLite) 鈥?D: SQL trigger rate on parameterized corpus (+ length1 substitut
+e for dialog_200)
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      597 |     });
+      598 |     expect(totalLength1Windows).toBeGreaterThanOrEqual(24);
+    > 599 |     expect(SQL_STATS.exactTriggerRate as number).toBeGreaterThan(0);
+          |                                                  ^
+      600 |     expect(SQL_STATS.exactTriggerRate as number).toBeLessThanOrEqual(1);
+      601 |   });
+      602 |
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts:599:50)
+
+  鈼?Batch 1.1B Stage 4 generalization audit (SQLite) 鈥?J: Unicode/string exact semantics (no normalization)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      916 |         contract: 'JS/SQLite exact equality; trim only; no NFC/NFKC',
+      917 |       });
+    > 918 |       expect(hits.length > 0).toBe(c.expectHit);
+          |                               ^
+      919 |       if (!wouldExact) {
+      920 |         // empty after trim 鈫?no exact SQL; ambiguity may still run 1 SQL
+      921 |         expect(st.sqlQueries).toBeLessThanOrEqual(1);
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts:918:31)
+
+  鈼?Batch 1.1B Stage 4 generalization audit (SQLite) 鈥?L: rank1 / deep surface 鈫?Edge 鈫?Path structure parity
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "鏄€"
+    Received: undefined
+
+      1036 |         source: recall.candidates[0]?.source,
+      1037 |       });
+    > 1038 |       expect(edges[0]!.replacement).toBe(surface);
+           |                                     ^
+      1039 |       expect(path.retainedCompletePathCount).toBeGreaterThanOrEqual(1);
+      1040 |     }
+      1041 |   });
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts:1038:37)
+
+  鈼?Batch 1.1B Stage 4 generalization audit (SQLite) 鈥?N: failure injection 鈥?closed runtime / empty / invalid keys
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      1081 |     expect(rt.lookupBaseByExactSurfaceAndPinyin('fi', '', 1)).toEqual([]);
+      1082 |     expect(rt.lookupBaseByExactSurfacePinyinAndTone('fi', '', '濂?, 1)).toEqual([]);
+    > 1083 |     expect(recall1(rt, 'fi', '   ')).toHaveLength(1); // trim empty 鈫?no exact; unique non-trunc 鈫?濂?     
+      |                                      ^
+      1084 |     FAILURE.push({ id: 'empty_trim_keeps_ambiguity_unique', final: '濂? });
+      1085 |
+      1086 |     rt.close();
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1b-stage4-generalization.audit.test.ts:1083:38)
+
+  console.log
+    [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+FAIL main/src/lexicon-v2/batch1-1a-stage4-generalization.audit.test.ts (20.322 s)
+  Batch 1.1A Stage 4 generalization matrix (real SQLite)
+    鈭?P1 plain total=7 eligible=1 鈫?accept (1246 ms)
+    鈭?P2 plain total=8 eligible=1 鈫?exact-limit reject (conservative) (1227 ms)
+    鈭?P3 plain total=9 eligible=1 鈫?reject (1239 ms)
+    鈭?P4 plain total=8 eligible=0 鈫?empty (1218 ms)
+    鈭?P5 plain total=8 eligible>=2 鈫?ambiguous no Top1 (1224 ms)
+    脳 P6 plain total=7 eligible>=2 surface in set 鈫?accept (1429 ms)
+    鈭?T1 tone total=7 eligible=1 鈫?accept (1248 ms)
+    鈭?T2 tone total=8 eligible=1 鈫?exact-limit reject (1242 ms)
+    鈭?T3 tone total=9 eligible=1 鈫?reject (1243 ms)
+    鈭?T4 tone total=8 eligible=0 鈫?empty (1171 ms)
+    鈭?T5 tone total=8 eligible>=2 鈫?no Top1 (1172 ms)
+    鈭?T6 tone total=7 eligible>=2 + surface 鈫?accept (1189 ms)
+    脳 eligibility metamorphic: disabled + prior<=0 + alias mix under total=7 accept (1287 ms)
+    鈭?cache: LIMIT=1 then LIMIT=8 and reverse do not cross-pollute counts (1233 ms)
+    脳 downstream: true unique 鈫?edge/path; exact-limit reject 鈫?no edge/vote (1193 ms)
+    鈭?rank9 surface exact reachable after Batch 1.1B (1282 ms)
+
+  鈼?Batch 1.1A Stage 4 generalization matrix (real SQLite) 鈥?P6 plain total=7 eligible>=2 surface in set 鈫?accept
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      293 |       word: hits[0]?.hotword.word ?? null,
+      294 |     });
+    > 295 |     expect(hits).toHaveLength(1);
+          |                  ^
+      296 |     expect(hits[0]!.hotword.word).toBe('鎳?);
+      297 |   });
+      298 |
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1a-stage4-generalization.audit.test.ts:295:18)
+
+  鈼?Batch 1.1A Stage 4 generalization matrix (real SQLite) 鈥?eligibility metamorphic: disabled + prior<=0 + alias mix u
+nder total=7 accept
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      515 |     });
+      516 |     expect(el.length).toBe(1);
+    > 517 |     expect(hits).toHaveLength(1);
+          |                  ^
+      518 |   });
+      519 |
+      520 |   it('cache: LIMIT=1 then LIMIT=8 and reverse do not cross-pollute counts', () => {
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1a-stage4-generalization.audit.test.ts:517:18)
+
+  鈼?Batch 1.1A Stage 4 generalization matrix (real SQLite) 鈥?downstream: true unique 鈫?edge/path; exact-limit reject 鈫?
+no edge/vote
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      583 |     });
+      584 |     const sqlAfter = rt.getTierQueryStats().sqlQueries;
+    > 585 |     expect(recall.candidates).toHaveLength(1);
+          |                               ^
+      586 |     const edges = buildLexicalEdges({
+      587 |       recalledWindows: [
+      588 |         {
+
+      at Object.<anonymous> (main/src/lexicon-v2/batch1-1a-stage4-generalization.audit.test.ts:585:31)
+
+Test Suites: 2 failed, 2 total
+Tests:       8 failed, 22 passed, 30 total
+Snapshots:   0 total
+Time:        67.922 s, estimated 68 s
+Ran all test suites matching /batch1-1a-stage4|batch1-1b-stage4/i.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after 
+all tests finished?

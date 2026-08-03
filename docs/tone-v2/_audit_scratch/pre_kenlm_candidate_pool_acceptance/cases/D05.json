@@ -1,0 +1,420 @@
+{
+  "caseId": "D05",
+  "rawText": "请确认菜单和打包",
+  "windowCount": 30,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 1,
+  "retainedDomainCount": 4,
+  "bucketCount": 4,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 4,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 4,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请确认菜单和打包"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "domainId": "bakery",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "domainId": "milk_tea",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "确"
+        ],
+        [
+          "认"
+        ],
+        [
+          "菜单"
+        ],
+        [
+          "和"
+        ],
+        [
+          "打包"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请确认菜单和打包",
+      "sourcePathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "sourceDomain": "bakery",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "菜单",
+          "sourceText": "菜单"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "打包",
+          "sourceText": "打包"
+        }
+      ],
+      "dedupKey": "请确认菜单和打包",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认菜单和打包",
+      "sourcePathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "sourceDomain": "coffee",
+      "sourceBucket": 1,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "菜单",
+          "sourceText": "菜单"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "打包",
+          "sourceText": "打包"
+        }
+      ],
+      "dedupKey": "请确认菜单和打包",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认菜单和打包",
+      "sourcePathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "sourceDomain": "food_order",
+      "sourceBucket": 2,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "菜单",
+          "sourceText": "菜单"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "打包",
+          "sourceText": "打包"
+        }
+      ],
+      "dedupKey": "请确认菜单和打包",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请确认菜单和打包",
+      "sourcePathId": "0f7ba79c0fbaa1b8a443ba0d5c7ae2cae0e39ffd73936569646b347c7bda8161",
+      "sourceDomain": "milk_tea",
+      "sourceBucket": 3,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 2,
+          "word": "确",
+          "sourceText": "确"
+        },
+        {
+          "start": 2,
+          "end": 3,
+          "word": "认",
+          "sourceText": "认"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "菜单",
+          "sourceText": "菜单"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "word": "和",
+          "sourceText": "和"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "word": "打包",
+          "sourceText": "打包"
+        }
+      ],
+      "dedupKey": "请确认菜单和打包",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 30,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 30,
+    "lexicalEdgeCount": 2,
+    "fallbackEdgeCount": 4,
+    "edgeCountAfterFallback": 6,
+    "fallbackInjectionCount": 4,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 3
+      },
+      {
+        "start": 5,
+        "end": 6
+      }
+    ],
+    "completePathCount": 1,
+    "retainedCompletePathCount": 1,
+    "prunedPathCount": 0,
+    "materializedPathCount": 1,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 30,
+    "sqlQueryCount": 22,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 1,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "D"
+  ],
+  "why": "food multi-domain",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 21.536399841308594,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

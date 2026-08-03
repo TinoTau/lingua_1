@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "lexicon-v3-runtime-v3",
+  "bundleVersion": 11,
+  "bundleTag": "v3-runtime",
+  "buildTime": "2026-08-02T03:22:33.454Z",
+  "checksum": "sha256:38c376c4af1a4da454c4f6543142b794ff3a90730b8fdd1c6543308885edd222",
+  "tables": {
+    "base": 10061,
+    "idiom": 22192,
+    "domain": 1033,
+    "routing": 1033,
+    "term": 10061,
+    "term_domain_tags": 1033,
+    "domain_hierarchy": 12
+  },
+  "sourceInputs": {
+    "mode": "FULL_REBUILD",
+    "sourceDir": "electron_node/docs/lexicon-assets/full_rebuild_v1",
+    "loadOrder": [
+      "lexicon_full_corrected_review.csv",
+      "terms_to_remove_or_rebuild.csv",
+      "supplemental_terms.csv",
+      "term_domain_tags_corrected.csv",
+      "idiom_zh_v2/entries.jsonl",
+      "profile-registry.json"
+    ],
+    "termSources": [
+      {
+        "file": "lexicon_full_corrected_review.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/lexicon_full_corrected_review.csv",
+        "sha256": "sha256:83efb26bf08ee4cf3c826124582bc587b11769207063de60a83582b22becb432",
+        "recordCount": 10000,
+        "matchesTmpExtract": true
+      },
+      {
+        "file": "term_domain_tags_corrected.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/term_domain_tags_corrected.csv",
+        "sha256": "sha256:e0d484452947af5927bea5efb61f296bbedc801f089144cac443cd589382f002",
+        "recordCount": 970,
+        "matchesTmpExtract": true
+      },
+      {
+        "file": "supplemental_terms.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/supplemental_terms.csv",
+        "sha256": "sha256:5412133a15eb0548664107e41b0eef4a4c88b7ede5fdc2b3eb196336a584bc9a",
+        "recordCount": 73,
+        "matchesTmpExtract": true
+      },
+      {
+        "file": "terms_to_remove_or_rebuild.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/terms_to_remove_or_rebuild.csv",
+        "sha256": "sha256:5911d4ac8a00dba7ecd3a7e319af5a489df2356bd1b38496e29db4583bbc13e1",
+        "recordCount": 12,
+        "matchesTmpExtract": true
+      }
+    ],
+    "idiomSource": {
+      "path": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
+      "sha256": "sha256:017f68a5aa52db8425250ae3a3dd3a8e7a4a09c068781efb7531349c385f8668",
+      "recordCount": 22192
+    },
+    "hierarchySource": {
+      "path": "electron_node/electron-node/data/lexicon/profile-registry.json",
+      "sha256": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b"
+    },
+    "excludedTermCount": 12,
+    "supplementalRowCount": 73,
+    "reviewKeptCount": 9988,
+    "domainTagCount": 1033
+  },
+  "historicalInputs": {
+    "note": "p1_3 seed JSONL / seed-only shadow are NOT production Full Rebuild inputs",
+    "seedOnlyShadow": "NOT PRODUCTION FULL REBUILD"
+  },
+  "overlayInputs": [],
+  "lastPatchId": null,
+  "lastAppliedAt": null,
+  "domainAvailability": {
+    "tourism_transport": 67,
+    "tech_ai": 142,
+    "food_order": 88,
+    "medical": 178,
+    "tourism_hotel": 79,
+    "tourism_route": 111,
+    "milk_tea": 53,
+    "meeting": 61,
+    "coffee": 107,
+    "tourism_pickup": 52,
+    "bakery": 90,
+    "transport": 5
+  },
+  "domainHierarchyVersion": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b",
+  "rebuild": {
+    "mode": "FULL_REBUILD",
+    "patchId": "lexicon-full-rebuild-v1",
+    "sources": [
+      "lexicon_full_corrected_review.csv",
+      "term_domain_tags_corrected.csv",
+      "supplemental_terms.csv"
+    ],
+    "excluded": [
+      "terms_to_remove_or_rebuild.csv"
+    ],
+    "remove_term_excluded_count": 12,
+    "no_merge": true,
+    "idiomSource": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
+    "hierarchySource": "electron_node/electron-node/data/lexicon/profile-registry.json"
+  },
+  "atomicityNote": "ATOMICITY CONTENT CLEANUP NOT EXECUTED",
+  "atomicity": {
+    "mode": "audit",
+    "report": "atomicity_report.json",
+    "csv": "atomicity_report.csv",
+    "summary": {
+      "ACCEPT": 9247,
+      "ACCEPT_EXCEPTION": 0,
+      "REJECT_COMPOSITE": 74,
+      "UNRESOLVED": 740
+    },
+    "total": 10061,
+    "enforceReady": true,
+    "runtimeSchemaExtended": false
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "caseId": "F03",
+  "rawText": "帮我准备一杯大杯拿铁",
+  "retainedDomains": [
+    "coffee"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "帮"
+        ],
+        [
+          "我"
+        ],
+        [
+          "准"
+        ],
+        [
+          "备"
+        ],
+        [
+          "一"
+        ],
+        [
+          "杯"
+        ],
+        [
+          "大杯"
+        ],
+        [
+          "拿铁"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "帮我准备一杯大杯拿铁"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "帮我准备一杯大杯拿铁"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "帮我准备一杯大杯拿铁"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 33.68900012969971,
+  "groups": [
+    "F"
+  ],
+  "why": "raw-correct cafe",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

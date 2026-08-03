@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-07-28",
+  "codeRegex": {
+    "punctuationInWindow": "[，。！？、；：,.!?;:]",
+    "sentenceBoundary": "[。！？.!?]"
+  },
+  "adjacencyChecksRemoved": true,
+  "matrix": [
+    {"punct": "。", "position": "adjacent_before", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": "。", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": "。", "position": "inside_slice", "expected": "block", "codeSupport": "YES (punct or sentence)", "tested": true},
+    {"punct": "！", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": "？", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": true},
+    {"punct": "？", "position": "adjacent_before", "expected": "allow", "codeSupport": "YES", "tested": true},
+    {"punct": "？", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": true},
+    {"punct": "；", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": "；", "position": "inside_slice", "expected": "block", "codeSupport": "YES (punct)", "tested": false},
+    {"punct": "：", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": false},
+    {"punct": "，", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": true},
+    {"punct": "、", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": false},
+    {"punct": ".", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": ".", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": false},
+    {"punct": "!", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": false},
+    {"punct": "?", "position": "adjacent_after", "expected": "allow", "codeSupport": "YES", "tested": false},
+    {"punct": "?", "position": "inside_slice", "expected": "block", "codeSupport": "YES", "tested": false},
+    {"punct": "…", "position": "inside_slice", "expected": "block?", "codeSupport": "NO — not in PUNCTUATION_RE or SENTENCE_BOUNDARY_RE", "tested": false, "gap": "P1"},
+    {"punct": "……", "position": "inside_slice", "expected": "block?", "codeSupport": "NO", "tested": false, "gap": "P1"},
+    {"punct": "space", "position": "inside_slice", "expected": "block", "codeSupport": "YES whitespace_gap", "tested": true},
+    {"punct": "raw_gap_between_spans", "position": "cross_coarse", "expected": "block", "codeSupport": "YES", "tested": true},
+    {"punct": "mixed_fullwidth_halfwidth", "position": "inside", "expected": "block", "codeSupport": "YES for listed chars", "tested": false}
+  ],
+  "regressionRiskFromAdjacencyRemoval": {
+    "cross_punct_window_allowed": "NO if punct inside slice",
+    "ascii_bypass": "NO for .!?;: inside slice",
+    "ellipsis_bypass": "YES possible — ellipsis not in regex"
+  },
+  "verdict": "PARTIAL_GENERALIZATION — core adjacency fix sound; test matrix thin; ellipsis gap"
+}

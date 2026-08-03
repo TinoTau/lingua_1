@@ -1,0 +1,1599 @@
+{
+  "caseId": "d041",
+  "fileNum": "041",
+  "rawText": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+  "scenario": "gym",
+  "retainedDomains": [
+    "medical",
+    "meeting",
+    "tourism_hotel"
+  ],
+  "domainScores": {
+    "medical": 1,
+    "meeting": 1,
+    "tourism_hotel": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "domainId": "medical",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "更",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "更"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "衣室",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:1",
+          "sameDomain": [
+            "医师",
+            "医师"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "医师",
+            "衣室"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "柜",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "柜"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "子",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "钥",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "钥"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "匙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "匙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "找",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "找"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "不",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "到",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "到"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "了",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "了"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "前台",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "前台"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "能",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "帮",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "帮"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "忙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "忙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "开",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "一",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "下",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "吗",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "更"
+        ],
+        [
+          "医师",
+          "衣室"
+        ],
+        [
+          "柜"
+        ],
+        [
+          "子"
+        ],
+        [
+          "钥"
+        ],
+        [
+          "匙"
+        ],
+        [
+          "找"
+        ],
+        [
+          "不"
+        ],
+        [
+          "到"
+        ],
+        [
+          "了"
+        ],
+        [
+          "前台"
+        ],
+        [
+          "能"
+        ],
+        [
+          "帮"
+        ],
+        [
+          "忙"
+        ],
+        [
+          "开"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+        "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？"
+      ]
+    },
+    {
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "domainId": "meeting",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "更",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "更"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "衣室",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:1",
+          "sameDomain": [
+            "议室"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "议室",
+            "衣室"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "柜",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "柜"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "子",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "钥",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "钥"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "匙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "匙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "找",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "找"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "不",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "到",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "到"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "了",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "了"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "前台",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "前台"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "能",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "帮",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "帮"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "忙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "忙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "开",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "一",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "下",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "吗",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "更"
+        ],
+        [
+          "议室",
+          "衣室"
+        ],
+        [
+          "柜"
+        ],
+        [
+          "子"
+        ],
+        [
+          "钥"
+        ],
+        [
+          "匙"
+        ],
+        [
+          "找"
+        ],
+        [
+          "不"
+        ],
+        [
+          "到"
+        ],
+        [
+          "了"
+        ],
+        [
+          "前台"
+        ],
+        [
+          "能"
+        ],
+        [
+          "帮"
+        ],
+        [
+          "忙"
+        ],
+        [
+          "开"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "更议室柜子钥匙找不到了，前台能帮忙开一下吗？",
+        "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？"
+      ]
+    },
+    {
+      "pathId": "3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06",
+      "domainId": "tourism_hotel",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "更",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "更"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "衣室",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "衣室"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "柜",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "柜"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "子",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "子"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "钥",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "钥"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "匙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "匙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "找",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "找"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "不",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "到",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "到"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "了",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "了"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "前台",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:10",
+          "sameDomain": [
+            "前台",
+            "前台",
+            "前台"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "前台"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "能",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "帮",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "帮"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "忙",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "忙"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "开",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "开"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "一",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "下",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "吗",
+          "fineSpanId": "fine:3b518d0b2df5f529d68743f21657b328629df6e85a64c6f34b152211b6dc2f06:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "更"
+        ],
+        [
+          "衣室"
+        ],
+        [
+          "柜"
+        ],
+        [
+          "子"
+        ],
+        [
+          "钥"
+        ],
+        [
+          "匙"
+        ],
+        [
+          "找"
+        ],
+        [
+          "不"
+        ],
+        [
+          "到"
+        ],
+        [
+          "了"
+        ],
+        [
+          "前台"
+        ],
+        [
+          "能"
+        ],
+        [
+          "帮"
+        ],
+        [
+          "忙"
+        ],
+        [
+          "开"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更议室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "衣室",
+            "start": 1,
+            "end": 3
+          },
+          "word": "医师",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.006,
+          "repairTarget": true,
+          "candidateScore": 2.006
+        },
+        {
+          "span": {
+            "text": "更",
+            "start": 0,
+            "end": 1
+          },
+          "word": "更",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "柜",
+            "start": 3,
+            "end": 4
+          },
+          "word": "柜",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 4,
+            "end": 5
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "钥",
+            "start": 5,
+            "end": 6
+          },
+          "word": "钥",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "匙",
+            "start": 6,
+            "end": 7
+          },
+          "word": "匙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "找",
+            "start": 7,
+            "end": 8
+          },
+          "word": "找",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 8,
+            "end": 9
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "到",
+            "start": 9,
+            "end": 10
+          },
+          "word": "到",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "了",
+            "start": 10,
+            "end": 11
+          },
+          "word": "了",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "前台",
+            "start": 12,
+            "end": 14
+          },
+          "word": "前台",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 14,
+            "end": 15
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "帮",
+            "start": 15,
+            "end": 16
+          },
+          "word": "帮",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "忙",
+            "start": 16,
+            "end": 17
+          },
+          "word": "忙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 17,
+            "end": 18
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 18,
+            "end": 19
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 19,
+            "end": 20
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 20,
+            "end": 21
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.006
+    },
+    {
+      "text": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "更",
+            "start": 0,
+            "end": 1
+          },
+          "word": "更",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "衣室",
+            "start": 1,
+            "end": 3
+          },
+          "word": "衣室",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "柜",
+            "start": 3,
+            "end": 4
+          },
+          "word": "柜",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 4,
+            "end": 5
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "钥",
+            "start": 5,
+            "end": 6
+          },
+          "word": "钥",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "匙",
+            "start": 6,
+            "end": 7
+          },
+          "word": "匙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "找",
+            "start": 7,
+            "end": 8
+          },
+          "word": "找",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 8,
+            "end": 9
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "到",
+            "start": 9,
+            "end": 10
+          },
+          "word": "到",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "了",
+            "start": 10,
+            "end": 11
+          },
+          "word": "了",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "前台",
+            "start": 12,
+            "end": 14
+          },
+          "word": "前台",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 14,
+            "end": 15
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "帮",
+            "start": 15,
+            "end": 16
+          },
+          "word": "帮",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "忙",
+            "start": 16,
+            "end": 17
+          },
+          "word": "忙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 17,
+            "end": 18
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 18,
+            "end": 19
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 19,
+            "end": 20
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 20,
+            "end": 21
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 0
+    },
+    {
+      "text": "更议室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "衣室",
+            "start": 1,
+            "end": 3
+          },
+          "word": "议室",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.006,
+          "repairTarget": true,
+          "candidateScore": 2.006
+        },
+        {
+          "span": {
+            "text": "更",
+            "start": 0,
+            "end": 1
+          },
+          "word": "更",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "柜",
+            "start": 3,
+            "end": 4
+          },
+          "word": "柜",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "子",
+            "start": 4,
+            "end": 5
+          },
+          "word": "子",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "钥",
+            "start": 5,
+            "end": 6
+          },
+          "word": "钥",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "匙",
+            "start": 6,
+            "end": 7
+          },
+          "word": "匙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "找",
+            "start": 7,
+            "end": 8
+          },
+          "word": "找",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 8,
+            "end": 9
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "到",
+            "start": 9,
+            "end": 10
+          },
+          "word": "到",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "了",
+            "start": 10,
+            "end": 11
+          },
+          "word": "了",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "前台",
+            "start": 12,
+            "end": 14
+          },
+          "word": "前台",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 14,
+            "end": 15
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "帮",
+            "start": 15,
+            "end": 16
+          },
+          "word": "帮",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "忙",
+            "start": 16,
+            "end": 17
+          },
+          "word": "忙",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "开",
+            "start": 17,
+            "end": 18
+          },
+          "word": "开",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 18,
+            "end": 19
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 19,
+            "end": 20
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 20,
+            "end": 21
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.006
+    }
+  ],
+  "kenlmInputTexts": [
+    "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+    "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": true,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": [
+      "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？"
+    ]
+  },
+  "humanJudgment": {
+    "suggested": [
+      "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+    ],
+    "actual": [
+      "更医师柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "更议室柜子钥匙找不到了，前台能帮忙开一下吗？"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

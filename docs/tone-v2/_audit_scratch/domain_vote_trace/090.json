@@ -1,0 +1,3179 @@
+{
+  "case": {
+    "id": "d090",
+    "fileNum": "090",
+    "scenario": "lexicon_homophone",
+    "rawText": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。"
+  },
+  "productionEntry": "runFwDetectorOrchestrator → runFwDetectorV4Path → runSpanAssemblyV4Orchestrator → runDomainAwareAssembly → voteUtteranceDomainFromPool",
+  "paths": [
+    {
+      "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+      "pathIndex": 0,
+      "boundaryKey": "0-1|1-2|2-4|4-5|5-6|6-7|7-11|11-12|12-13|13-15|15-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "关",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "于",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+          "rawRange": [
+            2,
+            4
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            2,
+            4
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "和",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:6",
+          "rawRange": [
+            7,
+            11
+          ],
+          "rawText": "上线计化",
+          "syllableRange": [
+            7,
+            11
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:7",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:8",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "按",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+          "rawRange": [
+            14,
+            16
+          ],
+          "rawText": "上线",
+          "syllableRange": [
+            13,
+            15
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:10",
+          "rawRange": [
+            16,
+            18
+          ],
+          "rawText": "计划",
+          "syllableRange": [
+            15,
+            17
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:11",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "执",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:12",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:13",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:14",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:15",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "题",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:16",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "群",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:17",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "里",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:18",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "说",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "2:4:1",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "2:4:2",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+          "candidateRank": 2,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:11:6",
+          "word": "上线计划",
+          "surface": "上线计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            11
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:6",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:15:10",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:15:11",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+          "candidateRank": 2,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "15:17:16",
+          "word": "计划",
+          "surface": "计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            18
+          ],
+          "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:10",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "2:4:1",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "2:4:2",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "7:11:6",
+                "word": "上线计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:15:10",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "13:15:11",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:17:16",
+                "word": "计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 4
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 4
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 4,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tech_ai",
+        "winnerScore": 4,
+        "voteMargin": 4,
+        "parentTermVoteCount": 4
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 4
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 4
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tech_ai",
+          "rawVoteScore": 4,
+          "adjustedScore": 4,
+          "evidenceFineSpanCount": 4,
+          "evidenceCandidateCount": 6,
+          "evidenceFineSpanList": [
+            "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+            "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:6",
+            "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+            "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:10"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+              "candidateId": "2:4:1",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:2",
+              "candidateId": "2:4:2",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:6",
+              "candidateId": "7:11:6",
+              "word": "上线计划"
+            },
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+              "candidateId": "13:15:10",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:9",
+              "candidateId": "13:15:11",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:80d8d072c93bd03cae9cbb84c08e94e3da22d362211a19bb4e9529d389cfcbd9:10",
+              "candidateId": "15:17:16",
+              "word": "计划"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 4,
+            "domainScore": 4,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3); this score=4"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    },
+    {
+      "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+      "pathIndex": 1,
+      "boundaryKey": "0-1|1-2|2-4|4-5|5-6|6-7|7-11|11-12|12-13|13-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "关",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "于",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+          "rawRange": [
+            2,
+            4
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            2,
+            4
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "和",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:6",
+          "rawRange": [
+            7,
+            11
+          ],
+          "rawText": "上线计化",
+          "syllableRange": [
+            7,
+            11
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:7",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:8",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "按",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:9",
+          "rawRange": [
+            14,
+            18
+          ],
+          "rawText": "上线计划",
+          "syllableRange": [
+            13,
+            17
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:10",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "执",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:11",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:12",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:13",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:14",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "题",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:15",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "群",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:16",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "里",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:17",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "说",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "2:4:1",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "2:4:2",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+          "candidateRank": 2,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:11:6",
+          "word": "上线计划",
+          "surface": "上线计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            11
+          ],
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:6",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:17:13",
+          "word": "上线计划",
+          "surface": "上线计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            18
+          ],
+          "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:9",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "2:4:1",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "2:4:2",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "7:11:6",
+                "word": "上线计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:9",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:17:13",
+                "word": "上线计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 3
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 3
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 3,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tech_ai",
+        "winnerScore": 3,
+        "voteMargin": 3,
+        "parentTermVoteCount": 3
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 3
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 3
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tech_ai",
+          "rawVoteScore": 3,
+          "adjustedScore": 3,
+          "evidenceFineSpanCount": 3,
+          "evidenceCandidateCount": 4,
+          "evidenceFineSpanList": [
+            "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+            "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:6",
+            "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:9"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+              "candidateId": "2:4:1",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:2",
+              "candidateId": "2:4:2",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:6",
+              "candidateId": "7:11:6",
+              "word": "上线计划"
+            },
+            {
+              "fineSpanId": "fine:93e4109d85b5380fab48f556415ccbc466756d447402b61852516ce4b9af9d96:9",
+              "candidateId": "13:17:13",
+              "word": "上线计划"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 3,
+            "domainScore": 3,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 2.25,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=2.25); this score=3"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    },
+    {
+      "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+      "pathIndex": 2,
+      "boundaryKey": "0-1|1-2|2-4|4-5|5-6|6-7|7-9|9-11|11-12|12-13|13-15|15-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "关",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "于",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+          "rawRange": [
+            2,
+            4
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            2,
+            4
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "和",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+          "rawRange": [
+            7,
+            9
+          ],
+          "rawText": "上线",
+          "syllableRange": [
+            7,
+            9
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:7",
+          "rawRange": [
+            9,
+            11
+          ],
+          "rawText": "计化",
+          "syllableRange": [
+            9,
+            11
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:8",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:9",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "按",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+          "rawRange": [
+            14,
+            16
+          ],
+          "rawText": "上线",
+          "syllableRange": [
+            13,
+            15
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:11",
+          "rawRange": [
+            16,
+            18
+          ],
+          "rawText": "计划",
+          "syllableRange": [
+            15,
+            17
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:12",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "执",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:13",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:14",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:15",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:16",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "题",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:17",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "群",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:18",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "里",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:19",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "说",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "2:4:1",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "2:4:2",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+          "candidateRank": 2,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:9:3",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:9:4",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+          "candidateRank": 2,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "9:11:9",
+          "word": "计划",
+          "surface": "计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            9,
+            11
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:7",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:15:10",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:15:11",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            16
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+          "candidateRank": 2,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "15:17:16",
+          "word": "计划",
+          "surface": "计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            16,
+            18
+          ],
+          "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:11",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "2:4:1",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "2:4:2",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "7:9:3",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "7:9:4",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "9:11:9",
+                "word": "计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:15:10",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "13:15:11",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:11",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "15:17:16",
+                "word": "计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 5
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 5
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 5,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tech_ai",
+        "winnerScore": 5,
+        "voteMargin": 5,
+        "parentTermVoteCount": 4
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 5
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 5
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tech_ai",
+          "rawVoteScore": 5,
+          "adjustedScore": 5,
+          "evidenceFineSpanCount": 5,
+          "evidenceCandidateCount": 8,
+          "evidenceFineSpanList": [
+            "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+            "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+            "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:7",
+            "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+            "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:11"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+              "candidateId": "2:4:1",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:2",
+              "candidateId": "2:4:2",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+              "candidateId": "7:9:3",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:6",
+              "candidateId": "7:9:4",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:7",
+              "candidateId": "9:11:9",
+              "word": "计划"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+              "candidateId": "13:15:10",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:10",
+              "candidateId": "13:15:11",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:2ad765c2b868ddad2f2aacc904cdbbff13b3bd2676190675e265773ee4a9a6ab:11",
+              "candidateId": "15:17:16",
+              "word": "计划"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 5,
+            "domainScore": 5,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3.75,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3.75); this score=5"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    },
+    {
+      "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+      "pathIndex": 3,
+      "boundaryKey": "0-1|1-2|2-4|4-5|5-6|6-7|7-9|9-11|11-12|12-13|13-17|17-18|18-19|19-20|20-21|21-22|22-23|23-24|24-25",
+      "fineSpans": [
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:0",
+          "rawRange": [
+            0,
+            1
+          ],
+          "rawText": "关",
+          "syllableRange": [
+            0,
+            1
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:1",
+          "rawRange": [
+            1,
+            2
+          ],
+          "rawText": "于",
+          "syllableRange": [
+            1,
+            2
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+          "rawRange": [
+            2,
+            4
+          ],
+          "rawText": "后选",
+          "syllableRange": [
+            2,
+            4
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:3",
+          "rawRange": [
+            4,
+            5
+          ],
+          "rawText": "生",
+          "syllableRange": [
+            4,
+            5
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:4",
+          "rawRange": [
+            5,
+            6
+          ],
+          "rawText": "城",
+          "syllableRange": [
+            5,
+            6
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:5",
+          "rawRange": [
+            6,
+            7
+          ],
+          "rawText": "和",
+          "syllableRange": [
+            6,
+            7
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+          "rawRange": [
+            7,
+            9
+          ],
+          "rawText": "上线",
+          "syllableRange": [
+            7,
+            9
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:7",
+          "rawRange": [
+            9,
+            11
+          ],
+          "rawText": "计化",
+          "syllableRange": [
+            9,
+            11
+          ],
+          "coarseSpanIds": [
+            "c0"
+          ],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:8",
+          "rawRange": [
+            12,
+            13
+          ],
+          "rawText": "请",
+          "syllableRange": [
+            11,
+            12
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:9",
+          "rawRange": [
+            13,
+            14
+          ],
+          "rawText": "按",
+          "syllableRange": [
+            12,
+            13
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:10",
+          "rawRange": [
+            14,
+            18
+          ],
+          "rawText": "上线计划",
+          "syllableRange": [
+            13,
+            17
+          ],
+          "coarseSpanIds": [
+            "c1"
+          ],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:11",
+          "rawRange": [
+            18,
+            19
+          ],
+          "rawText": "执",
+          "syllableRange": [
+            17,
+            18
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:12",
+          "rawRange": [
+            19,
+            20
+          ],
+          "rawText": "行",
+          "syllableRange": [
+            18,
+            19
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:13",
+          "rawRange": [
+            21,
+            22
+          ],
+          "rawText": "有",
+          "syllableRange": [
+            19,
+            20
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:14",
+          "rawRange": [
+            22,
+            23
+          ],
+          "rawText": "问",
+          "syllableRange": [
+            20,
+            21
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:15",
+          "rawRange": [
+            23,
+            24
+          ],
+          "rawText": "题",
+          "syllableRange": [
+            21,
+            22
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:16",
+          "rawRange": [
+            24,
+            25
+          ],
+          "rawText": "群",
+          "syllableRange": [
+            22,
+            23
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:17",
+          "rawRange": [
+            25,
+            26
+          ],
+          "rawText": "里",
+          "syllableRange": [
+            23,
+            24
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        },
+        {
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:18",
+          "rawRange": [
+            26,
+            27
+          ],
+          "rawText": "说",
+          "syllableRange": [
+            24,
+            25
+          ],
+          "coarseSpanIds": [],
+          "pathId": "65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a",
+          "fineSpanDomainSet": []
+        }
+      ],
+      "candidates": [
+        {
+          "candidateId": "2:4:1",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "2:4:2",
+          "word": "候选",
+          "surface": "候选",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            2,
+            4
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+          "candidateRank": 2,
+          "score": 2.35,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:9:3",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+          "candidateRank": 1,
+          "score": 2.42,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "7:9:4",
+          "word": "上线",
+          "surface": "上线",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            7,
+            9
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+          "candidateRank": 2,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "9:11:9",
+          "word": "计划",
+          "surface": "计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            9,
+            11
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:7",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        },
+        {
+          "candidateId": "13:17:13",
+          "word": "上线计划",
+          "surface": "上线计划",
+          "source": "domain_term",
+          "recallSource": "lexicon_pinyin_topk",
+          "hitKind": "parent_fragment",
+          "rawRange": [
+            14,
+            18
+          ],
+          "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:10",
+          "candidateRank": 1,
+          "score": 2.4,
+          "toneScore": true,
+          "tonePenalty": 1,
+          "domainTags": [
+            "tech_ai"
+          ],
+          "isBase": false,
+          "isCanonical": false,
+          "compatibilityStatus": "active",
+          "eligibilityStatus": {
+            "voteEligible": "YES",
+            "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+            "decisionFunction": "buildFineSpanDomainSet",
+            "reasonCode": "VALID_DOMAIN_CANDIDATE",
+            "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet"
+          },
+          "voteEligible": "YES",
+          "ownerModule": "utterance-domain-vote.buildFineSpanDomainSet",
+          "decisionFunction": "buildFineSpanDomainSet",
+          "reasonCode": "VALID_DOMAIN_CANDIDATE",
+          "reasonDetail": "not covered + domain_term|passive_domain_weak → domains union into FineSpanDomainSet",
+          "structuralDedupeSkip": false,
+          "enteredFineSpanDomainSet": true,
+          "domainsAddedToSet": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "spanDomainSets": [
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [
+          "tech_ai"
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "contributionsByDomain": {
+        "tech_ai": [
+          {
+            "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "2:4:1",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "2:4:2",
+                "word": "候选",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "7:9:3",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              },
+              {
+                "candidateId": "7:9:4",
+                "word": "上线",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:7",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "9:11:9",
+                "word": "计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          },
+          {
+            "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:10",
+            "value": 1,
+            "formula": "presence: domain ∈ FineSpanDomainSet(span) → +1 once per span",
+            "evidenceCandidates": [
+              {
+                "candidateId": "13:17:13",
+                "word": "上线计划",
+                "domainsAdded": [
+                  "tech_ai"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "reconstructedScores": {
+        "tech_ai": 4
+      },
+      "productionVote": {
+        "domainScores": {
+          "tech_ai": 4
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "maxCount": 4,
+        "runnerUpCount": 0,
+        "isTie": false,
+        "utteranceDomain": "tech_ai",
+        "winnerScore": 4,
+        "voteMargin": 4,
+        "parentTermVoteCount": 4
+      },
+      "replayVote": {
+        "domainScores": {
+          "tech_ai": 4
+        },
+        "retainedDomains": [
+          "tech_ai"
+        ],
+        "insufficientEvidence": false,
+        "isTie": false,
+        "maxCount": 4
+      },
+      "scoreReconcileOk": true,
+      "ranking": [
+        {
+          "rank": 1,
+          "domain": "tech_ai",
+          "rawVoteScore": 4,
+          "adjustedScore": 4,
+          "evidenceFineSpanCount": 4,
+          "evidenceCandidateCount": 6,
+          "evidenceFineSpanList": [
+            "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+            "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+            "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:7",
+            "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:10"
+          ],
+          "evidenceCandidateList": [
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+              "candidateId": "2:4:1",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:2",
+              "candidateId": "2:4:2",
+              "word": "候选"
+            },
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+              "candidateId": "7:9:3",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:6",
+              "candidateId": "7:9:4",
+              "word": "上线"
+            },
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:7",
+              "candidateId": "9:11:9",
+              "word": "计划"
+            },
+            {
+              "fineSpanId": "fine:65aa4e3a49b767d4a16d0bb386a6f55fc3d2885c77f30fc1f8e5824bd3aebf0a:10",
+              "candidateId": "13:17:13",
+              "word": "上线计划"
+            }
+          ],
+          "retention": {
+            "retained": "YES",
+            "reasonCode": "UNIQUE_TOP",
+            "topScore": 4,
+            "domainScore": 4,
+            "scoreRatio": 1,
+            "absoluteGap": 0,
+            "configuredThreshold": 0.75,
+            "thresholdAbsolute": 3,
+            "isTie": false,
+            "actualComparisonResult": "retain iff count>=maxCount*0.75 (=3); this score=4"
+          }
+        }
+      ],
+      "retentionRatio": 0.75,
+      "retainedDomains": [
+        "tech_ai"
+      ],
+      "insufficientEvidence": false,
+      "baseOnly": false,
+      "bucketDomains": [
+        "tech_ai"
+      ],
+      "bucketDomainsFromVote": [
+        "tech_ai"
+      ],
+      "bucketMatch": true,
+      "bucketSpanSetsLength": 1,
+      "multiDomainInstances": [],
+      "baseHandling": {
+        "enteredCandidatePool": 0,
+        "contributedConcreteDomainVote": 0,
+        "affectsInsufficientEvidenceOnlyViaAbsenceOfDomainVotes": true,
+        "note": "Base enters pool / every bucket for Assembly; Vote excludes via isDomainVoteSource"
+      },
+      "priors": {
+        "inputDomainPriors": [],
+        "priorSource": "orchestrator input domainPriors (empty for dialog_200 probe)",
+        "priorValue": null,
+        "priorAppliedAt": "NOT_APPLIED_TO_VOTE",
+        "priorContribution": 0,
+        "statement": "No domain priors provided"
+      },
+      "llm": {
+        "llmDomainInput": null,
+        "llmDomainResult": null,
+        "llmWeight": null,
+        "llmAdjustment": null,
+        "statement": "LLM did not participate in this Vote"
+      },
+      "formulaSSOT": {
+        "text": "domainScores[domain] = number of distinct fine spans that present the domain",
+        "code": "accumulateSpanDomainSets(buildFineSpanDomainSet(span.candidates) for each span)",
+        "notUsed": [
+          "candidateScore mass",
+          "toneFactor weight",
+          "priorFactor in Vote",
+          "llmFactor in Vote",
+          "domains.length fan-out split",
+          "per-span Top1 only vote"
+        ]
+      }
+    }
+  ]
+}

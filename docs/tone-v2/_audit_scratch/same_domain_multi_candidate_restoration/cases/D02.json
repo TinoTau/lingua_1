@@ -1,0 +1,186 @@
+{
+  "caseId": "D02",
+  "rawText": "我想堂食还是带走",
+  "retainedDomains": [
+    "bakery",
+    "coffee",
+    "food_order",
+    "milk_tea"
+  ],
+  "bucketDetails": [
+    {
+      "domainId": "bakery",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "堂食"
+        ],
+        [
+          "还"
+        ],
+        [
+          "是"
+        ],
+        [
+          "带走"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想堂食还是带走"
+      ]
+    },
+    {
+      "domainId": "coffee",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "堂食"
+        ],
+        [
+          "还"
+        ],
+        [
+          "是"
+        ],
+        [
+          "带走"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想堂食还是带走"
+      ]
+    },
+    {
+      "domainId": "food_order",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "堂食"
+        ],
+        [
+          "还"
+        ],
+        [
+          "是"
+        ],
+        [
+          "带走"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想堂食还是带走"
+      ]
+    },
+    {
+      "domainId": "milk_tea",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "我"
+        ],
+        [
+          "想"
+        ],
+        [
+          "堂食"
+        ],
+        [
+          "还"
+        ],
+        [
+          "是"
+        ],
+        [
+          "带走"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1,
+      "texts": [
+        "我想堂食还是带走"
+      ]
+    }
+  ],
+  "theoreticalCombinationCount": 1,
+  "assemblyDistinctTextCount": 1,
+  "assemblyTexts": [
+    "我想堂食还是带走"
+  ],
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledDistinct": 1,
+  "prefilledTexts": [
+    "我想堂食还是带走"
+  ],
+  "kenlmInputCount": 1,
+  "dropReasons": [],
+  "exactTermOnlyResidual": false,
+  "multiGrid": false,
+  "capOk": true,
+  "orchMs": 28.314300060272217,
+  "groups": [
+    "D"
+  ],
+  "why": "4-domain tags",
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

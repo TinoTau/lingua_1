@@ -1,0 +1,713 @@
+{
+  "caseId": "d078",
+  "fileNum": "078",
+  "rawText": "房间空调不太制冷，能派人上来看一下吗？",
+  "scenario": "hotel",
+  "retainedDomains": [
+    "tech_ai"
+  ],
+  "domainScores": {
+    "tech_ai": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a",
+      "domainId": "tech_ai",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "房",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "房"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "间空",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:1",
+          "sameDomain": [
+            "监控"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "监控",
+            "间空"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "调",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "调"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "不",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "不"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "太",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "太"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "制",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "制"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "冷",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "冷"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "能",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "能"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "派",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "派"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "人",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:9",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "人"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "上",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "上"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "来",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "来"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "看",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "看"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "一",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "下",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "吗",
+          "fineSpanId": "fine:6cadd25d36a390cae4a08810f3d8c2773753c3c6d3c1f3c07298a83ac138f50a:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "吗"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "房"
+        ],
+        [
+          "监控",
+          "间空"
+        ],
+        [
+          "调"
+        ],
+        [
+          "不"
+        ],
+        [
+          "太"
+        ],
+        [
+          "制"
+        ],
+        [
+          "冷"
+        ],
+        [
+          "能"
+        ],
+        [
+          "派"
+        ],
+        [
+          "人"
+        ],
+        [
+          "上"
+        ],
+        [
+          "来"
+        ],
+        [
+          "看"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "吗"
+        ]
+      ],
+      "assemblyTexts": [
+        "房监控调不太制冷，能派人上来看一下吗？",
+        "房间空调不太制冷，能派人上来看一下吗？"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "房监控调不太制冷，能派人上来看一下吗？",
+    "房间空调不太制冷，能派人上来看一下吗？"
+  ],
+  "allAssemblyBeforeDedup": [
+    "房监控调不太制冷，能派人上来看一下吗？",
+    "房间空调不太制冷，能派人上来看一下吗？"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "房监控调不太制冷，能派人上来看一下吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "间空",
+            "start": 1,
+            "end": 3
+          },
+          "word": "监控",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "房",
+            "start": 0,
+            "end": 1
+          },
+          "word": "房",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "调",
+            "start": 3,
+            "end": 4
+          },
+          "word": "调",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 4,
+            "end": 5
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "太",
+            "start": 5,
+            "end": 6
+          },
+          "word": "太",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "制",
+            "start": 6,
+            "end": 7
+          },
+          "word": "制",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "冷",
+            "start": 7,
+            "end": 8
+          },
+          "word": "冷",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 9,
+            "end": 10
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "派",
+            "start": 10,
+            "end": 11
+          },
+          "word": "派",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "人",
+            "start": 11,
+            "end": 12
+          },
+          "word": "人",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上",
+            "start": 12,
+            "end": 13
+          },
+          "word": "上",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "来",
+            "start": 13,
+            "end": 14
+          },
+          "word": "来",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "看",
+            "start": 14,
+            "end": 15
+          },
+          "word": "看",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 15,
+            "end": 16
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 16,
+            "end": 17
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 17,
+            "end": 18
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.36
+    },
+    {
+      "text": "房间空调不太制冷，能派人上来看一下吗？",
+      "replacements": [
+        {
+          "span": {
+            "text": "房",
+            "start": 0,
+            "end": 1
+          },
+          "word": "房",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "间空",
+            "start": 1,
+            "end": 3
+          },
+          "word": "间空",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "调",
+            "start": 3,
+            "end": 4
+          },
+          "word": "调",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "不",
+            "start": 4,
+            "end": 5
+          },
+          "word": "不",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "太",
+            "start": 5,
+            "end": 6
+          },
+          "word": "太",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "制",
+            "start": 6,
+            "end": 7
+          },
+          "word": "制",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "冷",
+            "start": 7,
+            "end": 8
+          },
+          "word": "冷",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "能",
+            "start": 9,
+            "end": 10
+          },
+          "word": "能",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "派",
+            "start": 10,
+            "end": 11
+          },
+          "word": "派",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "人",
+            "start": 11,
+            "end": 12
+          },
+          "word": "人",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "上",
+            "start": 12,
+            "end": 13
+          },
+          "word": "上",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "来",
+            "start": 13,
+            "end": 14
+          },
+          "word": "来",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "看",
+            "start": 14,
+            "end": 15
+          },
+          "word": "看",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 15,
+            "end": 16
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 16,
+            "end": 17
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "吗",
+            "start": 17,
+            "end": 18
+          },
+          "word": "吗",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 0
+    }
+  ],
+  "kenlmInputTexts": [
+    "房监控调不太制冷，能派人上来看一下吗？",
+    "房间空调不太制冷，能派人上来看一下吗？"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "本轮 Pre-KenLM Trace 默认不跑 KenLM（设 DIALOG200_TRACE_KENLM=1 可启用）",
+    "ranking": [],
+    "inputOnly": [
+      "房监控调不太制冷，能派人上来看一下吗？",
+      "房间空调不太制冷，能派人上来看一下吗？"
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": false,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "房间空调不太制冷，能派人上来看一下吗？",
+      "房监控调不太制冷，能派人上来看一下吗？"
+    ],
+    "actual": [
+      "房监控调不太制冷，能派人上来看一下吗？",
+      "房间空调不太制冷，能派人上来看一下吗？"
+    ],
+    "conform": "YES",
+    "reason": "KenLM 输入与合理候选集合一致（含 Raw 保留与同域替换）。",
+    "odd": []
+  }
+}

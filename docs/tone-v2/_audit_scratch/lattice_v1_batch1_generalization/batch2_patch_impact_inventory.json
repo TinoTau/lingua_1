@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-07-28",
+  "status": "BLOCKED",
+  "reason": "Batch1 Generalization Audit = CONDITIONAL",
+  "wouldTouchWhenUnblocked": [
+    "main/src/lexicon-patch-v4/patch-types-v4.ts — add PatchOpV4 addBaseTerm|updateBaseTermFields|enableBaseTerm|disableBaseTerm",
+    "main/src/lexicon-patch-v4/patch-validator-v4.ts",
+    "main/src/lexicon-patch-v4/sqlite-applier-v4.ts",
+    "main/src/lexicon-patch-v4/patch-hash-v4.ts",
+    "main/src/lexicon-patch-v4/term-ref-v4.ts",
+    "main/src/lexicon-patch-v4/import-report-v4.ts",
+    "main/src/lexicon-patch-v4/source-sync-v4.ts — EXPLICIT base skip policy",
+    "electron_node/electron-node/scripts/lexicon/lib/v2-classify-row.mjs — singleCharApproved",
+    "scripts/lexicon/lib/parse-rows.mjs"
+  ],
+  "note": "Full design deferred until Batch1 P0 fixes land and re-audit PASS"
+}

@@ -1,0 +1,254 @@
+{
+  "caseId": "E02",
+  "rawText": "请检查接口文档",
+  "windowCount": 25,
+  "surfaceDistinctRecallCount": 0,
+  "eligibleMultiCandidateSpans": [],
+  "expectedCombinationPotential": 0,
+  "pathCount": 3,
+  "retainedDomainCount": 1,
+  "bucketCount": 3,
+  "theoreticalCombinationCount": 1,
+  "validNonOverlappingCombinationCount": 1,
+  "assemblyGeneratedCount": 3,
+  "assemblyDistinctTextCount": 1,
+  "crossPathInputCount": 3,
+  "crossPathDistinctCount": 1,
+  "prefilledCount": 1,
+  "prefilledTexts": [
+    "请检查接口文档"
+  ],
+  "kenlmInputCount": 1,
+  "firstCollapseLayer": "RECALL",
+  "bucketDetails": [
+    {
+      "pathId": "abe460743f4aeeb97c572ae85cb41e10719e3c9eb124280d4baa447eade221b1",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查"
+        ],
+        [
+          "接口"
+        ],
+        [
+          "文档"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "7cdb6ed59159f2630baf4d611420a1fdb0f40c8d5a9f4454cd38962c07626460",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查"
+        ],
+        [
+          "接口文档"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    },
+    {
+      "pathId": "5b7c22c98aaf04c23368e764bb1aefcb43de0f8d98902426992152be9feff79d",
+      "domainId": "tech_ai",
+      "perSpanSurfaceCounts": [
+        1,
+        1,
+        1
+      ],
+      "perSpanSurfaces": [
+        [
+          "请"
+        ],
+        [
+          "检查接"
+        ],
+        [
+          "口文档"
+        ]
+      ],
+      "theoretical": 1,
+      "generated": 1,
+      "distinct": 1
+    }
+  ],
+  "candidates": [
+    {
+      "text": "请检查接口文档",
+      "sourcePathId": "abe460743f4aeeb97c572ae85cb41e10719e3c9eb124280d4baa447eade221b1",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "检查",
+          "sourceText": "检查"
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "word": "接口",
+          "sourceText": "接口"
+        },
+        {
+          "start": 5,
+          "end": 7,
+          "word": "文档",
+          "sourceText": "文档"
+        }
+      ],
+      "dedupKey": "请检查接口文档",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请检查接口文档",
+      "sourcePathId": "7cdb6ed59159f2630baf4d611420a1fdb0f40c8d5a9f4454cd38962c07626460",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 3,
+          "word": "检查",
+          "sourceText": "检查"
+        },
+        {
+          "start": 3,
+          "end": 7,
+          "word": "接口文档",
+          "sourceText": "接口文档"
+        }
+      ],
+      "dedupKey": "请检查接口文档",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    },
+    {
+      "text": "请检查接口文档",
+      "sourcePathId": "5b7c22c98aaf04c23368e764bb1aefcb43de0f8d98902426992152be9feff79d",
+      "sourceDomain": "tech_ai",
+      "sourceBucket": 0,
+      "replacementOperations": [
+        {
+          "start": 0,
+          "end": 1,
+          "word": "请",
+          "sourceText": "请"
+        },
+        {
+          "start": 1,
+          "end": 4,
+          "word": "检查接",
+          "sourceText": "检查接"
+        },
+        {
+          "start": 4,
+          "end": 7,
+          "word": "口文档",
+          "sourceText": "口文档"
+        }
+      ],
+      "dedupKey": "请检查接口文档",
+      "rebuildOk": true,
+      "classification": "VALID_RAW"
+    }
+  ],
+  "invalidCandidateCount": 0,
+  "latticeTrace": {
+    "windowCount": 25,
+    "blockedWindowCount": 0,
+    "recallableWindowCount": 25,
+    "lexicalEdgeCount": 9,
+    "fallbackEdgeCount": 1,
+    "edgeCountAfterFallback": 10,
+    "fallbackInjectionCount": 1,
+    "fallbackInjectionRanges": [
+      {
+        "start": 0,
+        "end": 1
+      }
+    ],
+    "completePathCount": 3,
+    "retainedCompletePathCount": 3,
+    "prunedPathCount": 0,
+    "materializedPathCount": 3,
+    "coverageStatus": "complete",
+    "logicalWindowRecallCount": 25,
+    "sqlQueryCount": 30,
+    "pathCapEvents": []
+  },
+  "architectureCompliance": {
+    "generatorMode": "multi_path_lattice",
+    "fineSpanOwner": "segmentation_path",
+    "voteScope": "per_path",
+    "assemblyScope": "per_path",
+    "retainedCompletePathCount": 3,
+    "beamEnabled": false,
+    "globalWindowProductionPath": false,
+    "fineSpanPriorSource": "none",
+    "contextPriorDecisionApplied": false,
+    "priorWrittenToEnabledDomains": false,
+    "profileAffectedRecall": false,
+    "votePoolSource": "path_fine_span",
+    "sessionPriorTransport": "audio_chunk_session_snapshot",
+    "topicShiftContractComplete": true,
+    "schedulerDomainInference": false,
+    "toneRecomputedAfterRebind": true,
+    "crossPathMergeOwner": "mergeCrossPathSentenceCandidates",
+    "candidateCapScope": "global",
+    "candidateCap": 16,
+    "dedupBeforeCap": true,
+    "dedupRetention": "first_wins",
+    "kenlmInputOwner": "cross_path_merge",
+    "prefilledCombinationsRequired": true,
+    "toneEvidenceOwner": "acoustic_tone_slices"
+  },
+  "groups": [
+    "E"
+  ],
+  "why": "overlap",
+  "prescanStatus": "TARGET_NOT_TRIGGERED",
+  "orchMs": 23.255199909210205,
+  "kenlm": {
+    "skipped": true,
+    "reason": "prefilledCount<=1",
+    "prefilledCount": 1
+  }
+}

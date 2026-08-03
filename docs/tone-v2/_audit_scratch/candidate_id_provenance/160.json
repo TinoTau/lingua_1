@@ -1,0 +1,387 @@
+{
+  "caseId": "d160",
+  "rawText": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+  "stages": {
+    "pool": {
+      "present": 1,
+      "absent": 0,
+      "ids": [
+        "13:15:1"
+      ]
+    },
+    "bucket": {
+      "present": 1,
+      "absent": 0
+    },
+    "budget": {
+      "present": 24,
+      "absent": 0
+    },
+    "domainAwarePick": {
+      "present": 24,
+      "absent": 0
+    },
+    "spanReplacement": {
+      "present": 0,
+      "absent": 24,
+      "nullish": 24
+    },
+    "sentenceReplacement": {
+      "present": 0,
+      "absent": 46,
+      "nullish": 46,
+      "repairPresent": 0,
+      "repairAbsent": 1
+    },
+    "crossPath": {
+      "present": 0,
+      "absent": 46,
+      "nullish": 46
+    },
+    "kenlmInput": {
+      "present": 0,
+      "absent": 46,
+      "nullish": 46
+    },
+    "jobResultProjection": {
+      "note": "PROBE: no full JobResult; fw_detector.replacements has NO candidateId field; sentenceRerank.topCandidates.candidateId is synthetic candidate:i / raw; sentenceRerank.picked.replacements.candidateId would inherit SpanReplacementPick (currently ABSENT after mapper)",
+      "fwDetectorReplacementDiagHasCandidateId": false,
+      "topCandidatesCandidateIdKind": "SYNTHETIC_INDEX",
+      "pickedReplacementCandidateId": "WOULD_BE_ABSENT_IF_PICKED_FROM_CURRENT_CHAIN",
+      "countPresent": 0
+    }
+  },
+  "mapperLoss": [
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:0",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:0",
+      "inputWord": "请",
+      "inputRange": [
+        0,
+        1
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:1",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:1",
+      "inputWord": "简",
+      "inputRange": [
+        1,
+        2
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:2",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:2",
+      "inputWord": "单",
+      "inputRange": [
+        2,
+        3
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:3",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:3",
+      "inputWord": "介",
+      "inputRange": [
+        3,
+        4
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:4",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:4",
+      "inputWord": "绍",
+      "inputRange": [
+        4,
+        5
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:5",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:5",
+      "inputWord": "一",
+      "inputRange": [
+        5,
+        6
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:6",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:6",
+      "inputWord": "下",
+      "inputRange": [
+        6,
+        7
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:7",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:7",
+      "inputWord": "你",
+      "inputRange": [
+        7,
+        8
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:8",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:8",
+      "inputWord": "上",
+      "inputRange": [
+        8,
+        9
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:9",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:9",
+      "inputWord": "一",
+      "inputRange": [
+        9,
+        10
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:10",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:10",
+      "inputWord": "段",
+      "inputRange": [
+        10,
+        11
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:11",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:11",
+      "inputWord": "项",
+      "inputRange": [
+        11,
+        12
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:12",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:12",
+      "inputWord": "目",
+      "inputRange": [
+        12,
+        13
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:13",
+      "inputCandidateId": "13:15:1",
+      "inputWord": "理服",
+      "inputRange": [
+        13,
+        15
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    },
+    {
+      "pathId": "c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730",
+      "bucketDomain": "tech_ai",
+      "fineSpanId": "fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:13",
+      "inputCandidateId": "canonical:fine:c33b910447acae81d7f3fcaec0bc8df744a479211aa365008054f6f07e77e730:13",
+      "inputWord": "里负",
+      "inputRange": [
+        13,
+        15
+      ],
+      "outputCandidateId": null,
+      "outputKeys": [
+        "span",
+        "word",
+        "source",
+        "priorScore",
+        "repairTarget",
+        "candidateScore"
+      ],
+      "lossKind": "UNMAPPED_ABSENT"
+    }
+  ],
+  "matchKeyCollisions": [],
+  "sameRangeSurfaceDifferentId": [],
+  "sameIdDifferentRange": [],
+  "sameIdDifferentSurface": [],
+  "idStability": {
+    "bucketChanged": 0,
+    "budgetChanged": 0
+  },
+  "pathCount": 1,
+  "kenlmInputCount": 2,
+  "anomalyTypes": [
+    "C5",
+    "C6",
+    "C17",
+    "C8"
+  ]
+}

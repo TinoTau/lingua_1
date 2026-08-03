@@ -1,0 +1,1686 @@
+{
+  "method": {
+    "with": "Lattice FineSpan + Orchestrator with DB-derived Mandatory Tone fixtures",
+    "without": "same + Probe Proxy excluding lookup hits where word === full surface (no Source write)",
+    "verdictRules": "KEEP_RUNTIME_REQUIRED only if Coverage/Domain/Assembly/KenLM Top1/final degrade; else DELETE_RUNTIME_SAFE"
+  },
+  "required": [],
+  "safe": [
+    "专家系统",
+    "单元测试",
+    "回归测试",
+    "安检通道",
+    "循环网络",
+    "正则策略",
+    "注册中心",
+    "流量镜像",
+    "测试数据",
+    "熔断策略",
+    "特征工程",
+    "神经网络",
+    "联系电话",
+    "视频会议",
+    "训练数据",
+    "迁移学习",
+    "迷你吧",
+    "邀请函",
+    "配置中心",
+    "配置文件",
+    "降级策略",
+    "集成测试"
+  ],
+  "noParticipation": [
+    "正则策略",
+    "熔断策略",
+    "迷你吧",
+    "降级策略"
+  ],
+  "results": [
+    {
+      "surface": "专家系统",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "专家系统",
+        "sentenceCandidates": [
+          "专家系统"
+        ],
+        "finalSentence": "专家系统",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:专家",
+          "0:4:专家系统",
+          "2:4:系统"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "专家系统"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "专家系统",
+        "sentenceCandidates": [
+          "专家系统"
+        ],
+        "finalSentence": "专家系统",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:专家",
+          "2:4:系统"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "单元测试",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "单元测试",
+        "sentenceCandidates": [
+          "单元测试"
+        ],
+        "finalSentence": "单元测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:单元",
+          "0:4:单元测试",
+          "2:4:测试"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "单元测试"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "单元测试",
+        "sentenceCandidates": [
+          "单元测试"
+        ],
+        "finalSentence": "单元测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:单元",
+          "2:4:测试"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "回归测试",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "回归测试",
+        "sentenceCandidates": [
+          "回归测试"
+        ],
+        "finalSentence": "回归测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:回归",
+          "0:4:回归测试",
+          "2:4:测试"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "回归测试"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "回归测试",
+        "sentenceCandidates": [
+          "回归测试"
+        ],
+        "finalSentence": "回归测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:回归",
+          "2:4:测试"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "安检通道",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "安检通道",
+        "sentenceCandidates": [
+          "安检通道"
+        ],
+        "finalSentence": "安检通道",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:安检",
+          "0:4:安检通道",
+          "2:4:通道"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "安检通道"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "安检通道",
+        "sentenceCandidates": [
+          "安检通道"
+        ],
+        "finalSentence": "安检通道",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:安检",
+          "2:4:通道"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "循环网络",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "循环网络",
+        "sentenceCandidates": [
+          "循环网络"
+        ],
+        "finalSentence": "循环网络",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:循环",
+          "0:4:循环网络",
+          "2:4:网络"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "循环网络"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "循环网络",
+        "sentenceCandidates": [
+          "循环网络"
+        ],
+        "finalSentence": "循环网络",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:循环",
+          "2:4:网络"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "正则策略",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": false,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "正则策略",
+        "sentenceCandidates": [
+          "正则策略"
+        ],
+        "finalSentence": "正则策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:正则"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "正则策略",
+        "sentenceCandidates": [
+          "正则策略"
+        ],
+        "finalSentence": "正则策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:正则"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": 0,
+        "pathDelta": 0,
+        "reasons": [],
+        "identicalHard": true,
+        "note": null
+      }
+    },
+    {
+      "surface": "注册中心",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "注册中心",
+        "sentenceCandidates": [
+          "注册中心"
+        ],
+        "finalSentence": "注册中心",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:注册",
+          "0:4:注册中心",
+          "2:4:中心",
+          "2:4:忠心"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "注册中心"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "注册中心",
+        "sentenceCandidates": [
+          "注册中心"
+        ],
+        "finalSentence": "注册中心",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:注册",
+          "2:4:中心",
+          "2:4:忠心"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "流量镜像",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "流量镜像",
+        "sentenceCandidates": [
+          "流量镜像"
+        ],
+        "finalSentence": "流量镜像",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:流量",
+          "0:4:流量镜像",
+          "2:4:镜像"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "流量镜像"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "流量镜像",
+        "sentenceCandidates": [
+          "流量镜像"
+        ],
+        "finalSentence": "流量镜像",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:流量",
+          "2:4:镜像"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "测试数据",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "测试数据",
+        "sentenceCandidates": [
+          "测试数据"
+        ],
+        "finalSentence": "测试数据",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:测试",
+          "0:4:测试数据",
+          "2:4:数据"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "测试数据"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "测试数据",
+        "sentenceCandidates": [
+          "测试数据"
+        ],
+        "finalSentence": "测试数据",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:测试",
+          "2:4:数据"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "熔断策略",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": false,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "熔断策略",
+        "sentenceCandidates": [
+          "熔断策略"
+        ],
+        "finalSentence": "熔断策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:熔断"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "熔断策略",
+        "sentenceCandidates": [
+          "熔断策略"
+        ],
+        "finalSentence": "熔断策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:熔断"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": 0,
+        "pathDelta": 0,
+        "reasons": [],
+        "identicalHard": true,
+        "note": null
+      }
+    },
+    {
+      "surface": "特征工程",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "特征工程",
+        "sentenceCandidates": [
+          "特征工程"
+        ],
+        "finalSentence": "特征工程",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:特征",
+          "0:4:特征工程",
+          "2:4:工程"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "特征工程"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "特征工程",
+        "sentenceCandidates": [
+          "特征工程"
+        ],
+        "finalSentence": "特征工程",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:特征",
+          "2:4:工程"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "神经网络",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "神经网络",
+        "sentenceCandidates": [
+          "神经网络"
+        ],
+        "finalSentence": "神经网络",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:神经",
+          "0:4:神经网络",
+          "2:4:网络"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "神经网络"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "神经网络",
+        "sentenceCandidates": [
+          "神经网络"
+        ],
+        "finalSentence": "神经网络",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:神经",
+          "2:4:网络"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "联系电话",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "联系电话",
+        "sentenceCandidates": [
+          "联系电话"
+        ],
+        "finalSentence": "联系电话",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:联系",
+          "0:4:联系电话",
+          "2:4:电话"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "联系电话"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "联系电话",
+        "sentenceCandidates": [
+          "联系电话"
+        ],
+        "finalSentence": "联系电话",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:联系",
+          "2:4:电话"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "视频会议",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "视频会议",
+        "sentenceCandidates": [
+          "视频会议"
+        ],
+        "finalSentence": "视频会议",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:视频",
+          "0:4:视频会议",
+          "2:4:会议"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "视频会议"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "视频会议",
+        "sentenceCandidates": [
+          "视频会议"
+        ],
+        "finalSentence": "视频会议",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:视频",
+          "2:4:会议"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "训练数据",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "训练数据",
+        "sentenceCandidates": [
+          "训练数据"
+        ],
+        "finalSentence": "训练数据",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:训练",
+          "0:4:训练数据",
+          "2:4:数据"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "训练数据"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "训练数据",
+        "sentenceCandidates": [
+          "训练数据"
+        ],
+        "finalSentence": "训练数据",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:训练",
+          "2:4:数据"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "迁移学习",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "迁移学习",
+        "sentenceCandidates": [
+          "迁移学习"
+        ],
+        "finalSentence": "迁移学习",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:迁移",
+          "0:4:迁移学习",
+          "2:4:学习"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "迁移学习"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "迁移学习",
+        "sentenceCandidates": [
+          "迁移学习"
+        ],
+        "finalSentence": "迁移学习",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:迁移",
+          "2:4:学习"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "迷你吧",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": false,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 1,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "迷你吧",
+        "sentenceCandidates": [
+          "迷你吧"
+        ],
+        "finalSentence": "迷你吧",
+        "pathBoundaryKeys": [
+          "0-2|2-3"
+        ],
+        "edgeReplacements": [
+          "0:2:迷你"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 1,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "迷你吧",
+        "sentenceCandidates": [
+          "迷你吧"
+        ],
+        "finalSentence": "迷你吧",
+        "pathBoundaryKeys": [
+          "0-2|2-3"
+        ],
+        "edgeReplacements": [
+          "0:2:迷你"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": 0,
+        "pathDelta": 0,
+        "reasons": [],
+        "identicalHard": true,
+        "note": null
+      }
+    },
+    {
+      "surface": "邀请函",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "邀请函",
+        "sentenceCandidates": [
+          "邀请函"
+        ],
+        "finalSentence": "邀请函",
+        "pathBoundaryKeys": [
+          "0-3"
+        ],
+        "edgeReplacements": [
+          "0:3:邀请函"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "邀请函"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 3,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "邀请函",
+        "sentenceCandidates": [
+          "邀请函"
+        ],
+        "finalSentence": "邀请函",
+        "pathBoundaryKeys": [
+          "0-1|1-2|2-3"
+        ],
+        "edgeReplacements": [],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": 0,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "配置中心",
+      "focus": false,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "配置中心",
+        "sentenceCandidates": [
+          "配置中心"
+        ],
+        "finalSentence": "配置中心",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:配置",
+          "0:4:配置中心",
+          "2:4:中心",
+          "2:4:忠心"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "配置中心"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "配置中心",
+        "sentenceCandidates": [
+          "配置中心"
+        ],
+        "finalSentence": "配置中心",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:配置",
+          "2:4:中心",
+          "2:4:忠心"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "配置文件",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "配置文件",
+        "sentenceCandidates": [
+          "配置文件"
+        ],
+        "finalSentence": "配置文件",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:配置",
+          "0:4:配置文件",
+          "2:4:文件"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "配置文件"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "配置文件",
+        "sentenceCandidates": [
+          "配置文件"
+        ],
+        "finalSentence": "配置文件",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:配置",
+          "2:4:文件"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    },
+    {
+      "surface": "降级策略",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": false,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "降级策略",
+        "sentenceCandidates": [
+          "降级策略"
+        ],
+        "finalSentence": "降级策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:降级"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 1,
+        "fallbackEdgeCount": 2,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "降级策略",
+        "sentenceCandidates": [
+          "降级策略"
+        ],
+        "finalSentence": "降级策略",
+        "pathBoundaryKeys": [
+          "0-2|2-3|3-4"
+        ],
+        "edgeReplacements": [
+          "0:2:降级"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": 0,
+        "pathDelta": 0,
+        "reasons": [],
+        "identicalHard": true,
+        "note": null
+      }
+    },
+    {
+      "surface": "集成测试",
+      "focus": true,
+      "verdict": "DELETE_RUNTIME_SAFE",
+      "exclusionOk": true,
+      "compoundParticipatedWith": true,
+      "with": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 3,
+        "fallbackEdgeCount": 0,
+        "pathCount": 2,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "集成测试",
+        "sentenceCandidates": [
+          "集成测试"
+        ],
+        "finalSentence": "集成测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4",
+          "0-4"
+        ],
+        "edgeReplacements": [
+          "0:2:集成",
+          "0:4:集成测试",
+          "2:4:测试"
+        ],
+        "compoundInEdges": true,
+        "exactRecallHit": true,
+        "exactRecallTop": [
+          "集成测试"
+        ]
+      },
+      "without": {
+        "coverageStatus": "complete",
+        "lexicalEdgeCount": 2,
+        "fallbackEdgeCount": 0,
+        "pathCount": 1,
+        "retainedDomains": [],
+        "bucketCount": 1,
+        "assemblyCandidateCount": 1,
+        "kenlmInputCount": 1,
+        "kenlmTop1": "集成测试",
+        "sentenceCandidates": [
+          "集成测试"
+        ],
+        "finalSentence": "集成测试",
+        "pathBoundaryKeys": [
+          "0-2|2-4"
+        ],
+        "edgeReplacements": [
+          "0:2:集成",
+          "2:4:测试"
+        ],
+        "compoundInEdges": false,
+        "exactRecallHit": false,
+        "exactRecallTop": []
+      },
+      "diff": {
+        "spanCoverageChanged": false,
+        "domainChanged": false,
+        "bucketChanged": false,
+        "assemblyDropped": false,
+        "kenlmDropped": false,
+        "top1Changed": false,
+        "finalChanged": false,
+        "sentencesChanged": false,
+        "edgeDelta": -1,
+        "pathDelta": -1,
+        "reasons": [],
+        "identicalHard": true,
+        "note": "Lattice edge/path count dropped but Assembly/KenLM/Domain/final unchanged → SAFE under §七"
+      }
+    }
+  ]
+}

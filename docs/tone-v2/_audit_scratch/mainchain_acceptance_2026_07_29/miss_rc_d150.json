@@ -1,0 +1,73 @@
+{
+  "id": "d150",
+  "raw": "我想对比一下这两款电子电子 並單中抬的價格會員日能再減一點嗎?",
+  "asrToneSliceCount": 8,
+  "diagToneSliceCount": 23,
+  "wordTimeSpanBuilt": 26,
+  "wordTimeSpanMapped": 26,
+  "indexOfFailed": 0,
+  "toneDiag": {
+    "attempt": 1,
+    "hit": 0,
+    "miss": 1,
+    "overlapMiss": 0,
+    "overlapMismatch": 1,
+    "windowTimeAttempt": 1,
+    "windowTimeHit": 1
+  },
+  "windowClassifications": [
+    {
+      "text": "一點",
+      "pinyinKey": "yi|dian",
+      "result": "MISS",
+      "fail": "NO_SLICE_OVERLAP_WORD_TIME",
+      "detail": {
+        "i": 0,
+        "word": "一點",
+        "wordTime": [
+          2.58,
+          2.88
+        ],
+        "sliceCount": 8,
+        "nearestSlices": [
+          {
+            "start": 1.94,
+            "end": 2.02,
+            "dist": 0.6400000000000001
+          },
+          {
+            "start": 1.82,
+            "end": 1.94,
+            "dist": 0.76
+          },
+          {
+            "start": 1.64,
+            "end": 1.82,
+            "dist": 0.9400000000000002
+          }
+        ]
+      },
+      "pattern": null,
+      "hasWindowTimeInDiag": true,
+      "diagWindowTime": {
+        "start": 4.78,
+        "end": 5.08
+      },
+      "replayWindowTime": {
+        "start": 2.58,
+        "end": 2.88
+      }
+    }
+  ],
+  "spanApprox": {
+    "cjkCount": 29,
+    "theoreticalWindows2to5": 106,
+    "theoreticalWindows1to5": 135
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15
+  },
+  "ltrTrace": null,
+  "windowsFromDiag": null
+}

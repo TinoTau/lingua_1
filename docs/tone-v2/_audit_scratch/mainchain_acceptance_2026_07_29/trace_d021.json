@@ -1,0 +1,496 @@
+{
+  "id": "d021",
+  "expected": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+  "asr": "会上提到候选生成链路 要加監控 通上线期画文当我下午更新一版",
+  "raw_asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+  "asr_service_id": "faster-whisper-vad",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 13,
+    "skippedReason": null,
+    "firstSlicePosterior": {
+      "t1": 0.00044619006803259254,
+      "t2": 0.0007061082869768143,
+      "t3": 0.012237600982189178,
+      "t4": 0.9865445494651794,
+      "t5": 0.00006546424992848188
+    }
+  },
+  "toneDiag": {
+    "toneEnabled": true,
+    "toneSliceCount": 27,
+    "wordTimeSpanCount": 28,
+    "ngramTonePatternAttemptCount": 2,
+    "ngramTonePatternHitCount": 2,
+    "ngramTonePatternMissCount": 0,
+    "toneExactHitCount": 1,
+    "plainFallbackHitCount": 0,
+    "exampleToneWindows": [
+      {
+        "text": "新一",
+        "pinyinKey": "xin|yi",
+        "windowTimeRange": {
+          "start": 5.5,
+          "end": 5.880000000000001
+        },
+        "acousticTonePattern": [
+          1,
+          4
+        ]
+      },
+      {
+        "text": "新一版",
+        "pinyinKey": "xin|yi|ban",
+        "windowTimeRange": {
+          "start": 5.5,
+          "end": 5.96
+        },
+        "acousticTonePattern": [
+          1,
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "spanCount": 15,
+    "candidateCount": 15,
+    "candidateSentenceCount": 15,
+    "appliedCount": 4,
+    "kenlmApprovedCount": 0,
+    "kenlmVetoedCount": 0,
+    "pickedTopKWinCount": 4,
+    "kenlmQueryCount": 17
+  },
+  "sentenceRerank": {
+    "spanCount": 15,
+    "perSpanLimit": 4,
+    "combinationCount": 16,
+    "kenlmQueryCount": 17,
+    "pickedIsRaw": false,
+    "maxDelta": 10.555945000000008,
+    "minDeltaToReplace": 3,
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "candidate:1",
+        "text": "会上提到候选生成链路 要加監控 通上线期画文当我下午更新一版",
+        "kenlmScore": -81.497925,
+        "deltaVsRaw": 10.555945000000008,
+        "isRaw": false,
+        "replacementCount": 15
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:10",
+        "text": "会上提到候选生成链路 要加監控 通上限期画文当我下午更新一版",
+        "kenlmScore": -82.083725,
+        "deltaVsRaw": 9.970145000000002,
+        "isRaw": false,
+        "replacementCount": 15
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:0",
+        "text": "会上提到候选生成链路 要加監控 通上线期画文当我下午更心意版",
+        "kenlmScore": -83.53272,
+        "deltaVsRaw": 8.521150000000006,
+        "isRaw": false,
+        "replacementCount": 15
+      }
+    ],
+    "kenlmTiming": {
+      "batchMs": 672,
+      "queryCount": 17,
+      "avgMs": 39.529411764705884,
+      "p50Ms": 39.529411764705884,
+      "p95Ms": 39.529411764705884,
+      "maxMs": 672
+    },
+    "allCombinationDeltas": [
+      8.521150000000006,
+      10.555945000000008,
+      3.9124400000000037,
+      5.731369999999998,
+      5.949489999999997,
+      7.93535,
+      5.947234000000009,
+      7.766165999999998,
+      1.1226600000000104,
+      7.984290000000001,
+      9.970145000000002,
+      3.3266300000000086,
+      1.3407800000000094,
+      5.145570000000006,
+      3.159710000000004,
+      5.363690000000005
+    ],
+    "picked": {
+      "text": "会上提到候选生成链路 要加監控 通上线期画文当我下午更新一版",
+      "replacements": [
+        {
+          "span": {
+            "text": "會上",
+            "start": 0,
+            "end": 2
+          },
+          "word": "会上",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.35,
+          "repairTarget": true,
+          "candidateScore": 2.35
+        },
+        {
+          "span": {
+            "text": "候選",
+            "start": 4,
+            "end": 6
+          },
+          "word": "候选",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "連路",
+            "start": 8,
+            "end": 10
+          },
+          "word": "链路",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.36,
+          "repairTarget": true,
+          "candidateScore": 2.36
+        },
+        {
+          "span": {
+            "text": "上限",
+            "start": 17,
+            "end": 19
+          },
+          "word": "上线",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.42,
+          "repairTarget": true,
+          "candidateScore": 2.42
+        },
+        {
+          "span": {
+            "text": "提到",
+            "start": 2,
+            "end": 4
+          },
+          "word": "提到",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "生成",
+            "start": 6,
+            "end": 8
+          },
+          "word": "生成",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "要加",
+            "start": 11,
+            "end": 13
+          },
+          "word": "要加",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "監",
+            "start": 13,
+            "end": 14
+          },
+          "word": "監",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "控 通",
+            "start": 14,
+            "end": 17
+          },
+          "word": "控 通",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "期画",
+            "start": 19,
+            "end": 21
+          },
+          "word": "期画",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "文当",
+            "start": 21,
+            "end": 23
+          },
+          "word": "文当",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "我下",
+            "start": 23,
+            "end": 25
+          },
+          "word": "我下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "午更",
+            "start": 25,
+            "end": 27
+          },
+          "word": "午更",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "新一",
+            "start": 27,
+            "end": 29
+          },
+          "word": "新一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "版",
+            "start": 29,
+            "end": 30
+          },
+          "word": "版",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 9.549999999999999
+    },
+    "scoreMode": "raw_log_delta",
+    "baselineRawScore": -92.05387,
+    "pickedRawScore": -81.497925,
+    "maxNormalizedDelta": 0.00018822543232269482,
+    "kenlmSubprocessMs": 672,
+    "kenlmSubprocessCount": 1,
+    "allCombinations": [
+      {
+        "sentence": "会上提到候选生成链路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 8.521150000000006,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候选生成链路 要加監控 通上线期画文当我下午更新一版",
+        "delta": 10.555945000000008,
+        "approved": true
+      },
+      {
+        "sentence": "會上提到候选生成链路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 3.9124400000000037,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候选生成連路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 5.731369999999998,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候選生成链路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 5.949489999999997,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候选生成链路 要加監控 通上限期画文当我下午更心意版",
+        "delta": 7.93535,
+        "approved": false
+      },
+      {
+        "sentence": "會上提到候选生成链路 要加監控 通上线期画文当我下午更新一版",
+        "delta": 5.947234000000009,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候选生成連路 要加監控 通上线期画文当我下午更新一版",
+        "delta": 7.766165999999998,
+        "approved": false
+      },
+      {
+        "sentence": "會上提到候选生成連路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 1.1226600000000104,
+        "approved": false,
+        "rejectedReason": "below_min_delta"
+      },
+      {
+        "sentence": "会上提到候選生成链路 要加監控 通上线期画文当我下午更新一版",
+        "delta": 7.984290000000001,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候选生成链路 要加監控 通上限期画文当我下午更新一版",
+        "delta": 9.970145000000002,
+        "approved": false
+      },
+      {
+        "sentence": "會上提到候选生成链路 要加監控 通上限期画文当我下午更心意版",
+        "delta": 3.3266300000000086,
+        "approved": false
+      },
+      {
+        "sentence": "會上提到候選生成链路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 1.3407800000000094,
+        "approved": false,
+        "rejectedReason": "below_min_delta"
+      },
+      {
+        "sentence": "会上提到候选生成連路 要加監控 通上限期画文当我下午更心意版",
+        "delta": 5.145570000000006,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候選生成連路 要加監控 通上线期画文当我下午更心意版",
+        "delta": 3.159710000000004,
+        "approved": false
+      },
+      {
+        "sentence": "会上提到候選生成链路 要加監控 通上限期画文当我下午更心意版",
+        "delta": 5.363690000000005,
+        "approved": false
+      }
+    ]
+  },
+  "spans": [
+    {
+      "text": "會上",
+      "applied": true,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "会上",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "提到",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "提到",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "候選",
+      "applied": true,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "候选",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "生成",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "生成",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "連路",
+      "applied": true,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "链路",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "要加",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "要加",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "監",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "監",
+          "domainIds": []
+        }
+      ]
+    },
+    {
+      "text": "控 通",
+      "applied": false,
+      "candidateCount": 1,
+      "sampleCandidates": [
+        {
+          "replacement": "控 通",
+          "domainIds": []
+        }
+      ]
+    }
+  ]
+}

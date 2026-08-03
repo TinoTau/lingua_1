@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-07-28",
+  "LENGTH1_AMBIGUITY_SQL_LIMIT": 8,
+  "codeOrder": [
+    "lookupBase*(..., LIMIT 8)",
+    "filterEligibleBaseSingleChar",
+    "resolveLength1BaseCandidate (unique OR surface exact among fetched)",
+    "scoreLength1BaseHit",
+    "return hits length 0|1  // effectiveTopK=min(topK,1)"
+  ],
+  "capAfterAmbiguity": true,
+  "risks": [
+    {
+      "id": "FALSE_UNIQUE_AFTER_LIMIT",
+      "severity": "P0",
+      "scenario": "≥9 enabled base rows same plain/tone key; after LIMIT 8 only 1 remains eligible (others filtered) OR only 1 of 8 returned",
+      "behavior": "resolveLength1BaseCandidate sees length===1 → returns that candidate as unique",
+      "correct": "must treat truncated result set as potentially non-unique OR use existence probe LIMIT 2 + separate surface exact query",
+      "blocksBatch2": true
+    },
+    {
+      "id": "SURFACE_EXACT_BEYOND_LIMIT",
+      "severity": "P0",
+      "scenario": "surface exact word ranks 9th by prior_score DESC",
+      "behavior": "never appears in fetched set → cannot disambiguate → empty OR wrong unique among top8",
+      "blocksBatch2": true
+    },
+    {
+      "id": "AMBIGUOUS_TRUNCATED_TO_ONE",
+      "severity": "P0",
+      "scenario": "9 homophones; LIMIT returns 8; filter drops 7 → 1 left",
+      "behavior": "false unique",
+      "blocksBatch2": true
+    }
+  ],
+  "sqliteOrder": "ORDER BY prior_score DESC LIMIT ? — stable only for distinct priors; ties undefined",
+  "recommendedAuditFix": {
+    "option": "LIMIT 2 for non-uniqueness probe + dedicated surface-exact base lookup by (pinyin_key, word) OR fetch-all-with-cap-safety",
+    "note": "audit only; implement in Batch1 repair before Batch2"
+  },
+  "currentTestsCoverLimitEdge": false
+}

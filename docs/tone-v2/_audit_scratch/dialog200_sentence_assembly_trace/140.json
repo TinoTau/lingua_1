@@ -1,0 +1,1003 @@
+{
+  "caseId": "d140",
+  "fileNum": "140",
+  "rawText": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+  "scenario": "meeting",
+  "retainedDomains": [
+    "food_order"
+  ],
+  "domainScores": {
+    "food_order": 1
+  },
+  "insufficientEvidence": false,
+  "buckets": [
+    {
+      "pathId": "1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f",
+      "domainId": "food_order",
+      "spans": [
+        {
+          "spanIndex": 1,
+          "spanText": "今",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:0",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "今"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 2,
+          "spanText": "天",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:1",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "天"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 3,
+          "spanText": "的",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:2",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "的"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 4,
+          "spanText": "站",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:3",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "站"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 5,
+          "spanText": "会",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:4",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "会"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 6,
+          "spanText": "先",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:5",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "先"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 7,
+          "spanText": "过",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:6",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "过"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 8,
+          "spanText": "一",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:7",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 9,
+          "spanText": "下",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:8",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 10,
+          "spanText": "订单",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:9",
+          "sameDomain": [
+            "订单",
+            "订单",
+            "订单"
+          ],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "订单"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 11,
+          "spanText": "中",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:10",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "中"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 12,
+          "spanText": "台",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:11",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "台"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 13,
+          "spanText": "进",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:12",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "进"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 14,
+          "spanText": "度",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:13",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "度"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 15,
+          "spanText": "内",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:14",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "内"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 16,
+          "spanText": "存",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:15",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "存"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 17,
+          "spanText": "占",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:16",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "占"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 18,
+          "spanText": "用",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:17",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "用"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 19,
+          "spanText": "高",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:18",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "高"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 20,
+          "spanText": "这",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:19",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "这"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 21,
+          "spanText": "块",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:20",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "块"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 22,
+          "spanText": "需",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:21",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "需"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 23,
+          "spanText": "要",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:22",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "要"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 24,
+          "spanText": "限",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:23",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "限"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 25,
+          "spanText": "流",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:24",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "流"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 26,
+          "spanText": "保",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:25",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "保"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 27,
+          "spanText": "护",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:26",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "护"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 28,
+          "spanText": "大",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:27",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "大"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 29,
+          "spanText": "家",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:28",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "家"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 30,
+          "spanText": "看",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:29",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "看"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 31,
+          "spanText": "一",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:30",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "一"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 32,
+          "spanText": "下",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:31",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "下"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 33,
+          "spanText": "风",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:32",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "风"
+          ],
+          "dropReasons": []
+        },
+        {
+          "spanIndex": 34,
+          "spanText": "险",
+          "fineSpanId": "fine:1818371cb2a90c789c7b281c3cc36a23715bfc08e3164930fe2034ce6bc0785f:33",
+          "sameDomain": [],
+          "base": [],
+          "fallback": [],
+          "budgeted": [
+            "险"
+          ],
+          "dropReasons": []
+        }
+      ],
+      "grid": [
+        [
+          "今"
+        ],
+        [
+          "天"
+        ],
+        [
+          "的"
+        ],
+        [
+          "站"
+        ],
+        [
+          "会"
+        ],
+        [
+          "先"
+        ],
+        [
+          "过"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "订单"
+        ],
+        [
+          "中"
+        ],
+        [
+          "台"
+        ],
+        [
+          "进"
+        ],
+        [
+          "度"
+        ],
+        [
+          "内"
+        ],
+        [
+          "存"
+        ],
+        [
+          "占"
+        ],
+        [
+          "用"
+        ],
+        [
+          "高"
+        ],
+        [
+          "这"
+        ],
+        [
+          "块"
+        ],
+        [
+          "需"
+        ],
+        [
+          "要"
+        ],
+        [
+          "限"
+        ],
+        [
+          "流"
+        ],
+        [
+          "保"
+        ],
+        [
+          "护"
+        ],
+        [
+          "大"
+        ],
+        [
+          "家"
+        ],
+        [
+          "看"
+        ],
+        [
+          "一"
+        ],
+        [
+          "下"
+        ],
+        [
+          "风"
+        ],
+        [
+          "险"
+        ]
+      ],
+      "assemblyTexts": [
+        "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+      ]
+    }
+  ],
+  "assemblyTexts": [
+    "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+  ],
+  "allAssemblyBeforeDedup": [
+    "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+  ],
+  "uniqueBeforeCap": [
+    {
+      "text": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "replacements": [
+        {
+          "span": {
+            "text": "订单",
+            "start": 9,
+            "end": 11
+          },
+          "word": "订单",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 2.4,
+          "repairTarget": true,
+          "candidateScore": 2.4
+        },
+        {
+          "span": {
+            "text": "今",
+            "start": 0,
+            "end": 1
+          },
+          "word": "今",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "天",
+            "start": 1,
+            "end": 2
+          },
+          "word": "天",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "的",
+            "start": 2,
+            "end": 3
+          },
+          "word": "的",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "站",
+            "start": 3,
+            "end": 4
+          },
+          "word": "站",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "会",
+            "start": 4,
+            "end": 5
+          },
+          "word": "会",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "先",
+            "start": 5,
+            "end": 6
+          },
+          "word": "先",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "过",
+            "start": 6,
+            "end": 7
+          },
+          "word": "过",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 7,
+            "end": 8
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 8,
+            "end": 9
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "中",
+            "start": 11,
+            "end": 12
+          },
+          "word": "中",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "台",
+            "start": 12,
+            "end": 13
+          },
+          "word": "台",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "进",
+            "start": 13,
+            "end": 14
+          },
+          "word": "进",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "度",
+            "start": 14,
+            "end": 15
+          },
+          "word": "度",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "内",
+            "start": 16,
+            "end": 17
+          },
+          "word": "内",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "存",
+            "start": 17,
+            "end": 18
+          },
+          "word": "存",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "占",
+            "start": 18,
+            "end": 19
+          },
+          "word": "占",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "用",
+            "start": 19,
+            "end": 20
+          },
+          "word": "用",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "高",
+            "start": 20,
+            "end": 21
+          },
+          "word": "高",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "这",
+            "start": 21,
+            "end": 22
+          },
+          "word": "这",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "块",
+            "start": 22,
+            "end": 23
+          },
+          "word": "块",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "需",
+            "start": 23,
+            "end": 24
+          },
+          "word": "需",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "要",
+            "start": 24,
+            "end": 25
+          },
+          "word": "要",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "限",
+            "start": 25,
+            "end": 26
+          },
+          "word": "限",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "流",
+            "start": 26,
+            "end": 27
+          },
+          "word": "流",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "保",
+            "start": 27,
+            "end": 28
+          },
+          "word": "保",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "护",
+            "start": 28,
+            "end": 29
+          },
+          "word": "护",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "大",
+            "start": 30,
+            "end": 31
+          },
+          "word": "大",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "家",
+            "start": 31,
+            "end": 32
+          },
+          "word": "家",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "看",
+            "start": 32,
+            "end": 33
+          },
+          "word": "看",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "一",
+            "start": 33,
+            "end": 34
+          },
+          "word": "一",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "下",
+            "start": 34,
+            "end": 35
+          },
+          "word": "下",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "风",
+            "start": 35,
+            "end": 36
+          },
+          "word": "风",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        },
+        {
+          "span": {
+            "text": "险",
+            "start": 36,
+            "end": 37
+          },
+          "word": "险",
+          "source": "canonical_exact",
+          "priorScore": 0,
+          "repairTarget": false,
+          "candidateScore": 0
+        }
+      ],
+      "candidateScore": 2.4
+    }
+  ],
+  "kenlmInputTexts": [
+    "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+  ],
+  "kenlm": {
+    "ran": false,
+    "reason": "prefilledCount<=1（无需排序）",
+    "ranking": [
+      {
+        "rank": 1,
+        "text": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+        "score": null,
+        "note": "single_input"
+      }
+    ]
+  },
+  "flags": {
+    "singleAssemblyOnly": true,
+    "assemblyGt1_kenlmEq1": false,
+    "crossPathDroppedMany": false,
+    "oddLooking": false,
+    "kenlmTop1Questionable": false,
+    "singleReasons": [
+      "只有一个 retainedDomain / base-only 桶",
+      "每个 Span 槽位仅 1 个 surface（含 canonical）",
+      "无多表面 Recall 进入 Assembly Grid",
+      "Assembly 结果仅 ASR Raw"
+    ],
+    "oddTexts": [],
+    "droppedByDedupOrCap": []
+  },
+  "humanJudgment": {
+    "suggested": [
+      "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+    ],
+    "actual": [
+      "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。"
+    ],
+    "conform": "YES",
+    "reason": "无多表面组合空间；仅 Raw/单候选进入 KenLM，符合冻结设计。",
+    "odd": []
+  }
+}

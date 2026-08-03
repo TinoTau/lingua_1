@@ -15,3 +15,17 @@
 后续 KenLM / Lexicon Expansion / Context Prior / LLM 开发失败时，按该 Snapshot 的 Recovery Guide 恢复。
 
 Snapshot **不取代** Lattice Architecture / Runtime SSOT 等 Sole Authority；只绑定当前代码 + 文档 + 验收结果为恢复节点。
+
+### Documentation Hierarchy
+
+```text
+Framework Snapshot → docs/current/ → docs/supporting/ → docs/acceptance/ → docs/archive/
+```
+
+| 层级 | 路径 |
+|------|------|
+| CURRENT | [`../current/INDEX.md`](../current/INDEX.md) |
+| Supporting | [`../supporting/INDEX.md`](../supporting/INDEX.md) |
+| Acceptance | [`../acceptance/README.md`](../acceptance/README.md) |
+| Archive | [`../archive/README.md`](../archive/README.md) |
+| Runtime Index | [`../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md) |

@@ -1,0 +1,7 @@
+{"case":"吗？","rule":"sentence_boundary adjacency via rawEnd","current":"length-1 window ending before ？ is BLOCKED","target":"吗 ALLOW; 吗？ BLOCK","source":"lattice-hard-block-filter.ts hasSentenceBoundary rawEnd check; Quality Audit ALL_WINDOWS_BLOCKED d017 etc"}
+{"case":"？我","rule":"sentence_boundary adjacency via rawStart-1","current":"length-1 我 after ？ is BLOCKED","target":"我 ALLOW; ？我 BLOCK","source":"hasSentenceBoundary rawStart-1"}
+{"case":"少糖。","rule":"rawEnd points at 。","current":"糖 length-1 BLOCKED","target":"糖 ALLOW if no punct inside slice","source":"hard_block_cases / Quality Audit"}
+{"case":"。顺便","rule":"rawStart-1 is 。","current":"顺 length-1 BLOCKED","target":"顺 ALLOW","source":"hard_block_cases d001 pos14"}
+{"case":"punctuation_in_window","rule":"slice contains ，。！？","current":"correctly blocks windows containing punct","target":"KEEP","source":"hasPunctuationInWindow"}
+{"case":"raw_gap_between_spans","rule":"coarse spans rawEnd!=rawStart","current":"blocks multi-span gap windows including some len=1 if span partition isolates","target":"KEEP for true gaps; do not loosen","source":"blockedReasonDist raw_gap=1981"}
+{"note":"positionsWithOnlyBlockedWindows=410 on dialog_200; 9 sentences first-breakpoint ALL_WINDOWS_BLOCKED all 吗？ templates"}
