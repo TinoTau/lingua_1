@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 /**
- * Documentation governance gate.
+ * Documentation governance gate (enhanced residual scope).
  *
  * Usage (repo root):
  *   node scripts/docs/check-documentation-governance.mjs
  * Or:
  *   npm run docs:check  (from electron_node/electron-node)
+ *
+ * Gate decision after residual backlog: ENHANCE_GATE
+ * — fail on UNCLASSIFIED production-relevant residuals, UNINDEXED_CURRENT,
+ *   living CRITICAL broken links; warn on unindexed acceptance packs /
+ *   unresolved duplicate groups when residual CSVs present.
+ * — do NOT warn on PACK_MEMBER orphans, historical state links, or scratch noise.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -46,7 +52,7 @@ const CURRENT_AUTHORITIES = [
   "docs/fw-detector/diagnostics/FROZEN.md",
 ];
 
-const CRITICAL_PREFIXES = [
+const LIVING_CRITICAL_PREFIXES = [
   "docs/INDEX.md",
   "docs/current/",
   "docs/supporting/",
@@ -57,6 +63,9 @@ const CRITICAL_PREFIXES = [
   "docs/archive/INDEX.md",
   "docs/archive/README.md",
 ];
+
+const RESIDUAL_PACK =
+  "docs/acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure";
 
 function exists(rel) {
   return fs.existsSync(path.join(REPO, rel));
@@ -89,6 +98,8 @@ function collectMdLinks(text) {
   while ((m = re.exec(text))) {
     const t = m[2].trim().split(/\s+/)[0].replace(/^<|>$/g, "");
     if (!t || /^https?:|^mailto:|^#/.test(t)) continue;
+    if (t === "..." || t.includes("<") || t.includes("YYYY-MM-DD") || t.includes("<Type>"))
+      continue;
     out.push(t);
   }
   return out;
@@ -107,19 +118,68 @@ function resolveLink(fromRel, link) {
   return toPosix(path.posix.normalize(path.posix.join(fromDir, clean)));
 }
 
-function isCritical(relPath) {
-  return (
-    CRITICAL_PREFIXES.some(
+function frontmatterStatus(text) {
+  const m = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!m) return "";
+  const sm = m[1].match(/^status:\s*(\S+)/m);
+  return sm ? sm[1].trim() : "";
+}
+
+function isLivingCritical(relPath) {
+  if (CURRENT_AUTHORITIES.includes(relPath)) return true;
+  if (
+    LIVING_CRITICAL_PREFIXES.some(
       (p) => relPath === p || (p.endsWith("/") && relPath.startsWith(p))
-    ) || CURRENT_AUTHORITIES.includes(relPath)
-  );
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function parseCsvFile(relPath) {
+  if (!exists(relPath)) return [];
+  const text = fs.readFileSync(path.join(REPO, relPath), "utf8").replace(/^\uFEFF/, "");
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const headers = splitCsvLine(lines[0]);
+  return lines.slice(1).filter(Boolean).map((line) => {
+    const cols = splitCsvLine(line);
+    const o = {};
+    headers.forEach((h, i) => (o[h] = cols[i] ?? ""));
+    return o;
+  });
+}
+
+function splitCsvLine(line) {
+  const cols = [];
+  let cur = "";
+  let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (q && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else q = !q;
+    } else if (ch === "," && !q) {
+      cols.push(cur);
+      cur = "";
+    } else cur += ch;
+  }
+  cols.push(cur);
+  return cols;
 }
 
 function main() {
-  const failures = [];
+  const hardFailures = [];
   const warnings = [];
+  const informationalBacklog = [];
 
-  // Required governance files
+  informationalBacklog.push(
+    "GATE_SCOPE:ENHANCE_GATE — living CRITICAL + residual CSV hard gates; historical/PACK_MEMBER/scratch are informational only"
+  );
+
   const required = [
     "docs/INDEX.md",
     "docs/current/INDEX.md",
@@ -133,74 +193,59 @@ function main() {
     "docs/framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md",
   ];
   for (const r of required) {
-    if (!exists(r)) failures.push(`MISSING_REQUIRED:${r}`);
+    if (!exists(r)) hardFailures.push(`MISSING_REQUIRED:${r}`);
   }
 
-  // CURRENT authorities reachable
   for (const a of CURRENT_AUTHORITIES) {
-    if (!exists(a)) failures.push(`MISSING_CURRENT_AUTHORITY:${a}`);
+    if (!exists(a)) hardFailures.push(`MISSING_CURRENT_AUTHORITY:${a}`);
   }
 
-  // Forbidden filename suffixes under docs/
   const badNameRe = /(?:\s\(1\)|\s\(2\)|copy|final2)/i;
   for (const abs of walk(path.join(REPO, "docs"))) {
     const name = path.basename(abs);
-    if (badNameRe.test(name)) {
-      failures.push(`FORBIDDEN_FILENAME:${rel(abs)}`);
-    }
+    if (badNameRe.test(name)) hardFailures.push(`FORBIDDEN_FILENAME:${rel(abs)}`);
   }
 
-  // Root-level Acceptance-like reports
-  for (const abs of fs.readdirSync(REPO)) {
-    const full = path.join(REPO, abs);
+  for (const name of fs.readdirSync(REPO)) {
+    const full = path.join(REPO, name);
     if (!fs.statSync(full).isFile()) continue;
-    if (/FW_Repair_V4_.*\.(md|csv|json)$/i.test(abs) || /_Audit_.*\.md$/i.test(abs)) {
-      failures.push(`ROOT_ACCEPTANCE_REPORT:${abs}`);
+    if (/FW_Repair_V4_.*\.(md|csv|json)$/i.test(name) || /_Audit_.*\.md$/i.test(name)) {
+      hardFailures.push(`ROOT_ACCEPTANCE_REPORT:${name}`);
     }
   }
 
-  // Acceptance pack contract for dated dirs
   const acceptanceRoot = path.join(REPO, "docs", "acceptance");
   if (fs.existsSync(acceptanceRoot)) {
     for (const typeEnt of fs.readdirSync(acceptanceRoot, { withFileTypes: true })) {
       if (!typeEnt.isDirectory()) continue;
-      if (typeEnt.name === "node_modules") continue;
-      // allow README at acceptance root files
       if (!ACCEPTANCE_TYPES.has(typeEnt.name)) {
-        // legacy non-typed dirs under acceptance are warning
-        if (["Development", "Audit", "Test", "Regression", "Freeze", "Documentation"].includes(typeEnt.name))
-          continue;
         warnings.push(`NONSTANDARD_ACCEPTANCE_TYPE_DIR:docs/acceptance/${typeEnt.name}`);
         continue;
       }
       const typeDir = path.join(acceptanceRoot, typeEnt.name);
       for (const packEnt of fs.readdirSync(typeDir, { withFileTypes: true })) {
         if (!packEnt.isDirectory()) continue;
-        const packName = packEnt.name;
-        const packRel = `docs/acceptance/${typeEnt.name}/${packName}`;
-        if (!/^\d{4}-\d{2}-\d{2}_/.test(packName)) {
-          // allow legacy Freeze subdirs without date prefix as warning
+        const packRel = `docs/acceptance/${typeEnt.name}/${packEnt.name}`;
+        if (!/^\d{4}-\d{2}-\d{2}_/.test(packEnt.name)) {
           warnings.push(`ACCEPTANCE_PACK_NAME:${packRel}`);
           continue;
         }
-        const packDir = path.join(typeDir, packName);
+        const packDir = path.join(typeDir, packEnt.name);
         for (const need of ["README.md", "report.md", "summary.json"]) {
           if (!fs.existsSync(path.join(packDir, need))) {
-            // Documentation/Audit packs must have them; warn for incomplete legacy
             if (typeEnt.name === "Documentation" || typeEnt.name === "Audit") {
-              failures.push(`ACCEPTANCE_PACK_MISSING:${packRel}/${need}`);
+              hardFailures.push(`ACCEPTANCE_PACK_MISSING:${packRel}/${need}`);
             } else {
               warnings.push(`ACCEPTANCE_PACK_MISSING:${packRel}/${need}`);
             }
           }
         }
-        // Acceptance must not claim CURRENT_SSOT in summary
         const summaryPath = path.join(packDir, "summary.json");
         if (fs.existsSync(summaryPath)) {
           try {
             const s = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
             if (s.status === "CURRENT_SSOT" || s.documentStatus === "CURRENT_SSOT") {
-              failures.push(`ACCEPTANCE_MARKED_CURRENT:${packRel}`);
+              hardFailures.push(`ACCEPTANCE_MARKED_CURRENT:${packRel}`);
             }
           } catch {
             warnings.push(`ACCEPTANCE_SUMMARY_UNPARSEABLE:${packRel}`);
@@ -210,33 +255,34 @@ function main() {
     }
   }
 
-  // Critical broken links
-  const criticalFiles = [];
+  // Living critical broken links (skip HISTORICAL/SUPERSEDED/RETIRED frontmatter)
   for (const abs of walk(path.join(REPO, "docs"))) {
     const r = rel(abs);
     if (!r.endsWith(".md")) continue;
-    if (!isCritical(r)) continue;
-    criticalFiles.push(r);
-  }
-  for (const r of criticalFiles) {
+    if (!isLivingCritical(r)) continue;
     let text;
     try {
-      text = fs.readFileSync(path.join(REPO, r), "utf8");
+      text = fs.readFileSync(abs, "utf8");
     } catch {
+      continue;
+    }
+    const st = frontmatterStatus(text);
+    if (["HISTORICAL", "SUPERSEDED", "RETIRED", "SCRATCH", "EXPERIMENTAL"].includes(st)) {
       continue;
     }
     for (const link of collectMdLinks(text)) {
       const resolved = resolveLink(r, link);
-      if (!exists(resolved)) {
-        // allow missing trailing slash dirs if README exists
-        if (exists(resolved.replace(/\/$/, "") + "/README.md")) continue;
-        if (exists(resolved + "/README.md")) continue;
-        failures.push(`BROKEN_CRITICAL_LINK:${r} -> ${link} (${resolved})`);
+      if (
+        exists(resolved) ||
+        exists(resolved.replace(/\/$/, "") + "/README.md") ||
+        exists(resolved + "/README.md")
+      ) {
+        continue;
       }
+      hardFailures.push(`BROKEN_CRITICAL_LINK:${r} -> ${link} (${resolved})`);
     }
   }
 
-  // Dual CURRENT claim heuristic: supporting INDEX should not label rows as sole authority
   const supportingIndex = path.join(REPO, "docs/supporting/INDEX.md");
   if (fs.existsSync(supportingIndex)) {
     const t = fs.readFileSync(supportingIndex, "utf8");
@@ -250,39 +296,114 @@ function main() {
     }
   }
 
-  // Snapshot pack presence
   const snap = "docs/framework_snapshots/FW_V4_FREEZE_2026_08_03";
-  for (const f of [
-    "FRAMEWORK_FREEZE_SUMMARY.md",
-    "snapshot.json",
-    "13_Recovery_Guide.md",
-  ]) {
-    if (!exists(`${snap}/${f}`)) failures.push(`SNAPSHOT_MISSING:${snap}/${f}`);
+  for (const f of ["FRAMEWORK_FREEZE_SUMMARY.md", "snapshot.json", "13_Recovery_Guide.md"]) {
+    if (!exists(`${snap}/${f}`)) hardFailures.push(`SNAPSHOT_MISSING:${snap}/${f}`);
+  }
+
+  // Residual CSV hard/warn gates (ENHANCE_GATE)
+  const unc = parseCsvFile(`${RESIDUAL_PACK}/unclassified_resolution.csv`);
+  if (unc.length) {
+    const left = unc.filter((r) => r.finalClassification === "UNCLASSIFIED" || !r.finalClassification);
+    if (left.length) {
+      for (const r of left) hardFailures.push(`UNCLASSIFIED_REMAINING:${r.path}`);
+    } else {
+      informationalBacklog.push(`UNCLASSIFIED_CLOSED:${unc.length}`);
+    }
+  } else {
+    warnings.push("RESIDUAL_UNCLASSIFIED_CSV_MISSING");
+  }
+
+  const dups = parseCsvFile(`${RESIDUAL_PACK}/duplicate_resolution.csv`);
+  if (dups.length) {
+    const unresolved = dups.filter(
+      (r) => r.status !== "RESOLVED" || String(r.duplicateType).includes("MANUAL_REVIEW")
+    );
+    if (unresolved.length) {
+      for (const r of unresolved.slice(0, 20)) {
+        warnings.push(`UNRESOLVED_DUPLICATE_GROUP:${r.duplicateGroupId}`);
+      }
+    } else {
+      informationalBacklog.push(`DUPLICATE_GROUPS_RESOLVED:${dups.length}`);
+    }
+  }
+
+  const orphans = parseCsvFile(`${RESIDUAL_PACK}/orphan_triage.csv`);
+  if (orphans.length) {
+    const unindexedCurrent = orphans.filter((r) => r.finalOrphanClass === "UNINDEXED_CURRENT");
+    for (const r of unindexedCurrent) hardFailures.push(`UNINDEXED_CURRENT:${r.path}`);
+    const possible = orphans.filter(
+      (r) =>
+        r.finalOrphanClass === "POSSIBLE_CURRENT_OR_SUPPORTING" &&
+        !String(r.status).startsWith("RESOLVED")
+    );
+    for (const r of possible) hardFailures.push(`POSSIBLE_CURRENT_UNRESOLVED:${r.path}`);
+    const packMembers = orphans.filter((r) => r.finalOrphanClass === "PACK_MEMBER").length;
+    const unindexedPacks = orphans.filter((r) => r.finalOrphanClass === "UNINDEXED_PACK");
+    for (const r of unindexedPacks.slice(0, 20)) {
+      warnings.push(`UNINDEXED_ACCEPTANCE_PACK:${r.packRoot || r.path}`);
+    }
+    informationalBacklog.push(`ORPHAN_PACK_MEMBER_COUNT:${packMembers}`);
+    informationalBacklog.push(`ORPHAN_TRIAGED_TOTAL:${orphans.length}`);
+  }
+
+  const links = parseCsvFile(`${RESIDUAL_PACK}/broken_link_policy_results.csv`);
+  if (links.length) {
+    const openCrit = links.filter(
+      (r) => r.finalLinkClass === "CRITICAL" && r.status === "OPEN"
+    );
+    for (const r of openCrit) {
+      hardFailures.push(`RESIDUAL_CRITICAL_LINK_OPEN:${r.sourcePath} -> ${r.linkText}`);
+    }
+    const missingEvidence = links.filter(
+      (r) =>
+        r.finalLinkClass === "ACCEPTANCE_LOCAL" &&
+        (r.status === "OPEN" || /^MISSING_EVIDENCE$/i.test(r.status))
+    );
+    for (const r of missingEvidence) {
+      hardFailures.push(`ACCEPTANCE_MISSING_UNIQUE_EVIDENCE:${r.sourcePath} -> ${r.linkText}`);
+    }
+    const closedNoEvidence = links.filter((r) =>
+      /CLOSED_NO_UNIQUE_EVIDENCE/i.test(r.status)
+    ).length;
+    if (closedNoEvidence) {
+      informationalBacklog.push(
+        `ACCEPTANCE_LOCAL_CLOSED_WITHOUT_UNIQUE_EVIDENCE_CLAIM:${closedNoEvidence}`
+      );
+    }
+    const hist = links.filter((r) => r.finalLinkClass === "HISTORICAL_STATE_LINK").length;
+    informationalBacklog.push(`HISTORICAL_STATE_LINKS:${hist}`);
   }
 
   const report = {
-    ok: failures.length === 0,
-    failureCount: failures.length,
-    warningCount: warnings.length,
-    failures,
+    ok: hardFailures.length === 0,
+    gateScopeDecision: "ENHANCE_GATE",
+    hardFailures,
     warnings: warnings.slice(0, 200),
+    informationalBacklog: informationalBacklog.slice(0, 200),
+    failureCount: hardFailures.length,
+    warningCount: warnings.length,
+    informationalCount: informationalBacklog.length,
+    // backward compatible aliases
+    failures: hardFailures,
   };
 
-  const outDir = path.join(
-    REPO,
-    "docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation"
-  );
-  if (fs.existsSync(path.dirname(outDir))) {
-    fs.mkdirSync(outDir, { recursive: true });
+  const outTargets = [
+    RESIDUAL_PACK,
+    "docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation",
+  ];
+  for (const outDir of outTargets) {
+    if (!exists(path.dirname(outDir))) continue;
+    fs.mkdirSync(path.join(REPO, outDir), { recursive: true });
     fs.writeFileSync(
-      path.join(outDir, "docs_check_result.json"),
+      path.join(REPO, outDir, "docs_check_result.json"),
       JSON.stringify(report, null, 2) + "\n",
       "utf8"
     );
   }
 
   console.log(JSON.stringify(report, null, 2));
-  process.exit(failures.length ? 1 : 0);
+  process.exit(hardFailures.length ? 1 : 0);
 }
 
 main();

@@ -1,0 +1,46 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "DOCUMENTATION_GOVERNANCE_RESIDUAL_BACKLOG_CLOSURE",
+  "codeChanged": false,
+  "lexiconChanged": false,
+  "modelChanged": false,
+  "configChanged": false,
+  "sqliteChanged": false,
+  "priorPack": "docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/",
+  "gateScopeDecision": "ENHANCE_GATE",
+  "authorityReconciliation": "COUNT_DIFFERENCE_EXPLAINED",
+  "documentationGovernance": "docs/current/DOCUMENTATION_GOVERNANCE.md",
+  "metrics": {
+    "before": {
+      "UNCLASSIFIED": 21,
+      "unresolvedDuplicateGroups": 8,
+      "criticalBrokenLinks": 0,
+      "acceptanceLocalBrokenLinks": 44,
+      "historicalBrokenLinks": 183,
+      "orphansTotal": 1012,
+      "unindexedCurrent": 0
+    },
+    "after": {
+      "UNCLASSIFIED": 0,
+      "unresolvedDuplicateGroups": 0,
+      "criticalBrokenLinks": 0,
+      "acceptanceLocalBrokenLinks": 0,
+      "historicalBrokenLinks": 342,
+      "orphansPackMember": 17,
+      "unindexedAcceptancePacks": 0,
+      "unindexedCurrent": 0,
+      "generatedScratch": 647,
+      "manualReviewRequired": 0,
+      "possibleCurrentUnresolved": 0,
+      "falsePositiveLinks": 1,
+      "authorityReconciliation": "COUNT_DIFFERENCE_EXPLAINED",
+      "troubleshootingDemotedToHistorical": 6,
+      "acceptanceLocalClosedWithoutUniqueEvidenceClaim": 38
+    }
+  },
+  "docsCheck": "PASS",
+  "docsCheckHardFailures": 0,
+  "docsCheckWarnings": 0,
+  "docsCheckInformational": 7,
+  "finalVerdict": "DOCUMENTATION_BACKLOG_CLASSIFIED_WITH_HISTORICAL_DEBT"
+}

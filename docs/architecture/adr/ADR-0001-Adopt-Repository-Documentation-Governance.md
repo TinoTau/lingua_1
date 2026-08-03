@@ -6,6 +6,7 @@ baseline: FW_V4_FREEZE_2026_08_03
 supersedes:
 related_ssot: docs/current/DOCUMENTATION_GOVERNANCE.md
 related_acceptance: docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/
+implementation_notes_acceptance: docs/acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/
 ---
 
 # ADR-0001 — Adopt Repository Documentation Governance
@@ -60,3 +61,15 @@ ACCEPTED — 2026-08-03
 ## Related Acceptance
 
 - `docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/`
+- `docs/acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/`
+
+## Implementation Notes（不改写 Decision）
+
+2026-08-04 residual backlog closure 补充了可操作细则（写入 Governance §17–§20，非新 ADR）：
+
+- Orphan Pack Member 不要求单文件索引
+- Historical State Links 允许保留
+- Duplicate Evidence Role 区分 Acceptance / Snapshot / Scratch
+- Authority registry count ≠ CURRENT_SSOT classification count
+
+Gate 判定：`ENHANCE_GATE`（在保持无噪声前提下增加 UNCLASSIFIED / UNINDEXED_CURRENT / living-critical links 检查）。

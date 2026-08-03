@@ -1,3 +1,9 @@
+---
+status: SUPPORTING_CONTRACT
+baseline: FW_V4_FREEZE_2026_08_03
+classified_by: 2026-08-04_Documentation_Governance_Residual_Backlog_Closure
+---
+
 # Context Prior / Soft Demotion
 
 | 字段 | 值 |

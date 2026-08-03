@@ -26,3 +26,5 @@ baseline: FW_V4_FREEZE_2026_08_03
 | Root `analyze_result.txt` / `job_details_report.txt` / `observability.json` | SCRATCH | Loose root artifacts; do not treat as Acceptance |
 
 权威规则：[`../current/DOCUMENTATION_GOVERNANCE.md`](../current/DOCUMENTATION_GOVERNANCE.md)
+
+Residual closure evidence：[`../acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/`](../acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/)

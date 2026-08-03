@@ -149,7 +149,7 @@ atomicity       = enforce · ACCEPT=9251 · ACCEPT_EXCEPTION=8 · REJECT=0 · UN
 
 ## 11. Artifacts
 
-目录：`docs/acceptance/Freeze/recall_candidate_recovery_2026_08_03/`
+目录：`docs/acceptance/Freeze/2026-08-03_Recall_Candidate_Recovery_Development/`
 
 - `lexicon_repairs.csv`
 - `runtime_recall_candidates.csv`

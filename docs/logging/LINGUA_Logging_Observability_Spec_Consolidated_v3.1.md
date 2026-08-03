@@ -1,3 +1,9 @@
+---
+status: OPERATING_GUIDE
+baseline: FW_V4_FREEZE_2026_08_03
+classified_by: 2026-08-04_Documentation_Governance_Residual_Backlog_Closure
+---
+
 # LINGUA 全链路日志与可观测性规范（合并增强版）
 ## Logging & Observability Specification – Consolidated v3.1
 

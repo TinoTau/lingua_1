@@ -1,0 +1,22 @@
+concern,authorityPath,authorityFileClassification,registeredBy,isPhysicalCurrentSsot,isIndexAuthorityEntry,isSupportingAuthorityReference,countedInCurrentSsot,countedInCurrentAuthorities,explanation
+CURRENT Index Entry,docs/current/INDEX.md,CURRENT_SSOT_INDEX,docs/current/INDEX.md,false,true,false,true,true,INDEX registry entry — counted in currentAuthorities; Phase-1 CURRENT_SSOT path list also included INDEX as one of 18
+Documentation Governance,docs/current/DOCUMENTATION_GOVERNANCE.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,false,true,Added after Phase-1 inventory; explains Authority list growth vs Phase-1 CURRENT_SSOT=18; COUNT_DIFFERENCE_EXPLAINED
+Document Index / Runtime Domain Index,docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Framework Snapshot Entry,docs/framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md,CURRENT_SSOT,docs/current/INDEX.md,true,true,false,false,true,Registered authority; Phase-1 classifier may have labeled differently if path heuristic missed — DOCUMENTATION_DEBT if missing physical
+Overall Architecture / Lattice,docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Runtime Pipeline / Runtime SSOT,docs/tone-v2/Runtime_SSOT_Contract_Freeze.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Evolution Rule,docs/tone-v2/Lingua_Runtime_Evolution_Rule.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Atomicity,docs/tone-v2/FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Tone Runtime / Tone Evidence Mapping,docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Tone Contract Freeze,docs/tone-v2/TONE_V2_CONTRACT_FREEZE.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Implementation Contract,docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Implementation_Contract_V1.0.0_2026_07_26.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Domain SSOT / Lexicon Domain Contract,docs/tone-v2/Lexicon_Domain_Contract_Freeze_V1.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Framework Freeze Registry,docs/fw-detector/freeze/FROZEN.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Architecture Overview (fw-detector),docs/fw-detector/ARCHITECTURE.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Domain Source Unification,docs/fw-detector/DOMAIN_SOURCE_UNIFICATION.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Domain Vote / Domain Recall,docs/fw-detector/recall/DOMAIN_RECALL.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Assembly,docs/fw-detector/assembly/FROZEN_V1_2.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+KenLM Runtime,docs/fw-detector/kenlm/KENLM_RUNTIME.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+JobResult / Validator Interface,docs/fw-detector/INTERFACE_FREEZE.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+Diagnostics,docs/fw-detector/diagnostics/FROZEN.md,CURRENT_SSOT,docs/current/INDEX.md,true,false,false,true,true,Present in Phase-1 CURRENT_SSOT classification
+_RECONCILIATION_SUMMARY_,,META,2026-08-04 residual closure,,,,18,19,COUNT_DIFFERENCE_EXPLAINED: Phase-1 CURRENT_SSOT=18 is path-heuristic classification count; currentAuthorities=19 was auditor registry length (docs/current/INDEX + module Sole Authorities + Snapshot entry) before DOCUMENTATION_GOVERNANCE.md existed. Not a competing Sole Authority defect. Gate registry now includes Governance explicitly.

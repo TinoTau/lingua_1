@@ -1,3 +1,9 @@
+---
+status: REFERENCE_DATA
+baseline: FW_V4_FREEZE_2026_08_03
+classified_by: 2026-08-04_Documentation_Governance_Residual_Backlog_Closure
+---
+
 
 # 用户系统与计费模块完整产品与技术方案说明
 （User System & Billing Module – Full PRD + Tech Spec）

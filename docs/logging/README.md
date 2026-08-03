@@ -1,3 +1,9 @@
+---
+status: OPERATING_GUIDE
+baseline: FW_V4_FREEZE_2026_08_03
+classified_by: 2026-08-04_Documentation_Governance_Residual_Backlog_Closure
+---
+
 # 日志与可观测性文档
 
 本目录包含 LINGUA 全链路日志与可观测性系统的规范文档和评估报告。

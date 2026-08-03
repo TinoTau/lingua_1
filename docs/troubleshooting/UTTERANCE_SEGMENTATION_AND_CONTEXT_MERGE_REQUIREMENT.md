@@ -1,3 +1,12 @@
+---
+status: HISTORICAL
+historical_baseline: pre-FW_V4
+reason: Dated troubleshooting incident report; paths may refer to repository state at that date.
+classified_by: 2026-08-04_Documentation_Governance_Residual_Backlog_Closure
+---
+
+> Historical document; paths may refer to repository state at that date.
+
 # Utterance 分段与上下文拼接需求文档
 
 **日期**: 2025-12-27  

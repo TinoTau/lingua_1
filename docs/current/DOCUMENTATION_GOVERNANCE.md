@@ -5,7 +5,7 @@ authority: DOCUMENTATION_GOVERNANCE
 baseline: FW_V4_FREEZE_2026_08_03
 owner: docs
 supersedes:
-reviewed_at: 2026-08-03
+reviewed_at: 2026-08-04
 ---
 
 # Documentation Governance — Sole Authority
@@ -270,10 +270,74 @@ taskId · date · baseline · module · taskType
 
 ---
 
+## 17. Orphan Pack Member Rule
+
+Acceptance Pack 内的 CSV / JSON / callgraph / contract / trace 等附件：
+
+```text
+只要同目录 README/report/summary 已被 Acceptance Type 合同覆盖，
+即视为 PACK_MEMBER，不要求单文件写入 Index。
+```
+
+禁止为了把 orphan 指标降到 0 而把数千个附件逐文件加入 Index。
+
+`UNINDEXED_CURRENT` 与未关闭的 `POSSIBLE_CURRENT_OR_SUPPORTING` 仍为硬门。
+
+---
+
+## 18. Historical Link Rule
+
+Historical / Superseded / Retired / 过期 troubleshooting 事故报告中的失效路径：
+
+```text
+允许保留原正文；
+应声明：Historical document; paths may refer to repository state at that date.
+```
+
+此类链接计入 `HISTORICAL_STATE_LINK` 信息债，**不**计入 CRITICAL 硬门。
+
+Living Operating Guides（`docs/operating/INDEX.md`、Recovery Guide、setup 入口）的失效链接必须修复为 0。
+
+---
+
+## 19. Duplicate Evidence Role Rule
+
+内容哈希相同不等于可删：
+
+| Role | Policy |
+|------|--------|
+| Acceptance formal report | Canonical keep |
+| Snapshot sealed copy | Keep — 不得仅因相同删除 |
+| Independent acceptance evidence at different dates | Keep both |
+| Scratch / generated mirror | Delete or keep noise policy |
+| Legacy path still referenced | Pointer preferred over delete |
+
+不得把 `REQUIRES_REVIEW` 长期留在正式治理结果中；必须给出 KEEP / DELETE / POINTER 决策。
+
+---
+
+## 20. Authority Registry Count Rule
+
+两种计数不得混用：
+
+```text
+CURRENT_SSOT classification count
+  = 被 Primary Classification 标为 CURRENT_SSOT 的文件数
+
+currentAuthorities / Sole Authority registry
+  = docs/current/INDEX.md（及 Gate 清单）登记的 Concern→正文 条目数
+```
+
+Index 自身、Snapshot Entry、Documentation Governance 可能同时出现在 registry 中；  
+**计数差不自动等于 Sole Authority 冲突**。冲突判定以同一 Concern 的实质竞争正文为准。
+
+---
+
 ## Related
 
 | Kind | Path |
 |------|------|
 | ADR | [`../architecture/adr/ADR-0001-Adopt-Repository-Documentation-Governance.md`](../architecture/adr/ADR-0001-Adopt-Repository-Documentation-Governance.md) |
-| Acceptance | [`../acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/`](../acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/) |
+| Acceptance (governance establish) | [`../acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/`](../acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/) |
+| Acceptance (residual backlog closure) | [`../acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/`](../acceptance/Documentation/2026-08-04_Documentation_Governance_Residual_Backlog_Closure/) |
 | Snapshot | [`../framework_snapshots/FW_V4_FREEZE_2026_08_03/`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/) |

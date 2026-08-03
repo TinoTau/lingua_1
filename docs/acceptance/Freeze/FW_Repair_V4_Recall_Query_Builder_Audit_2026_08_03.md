@@ -169,7 +169,7 @@ Plain 已不同 → Tone 再严也回不到「正在」。
 Window → Plain → Tone → QueryType → SQL → Bind → Candidate
 ```
 
-产物目录：`docs/acceptance/Freeze/recall_query_builder_audit_2026_08_03/`
+产物目录：`docs/acceptance/Freeze/2026-08-03_Recall_Query_Builder_Audit/`
 
 - `recall_query_trace.csv`
 - `recall_sql_trace.csv`
