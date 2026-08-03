@@ -132,7 +132,8 @@ See `13_Recovery_Guide.md`. Short form:
 | Field | Value |
 |-------|-------|
 | Tag | `FW_V4_FREEZE_2026_08_03` |
-| Commit | `8603408097d0e4ce03651ec8d2d24afb44d70389` (+ metadata finalization) |
+| Freeze Commit | `8603408097d0e4ce03651ec8d2d24afb44d70389` |
+| Tag tip | `f568fdbd2ec5ed451a63b0d0e874da536d3a7d61`（metadata finalization） |
 
 No long-lived freeze branch.
 
