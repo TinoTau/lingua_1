@@ -1,0 +1,33 @@
+sourcePath,currentClassification,targetClassification,targetPath,action,reason,linksToUpdate,risk,requiresManualReview
+docs/current/DOCUMENTATION_GOVERNANCE.md,UNCLASSIFIED,CURRENT_SSOT,docs/current/DOCUMENTATION_GOVERNANCE.md,KEEP,Create Documentation Governance Sole Authority,docs/current/INDEX.md|docs/INDEX.md,low,false
+docs/architecture/adr/ADR-0001-Adopt-Repository-Documentation-Governance.md,UNCLASSIFIED,ARCHITECTURE_DECISION,docs/architecture/adr/ADR-0001-Adopt-Repository-Documentation-Governance.md,KEEP,Create governance ADR,docs/architecture/INDEX.md,low,false
+docs/INDEX.md,UNCLASSIFIED,OPERATING_GUIDE,docs/INDEX.md,KEEP,Unified docs entry,docs/README.md,low,false
+docs/operating/INDEX.md,UNCLASSIFIED,OPERATING_GUIDE,docs/operating/INDEX.md,KEEP,Operating guide index,,low,false
+docs/archive/INDEX.md,UNCLASSIFIED,HISTORICAL,docs/archive/INDEX.md,KEEP,Archive index alongside README,,low,false
+docs/_scratch/README.md,SCRATCH,SCRATCH,docs/_scratch/README.md,KEEP,Official scratch contract,,low,false
+docs/supporting/INDEX.md,SUPPORTING_CONTRACT,SUPPORTING_CONTRACT,docs/supporting/INDEX.md,MERGE_INDEX_ONLY,Remove dual CURRENT authority claims; keep true supporting only,docs/current/INDEX.md,medium,false
+docs/current/INDEX.md,CURRENT_SSOT,CURRENT_SSOT,docs/current/INDEX.md,MERGE_INDEX_ONLY,Register Documentation Governance + hierarchy links,,low,false
+docs/acceptance/README.md,ACCEPTANCE_RECORD,ACCEPTANCE_RECORD,docs/acceptance/README.md,MERGE_INDEX_ONLY,Add Audit/Documentation types and dated pack contract,,low,false
+docs/framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md,FRAMEWORK_SNAPSHOT,FRAMEWORK_SNAPSHOT,docs/framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md,MERGE_INDEX_ONLY,Add Governance + docs/INDEX navigation only,,low,false
+docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md,FRAMEWORK_SNAPSHOT,FRAMEWORK_SNAPSHOT,docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md,MERGE_INDEX_ONLY,Add Documentation Governance reading pointer; no business conclusion change,,low,false
+docs/tone-v2/FW_Repair_V4_Candidate_Generation_Failure_Audit_2026_08_03.md,DUPLICATE,DUPLICATE,,DELETE_DUPLICATE,Exact duplicate of Acceptance Freeze report,,low,false
+docs/tone-v2/FW_Repair_V4_KenLM_A_Class_Upstream_Candidate_Coverage_Audit_2026_08_03.md,DUPLICATE,DUPLICATE,,DELETE_DUPLICATE,Exact duplicate of Acceptance Freeze report,,low,false
+docs/tone-v2/FW_Repair_V4_KenLM_Capability_Baseline_Audit_2026_08_03.md,HISTORICAL,DUPLICATE,,DELETE_DUPLICATE,Duplicate Acceptance report if hash matches; else REPLACE_WITH_POINTER,docs/acceptance/Freeze/,low,true
+docs/tone-v2/_audit_scratch/candidate_generation_failure_2026_08_03/,SCRATCH,DUPLICATE,,DELETE_DUPLICATE,Exact CSV/JSON mirror of Acceptance pack; keep probe .mjs,docs/acceptance/Freeze/candidate_generation_failure_2026_08_03/,low,false
+docs/tone-v2/_audit_scratch/kenlm_a_class_upstream_2026_08_03/,SCRATCH,DUPLICATE,,DELETE_DUPLICATE,Exact mirror of Acceptance pack,,low,false
+docs/tone-v2/_audit_scratch/kenlm_capability_baseline_2026_08_03/,SCRATCH,DUPLICATE,,DELETE_DUPLICATE,Exact mirror of Acceptance pack,,low,false
+docs/tone-v2/kenlm_validation_case_inventory_resolved.csv,DUPLICATE,DUPLICATE,,DELETE_DUPLICATE,Exact duplicate of Acceptance Freeze CSV,,low,false
+docs/CODING/,UNCLASSIFIED,REFERENCE_DATA,docs/CODING/,ADD_STATUS_HEADER,Project constitution / engineering principles — not ASR CURRENT,,low,false
+docs/logging/,UNCLASSIFIED,OPERATING_GUIDE,docs/logging/,ADD_STATUS_HEADER,Logging guides — operating/reference; not lattice CURRENT,,low,false
+docs/project/,UNCLASSIFIED,HISTORICAL,docs/project/,ADD_STATUS_HEADER,Phase summaries — historical,,low,false
+docs/PROJECT_*.md,UNCLASSIFIED,REFERENCE_DATA,docs/,ADD_STATUS_HEADER,Project structure docs — reference,,low,false
+docs/user/,UNCLASSIFIED,REFERENCE_DATA,docs/user/,KEEP,PRD / feasibility — not ASR SSOT,,low,false
+docs/decision/,ARCHITECTURE_DECISION,ARCHITECTURE_DECISION,docs/decision/,REQUIRES_REVIEW,Gradually point to architecture/adr; do not mass-move this round,,medium,true
+docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/,ACCEPTANCE_RECORD,ACCEPTANCE_RECORD,docs/acceptance/Documentation/2026-08-03_Docs_Repository_Governance_and_Consolidation/,KEEP,This round formal pack,,low,false
+docs/acceptance/Audit/,ACCEPTANCE_RECORD,ACCEPTANCE_RECORD,docs/acceptance/Audit/,KEEP,Ensure Type directory exists for future audits,,low,false
+scripts/docs/check-documentation-governance.mjs,REFERENCE_DATA,REFERENCE_DATA,scripts/docs/check-documentation-governance.mjs,KEEP,docs:check implementation,,low,false
+scripts/docs/audit-docs-repository.mjs,REFERENCE_DATA,REFERENCE_DATA,scripts/docs/audit-docs-repository.mjs,KEEP,Re-runnable Phase-1 auditor,,low,false
+electron_node/electron-node/package.json,REFERENCE_DATA,REFERENCE_DATA,electron_node/electron-node/package.json,MERGE_INDEX_ONLY,Add docs:check script only,,low,false
+analyze_result.txt,UNCLASSIFIED,SCRATCH,,MOVE_ARCHIVE,Root loose report — move to docs/_scratch or archive if kept,,low,true
+job_details_report.txt,UNCLASSIFIED,SCRATCH,,MOVE_ARCHIVE,Root loose report,,low,true
+observability.json,UNCLASSIFIED,SCRATCH,,MOVE_ARCHIVE,Root loose json,,low,true

@@ -1,0 +1,10 @@
+rule,status,evidence
+Phase1_audit_before_move,PASS,docs_inventory.csv generated before cleanup
+single_acceptance_pack_this_round,PASS,D:\Programs\github\lingua_1\docs\acceptance\Documentation\2026-08-03_Docs_Repository_Governance_and_Consolidation
+no_parallel_CURRENT,PASS,supporting INDEX demoted dual claims
+no_business_code_change,PASS,only docs + scripts/docs + docs:check package script
+no_old_freeze_tag_move,PASS,tag not modified
+unique_evidence_retained,PASS,probe .mjs retained under _audit_scratch
+governance_triple_registration,PASS,CURRENT + ADR-0001 + this Acceptance pack
+future_acceptance_path_contract,PASS,docs/current/DOCUMENTATION_GOVERNANCE.md §7
+docs_check_gate,PASS,scripts/docs/check-documentation-governance.mjs
