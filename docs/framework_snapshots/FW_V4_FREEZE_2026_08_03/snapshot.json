@@ -5,7 +5,7 @@
   "createdTime": "2026-08-03T00:00:00.000Z",
   "scope": "ASR post-processing through KenLM runtime boundary",
   "nature": "Date-based recoverable checkpoint, not permanent architecture freeze",
-  "verdict": "PENDING_GIT_FREEZE_COMMIT",
+  "verdict": "FRAMEWORK_FREEZE_COMMITTED",
   "architecture": {
     "fineSpan": "Multi-Path Lexical Lattice V1.0.0",
     "runtimeContract": "Runtime SSOT Contract V1.2",
@@ -59,8 +59,10 @@
     "nextStage": "KenLM capability validation"
   },
   "git": {
-    "commit": "<FILL_AFTER_FREEZE_COMMIT>",
-    "tag": "FW_V4_FREEZE_2026_08_03"
+    "commit": "8603408097d0e4ce03651ec8d2d24afb44d70389",
+    "commitSubject": "freeze: establish FW_V4_FREEZE_2026_08_03 recovery baseline",
+    "tag": "FW_V4_FREEZE_2026_08_03",
+    "metadataFinalizationOf": "8603408097d0e4ce03651ec8d2d24afb44d70389"
   },
   "currentSsotDocs": [
     "docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md",

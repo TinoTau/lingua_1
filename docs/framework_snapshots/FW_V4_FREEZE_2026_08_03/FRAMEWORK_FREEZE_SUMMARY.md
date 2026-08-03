@@ -132,7 +132,7 @@ See `13_Recovery_Guide.md`. Short form:
 | Field | Value |
 |-------|-------|
 | Tag | `FW_V4_FREEZE_2026_08_03` |
-| Commit | filled in `snapshot.json` after freeze commit |
+| Commit | `8603408097d0e4ce03651ec8d2d24afb44d70389` (+ metadata finalization) |
 
 No long-lived freeze branch.
 

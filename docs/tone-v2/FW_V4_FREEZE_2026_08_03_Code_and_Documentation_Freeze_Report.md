@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|-------|
 | Date | 2026-08-03 |
-| Verdict | **FRAMEWORK_FREEZE_COMMITTED**（见 §19–20 Git 结果） |
+| Verdict | **FRAMEWORK_FREEZE_COMMITTED** |
 | Nature | IMPLEMENTATION · Snapshot registration · NO business logic change |
 
 ---
@@ -101,11 +101,15 @@ ASR Raw → FineSpan/Lattice → Exact Recall → Domain Vote → Bucket → Ass
 
 ## 19. Git Commit
 
-见执行结果（本报告生成后填写）。
+| Field | Value |
+|-------|-------|
+| Freeze Commit | `8603408097d0e4ce03651ec8d2d24afb44d70389` |
+| Subject | freeze: establish FW_V4_FREEZE_2026_08_03 recovery baseline |
+| Metadata Finalization | subsequent commit filling `snapshot.json` git.commit |
 
 ## 20. Git Tag
 
-`FW_V4_FREEZE_2026_08_03` annotated tag（或 GIT_ACTION_REQUIRED）。
+Annotated tag `FW_V4_FREEZE_2026_08_03` on metadata-finalized tip.
 
 ---
 
@@ -132,11 +136,26 @@ T1–T30：本轮完成（T22 中 `lexicon:gate:v3-runtime` 记为已知阈值�
 [x] checksum 记录
 [x] legacy PRODUCTION_ACTIVE=0
 [x] 无长期冻结分支
-[ ] Git commit/tag — 见执行段
+[x] Git commit/tag
 ```
 
 ---
 
 ## 24. Final Verdict
 
-见 Git 执行完成后的结论块。
+```text
+FRAMEWORK_FREEZE_COMMITTED
+
+FW_V4_FREEZE_2026_08_03 已正式建立。
+
+当前已验收代码、正式 Source、配置、CURRENT SSOT、
+Framework Snapshot 和回归基线已绑定至 Git commit
+8603408097d0e4ce03651ec8d2d24afb44d70389
+（+ metadata finalization）。
+
+未创建长期冻结分支。
+
+Snapshot Tag：FW_V4_FREEZE_2026_08_03
+
+该节点可作为 KenLM 能力验证前的恢复基线。
+```
