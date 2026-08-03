@@ -19,13 +19,17 @@ Snapshot **不取代** Lattice Architecture / Runtime SSOT 等 Sole Authority；
 ### Documentation Hierarchy
 
 ```text
-Framework Snapshot → docs/current/ → docs/supporting/ → docs/acceptance/ → docs/archive/
+docs/INDEX.md → Documentation Governance → Framework Snapshot
+  → docs/current/ → docs/supporting/ → docs/acceptance/ → docs/archive/
 ```
 
 | 层级 | 路径 |
 |------|------|
+| Unified Entry | [`../INDEX.md`](../INDEX.md) |
+| Documentation Governance | [`../current/DOCUMENTATION_GOVERNANCE.md`](../current/DOCUMENTATION_GOVERNANCE.md) |
 | CURRENT | [`../current/INDEX.md`](../current/INDEX.md) |
 | Supporting | [`../supporting/INDEX.md`](../supporting/INDEX.md) |
 | Acceptance | [`../acceptance/README.md`](../acceptance/README.md) |
-| Archive | [`../archive/README.md`](../archive/README.md) |
+| Architecture (ADR) | [`../architecture/INDEX.md`](../architecture/INDEX.md) |
+| Archive | [`../archive/INDEX.md`](../archive/INDEX.md) |
 | Runtime Index | [`../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md) |

@@ -1,0 +1,5493 @@
+{
+  "freezeBaseline": "FW_V4_FREEZE_2026_08_03",
+  "exactTopK": 2,
+  "windowMinSyllables": 2,
+  "windowMaxSyllables": 5,
+  "maxSentenceCandidates": 16,
+  "toneTimestampOnlyEnabled": true,
+  "mandatoryToneRecall": "Batch_1.1C_fail_closed_no_plain_fallback",
+  "primaryDistribution": {
+    "LEXICON_KEY_ERROR": 1,
+    "RECALL_QUERY_MISS": 3,
+    "LEXICON_TERM_MISSING": 3
+  },
+  "firstMissingDistribution": {
+    "EXACT_RECALL": 4,
+    "SQLITE": 3
+  },
+  "overfitStaticHits": [
+    {
+      "file": "electron_node\\electron-node\\main\\src\\fw-detector\\span-assembly-v4\\v4-diagnostics-config.ts",
+      "pattern": "caseId ==="
+    }
+  ],
+  "verdict": "UPSTREAM_FIX_REQUIRED",
+  "cases": [
+    {
+      "caseId": "nn-train-01",
+      "noiseSurface": "我闷蒸在",
+      "correctSurface": "我们正在",
+      "rawText": "我闷蒸在升级公司内部的专家系统平台。",
+      "expectedText": "我们正在升级公司内部的专家系统平台。",
+      "noiseRaw": {
+        "start": 0,
+        "end": 4
+      },
+      "noiseSyl": {
+        "start": 0,
+        "end": 4
+      },
+      "syllables": "wo|men|zheng|zai|sheng|ji|gong|si|nei|bu|de|zhuan|jia|xi|tong|ping|tai",
+      "atomLookups": [
+        {
+          "surface": "我们",
+          "termId": "term-e68891e4bbac7c77",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "wo|men",
+          "tonePinyinKey": "wo3|men0",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "4122",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e68891e4bbac7c77",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "4122",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        },
+        {
+          "surface": "正在",
+          "termId": "term-e6ada3e59ca87c7a",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "zheng|zai",
+          "tonePinyinKey": "zheng4|zai4",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "5459",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e6ada3e59ca87c7a",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "5459",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        }
+      ],
+      "noiseLookup": {
+        "surface": "我闷蒸在",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "correctLookup": {
+        "surface": "我们正在",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "compoundLookups": [
+        {
+          "surface": "我们正在",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "atomToneProbes": [
+        {
+          "surface": "我们",
+          "status": "TONE_KEY_MISMATCH",
+          "rank": null,
+          "hasTone0": true,
+          "tonePinyinKey": "wo3|men0",
+          "hits": [],
+          "dbToneHits": [
+            "我们"
+          ]
+        },
+        {
+          "surface": "正在",
+          "status": "HIT",
+          "rank": 1,
+          "hasTone0": false,
+          "tonePinyinKey": "zheng4|zai4",
+          "hits": [
+            "正在"
+          ],
+          "dbToneHits": [
+            "正在"
+          ]
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "0:1",
+          "rawStart": 0,
+          "rawEnd": 1,
+          "syllableStart": 0,
+          "syllableEnd": 1,
+          "length": 1,
+          "windowPinyin": "wo",
+          "windowText": "我"
+        },
+        {
+          "windowId": "0:2",
+          "rawStart": 0,
+          "rawEnd": 2,
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "length": 2,
+          "windowPinyin": "wo|men",
+          "windowText": "我闷"
+        },
+        {
+          "windowId": "0:3",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "length": 3,
+          "windowPinyin": "wo|men|zheng",
+          "windowText": "我闷蒸"
+        },
+        {
+          "windowId": "0:4",
+          "rawStart": 0,
+          "rawEnd": 4,
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "length": 4,
+          "windowPinyin": "wo|men|zheng|zai",
+          "windowText": "我闷蒸在"
+        },
+        {
+          "windowId": "0:5",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "length": 5,
+          "windowPinyin": "wo|men|zheng|zai|sheng",
+          "windowText": "我闷蒸在升"
+        },
+        {
+          "windowId": "1:2",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "length": 1,
+          "windowPinyin": "men",
+          "windowText": "闷"
+        },
+        {
+          "windowId": "1:3",
+          "rawStart": 1,
+          "rawEnd": 3,
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "length": 2,
+          "windowPinyin": "men|zheng",
+          "windowText": "闷蒸"
+        },
+        {
+          "windowId": "1:4",
+          "rawStart": 1,
+          "rawEnd": 4,
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "length": 3,
+          "windowPinyin": "men|zheng|zai",
+          "windowText": "闷蒸在"
+        },
+        {
+          "windowId": "1:5",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "length": 4,
+          "windowPinyin": "men|zheng|zai|sheng",
+          "windowText": "闷蒸在升"
+        },
+        {
+          "windowId": "1:6",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "length": 5,
+          "windowPinyin": "men|zheng|zai|sheng|ji",
+          "windowText": "闷蒸在升级"
+        },
+        {
+          "windowId": "2:3",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "length": 1,
+          "windowPinyin": "zheng",
+          "windowText": "蒸"
+        },
+        {
+          "windowId": "2:4",
+          "rawStart": 2,
+          "rawEnd": 4,
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "length": 2,
+          "windowPinyin": "zheng|zai",
+          "windowText": "蒸在"
+        },
+        {
+          "windowId": "2:5",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "length": 3,
+          "windowPinyin": "zheng|zai|sheng",
+          "windowText": "蒸在升"
+        },
+        {
+          "windowId": "2:6",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "length": 4,
+          "windowPinyin": "zheng|zai|sheng|ji",
+          "windowText": "蒸在升级"
+        },
+        {
+          "windowId": "2:7",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "length": 5,
+          "windowPinyin": "zheng|zai|sheng|ji|gong",
+          "windowText": "蒸在升级公"
+        },
+        {
+          "windowId": "3:4",
+          "rawStart": 3,
+          "rawEnd": 4,
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "length": 1,
+          "windowPinyin": "zai",
+          "windowText": "在"
+        },
+        {
+          "windowId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "length": 2,
+          "windowPinyin": "zai|sheng",
+          "windowText": "在升"
+        },
+        {
+          "windowId": "3:6",
+          "rawStart": 3,
+          "rawEnd": 6,
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "length": 3,
+          "windowPinyin": "zai|sheng|ji",
+          "windowText": "在升级"
+        },
+        {
+          "windowId": "3:7",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "length": 4,
+          "windowPinyin": "zai|sheng|ji|gong",
+          "windowText": "在升级公"
+        },
+        {
+          "windowId": "3:8",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "length": 5,
+          "windowPinyin": "zai|sheng|ji|gong|si",
+          "windowText": "在升级公司"
+        }
+      ],
+      "windowClass": "MULTI_WINDOW_COMPOSITION_REQUIRED",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "0:1",
+          "windowPinyin": "wo",
+          "windowText": "我",
+          "rawStart": 0,
+          "rawEnd": 1,
+          "syllableStart": 0,
+          "syllableEnd": 1,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1"
+          },
+          "builtKey": "wo1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:2",
+          "windowPinyin": "wo|men",
+          "windowText": "我闷",
+          "rawStart": 0,
+          "rawEnd": 2,
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo3|men5"
+          },
+          "builtKey": "wo3|men5",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:3",
+          "windowPinyin": "wo|men|zheng",
+          "windowText": "我闷蒸",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1"
+          },
+          "builtKey": "wo1|men1|zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:4",
+          "windowPinyin": "wo|men|zheng|zai",
+          "windowText": "我闷蒸在",
+          "rawStart": 0,
+          "rawEnd": 4,
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1|zai1"
+          },
+          "builtKey": "wo1|men1|zheng1|zai1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:5",
+          "windowPinyin": "wo|men|zheng|zai|sheng",
+          "windowText": "我闷蒸在升",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1|zai1|sheng1"
+          },
+          "builtKey": "wo1|men1|zheng1|zai1|sheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:2",
+          "windowPinyin": "men",
+          "windowText": "闷",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1"
+          },
+          "builtKey": "men1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:3",
+          "windowPinyin": "men|zheng",
+          "windowText": "闷蒸",
+          "rawStart": 1,
+          "rawEnd": 3,
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1"
+          },
+          "builtKey": "men1|zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "闷蒸",
+            "闷蒸"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:4",
+          "windowPinyin": "men|zheng|zai",
+          "windowText": "闷蒸在",
+          "rawStart": 1,
+          "rawEnd": 4,
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1"
+          },
+          "builtKey": "men1|zheng1|zai1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:5",
+          "windowPinyin": "men|zheng|zai|sheng",
+          "windowText": "闷蒸在升",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1|sheng1"
+          },
+          "builtKey": "men1|zheng1|zai1|sheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:6",
+          "windowPinyin": "men|zheng|zai|sheng|ji",
+          "windowText": "闷蒸在升级",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1|sheng1|ji1"
+          },
+          "builtKey": "men1|zheng1|zai1|sheng1|ji1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:3",
+          "windowPinyin": "zheng",
+          "windowText": "蒸",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1"
+          },
+          "builtKey": "zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:4",
+          "windowPinyin": "zheng|zai",
+          "windowText": "蒸在",
+          "rawStart": 2,
+          "rawEnd": 4,
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng3|zai5"
+          },
+          "builtKey": "zheng3|zai5",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:5",
+          "windowPinyin": "zheng|zai|sheng",
+          "windowText": "蒸在升",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|sheng1"
+          },
+          "builtKey": "zheng1|zai1|sheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:6",
+          "windowPinyin": "zheng|zai|sheng|ji",
+          "windowText": "蒸在升级",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|sheng1|ji1"
+          },
+          "builtKey": "zheng1|zai1|sheng1|ji1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:7",
+          "windowPinyin": "zheng|zai|sheng|ji|gong",
+          "windowText": "蒸在升级公",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|sheng1|ji1|gong1"
+          },
+          "builtKey": "zheng1|zai1|sheng1|ji1|gong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:4",
+          "windowPinyin": "zai",
+          "windowText": "在",
+          "rawStart": 3,
+          "rawEnd": 4,
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zai1"
+          },
+          "builtKey": "zai1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:5",
+          "windowPinyin": "zai|sheng",
+          "windowText": "在升",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zai3|sheng5"
+          },
+          "builtKey": "zai3|sheng5",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:6",
+          "windowPinyin": "zai|sheng|ji",
+          "windowText": "在升级",
+          "rawStart": 3,
+          "rawEnd": 6,
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zai1|sheng1|ji1"
+          },
+          "builtKey": "zai1|sheng1|ji1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:7",
+          "windowPinyin": "zai|sheng|ji|gong",
+          "windowText": "在升级公",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zai1|sheng1|ji1|gong1"
+          },
+          "builtKey": "zai1|sheng1|ji1|gong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:8",
+          "windowPinyin": "zai|sheng|ji|gong|si",
+          "windowText": "在升级公司",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zai1|sheng1|ji1|gong1|si1"
+          },
+          "builtKey": "zai1|sheng1|ji1|gong1|si1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": true,
+        "SQLITE": true,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "EXACT_RECALL",
+      "primaryRootCause": "LEXICON_KEY_ERROR",
+      "secondaryCauses": [
+        "我们:tone_pinyin_key=wo3|men0",
+        "acoustic_tone0_invalid",
+        "PLAIN_FALLBACK_NOT_REACHED",
+        "COUNTERFACTUAL_NEXT:ASSEMBLY_COMPOSITION_MISS"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "我闷蒸在升级公司内部的专家系统平台。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 17,
+        "edgeCountAfterFallback": 17,
+        "fallbackInjectionCount": 17,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 17
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 75,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "logicalWindowRecallCount": 75,
+        "windowNoCandidateCount": 75,
+        "theoreticalWindowCount": 75,
+        "canonicalRecallQueryCount": 75,
+        "uniqueRecallKeyCount": 75,
+        "cacheHitCount": 0,
+        "cacheMissCount": 75,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 17,
+        "singleCharRecallCount": 17,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 70,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "nn-train-01b",
+      "noiseSurface": "闷蒸",
+      "correctSurface": "正在",
+      "rawText": "我闷蒸在训练神经网络模型。",
+      "expectedText": "我们正在训练神经网络模型。",
+      "noiseRaw": {
+        "start": 1,
+        "end": 3
+      },
+      "noiseSyl": {
+        "start": 1,
+        "end": 3
+      },
+      "syllables": "wo|men|zheng|zai|xun|lian|shen|jing|wang|luo|mo|xing",
+      "atomLookups": [
+        {
+          "surface": "正在",
+          "termId": "term-e6ada3e59ca87c7a",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "zheng|zai",
+          "tonePinyinKey": "zheng4|zai4",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "5459",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e6ada3e59ca87c7a",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "5459",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        }
+      ],
+      "noiseLookup": {
+        "surface": "闷蒸",
+        "termId": "term-e997b7e892b87c6d",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "men|zheng",
+        "tonePinyinKey": "men1|zheng1",
+        "priorScore": 0.86,
+        "domains": [
+          "coffee"
+        ],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "8770",
+        "projection": "domain",
+        "atomicity": {
+          "termId": "term-e997b7e892b87c6d",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "8770",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "correctLookup": {
+        "surface": "正在",
+        "termId": "term-e6ada3e59ca87c7a",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "zheng|zai",
+        "tonePinyinKey": "zheng4|zai4",
+        "priorScore": 0.85,
+        "domains": [],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "5459",
+        "projection": "base",
+        "atomicity": {
+          "termId": "term-e6ada3e59ca87c7a",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "5459",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "compoundLookups": [],
+      "atomToneProbes": [
+        {
+          "surface": "正在",
+          "status": "HIT",
+          "rank": 1,
+          "hasTone0": false,
+          "tonePinyinKey": "zheng4|zai4",
+          "hits": [
+            "正在"
+          ],
+          "dbToneHits": [
+            "正在"
+          ]
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "0:2",
+          "rawStart": 0,
+          "rawEnd": 2,
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "length": 2,
+          "windowPinyin": "wo|men",
+          "windowText": "我闷"
+        },
+        {
+          "windowId": "0:3",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "length": 3,
+          "windowPinyin": "wo|men|zheng",
+          "windowText": "我闷蒸"
+        },
+        {
+          "windowId": "0:4",
+          "rawStart": 0,
+          "rawEnd": 4,
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "length": 4,
+          "windowPinyin": "wo|men|zheng|zai",
+          "windowText": "我闷蒸在"
+        },
+        {
+          "windowId": "0:5",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "length": 5,
+          "windowPinyin": "wo|men|zheng|zai|xun",
+          "windowText": "我闷蒸在训"
+        },
+        {
+          "windowId": "1:2",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "length": 1,
+          "windowPinyin": "men",
+          "windowText": "闷"
+        },
+        {
+          "windowId": "1:3",
+          "rawStart": 1,
+          "rawEnd": 3,
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "length": 2,
+          "windowPinyin": "men|zheng",
+          "windowText": "闷蒸"
+        },
+        {
+          "windowId": "1:4",
+          "rawStart": 1,
+          "rawEnd": 4,
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "length": 3,
+          "windowPinyin": "men|zheng|zai",
+          "windowText": "闷蒸在"
+        },
+        {
+          "windowId": "1:5",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "length": 4,
+          "windowPinyin": "men|zheng|zai|xun",
+          "windowText": "闷蒸在训"
+        },
+        {
+          "windowId": "1:6",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "length": 5,
+          "windowPinyin": "men|zheng|zai|xun|lian",
+          "windowText": "闷蒸在训练"
+        },
+        {
+          "windowId": "2:3",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "length": 1,
+          "windowPinyin": "zheng",
+          "windowText": "蒸"
+        },
+        {
+          "windowId": "2:4",
+          "rawStart": 2,
+          "rawEnd": 4,
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "length": 2,
+          "windowPinyin": "zheng|zai",
+          "windowText": "蒸在"
+        },
+        {
+          "windowId": "2:5",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "length": 3,
+          "windowPinyin": "zheng|zai|xun",
+          "windowText": "蒸在训"
+        },
+        {
+          "windowId": "2:6",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "length": 4,
+          "windowPinyin": "zheng|zai|xun|lian",
+          "windowText": "蒸在训练"
+        },
+        {
+          "windowId": "2:7",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "length": 5,
+          "windowPinyin": "zheng|zai|xun|lian|shen",
+          "windowText": "蒸在训练神"
+        }
+      ],
+      "windowClass": "WINDOW_EXISTS",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "0:2",
+          "windowPinyin": "wo|men",
+          "windowText": "我闷",
+          "rawStart": 0,
+          "rawEnd": 2,
+          "syllableStart": 0,
+          "syllableEnd": 2,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo4|men4"
+          },
+          "builtKey": "wo4|men4",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:3",
+          "windowPinyin": "wo|men|zheng",
+          "windowText": "我闷蒸",
+          "rawStart": 0,
+          "rawEnd": 3,
+          "syllableStart": 0,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1"
+          },
+          "builtKey": "wo1|men1|zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:4",
+          "windowPinyin": "wo|men|zheng|zai",
+          "windowText": "我闷蒸在",
+          "rawStart": 0,
+          "rawEnd": 4,
+          "syllableStart": 0,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1|zai1"
+          },
+          "builtKey": "wo1|men1|zheng1|zai1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "0:5",
+          "windowPinyin": "wo|men|zheng|zai|xun",
+          "windowText": "我闷蒸在训",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "wo1|men1|zheng1|zai1|xun1"
+          },
+          "builtKey": "wo1|men1|zheng1|zai1|xun1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:2",
+          "windowPinyin": "men",
+          "windowText": "闷",
+          "rawStart": 1,
+          "rawEnd": 2,
+          "syllableStart": 1,
+          "syllableEnd": 2,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1"
+          },
+          "builtKey": "men1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:3",
+          "windowPinyin": "men|zheng",
+          "windowText": "闷蒸",
+          "rawStart": 1,
+          "rawEnd": 3,
+          "syllableStart": 1,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1"
+          },
+          "builtKey": "men1|zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "闷蒸",
+            "闷蒸"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:4",
+          "windowPinyin": "men|zheng|zai",
+          "windowText": "闷蒸在",
+          "rawStart": 1,
+          "rawEnd": 4,
+          "syllableStart": 1,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1"
+          },
+          "builtKey": "men1|zheng1|zai1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:5",
+          "windowPinyin": "men|zheng|zai|xun",
+          "windowText": "闷蒸在训",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1|xun1"
+          },
+          "builtKey": "men1|zheng1|zai1|xun1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:6",
+          "windowPinyin": "men|zheng|zai|xun|lian",
+          "windowText": "闷蒸在训练",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "men1|zheng1|zai1|xun1|lian1"
+          },
+          "builtKey": "men1|zheng1|zai1|xun1|lian1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:3",
+          "windowPinyin": "zheng",
+          "windowText": "蒸",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "syllableStart": 2,
+          "syllableEnd": 3,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1"
+          },
+          "builtKey": "zheng1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:4",
+          "windowPinyin": "zheng|zai",
+          "windowText": "蒸在",
+          "rawStart": 2,
+          "rawEnd": 4,
+          "syllableStart": 2,
+          "syllableEnd": 4,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng4|zai4"
+          },
+          "builtKey": "zheng4|zai4",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "正在"
+          ],
+          "expectedAtomsInCf": [
+            "正在"
+          ]
+        },
+        {
+          "windowId": "2:5",
+          "windowPinyin": "zheng|zai|xun",
+          "windowText": "蒸在训",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|xun1"
+          },
+          "builtKey": "zheng1|zai1|xun1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:6",
+          "windowPinyin": "zheng|zai|xun|lian",
+          "windowText": "蒸在训练",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|xun1|lian1"
+          },
+          "builtKey": "zheng1|zai1|xun1|lian1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:7",
+          "windowPinyin": "zheng|zai|xun|lian|shen",
+          "windowText": "蒸在训练神",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zheng1|zai1|xun1|lian1|shen1"
+          },
+          "builtKey": "zheng1|zai1|xun1|lian1|shen1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": true,
+        "SQLITE": true,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "EXACT_RECALL",
+      "primaryRootCause": "RECALL_QUERY_MISS",
+      "secondaryCauses": [
+        "noiseWindowPinyin=men|zheng",
+        "correctPinyin=zheng|zai",
+        "PLAIN_FALLBACK_NOT_REACHED"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "我闷蒸在训练神经网络模型。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 50,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 50,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 12,
+        "edgeCountAfterFallback": 12,
+        "fallbackInjectionCount": 12,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 12
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 50,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 50,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 50,
+        "logicalWindowRecallCount": 50,
+        "windowNoCandidateCount": 50,
+        "theoreticalWindowCount": 50,
+        "canonicalRecallQueryCount": 50,
+        "uniqueRecallKeyCount": 50,
+        "cacheHitCount": 0,
+        "cacheMissCount": 50,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 12,
+        "singleCharRecallCount": 12,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 17,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "center-01",
+      "noiseSurface": "忠心",
+      "correctSurface": "中心",
+      "rawText": "微服务会定时向注册忠心上报健康状态。",
+      "expectedText": "微服务会定时向注册中心上报健康状态。",
+      "noiseRaw": {
+        "start": 9,
+        "end": 11
+      },
+      "noiseSyl": {
+        "start": 9,
+        "end": 11
+      },
+      "syllables": "wei|fu|wu|hui|ding|shi|xiang|zhu|ce|zhong|xin|shang|bao|jian|kang|zhuang|tai",
+      "atomLookups": [
+        {
+          "surface": "中心",
+          "termId": "term-e4b8ade5bf837c7a",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "zhong|xin",
+          "tonePinyinKey": "zhong1|xin1",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "337",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e4b8ade5bf837c7a",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "337",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        }
+      ],
+      "noiseLookup": {
+        "surface": "忠心",
+        "termId": "term-e5bfa0e5bf837c7a",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "zhong|xin",
+        "tonePinyinKey": "zhong1|xin1",
+        "priorScore": 0.85,
+        "domains": [],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "3909",
+        "projection": "base",
+        "atomicity": {
+          "termId": "term-e5bfa0e5bf837c7a",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "3909",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "correctLookup": {
+        "surface": "中心",
+        "termId": "term-e4b8ade5bf837c7a",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "zhong|xin",
+        "tonePinyinKey": "zhong1|xin1",
+        "priorScore": 0.85,
+        "domains": [],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "337",
+        "projection": "base",
+        "atomicity": {
+          "termId": "term-e4b8ade5bf837c7a",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "337",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "compoundLookups": [],
+      "atomToneProbes": [
+        {
+          "surface": "中心",
+          "status": "HIT",
+          "rank": 1,
+          "hasTone0": false,
+          "tonePinyinKey": "zhong1|xin1",
+          "hits": [
+            "中心",
+            "忠心"
+          ],
+          "dbToneHits": [
+            "中心",
+            "忠心"
+          ]
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "5:10",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "length": 5,
+          "windowPinyin": "shi|xiang|zhu|ce|zhong",
+          "windowText": "时向注册忠"
+        },
+        {
+          "windowId": "6:10",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "length": 4,
+          "windowPinyin": "xiang|zhu|ce|zhong",
+          "windowText": "向注册忠"
+        },
+        {
+          "windowId": "6:11",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "length": 5,
+          "windowPinyin": "xiang|zhu|ce|zhong|xin",
+          "windowText": "向注册忠心"
+        },
+        {
+          "windowId": "7:10",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "length": 3,
+          "windowPinyin": "zhu|ce|zhong",
+          "windowText": "注册忠"
+        },
+        {
+          "windowId": "7:11",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "length": 4,
+          "windowPinyin": "zhu|ce|zhong|xin",
+          "windowText": "注册忠心"
+        },
+        {
+          "windowId": "7:12",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "length": 5,
+          "windowPinyin": "zhu|ce|zhong|xin|shang",
+          "windowText": "注册忠心上"
+        },
+        {
+          "windowId": "8:10",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "length": 2,
+          "windowPinyin": "ce|zhong",
+          "windowText": "册忠"
+        },
+        {
+          "windowId": "8:11",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "length": 3,
+          "windowPinyin": "ce|zhong|xin",
+          "windowText": "册忠心"
+        },
+        {
+          "windowId": "8:12",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "length": 4,
+          "windowPinyin": "ce|zhong|xin|shang",
+          "windowText": "册忠心上"
+        },
+        {
+          "windowId": "8:13",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "length": 5,
+          "windowPinyin": "ce|zhong|xin|shang|bao",
+          "windowText": "册忠心上报"
+        },
+        {
+          "windowId": "9:10",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "length": 1,
+          "windowPinyin": "zhong",
+          "windowText": "忠"
+        },
+        {
+          "windowId": "9:11",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "length": 2,
+          "windowPinyin": "zhong|xin",
+          "windowText": "忠心"
+        },
+        {
+          "windowId": "9:12",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "length": 3,
+          "windowPinyin": "zhong|xin|shang",
+          "windowText": "忠心上"
+        },
+        {
+          "windowId": "9:13",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "length": 4,
+          "windowPinyin": "zhong|xin|shang|bao",
+          "windowText": "忠心上报"
+        },
+        {
+          "windowId": "9:14",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "length": 5,
+          "windowPinyin": "zhong|xin|shang|bao|jian",
+          "windowText": "忠心上报健"
+        },
+        {
+          "windowId": "10:11",
+          "rawStart": 10,
+          "rawEnd": 11,
+          "syllableStart": 10,
+          "syllableEnd": 11,
+          "length": 1,
+          "windowPinyin": "xin",
+          "windowText": "心"
+        },
+        {
+          "windowId": "10:12",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "length": 2,
+          "windowPinyin": "xin|shang",
+          "windowText": "心上"
+        },
+        {
+          "windowId": "10:13",
+          "rawStart": 10,
+          "rawEnd": 13,
+          "syllableStart": 10,
+          "syllableEnd": 13,
+          "length": 3,
+          "windowPinyin": "xin|shang|bao",
+          "windowText": "心上报"
+        },
+        {
+          "windowId": "10:14",
+          "rawStart": 10,
+          "rawEnd": 14,
+          "syllableStart": 10,
+          "syllableEnd": 14,
+          "length": 4,
+          "windowPinyin": "xin|shang|bao|jian",
+          "windowText": "心上报健"
+        },
+        {
+          "windowId": "10:15",
+          "rawStart": 10,
+          "rawEnd": 15,
+          "syllableStart": 10,
+          "syllableEnd": 15,
+          "length": 5,
+          "windowPinyin": "xin|shang|bao|jian|kang",
+          "windowText": "心上报健康"
+        }
+      ],
+      "windowClass": "WINDOW_EXISTS",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "5:10",
+          "windowPinyin": "shi|xiang|zhu|ce|zhong",
+          "windowText": "时向注册忠",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1|xiang1|zhu1|ce1|zhong1"
+          },
+          "builtKey": "shi1|xiang1|zhu1|ce1|zhong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:10",
+          "windowPinyin": "xiang|zhu|ce|zhong",
+          "windowText": "向注册忠",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xiang1|zhu1|ce1|zhong1"
+          },
+          "builtKey": "xiang1|zhu1|ce1|zhong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:11",
+          "windowPinyin": "xiang|zhu|ce|zhong|xin",
+          "windowText": "向注册忠心",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xiang1|zhu1|ce1|zhong1|xin1"
+          },
+          "builtKey": "xiang1|zhu1|ce1|zhong1|xin1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:10",
+          "windowPinyin": "zhu|ce|zhong",
+          "windowText": "注册忠",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhu1|ce1|zhong1"
+          },
+          "builtKey": "zhu1|ce1|zhong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:11",
+          "windowPinyin": "zhu|ce|zhong|xin",
+          "windowText": "注册忠心",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhu1|ce1|zhong1|xin1"
+          },
+          "builtKey": "zhu1|ce1|zhong1|xin1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:12",
+          "windowPinyin": "zhu|ce|zhong|xin|shang",
+          "windowText": "注册忠心上",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhu1|ce1|zhong1|xin1|shang1"
+          },
+          "builtKey": "zhu1|ce1|zhong1|xin1|shang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:10",
+          "windowPinyin": "ce|zhong",
+          "windowText": "册忠",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|zhong1"
+          },
+          "builtKey": "ce1|zhong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:11",
+          "windowPinyin": "ce|zhong|xin",
+          "windowText": "册忠心",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|zhong1|xin1"
+          },
+          "builtKey": "ce1|zhong1|xin1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:12",
+          "windowPinyin": "ce|zhong|xin|shang",
+          "windowText": "册忠心上",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|zhong1|xin1|shang1"
+          },
+          "builtKey": "ce1|zhong1|xin1|shang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:13",
+          "windowPinyin": "ce|zhong|xin|shang|bao",
+          "windowText": "册忠心上报",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|zhong1|xin1|shang1|bao1"
+          },
+          "builtKey": "ce1|zhong1|xin1|shang1|bao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:10",
+          "windowPinyin": "zhong",
+          "windowText": "忠",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhong1"
+          },
+          "builtKey": "zhong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:11",
+          "windowPinyin": "zhong|xin",
+          "windowText": "忠心",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhong1|xin1"
+          },
+          "builtKey": "zhong1|xin1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "忠心",
+            "中心"
+          ],
+          "expectedAtomsInCf": [
+            "中心"
+          ]
+        },
+        {
+          "windowId": "9:12",
+          "windowPinyin": "zhong|xin|shang",
+          "windowText": "忠心上",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhong1|xin1|shang1"
+          },
+          "builtKey": "zhong1|xin1|shang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:13",
+          "windowPinyin": "zhong|xin|shang|bao",
+          "windowText": "忠心上报",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhong1|xin1|shang1|bao1"
+          },
+          "builtKey": "zhong1|xin1|shang1|bao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:14",
+          "windowPinyin": "zhong|xin|shang|bao|jian",
+          "windowText": "忠心上报健",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhong1|xin1|shang1|bao1|jian1"
+          },
+          "builtKey": "zhong1|xin1|shang1|bao1|jian1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:11",
+          "windowPinyin": "xin",
+          "windowText": "心",
+          "rawStart": 10,
+          "rawEnd": 11,
+          "syllableStart": 10,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xin1"
+          },
+          "builtKey": "xin1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:12",
+          "windowPinyin": "xin|shang",
+          "windowText": "心上",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xin1|shang4"
+          },
+          "builtKey": "xin1|shang4",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "心上"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:13",
+          "windowPinyin": "xin|shang|bao",
+          "windowText": "心上报",
+          "rawStart": 10,
+          "rawEnd": 13,
+          "syllableStart": 10,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xin1|shang1|bao1"
+          },
+          "builtKey": "xin1|shang1|bao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:14",
+          "windowPinyin": "xin|shang|bao|jian",
+          "windowText": "心上报健",
+          "rawStart": 10,
+          "rawEnd": 14,
+          "syllableStart": 10,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xin1|shang1|bao1|jian1"
+          },
+          "builtKey": "xin1|shang1|bao1|jian1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:15",
+          "windowPinyin": "xin|shang|bao|jian|kang",
+          "windowText": "心上报健康",
+          "rawStart": 10,
+          "rawEnd": 15,
+          "syllableStart": 10,
+          "syllableEnd": 15,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xin1|shang1|bao1|jian1|kang1"
+          },
+          "builtKey": "xin1|shang1|bao1|jian1|kang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": true,
+        "SQLITE": true,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "EXACT_RECALL",
+      "primaryRootCause": "RECALL_QUERY_MISS",
+      "secondaryCauses": [
+        "PLAIN_FALLBACK_NOT_REACHED",
+        "tone_readiness=caller_disabled|no_pattern",
+        "COUNTERFACTUAL_RECALL_OK_中心",
+        "COUNTERFACTUAL_NEXT:check_edge_assembly"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "微服务会定时向注册忠心上报健康状态。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 17,
+        "edgeCountAfterFallback": 17,
+        "fallbackInjectionCount": 17,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 17
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 75,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "logicalWindowRecallCount": 75,
+        "windowNoCandidateCount": 75,
+        "theoreticalWindowCount": 75,
+        "canonicalRecallQueryCount": 75,
+        "uniqueRecallKeyCount": 75,
+        "cacheHitCount": 0,
+        "cacheMissCount": 75,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 17,
+        "singleCharRecallCount": 17,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 45,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "snack-01",
+      "noiseSurface": "消失",
+      "correctSurface": "小食",
+      "rawText": "客房里的迷你吧提供饮料和消失。",
+      "expectedText": "客房里的迷你吧提供饮料和小食。",
+      "noiseRaw": {
+        "start": 12,
+        "end": 14
+      },
+      "noiseSyl": {
+        "start": 12,
+        "end": 14
+      },
+      "syllables": "ke|fang|li|de|mi|ni|ba|ti|gong|yin|liao|he|xiao|shi",
+      "atomLookups": [
+        {
+          "surface": "小食",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "noiseLookup": {
+        "surface": "消失",
+        "termId": "term-e6b688e5a4b17c78",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "xiao|shi",
+        "tonePinyinKey": "xiao1|shi1",
+        "priorScore": 0.85,
+        "domains": [],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "5842",
+        "projection": "base",
+        "atomicity": {
+          "termId": "term-e6b688e5a4b17c78",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "5842",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "correctLookup": {
+        "surface": "小食",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "compoundLookups": [],
+      "atomToneProbes": [
+        {
+          "surface": "小食",
+          "status": "TERM_MISSING"
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "8:13",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "length": 5,
+          "windowPinyin": "gong|yin|liao|he|xiao",
+          "windowText": "供饮料和消"
+        },
+        {
+          "windowId": "9:13",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "length": 4,
+          "windowPinyin": "yin|liao|he|xiao",
+          "windowText": "饮料和消"
+        },
+        {
+          "windowId": "9:14",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "length": 5,
+          "windowPinyin": "yin|liao|he|xiao|shi",
+          "windowText": "饮料和消失"
+        },
+        {
+          "windowId": "10:13",
+          "rawStart": 10,
+          "rawEnd": 13,
+          "syllableStart": 10,
+          "syllableEnd": 13,
+          "length": 3,
+          "windowPinyin": "liao|he|xiao",
+          "windowText": "料和消"
+        },
+        {
+          "windowId": "10:14",
+          "rawStart": 10,
+          "rawEnd": 14,
+          "syllableStart": 10,
+          "syllableEnd": 14,
+          "length": 4,
+          "windowPinyin": "liao|he|xiao|shi",
+          "windowText": "料和消失"
+        },
+        {
+          "windowId": "11:13",
+          "rawStart": 11,
+          "rawEnd": 13,
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "length": 2,
+          "windowPinyin": "he|xiao",
+          "windowText": "和消"
+        },
+        {
+          "windowId": "11:14",
+          "rawStart": 11,
+          "rawEnd": 14,
+          "syllableStart": 11,
+          "syllableEnd": 14,
+          "length": 3,
+          "windowPinyin": "he|xiao|shi",
+          "windowText": "和消失"
+        },
+        {
+          "windowId": "12:13",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "syllableStart": 12,
+          "syllableEnd": 13,
+          "length": 1,
+          "windowPinyin": "xiao",
+          "windowText": "消"
+        },
+        {
+          "windowId": "12:14",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "syllableStart": 12,
+          "syllableEnd": 14,
+          "length": 2,
+          "windowPinyin": "xiao|shi",
+          "windowText": "消失"
+        },
+        {
+          "windowId": "13:14",
+          "rawStart": 13,
+          "rawEnd": 14,
+          "syllableStart": 13,
+          "syllableEnd": 14,
+          "length": 1,
+          "windowPinyin": "shi",
+          "windowText": "失"
+        }
+      ],
+      "windowClass": "WINDOW_EXISTS",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "8:13",
+          "windowPinyin": "gong|yin|liao|he|xiao",
+          "windowText": "供饮料和消",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "gong1|yin1|liao1|he1|xiao1"
+          },
+          "builtKey": "gong1|yin1|liao1|he1|xiao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:13",
+          "windowPinyin": "yin|liao|he|xiao",
+          "windowText": "饮料和消",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yin1|liao1|he1|xiao1"
+          },
+          "builtKey": "yin1|liao1|he1|xiao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:14",
+          "windowPinyin": "yin|liao|he|xiao|shi",
+          "windowText": "饮料和消失",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yin1|liao1|he1|xiao1|shi1"
+          },
+          "builtKey": "yin1|liao1|he1|xiao1|shi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:13",
+          "windowPinyin": "liao|he|xiao",
+          "windowText": "料和消",
+          "rawStart": 10,
+          "rawEnd": 13,
+          "syllableStart": 10,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "liao1|he1|xiao1"
+          },
+          "builtKey": "liao1|he1|xiao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "10:14",
+          "windowPinyin": "liao|he|xiao|shi",
+          "windowText": "料和消失",
+          "rawStart": 10,
+          "rawEnd": 14,
+          "syllableStart": 10,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "liao1|he1|xiao1|shi1"
+          },
+          "builtKey": "liao1|he1|xiao1|shi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "11:13",
+          "windowPinyin": "he|xiao",
+          "windowText": "和消",
+          "rawStart": 11,
+          "rawEnd": 13,
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "he1|xiao1"
+          },
+          "builtKey": "he1|xiao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "11:14",
+          "windowPinyin": "he|xiao|shi",
+          "windowText": "和消失",
+          "rawStart": 11,
+          "rawEnd": 14,
+          "syllableStart": 11,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "he1|xiao1|shi1"
+          },
+          "builtKey": "he1|xiao1|shi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "12:13",
+          "windowPinyin": "xiao",
+          "windowText": "消",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "syllableStart": 12,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xiao1"
+          },
+          "builtKey": "xiao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "12:14",
+          "windowPinyin": "xiao|shi",
+          "windowText": "消失",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "syllableStart": 12,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "xiao1|shi1"
+          },
+          "builtKey": "xiao1|shi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "消失"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "13:14",
+          "windowPinyin": "shi",
+          "windowText": "失",
+          "rawStart": 13,
+          "rawEnd": 14,
+          "syllableStart": 13,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1"
+          },
+          "builtKey": "shi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": false,
+        "SQLITE": false,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "SQLITE",
+      "primaryRootCause": "LEXICON_TERM_MISSING",
+      "secondaryCauses": [
+        "missing:小食"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "客房里的迷你吧提供饮料和消失。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 60,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 60,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 14,
+        "edgeCountAfterFallback": 14,
+        "fallbackInjectionCount": 14,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 14
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 60,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 60,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 60,
+        "logicalWindowRecallCount": 60,
+        "windowNoCandidateCount": 60,
+        "theoreticalWindowCount": 60,
+        "canonicalRecallQueryCount": 60,
+        "uniqueRecallKeyCount": 60,
+        "cacheHitCount": 0,
+        "cacheMissCount": 60,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 14,
+        "singleCharRecallCount": 14,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 26,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "sync-01",
+      "noiseSurface": "已精通步",
+      "correctSurface": "已经同步",
+      "rawText": "回归测试报告已精通步给质量保障团队。",
+      "expectedText": "回归测试报告已经同步给质量保障团队。",
+      "noiseRaw": {
+        "start": 6,
+        "end": 10
+      },
+      "noiseSyl": {
+        "start": 6,
+        "end": 10
+      },
+      "syllables": "hui|gui|ce|shi|bao|gao|yi|jing|tong|bu|gei|zhi|liang|bao|zhang|tuan|dui",
+      "atomLookups": [
+        {
+          "surface": "已经",
+          "termId": "term-e5b7b2e7bb8f7c79",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "yi|jing",
+          "tonePinyinKey": "yi3|jing1",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "3510",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e5b7b2e7bb8f7c79",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "3510",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        },
+        {
+          "surface": "同步",
+          "termId": "term-e5908ce6ada57c74",
+          "formalTermExists": true,
+          "inTermTable": true,
+          "inBaseTable": true,
+          "pinyinKey": "tong|bu",
+          "tonePinyinKey": "tong2|bu4",
+          "priorScore": 0.85,
+          "domains": [],
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "2199",
+          "projection": "base",
+          "atomicity": {
+            "termId": "term-e5908ce6ada57c74",
+            "sourceFile": "lexicon_full_corrected_review.csv",
+            "sourceRow": "2199",
+            "decision": "ACCEPT",
+            "reason": "SHORT_ATOMIC"
+          }
+        }
+      ],
+      "noiseLookup": {
+        "surface": "已精通步",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "correctLookup": {
+        "surface": "已经同步",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "compoundLookups": [
+        {
+          "surface": "已经同步",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "atomToneProbes": [
+        {
+          "surface": "已经",
+          "status": "HIT",
+          "rank": 1,
+          "hasTone0": false,
+          "tonePinyinKey": "yi3|jing1",
+          "hits": [
+            "已经"
+          ],
+          "dbToneHits": [
+            "已经"
+          ]
+        },
+        {
+          "surface": "同步",
+          "status": "HIT",
+          "rank": 1,
+          "hasTone0": false,
+          "tonePinyinKey": "tong2|bu4",
+          "hits": [
+            "同步"
+          ],
+          "dbToneHits": [
+            "同步"
+          ]
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "2:7",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "length": 5,
+          "windowPinyin": "ce|shi|bao|gao|yi",
+          "windowText": "测试报告已"
+        },
+        {
+          "windowId": "3:7",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "length": 4,
+          "windowPinyin": "shi|bao|gao|yi",
+          "windowText": "试报告已"
+        },
+        {
+          "windowId": "3:8",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "length": 5,
+          "windowPinyin": "shi|bao|gao|yi|jing",
+          "windowText": "试报告已精"
+        },
+        {
+          "windowId": "4:7",
+          "rawStart": 4,
+          "rawEnd": 7,
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "length": 3,
+          "windowPinyin": "bao|gao|yi",
+          "windowText": "报告已"
+        },
+        {
+          "windowId": "4:8",
+          "rawStart": 4,
+          "rawEnd": 8,
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "length": 4,
+          "windowPinyin": "bao|gao|yi|jing",
+          "windowText": "报告已精"
+        },
+        {
+          "windowId": "4:9",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "length": 5,
+          "windowPinyin": "bao|gao|yi|jing|tong",
+          "windowText": "报告已精通"
+        },
+        {
+          "windowId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "length": 2,
+          "windowPinyin": "gao|yi",
+          "windowText": "告已"
+        },
+        {
+          "windowId": "5:8",
+          "rawStart": 5,
+          "rawEnd": 8,
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "length": 3,
+          "windowPinyin": "gao|yi|jing",
+          "windowText": "告已精"
+        },
+        {
+          "windowId": "5:9",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "length": 4,
+          "windowPinyin": "gao|yi|jing|tong",
+          "windowText": "告已精通"
+        },
+        {
+          "windowId": "5:10",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "length": 5,
+          "windowPinyin": "gao|yi|jing|tong|bu",
+          "windowText": "告已精通步"
+        },
+        {
+          "windowId": "6:7",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "length": 1,
+          "windowPinyin": "yi",
+          "windowText": "已"
+        },
+        {
+          "windowId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "length": 2,
+          "windowPinyin": "yi|jing",
+          "windowText": "已精"
+        },
+        {
+          "windowId": "6:9",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "length": 3,
+          "windowPinyin": "yi|jing|tong",
+          "windowText": "已精通"
+        },
+        {
+          "windowId": "6:10",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "length": 4,
+          "windowPinyin": "yi|jing|tong|bu",
+          "windowText": "已精通步"
+        },
+        {
+          "windowId": "6:11",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "length": 5,
+          "windowPinyin": "yi|jing|tong|bu|gei",
+          "windowText": "已精通步给"
+        },
+        {
+          "windowId": "7:8",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "syllableStart": 7,
+          "syllableEnd": 8,
+          "length": 1,
+          "windowPinyin": "jing",
+          "windowText": "精"
+        },
+        {
+          "windowId": "7:9",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "length": 2,
+          "windowPinyin": "jing|tong",
+          "windowText": "精通"
+        },
+        {
+          "windowId": "7:10",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "length": 3,
+          "windowPinyin": "jing|tong|bu",
+          "windowText": "精通步"
+        },
+        {
+          "windowId": "7:11",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "length": 4,
+          "windowPinyin": "jing|tong|bu|gei",
+          "windowText": "精通步给"
+        },
+        {
+          "windowId": "7:12",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "length": 5,
+          "windowPinyin": "jing|tong|bu|gei|zhi",
+          "windowText": "精通步给质"
+        },
+        {
+          "windowId": "8:9",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "length": 1,
+          "windowPinyin": "tong",
+          "windowText": "通"
+        },
+        {
+          "windowId": "8:10",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "length": 2,
+          "windowPinyin": "tong|bu",
+          "windowText": "通步"
+        },
+        {
+          "windowId": "8:11",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "length": 3,
+          "windowPinyin": "tong|bu|gei",
+          "windowText": "通步给"
+        },
+        {
+          "windowId": "8:12",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "length": 4,
+          "windowPinyin": "tong|bu|gei|zhi",
+          "windowText": "通步给质"
+        },
+        {
+          "windowId": "8:13",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "length": 5,
+          "windowPinyin": "tong|bu|gei|zhi|liang",
+          "windowText": "通步给质量"
+        },
+        {
+          "windowId": "9:10",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "length": 1,
+          "windowPinyin": "bu",
+          "windowText": "步"
+        },
+        {
+          "windowId": "9:11",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "length": 2,
+          "windowPinyin": "bu|gei",
+          "windowText": "步给"
+        },
+        {
+          "windowId": "9:12",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "length": 3,
+          "windowPinyin": "bu|gei|zhi",
+          "windowText": "步给质"
+        },
+        {
+          "windowId": "9:13",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "length": 4,
+          "windowPinyin": "bu|gei|zhi|liang",
+          "windowText": "步给质量"
+        },
+        {
+          "windowId": "9:14",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "length": 5,
+          "windowPinyin": "bu|gei|zhi|liang|bao",
+          "windowText": "步给质量保"
+        }
+      ],
+      "windowClass": "MULTI_WINDOW_COMPOSITION_REQUIRED",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "2:7",
+          "windowPinyin": "ce|shi|bao|gao|yi",
+          "windowText": "测试报告已",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|shi1|bao1|gao1|yi1"
+          },
+          "builtKey": "ce1|shi1|bao1|gao1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:7",
+          "windowPinyin": "shi|bao|gao|yi",
+          "windowText": "试报告已",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1|bao1|gao1|yi1"
+          },
+          "builtKey": "shi1|bao1|gao1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:8",
+          "windowPinyin": "shi|bao|gao|yi|jing",
+          "windowText": "试报告已精",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1|bao1|gao1|yi1|jing1"
+          },
+          "builtKey": "shi1|bao1|gao1|yi1|jing1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:7",
+          "windowPinyin": "bao|gao|yi",
+          "windowText": "报告已",
+          "rawStart": 4,
+          "rawEnd": 7,
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bao1|gao1|yi1"
+          },
+          "builtKey": "bao1|gao1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:8",
+          "windowPinyin": "bao|gao|yi|jing",
+          "windowText": "报告已精",
+          "rawStart": 4,
+          "rawEnd": 8,
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bao1|gao1|yi1|jing1"
+          },
+          "builtKey": "bao1|gao1|yi1|jing1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:9",
+          "windowPinyin": "bao|gao|yi|jing|tong",
+          "windowText": "报告已精通",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bao1|gao1|yi1|jing1|tong1"
+          },
+          "builtKey": "bao1|gao1|yi1|jing1|tong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:7",
+          "windowPinyin": "gao|yi",
+          "windowText": "告已",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "gao3|yi1"
+          },
+          "builtKey": "gao3|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:8",
+          "windowPinyin": "gao|yi|jing",
+          "windowText": "告已精",
+          "rawStart": 5,
+          "rawEnd": 8,
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "gao1|yi1|jing1"
+          },
+          "builtKey": "gao1|yi1|jing1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:9",
+          "windowPinyin": "gao|yi|jing|tong",
+          "windowText": "告已精通",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "gao1|yi1|jing1|tong1"
+          },
+          "builtKey": "gao1|yi1|jing1|tong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:10",
+          "windowPinyin": "gao|yi|jing|tong|bu",
+          "windowText": "告已精通步",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "gao1|yi1|jing1|tong1|bu1"
+          },
+          "builtKey": "gao1|yi1|jing1|tong1|bu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:7",
+          "windowPinyin": "yi",
+          "windowText": "已",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1"
+          },
+          "builtKey": "yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:8",
+          "windowPinyin": "yi|jing",
+          "windowText": "已精",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi3|jing1"
+          },
+          "builtKey": "yi3|jing1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "已经"
+          ],
+          "expectedAtomsInCf": [
+            "已经"
+          ]
+        },
+        {
+          "windowId": "6:9",
+          "windowPinyin": "yi|jing|tong",
+          "windowText": "已精通",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|jing1|tong1"
+          },
+          "builtKey": "yi1|jing1|tong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:10",
+          "windowPinyin": "yi|jing|tong|bu",
+          "windowText": "已精通步",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|jing1|tong1|bu1"
+          },
+          "builtKey": "yi1|jing1|tong1|bu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:11",
+          "windowPinyin": "yi|jing|tong|bu|gei",
+          "windowText": "已精通步给",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|jing1|tong1|bu1|gei1"
+          },
+          "builtKey": "yi1|jing1|tong1|bu1|gei1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:8",
+          "windowPinyin": "jing",
+          "windowText": "精",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "syllableStart": 7,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "jing1"
+          },
+          "builtKey": "jing1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:9",
+          "windowPinyin": "jing|tong",
+          "windowText": "精通",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "jing1|tong1"
+          },
+          "builtKey": "jing1|tong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "精通"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:10",
+          "windowPinyin": "jing|tong|bu",
+          "windowText": "精通步",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "jing1|tong1|bu1"
+          },
+          "builtKey": "jing1|tong1|bu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:11",
+          "windowPinyin": "jing|tong|bu|gei",
+          "windowText": "精通步给",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "jing1|tong1|bu1|gei1"
+          },
+          "builtKey": "jing1|tong1|bu1|gei1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:12",
+          "windowPinyin": "jing|tong|bu|gei|zhi",
+          "windowText": "精通步给质",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "jing1|tong1|bu1|gei1|zhi1"
+          },
+          "builtKey": "jing1|tong1|bu1|gei1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:9",
+          "windowPinyin": "tong",
+          "windowText": "通",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "tong1"
+          },
+          "builtKey": "tong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:10",
+          "windowPinyin": "tong|bu",
+          "windowText": "通步",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "tong3|bu1"
+          },
+          "builtKey": "tong3|bu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:11",
+          "windowPinyin": "tong|bu|gei",
+          "windowText": "通步给",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "tong1|bu1|gei1"
+          },
+          "builtKey": "tong1|bu1|gei1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:12",
+          "windowPinyin": "tong|bu|gei|zhi",
+          "windowText": "通步给质",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "tong1|bu1|gei1|zhi1"
+          },
+          "builtKey": "tong1|bu1|gei1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:13",
+          "windowPinyin": "tong|bu|gei|zhi|liang",
+          "windowText": "通步给质量",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "tong1|bu1|gei1|zhi1|liang1"
+          },
+          "builtKey": "tong1|bu1|gei1|zhi1|liang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:10",
+          "windowPinyin": "bu",
+          "windowText": "步",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bu1"
+          },
+          "builtKey": "bu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:11",
+          "windowPinyin": "bu|gei",
+          "windowText": "步给",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bu3|gei1"
+          },
+          "builtKey": "bu3|gei1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:12",
+          "windowPinyin": "bu|gei|zhi",
+          "windowText": "步给质",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bu1|gei1|zhi1"
+          },
+          "builtKey": "bu1|gei1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:13",
+          "windowPinyin": "bu|gei|zhi|liang",
+          "windowText": "步给质量",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bu1|gei1|zhi1|liang1"
+          },
+          "builtKey": "bu1|gei1|zhi1|liang1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:14",
+          "windowPinyin": "bu|gei|zhi|liang|bao",
+          "windowText": "步给质量保",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "bu1|gei1|zhi1|liang1|bao1"
+          },
+          "builtKey": "bu1|gei1|zhi1|liang1|bao1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": true,
+        "SQLITE": true,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "EXACT_RECALL",
+      "primaryRootCause": "RECALL_QUERY_MISS",
+      "secondaryCauses": [
+        "PLAIN_FALLBACK_NOT_REACHED",
+        "COUNTERFACTUAL_ATOMS_RECALLABLE_ON_NOISE_WINDOWS",
+        "COUNTERFACTUAL_NEXT:ASSEMBLY_COMPOSITION_MISS"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "回归测试报告已精通步给质量保障团队。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 17,
+        "edgeCountAfterFallback": 17,
+        "fallbackInjectionCount": 17,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 17
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 75,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 75,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 75,
+        "logicalWindowRecallCount": 75,
+        "windowNoCandidateCount": 75,
+        "theoreticalWindowCount": 75,
+        "canonicalRecallQueryCount": 75,
+        "uniqueRecallKeyCount": 75,
+        "cacheHitCount": 0,
+        "cacheMissCount": 75,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 17,
+        "singleCharRecallCount": 17,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 31,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "trigger-01",
+      "noiseSurface": "出发",
+      "correctSurface": "触发",
+      "rawText": "调用下游超时后会出发熔断策略保护。",
+      "expectedText": "调用下游超时后会触发熔断策略保护。",
+      "noiseRaw": {
+        "start": 8,
+        "end": 10
+      },
+      "noiseSyl": {
+        "start": 8,
+        "end": 10
+      },
+      "syllables": "diao|yong|xia|you|chao|shi|hou|hui|chu|fa|rong|duan|ce|le|bao|hu",
+      "atomLookups": [
+        {
+          "surface": "触发",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "noiseLookup": {
+        "surface": "出发",
+        "termId": "term-e587bae58f917c63",
+        "formalTermExists": true,
+        "inTermTable": true,
+        "inBaseTable": true,
+        "pinyinKey": "chu|fa",
+        "tonePinyinKey": "chu1|fa1",
+        "priorScore": 0.86,
+        "domains": [],
+        "sourceFile": "lexicon_full_corrected_review.csv",
+        "sourceRow": "1389",
+        "projection": "base",
+        "atomicity": {
+          "termId": "term-e587bae58f917c63",
+          "sourceFile": "lexicon_full_corrected_review.csv",
+          "sourceRow": "1389",
+          "decision": "ACCEPT",
+          "reason": "SHORT_ATOMIC"
+        }
+      },
+      "correctLookup": {
+        "surface": "触发",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "compoundLookups": [],
+      "atomToneProbes": [
+        {
+          "surface": "触发",
+          "status": "TERM_MISSING"
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "4:9",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "length": 5,
+          "windowPinyin": "chao|shi|hou|hui|chu",
+          "windowText": "超时后会出"
+        },
+        {
+          "windowId": "5:9",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "length": 4,
+          "windowPinyin": "shi|hou|hui|chu",
+          "windowText": "时后会出"
+        },
+        {
+          "windowId": "5:10",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "length": 5,
+          "windowPinyin": "shi|hou|hui|chu|fa",
+          "windowText": "时后会出发"
+        },
+        {
+          "windowId": "6:9",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "length": 3,
+          "windowPinyin": "hou|hui|chu",
+          "windowText": "后会出"
+        },
+        {
+          "windowId": "6:10",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "length": 4,
+          "windowPinyin": "hou|hui|chu|fa",
+          "windowText": "后会出发"
+        },
+        {
+          "windowId": "6:11",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "length": 5,
+          "windowPinyin": "hou|hui|chu|fa|rong",
+          "windowText": "后会出发熔"
+        },
+        {
+          "windowId": "7:9",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "length": 2,
+          "windowPinyin": "hui|chu",
+          "windowText": "会出"
+        },
+        {
+          "windowId": "7:10",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "length": 3,
+          "windowPinyin": "hui|chu|fa",
+          "windowText": "会出发"
+        },
+        {
+          "windowId": "7:11",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "length": 4,
+          "windowPinyin": "hui|chu|fa|rong",
+          "windowText": "会出发熔"
+        },
+        {
+          "windowId": "7:12",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "length": 5,
+          "windowPinyin": "hui|chu|fa|rong|duan",
+          "windowText": "会出发熔断"
+        },
+        {
+          "windowId": "8:9",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "length": 1,
+          "windowPinyin": "chu",
+          "windowText": "出"
+        },
+        {
+          "windowId": "8:10",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "length": 2,
+          "windowPinyin": "chu|fa",
+          "windowText": "出发"
+        },
+        {
+          "windowId": "8:11",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "length": 3,
+          "windowPinyin": "chu|fa|rong",
+          "windowText": "出发熔"
+        },
+        {
+          "windowId": "8:12",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "length": 4,
+          "windowPinyin": "chu|fa|rong|duan",
+          "windowText": "出发熔断"
+        },
+        {
+          "windowId": "8:13",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "length": 5,
+          "windowPinyin": "chu|fa|rong|duan|ce",
+          "windowText": "出发熔断策"
+        },
+        {
+          "windowId": "9:10",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "length": 1,
+          "windowPinyin": "fa",
+          "windowText": "发"
+        },
+        {
+          "windowId": "9:11",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "length": 2,
+          "windowPinyin": "fa|rong",
+          "windowText": "发熔"
+        },
+        {
+          "windowId": "9:12",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "length": 3,
+          "windowPinyin": "fa|rong|duan",
+          "windowText": "发熔断"
+        },
+        {
+          "windowId": "9:13",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "length": 4,
+          "windowPinyin": "fa|rong|duan|ce",
+          "windowText": "发熔断策"
+        },
+        {
+          "windowId": "9:14",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "length": 5,
+          "windowPinyin": "fa|rong|duan|ce|le",
+          "windowText": "发熔断策略"
+        }
+      ],
+      "windowClass": "WINDOW_EXISTS",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "4:9",
+          "windowPinyin": "chao|shi|hou|hui|chu",
+          "windowText": "超时后会出",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chao1|shi1|hou1|hui1|chu1"
+          },
+          "builtKey": "chao1|shi1|hou1|hui1|chu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:9",
+          "windowPinyin": "shi|hou|hui|chu",
+          "windowText": "时后会出",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1|hou1|hui1|chu1"
+          },
+          "builtKey": "shi1|hou1|hui1|chu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:10",
+          "windowPinyin": "shi|hou|hui|chu|fa",
+          "windowText": "时后会出发",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "shi1|hou1|hui1|chu1|fa1"
+          },
+          "builtKey": "shi1|hou1|hui1|chu1|fa1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:9",
+          "windowPinyin": "hou|hui|chu",
+          "windowText": "后会出",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hou1|hui1|chu1"
+          },
+          "builtKey": "hou1|hui1|chu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:10",
+          "windowPinyin": "hou|hui|chu|fa",
+          "windowText": "后会出发",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hou1|hui1|chu1|fa1"
+          },
+          "builtKey": "hou1|hui1|chu1|fa1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:11",
+          "windowPinyin": "hou|hui|chu|fa|rong",
+          "windowText": "后会出发熔",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hou1|hui1|chu1|fa1|rong1"
+          },
+          "builtKey": "hou1|hui1|chu1|fa1|rong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:9",
+          "windowPinyin": "hui|chu",
+          "windowText": "会出",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hui1|chu1"
+          },
+          "builtKey": "hui1|chu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:10",
+          "windowPinyin": "hui|chu|fa",
+          "windowText": "会出发",
+          "rawStart": 7,
+          "rawEnd": 10,
+          "syllableStart": 7,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hui1|chu1|fa1"
+          },
+          "builtKey": "hui1|chu1|fa1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:11",
+          "windowPinyin": "hui|chu|fa|rong",
+          "windowText": "会出发熔",
+          "rawStart": 7,
+          "rawEnd": 11,
+          "syllableStart": 7,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hui1|chu1|fa1|rong1"
+          },
+          "builtKey": "hui1|chu1|fa1|rong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "7:12",
+          "windowPinyin": "hui|chu|fa|rong|duan",
+          "windowText": "会出发熔断",
+          "rawStart": 7,
+          "rawEnd": 12,
+          "syllableStart": 7,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "hui1|chu1|fa1|rong1|duan1"
+          },
+          "builtKey": "hui1|chu1|fa1|rong1|duan1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:9",
+          "windowPinyin": "chu",
+          "windowText": "出",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "syllableStart": 8,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chu1"
+          },
+          "builtKey": "chu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:10",
+          "windowPinyin": "chu|fa",
+          "windowText": "出发",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "syllableStart": 8,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chu1|fa1"
+          },
+          "builtKey": "chu1|fa1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "出发"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:11",
+          "windowPinyin": "chu|fa|rong",
+          "windowText": "出发熔",
+          "rawStart": 8,
+          "rawEnd": 11,
+          "syllableStart": 8,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chu1|fa1|rong1"
+          },
+          "builtKey": "chu1|fa1|rong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:12",
+          "windowPinyin": "chu|fa|rong|duan",
+          "windowText": "出发熔断",
+          "rawStart": 8,
+          "rawEnd": 12,
+          "syllableStart": 8,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chu1|fa1|rong1|duan1"
+          },
+          "builtKey": "chu1|fa1|rong1|duan1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "8:13",
+          "windowPinyin": "chu|fa|rong|duan|ce",
+          "windowText": "出发熔断策",
+          "rawStart": 8,
+          "rawEnd": 13,
+          "syllableStart": 8,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "chu1|fa1|rong1|duan1|ce1"
+          },
+          "builtKey": "chu1|fa1|rong1|duan1|ce1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:10",
+          "windowPinyin": "fa",
+          "windowText": "发",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "syllableStart": 9,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "fa1"
+          },
+          "builtKey": "fa1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:11",
+          "windowPinyin": "fa|rong",
+          "windowText": "发熔",
+          "rawStart": 9,
+          "rawEnd": 11,
+          "syllableStart": 9,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "fa1|rong1"
+          },
+          "builtKey": "fa1|rong1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:12",
+          "windowPinyin": "fa|rong|duan",
+          "windowText": "发熔断",
+          "rawStart": 9,
+          "rawEnd": 12,
+          "syllableStart": 9,
+          "syllableEnd": 12,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "fa1|rong1|duan1"
+          },
+          "builtKey": "fa1|rong1|duan1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:13",
+          "windowPinyin": "fa|rong|duan|ce",
+          "windowText": "发熔断策",
+          "rawStart": 9,
+          "rawEnd": 13,
+          "syllableStart": 9,
+          "syllableEnd": 13,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "fa1|rong1|duan1|ce1"
+          },
+          "builtKey": "fa1|rong1|duan1|ce1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "9:14",
+          "windowPinyin": "fa|rong|duan|ce|le",
+          "windowText": "发熔断策略",
+          "rawStart": 9,
+          "rawEnd": 14,
+          "syllableStart": 9,
+          "syllableEnd": 14,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "fa1|rong1|duan1|ce1|le1"
+          },
+          "builtKey": "fa1|rong1|duan1|ce1|le1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": false,
+        "SQLITE": false,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "SQLITE",
+      "primaryRootCause": "LEXICON_TERM_MISSING",
+      "secondaryCauses": [
+        "missing:触发"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "调用下游超时后会出发熔断策略保护。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 70,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 70,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 16,
+        "edgeCountAfterFallback": 16,
+        "fallbackInjectionCount": 16,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 16
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 70,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 70,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 70,
+        "logicalWindowRecallCount": 70,
+        "windowNoCandidateCount": 70,
+        "theoreticalWindowCount": 70,
+        "canonicalRecallQueryCount": 70,
+        "uniqueRecallKeyCount": 70,
+        "cacheHitCount": 0,
+        "cacheMissCount": 70,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 16,
+        "singleCharRecallCount": 16,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 27,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    },
+    {
+      "caseId": "threshold-01",
+      "noiseSurface": "阈之一",
+      "correctSurface": "阈值",
+      "rawText": "熔断策略阈之一按错误率重新校准。",
+      "expectedText": "熔断策略阈值已按错误率重新校准。",
+      "noiseRaw": {
+        "start": 4,
+        "end": 7
+      },
+      "noiseSyl": {
+        "start": 4,
+        "end": 7
+      },
+      "syllables": "rong|duan|ce|le|yu|zhi|yi|an|cuo|wu|l|chong|xin|jiao|zhun",
+      "atomLookups": [
+        {
+          "surface": "阈值",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "noiseLookup": {
+        "surface": "阈之一",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "correctLookup": {
+        "surface": "阈值",
+        "termId": "",
+        "formalTermExists": false,
+        "inTermTable": false,
+        "inBaseTable": false,
+        "pinyinKey": "",
+        "tonePinyinKey": "",
+        "priorScore": null,
+        "domains": [],
+        "sourceFile": "",
+        "sourceRow": "",
+        "projection": "missing",
+        "atomicity": null
+      },
+      "compoundLookups": [
+        {
+          "surface": "阈值已",
+          "termId": "",
+          "formalTermExists": false,
+          "inTermTable": false,
+          "inBaseTable": false,
+          "pinyinKey": "",
+          "tonePinyinKey": "",
+          "priorScore": null,
+          "domains": [],
+          "sourceFile": "",
+          "sourceRow": "",
+          "projection": "missing",
+          "atomicity": null
+        }
+      ],
+      "atomToneProbes": [
+        {
+          "surface": "阈值",
+          "status": "TERM_MISSING"
+        }
+      ],
+      "relatedWindows": [
+        {
+          "windowId": "0:5",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "length": 5,
+          "windowPinyin": "rong|duan|ce|le|yu",
+          "windowText": "熔断策略阈"
+        },
+        {
+          "windowId": "1:5",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "length": 4,
+          "windowPinyin": "duan|ce|le|yu",
+          "windowText": "断策略阈"
+        },
+        {
+          "windowId": "1:6",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "length": 5,
+          "windowPinyin": "duan|ce|le|yu|zhi",
+          "windowText": "断策略阈之"
+        },
+        {
+          "windowId": "2:5",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "length": 3,
+          "windowPinyin": "ce|le|yu",
+          "windowText": "策略阈"
+        },
+        {
+          "windowId": "2:6",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "length": 4,
+          "windowPinyin": "ce|le|yu|zhi",
+          "windowText": "策略阈之"
+        },
+        {
+          "windowId": "2:7",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "length": 5,
+          "windowPinyin": "ce|le|yu|zhi|yi",
+          "windowText": "策略阈之一"
+        },
+        {
+          "windowId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "length": 2,
+          "windowPinyin": "le|yu",
+          "windowText": "略阈"
+        },
+        {
+          "windowId": "3:6",
+          "rawStart": 3,
+          "rawEnd": 6,
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "length": 3,
+          "windowPinyin": "le|yu|zhi",
+          "windowText": "略阈之"
+        },
+        {
+          "windowId": "3:7",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "length": 4,
+          "windowPinyin": "le|yu|zhi|yi",
+          "windowText": "略阈之一"
+        },
+        {
+          "windowId": "3:8",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "length": 5,
+          "windowPinyin": "le|yu|zhi|yi|an",
+          "windowText": "略阈之一按"
+        },
+        {
+          "windowId": "4:5",
+          "rawStart": 4,
+          "rawEnd": 5,
+          "syllableStart": 4,
+          "syllableEnd": 5,
+          "length": 1,
+          "windowPinyin": "yu",
+          "windowText": "阈"
+        },
+        {
+          "windowId": "4:6",
+          "rawStart": 4,
+          "rawEnd": 6,
+          "syllableStart": 4,
+          "syllableEnd": 6,
+          "length": 2,
+          "windowPinyin": "yu|zhi",
+          "windowText": "阈之"
+        },
+        {
+          "windowId": "4:7",
+          "rawStart": 4,
+          "rawEnd": 7,
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "length": 3,
+          "windowPinyin": "yu|zhi|yi",
+          "windowText": "阈之一"
+        },
+        {
+          "windowId": "4:8",
+          "rawStart": 4,
+          "rawEnd": 8,
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "length": 4,
+          "windowPinyin": "yu|zhi|yi|an",
+          "windowText": "阈之一按"
+        },
+        {
+          "windowId": "4:9",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "length": 5,
+          "windowPinyin": "yu|zhi|yi|an|cuo",
+          "windowText": "阈之一按错"
+        },
+        {
+          "windowId": "5:6",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "syllableStart": 5,
+          "syllableEnd": 6,
+          "length": 1,
+          "windowPinyin": "zhi",
+          "windowText": "之"
+        },
+        {
+          "windowId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "length": 2,
+          "windowPinyin": "zhi|yi",
+          "windowText": "之一"
+        },
+        {
+          "windowId": "5:8",
+          "rawStart": 5,
+          "rawEnd": 8,
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "length": 3,
+          "windowPinyin": "zhi|yi|an",
+          "windowText": "之一按"
+        },
+        {
+          "windowId": "5:9",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "length": 4,
+          "windowPinyin": "zhi|yi|an|cuo",
+          "windowText": "之一按错"
+        },
+        {
+          "windowId": "5:10",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "length": 5,
+          "windowPinyin": "zhi|yi|an|cuo|wu",
+          "windowText": "之一按错误"
+        },
+        {
+          "windowId": "6:7",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "length": 1,
+          "windowPinyin": "yi",
+          "windowText": "一"
+        },
+        {
+          "windowId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "length": 2,
+          "windowPinyin": "yi|an",
+          "windowText": "一按"
+        },
+        {
+          "windowId": "6:9",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "length": 3,
+          "windowPinyin": "yi|an|cuo",
+          "windowText": "一按错"
+        },
+        {
+          "windowId": "6:10",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "length": 4,
+          "windowPinyin": "yi|an|cuo|wu",
+          "windowText": "一按错误"
+        },
+        {
+          "windowId": "6:11",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "length": 5,
+          "windowPinyin": "yi|an|cuo|wu|l",
+          "windowText": "一按错误率"
+        }
+      ],
+      "windowClass": "WINDOW_EXISTS",
+      "observedCandidateCount": 0,
+      "observedEdgeCount": 0,
+      "expectedObserved": [],
+      "expectedEdges": [],
+      "toneCounterfactual": [
+        {
+          "windowId": "0:5",
+          "windowPinyin": "rong|duan|ce|le|yu",
+          "windowText": "熔断策略阈",
+          "rawStart": 0,
+          "rawEnd": 5,
+          "syllableStart": 0,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "rong1|duan1|ce1|le1|yu1"
+          },
+          "builtKey": "rong1|duan1|ce1|le1|yu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:5",
+          "windowPinyin": "duan|ce|le|yu",
+          "windowText": "断策略阈",
+          "rawStart": 1,
+          "rawEnd": 5,
+          "syllableStart": 1,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "duan1|ce1|le1|yu1"
+          },
+          "builtKey": "duan1|ce1|le1|yu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "1:6",
+          "windowPinyin": "duan|ce|le|yu|zhi",
+          "windowText": "断策略阈之",
+          "rawStart": 1,
+          "rawEnd": 6,
+          "syllableStart": 1,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "duan1|ce1|le1|yu1|zhi1"
+          },
+          "builtKey": "duan1|ce1|le1|yu1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:5",
+          "windowPinyin": "ce|le|yu",
+          "windowText": "策略阈",
+          "rawStart": 2,
+          "rawEnd": 5,
+          "syllableStart": 2,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|le1|yu1"
+          },
+          "builtKey": "ce1|le1|yu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:6",
+          "windowPinyin": "ce|le|yu|zhi",
+          "windowText": "策略阈之",
+          "rawStart": 2,
+          "rawEnd": 6,
+          "syllableStart": 2,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|le1|yu1|zhi1"
+          },
+          "builtKey": "ce1|le1|yu1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "2:7",
+          "windowPinyin": "ce|le|yu|zhi|yi",
+          "windowText": "策略阈之一",
+          "rawStart": 2,
+          "rawEnd": 7,
+          "syllableStart": 2,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "ce1|le1|yu1|zhi1|yi1"
+          },
+          "builtKey": "ce1|le1|yu1|zhi1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:5",
+          "windowPinyin": "le|yu",
+          "windowText": "略阈",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "syllableStart": 3,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "le1|yu1"
+          },
+          "builtKey": "le1|yu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:6",
+          "windowPinyin": "le|yu|zhi",
+          "windowText": "略阈之",
+          "rawStart": 3,
+          "rawEnd": 6,
+          "syllableStart": 3,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "le1|yu1|zhi1"
+          },
+          "builtKey": "le1|yu1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:7",
+          "windowPinyin": "le|yu|zhi|yi",
+          "windowText": "略阈之一",
+          "rawStart": 3,
+          "rawEnd": 7,
+          "syllableStart": 3,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "le1|yu1|zhi1|yi1"
+          },
+          "builtKey": "le1|yu1|zhi1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "3:8",
+          "windowPinyin": "le|yu|zhi|yi|an",
+          "windowText": "略阈之一按",
+          "rawStart": 3,
+          "rawEnd": 8,
+          "syllableStart": 3,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "le1|yu1|zhi1|yi1|an1"
+          },
+          "builtKey": "le1|yu1|zhi1|yi1|an1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:5",
+          "windowPinyin": "yu",
+          "windowText": "阈",
+          "rawStart": 4,
+          "rawEnd": 5,
+          "syllableStart": 4,
+          "syllableEnd": 5,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yu1"
+          },
+          "builtKey": "yu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:6",
+          "windowPinyin": "yu|zhi",
+          "windowText": "阈之",
+          "rawStart": 4,
+          "rawEnd": 6,
+          "syllableStart": 4,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yu1|zhi1"
+          },
+          "builtKey": "yu1|zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:7",
+          "windowPinyin": "yu|zhi|yi",
+          "windowText": "阈之一",
+          "rawStart": 4,
+          "rawEnd": 7,
+          "syllableStart": 4,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yu1|zhi1|yi1"
+          },
+          "builtKey": "yu1|zhi1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:8",
+          "windowPinyin": "yu|zhi|yi|an",
+          "windowText": "阈之一按",
+          "rawStart": 4,
+          "rawEnd": 8,
+          "syllableStart": 4,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yu1|zhi1|yi1|an1"
+          },
+          "builtKey": "yu1|zhi1|yi1|an1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "4:9",
+          "windowPinyin": "yu|zhi|yi|an|cuo",
+          "windowText": "阈之一按错",
+          "rawStart": 4,
+          "rawEnd": 9,
+          "syllableStart": 4,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yu1|zhi1|yi1|an1|cuo1"
+          },
+          "builtKey": "yu1|zhi1|yi1|an1|cuo1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:6",
+          "windowPinyin": "zhi",
+          "windowText": "之",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "syllableStart": 5,
+          "syllableEnd": 6,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhi1"
+          },
+          "builtKey": "zhi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:7",
+          "windowPinyin": "zhi|yi",
+          "windowText": "之一",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhi1|yi1"
+          },
+          "builtKey": "zhi1|yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [
+            "之一"
+          ],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:8",
+          "windowPinyin": "zhi|yi|an",
+          "windowText": "之一按",
+          "rawStart": 5,
+          "rawEnd": 8,
+          "syllableStart": 5,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhi1|yi1|an1"
+          },
+          "builtKey": "zhi1|yi1|an1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:9",
+          "windowPinyin": "zhi|yi|an|cuo",
+          "windowText": "之一按错",
+          "rawStart": 5,
+          "rawEnd": 9,
+          "syllableStart": 5,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhi1|yi1|an1|cuo1"
+          },
+          "builtKey": "zhi1|yi1|an1|cuo1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "5:10",
+          "windowPinyin": "zhi|yi|an|cuo|wu",
+          "windowText": "之一按错误",
+          "rawStart": 5,
+          "rawEnd": 10,
+          "syllableStart": 5,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "zhi1|yi1|an1|cuo1|wu1"
+          },
+          "builtKey": "zhi1|yi1|an1|cuo1|wu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:7",
+          "windowPinyin": "yi",
+          "windowText": "一",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "syllableStart": 6,
+          "syllableEnd": 7,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1"
+          },
+          "builtKey": "yi1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:8",
+          "windowPinyin": "yi|an",
+          "windowText": "一按",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "syllableStart": 6,
+          "syllableEnd": 8,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|an1"
+          },
+          "builtKey": "yi1|an1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:9",
+          "windowPinyin": "yi|an|cuo",
+          "windowText": "一按错",
+          "rawStart": 6,
+          "rawEnd": 9,
+          "syllableStart": 6,
+          "syllableEnd": 9,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|an1|cuo1"
+          },
+          "builtKey": "yi1|an1|cuo1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:10",
+          "windowPinyin": "yi|an|cuo|wu",
+          "windowText": "一按错误",
+          "rawStart": 6,
+          "rawEnd": 10,
+          "syllableStart": 6,
+          "syllableEnd": 10,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|an1|cuo1|wu1"
+          },
+          "builtKey": "yi1|an1|cuo1|wu1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        },
+        {
+          "windowId": "6:11",
+          "windowPinyin": "yi|an|cuo|wu|l",
+          "windowText": "一按错误率",
+          "rawStart": 6,
+          "rawEnd": 11,
+          "syllableStart": 6,
+          "syllableEnd": 11,
+          "readinessNo": {
+            "state": "caller_disabled"
+          },
+          "readinessYes": {
+            "state": "ready",
+            "tonePinyinKey": "yi1|an1|cuo1|wu1|l1"
+          },
+          "builtKey": "yi1|an1|cuo1|wu1|l1",
+          "observedHitCount": 0,
+          "cfHitSurfaces": [],
+          "expectedAtomsInCf": []
+        }
+      ],
+      "stageOk": {
+        "FORMAL_SOURCE": false,
+        "SQLITE": false,
+        "EXACT_RECALL": false,
+        "WINDOW_CANDIDATE": false,
+        "LEXICAL_EDGE": false,
+        "SEGMENTATION_PATH": false,
+        "DOMAIN_BUDGET": false,
+        "ASSEMBLY": false,
+        "CROSSPATH": false,
+        "KENLM_INPUT": false
+      },
+      "FIRST_MISSING_STAGE": "SQLITE",
+      "primaryRootCause": "LEXICON_TERM_MISSING",
+      "secondaryCauses": [
+        "missing:阈值"
+      ],
+      "capabilityClass": "DATA",
+      "kenlmInputTexts": [
+        "熔断策略阈之一按错误率重新校准。"
+      ],
+      "kenlmCandidateCount": 1,
+      "correctTextPresent": false,
+      "latticeTrace": {
+        "windowCount": 65,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 65,
+        "lexicalEdgeCount": 0,
+        "fallbackEdgeCount": 15,
+        "edgeCountAfterFallback": 15,
+        "fallbackInjectionCount": 15,
+        "fallbackInjectionRanges": [
+          {
+            "start": 0,
+            "end": 15
+          }
+        ],
+        "completePathCount": 1,
+        "retainedCompletePathCount": 1,
+        "prunedPathCount": 0,
+        "materializedPathCount": 1,
+        "coverageStatus": "complete",
+        "logicalWindowRecallCount": 65,
+        "sqlQueryCount": 0,
+        "pathCapEvents": []
+      },
+      "phase1Diagnostics": {
+        "windowCount": 65,
+        "blockedWindowCount": 0,
+        "recallableWindowCount": 65,
+        "logicalWindowRecallCount": 65,
+        "windowNoCandidateCount": 65,
+        "theoreticalWindowCount": 65,
+        "canonicalRecallQueryCount": 65,
+        "uniqueRecallKeyCount": 65,
+        "cacheHitCount": 0,
+        "cacheMissCount": 65,
+        "physicalSqlStatementCount": 0,
+        "edgeCount": 0,
+        "candidateCount": 0,
+        "singleCharWindowCount": 15,
+        "singleCharRecallCount": 15,
+        "singleCharHitCount": 0,
+        "singleCharCandidateCount": 0,
+        "singleCharCandidateCapHitCount": 0,
+        "singleCharLexicalEdgeCount": 0,
+        "latencyMs": 27,
+        "heapDeltaBytes": null,
+        "harnessOnly": true
+      }
+    }
+  ]
+}

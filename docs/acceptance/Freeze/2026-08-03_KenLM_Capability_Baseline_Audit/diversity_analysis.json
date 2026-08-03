@@ -1,0 +1,76 @@
+{
+  "dialog_200": {
+    "suite": "dialog_200",
+    "n": 200,
+    "onlyRawDupOrIdenticalPool": 200,
+    "withDistinctAltText": 0,
+    "maxDistinctTextsPerCase": 1,
+    "casesWithNonZeroMaxDelta": 0
+  },
+  "noise_inventory": {
+    "suite": "noise_inventory",
+    "n": 7,
+    "onlyRawDupOrIdenticalPool": 7,
+    "withDistinctAltText": 0,
+    "maxDistinctTextsPerCase": 1,
+    "casesWithNonZeroMaxDelta": 0
+  },
+  "noiseDetail": [
+    {
+      "caseId": "nn-train-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "我闷蒸在升级公司内部的专家系统平台。"
+      ]
+    },
+    {
+      "caseId": "nn-train-01b",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "我闷蒸在训练神经网络模型。"
+      ]
+    },
+    {
+      "caseId": "center-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "微服务会定时向注册忠心上报健康状态。"
+      ]
+    },
+    {
+      "caseId": "snack-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "客房里的迷你吧提供饮料和消失。"
+      ]
+    },
+    {
+      "caseId": "sync-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "回归测试报告已精通步给质量保障团队。"
+      ]
+    },
+    {
+      "caseId": "trigger-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "调用下游超时后会出发熔断策略保护。"
+      ]
+    },
+    {
+      "caseId": "threshold-01",
+      "class": "A",
+      "expectedAvail": "false",
+      "distinctTexts": [
+        "熔断策略阈之一按错误率重新校准。"
+      ]
+    }
+  ]
+}

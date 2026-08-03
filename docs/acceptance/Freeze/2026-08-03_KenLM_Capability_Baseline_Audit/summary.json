@@ -1,0 +1,440 @@
+{
+  "freezeBaseline": "FW_V4_FREEZE_2026_08_03",
+  "modelIdentity": {
+    "modelPath": "d:\\Programs\\github\\lingua_1\\kenLM\\model\\zh_char_3gram.trie.bin",
+    "modelExists": true,
+    "modelSizeBytes": 34995949,
+    "modelSha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "queryPath": "query.exe",
+    "queryExists": false,
+    "runnable": true,
+    "kenlmStatus": {
+      "enabled": true,
+      "modelPath": "d:\\Programs\\github\\lingua_1\\kenLM\\model\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "ngramOrder": 3,
+    "scoreMode": "raw_log_delta",
+    "minDeltaToReplace": 3,
+    "maxSentenceCandidates": 16,
+    "kenlmSubprocessTimeoutMs": 5000,
+    "kenlmSubprocessMaxLines": 17,
+    "freezeBaseline": "FW_V4_FREEZE_2026_08_03"
+  },
+  "invocationProof": {
+    "ok": true,
+    "reason": "ok",
+    "wallMs": 700,
+    "sampleScore": -13.089462,
+    "sampleOov": 0,
+    "tokenizedSample": "你 好 世 界",
+    "warmupTimeoutMsUsed": 120000,
+    "productionTimeoutMs": 5000,
+    "commandPlan": {
+      "note": "spawn via planKenlmSpawn(queryPath, modelPath); stdin = tokenized lines; Windows uses WSL when query.exe missing",
+      "modelPath": "d:\\Programs\\github\\lingua_1\\kenLM\\model\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe"
+    }
+  },
+  "metrics": {
+    "totalCases": 200,
+    "completedCases": 200,
+    "failedCases": 0,
+    "casesWith1Candidate": 0,
+    "casesWith2PlusCandidates": 200,
+    "averageCandidateCount": 2,
+    "maxCandidateCount": 2,
+    "rawOnlyCases": 0,
+    "expectedCandidateAvailableCases": 200,
+    "expectedCandidateAvailabilityRate": 1,
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "PASS": 200,
+    "correctTop1RateAmongAvailable": 1,
+    "correctTop3RateAmongAvailable": 1,
+    "finalSelectionAccuracyAmongAvailable": 1,
+    "rawPreservationAccuracy": 1,
+    "wrongReplacementRate": 0,
+    "missedCorrectionRate": 0,
+    "averageTop1Margin": 0,
+    "averageCorrectVsRawDelta": 0,
+    "scoreTieRate": 1,
+    "note_dialog200_raw_equals_expected": "dialog_200 restored corpus: text===expectedText for all cases → RAW_ALREADY_CORRECT dominates; ranking competition still measured among candidates."
+  },
+  "performanceBaseline": {
+    "preKenlm_p50": 55.02629995346069,
+    "preKenlm_p95": 96.05759978294373,
+    "preKenlm_max": 120.23399996757507,
+    "kenlmOnly_p50": 654.1531999111176,
+    "kenlmOnly_p95": 691.3003001213074,
+    "kenlmOnly_max": 704.0743000507355,
+    "totalPost_p50": 706.5653002262115,
+    "totalPost_p95": 764.1750998497009,
+    "totalPost_max": 797.1677000522614,
+    "warmupProofWallMs": 700,
+    "note": "Each case calls scoreBatch twice (export + production pick); kenlmOnlyMs is first batch only. pickMs includes second batch."
+  },
+  "classCount": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "PASS": 200
+  },
+  "tagHist": {
+    "RAW_ALREADY_CORRECT": 200,
+    "MULTI_REPLACEMENT": 200,
+    "LONG_UTTERANCE": 5
+  },
+  "noiseResolved": [
+    {
+      "caseId": "nn-train-01",
+      "noiseSurface": "我闷蒸在",
+      "correctSurface": "我们正在",
+      "rawText": "我闷蒸在升级公司内部的专家系统平台。",
+      "expectedText": "我们正在升级公司内部的专家系统平台。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "我闷蒸在升级公司内部的专家系统平台。",
+      "top3": [
+        {
+          "text": "我闷蒸在升级公司内部的专家系统平台。",
+          "score": -36.002693,
+          "rank": 1
+        },
+        {
+          "text": "我闷蒸在升级公司内部的专家系统平台。",
+          "score": -36.002693,
+          "rank": 2
+        }
+      ],
+      "selectedText": "我闷蒸在升级公司内部的专家系统平台。",
+      "maxDelta": 0,
+      "baselineRawScore": -36.002693,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "我闷蒸在升级公司内部的专家系统平台。",
+          "score": -36.002693,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "我闷蒸在升级公司内部的专家系统平台。",
+          "score": -36.002693,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "nn-train-01b",
+      "noiseSurface": "闷蒸",
+      "correctSurface": "正在",
+      "rawText": "我闷蒸在训练神经网络模型。",
+      "expectedText": "我们正在训练神经网络模型。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "我闷蒸在训练神经网络模型。",
+      "top3": [
+        {
+          "text": "我闷蒸在训练神经网络模型。",
+          "score": -28.84609,
+          "rank": 1
+        },
+        {
+          "text": "我闷蒸在训练神经网络模型。",
+          "score": -28.84609,
+          "rank": 2
+        }
+      ],
+      "selectedText": "我闷蒸在训练神经网络模型。",
+      "maxDelta": 0,
+      "baselineRawScore": -28.84609,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "我闷蒸在训练神经网络模型。",
+          "score": -28.84609,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "我闷蒸在训练神经网络模型。",
+          "score": -28.84609,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "center-01",
+      "noiseSurface": "忠心",
+      "correctSurface": "中心",
+      "rawText": "微服务会定时向注册忠心上报健康状态。",
+      "expectedText": "微服务会定时向注册中心上报健康状态。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "微服务会定时向注册忠心上报健康状态。",
+      "top3": [
+        {
+          "text": "微服务会定时向注册忠心上报健康状态。",
+          "score": -43.01298,
+          "rank": 1
+        },
+        {
+          "text": "微服务会定时向注册忠心上报健康状态。",
+          "score": -43.01298,
+          "rank": 2
+        }
+      ],
+      "selectedText": "微服务会定时向注册忠心上报健康状态。",
+      "maxDelta": 0,
+      "baselineRawScore": -43.01298,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "微服务会定时向注册忠心上报健康状态。",
+          "score": -43.01298,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "微服务会定时向注册忠心上报健康状态。",
+          "score": -43.01298,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "snack-01",
+      "noiseSurface": "消失",
+      "correctSurface": "小食",
+      "rawText": "客房里的迷你吧提供饮料和消失。",
+      "expectedText": "客房里的迷你吧提供饮料和小食。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "客房里的迷你吧提供饮料和消失。",
+      "top3": [
+        {
+          "text": "客房里的迷你吧提供饮料和消失。",
+          "score": -34.618904,
+          "rank": 1
+        },
+        {
+          "text": "客房里的迷你吧提供饮料和消失。",
+          "score": -34.618904,
+          "rank": 2
+        }
+      ],
+      "selectedText": "客房里的迷你吧提供饮料和消失。",
+      "maxDelta": 0,
+      "baselineRawScore": -34.618904,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "客房里的迷你吧提供饮料和消失。",
+          "score": -34.618904,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "客房里的迷你吧提供饮料和消失。",
+          "score": -34.618904,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "sync-01",
+      "noiseSurface": "已精通步",
+      "correctSurface": "已经同步",
+      "rawText": "回归测试报告已精通步给质量保障团队。",
+      "expectedText": "回归测试报告已经同步给质量保障团队。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "回归测试报告已精通步给质量保障团队。",
+      "top3": [
+        {
+          "text": "回归测试报告已精通步给质量保障团队。",
+          "score": -42.77955,
+          "rank": 1
+        },
+        {
+          "text": "回归测试报告已精通步给质量保障团队。",
+          "score": -42.77955,
+          "rank": 2
+        }
+      ],
+      "selectedText": "回归测试报告已精通步给质量保障团队。",
+      "maxDelta": 0,
+      "baselineRawScore": -42.77955,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "回归测试报告已精通步给质量保障团队。",
+          "score": -42.77955,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "回归测试报告已精通步给质量保障团队。",
+          "score": -42.77955,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "trigger-01",
+      "noiseSurface": "出发",
+      "correctSurface": "触发",
+      "rawText": "调用下游超时后会出发熔断策略保护。",
+      "expectedText": "调用下游超时后会触发熔断策略保护。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "调用下游超时后会出发熔断策略保护。",
+      "top3": [
+        {
+          "text": "调用下游超时后会出发熔断策略保护。",
+          "score": -47.24251,
+          "rank": 1
+        },
+        {
+          "text": "调用下游超时后会出发熔断策略保护。",
+          "score": -47.24251,
+          "rank": 2
+        }
+      ],
+      "selectedText": "调用下游超时后会出发熔断策略保护。",
+      "maxDelta": 0,
+      "baselineRawScore": -47.24251,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "调用下游超时后会出发熔断策略保护。",
+          "score": -47.24251,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "调用下游超时后会出发熔断策略保护。",
+          "score": -47.24251,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    },
+    {
+      "caseId": "threshold-01",
+      "noiseSurface": "阈之一",
+      "correctSurface": "阈值",
+      "rawText": "熔断策略阈之一按错误率重新校准。",
+      "expectedText": "熔断策略阈值已按错误率重新校准。",
+      "status": "RESOLVED",
+      "reason": "",
+      "candidateCount": 2,
+      "expectedCandidateAvailable": false,
+      "expectedRank": "UNAVAILABLE",
+      "top1Text": "熔断策略阈之一按错误率重新校准。",
+      "top3": [
+        {
+          "text": "熔断策略阈之一按错误率重新校准。",
+          "score": -45.681896,
+          "rank": 1
+        },
+        {
+          "text": "熔断策略阈之一按错误率重新校准。",
+          "score": -45.681896,
+          "rank": 2
+        }
+      ],
+      "selectedText": "熔断策略阈之一按错误率重新校准。",
+      "maxDelta": 0,
+      "baselineRawScore": -45.681896,
+      "problemClass": "A",
+      "allCandidates": [
+        {
+          "id": "raw",
+          "text": "熔断策略阈之一按错误率重新校准。",
+          "score": -45.681896,
+          "delta": 0,
+          "rank": 1,
+          "isRaw": true
+        },
+        {
+          "id": "candidate:0",
+          "text": "熔断策略阈之一按错误率重新校准。",
+          "score": -45.681896,
+          "delta": 0,
+          "rank": 2,
+          "isRaw": true
+        }
+      ]
+    }
+  ],
+  "rawIdentityBlockers": [],
+  "unavailableFields": [
+    {
+      "field": "sourcePath / bucketDomain on many candidates",
+      "valueWritten": "UNAVAILABLE when SentenceCombination lacks fields",
+      "owner": "CrossPath merge / SentenceCombination DTO"
+    },
+    {
+      "field": "isCanonical",
+      "valueWritten": "false unless combo.isCanonical===true",
+      "owner": "Assembly combination marker"
+    },
+    {
+      "field": "model vocabulary size / pruning params",
+      "valueWritten": "MODEL_PROVENANCE_INCOMPLETE",
+      "owner": "kenLM training logs / missing checksums.txt"
+    }
+  ],
+  "outDir": "D:\\Programs\\github\\lingua_1\\docs\\tone-v2\\_audit_scratch\\kenlm_capability_baseline_2026_08_03"
+}

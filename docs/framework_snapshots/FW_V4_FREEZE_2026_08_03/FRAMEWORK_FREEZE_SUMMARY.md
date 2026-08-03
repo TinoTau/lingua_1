@@ -119,15 +119,23 @@ ASR Raw → Syllable Coordinate → Lexical Window → Hard Block
 
 ## Current SSOT Documents
 
-1. `docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`
-2. `docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`
-3. `docs/tone-v2/Runtime_SSOT_Contract_Freeze.md`
-4. `docs/tone-v2/FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md`
-5. `docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md`
-6. `docs/fw-detector/freeze/FROZEN.md`
-7. `docs/fw-detector/kenlm/KENLM_RUNTIME.md`
-8. `docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md` (Supporting)
-9. This pack: `docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/`
+0. `docs/INDEX.md` (unified entry) · `docs/current/DOCUMENTATION_GOVERNANCE.md` (Documentation Governance Sole Authority)
+1. `docs/current/INDEX.md`
+2. `docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`
+3. `docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`
+4. `docs/tone-v2/Runtime_SSOT_Contract_Freeze.md`
+5. `docs/tone-v2/FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md`
+6. `docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md`
+7. `docs/fw-detector/freeze/FROZEN.md`
+8. `docs/fw-detector/kenlm/KENLM_RUNTIME.md`
+9. `docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md` (Supporting)
+10. This pack: `docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/`
+
+Reading order update (navigation only — **no** change to frozen business conclusions):
+
+```text
+Documentation Governance → this Snapshot → CURRENT Index → Sole Authorities → Supporting → Acceptance
+```
 
 Snapshot **binds** Sole Authorities; it does **not** replace them.
 

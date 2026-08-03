@@ -1,0 +1,8 @@
+caseId,noiseSurface,correctSurface,FIRST_MISSING_STAGE,primaryRootCause,secondaryCauses,capabilityClass,dataIssue,capacityIssue,runtimeIssue,archLimit,kenlmOptimizationAllowed
+nn-train-01,我闷蒸在,我们正在,EXACT_RECALL,LEXICON_KEY_ERROR,我们:tone_pinyin_key=wo3|men0|acoustic_tone0_invalid|PLAIN_FALLBACK_NOT_REACHED|COUNTERFACTUAL_NEXT:ASSEMBLY_COMPOSITION_MISS,DATA,true,false,false,false,false
+nn-train-01b,闷蒸,正在,EXACT_RECALL,RECALL_QUERY_MISS,noiseWindowPinyin=men|zheng|correctPinyin=zheng|zai|PLAIN_FALLBACK_NOT_REACHED,DATA,true,false,false,false,false
+center-01,忠心,中心,EXACT_RECALL,RECALL_QUERY_MISS,PLAIN_FALLBACK_NOT_REACHED|tone_readiness=caller_disabled|no_pattern|COUNTERFACTUAL_RECALL_OK_中心|COUNTERFACTUAL_NEXT:check_edge_assembly,DATA,true,false,false,false,false
+snack-01,消失,小食,SQLITE,LEXICON_TERM_MISSING,missing:小食,DATA,true,false,false,false,false
+sync-01,已精通步,已经同步,EXACT_RECALL,RECALL_QUERY_MISS,PLAIN_FALLBACK_NOT_REACHED|COUNTERFACTUAL_ATOMS_RECALLABLE_ON_NOISE_WINDOWS|COUNTERFACTUAL_NEXT:ASSEMBLY_COMPOSITION_MISS,DATA,true,false,false,false,false
+trigger-01,出发,触发,SQLITE,LEXICON_TERM_MISSING,missing:触发,DATA,true,false,false,false,false
+threshold-01,阈之一,阈值,SQLITE,LEXICON_TERM_MISSING,missing:阈值,DATA,true,false,false,false,false

@@ -1,0 +1,14 @@
+metric,value
+preKenlm_p50,55.02629995346069
+preKenlm_p95,96.05759978294373
+preKenlm_max,120.23399996757507
+kenlmOnly_p50,654.1531999111176
+kenlmOnly_p95,691.3003001213074
+kenlmOnly_max,704.0743000507355
+totalPost_p50,706.5653002262115
+totalPost_p95,764.1750998497009
+totalPost_max,797.1677000522614
+warmupProofWallMs,700
+note,Each case calls scoreBatch twice (export + production pick); kenlmOnlyMs is first batch only. pickMs includes second batch.
+dialog_completed,200
+avg_candidate_count,2

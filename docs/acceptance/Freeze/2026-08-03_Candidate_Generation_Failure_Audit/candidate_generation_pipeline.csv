@@ -1,0 +1,8 @@
+caseId,noiseSurface,correctSurface,rawText,expectedText,ExpectedCandidate,RecallCandidate,LexicalEdge,SegmentationPath,AssemblySentence,CrossPathSentence,KenLMCandidate,FIRST_FAILURE,observedRecallCandidateCount,observedEdgeCount,crossPathCandidateCount,correctCandidateGenerated
+nn-train-01,我闷蒸在,我们正在,我闷蒸在升级公司内部的专家系统平台。,我们正在升级公司内部的专家系统平台。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+nn-train-01b,闷蒸,正在,我闷蒸在训练神经网络模型。,我们正在训练神经网络模型。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+center-01,忠心,中心,微服务会定时向注册忠心上报健康状态。,微服务会定时向注册中心上报健康状态。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+snack-01,消失,小食,客房里的迷你吧提供饮料和消失。,客房里的迷你吧提供饮料和小食。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+sync-01,已精通步,已经同步,回归测试报告已精通步给质量保障团队。,回归测试报告已经同步给质量保障团队。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+trigger-01,出发,触发,调用下游超时后会出发熔断策略保护。,调用下游超时后会触发熔断策略保护。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
+threshold-01,阈之一,阈值,熔断策略阈之一按错误率重新校准。,熔断策略阈值已按错误率重新校准。,YES,NO,NO,NO,NO,NO,NO,RecallCandidate,0,0,1,false
