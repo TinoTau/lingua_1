@@ -1,0 +1,57 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "KENLM_PHASE01_BASELINE_AUDIT",
+  "phase": "KENLM Phase 01",
+  "nature": "READ_ONLY_SCOREBATCH_ON_REAL_KENLM_INPUT",
+  "modelIdentity": {
+    "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+    "modelSha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "modelSizeBytes": 34995949,
+    "queryPath": "query.exe",
+    "runnable": true,
+    "status": {
+      "enabled": true,
+      "modelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "queryPath": "query.exe",
+      "failOpen": true
+    },
+    "scoreMode": "raw_log_batch_score"
+  },
+  "warmup": {
+    "ok": true,
+    "wallMs": 8383
+  },
+  "metrics": {
+    "kenlmInputCasesTotal": 200,
+    "competitionCasesDistinctText": 75,
+    "excludedNoCompetition": 125,
+    "candidatesScored": 212,
+    "rawTop1Count": 57,
+    "nonRawTop1Count": 18,
+    "rawTop1Rate": 0.76,
+    "averageAbsScoreGapVsRaw": 4.513636627737223,
+    "medianAbsScoreGapVsRaw": 4.675489999999996,
+    "maxAbsScoreGapVsRaw": 10.801809999999989,
+    "minAbsScoreGapVsRaw": 0.19932000000000016,
+    "candidateCountHistogram": {
+      "2": 46,
+      "3": 16,
+      "4": 8,
+      "8": 5
+    }
+  },
+  "answers": {
+    "Q1_realCompetitionCases": 75,
+    "Q2_candidatesKenlmRanked": 212,
+    "Q3_rawLongTermFirst": "NO — Raw Top1 only 76.0%",
+    "Q4_clearRankingAbility": "YES_WITH_CAVEAT — discriminative score gaps exist on real distinct pools; interpret against Raw-vs-alt quality (alts may be noise variants)",
+    "Q5_next": "Both: keep collecting harder Raw+Correct repair competitions; corpus/model tuning only after labeling whether non-raw Top1 is desirable. Prefer measuring on repair-success pools (e.g. center-01 class), not only ASR-noise variants."
+  },
+  "rankingMetricsNote": "No expectedText used. Metrics are Raw-vs-alternates on real KenLM inputs only (not correction accuracy).",
+  "evidencePaths": {
+    "formalPack": "docs/acceptance/Audit/2026-08-04_KenLM_Phase01_Baseline/",
+    "kenlmInputSource": "docs/tone-v2/_audit_scratch/dialog200_candidate_sentence_export/dialog200_all_candidate_sentences.csv#stage=kenlmInput",
+    "probe": "docs/tone-v2/_audit_scratch/kenlm-phase01-score-competition.mjs"
+  },
+  "finalVerdict": "KENLM_BASELINE_READY"
+}

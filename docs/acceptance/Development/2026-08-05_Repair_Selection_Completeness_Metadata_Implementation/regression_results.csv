@@ -1,0 +1,7 @@
+command,scope,result,notes
+npx jest --testPathPattern=derive-repair-selection-completeness|build-sentence-candidates|merge-cross-path|rerank-fw-sentences,Assembly+CrossPath+KenLM unit,PASS,33 tests
+npx jest --testPathPattern=freeze-contract|domain-presence-vote-acceptance|span-assembly-v4-diagnostics|...,Freeze + related,PASS,144 tests in targeted run
+npm run docs:check,Documentation governance,PASS,ok=true
+npm run accept:domain-multibucket-kenlm,KENLM integration acceptance,ACCEPTANCE_PASS,sampleCount=20 kenlmTop1=0.95
+npm run test:fw-detector (full),fw-detector suite,PARTIAL_ENV,66 suites PASS; 1 suite FAIL better-sqlite3 NODE_MODULE_VERSION mismatch (pre-existing env; not caused by this change)
+dialog_200 full audio E2E,200/200 contract,NOT_RE_RUN_THIS_ROUND,Requires live node; freeze baseline remains 200/200; metadata-only path has no pick/admission change

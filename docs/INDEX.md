@@ -1,7 +1,7 @@
 ---
 title: Lingua Docs — Unified Entry
 status: OPERATING_GUIDE
-baseline: FW_V4_FREEZE_2026_08_03
+baseline: FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
 ---
 
 # Lingua Documentation — Start Here
@@ -20,7 +20,7 @@ baseline: FW_V4_FREEZE_2026_08_03
 | Step | Document |
 |------|----------|
 | Documentation Governance | [`current/DOCUMENTATION_GOVERNANCE.md`](./current/DOCUMENTATION_GOVERNANCE.md) |
-| Current recovery baseline | [`framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](./framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) |
+| Current recovery baseline | [`framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md`](./framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md) |
 | CURRENT SSOT Index | [`current/INDEX.md`](./current/INDEX.md) |
 
 ## Current SSOT
@@ -30,6 +30,8 @@ baseline: FW_V4_FREEZE_2026_08_03
 ## Framework Snapshot
 
 [`framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md`](./framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md)
+
+Previous historical baseline (do not rewrite): [`framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](./framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)
 
 ## Supporting Contracts
 

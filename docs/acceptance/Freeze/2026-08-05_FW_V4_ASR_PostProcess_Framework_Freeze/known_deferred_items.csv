@@ -1,0 +1,5 @@
+itemId,name,classification,currentImpact,reopenCondition,owner,status
+D1,Sentence Semantic Diversity,DEFERRED_NO_OWNER,Current Top16 not saturated; near-dups quality issue only,Reopen only with real starvation evidence,UNASSIGNED,DEFERRED
+D2,allocateDomainBucketSentenceBudget return unused,KNOWN_NON_BLOCKING_INCONSISTENCY,No current output impact (pools << 16),Reopen when multi-bucket cap pressure is observed,Assembly_orchestrator,REGISTERED
+D3,Interactive Recognition Repair,DEFERRED_FUTURE_MODULE,Not part of current framework,Start under independent architecture audit,FUTURE,DEFERRED
+D4,Wikipedia KenLM Corpus V1,PRODUCTION_REJECTED_REFERENCE_MODEL,No verified quality gain vs production,Reuse only as experimental reference,KenLM_experiment,REJECTED_FOR_PRODUCTION

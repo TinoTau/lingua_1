@@ -1,0 +1,8 @@
+module,role,mayCompute,mayFilter,mayRank,mayRead,compliance
+buildSentenceCandidates,Sole Owner,YES,NO,NO (score-only sort unchanged),YES,PASS
+deriveRepairSelectionCompleteness,Assembly-local pure helper,YES (called only by Assembly),NO,NO,YES,PASS
+mergeCrossPathSentenceCandidates,CrossPath merge,NO,NO,NO,pass-through only,PASS
+rerankFwSentences,KenLM pick,NO,NO,NO (text+score only),NO,PASS
+kenlm/*,KenLM adapters,NO,NO,NO,NO,PASS
+v4-diagnostics-mappers,Diagnostics mirror,NO,NO,NO,YES (copy),PASS
+JobResult,External transport,NO,NO,NO,unchanged,PASS

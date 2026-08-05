@@ -68,8 +68,8 @@ Shadow Beam / Graph Domain Vote / Domain Rerank / Parent Domain Vote：**REMOVED
 | `filterDomainCandidatesPerSpan`（内联） | vote + pools | sameDomain + Base |
 | `selectPerSpanCandidates` | filtered sets | 按优先级选 per-span |
 | `assembleDomainAwareSpanSets` | selections | `SpanReplacementPick[][]` |
-| `buildSentenceCandidates` | spanSets + cap | sentence candidates |
-| `mergeCrossBucketSentenceCandidates` | per-bucket lists | text-deduped pool |
+| `buildSentenceCandidates` | spanSets + cap | sentence candidates（含 Formula A metadata） |
+| `mergeCrossBucketSentenceCandidates` | per-bucket lists | text-deduped pool（透传 metadata，不重算） |
 | `runSpanAssemblyV4Orchestrator` | `recallDomainScope` + raw/runtime/… | metrics + spanSets + kenlm pool |
 
 **Per-span 选择优先级**：`sameDomain > base > fallback > canonical`
@@ -89,9 +89,21 @@ Shadow Beam / Graph Domain Vote / Domain Rerank / Parent Domain Vote：**REMOVED
 
 // DomainAwareSpanReplacementPick
 { word, span, score, recallSource, repairTarget, domains? }
+
+// SentenceCombination（Assembly Sole Owner；metadata-only）
+{
+  text, replacements[], candidateScore,
+  repairSelectionCompleteness, // RAW | PARTIAL_SELECTION | COMPLETE_SELECTION
+  repairPickCount,
+  unrepairedRepairableSlotCount
+}
+// repairSelectionCompleteness = Formula A Slot Coverage（replacement selection completeness）
+// 不表示 semantic correctness；raw-only slot 不计入 unrepairedRepairableSlotCount
 ```
 
 KenLM / `SpanReplacementPick` 路径不得携带 domains 元数据。
+KenLM **不得**读取 `repairSelectionCompleteness` 三字段。
+CrossPath **仅**透传，不得重算 / 过滤 / 排序。
 
 ---
 
@@ -107,6 +119,43 @@ KenLM / `SpanReplacementPick` 路径不得携带 domains 元数据。
 - 每桶 `buildSentenceCandidates(cap = MAX_SENTENCE_CANDIDATES)`。
 - 不得用 `floor(16 / bucketCount)` 作为最终配额再合并。
 - `retainedDomains.length > 16` 时 `allocateDomainBucketSentenceBudget` 须显式失败。
+
+### Known Non-Blocking Inconsistency（2026-08-05 登记）
+
+`allocateDomainBucketSentenceBudget` **被调用**且返回 per-bucket budget，但返回值**未**传入 `buildSentenceCandidates`；每桶仍使用全局 cap **16**。当前仅利用 `floor(16/bucketCount) < 1` 作为 guard。
+
+```text
+Classification: KNOWN_NON_BLOCKING_INCONSISTENCY
+Reason: dialog_200 pools << 16；无现阶段输出影响证据
+本轮不得修改。Reopen when multi-bucket cap pressure is observed.
+```
+
+---
+
+## 6A. Combination Enumeration Algorithm（归档 · 2026-08-05）
+
+```text
+Interval Non-Overlap Repair-Subset DFS
++ Canonical Gap Fill
++ candidateScore Sort
++ Exact-Text Dedup
++ Output Cap
+```
+
+| Limit | Value |
+|-------|------:|
+| `maxIntervalEnumNodes` | 1024 |
+| `maxIntervalRepairPicksPerPath` | 16 |
+| `maxSentenceCandidates` | 16 |
+| per-span candidate limit | 8 / 6 / 4 |
+
+Assembly 枚举的是**合法 Replacement Subset**，不是语义候选聚类；不判断 Semantic Correctness / Sentence Similarity / Near-Duplicate Meaning。
+
+**Top16 利用率（Enumeration Audit）：** dialog_200 mean pool ≈1.685；competition mean ≈2.827；max=8；full-16=0 → **非容量瓶颈**。
+
+**Candidate Diversity：** 暂无 Sole Owner；暂停开发（见 Snapshot Known Limitations）。
+
+Code: `build-sentence-candidates.ts` · Evidence: Assembly Enumeration Audit 2026-08-05
 
 ---
 

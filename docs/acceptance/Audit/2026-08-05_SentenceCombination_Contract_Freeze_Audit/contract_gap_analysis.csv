@@ -1,0 +1,8 @@
+gapId,description,severity,blocksOwnershipFreeze,blocksFormulaImplementation,resolution
+G1,No sentence-level repairCompleteness field on SentenceCombination,NO_REPAIR_COMPLETENESS_CONTRACT,false,true,Add Assembly-owned metadata after ownership freeze
+G2,No sole-owner statement for completeness in 06_Ownership,Ownership silence,false,false,Record Assembly as Sole Owner in next contract update
+G3,PARTIAL vs COMPLETE formula not yet production-frozen,Audit heuristics only,false,true,Separate Completeness Rule design under Assembly owner — not CrossPath/KenLM
+G4,Risk CrossPath invents text heuristics without metadata,Second owner,true if allowed,false,Forbid recompute; CrossPath consume-only
+G5,Risk metadata used as silent admission Gate,Hidden Gate,false,false,Metadata-only first; Admission Contract explicit if/when filtering
+G6,KenLM candidateId provenance debt,Known limitation 04/11,false,false,Orthogonal; do not conflate with completeness ownership
+G7,Cannot derive completeness from candidateScore alone,Score ≠ completeness,false,false,Do not overload candidateScore

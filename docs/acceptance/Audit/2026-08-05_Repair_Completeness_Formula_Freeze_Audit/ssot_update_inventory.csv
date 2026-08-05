@@ -1,0 +1,7 @@
+docPath,updateWhenImplementing,changeType,notes
+docs/framework_snapshots or current SentenceCombination Data Contract,YES,ADD_FIELD,Document repairSelectionCompleteness enum + counts — do not fork LATEST/V2
+docs/framework_snapshots/.../06_Ownership.md,YES,ADD_ROW,Sole Owner: Assembly for repairSelectionCompleteness
+docs/fw-detector/assembly/FROZEN_V1_2.md,YES,SECTION,Assembly produces metadata at buildSentenceCandidates
+Diagnostics Contract,YES,EXPORT_ONLY,May display field; must not redefine
+CrossPath Admission Contract,NO_THIS_ROUND,FUTURE,Only if/when admission consumes metadata
+KenLM Runtime Boundary,CONFIRM_UNCHANGED,NO_READ,KenLM remains unaware

@@ -1,0 +1,53 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "benchmark": "KENLM_BENCHMARK_V1",
+  "task": "KENLM_PHASE03_FIRST_TRAINING",
+  "nature": "MODEL_ONLY_FIRST_TRAIN_AND_BENCHMARK_REGRESSION",
+  "finalVerdict": "KENLM_FIRST_TRAIN_NOT_BETTER",
+  "answers": {
+    "Q1_trainSuccess": true,
+    "Q2_newBetterThanOld": false,
+    "Q3_improvedCases": 0,
+    "Q4_regressedCases": 0,
+    "Q5_worthReplaceProduction": false
+  },
+  "metrics": {
+    "cases": 75,
+    "correctBefore": 67,
+    "correctAfter": 67,
+    "unchanged": 75,
+    "improved": 0,
+    "regressed": 0,
+    "netGain": 0,
+    "top1Changed": 0,
+    "top1ChangedAndMatchesHuman": 0,
+    "old": {
+      "rawTop1": 57,
+      "nonRawTop1": 18,
+      "avgAbsGapVsRaw": 4.513636627737223,
+      "medianAbsGapVsRaw": 4.675489999999996
+    },
+    "new": {
+      "rawTop1": 57,
+      "nonRawTop1": 18,
+      "avgAbsGapVsRaw": 4.513636627737223,
+      "medianAbsGapVsRaw": 4.675489999999996
+    },
+    "failuresAfterTrain": 8,
+    "failureClasses": {
+      "Domain": 4,
+      "Language": 4
+    },
+    "sameBinaryAsOld": true
+  },
+  "models": {
+    "old": {
+      "path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+      "sha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c"
+    },
+    "new": {
+      "path": "D:\\Programs\\github\\lingua_1\\kenLM\\model\\phase03_first_train\\zh_char_3gram.trie.bin",
+      "sha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c"
+    }
+  }
+}

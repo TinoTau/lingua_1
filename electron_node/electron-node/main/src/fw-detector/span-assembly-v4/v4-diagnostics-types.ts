@@ -128,6 +128,10 @@ export type CombinationTrace = {
   delta: number;
   approved: boolean;
   rejectedReason?: 'below_min_delta' | 'picked_raw' | 'missing_repair_target';
+  /** Assembly Formula A metadata — observation only; does not gate pick. */
+  repairSelectionCompleteness?: import('../derive-repair-selection-completeness').RepairSelectionCompleteness;
+  repairPickCount?: number;
+  unrepairedRepairableSlotCount?: number;
 };
 
 export type CandidateLifecycleLayer =

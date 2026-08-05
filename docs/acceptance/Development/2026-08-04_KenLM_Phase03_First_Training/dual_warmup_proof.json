@@ -1,0 +1,10 @@
+{
+  "oldSha": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+  "newSha": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+  "sameBinary": true,
+  "note": "phase03_first_train.sh rebuilt char corpus (439490 lines) + lmplz -o 3 -S 50% + build_binary trie; output trie sha256 equals production",
+  "priorLiveWarmup": [
+    "[phase03-reg] warmup kenLM/zh_char_3gram.trie.bin ok=true ms=7613",
+    "[phase03-reg] warmup phase03_first_train/zh_char_3gram.trie.bin ok=true ms=519"
+  ]
+}

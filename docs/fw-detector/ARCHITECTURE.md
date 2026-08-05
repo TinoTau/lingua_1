@@ -60,8 +60,8 @@ Audio → ASR → rawAsrText freeze → FW_SPAN_DETECTOR → AGGREGATION → tex
 | Ranking | candidate-score · ED tie-break | [assembly/RANKING_V1_2.md](./assembly/RANKING_V1_2.md) |
 | Domain Vote formula | Fine-Span Presence Vote 计票 | [Runtime_SSOT_Contract_Freeze.md](../tone-v2/Runtime_SSOT_Contract_Freeze.md) |
 | Domain Vote caller | **Per SegmentationPath** | Lattice Architecture V1.0.0 |
-| Assembly | Path-local Multi-Bucket · global ≤16 | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) + Lattice Architecture |
-| KenLM | batch-only · raw_log_delta · cross-Path | [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md) |
+| Assembly | Path-local Multi-Bucket · global ≤16 · **Sole Owner of `repairSelectionCompleteness`** | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) + Lattice Architecture |
+| KenLM | batch-only · raw_log_delta · cross-Path · **unaware of repairSelectionCompleteness** | [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md) |
 | Context Prior | diagnostics-only · `applied:false` | [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md) |
 | Diagnostics | Path-aware summary/trace | [diagnostics/FROZEN.md](./diagnostics/FROZEN.md) |
 | Framework freeze registry | 冻结入口表 | [freeze/FROZEN.md](./freeze/FROZEN.md) |

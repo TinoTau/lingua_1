@@ -84,13 +84,22 @@ PrunedSegmentationPathTrace · Path-aware KenLM metadata mapping
 
 ## 4. SentenceCombination
 
-**代码：** `build-sentence-candidates.ts`
+**代码：** `build-sentence-candidates.ts`  
+**Sole Owner（metadata）：** `buildSentenceCandidates` + Assembly-local `deriveRepairSelectionCompleteness`
 
 ```typescript
+export type RepairSelectionCompleteness =
+  | 'RAW'
+  | 'PARTIAL_SELECTION'
+  | 'COMPLETE_SELECTION';
+
 type SentenceCombination = {
   text: string;
   replacements: SpanReplacementPick[];
   candidateScore: number;
+  repairSelectionCompleteness: RepairSelectionCompleteness;
+  repairPickCount: number;
+  unrepairedRepairableSlotCount: number;
 };
 ```
 
@@ -99,11 +108,16 @@ type SentenceCombination = {
 | `text` | 应用 replacements 后的整句 |
 | `replacements` | 有序 span 替换列表 |
 | `candidateScore` | 组合 recall 分之和 |
+| `repairSelectionCompleteness` | **Replacement selection completeness**（Formula A Slot Coverage）。**不**表示语义正确性 / 句子自然度 / 音频真实修复 |
+| `repairPickCount` | 当前组合中非 canonical replacement 数量 |
+| `unrepairedRepairableSlotCount` | 有非 canonical option 却未选 repair 的 slot 数；raw-only slot 不计 |
 
 | 允许 | 禁止 |
 |------|------|
-| diagnostics 镜像组合 | 改笛卡尔积 cap 语义（`maxSentenceCandidates` 属 config） |
+| diagnostics 镜像组合与三字段 | 改笛卡尔积 cap 语义（`maxSentenceCandidates` 属 config） |
+| CrossPath 原样透传三字段 | CrossPath / KenLM / orchestrator 重算或按字段过滤/排序 |
 | | 删除 `replacements` 结构 |
+| | 平行字段名（`repairCompleteness` / `isPartial` 等） |
 
 ---
 

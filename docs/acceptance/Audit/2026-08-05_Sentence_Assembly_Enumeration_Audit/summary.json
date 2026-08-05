@@ -1,0 +1,76 @@
+{
+  "task": "SENTENCE_ASSEMBLY_ENUMERATION_DIVERSITY_AUDIT",
+  "date": "2026-08-05",
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "nature": "READ_ONLY",
+  "finalVerdict": "ASSEMBLY_CONTRACT_INCOMPLETE",
+  "scope": {
+    "in": [
+      "buildSentenceCandidates",
+      "combination_enumeration",
+      "replacement_path_expansion",
+      "crossPath_input",
+      "candidate_diversity",
+      "duplication",
+      "top16_utilization"
+    ],
+    "out": ["Tone", "Recall", "KenLM_score", "Interactive_Repair"]
+  },
+  "algorithm": {
+    "name": "Interval_NonOverlap_RepairSubset_DFS",
+    "beam": false,
+    "bfs": false,
+    "full_cartesian_across_slots": false,
+    "limits": {
+      "maxIntervalEnumNodes": 1024,
+      "maxIntervalRepairPicksPerPath": 16,
+      "maxSentenceCandidates": 16,
+      "perSpanLimit": "8|6|4"
+    }
+  },
+  "diversity": {
+    "assemblyMaximizes": "replacement_subset_diversity",
+    "sentenceDiversityOwner": null,
+    "exactTextDedupOwners": ["Assembly", "CrossPath"],
+    "nearDupPolicy": "NONE"
+  },
+  "statistics": {
+    "casesAnalyzed": 200,
+    "competitionCases": 75,
+    "poolSize": {
+      "all_mean": 1.685,
+      "all_median": 1,
+      "all_max": 8,
+      "competition_mean": 2.827,
+      "competition_median": 2,
+      "competition_max": 8
+    },
+    "top16Utilization": {
+      "meanFillRate": 0.1053,
+      "casesFull16": 0,
+      "meanUnusedSlots": 14.315
+    },
+    "nearDuplicateCompetition": {
+      "meanNearDupSlotShare_editLe1": 0.4178,
+      "casesWithNearDupClusterGe2": 36
+    },
+    "competitionPairwiseDiffBuckets": {
+      "1_char": 103,
+      "2_char": 145,
+      "3plus_char": 34
+    },
+    "domainDiversity": {
+      "competitionMultiRetainedDomain": 18,
+      "competitionSingleRetainedDomain": 57,
+      "competitionMeanRetainedDomains": 1.4
+    }
+  },
+  "contractGaps": [
+    "NO_SOLE_OWNER_FOR_SENTENCE_DIVERSITY",
+    "PER_BUCKET_BUDGET_RETURN_UNUSED",
+    "NO_NEAR_DUP_POLICY",
+    "TOP16_CHRONICALLY_UNDERFILLED"
+  ],
+  "canFreezeEnumerationAlgorithmAlone": true,
+  "canFreezeEnumerationPlusDiversityContract": false
+}

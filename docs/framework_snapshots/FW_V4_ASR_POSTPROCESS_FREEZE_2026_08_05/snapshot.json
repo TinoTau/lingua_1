@@ -1,0 +1,48 @@
+{
+  "snapshotName": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "status": "CURRENT_RECOVERY_BASELINE",
+  "createdAt": "2026-08-05",
+  "previousBaseline": "FW_V4_FREEZE_2026_08_03",
+  "nature": "Date-based recoverable checkpoint, not permanent architecture freeze",
+  "verdict": "FRAMEWORK_FREEZE_COMPLETE",
+  "scope": "ASR post-processing through KenLM runtime boundary",
+  "architecture": {
+    "fineSpan": "Multi-Path Lexical Lattice V1.0.0",
+    "runtimeContract": "Runtime SSOT Contract V1.2",
+    "assemblyEnumeration": "Interval Non-Overlap Repair-Subset DFS + Gap Fill",
+    "repairSelectionCompleteness": "Formula A Slot Coverage — Assembly Sole Owner",
+    "domainVote": "Presence Vote · Base does not vote · Base may co-assemble"
+  },
+  "productionChain": [
+    "ASR Raw",
+    "FineSpan / Lattice",
+    "Tone Mandatory",
+    "Exact Recall Mode C",
+    "Domain Vote",
+    "SameDomain Bucket",
+    "Sentence Assembly",
+    "CrossPath",
+    "KenLM Input Boundary"
+  ],
+  "kenlm": {
+    "productionStatus": "RETAINED_UNCHANGED",
+    "productionTrieRelativePath": "kenLM/model/zh_char_3gram.trie.bin",
+    "productionTrieSha256": "532A335A09A006D1BA674F808814EE1D40C5B1D8F3527CA980E96723E7A62A4C",
+    "wikipediaCorpusV1": "PRODUCTION_REJECTED",
+    "scoreMode": "raw_log_delta",
+    "minDeltaToReplace": 3.0
+  },
+  "top16Utilization": {
+    "dialog200MeanPool": 1.685,
+    "competitionMeanPool": 2.827,
+    "maxPool": 8,
+    "full16Cases": 0,
+    "capacityBottleneck": false
+  },
+  "deferred": [
+    "Sentence_Semantic_Diversity",
+    "allocateDomainBucketSentenceBudget_return_unused",
+    "Interactive_Recognition_Repair",
+    "Wikipedia_KenLM_Corpus_V1"
+  ]
+}

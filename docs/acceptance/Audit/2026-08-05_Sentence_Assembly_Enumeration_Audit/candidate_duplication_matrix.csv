@@ -1,0 +1,7 @@
+duplicationSource,layer,mechanism,producesExactTextDup,removedBy,observedInDialog200
+repair_subset_enumeration,Assembly_buildSentenceCandidates,All non-overlapping repair subsets of slot repairs → multiple paths can apply to same surface spans,YES_possible,Assembly_exact_text_Map_first_wins,YES
+multi_bucket_same_path,Path_Assembly_per_bucket,Each retained domain bucket calls buildSentenceCandidates independently; identical text can appear in multiple buckets,YES_possible,CrossPath_exact_text_first_wins,YES
+multi_path_same_text,CrossPath_merge,Different SegmentationPaths may produce identical sentence text,YES_possible,CrossPath_exact_text_first_wins,YES
+near_duplicate_one_token,Assembly_enumeration,Different repair picks yield sentences differing by 1–2 chars; exact-text dedup does NOT remove them,NO,NONE_retained_as_separate_slots,YES
+canonical_gap_fill_provenance,Assembly_buildPathFromRepairs,Gap canonical picks differ by path but final text may still collide after apply,YES_possible,Assembly_exact_text_Map_first_wins,YES
+KenLM_input,KenLM,KenLM does not generate or dedupe candidates,N_A,N_A_consume_only,N_A

@@ -1,0 +1,8 @@
+module,dependsOnCompletenessToday,shouldDependAfterMetadataFreeze,mayRecompute,notes
+buildSentenceCandidates,false,produce_only,n/a,Sole producer at combination birth
+assemble-domain-aware-span-sets,false,false,false,Supplies picks; does not label sentence completeness
+mergeCrossPathSentenceCandidates,false,consume_optional_later,false,Today dedupe+cap only; future admission may read metadata only
+rerankFwSentences,false,false,false,KenLM boundary — score/rank/pick only; must stay unaware
+Exact Recall / Tone,false,false,false,Upstream of Assembly; not completeness owners
+Presence Vote / Bucket,false,false,false,Domain organization only
+Diagnostics / Export,false,may_display,false,May surface Assembly metadata; must not invent second definition

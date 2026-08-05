@@ -2,8 +2,8 @@
 title: CURRENT SSOT Index — ASR Post-Processing
 status: CURRENT_SSOT
 authority: CURRENT_INDEX
-baseline: FW_V4_FREEZE_2026_08_03
-reviewed_at: 2026-08-03
+baseline: FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
+reviewed_at: 2026-08-05
 ---
 
 # CURRENT SSOT — ASR Post-Processing
@@ -11,7 +11,8 @@ reviewed_at: 2026-08-03
 | Field | Value |
 |-------|-------|
 | Status | **CURRENT** |
-| Recovery Baseline | [`FW_V4_FREEZE_2026_08_03`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) |
+| Recovery Baseline | [`FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`](../framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md) |
+| Previous Baseline | [`FW_V4_FREEZE_2026_08_03`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)（Historical） |
 | Unified Docs Entry | [`../INDEX.md`](../INDEX.md) |
 | Documentation Governance | [`DOCUMENTATION_GOVERNANCE.md`](./DOCUMENTATION_GOVERNANCE.md) |
 | Rule | 唯一 CURRENT 入口目录；禁止 `CURRENT_V2` / `LATEST` / `FINAL` / `NEW` 平行权威 |
@@ -22,7 +23,7 @@ reviewed_at: 2026-08-03
 
 ```text
 1. Documentation Governance
-2. Framework Snapshot (FW_V4_FREEZE_2026_08_03)
+2. Framework Snapshot (FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05)
 3. CURRENT (this index → Sole Authorities)
 4. Supporting (docs/supporting/)
 5. Acceptance (docs/acceptance/) — evidence only
@@ -59,10 +60,24 @@ reviewed_at: 2026-08-03
 | Architecture Overview | [`../fw-detector/ARCHITECTURE.md`](../fw-detector/ARCHITECTURE.md) |
 | Domain Source Unification | [`../fw-detector/DOMAIN_SOURCE_UNIFICATION.md`](../fw-detector/DOMAIN_SOURCE_UNIFICATION.md) |
 | Domain Recall | [`../fw-detector/recall/DOMAIN_RECALL.md`](../fw-detector/recall/DOMAIN_RECALL.md) |
-| Assembly | [`../fw-detector/assembly/FROZEN_V1_2.md`](../fw-detector/assembly/FROZEN_V1_2.md) |
+| Assembly（含 Enumeration + Formula A） | [`../fw-detector/assembly/FROZEN_V1_2.md`](../fw-detector/assembly/FROZEN_V1_2.md) |
+| Interface / SentenceCombination | [`../fw-detector/INTERFACE_FREEZE.md`](../fw-detector/INTERFACE_FREEZE.md) |
 | KenLM Runtime Boundary | [`../fw-detector/kenlm/KENLM_RUNTIME.md`](../fw-detector/kenlm/KENLM_RUNTIME.md) |
 | Validator / Interface Freeze | [`../fw-detector/INTERFACE_FREEZE.md`](../fw-detector/INTERFACE_FREEZE.md) |
 | Diagnostics | [`../fw-detector/diagnostics/FROZEN.md`](../fw-detector/diagnostics/FROZEN.md) |
+
+### 本节点正式归档要点（2026-08-05）
+
+```text
+1. repairSelectionCompleteness = Formula A（Assembly Sole Owner）
+2. Assembly Enumeration = Interval Non-Overlap Repair-Subset DFS（已归档算法）
+3. Top16 非容量瓶颈（dialog_200 mean pool ≈1.7）
+4. Candidate Diversity 暂无 Owner — 暂停开发
+5. allocateDomainBucketSentenceBudget = KNOWN_NON_BLOCKING_INCONSISTENCY
+6. Wikipedia KenLM V1 = PRODUCTION_REJECTED
+7. Interactive Recognition Repair = DEFERRED_FUTURE_MODULE
+8. 禁止新增 Shadow / Compatibility Path
+```
 
 ### Recall Subsystem（日期节点冻结 · Supporting）
 
@@ -73,6 +88,7 @@ reviewed_at: 2026-08-03
 
 ```text
 Recall Subsystem Status: FROZEN_AT_2026_08_03
+（仍有效；本节点未改 Tone/Exact Recall 行为）
 ```
 
 冲突优先级：

@@ -1,0 +1,4 @@
+option,definitionSummary,needsCluster,needsThreshold,distinguishes候选声城_vs_上线计划,distinguishesStructuralPartial,namesOverclaim,recommend,notes
+FormulaA_SlotCoverage,"RAW if repairPickCount=0; PARTIAL_SELECTION if unrepairedRepairableSlotCount>0; COMPLETE_SELECTION if repairs>0 and unrepaired=0 (raw-only allowed)",false,false,NO_候选声城_is_COMPLETE_SELECTION,YES_e.g._后选_fixed_计化_left,false_if_renamed,YES_PRIMARY,Simplest deterministic; honest about Tone-miss slots
+FormulaB_ReplacementCluster,"Clusters of adjacent repairable slots; PARTIAL if any touched cluster incomplete",true,false,NO_same_as_A_for_声城_raw_only,YES_same_structural,false_if_renamed,OPTIONAL,Cluster of repairable indices only — no new Detector; adds complexity without fixing semantic gap
+FormulaC_RangeRatio,"repairedLen/repairableLen with thresholds",false,true,NO,WEAK,threshold_risk,NO,Unnecessary threshold; Hidden-Gate risk; harder to explain

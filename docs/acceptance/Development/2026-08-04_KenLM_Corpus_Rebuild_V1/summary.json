@@ -1,0 +1,72 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "benchmark": "KENLM_BENCHMARK_V1",
+  "task": "KENLM_CORPUS_REBUILD_V1",
+  "sourcesPolicy": "wikipedia_only_oscar_abandoned",
+  "finalVerdict": "KENLM_CORPUS_V1_READY",
+  "answers": {
+    "Q1_wikipediaSentences": 17474810,
+    "Q2_oscarSentences": 0,
+    "Q2_oscarNote": "OSCAR abandoned (gated); Wikipedia only",
+    "Q3_vocabulary": 71613,
+    "Q4_trieBinaryBytes": 601466261,
+    "Q5_improved": 4,
+    "Q5_regressed": 0,
+    "Q6_recommendReplace": true
+  },
+  "metrics": {
+    "correctBefore": 67,
+    "correctAfter": 71,
+    "improved": 4,
+    "regressed": 0,
+    "unchanged": 71
+  },
+  "models": {
+    "oldSha": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "newSha": "848ebee6dec020449f28d073cada6e53cc9dc70bd7343e6fc2a7ea7fedce61d8",
+    "newPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/corpus_v1/zh_char_3gram.trie.bin",
+    "productionReplaced": false
+  },
+  "trainMeta": {
+    "corpusChar": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/v1/corpus_v1.char.txt",
+    "corpusLines": 17474810,
+    "tokenCount": 679285642,
+    "vocabularySize": 71613,
+    "ngramCountsByOrder": [
+      71613,
+      7161301,
+      83923594
+    ],
+    "ngramCountSum": 91156508,
+    "arpaPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/corpus_v1/zh_char_3gram.arpa",
+    "arpaSizeBytes": 2116813606,
+    "arpaSha256": "e9d55845cbfc563231e483539a1ff0bf85b7298a9c0c0bb085a4d538f215601a",
+    "binaryPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/corpus_v1/zh_char_3gram.trie.bin",
+    "binarySizeBytes": 601466261,
+    "binarySha256": "848ebee6dec020449f28d073cada6e53cc9dc70bd7343e6fc2a7ea7fedce61d8",
+    "ngramOrder": 3,
+    "pruning": "none",
+    "memoryFlag": "-S 50%",
+    "discount": "Modified Kneser-Ney with --discount_fallback (1-gram fallback D1=0.5 D2=1 D3+=1.5)",
+    "discountFallback": true,
+    "sourcesPolicy": "wikipedia_only_oscar_abandoned",
+    "buildCommand": "lmplz -o 3 -S 50% -T /tmp --discount_fallback --text corpus_v1.char.txt --arpa zh_char_3gram.arpa && build_binary trie zh_char_3gram.arpa zh_char_3gram.trie.bin"
+  },
+  "corpusStats": {
+    "inputs": [
+      "/mnt/d/Programs/github/lingua_1/kenLM/corpus/v1_raw/wikipedia_sentences.txt"
+    ],
+    "rawOut": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/v1/corpus_v1.raw.txt",
+    "charOut": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/v1/corpus_v1.char.txt",
+    "sentenceCount": 17474810,
+    "tokenCount": 679285642,
+    "vocabularySize": 71610,
+    "perSource": {
+      "wikipedia_sentences": 17474810
+    },
+    "dropped": {},
+    "minChars": 4,
+    "maxChars": 256,
+    "sourcesPolicy": "wikipedia_only"
+  }
+}

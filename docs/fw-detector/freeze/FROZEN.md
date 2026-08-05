@@ -66,7 +66,9 @@ FW 整句结果
 
 **Step 7 Baseline Closure（2026-07-30）：** 唯一生产架构 = Lattice V1.0.0；唯一 Runtime Vote/Assembly/KenLM = Runtime SSOT V1.2；唯一 Tone = Tone Evidence/Mapping V1.0；Acceptance = `accept:runtime-ssot` + `accept:domain-multibucket-kenlm`。
 
-**FW_V4_FREEZE_2026_08_03（CURRENT RECOVERY BASELINE）：** 日期节点恢复基线（非永久冻结）。权威入口 [`../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)。绑定 Lattice + Runtime SSOT + Atomicity Closure + Lexicon（freeze tip v12；同日 Recovery 后正式 Runtime v13）+ dialog_200 硬门；**Recall Subsystem `FROZEN_AT_2026_08_03`**（Supporting：[`../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md)）。KenLM 仅 Runtime Boundary READY（质量未验收）。Snapshot **不取代**本节 Sole Authorities。
+**FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05（CURRENT RECOVERY BASELINE）：** 日期节点恢复基线（非永久冻结）。权威入口 [`../../framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md`](../../framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md)。归档：Assembly Enumeration 算法 · Formula A `repairSelectionCompleteness` · CrossPath/KenLM 边界 · Wikipedia KenLM **PRODUCTION_REJECTED** · Diversity deferred · `allocateDomainBucketSentenceBudget` = KNOWN_NON_BLOCKING_INCONSISTENCY。历史节点 [`FW_V4_FREEZE_2026_08_03`](../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) **保留不改写**。Snapshot **不取代**本节 Sole Authorities。
+
+**FW_V4_FREEZE_2026_08_03（Historical）：** 前一恢复基线；Recall Subsystem `FROZEN_AT_2026_08_03` 仍有效。
 ---
 
 ## 3. 冻结合约矩阵
@@ -164,8 +166,9 @@ npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 | Fine Span owner | `segmentation_path` / Lattice runtime |
 | Vote scope | `per_path` · `voteUtteranceDomainFromPool` |
 | Assembly scope | `per_path` · `runDomainAwareAssembly` |
-| Cross-Path owner | `mergeCrossPathSentenceCandidates` |
+| Cross-Path owner | `mergeCrossPathSentenceCandidates`（透传 `repairSelectionCompleteness`；不重算、不筛选） |
 | Candidate cap | global ≤**16** (`maxSentenceCandidates`) |
+| Repair selection completeness | Assembly Sole Owner · Formula A · metadata-only · KenLM unaware |
 | KenLM input owner | `cross_path_merge` · `prefilledCombinations` required |
 | Acceptance commands | `accept:runtime-ssot` · `accept:domain-multibucket-kenlm` |
 | Required tests | `freeze-contract` · Lattice/Vote/Merge/Tone freeze suites |

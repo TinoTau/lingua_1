@@ -25,6 +25,22 @@
 
 本轮 **不修改** `minDeltaToReplace` 公式与阈值。
 
+### Production model identity（2026-08-05 freeze）
+
+| Item | Value |
+|------|-------|
+| Path | `kenLM/model/zh_char_3gram.trie.bin` |
+| SHA256 | `532A335A09A006D1BA674F808814EE1D40C5B1D8F3527CA980E96723E7A62A4C` |
+| Status | **Production retained — unchanged** |
+
+### Wikipedia Corpus V1（experimental）
+
+```text
+TRAINING_VALID · MODEL_LOADABLE · BENCHMARK_TESTED · PRODUCTION_REJECTED
+```
+
+不得替换当前生产 KenLM。Evidence: `docs/acceptance/Test/2026-08-05_KenLM_CorpusV1_Production_Readiness_AB/`
+
 ---
 
 ## 2. 正式调用链（跨 Path / 跨桶池）

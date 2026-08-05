@@ -2,19 +2,17 @@
 
 | Snapshot | Status |
 |----------|--------|
-| **FW_V4_FREEZE_2026_08_03** | **CURRENT RECOVERY BASELINE** |
+| **FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05** | **CURRENT RECOVERY BASELINE** |
+| `FW_V4_FREEZE_2026_08_03` | Historical Snapshot（保留，不改写） |
 
-**权威包：** [`FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](./FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)
+**权威包：** [`FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md`](./FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md)
 
 | Field | Value |
 |-------|-------|
 | Scope | ASR Post-Processing → KenLM Runtime Boundary |
-| Next Stage | KenLM Capability Validation |
+| Previous | `FW_V4_FREEZE_2026_08_03` |
 | Nature | Date-based recoverable checkpoint |
-
-后续 KenLM / Lexicon Expansion / Context Prior / LLM 开发失败时，按该 Snapshot 的 Recovery Guide 恢复。
-
-Snapshot **不取代** Lattice Architecture / Runtime SSOT 等 Sole Authority；只绑定当前代码 + 文档 + 验收结果为恢复节点。
+| Git Tag | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` |
 
 ### Documentation Hierarchy
 
@@ -30,6 +28,5 @@ docs/INDEX.md → Documentation Governance → Framework Snapshot
 | CURRENT | [`../current/INDEX.md`](../current/INDEX.md) |
 | Supporting | [`../supporting/INDEX.md`](../supporting/INDEX.md) |
 | Acceptance | [`../acceptance/README.md`](../acceptance/README.md) |
-| Architecture (ADR) | [`../architecture/INDEX.md`](../architecture/INDEX.md) |
-| Archive | [`../archive/INDEX.md`](../archive/INDEX.md) |
-| Runtime Index | [`../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md) |
+| Freeze Acceptance Pack | [`../acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/`](../acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/) |
+| Historical 2026-08-03 | [`FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](./FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) |

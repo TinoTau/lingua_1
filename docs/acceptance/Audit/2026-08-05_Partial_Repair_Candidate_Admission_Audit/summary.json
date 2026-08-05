@@ -1,0 +1,205 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "PARTIAL_REPAIR_CANDIDATE_ADMISSION_AUDIT",
+  "finalVerdict": "PARTIAL_REPAIR_ADMISSION_DEFECT_CONFIRMED",
+  "repairCompletenessContract": "NO_REPAIR_COMPLETENESS_CONTRACT",
+  "answers": {
+    "Q1": "NO — NO_REPAIR_COMPLETENESS_CONTRACT",
+    "Q2": "buildSentenceCandidates (first candidateText); mergeCrossPathSentenceCandidates (formal KenLM pool)",
+    "Q3": "YES — RAW_FALLBACK_ADMISSION_COUPLING",
+    "Q4_partialOfNonRaw": 0.438,
+    "Q5_partialOfTop16NonRaw": 0.438,
+    "Q6_singleReplacementBias": true,
+    "Q7_completeDroppedByCap": "POSSIBLE via per-bucket/global cap order; no systematic COMPLETE-only drop proven for 生成-cluster (COMPLETE never formed there)",
+    "Q8_overlap": "Assembly prior-sum ranking mild PRE_KENLM_RANKING_RESPONSIBILITY_OVERLAP",
+    "Q9_duplicateCaps": "per-bucket maxSentenceCandidates + global ≤16; dual text dedupe",
+    "Q10_minimalAdjustment": "CrossPath Admission (Option B) or Assembly Admission (Option C) — prefer B/C over A",
+    "Q11_withoutToneRecallDomainKenLM": true,
+    "Q12_readyForDesign": true
+  },
+  "classCounts": {
+    "RAW_ONLY": 75,
+    "MIXED_BUT_VALID": 73,
+    "PARTIAL_REPAIR": 60,
+    "COMPLETE_REPAIR": 4
+  },
+  "top16NonRawClassCounts": {
+    "MIXED_BUT_VALID": 73,
+    "PARTIAL_REPAIR": 60,
+    "COMPLETE_REPAIR": 4
+  },
+  "callChain": {
+    "firstCandidateText": "buildSentenceCandidates.applyReplacementsRightToLeft",
+    "formalPoolAdmission": "mergeCrossPathSentenceCandidates",
+    "kenlmInput": "kenlmSentenceCandidates.combinations / rerankFwSentences"
+  },
+  "contrastSamples": {
+    "complete": [
+      {
+        "caseId": "d044",
+        "candidateId": "d044:k0",
+        "candidateText": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "replacementSurfaces": "计划",
+        "kenlmRank": 1
+      },
+      {
+        "caseId": "d089",
+        "candidateId": "d089:k0",
+        "candidateText": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "replacementSurfaces": "计划",
+        "kenlmRank": 1
+      },
+      {
+        "caseId": "d134",
+        "candidateId": "d134:k0",
+        "candidateText": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "replacementSurfaces": "计划",
+        "kenlmRank": 1
+      },
+      {
+        "caseId": "d179",
+        "candidateId": "d179:k0",
+        "candidateText": "这周的上线计划已经确认，上线计划评审安排在周四上午。",
+        "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "replacementSurfaces": "计划",
+        "kenlmRank": 1
+      }
+    ],
+    "rawCorrectNoise": [
+      {
+        "caseId": "d007",
+        "candidateId": "d007:k0",
+        "candidateText": "师傅，去中关村软件园，走机场高速。我赶酒店半的会，要是堵车您提前跟我说。",
+        "note": "RAW_CORRECT case; alt is noise"
+      },
+      {
+        "caseId": "d009",
+        "candidateId": "d009:k0",
+        "candidateText": "去望京SOHO，不走四环科医吗？那边现在堵不堵？",
+        "note": "RAW_CORRECT case; alt is noise"
+      },
+      {
+        "caseId": "d013",
+        "candidateId": "d013:k0",
+        "candidateText": "这件外套能试穿吗？我穿中码。买量检有没有折扣？",
+        "note": "RAW_CORRECT case; alt is noise"
+      },
+      {
+        "caseId": "d014",
+        "candidateId": "d014:k0",
+        "candidateText": "请问这双鞋有四十码吗？不合适三天内科医退换吧？",
+        "note": "RAW_CORRECT case; alt is noise"
+      },
+      {
+        "caseId": "d023",
+        "candidateId": "d023:k2",
+        "candidateText": "想改一下收货地质，还来得及吗？麻烦尽快处理，谢谢。",
+        "note": "RAW_CORRECT case; alt is noise"
+      }
+    ],
+    "partial": [
+      {
+        "caseId": "d019",
+        "candidateId": "d019:k0",
+        "candidateText": "今天我们团队要讨论候选生城相关的候选生城流程和上线计划安排，请研发一起评估风险。",
+        "rawText": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+        "replacementSurfaces": "候选|候选|计划",
+        "illegalResidual": "生城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d020",
+        "candidateId": "d020:k0",
+        "candidateText": "这次发布我们先对齐上线计划窗口，候选生城模块需要联调，别漏掉回归。",
+        "rawText": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "replacementSurfaces": "候选",
+        "illegalResidual": "生城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d043",
+        "candidateId": "d043:k0",
+        "candidateText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rawText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "replacementSurfaces": "候选",
+        "illegalResidual": "声城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d044",
+        "candidateId": "d044:k2",
+        "candidateText": "这周的上线计花已经确认，上线计划评审安排在周四商务。",
+        "rawText": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "replacementSurfaces": "商务",
+        "illegalResidual": "计花",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d045",
+        "candidateId": "d045:k0",
+        "candidateText": "关于候选生城和上线计划，请按上线计划执行，有问题群里说。",
+        "rawText": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "replacementSurfaces": "候选|上线计划",
+        "illegalResidual": "生城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d088",
+        "candidateId": "d088:k0",
+        "candidateText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rawText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "replacementSurfaces": "候选",
+        "illegalResidual": "声城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d133",
+        "candidateId": "d133:k0",
+        "candidateText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rawText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "replacementSurfaces": "候选",
+        "illegalResidual": "声城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      },
+      {
+        "caseId": "d178",
+        "candidateId": "d178:k0",
+        "candidateText": "我们下午讨论候选声城方案，先把候选生成的接口文档补齐。",
+        "rawText": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "replacementSurfaces": "候选",
+        "illegalResidual": "声城",
+        "primaryCause": "RAW_FALLBACK_ADMISSION_COUPLING",
+        "secondaryCauses": "NO_REPAIR_COMPLETENESS_CONTRACT|SINGLE_REPLACEMENT_ENUMERATION_BIAS",
+        "admissionFunction": "buildSentenceCandidates → mergeCrossPathSentenceCandidates"
+      }
+    ]
+  },
+  "packFiles": [
+    "README.md",
+    "report.md",
+    "summary.json",
+    "minimal_adjustment_options.md",
+    "candidate_repair_provenance.csv",
+    "candidate_repair_classification.csv",
+    "assembly_and_fallback_trace.csv",
+    "scoring_cap_responsibility.csv",
+    "budget_cases_and_root_cause.csv"
+  ]
+}

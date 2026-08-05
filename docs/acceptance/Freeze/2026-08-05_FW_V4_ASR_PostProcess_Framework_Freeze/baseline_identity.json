@@ -1,0 +1,27 @@
+{
+  "freezeId": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "createdAt": "2026-08-05T09:56:00Z",
+  "gitCommit": "RESOLVE_FROM_TAG",
+  "gitTag": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "previousBaseline": "FW_V4_FREEZE_2026_08_03",
+  "workingTreeClean": true,
+  "docsCheck": "PASS",
+  "dialog200": "INHERITED_BASELINE_200_200_NOT_RERUN",
+  "benchmark": "KENLM_BENCHMARK_V1_INHERITED",
+  "acceptDomainMultibucketKenlm": "ACCEPTANCE_PASS",
+  "unitTestsFreezeRelated": "PASS_122",
+  "productionKenlmPath": "kenLM/model/zh_char_3gram.trie.bin",
+  "productionKenlmSha256": "532A335A09A006D1BA674F808814EE1D40C5B1D8F3527CA980E96723E7A62A4C",
+  "frameworkScope": [
+    "Tone",
+    "Exact Recall",
+    "Lexicon",
+    "Domain Vote",
+    "SameDomain Bucket",
+    "Sentence Assembly",
+    "CrossPath",
+    "KenLM"
+  ],
+  "finalVerdict": "FRAMEWORK_FREEZE_COMPLETE",
+  "identityNote": "Authoritative commit SHA = git rev-list -n 1 <gitTag> (annotated tag peel). gitCommit=RESOLVE_FROM_TAG avoids self-hash amend loops. Do not use bare git rev-parse <tag> for annotated tags."
+}

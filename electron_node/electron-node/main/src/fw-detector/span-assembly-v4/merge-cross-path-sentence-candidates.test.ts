@@ -6,10 +6,11 @@ import { describe, expect, it } from '@jest/globals';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { SentenceCombination } from '../build-sentence-candidates';
+import { RAW_REPAIR_SELECTION_META } from '../derive-repair-selection-completeness';
 import { mergeCrossPathSentenceCandidates } from './merge-cross-path-sentence-candidates';
 
 function combo(text: string, score = 1): SentenceCombination {
-  return { text, replacements: [], candidateScore: score };
+  return { text, replacements: [], candidateScore: score, ...RAW_REPAIR_SELECTION_META };
 }
 
 function pathInput(

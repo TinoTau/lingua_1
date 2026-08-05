@@ -490,15 +490,22 @@ describe('T9–T10 Multi-Bucket KenLM prefilled boundary', () => {
 
   it('T9: prefilled merged pool reaches KenLM; no domain metadata on combinations', async () => {
     const scored: string[] = [];
+    const meta = {
+      repairSelectionCompleteness: 'RAW' as const,
+      repairPickCount: 0,
+      unrepairedRepairableSlotCount: 0,
+    };
     const comboA = {
       text: '句子A',
       replacements: [],
       candidateScore: 2,
+      ...meta,
     };
     const comboB = {
       text: '句子B',
       replacements: [],
       candidateScore: 1,
+      ...meta,
     };
     const merged = mergeCrossPathSentenceCandidates(
       [
@@ -601,15 +608,40 @@ describe('T11 Deterministic ordering', () => {
         boundaryKey: 'bk0',
         perBucketGenerated: [
           [
-            { text: 'B', replacements: [], candidateScore: 2 },
-            { text: 'A', replacements: [], candidateScore: 3 },
+            {
+              text: 'B',
+              replacements: [],
+              candidateScore: 2,
+              repairSelectionCompleteness: 'RAW' as const,
+              repairPickCount: 0,
+              unrepairedRepairableSlotCount: 0,
+            },
+            {
+              text: 'A',
+              replacements: [],
+              candidateScore: 3,
+              repairSelectionCompleteness: 'RAW' as const,
+              repairPickCount: 0,
+              unrepairedRepairableSlotCount: 0,
+            },
           ],
         ],
       },
       {
         pathId: 'p1',
         boundaryKey: 'bk1',
-        perBucketGenerated: [[{ text: 'A', replacements: [], candidateScore: 1 }]],
+        perBucketGenerated: [
+          [
+            {
+              text: 'A',
+              replacements: [],
+              candidateScore: 1,
+              repairSelectionCompleteness: 'RAW' as const,
+              repairPickCount: 0,
+              unrepairedRepairableSlotCount: 0,
+            },
+          ],
+        ],
       },
     ];
     const m1 = mergeCrossPathSentenceCandidates(lists, 16);

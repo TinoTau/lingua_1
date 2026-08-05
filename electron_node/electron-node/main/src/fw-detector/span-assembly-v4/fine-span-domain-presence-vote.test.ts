@@ -319,13 +319,19 @@ describe('Multi-bucket assembly + KenLM budget', () => {
   });
 
   it('cross-path dedup before final cap: duplicate texts do not waste slots (first-wins)', () => {
+    const meta = {
+      repairSelectionCompleteness: 'RAW' as const,
+      repairPickCount: 0,
+      unrepairedRepairableSlotCount: 0,
+    };
     const shared = {
       text: '共享句',
       replacements: [] as import('../build-sentence-candidates').SpanReplacementPick[],
       candidateScore: 1,
+      ...meta,
     };
-    const uniqueHigh = { text: '正确句', replacements: [], candidateScore: 5 };
-    const uniqueNoise = { text: '噪声句', replacements: [], candidateScore: 0.1 };
+    const uniqueHigh = { text: '正确句', replacements: [], candidateScore: 5, ...meta };
+    const uniqueNoise = { text: '噪声句', replacements: [], candidateScore: 0.1, ...meta };
     // Path A bucket0: shared + noise; Path B bucket0: shared + correct
     // first-wins keeps first shared; global cap=2 keeps 共享句 + 噪声句 (noise before path B)
     // Better fixture: single path with two buckets — first-wins then cap
@@ -363,9 +369,14 @@ describe('Multi-bucket assembly + KenLM budget', () => {
   });
 
   it('merge order is deterministic for identical path/bucket inputs', () => {
-    const a = { text: 'A', replacements: [], candidateScore: 3 };
-    const b = { text: 'B', replacements: [], candidateScore: 2 };
-    const c = { text: 'C', replacements: [], candidateScore: 1 };
+    const meta = {
+      repairSelectionCompleteness: 'RAW' as const,
+      repairPickCount: 0,
+      unrepairedRepairableSlotCount: 0,
+    };
+    const a = { text: 'A', replacements: [], candidateScore: 3, ...meta };
+    const b = { text: 'B', replacements: [], candidateScore: 2, ...meta };
+    const c = { text: 'C', replacements: [], candidateScore: 1, ...meta };
     const forward = mergeCrossPathSentenceCandidates(
       [
         { pathId: 'p0', boundaryKey: 'x', perBucketGenerated: [[a, b]] },

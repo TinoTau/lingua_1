@@ -1,0 +1,12 @@
+field,presentToday,equivalentToCompleteness,notes
+text,true,false,Assembled sentence string only
+replacements[],true,false,List of picks; encodes spans/sources but no completeness enum
+candidateScore,true,false,Sum of pick scores; ranking prior not completeness
+SpanReplacementPick.repairTarget,true,false,Per-pick flag; not sentence-level completeness
+SpanReplacementPick.source,true,false,canonical_exact vs lexicon; building block only
+SpanReplacementPick.span,true,false,Range for provenance; not completeness label
+repairCompleteness,false,n/a,ABSENT — confirms NO_REPAIR_COMPLETENESS_CONTRACT
+repairStatus,false,n/a,ABSENT
+pathKind,false,n/a,ABSENT
+candidateKind,false,n/a,ABSENT
+rawPreservedRanges (explicit field),false,n/a,Inferable from replacements that are canonical_exact / gaps; not a named contract field today

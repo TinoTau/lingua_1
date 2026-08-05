@@ -1,0 +1,13 @@
+requiredConcept,existingField,producer,availableAtAssembly,deterministic,missing,notes
+replaced_raw_ranges,SpanReplacementPick.span + word where repairTarget/word!=span.text,buildSentenceCandidates picks,true,true,false,From combination.replacements
+raw_preserved_gap_ranges,canonical_exact picks added by buildGapCanonicalPicks,build-sentence-candidates.ts,true,true,false,Attached on combination.replacements
+repairTarget_flag,SpanReplacementPick.repairTarget,windowCandidateToDomainAwarePick / canonical,true,true,false,
+repair_pick_count,count(replacements where non-canonical repair),Assembly derive,true,true,false,Pure count
+adjacency_of_ranges,span.start/end on picks,Assembly derive,true,true,false,Numeric range adjacency only — not semantic cluster of damage
+path_full_coverage,gap fills cover coarse ranges,buildPathFromRepairs,true,true,false,Connectivity guarantee
+repairable_slot,FineSpan slot with >=1 non-canonical option in spanSets selectedCandidates,budgetPerSpanCandidates output spanSets,true,true,false,MUST use pool options at assembly time — not final text
+repaired_slot,repairable slot whose non-canonical option is in chosen repair subset,enumerateIntervalPaths chosen,true,true,false,
+unrepaired_repairable_slot,repairable slot not in chosen repair subset (falls to canonical gap),enumerateIntervalPaths,true,true,false,
+raw_only_slot,slot with no non-canonical option in spanSets,spanSets,true,true,false,e.g. 声/城 when no Recall hit
+semantic_should_have_been_repairable,expected correction / missing Recall edge,n/a,false,false,true,NOT available — Tone miss leaves empty options; CURRENT_METADATA_INSUFFICIENT_FOR_SEMANTIC_PARTIAL
+cluster_of_damage,suspiciousRegion detector,n/a,false,false,true,Forbidden new Detector; optional adjacency of repairable slots only (Formula B)

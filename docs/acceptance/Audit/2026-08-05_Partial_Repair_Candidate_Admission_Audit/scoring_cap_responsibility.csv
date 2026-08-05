@@ -1,0 +1,21 @@
+section,layer,duty,input,sortPosition,hardDelete,prefersFewReplacements,prefersKeepRaw,overlapWithOthers,cap,owner,necessary,risk,duplicates,stage,intended,actualExtra,overlap
+pre_kenlm_scoring,Edge/Recall score,Rank lexicon hits into WindowCandidate,prior + tone penalty + domain boost,1_recall,tone-not-ready / eligibility drops,n/a,no,feeds candidateScore,,,,,,,,,
+pre_kenlm_scoring,Domain Presence Vote,Select retainedDomains for buckets,domain_term tags per FineSpan,2_vote,no (insufficientEvidence → base-only bucket),no,no,not language fluency,,,,,,,,,
+pre_kenlm_scoring,Per-span budget,Limit picks per FineSpan (sameDomain>base>fallback>canonical),DomainAware picks,3_span_budget,soft truncate to perSpanLimit,no,canonical always retained as option,surface dedupe may drop base if same surface as domain,,,,,,,,,
+pre_kenlm_scoring,Assembly candidateScore,Sum of pick.candidateScore; sort before per-bucket slice,SentenceCombination.replacements,4_assembly,no fluency gate; slice by maxSentenceCandidates after text dedupe,NO — higher sum prefers more/high-score repairs; BUT empty raw scores 0 so any single repair ranks above raw; multi ranks above single if scores add,raw always enumerated as empty subset,PRE_KENLM_RANKING_RESPONSIBILITY_OVERLAP mild — uses lexicon priors not LM,,,,,,,,,
+pre_kenlm_scoring,CrossPath merge,Exact text dedupe first-wins + global cap≤16,path×bucket SentenceCombination lists,5_crosspath,duplicates dropped; tail truncated after cap,indirect — collection order path_bucket_candidate; no re-score,no preference,no fluency ranking,,,,,,,,,
+pre_kenlm_scoring,KenLM rerank,LM score + raw_log_delta gate,≤16 combinations,6_kenlm,no delete of pool; pick keep-raw if delta<minDelta,n/a (LM),via minDeltaToReplace gate,sole fluency owner by freeze,,,,,,,,,
+cap_and_dedupe,,,,,,,,,per-span candidate limit,budgetPerSpanCandidates,True,may truncate base if sameDomain fills cap,False,,,,
+cap_and_dedupe,,,,,,,,,maxIntervalEnumNodes=1024,enumerateIntervalPaths,True,enum abort under huge slots,False,,,,
+cap_and_dedupe,,,,,,,,,maxIntervalRepairPicksPerPath=16,enumerateIntervalPaths,True,blocks huge multi-repair paths,False,,,,
+cap_and_dedupe,,,,,,,,,per-bucket buildSentenceCandidates(maxSentenceCandidates),orchestrator path loop,True,may truncate lower-score combos including multi-repair,overlaps global intent,,,,
+cap_and_dedupe,,,,,,,,,allocateDomainBucketSentenceBudget,utterance-domain-vote,True,ensures ≥1 slot/bucket,False,,,,
+cap_and_dedupe,,,,,,,,,CrossPath global ≤16,mergeCrossPathSentenceCandidates,True,truncates uniqueAfterDedup tail — PARTIAL early in order may crowd COMPLETE later,final admission cap,,,,
+cap_and_dedupe,,,,,,,,,exact text dedupe,mergeCrossPath + assembly uniqueByText,True,DEDUPE_PROVENANCE_COLLAPSE if same text different paths — first wins,two-level text dedupe,,,,
+cap_and_dedupe,,,,,,,,,maxCompleteSegmentationPaths=8,path enumeration,True,path diversity limit,False,,,,
+responsibility_overlap,,,,,,,,,,,,,,Path,Edge compatibility + coverage,none for fluency,False
+responsibility_overlap,,,,,,,,,,,,,,Assembly,Generate sentences from Path picks,sorts by sum(candidateScore) lexicon priors; enumerates all repair subsets without completeness,PRE_KENLM_RANKING_RESPONSIBILITY_OVERLAP (mild prior-sum ranking)
+responsibility_overlap,,,,,,,,,,,,,,Bucket,Domain/Base organization,none fluency,False
+responsibility_overlap,,,,,,,,,,,,,,CrossPath,Dedup + global cap,no re-score (correct),False
+responsibility_overlap,,,,,,,,,,,,,,KenLM,LM score/rank/pick,none,False
+responsibility_overlap,,,,,,,,,,,,,,Repair completeness,n/a (absent),NO_REPAIR_COMPLETENESS_CONTRACT,gap — admission treats PARTIAL==COMPLETE

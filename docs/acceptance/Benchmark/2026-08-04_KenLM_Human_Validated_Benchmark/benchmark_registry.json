@@ -1,0 +1,20 @@
+{
+  "version": "KENLM_BENCHMARK_V1",
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "phase01": "KENLM_PHASE01_BASELINE_READY",
+  "created": "2026-08-04",
+  "caseCount": 75,
+  "verified": 71,
+  "review": 4,
+  "undecidable": 0,
+  "retired": 0,
+  "decisionCounts": {
+    "RAW_CORRECT": 57,
+    "NON_RAW_CORRECT": 18,
+    "MULTIPLE_OK": 0,
+    "ALL_WRONG": 0,
+    "UNDECIDABLE": 0
+  },
+  "policy": "APPEND_ONLY — do not overwrite history; revise via decisionRevision",
+  "source": "docs/acceptance/Audit/2026-08-04_KenLM_Phase01_Baseline/candidate_ranking.csv"
+}

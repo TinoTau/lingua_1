@@ -1,0 +1,44 @@
+{
+  "task": "REPAIR_SELECTION_COMPLETENESS_METADATA_IMPLEMENTATION",
+  "date": "2026-08-05",
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "finalVerdict": "METADATA_IMPLEMENTATION_COMPLETE",
+  "field": "repairSelectionCompleteness",
+  "enum": ["RAW", "PARTIAL_SELECTION", "COMPLETE_SELECTION"],
+  "diagnosticCounts": ["repairPickCount", "unrepairedRepairableSlotCount"],
+  "formula": "Formula_A_Slot_Coverage",
+  "soleOwner": "buildSentenceCandidates",
+  "helper": "deriveRepairSelectionCompleteness",
+  "crossPath": "pass_through_only",
+  "kenlm": "unaware",
+  "jobResult": "unchanged",
+  "hiddenGate": false,
+  "admissionChange": false,
+  "capabilityBoundary": {
+    "case": "候选声城",
+    "expected": "COMPLETE_SELECTION",
+    "confirmedCaseIds": ["d043", "d088", "d133", "d178"],
+    "note": "Structural selection completeness only — not semantic correctness"
+  },
+  "distribution75": {
+    "competitionCases": 75,
+    "candidateRows": 212,
+    "RAW": 75,
+    "PARTIAL_SELECTION": 52,
+    "COMPLETE_SELECTION": 85,
+    "ratios": {
+      "RAW": 0.3538,
+      "PARTIAL_SELECTION": 0.2453,
+      "COMPLETE_SELECTION": 0.4009
+    }
+  },
+  "regression": {
+    "unitFormulaA": "PASS",
+    "freezeContract": "PASS",
+    "docsCheck": "PASS",
+    "acceptDomainMultibucketKenlm": "ACCEPTANCE_PASS"
+  },
+  "targets": {
+    "T1_T23": "COMPLETE"
+  }
+}

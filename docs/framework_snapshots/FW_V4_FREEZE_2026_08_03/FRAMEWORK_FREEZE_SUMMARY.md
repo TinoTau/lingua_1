@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|-------|
 | Snapshot Name | **FW_V4_FREEZE_2026_08_03** |
-| Status | **CURRENT RECOVERY BASELINE** |
+| Status | **HISTORICAL RECOVERY BASELINE**（已被 `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` 接替；本文结论不改写） |
 | Scope | ASR Post-Processing through KenLM Runtime Boundary |
 | Next Stage | KenLM Capability Validation |
 | Nature | Date-based recoverable checkpoint — **not** permanent architecture freeze |

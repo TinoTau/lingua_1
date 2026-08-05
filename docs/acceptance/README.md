@@ -1,7 +1,7 @@
 ---
 title: Acceptance Records Index
 status: ACCEPTANCE_RECORD
-baseline: FW_V4_FREEZE_2026_08_03
+baseline: FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
 ---
 
 # Acceptance Records — ASR Post-Processing
@@ -11,6 +11,7 @@ baseline: FW_V4_FREEZE_2026_08_03
 | Status | **ACCEPTANCE_RECORD**（Evidence only） |
 | Rule | 不得作为 CURRENT；不得据此重新设计 Framework |
 | Governance | [`../current/DOCUMENTATION_GOVERNANCE.md`](../current/DOCUMENTATION_GOVERNANCE.md) |
+| Current Freeze Pack | [`Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/`](./Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/) |
 
 ---
 
@@ -24,6 +25,7 @@ docs/acceptance/
   Regression/     — Acceptance / Regression / Quality gates
   Freeze/         — Freeze / Consolidation / dated freeze packs
   Documentation/  — Documentation governance / consolidation
+  Benchmark/      — Permanent human-validated benchmarks
 ```
 
 ### Dated packs（强制）

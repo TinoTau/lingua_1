@@ -1,10 +1,11 @@
 import { describe, expect, it } from '@jest/globals';
 import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
 import type { SentenceCombination } from './build-sentence-candidates';
+import { RAW_REPAIR_SELECTION_META } from './derive-repair-selection-completeness';
 import { FW_RERANK_SCORE_MODE, rerankFwSentences } from './rerank-fw-sentences';
 
 function combo(text: string, candidateScore: number): SentenceCombination {
-  return { text, replacements: [], candidateScore };
+  return { text, replacements: [], candidateScore, ...RAW_REPAIR_SELECTION_META };
 }
 
 function mockScorer(

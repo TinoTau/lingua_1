@@ -1,0 +1,14 @@
+dependency,producer,consumer,affects_enumeration,affects_diversity,notes
+spanSets,assembleDomainAwareSpanSets,buildSentenceCandidates,YES,YES,Input option sets
+repairTarget_flag,windowCandidateToPick / assemble,enumerateIntervalPaths,YES,YES,Only repairTarget picks expand subsets
+coarseRanges,orchestrator / resolveCoarseSpanRanges,gap fill + Formula A,YES,indirect,Coverage identity
+maxSentenceCandidates,runtime config (16),Assembly slice + CrossPath cap,YES,YES,Hard output cap
+maxIntervalEnumNodes,V4_LIMITS,DFS visitSlot,YES,YES,Silent truncation when exceeded
+maxIntervalRepairPicksPerPath,V4_LIMITS,DFS leaf/extend,YES,YES,Path repair cardinality
+perSpanLimit,getPerSpanCandidateLimit,budgetPerSpanCandidates,YES,YES,Upstream option fan-in
+allocateDomainBucketSentenceBudget,utterance-domain-vote,orchestrator guard only,PARTIAL,NO_EFFECT_ON_CAP,Return unused; each bucket still gets 16
+candidateScore,pick scores,Assembly sort order,NO_set_change,YES_which_dup_wins,First-wins after sort
+exact_text,applyReplacements,Assembly+CrossPath dedup,YES,YES,Only exact matches removed
+repairSelectionCompleteness,deriveRepairSelectionCompleteness,diagnostics/metadata,NO,NO,Metadata-only; no filter
+CrossPath_order,path/bucket/candidate,merge first-wins,NO_gen,YES_which_survives,Collection order
+KenLM,prefilled texts,rerank,NO,NO,Out of audit scope

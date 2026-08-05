@@ -1,0 +1,13 @@
+dimension,before,after,changed,evidence
+candidate_text_generation,enumerate repair subsets,same,NO,buildSentenceCandidates paths unchanged except meta attach
+candidate_count_cap,maxSentenceCandidates / ≤16,same,NO,cap logic untouched
+candidate_order,sort by candidateScore desc,same,NO,sort comparator unchanged
+candidateId,unchanged producers,same,NO,no ID rewrite
+crossPath_dedupe,exact text first-wins,same,NO,merge module no meta reads
+crossPath_cap,slice(0 cap),same,NO,merge module unchanged algorithm
+kenlm_input_texts,prefilled combination.text[],same,NO,rerank uses text only; static no field read
+kenlm_scores,scoreBatch,same,NO,accept:domain-multibucket-kenlm PASS
+final_pick,raw_log_delta + minDelta,same,NO,rerankFwSentences unaware of meta
+JobResult_schema,prior freeze,same,NO,no JobResult edit
+hidden_gate,none,none,NO,no filter/rank/budget on completeness
+DTO_fields,3 fields,6 fields (+3 meta),YES_DTO_ONLY,expected metadata extension

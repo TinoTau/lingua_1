@@ -1,0 +1,781 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "benchmarkVersion": "KENLM_BENCHMARK_V1",
+  "task": "KENLM_PHASE02_HUMAN_VALIDATED_COMPETITION_BENCHMARK",
+  "nature": "READ_ONLY_BENCHMARK_CONSTRUCTION",
+  "finalVerdict": "KENLM_BENCHMARK_READY",
+  "answers": {
+    "Q1_meaningfulCompetition": 75,
+    "Q2_verified": 71,
+    "Q3_reviewRequired": 4,
+    "Q4_undecidable": 0,
+    "Q5_enoughToStartKenlmOptimization": "YES — Human Validated Benchmark established; use for all KenLM eval"
+  },
+  "decisionCounts": {
+    "RAW_CORRECT": 57,
+    "NON_RAW_CORRECT": 18,
+    "MULTIPLE_OK": 0,
+    "ALL_WRONG": 0,
+    "UNDECIDABLE": 0
+  },
+  "statusCounts": {
+    "verified": 71,
+    "review": 4,
+    "undecidable": 0,
+    "retired": 0
+  },
+  "note": "No Accuracy metric. No model training/tuning. No expectedText/GroundTruth fields.",
+  "caseIndex": [
+    {
+      "benchmarkId": "KLM000001",
+      "caseId": "d007",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (九→酒@16;点→店@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000002",
+      "caseId": "d009",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@11;以→医@12); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000003",
+      "caseId": "d013",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (两→量@13;件→检@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000004",
+      "caseId": "d014",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@16;以→医@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000005",
+      "caseId": "d019",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Pick first non-raw (k0): restores 上线计划 + 后选→候选; 生城 remains domain-imperfect but best in pool",
+      "candidateCount": 8,
+      "distinctText": 8
+    },
+    {
+      "benchmarkId": "KLM000006",
+      "caseId": "d020",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "VERIFIED",
+      "note": "后选生城→候选生城 is meaningful domain repair vs Raw",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000007",
+      "caseId": "d023",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000008",
+      "caseId": "d025",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (里→理@13;负→服@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000009",
+      "caseId": "d027",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@8;以→医@9); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000010",
+      "caseId": "d029",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000011",
+      "caseId": "d030",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (重→钟@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000012",
+      "caseId": "d033",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (间→监@1;空→控@2); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000013",
+      "caseId": "d036",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (等→登@9;级→机@10); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000014",
+      "caseId": "d041",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000015",
+      "caseId": "d043",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "REVIEW_REQUIRED",
+      "note": "后选声城→候选声城; 声城 vs 生成 still ambiguous — review",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000016",
+      "caseId": "d044",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000017",
+      "caseId": "d045",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d045:k0 over damaged Raw",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000018",
+      "caseId": "d052",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (九→酒@15;点→店@16); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000019",
+      "caseId": "d053",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000020",
+      "caseId": "d054",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000021",
+      "caseId": "d058",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (两→量@13;件→检@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000022",
+      "caseId": "d059",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@16;以→医@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000023",
+      "caseId": "d064",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d064:k0 over damaged Raw",
+      "candidateCount": 8,
+      "distinctText": 8
+    },
+    {
+      "benchmarkId": "KLM000024",
+      "caseId": "d065",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d065:k0 over damaged Raw",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000025",
+      "caseId": "d068",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000026",
+      "caseId": "d070",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (里→理@13;负→服@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000027",
+      "caseId": "d072",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@8;以→医@9); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000028",
+      "caseId": "d074",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000029",
+      "caseId": "d075",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (重→钟@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000030",
+      "caseId": "d078",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (间→监@1;空→控@2); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000031",
+      "caseId": "d081",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (等→登@9;级→机@10); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000032",
+      "caseId": "d086",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000033",
+      "caseId": "d088",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "REVIEW_REQUIRED",
+      "note": "后选声城→候选声城; 声城 vs 生成 still ambiguous — review",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000034",
+      "caseId": "d089",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000035",
+      "caseId": "d090",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d090:k0 over damaged Raw",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000036",
+      "caseId": "d097",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (九→酒@14;点→店@15); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000037",
+      "caseId": "d103",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (两→量@13;件→检@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000038",
+      "caseId": "d104",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@16;以→医@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000039",
+      "caseId": "d109",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d109:k0 over damaged Raw",
+      "candidateCount": 8,
+      "distinctText": 8
+    },
+    {
+      "benchmarkId": "KLM000040",
+      "caseId": "d110",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d110:k0 over damaged Raw",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000041",
+      "caseId": "d113",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000042",
+      "caseId": "d115",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (里→理@13;负→服@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000043",
+      "caseId": "d117",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@8;以→医@9); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000044",
+      "caseId": "d119",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000045",
+      "caseId": "d120",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (重→钟@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000046",
+      "caseId": "d123",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (间→监@1;空→控@2); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000047",
+      "caseId": "d126",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (等→登@9;级→机@10); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000048",
+      "caseId": "d131",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000049",
+      "caseId": "d133",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "REVIEW_REQUIRED",
+      "note": "后选声城→候选声城; 声城 vs 生成 still ambiguous — review",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000050",
+      "caseId": "d134",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000051",
+      "caseId": "d135",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d135:k0 over damaged Raw",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000052",
+      "caseId": "d142",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (九→酒@12;点→店@13); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000053",
+      "caseId": "d143",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000054",
+      "caseId": "d144",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000055",
+      "caseId": "d148",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (两→量@13;件→检@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000056",
+      "caseId": "d149",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@16;以→医@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000057",
+      "caseId": "d154",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d154:k0 over damaged Raw",
+      "candidateCount": 8,
+      "distinctText": 8
+    },
+    {
+      "benchmarkId": "KLM000058",
+      "caseId": "d155",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d155:k0 over damaged Raw",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000059",
+      "caseId": "d158",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000060",
+      "caseId": "d160",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (里→理@13;负→服@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000061",
+      "caseId": "d162",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@8;以→医@9); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000062",
+      "caseId": "d164",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000063",
+      "caseId": "d165",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (重→钟@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000064",
+      "caseId": "d168",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (间→监@1;空→控@2); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000065",
+      "caseId": "d171",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (等→登@9;级→机@10); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000066",
+      "caseId": "d176",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000067",
+      "caseId": "d178",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise",
+      "status": "REVIEW_REQUIRED",
+      "note": "后选声城→候选声城; 声城 vs 生成 still ambiguous — review",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000068",
+      "caseId": "d179",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Raw fluent; alts look homophone/ASR damage",
+      "candidateCount": 3,
+      "distinctText": 3
+    },
+    {
+      "benchmarkId": "KLM000069",
+      "caseId": "d180",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d180:k0 over damaged Raw",
+      "candidateCount": 4,
+      "distinctText": 4
+    },
+    {
+      "benchmarkId": "KLM000070",
+      "caseId": "d187",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (九→酒@16;点→店@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000071",
+      "caseId": "d189",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@11;以→医@12); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000072",
+      "caseId": "d193",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (两→量@13;件→检@14); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000073",
+      "caseId": "d194",
+      "humanDecision": "RAW_CORRECT",
+      "decisionReason": "Grammar;Meaning;ASR Noise",
+      "status": "VERIFIED",
+      "note": "Near-homophone alt (可→科@16;以→医@17); Raw wins",
+      "candidateCount": 2,
+      "distinctText": 2
+    },
+    {
+      "benchmarkId": "KLM000074",
+      "caseId": "d199",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d199:k0 over damaged Raw",
+      "candidateCount": 8,
+      "distinctText": 8
+    },
+    {
+      "benchmarkId": "KLM000075",
+      "caseId": "d200",
+      "humanDecision": "CANDIDATE_1",
+      "decisionReason": "Domain;ASR Noise;Meaning",
+      "status": "VERIFIED",
+      "note": "Prefer d200:k0 over damaged Raw",
+      "candidateCount": 2,
+      "distinctText": 2
+    }
+  ],
+  "excludedFromBenchmark": []
+}

@@ -139,6 +139,9 @@ export function buildCombinationTraces(input: {
       delta,
       approved,
       rejectedReason,
+      repairSelectionCompleteness: combo.repairSelectionCompleteness,
+      repairPickCount: combo.repairPickCount,
+      unrepairedRepairableSlotCount: combo.unrepairedRepairableSlotCount,
     });
   }
 

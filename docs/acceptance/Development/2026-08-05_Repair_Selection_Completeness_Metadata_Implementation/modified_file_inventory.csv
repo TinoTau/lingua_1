@@ -1,0 +1,17 @@
+path,action,role
+electron_node/electron-node/main/src/fw-detector/derive-repair-selection-completeness.ts,ADD,Formula A pure helper (Assembly-local)
+electron_node/electron-node/main/src/fw-detector/derive-repair-selection-completeness.test.ts,ADD,Unit Case 1–7 + capability boundary
+electron_node/electron-node/main/src/fw-detector/build-sentence-candidates.ts,MODIFY,Extend SentenceCombination; sole compute at creation
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/v4-diagnostics-types.ts,MODIFY,Optional CombinationTrace metadata fields
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/v4-diagnostics-mappers.ts,MODIFY,Pass-through metadata into CombinationTrace
+electron_node/electron-node/main/src/fw-detector/rerank-fw-sentences.test.ts,MODIFY,Fixture RAW meta for DTO compile
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/merge-cross-path-sentence-candidates.test.ts,MODIFY,Fixture RAW meta
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/fine-span-domain-presence-vote.test.ts,MODIFY,Fixture RAW meta
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/domain-presence-vote-acceptance.test.ts,MODIFY,Fixture RAW meta
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-diagnostics.test.ts,MODIFY,Fixture RAW meta
+docs/fw-detector/INTERFACE_FREEZE.md,MODIFY,CURRENT SentenceCombination Data Contract
+docs/fw-detector/assembly/FROZEN_V1_2.md,MODIFY,CURRENT Assembly Contract
+docs/fw-detector/ARCHITECTURE.md,MODIFY,CURRENT Ownership Matrix pointer
+docs/fw-detector/diagnostics/FROZEN.md,MODIFY,CURRENT Diagnostics Contract
+docs/fw-detector/freeze/FROZEN.md,MODIFY,Registry pointer
+docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/04_Data_Contract.md,MODIFY,Snapshot field table sync

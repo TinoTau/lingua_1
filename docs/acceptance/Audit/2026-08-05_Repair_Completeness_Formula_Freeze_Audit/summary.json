@@ -1,0 +1,43 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "REPAIR_COMPLETENESS_FORMULA_FREEZE_AUDIT",
+  "nature": "READ_ONLY",
+  "finalVerdict": "FORMULA_SCOPE_RENAMED_AND_READY",
+  "acknowledgment": "CURRENT_METADATA_INSUFFICIENT_FOR_SEMANTIC_PARTIAL_CLASSIFICATION",
+  "frozenFormula": {
+    "fieldName": "repairSelectionCompleteness",
+    "enum": ["RAW", "PARTIAL_SELECTION", "COMPLETE_SELECTION"],
+    "rule": "FormulaA_SlotCoverage",
+    "diagnosticCounts": ["repairPickCount", "unrepairedRepairableSlotCount"],
+    "needsCluster": false,
+    "needsThreshold": false
+  },
+  "rejectedNames": ["repairCompleteness"],
+  "answers": {
+    "Q1_structuralPartial": true,
+    "Q2_semanticPartial_候选声城": false,
+    "Q3_repairCompleteness_overclaim": true,
+    "Q4_bestName": "repairSelectionCompleteness",
+    "Q5_bestFormula": "A",
+    "Q6_needCluster": false,
+    "Q7_needThreshold": false,
+    "Q8_minimalFields": [
+      "repairSelectionCompleteness",
+      "repairPickCount",
+      "unrepairedRepairableSlotCount"
+    ],
+    "Q9_noExternalRequery": true,
+    "Q10_runtimeBehaviourChangeIfMetadataOnly": false,
+    "Q11_hiddenGate": false,
+    "Q12_readyForMetadataOnlyImpl": true
+  },
+  "caseHighlights": {
+    "候选声城": "COMPLETE_SELECTION (structural) — 声/城 raw-only",
+    "后选+计化 partial": "PARTIAL_SELECTION when 计化 left unrepaired",
+    "计花→计划": "COMPLETE_SELECTION when selected"
+  },
+  "boundaries": {
+    "crossPath": "consume_only_no_filter_this_round",
+    "kenlm": "unaware"
+  }
+}

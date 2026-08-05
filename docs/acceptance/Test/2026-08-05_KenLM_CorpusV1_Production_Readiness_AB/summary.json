@@ -1,0 +1,88 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "KENLM_CORPUS_V1_PRODUCTION_READINESS_AB",
+  "finalVerdict": "PRODUCTION_REPLACEMENT_NOT_JUSTIFIED",
+  "answers": {
+    "Q1_verifiedNetGain": 0,
+    "Q1_detail": "VERIFIED Top1 67→67 (improved 0, regressed 0)",
+    "Q2_fourImprovements": "1 unique improvement pattern / 4 repeated REVIEW_REQUIRED occurrences (后选声城→候选声城)",
+    "Q3_productionPickChanged": true,
+    "Q3_finalSelectionChangedCount": 5,
+    "Q4_minDeltaCompatible": false,
+    "Q4_scaleRatioMedianMaxDelta": 0,
+    "Q5_newRssDeltaMedianMb": 0.13,
+    "Q5_newColdLoadMedianMs": 7471.360300064087,
+    "Q5_newDialog200WallMedianMs": 273396.62980008125,
+    "Q5_newScoreBatchP95Ms": 2439.1499999999983,
+    "Q6_coexistenceStable": true,
+    "Q7_canReplaceNow": false
+  },
+  "hardGates": {
+    "bothLoaded": true,
+    "newShaOk": true,
+    "verifiedRegressions": 0,
+    "verifiedWrongReplacementNotIncreased": true,
+    "reviewInterpreted": true,
+    "productionPickDone": true,
+    "gateCompatible": false,
+    "dialog200": true,
+    "noCrash": true,
+    "memoryBudgetOk": true,
+    "rollbackOk": true,
+    "verifiedNetGain": 0
+  },
+  "metrics": {
+    "verified": {
+      "total": 71,
+      "oldCorrect": 67,
+      "newCorrect": 67,
+      "improved": 0,
+      "regressed": 0,
+      "net": 0
+    },
+    "review": {
+      "total": 4,
+      "oldAgreement": 0,
+      "newAgreement": 1,
+      "resolved": 0,
+      "unresolved": 4
+    },
+    "provisionalAllCase": {
+      "old": 67,
+      "new": 68,
+      "note": "Do NOT treat as Verified Accuracy"
+    },
+    "production": {
+      "finalSelectionChanged": 5,
+      "rawKeepToReplace": 0,
+      "replaceToRawKeep": 5,
+      "sameTop1GateFlip": 0
+    },
+    "performance": {
+      "oldDialog200WallMedianMs": 45643.8819000721,
+      "newDialog200WallMedianMs": 273396.62980008125,
+      "oldScoreBatch": {
+        "n": 200,
+        "min": 0,
+        "p5": 0,
+        "p25": 0,
+        "median": 0,
+        "p75": 594,
+        "p95": 631.0999999999999,
+        "max": 664,
+        "mean": 226.975
+      },
+      "newScoreBatch": {
+        "n": 200,
+        "min": 0,
+        "p5": 0,
+        "p25": 0,
+        "median": 0,
+        "p75": 0,
+        "p95": 2439.1499999999983,
+        "max": 2723,
+        "mean": 439.045
+      }
+    }
+  }
+}

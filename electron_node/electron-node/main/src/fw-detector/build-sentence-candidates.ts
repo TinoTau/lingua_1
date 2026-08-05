@@ -1,7 +1,13 @@
 import type { WindowCandidateSource } from '../lexicon/window-candidate-source';
+import {
+  deriveRepairSelectionCompleteness,
+  type RepairSelectionCompleteness,
+} from './derive-repair-selection-completeness';
 import { rawOverlap } from './span-assembly-v4/classify-overlap-relation';
 import { V4_LIMITS } from './span-assembly-v4/v4-limits';
 import type { FwTextSpan } from './types';
+
+export type { RepairSelectionCompleteness } from './derive-repair-selection-completeness';
 
 export type SpanReplacementPick = {
   span: FwTextSpan;
@@ -19,6 +25,10 @@ export type SentenceCombination = {
   text: string;
   replacements: SpanReplacementPick[];
   candidateScore: number;
+  /** Assembly-owned Formula A metadata — not semantic correctness. */
+  repairSelectionCompleteness: RepairSelectionCompleteness;
+  repairPickCount: number;
+  unrepairedRepairableSlotCount: number;
 };
 
 export type CoarseSpanRange = {
@@ -275,12 +285,18 @@ export function buildSentenceCandidates(
 
   const { paths, rejectedOverlap } = enumerateIntervalPaths(spanSets, coarseRanges, rawText);
 
-  const scored = paths.map((picks) => {
+  const scored: SentenceCombination[] = paths.map((picks) => {
     const text = applyReplacementsRightToLeft(
       rawText,
       picks.map((p) => ({ start: p.span.start, end: p.span.end, word: p.word }))
     );
-    return { text, replacements: picks, candidateScore: combinationScore(picks) };
+    const meta = deriveRepairSelectionCompleteness(spanSets, picks, coarseRanges);
+    return {
+      text,
+      replacements: picks,
+      candidateScore: combinationScore(picks),
+      ...meta,
+    };
   });
 
   scored.sort((a, b) => b.candidateScore - a.candidateScore);

@@ -33,6 +33,16 @@ assemblySelected=少冰  ≠  fw_applied>0  ≠  finalText含少冰
 
 `domainCandidateCount` · `baseCandidateCount` · `sameDomainCandidateCount` · `mainDomainAwareSpanSetsTotal` · `assemblySelectionTraces` · Context Prior min/max multiplier
 
+**SentenceCombination Formula A metadata（观测 only · 不 gate）：**
+
+| 字段 | 语义 |
+|------|------|
+| `repairSelectionCompleteness` | `RAW` / `PARTIAL_SELECTION` / `COMPLETE_SELECTION` — replacement selection completeness，**非**语义正确性 |
+| `repairPickCount` | 非 canonical replacement 数 |
+| `unrepairedRepairableSlotCount` | 未选 repair 的 repairable slot 数（raw-only 不计） |
+
+Sole Owner：`buildSentenceCandidates`。CrossPath 透传。KenLM 不读。
+
 ### Recall traversal diagnostics（B1 · 现行）
 
 | 字段 | 语义 | 可否 gate Recall？ |

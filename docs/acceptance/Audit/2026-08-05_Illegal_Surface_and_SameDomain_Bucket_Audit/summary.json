@@ -1,0 +1,103 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "ILLEGAL_SURFACE_AND_SAMEDOMAIN_BUCKET_AUDIT",
+  "finalVerdict": "ILLEGAL_SURFACE_AND_BUCKET_ROOT_CAUSE_CONFIRMED",
+  "answers": {
+    "Q1_shengcheng_formal_term": false,
+    "Q1_shengcheng_sound_formal_term": false,
+    "Q2_provenance": "DOMAIN_CANDIDATE(候选) + RAW_PRESERVED(生|声) + RAW_PRESERVED(城)",
+    "Q3_generation_in_lexicon_and_bundle": true,
+    "Q3_termId": "exp-v1_1-alias-shengcheng / base-rebuild-exp-v1_1-alias-shengcheng",
+    "Q3_domains": [],
+    "Q4_first_missing_stage": "EXACT_RECALL",
+    "Q5_same_bucket_actual": false,
+    "Q5_same_bucket_theoretical_if_recalled": true,
+    "Q6_base_blocked_from_domain_bucket": false,
+    "Q7_shared_segmentation_path_actual": false,
+    "Q7_reason": "生成 LexicalEdge absent",
+    "Q8_assembly_built_候选生成_for_corrupt": false,
+    "Q8_drop_class": "ASSEMBLY_COMBINATION_NOT_ENUMERATED",
+    "Q9_single_replacement_bias": true,
+    "Q10_what_to_fix": "Recall/Tone reachability for 生成 (and/or multi-edge assembly once recalled); NOT KenLM; NOT diagnostic-only"
+  },
+  "primaryCauses": {
+    "illegalSurfacePrimaryCause": "RAW_FRAGMENT_PRESERVED",
+    "generationMissingPrimaryCause": "TONE_QUERY_MISS"
+  },
+  "focusCasesIdentical": true,
+  "inventoryCaseCount": 22,
+  "focusTraceIdentity": {
+    "identicalRuntimePattern": true,
+    "cases": [
+      "d043",
+      "d088",
+      "d133",
+      "d178"
+    ]
+  },
+  "sqliteProbeCompact": {
+    "path": "/mnt/d/Programs/github/lingua_1/node_runtime/lexicon/v3/lexicon.sqlite",
+    "surfaces": {
+      "生城": {
+        "rowCount": 0,
+        "domain_tags": [],
+        "ids": []
+      },
+      "声城": {
+        "rowCount": 0,
+        "domain_tags": [],
+        "ids": []
+      },
+      "生成": {
+        "rowCount": 2,
+        "domain_tags": [],
+        "ids": [
+          "exp-v1_1-alias-shengcheng",
+          "base-rebuild-exp-v1_1-alias-shengcheng"
+        ]
+      },
+      "候选": {
+        "rowCount": 3,
+        "domain_tags": [
+          {
+            "term_id": "exp-v1_1-alias-houxuan",
+            "domain_id": "tech_ai",
+            "weight": 1.0
+          }
+        ],
+        "ids": [
+          "exp-v1_1-alias-houxuan",
+          "base-rebuild-exp-v1_1-alias-houxuan",
+          "exp-v1_1-alias-houxuan"
+        ]
+      },
+      "后选": {
+        "rowCount": 0,
+        "domain_tags": [],
+        "ids": []
+      },
+      "生": {
+        "rowCount": 0,
+        "domain_tags": [],
+        "ids": []
+      },
+      "城": {
+        "rowCount": 0,
+        "domain_tags": [],
+        "ids": []
+      }
+    }
+  },
+  "packFiles": [
+    "README.md",
+    "report.md",
+    "summary.json",
+    "case_inventory.csv",
+    "surface_lexicon_presence.csv",
+    "character_provenance.csv",
+    "generation_trace.csv",
+    "domain_bucket_trace.csv",
+    "path_assembly_trace.csv",
+    "root_cause_and_quality.csv"
+  ]
+}

@@ -1,0 +1,13 @@
+suite,case,expected,result
+derive-repair-selection-completeness.test.ts,Case1_RAW,RAW repairPickCount=0,PASS
+derive-repair-selection-completeness.test.ts,Case2_COMPLETE_SELECTION,COMPLETE unrepaired=0,PASS
+derive-repair-selection-completeness.test.ts,Case3_PARTIAL_SELECTION,PARTIAL unrepaired>0,PASS
+derive-repair-selection-completeness.test.ts,Case4_capability_boundary_候选声城,COMPLETE_SELECTION,PASS
+derive-repair-selection-completeness.test.ts,Case5_multi_complete,COMPLETE repairPickCount=2,PASS
+derive-repair-selection-completeness.test.ts,Case6_multi_partial,PARTIAL pick=2 unrepaired=1,PASS
+derive-repair-selection-completeness.test.ts,Case7_range_identity,PARTIAL distinct ranges,PASS
+derive-repair-selection-completeness.test.ts,multi_slot_cover,COMPLETE one pick covers two,PASS
+build-sentence-candidates.test.ts,existing_interval_assembly,PASS (unchanged behaviour),PASS
+merge-cross-path-sentence-candidates.test.ts,pass_through_DTO,PASS,PASS
+rerank-fw-sentences.test.ts,kenlm_unaware,PASS,PASS
+freeze-contract.test.ts,freeze_suites,PASS,PASS

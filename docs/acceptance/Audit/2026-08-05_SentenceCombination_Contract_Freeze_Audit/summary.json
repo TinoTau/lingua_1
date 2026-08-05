@@ -1,0 +1,38 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "SENTENCE_COMBINATION_CONTRACT_FREEZE_AUDIT",
+  "nature": "READ_ONLY",
+  "finalVerdict": "CONTRACT_READY_FOR_IMPLEMENTATION",
+  "priorFinding": "NO_REPAIR_COMPLETENESS_CONTRACT",
+  "architectureDecision": {
+    "repairCompletenessBelongsOn": "SentenceCombination_metadata",
+    "soleOwner": "Sentence_Assembly_buildSentenceCandidates",
+    "crossPathRole": "consume_only_no_recompute",
+    "kenlmRole": "unaware",
+    "inferLaterByOtherModule": false
+  },
+  "answers": {
+    "Q1_owner": "Sentence Assembly (buildSentenceCandidates)",
+    "Q2_deriveWithoutNewRuntimeInference": true,
+    "Q2_note": "Pure function of rawText + replacements[]; formula design still needed under same owner",
+    "Q3_becomeMetadata": true,
+    "Q4_crossPathConsumeOnly": true,
+    "Q5_kenlmUnaware": true,
+    "Q6_preserveSSOT": true,
+    "Q7_preserveSRP": true,
+    "Q8_developmentMayBegin": true
+  },
+  "existingEquivalentField": null,
+  "metadataOnlyChangesRuntimeBehaviour": false,
+  "hiddenGateIfMetadataOnly": false,
+  "packFiles": [
+    "README.md",
+    "report.md",
+    "summary.json",
+    "sentence_combination_contract.md",
+    "owner_matrix.md",
+    "metadata_matrix.csv",
+    "runtime_dependency_matrix.csv",
+    "contract_gap_analysis.csv"
+  ]
+}
