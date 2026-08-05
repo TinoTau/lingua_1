@@ -36,7 +36,7 @@ runtime_behavior_seal.json 语义（保持全 false）
 | Runtime Freeze Tag | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` |
 | Runtime Freeze Commit（peeled） | `6889fe16790587df7e711d5ad35b1e50ea53037c` |
 | Annotated Tag Object | `d9a401a5d1dbb465a648e156679f656b7e09289f` |
-| Identity Documentation Correction Commit | 见 `resolved_identity.json`（提交后写入；不冒充 Runtime Freeze） |
+| Identity Documentation Correction Commit | `0e3bcab1a2e76ea32cbd85fef228c10c3fbfc406` |
 | Tag moved? | **false** |
 | Runtime changed? | **false** |
 

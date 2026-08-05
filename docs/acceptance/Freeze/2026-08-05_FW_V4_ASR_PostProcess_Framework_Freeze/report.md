@@ -6,6 +6,7 @@
 | Nature | **IDENTITY_DOCUMENTATION_CORRECTION** |
 | Runtime Freeze | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`（未移动） |
 | Runtime Freeze Commit | `6889fe16790587df7e711d5ad35b1e50ea53037c` |
+| Identity Documentation Correction Commit | `0e3bcab1a2e76ea32cbd85fef228c10c3fbfc406` |
 | Verdict | **FREEZE_IDENTITY_CORRECTION_COMPLETE** |
 
 原 Runtime Freeze 裁决 `FRAMEWORK_FREEZE_COMPLETE` **保持有效**；本轮不重新冻结代码。

@@ -98,6 +98,6 @@ VERIFY_FREEZE_IDENTITY_PASS
 ```text
 Runtime Freeze Tag:    FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
 Runtime Freeze Commit: 6889fe16790587df7e711d5ad35b1e50ea53037c
-Identity Documentation Correction Commit: see resolved_identity.json
+Identity Documentation Correction Commit: 0e3bcab1a2e76ea32cbd85fef228c10c3fbfc406
   (does not move the Runtime Freeze Tag; does not change frozen runtime)
 ```
