@@ -10,6 +10,10 @@
 | Created | 2026-08-05 |
 | Pack | `docs/framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/` |
 | Acceptance Freeze Pack | `docs/acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/` |
+| Runtime Freeze Tag | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` |
+| Runtime Freeze Commit（peeled） | `6889fe16790587df7e711d5ad35b1e50ea53037c` |
+| Annotated Tag Object | `d9a401a5d1dbb465a648e156679f656b7e09289f` |
+| Identity Documentation Correction Commit | 见 Pack `resolved_identity.json`（不冒充 Runtime Freeze Commit；不移动 Tag） |
 
 ---
 

@@ -21,6 +21,8 @@ baseline: FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
 |------|----------|
 | Documentation Governance | [`current/DOCUMENTATION_GOVERNANCE.md`](./current/DOCUMENTATION_GOVERNANCE.md) |
 | Current recovery baseline | [`framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md`](./framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md) |
+| Runtime Freeze Commit（peeled） | `6889fe16790587df7e711d5ad35b1e50ea53037c` — use `git rev-list -n 1 FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`（裸 `git rev-parse <tag>` 是 Tag Object，不是 Freeze Commit） |
+| Identity correction pack | [`acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/resolved_identity.json`](./acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/resolved_identity.json) — correction commit ≠ Runtime Freeze Commit |
 | CURRENT SSOT Index | [`current/INDEX.md`](./current/INDEX.md) |
 
 ## Current SSOT

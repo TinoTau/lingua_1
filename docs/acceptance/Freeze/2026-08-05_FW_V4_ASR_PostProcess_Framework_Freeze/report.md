@@ -1,151 +1,101 @@
-# FW Repair V4 — Current ASR Post-Processing Framework Freeze
+# FW Repair V4 — Freeze Identity & Recovery Documentation Consistency Correction
 
 | Field | Value |
 |-------|-------|
 | Date | 2026-08-05 |
-| Freeze ID | **FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05** |
-| Previous | `FW_V4_FREEZE_2026_08_03` |
-| Verdict | **FRAMEWORK_FREEZE_COMPLETE** |
+| Nature | **IDENTITY_DOCUMENTATION_CORRECTION** |
+| Runtime Freeze | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`（未移动） |
+| Runtime Freeze Commit | `6889fe16790587df7e711d5ad35b1e50ea53037c` |
+| Verdict | **FREEZE_IDENTITY_CORRECTION_COMPLETE** |
+
+原 Runtime Freeze 裁决 `FRAMEWORK_FREEZE_COMPLETE` **保持有效**；本轮不重新冻结代码。
 
 ---
 
-## Q1 — Commit SHA and Tag
+## Q1 — Annotated Tag Object SHA?
 
-| Field | Value |
-|-------|-------|
-| Tag | `FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` |
-| baseline_identity.gitCommit | `RESOLVE_FROM_TAG` |
-| Authoritative peel | `git rev-list -n 1 FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05` |
+`d9a401a5d1dbb465a648e156679f656b7e09289f`  
+命令：`git rev-parse FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`
 
-Annotated Tag peel 必须等于冻结 tip Commit。验证：`verify_freeze.ps1` → `VERIFY_FREEZE_PASS`。
+## Q2 — Peeled Freeze Commit SHA?
 
----
+`6889fe16790587df7e711d5ad35b1e50ea53037c`  
+命令：`git rev-list -n 1 FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05`
 
-## Q2 — Working Tree clean?
+## Q3 — Freeze Tag 补正前后是否同一 Commit?
 
-Freeze Commit 完成后：纳入范围内 tracked files clean。  
-显式排除未审计 WIP（未提交）：`docs/tone-v2/_audit_scratch/**`、`kenLM/corpus/**`、`kenLM/model/corpus_v1/**`、实验脚本；Lexicon rebuild WIP 已 **restore 到 HEAD**（不纳入本冻结）。
+**是。** `tagStability.tagMoved = false`；before = after = `6889fe16790587df7e711d5ad35b1e50ea53037c`。
 
----
+## Q4 — baseline_identity 是否静态固化真实 Commit SHA?
 
-## Q3 — Freeze scope modules
+**是。** `gitCommit` = peeled SHA；`tagObjectSha` 已写入；`identityResolution` = `STATIC_AND_VERIFIED`。细节见 `resolved_identity.json`。
+
+## Q5 — RECOVERY.md 是否区分 Tag Object 与 Commit?
+
+**是。** 裸 `rev-parse` = Tag Object；`rev-list -n 1` / `tag^{}` = Freeze Commit。
+
+## Q6 — verify_freeze.ps1 是否分别验证两种 SHA?
+
+**是。** 输出 `TAG_OBJECT_SHA` / `FREEZE_COMMIT_SHA`，并与 `resolved_identity.json` 比对。成功：`VERIFY_FREEZE_IDENTITY_PASS`。
+
+## Q7 — tracked Working Tree clean?
+
+**是。** `trackedWorkingTreeClean = true`（tracked dirty count = 0，补正前观测；补正提交仅改文档）。
+
+## Q8 — untracked / ignored / excluded WIP?
+
+**是，均存在。** untracked ≈ 37；ignored ≈ 202；`excludedWipPresent = true`。
+
+## Q9 — 哪些 WIP 不属于冻结范围?
+
+`docs/tone-v2/_audit_scratch/**`、`kenLM/corpus/**`、`kenLM/model/corpus_v1/**`、实验脚本与 phase03 产物、`kenLM/_smoke_in.txt`，以及 ignored 生成物。
+
+## Q10 — 本轮是否修改生产代码?
+
+**否。**
+
+## Q11 — 本轮是否修改 Runtime 行为?
+
+**否。** `runtime_behavior_seal.json` 保持全 `false`。
+
+## Q12 — 本轮是否移动或重建 Freeze Tag?
+
+**否。** 禁止事项已遵守；Tag 仍指向原 peeled Commit。
+
+## Q13 — dialog_200 是否仍 inherited?
+
+**是。** `INHERITED_BASELINE_200_200_NOT_RERUN`；KENLM_BENCHMARK_V1 = INHERITED。
+
+## Q14 — CURRENT SSOT / Freeze Registry 是否区分 Runtime Freeze Commit 与 Correction Commit?
+
+**是。** Registry / INDEX / Snapshot Entry 写明 Runtime Freeze Commit ≠ Identity Documentation Correction Commit。
+
+## Q15 — 恢复材料是否静态可验证可归档?
+
+**是。** `resolved_identity.json` + 静态 `baseline_identity.json` + 修正后的 `RECOVERY.md` + 只读 `verify_freeze.ps1`。
+
+## Q16 — 本轮补正是否完成?
+
+**是 → FREEZE_IDENTITY_CORRECTION_COMPLETE**
 
 ```text
-Tone · Exact Recall · Lexicon contracts · Domain Vote · SameDomain Bucket
-Sentence Assembly Enumeration · Formula A Metadata · CrossPath · KenLM
-CURRENT SSOT · Snapshot · Recovery materials
+FREEZE_IDENTITY_CORRECTION_COMPLETE
+
+FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
+的 Annotated Tag Object、Peeled Freeze Commit、
+恢复命令、Working Tree 状态和只读验证材料
+已完成一致性补正。
+
+原 Freeze Tag 未移动；
+被冻结 Runtime 未改变；
+补正 Commit 仅包含身份与文档修正。
+
+该冻结基线现已具备静态、可验证、
+可恢复和可外部归档的完整身份。
 ```
 
 ---
 
-## Q4 — Tone / Exact Recall in CURRENT SSOT?
+## Appendix — 原 Runtime Freeze 摘要（不变）
 
-**是。** Snapshot `02_Runtime.md` + CURRENT Index + Supporting Recall Contract（`FROZEN_AT_2026_08_03` 仍有效）。Mandatory Tone · Mode C · 禁止 Plain fallback。
-
----
-
-## Q5 — repairSelectionCompleteness archived?
-
-**是。** `INTERFACE_FREEZE.md` · Assembly Contract · Diagnostics · Implementation code + Formula A tests · Development Acceptance Pack。
-
----
-
-## Q6 — Assembly Enumeration matches code?
-
-**是。** Interval Non-Overlap Repair-Subset DFS + Gap Fill + Score Sort + Exact Dedup + Cap；limits 1024/16/16/8·6·4。与 `build-sentence-candidates.ts` 一致。
-
----
-
-## Q7 — Is Top16 a capacity bottleneck?
-
-**否。** dialog_200 mean pool ≈1.685；competition ≈2.827；max=8；full-16=0；mean unused ≈14.315。
-
----
-
-## Q8 — Why pause Candidate Diversity?
-
-无 Sole Owner；池未饱和；近重复是质量议题而非 cap 压力。登记 D1 `DEFERRED_NO_OWNER`。
-
----
-
-## Q9 — allocateDomainBucketSentenceBudget?
-
-`KNOWN_NON_BLOCKING_INCONSISTENCY`（D2）：调用作 guard，返回值未接入生成。本轮不改。
-
----
-
-## Q10 — CrossPath / KenLM duties unchanged?
-
-**是。** CrossPath = merge + exact-text first-wins + ≤16。KenLM = score/rank/pick only；不读 Formula A。
-
----
-
-## Q11 — Wikipedia KenLM non-production?
-
-**是。** `PRODUCTION_REJECTED`；生产 trie SHA256 `532A335A…A62A4C` 保留。
-
----
-
-## Q12 — Interactive Repair only deferred?
-
-**是。** D3 `DEFERRED_FUTURE_MODULE` — 无接口/占位代码/JobResult 改动。
-
----
-
-## Q13 — Tests run this freeze (CURRENT_RUN)
-
-| Command | Result |
-|---------|--------|
-| Formula A + Assembly + CrossPath + rerank + freeze-contract Jest | **PASS** (122 tests) |
-| `npm run docs:check` | **PASS** |
-| `npm run accept:domain-multibucket-kenlm` | **ACCEPTANCE_PASS** |
-
----
-
-## Q14 — Inherited baseline only
-
-| Item | Status |
-|------|--------|
-| dialog_200 200/200 | **INHERITED_BASELINE** — not rerun this freeze |
-| KENLM_BENCHMARK_V1 human labels | **INHERITED** evidence pack |
-| Recall subsystem freeze 2026-08-03 | **INHERITED** |
-
----
-
-## Q15 — Runtime behaviour unchanged?
-
-**是。** 见 `runtime_behavior_seal.json` — 全部 `false`。本轮仅文档/元数据归档 + 已实现 metadata 代码纳入基线（metadata-only，无 admission）。
-
----
-
-## Q16 — CURRENT SSOT unique authority updated?
-
-**是。** `docs/INDEX.md` · `docs/current/INDEX.md` · fw-detector contracts · Snapshot entry。无 FINAL/LATEST/V2 平行权威。旧 Snapshot 未改写。
-
----
-
-## Q17 — Recovery verified?
-
-`RECOVERY.md` + `verify_freeze.ps1`（只读）。Tag 创建后执行验证脚本。
-
----
-
-## Q18 — Can this be next-stage baseline?
-
-**是 → FRAMEWORK_FREEZE_COMPLETE**
-
-```text
-FRAMEWORK_FREEZE_COMPLETE
-
-当前 ASR 后处理代码、接口、Owner、能力边界、
-Assembly Enumeration、Repair Selection Metadata、
-CrossPath 与 KenLM Runtime Boundary
-已建立新的日期节点冻结基线。
-
-CURRENT SSOT 已同步；
-恢复身份、文件 Manifest、验证脚本和 Git Tag 已建立；
-Runtime 行为未发生变化。
-
-该冻结版本可作为 Interactive Recognition Repair
-及后续独立模块开发的恢复基线。
-```
+原 Pack 裁决 `FRAMEWORK_FREEZE_COMPLETE` 仍有效。详见历史 Q3–Q18 结论（Assembly / Formula A / CrossPath / KenLM / Deferred D1–D4）。本轮不重跑业务回归；仅 `verify_freeze.ps1` ×2 与 `docs:check`。

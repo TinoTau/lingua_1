@@ -1,10 +1,18 @@
 {
   "freezeId": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
   "createdAt": "2026-08-05T09:56:00Z",
-  "gitCommit": "RESOLVE_FROM_TAG",
+  "gitCommit": "6889fe16790587df7e711d5ad35b1e50ea53037c",
   "gitTag": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "tagObjectSha": "d9a401a5d1dbb465a648e156679f656b7e09289f",
+  "identityResolution": "STATIC_AND_VERIFIED",
+  "resolvedIdentityPath": "resolved_identity.json",
   "previousBaseline": "FW_V4_FREEZE_2026_08_03",
-  "workingTreeClean": true,
+  "trackedWorkingTreeClean": true,
+  "untrackedFilesPresent": true,
+  "ignoredFilesPresent": true,
+  "excludedWipPresent": true,
+  "workingTreeClean": false,
+  "workingTreeCleanNote": "Deprecated single flag. Prefer trackedWorkingTreeClean / untrackedFilesPresent / excludedWipPresent. Tracked freeze-scope tree was clean at Runtime Freeze; untracked excluded WIP remains outside freeze.",
   "docsCheck": "PASS",
   "dialog200": "INHERITED_BASELINE_200_200_NOT_RERUN",
   "benchmark": "KENLM_BENCHMARK_V1_INHERITED",
@@ -23,5 +31,6 @@
     "KenLM"
   ],
   "finalVerdict": "FRAMEWORK_FREEZE_COMPLETE",
-  "identityNote": "Authoritative commit SHA = git rev-list -n 1 <gitTag> (annotated tag peel). gitCommit=RESOLVE_FROM_TAG avoids self-hash amend loops. Do not use bare git rev-parse <tag> for annotated tags."
+  "identityNote": "gitCommit = freezeCommitSha (peeled). tagObjectSha = Annotated Tag Object. Bare git rev-parse <tag> ≠ freezeCommitSha. See resolved_identity.json for full static identity + tagStability.",
+  "correctionNature": "IDENTITY_DOCUMENTATION_CORRECTION_APPLIED_ON_TOP"
 }

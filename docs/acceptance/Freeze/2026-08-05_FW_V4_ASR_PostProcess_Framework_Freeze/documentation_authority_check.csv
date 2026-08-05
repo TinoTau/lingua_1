@@ -1,7 +1,11 @@
 check,result,notes
 No FINAL/LATEST/V2 parallel CURRENT,PASS,Only current/INDEX.md
-Historical FW_V4_FREEZE_2026_08_03 preserved,PASS,Not rewritten this freeze
+Historical FW_V4_FREEZE_2026_08_03 preserved,PASS,Not rewritten
 Acceptance packs evidence-only,PASS,Do not replace CURRENT
 Snapshot entry points to 2026-08-05,PASS,FRAMEWORK_FREEZE_SUMMARY.md
 Freeze Acceptance Pack single location,PASS,docs/acceptance/Freeze/2026-08-05_...
+Identity correction not a second Runtime Freeze,PASS,IDENTITY_DOCUMENTATION_CORRECTION only
+resolved_identity supplements baseline_identity,PASS,No conflicting dual authority
+Runtime Freeze Tag unmoved,PASS,peel=6889fe16790587df7e711d5ad35b1e50ea53037c
 docs:check,PASS,ok=true
+verify_freeze.ps1,PASS,VERIFY_FREEZE_IDENTITY_PASS

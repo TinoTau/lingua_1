@@ -68,6 +68,17 @@ FW 整句结果
 
 **FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05（CURRENT RECOVERY BASELINE）：** 日期节点恢复基线（非永久冻结）。权威入口 [`../../framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md`](../../framework_snapshots/FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05/FRAMEWORK_FREEZE_SUMMARY.md)。归档：Assembly Enumeration 算法 · Formula A `repairSelectionCompleteness` · CrossPath/KenLM 边界 · Wikipedia KenLM **PRODUCTION_REJECTED** · Diversity deferred · `allocateDomainBucketSentenceBudget` = KNOWN_NON_BLOCKING_INCONSISTENCY。历史节点 [`FW_V4_FREEZE_2026_08_03`](../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) **保留不改写**。Snapshot **不取代**本节 Sole Authorities。
 
+```text
+Runtime Freeze Tag:    FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05
+Runtime Freeze Commit: 6889fe16790587df7e711d5ad35b1e50ea53037c
+  (peeled: git rev-list -n 1 <tag> — NOT bare git rev-parse <tag>)
+Annotated Tag Object:  d9a401a5d1dbb465a648e156679f656b7e09289f
+Identity Documentation Correction Commit: see
+  docs/acceptance/Freeze/2026-08-05_FW_V4_ASR_PostProcess_Framework_Freeze/resolved_identity.json
+The correction commit does not change the frozen runtime.
+The correction commit does not move the Runtime Freeze Tag.
+```
+
 **FW_V4_FREEZE_2026_08_03（Historical）：** 前一恢复基线；Recall Subsystem `FROZEN_AT_2026_08_03` 仍有效。
 ---
 

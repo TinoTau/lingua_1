@@ -1,14 +1,27 @@
 {
-  "task": "FW_V4_ASR_POSTPROCESS_FRAMEWORK_FREEZE",
+  "task": "FW_V4_ASR_POSTPROCESS_FRAMEWORK_FREEZE_IDENTITY_CORRECTION",
   "date": "2026-08-05",
   "freezeId": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
   "previousBaseline": "FW_V4_FREEZE_2026_08_03",
-  "finalVerdict": "FRAMEWORK_FREEZE_COMPLETE",
+  "runtimeFreezeVerdict": "FRAMEWORK_FREEZE_COMPLETE",
+  "finalVerdict": "FREEZE_IDENTITY_CORRECTION_COMPLETE",
+  "correctionNature": "IDENTITY_DOCUMENTATION_CORRECTION",
+  "tagObjectSha": "d9a401a5d1dbb465a648e156679f656b7e09289f",
+  "freezeCommitSha": "6889fe16790587df7e711d5ad35b1e50ea53037c",
+  "tagMoved": false,
   "behaviourChanged": false,
+  "runtimeFreezeUnchanged": true,
   "docsCheck": "PASS",
-  "acceptDomainMultibucketKenlm": "ACCEPTANCE_PASS",
-  "dialog200": "INHERITED_BASELINE_NOT_RERUN",
+  "verifyFreezeIdentity": "PASS",
+  "dialog200": "INHERITED_BASELINE_200_200_NOT_RERUN",
+  "benchmark": "KENLM_BENCHMARK_V1_INHERITED",
   "productionKenlmSha256": "532A335A09A006D1BA674F808814EE1D40C5B1D8F3527CA980E96723E7A62A4C",
   "wikipediaKenlm": "PRODUCTION_REJECTED",
-  "deferred": ["D1", "D2", "D3", "D4"]
+  "deferred": ["D1", "D2", "D3", "D4"],
+  "workingTree": {
+    "trackedWorkingTreeClean": true,
+    "untrackedFilesPresent": true,
+    "ignoredFilesPresent": true,
+    "excludedWipPresent": true
+  }
 }

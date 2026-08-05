@@ -1,0 +1,54 @@
+{
+  "freezeId": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "freezeTag": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+  "tagObjectSha": "d9a401a5d1dbb465a648e156679f656b7e09289f",
+  "freezeCommitSha": "6889fe16790587df7e711d5ad35b1e50ea53037c",
+  "previousBaseline": "FW_V4_FREEZE_2026_08_03",
+  "identityResolution": {
+    "tagObjectCommand": "git rev-parse FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+    "peeledCommitCommand": "git rev-list -n 1 FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+    "peeledCommitCommandAlt": "git rev-parse FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05^{}",
+    "note": "Bare git rev-parse <tag> returns Annotated Tag Object SHA, NOT freezeCommitSha."
+  },
+  "tagStability": {
+    "freezeCommitBefore": "6889fe16790587df7e711d5ad35b1e50ea53037c",
+    "freezeCommitAfter": "6889fe16790587df7e711d5ad35b1e50ea53037c",
+    "tagMoved": false
+  },
+  "workingTree": {
+    "trackedWorkingTreeClean": true,
+    "untrackedFilesPresent": true,
+    "ignoredFilesPresent": true,
+    "excludedWipPresent": true,
+    "observedAt": "2026-08-05T10:36:00Z",
+    "counts": {
+      "trackedDirty": 0,
+      "untrackedPorcelain": 37,
+      "ignoredPorcelain": 202
+    },
+    "excludedWipExamples": [
+      "docs/tone-v2/_audit_scratch/**",
+      "kenLM/corpus/**",
+      "kenLM/model/corpus_v1/**",
+      "kenLM/model/phase03_first_train/**",
+      "kenLM/scripts/corpus_v1/**",
+      "kenLM/scripts/phase03_first_train.sh",
+      "kenLM/_smoke_in.txt"
+    ]
+  },
+  "productionKenlmPath": "kenLM/model/zh_char_3gram.trie.bin",
+  "productionKenlmSha256": "532A335A09A006D1BA674F808814EE1D40C5B1D8F3527CA980E96723E7A62A4C",
+  "dialog200": "INHERITED_BASELINE_200_200_NOT_RERUN",
+  "benchmark": "KENLM_BENCHMARK_V1_INHERITED",
+  "runtimeFreezeUnchanged": true,
+  "runtimeBehaviorSealUnchanged": true,
+  "correctionNature": "IDENTITY_DOCUMENTATION_CORRECTION",
+  "identityDocumentationCorrectionCommit": "PENDING_CORRECTION_COMMIT",
+  "authority": {
+    "runtimeFreezeTag": "FW_V4_ASR_POSTPROCESS_FREEZE_2026_08_05",
+    "runtimeFreezeCommit": "6889fe16790587df7e711d5ad35b1e50ea53037c",
+    "resolvedIdentityRole": "Static supplemental identity for Annotated Tag + peeled commit; does not replace Runtime Freeze Commit",
+    "baselineIdentityRole": "Original freeze pack identity; now statically filled + points here for tag object / peel detail"
+  },
+  "finalVerdict": "FREEZE_IDENTITY_CORRECTION_COMPLETE"
+}

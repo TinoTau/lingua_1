@@ -1,6 +1,8 @@
 command,class,result,notes
-npx jest FormulaA+Assembly+CrossPath+rerank+freeze-contract,CURRENT_RUN,PASS,122 tests
-npm run docs:check,CURRENT_RUN,PASS,ok=true warning Benchmark dir nonstandard
-npm run accept:domain-multibucket-kenlm,CURRENT_RUN,ACCEPTANCE_PASS,sampleCount=20
-dialog_200 full audio E2E,INHERITED_BASELINE,200/200,Not rerun this freeze — node service not required for freeze
+npx jest FormulaA+Assembly+CrossPath+rerank+freeze-contract,INHERITED_FROM_RUNTIME_FREEZE,PASS,122 tests — not rerun this identity correction
+npm run accept:domain-multibucket-kenlm,INHERITED_FROM_RUNTIME_FREEZE,ACCEPTANCE_PASS,Not rerun this identity correction
+dialog_200 full audio E2E,INHERITED_BASELINE,200/200,INHERITED_BASELINE_200_200_NOT_RERUN
 KENLM_BENCHMARK_V1 labels,INHERITED_BASELINE,PRESENT,Evidence under docs/acceptance/Benchmark/
+npm run docs:check,CURRENT_RUN_IDENTITY_CORRECTION,PASS,Required this round
+verify_freeze.ps1 run1,CURRENT_RUN_IDENTITY_CORRECTION,VERIFY_FREEZE_IDENTITY_PASS,Read-only
+verify_freeze.ps1 run2,CURRENT_RUN_IDENTITY_CORRECTION,VERIFY_FREEZE_IDENTITY_PASS,Stability recheck
