@@ -1,0 +1,61 @@
+path,class,note
+docs/user_correction/model3/MODEL3_SYNTHETIC_V1_FROZEN.md,AUTHORITATIVE,Synthetic V1 freeze SSOT (text-only role corrected 2026-08-26)
+docs/user_correction/model3/MODEL3_SYNTHETIC_V1_ACCEPTANCE_SEAL.json,AUTHORITATIVE,Machine-readable freeze seal — hashes/metrics identity unchanged; nextStage TTS wording is historical drift (do not retune seal)
+docs/user_correction/model3/README.md,AUTHORITATIVE,Model3 entry README (text-only)
+docs/user_correction/model3/RECOVERY.md,AUTHORITATIVE,Freeze identity + role recovery
+docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md,AUTHORITATIVE,Architecture contract (text-only)
+docs/user_correction/model3/MODEL3_TRAINING_DATASET_V1_CONTRACT.md,AUTHORITATIVE,Training dataset contract
+docs/user_correction/model3/MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json,AUTHORITATIVE,Sample schema (provenance enums ≠ Model3 audio input)
+docs/user_correction/model3/STRICT_ANCHOR_CONTRAST_PAIR_V1.json,AUTHORITATIVE,Strict pair contract
+docs/user_correction/model3/model3_v1_model_visible_feature_allowlist.json,AUTHORITATIVE,Feature allowlist ACOUSTIC=0
+docs/user_correction/model3/model3_input_contract_v1.md,AUTHORITATIVE,Input contract TEXT_ONLY
+docs/user_correction/model3/model3_training_loader_contract.md,AUTHORITATIVE,Loader contract
+docs/user_correction/model3/model3_training_feature_mask_contract.md,AUTHORITATIVE,Feature mask — acoustic not model-visible
+docs/user_correction/model3/model3_training_label_materialization_contract.md,AUTHORITATIVE,Label materialization
+docs/user_correction/model3/model3_training_label_contract_v1.md,AUTHORITATIVE,Label contract parent
+docs/user_correction/model3/model3_anchor_contract_v1.md,AUTHORITATIVE,Anchor ownership — ACP Domain Evidence Authority V1 (PROFILE_PRONUNCIATION only; Domain/PROFILE_DOMAIN/PROFILE_RETRIEVAL do not Anchor)
+docs/user_correction/model3/LINGUA_ACP_ANCHOR_DOMAIN_EVIDENCE_AUTHORITY_V1.md,AUTHORITATIVE,Approved ACP superseding prior Domain Anchor authority
+docs/user_correction/model3/model3_output_contract_v1.md,AUTHORITATIVE,Output contract
+docs/user_correction/model3/model3_retry_contract_v1.md,AUTHORITATIVE,ACTIVE + FROZEN; PRODUCTION_RETRY_ENABLED=YES. Prior note "not enabled" is SUPERSEDED (2026-09-08 / Engine Stable V1).
+docs/user_correction/model3/model3_performance_contract_v1.md,AUTHORITATIVE,Performance contract
+training/model3_dataset/configs/model3_v1_training_config.json,AUTHORITATIVE,Training config SSOT
+docs/user_correction/model3/Lingua_Model3_V1_Full100K_Strict_Integration_Report_2026_08_25.md,AUTHORITATIVE,Acceptance baseline report (pre-freeze)
+docs/user_correction/model3/model3_v1_full100k_strict_integration_bundle.json,AUTHORITATIVE,Acceptance metrics bundle
+docs/user_correction/model3/MODEL3_V1_TEXT_ONLY_ROLE_CORRECTION_REPORT_2026_08_26.md,AUTHORITATIVE,Text-only role correction report
+docs/user_correction/model3/MODEL3_TTS_READINESS_AUDIT_2026_08_26.md,SUPERSEDED_FOR_MODEL3,ROLE_DRIFT_CORRECTED — historical evidence only; not Model3 next phase
+docs/user_correction/model3/model3_freeze_tts_audit_bundle.json,SUPERSEDED_FOR_MODEL3,ROLE_DRIFT_CORRECTED
+docs/user_correction/model3/model3_freeze_governance.json,SUPERSEDED_FOR_MODEL3,nextPhase TTS recommendation superseded
+docs/user_correction/model3/model3_training_sample_schema_v1.json,SUPERSEDED,Replaced by MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json
+docs/user_correction/model3/model3_v1_training_metrics.json,DEPRECATED,Leaked-feature F1=1.0 baseline — not quality claim
+docs/user_correction/model3/model3_v1_noleak_governance.json,DEPRECATED,Marks DEPRECATED_LEAKED_FEATURE_MODEL
+docs/user_correction/model3/model3_v1_forbidden_feature_leakage_check.json,HISTORICAL_EXPERIMENT,Leakage evidence
+docs/user_correction/model3/Lingua_Model3_V1_Development_Report_2026_08_24.md,HISTORICAL_EXPERIMENT,Early synthetic baseline
+docs/user_correction/model3/Lingua_Model3_V1_Synthetic_Shortcut_Generalization_Audit_2026_08_24.md,HISTORICAL_EXPERIMENT,Leakage discovery
+docs/user_correction/model3/Lingua_Model3_V1_NoLeak_Retrain_Report_2026_08_24.md,HISTORICAL_EXPERIMENT,Noleak retrain
+docs/user_correction/model3/Lingua_Model3_V1_Full100K_Development_Report_2026_08_24.md,HISTORICAL_EXPERIMENT,Full100K first pass / old STRONG diet
+docs/user_correction/model3/Lingua_Model3_V1_Full100K_Diet_Rebalance_Report_2026_08_24.md,HISTORICAL_EXPERIMENT,Diet_B
+docs/user_correction/model3/Lingua_Model3_V1_Contrast_Construction_Review_2026_08_25.md,HISTORICAL_EXPERIMENT,Fake Strong exposure
+docs/user_correction/model3/Lingua_Model3_V1_Contrast_Pair_Reconstruction_Report_2026_08_25.md,HISTORICAL_EXPERIMENT,Strict reconstruction
+docs/user_correction/model3/Lingua_Model3_V1_Strict_Contrast_HardKeep_Balance_Report_2026_08_25.md,HISTORICAL_EXPERIMENT,HardKeep_Broken
+docs/user_correction/model3/Lingua_Model3_V1_Loss_Weight_Gradient_Audit_2026_08_25.md,HISTORICAL_EXPERIMENT,Loss/gradient audit
+docs/user_correction/model3/Lingua_Model3_V1_Objective_Rebalance_Report_2026_08_25.md,HISTORICAL_EXPERIMENT,O3 objective rebalance
+docs/user_correction/model3/model3_error_text_future_tts_bridge.md,HISTORICAL_PLANNING_ONLY,Early TTS bridge — not Model3 ownership
+docs/user_correction/model3/model3_v1_tts_go_no_go.json,SUPERSEDED,Early post-leakage go/no-go
+training/model3_dataset/train/train_full100k_strict_integration.py,AUTHORITATIVE,Authoritative trainer
+training/model3_dataset/train/config_loader.py,AUTHORITATIVE,Config SSOT loader
+training/model3_dataset/train/bigru_v1.py,AUTHORITATIVE,Model + noleak packer (TEXT_ONLY)
+training/model3_dataset/train/train_v1_bigru.py,DEPRECATED,Leaked / early trainer path
+training/model3_dataset/train/train_v1_noleak.py,HISTORICAL_EXPERIMENT,Noleak experiment
+training/model3_dataset/train/train_full100k.py,HISTORICAL_EXPERIMENT,Full100K first trainer
+training/model3_dataset/train/train_diet_rebalance.py,HISTORICAL_EXPERIMENT,Diet_B only
+training/model3_dataset/train/train_strict_hardkeep_balance.py,HISTORICAL_EXPERIMENT,Broken sampler experiment
+training/model3_dataset/train/train_strict_contrast_reconstruction.py,HISTORICAL_EXPERIMENT,Strict reconstruction
+training/model3_dataset/train/train_objective_rebalance.py,HISTORICAL_EXPERIMENT,O3 precursor
+training/model3_dataset/train/train_anchor_contrast_pilot.py,HISTORICAL_EXPERIMENT,Pilot only
+electron_node/services/piper_tts/,NOT_MODEL3_RELATED,Valid TTS infra for Model2/ASR experiments — not Model3-owned
+electron_node/services/faster_whisper_vad/tone_module/,VALID_UPSTREAM_REFERENCE,Tone for Recall — not Model3 input
+docs/user_correction/model3/model3_v2_s3_freeze_manifest.json,AUTHORITATIVE,Model3 V2 S3 experimental baseline freeze
+docs/user_correction/model3/model3_v2_s3_l3_evaluation_ssot.json,AUTHORITATIVE,L1-L4 / L3 evaluator SSOT V1
+docs/user_correction/model3/Lingua_Model3_V2_S3_Freeze_and_Generalization_Limit_Audit_2026_08_31.md,AUTHORITATIVE,S3 freeze + generalization limit audit
+docs/user_correction/model3/Lingua_Model3_V2_Production_Core_S3_Report_2026_08_30.md,HISTORICAL_EVIDENCE,S3 build/train report; L3 counts superseded by L3 evaluator V1
+docs/user_correction/model3/Lingua_Model3_V2_S2_Protected_Retry_Localization_Audit_2026_08_30.md,HISTORICAL_EVIDENCE,S2 localization; L3 STRONG=10 superseded by authoritative 11

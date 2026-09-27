@@ -1,0 +1,90 @@
+{
+  "engine_stable_id": "LINGUA_ASR_POSTPROCESSING_ENGINE_STABLE_V1",
+  "freeze_phase": "LINGUA_ASR_POSTPROCESSING_STABLE_ENGINEERING_FREEZE",
+  "freeze_status": "FROZEN",
+  "git_parent_commit_at_freeze": "63b253769cab6f4b11d1ded4f9c89c4a610555b3",
+  "git_commit": null,
+  "git_commit_note": "Self-hash of the freeze commit cannot be stored inside that commit. git_parent_commit_at_freeze is the parent reference. GIT is STABLE_VERSION_REFERENCE_ONLY.",
+  "git_role": "STABLE_VERSION_REFERENCE_ONLY",
+  "git_dirty_is_hard_gate": false,
+  "authoritative_engine_ssot": [
+    "docs/user_correction/model3/Model3_V2_Frozen_Architecture_SSOT.md",
+    "docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+    "docs/user_correction/model3/model3_retry_contract_v1.md",
+    "docs/user_correction/model3/model3_output_contract_v1.md",
+    "docs/user_correction/model3/model3_input_contract_v1.md",
+    "docs/user_correction/model3/LINGUA_ACP_MODEL3_RETRY_STAGE2_TONE_RELAXATION_V1.md",
+    "docs/user_correction/model3/LINGUA_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2.md",
+    "docs/user_correction/model3/DIALOG200_BASELINE_SSOT.json"
+  ],
+  "dialog200_baseline_run_id": "dialog200_capture_v2_20260925100532",
+  "dialog200_baseline_sha256": "ae4b569473cbaa01fe905efa6368b58d7f295468451195eeb9d4cd8b4fdca13a",
+  "dialog200_baseline_artifact": "DIALOG200_FROZEN_EVIDENCE_CAPTURE_V2.jsonl",
+  "dialog200_baseline_artifact_path": "docs/user_correction/model3/DIALOG200_FROZEN_EVIDENCE_CAPTURE_V2.jsonl",
+  "capture_contract_id": "LINGUA_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2",
+  "replay_v2_official_result": "A — REPLAY_V2_OFFICIAL_EQUIVALENCE_CERTIFIED",
+  "replay_v2_official_artifact": "docs/user_correction/model3/DIALOG200_FROZEN_EVIDENCE_REPLAY_V2_OFFICIAL.json",
+  "replay_v2_acceptance_report": "docs/user_correction/model3/LINGUA_FROZEN_EVIDENCE_REPLAY_V2_OFFICIAL_ACCEPTANCE_REPORT.md",
+  "replay_v2_runner_sha256": "e857e50baebda3a8076a992cc08b98d6863e523a1f4d66c93ab758f630fda533",
+  "replay_v2_comparator_sha256": "6687ac73b269a9edb72ff4b78470dc5dc7ba9a875e1535e2c90ff419a20cf2fe",
+  "replay_v2_identity_note": "SHAs copied from the accepted Official Acceptance report. They identify the certified runner/comparator at certification time. This freeze did not edit those files.",
+  "lexicon_identity": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "relative": "node_runtime/lexicon/v3/lexicon.sqlite",
+    "sha256": "59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"
+  },
+  "tone_identity": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json",
+    "note": "Not a pinned file SHA in the Capture identity manifest."
+  },
+  "model2_identity": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "relative": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+    "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"
+  },
+  "model3_identity": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "expected_weights_sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "expected_config_hash": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"
+  },
+  "kenlm_identity": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "relative": "electron_node/services/asr_sherpa_lm/models/kenLM/zh_char_3gram.trie.bin",
+    "sha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"
+  },
+  "asr_identity": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "service": "faster-whisper-vad",
+    "source": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"
+  },
+  "current_baseline_replaced": true,
+  "v1_authority_retired": true,
+  "production_algorithm_changed": false,
+  "business_quality_gate": false,
+  "engine_data_model_boundary": {
+    "engine": "LINGUA_ASR_POSTPROCESSING_ENGINE_STABLE_V1",
+    "independent_future_versions": ["Lexicon", "Tone", "Model2", "Model3", "KenLM"],
+    "rule": "Data or model upgrades do not automatically create Engine Stable V2. Engine Stable V2 requires an intentional engine architecture, contract, or responsibility change."
+  },
+  "known_non_blocking_items": [
+    "Model3 B17→B18 causal observability gap"
+  ],
+  "canonical_engineering_acceptance": [
+    "node electron_node/electron-node/tests/dialog200-baseline-authority-freeze.focus.test.mjs",
+    "node electron_node/electron-node/tests/dialog200-frozen-evidence-replay-v2.focus.test.mjs"
+  ],
+  "not_engine_stable_gates": [
+    "BUSINESS_QUALITY",
+    "MODEL_TRAINING",
+    "DIAGNOSTIC_ONLY",
+    "WER",
+    "CER",
+    "Dialog200 final-text accuracy"
+  ]
+}
