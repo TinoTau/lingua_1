@@ -1,0 +1,27 @@
+{
+  "modelName": "MODEL3_V1_STRICT_HARDKEEP_BALANCE_C_V1",
+  "architecture": "Small BiGRU",
+  "config": {
+    "class_weight_retry": 3.0,
+    "balance": {
+      "STRICT": 0.3,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.35,
+      "NATURAL": 0.2,
+      "NO_ANCHOR": 0.15
+    },
+    "pair_consistency_loss": true,
+    "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1"
+  },
+  "vocabSize": 1314,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

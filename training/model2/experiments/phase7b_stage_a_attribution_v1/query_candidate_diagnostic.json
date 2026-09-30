@@ -1,0 +1,39 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "full": {
+    "n": 256,
+    "Recall@1": 0.6953125,
+    "Recall@3": 0.93359375,
+    "Recall@4": 0.95703125,
+    "MRR": 0.8163566468253971,
+    "Positive_average_pool_size": 15.9140625,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "candidate_only_mean_query": {
+    "n": 256,
+    "Recall@1": 0.45703125,
+    "Recall@3": 0.765625,
+    "Recall@4": 0.8203125,
+    "MRR": 0.6310217993811739,
+    "Positive_average_pool_size": 15.9140625,
+    "FuzzyPool_Recall@16_ceiling": 1.0,
+    "mean_target_rank": 1.88671875,
+    "median_target_rank": 1.0
+  },
+  "query_only_mean_candidates": {
+    "n": 256,
+    "Recall@1": 0.82421875,
+    "Recall@3": 0.85546875,
+    "Recall@4": 0.85546875,
+    "MRR": 0.8503422358891107,
+    "Positive_average_pool_size": 15.9140625,
+    "FuzzyPool_Recall@16_ceiling": 1.0,
+    "mean_target_rank": 1.8515625,
+    "median_target_rank": 0.0
+  },
+  "flag": "TERM_SPECIFIC_SHORTCUT_RISK"
+}

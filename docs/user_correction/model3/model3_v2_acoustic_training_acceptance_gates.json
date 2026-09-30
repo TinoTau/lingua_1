@@ -1,0 +1,85 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_IMPLEMENTATION_PLAN",
+  "date": "2026-08-30",
+  "status": "DESIGN_ONLY_NOT_EXECUTED",
+  "semanticFailClosed": [
+    {
+      "gate": "MODEL3_CURRENT_TEXT_IDENTITY_VALID",
+      "passWhen": "All FineSpan/path/offsets/labels refer to model3CurrentText from same-run normalizeForFwRepairInput(rawActualAsrText)",
+      "failCode": "MODEL3_CURRENT_TEXT_IDENTITY_INVALID"
+    },
+    {
+      "gate": "LABEL_FEATURE_PROVENANCE_COHERENT",
+      "passWhen": [
+        "model3CurrentText used for FineSpan/cand/path",
+        "malformedRegion = align(referenceText, model3CurrentText)",
+        "features+anchors from same ASR/FW/Tone/Recall/materialization run"
+      ],
+      "failCode": "CROSS_SAMPLE_PROVENANCE_MISMATCH"
+    },
+    {
+      "gate": "NO_FAKE_TONE_OR_CAND",
+      "passWhen": "Tone slices and candidates from production owners only",
+      "failCode": "TONE_STATE_MISSING | RECALL_STATE_INVALID"
+    },
+    {
+      "gate": "PROTECTED_HOLDOUT_ISOLATION",
+      "passWhen": "No protected id/text/near-dup in supervised aggregates",
+      "failCode": "PROTECTED_HOLDOUT_COLLISION"
+    },
+    {
+      "gate": "ANCHOR_OWNER_NOT_SKIPPED",
+      "passWhen": "Domain vote + materializeModel3Anchors always run; Model2 expand invoked before vote when Stage III complete",
+      "failCode": "ANCHOR_MATERIALIZATION_BLOCKED",
+      "note": "UNAVAILABLE model2AnchorStatus allowed on host load fail; forging forbidden; silent NONE while skipping owners forbidden"
+    },
+    {
+      "gate": "NO_JOBRESULT_PROVENANCE_BLOB",
+      "passWhen": "Training provenance stays in training artifacts only",
+      "failCode": "STOP_AND_REVIEW if JobResult change required"
+    }
+  ],
+  "nonblockingCoverage": [
+    "Low rare error-family counts",
+    "Low MODEL2 anchor rate in a small batch",
+    "Low same-surface independent contrast count",
+    "Domain NONE-heavy on general pools without domain terms"
+  ],
+  "futureGate0": {
+    "name": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0",
+    "runBefore": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+    "checks": [
+      "fresh_same_run_materialization",
+      "text_identity",
+      "tone_state_present",
+      "cand_0_and_gt0_natural",
+      "retry_plus_cand_gt0",
+      "DOMAIN_ANCHOR_OWNER_PARITY",
+      "MODEL2_ANCHOR_OWNER_PARITY_OR_PATH_AVAILABLE",
+      "FULL_ANCHOR_DISTRIBUTION_EXERCISED_when_data_supports",
+      "multipath_retention",
+      "feature_pack_parity",
+      "label_provenance_coherent",
+      "holdout_isolation",
+      "family_split_identity"
+    ],
+    "executeNow": false
+  },
+  "implementationAcceptanceBeforeDatasetBuild": [
+    "formal B2 e2e",
+    "no business-logic duplication",
+    "fresh state + same-run provenance",
+    "candidate channel noncollapsed",
+    "Anchor ownership exercised",
+    "multipath retained",
+    "shared packer + shared V2 labels",
+    "holdout protected",
+    "formal sample serialization correct"
+  ],
+  "vadEnvironmentPolicy": {
+    "preferred": "Silero VAD CUDA EP when healthy",
+    "authorizedFallback": "TONE_P10_VAD_CPU=1",
+    "hardcodeInBusinessLogic": false,
+    "recordIn": "run manifest asrEnvIdentity"
+  }
+}

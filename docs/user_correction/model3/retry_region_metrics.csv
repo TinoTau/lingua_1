@@ -1,0 +1,15 @@
+phase,metric,before,after,notes
+audit,regionsWith2charEdges,0,0,pre input-parity fix
+audit,regionsWithMoreThan1Path,0,0,pre input-parity fix
+audit,segmentationChanged,0,0,pre input-parity fix
+inputParity,regionsWith2charEdges,0,6,post tone/acoustic wiring
+inputParity,regionsWith3charEdges,0,0,
+inputParity,regionsWithMoreThan1Path,0,6,
+inputParity,segmentationChanged,0,3,d142 d131 d176
+inputParity,toneEvidencePassed,0,13,
+pathSelection,multiPathCasesWithSelectionChange,0,0,SSOT tie on boundaryKey for all 6
+pathSelection,referenceReachable,5,5,unchanged vs input-parity
+asrEnv,latticeOkN,13,13,
+asrEnv,referenceReachable,5,5,final state
+asrEnv,retryMedianMs,,2,
+asrEnv,retryP95Ms,,15,

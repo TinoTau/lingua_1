@@ -29,3 +29,21 @@ class TtsRequest(BaseModel):
             json_encoders = {
                 str: lambda v: v.encode('utf-8').decode('utf-8') if isinstance(v, str) else v
             }
+
+
+class TtsPhonemizeRequest(BaseModel):
+    """Training-only: text → espeak phoneme sequence. Does not change /tts."""
+
+    text: str
+    voice: str
+
+
+class TtsPronunciationRequest(BaseModel):
+    """Training-only: synthesize from explicit espeak phoneme sequence.
+
+    Production /tts contract is unchanged. Used by Model2 offline accent generator.
+    """
+
+    voice: str
+    phonemes: list[str]
+    note: Optional[str] = "TRAINING_ONLY"

@@ -1,0 +1,26 @@
+{
+  "phase": "MODEL3_ERROR_TEXT_GENERATOR_PILOT_DEVELOPMENT",
+  "verdict": "PASS_WITH_DATA_QUALITY_GAPS",
+  "pilot_generator_ready": true,
+  "pilot_data_ready_for_human_qa": true,
+  "safe_to_scale_dataset": false,
+  "recommended_next_phase": "MODEL3_ERROR_TEXT_PILOT_HUMAN_QA_AND_ACCEPTANCE",
+  "bases": 800,
+  "samples": 2072,
+  "target_samples": 3000,
+  "schema_pass_rate": 1.0,
+  "source_sentence_leakage": 0,
+  "contrast_group_leakage": 0,
+  "surface_pair_leakage_risk": true,
+  "dialog_200_in_train": false,
+  "random_hanzi": 0,
+  "tone_samples": 0,
+  "human_qa": "PENDING",
+  "real_asr_measurement": "MEASURED_PARTIAL",
+  "gaps": [
+    "sample_count_below_target_quality_first",
+    "tone_optional_zero",
+    "surface_pair_cross_split_nonzero",
+    "real_asr_coverage_partial"
+  ]
+}

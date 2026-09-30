@@ -1,0 +1,14 @@
+{
+  "recommended": "P1_PLUS_FRESH_DOMAIN_HEAD",
+  "option_a": "P1_PLUS_FRESH_DOMAIN_HEAD",
+  "option_b": "J1_FINE_TUNE",
+  "why": "J1 argmax matches new execute-validated teacher on a restored sample at 0.225. Domain-head contamination from the old executor is likely. Prefer P1 trunk + fresh domain head, with optional A/B vs J1 fine-tune next round.",
+  "j1_restored_action_hit_old_slice_audit": 0.83,
+  "training_executed": false,
+  "probe": {
+    "n": 80,
+    "j1_argmax_in_new_teacher_set": 18,
+    "rate": 0.225,
+    "note": "probe only; not training"
+  }
+}

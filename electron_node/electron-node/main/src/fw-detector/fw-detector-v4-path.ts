@@ -17,6 +17,18 @@ import { buildCombinationTraces } from './span-assembly-v4/v4-diagnostics-mapper
 import { resolveV4DiagnosticsConfig } from './span-assembly-v4/v4-diagnostics-config';
 import { runSpanAssemblyV4Orchestrator } from './span-assembly-v4/span-assembly-v4-orchestrator';
 import { runFwSentenceRerankFromPrefilled } from './kenlm/run-fw-sentence-rerank-from-prefilled';
+import { createHash } from 'crypto';
+import {
+  captureV2Boundary,
+  isFrozenEvidenceCaptureV2Enabled,
+  sha256Utf8,
+} from '../capture-v2';
+
+/** Acceptance-harness only: stable fingerprint of KenLM pool texts (sorted). */
+function kenlmPoolFingerprint(texts: readonly string[]): string {
+  const joined = [...texts].map((t) => String(t ?? '')).sort().join('\n');
+  return createHash('sha256').update(joined, 'utf8').digest('hex');
+}
 
 function emptySummary() {
   return {
@@ -66,6 +78,17 @@ function resolveResultReason(spans: FwSpanDiagnostics[], appliedCount: number): 
   const candidateCount = spans.reduce((n, s) => n + s.candidates.length, 0);
   if (candidateCount === 0) return 'no_candidates';
   return undefined;
+}
+
+function repairNormalizationDiag(
+  ctx: JobContext,
+  repairText: string
+): NonNullable<FwDetectorResult['repairNormalization']> {
+  return {
+    rawAsrText: ctx.rawAsrText ?? '',
+    repairText,
+    scriptNormalized: ctx.fwRepairScriptNormalized === true,
+  };
 }
 
 export type RunFwDetectorV4PathInput = {
@@ -159,6 +182,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
       },
       kenlmVetoMs: 0,
       kenlmVetoQueryCount: 0,
+      repairNormalization: repairNormalizationDiag(ctx, rawText),
     };
     ctx.fwDetectorResult = result;
     return result;
@@ -169,7 +193,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
 
   const wrapped = await runWithLexiconRecallContext({ sessionIntent }, () =>
     runWithRecallV2Diagnostics(async () => {
-      const assemblyResult = runSpanAssemblyV4Orchestrator({
+      const assemblyResult = await runSpanAssemblyV4Orchestrator({
         rawText,
         runtime,
         profile,
@@ -185,9 +209,16 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         segmentCharOffsets: ctx.segmentCharOffsets,
         traceCaseId: ctx.fwDetectorTraceCaseId,
         domainPriors: ctx.domainPriors ?? [],
+        userProfile: ctx.userProfileV1 ?? null,
+        sessionId: ctx.sessionId,
       });
       if (!assemblyResult.fwSpans.length) {
-        return { assembly: assemblyResult, decision: null };
+        return {
+          assembly: assemblyResult,
+          decision: null,
+          baselineRerank: null,
+          baselineFinalText: null,
+        };
       }
       const rerankDecision = await runFwSentenceRerankFromPrefilled({
         rawText,
@@ -202,11 +233,39 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         kenlmScorer,
         prefilledCombinations: assemblyResult.kenlmSentenceCandidates?.combinations ?? [],
       });
-      return { assembly: assemblyResult, decision: rerankDecision };
+
+      // Acceptance causal fork: score baseline KEEP branch with the SAME KenLM implementation.
+      let baselineRerank: typeof rerankDecision | null = null;
+      let baselineFinalText: string | null = null;
+      if (assemblyResult.acceptanceCausal?.baselineKenlmSentenceCandidates) {
+        const bPrimary = assemblyResult.acceptanceCausal.baselinePathAssemblyResults[0];
+        baselineRerank = await runFwSentenceRerankFromPrefilled({
+          rawText,
+          spans: bPrimary?.fwSpans ?? assemblyResult.fwSpans,
+          spanSets: bPrimary?.assemblyResult.spanSets ?? assemblyResult.spanSets,
+          config: {
+            minPrior: config.minPrior,
+            maxSentenceCandidates: config.maxSentenceCandidates,
+            minDeltaToReplace: config.minDeltaToReplace,
+            candidateRequireRepairTarget: config.candidateRequireRepairTarget,
+          },
+          kenlmScorer,
+          prefilledCombinations:
+            assemblyResult.acceptanceCausal.baselineKenlmSentenceCandidates.combinations,
+        });
+        baselineFinalText = applyFwSpanReplacements(rawText, baselineRerank.approved);
+      }
+
+      return {
+        assembly: assemblyResult,
+        decision: rerankDecision,
+        baselineRerank,
+        baselineFinalText,
+      };
     })
   );
 
-  const { assembly, decision } = wrapped;
+  const { assembly, decision, baselineRerank, baselineFinalText } = wrapped;
   ctx.fwDetectorStepMs = Date.now() - fwStartMs;
 
   const v2QueryStats = runtime.getAndResetTierQueryStats();
@@ -242,6 +301,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
       },
       kenlmVetoMs: 0,
       kenlmVetoQueryCount: 0,
+      repairNormalization: repairNormalizationDiag(ctx, rawText),
       ...(recallV2Diagnostics ? { recallV2Diagnostics } : {}),
     };
     ctx.fwDetectorResult = result;
@@ -251,6 +311,41 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
   ctx.segmentForJobResult = applyFwSpanReplacements(rawText, decision.approved);
   if (decision.approved.length > 0) {
     ctx.asrRepairApplied = true;
+  }
+
+  // Capture V2 B16/B18 — OBSERVABILITY_ONLY; no-op when gate OFF.
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    const pool = (assembly.kenlmSentenceCandidates?.combinations ?? []).map((c) => ({
+      text: c.text,
+      candidateScore: c.candidateScore,
+      raw: false,
+    }));
+    const rawTextEntry = { text: rawText, candidateScore: null, raw: true };
+    captureV2Boundary('B16', {
+      pool: [rawTextEntry, ...pool],
+      raw_candidate_identity: rawText,
+      scores_when_produced: (decision.sentenceRerank.allCombinationDeltas ?? null),
+      deltaVsRaw: decision.sentenceRerank.maxDelta ?? null,
+      picked: decision.sentenceRerank.picked?.text ?? null,
+      pickedIsRaw: decision.sentenceRerank.pickedIsRaw === true,
+      gate_inputs: {
+        maxDelta: decision.sentenceRerank.maxDelta ?? null,
+        minDeltaToReplace: config.minDeltaToReplace,
+      },
+      gate_threshold: config.minDeltaToReplace,
+      explicit_gate_decision: {
+        pickedIsRaw: decision.sentenceRerank.pickedIsRaw === true,
+        approvedCount: decision.approved.length,
+      },
+      scorer_model_identity: {
+        kenlmEnabled: enableKenLMGate,
+      },
+    });
+    const finalText = ctx.segmentForJobResult ?? rawText;
+    captureV2Boundary('B18', {
+      finalPostprocessText: finalText,
+      finalHash: sha256Utf8(String(finalText)),
+    });
   }
 
   const summary = buildSummary(decision.spans, decision);
@@ -316,12 +411,91 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
       ...(assembly.trace ?? {}),
       ...(candidateCapProbe ? { candidateCapProbe } : {}),
       ...(voteLifecycleProbe ? { voteLifecycleProbe } : {}),
+      ...(assembly.model2PathTrace
+        ? {
+            model2PathTrace: {
+              ...assembly.model2PathTrace,
+              kenlm_rerank: {
+                picked_is_raw: decision.sentenceRerank.pickedIsRaw,
+                picked_text: decision.sentenceRerank.picked?.text ?? null,
+                top_candidates: (decision.sentenceRerank.topCandidates || []).slice(0, 16),
+                kenlm_query_count: decision.sentenceRerank.kenlmQueryCount,
+                kenlm_subprocess_ms: decision.sentenceRerank.kenlmSubprocessMs ?? kenlmVetoMs,
+                min_delta_to_replace: decision.sentenceRerank.minDeltaToReplace,
+                max_delta: decision.sentenceRerank.maxDelta,
+              },
+              tone_stage: assembly.tone
+                ? {
+                    invoked: true,
+                    slice_count: (assembly.tone as { acousticSliceCount?: number }).acousticSliceCount ?? null,
+                  }
+                : { invoked: false, status: 'NOT_INVOKED' },
+              ...(assembly.acceptanceCausal && baselineFinalText != null
+                ? {
+                    acceptance_causal: {
+                      ...(typeof assembly.model2PathTrace.acceptance_causal === 'object' &&
+                      assembly.model2PathTrace.acceptance_causal
+                        ? (assembly.model2PathTrace.acceptance_causal as Record<string, unknown>)
+                        : {}),
+                      harness_version: assembly.acceptanceCausal.harnessVersion,
+                      path_parity: assembly.acceptanceCausal.pathParity,
+                      baseline_final_text: baselineFinalText,
+                      s3_final_text: applyFwSpanReplacements(rawText, decision.approved),
+                      baseline_kenlm_pool_size:
+                        assembly.acceptanceCausal.baselineKenlmSentenceCandidates.combinations
+                          .length,
+                      s3_kenlm_pool_size:
+                        assembly.kenlmSentenceCandidates?.combinations.length ?? 0,
+                      baseline_kenlm_pool_fingerprint: kenlmPoolFingerprint(
+                        assembly.acceptanceCausal.baselineKenlmSentenceCandidates.combinations.map(
+                          (c) => c.text
+                        )
+                      ),
+                      s3_kenlm_pool_fingerprint: kenlmPoolFingerprint(
+                        (assembly.kenlmSentenceCandidates?.combinations ?? []).map((c) => c.text)
+                      ),
+                      baseline_kenlm_picked_text: baselineFinalText,
+                      s3_kenlm_picked_text: applyFwSpanReplacements(rawText, decision.approved),
+                      baseline_kenlm_query_count: baselineRerank?.kenlmQueryCount ?? null,
+                      s3_kenlm_query_count: decision.sentenceRerank.kenlmQueryCount ?? null,
+                      baseline_post_fork_ms_sum: assembly.acceptanceCausal.pathParity.reduce(
+                        (s, p) => s + p.baselinePostForkMs,
+                        0
+                      ),
+                      s3_post_fork_ms_sum: assembly.acceptanceCausal.pathParity.reduce(
+                        (s, p) => s + p.s3PostForkMs,
+                        0
+                      ),
+                      // Path-sum Model3 host-infer cost (shared upstream; once per path before fork).
+                      model3_inference_ms_sum: (assembly.pathAssemblyResults ?? []).reduce(
+                        (s, p) => s + (p.model3Diagnostics?.model3LatencyMs ?? 0),
+                        0
+                      ),
+                      mutation_isolated: assembly.acceptanceCausal.pathParity.every(
+                        (p) => p.mutationIsolated
+                      ),
+                      upstream_hashes_equal: (() => {
+                        const hs = new Set(
+                          assembly.acceptanceCausal!.pathParity.map((p) => p.upstreamHash)
+                        );
+                        // Per-path hashes differ by pathId; packed+upstream must be self-consistent.
+                        return assembly.acceptanceCausal!.pathParity.every(
+                          (p) => p.mutationIsolated
+                        );
+                      })(),
+                    },
+                  }
+                : {}),
+            },
+          }
+        : {}),
     },
     kenlmVetoMs,
     kenlmVetoQueryCount,
     kenlmTiming: decision.kenlmTiming
       ? { batchMs: kenlmVetoMs, queryCount: kenlmVetoQueryCount }
       : undefined,
+    repairNormalization: repairNormalizationDiag(ctx, rawText),
     ...(recallV2Diagnostics ? { recallV2Diagnostics } : {}),
     sentenceRerank: {
       ...decision.sentenceRerank,

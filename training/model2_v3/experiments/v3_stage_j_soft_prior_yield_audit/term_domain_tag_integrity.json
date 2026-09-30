@@ -1,0 +1,33 @@
+{
+  "domain_type_records": 655,
+  "unique_lexical_identities": 588,
+  "ssot_csv_words": 551,
+  "taxonomy": {
+    "single_tag": 544,
+    "duplicate_lexical_identity": 44,
+    "multi_tag_ok": 44
+  },
+  "missing_tag": 0,
+  "multi_tag_identities": 44,
+  "first_tag_collapse_vs_ssot": 0,
+  "ssot_tags_not_on_record": 0,
+  "orphan_ssot_words_not_in_index_surface": 8,
+  "duplicate_lexical_identity_groups": 44,
+  "per_domain_unique_identities": {
+    "tourism_transport": 50,
+    "tech_ai": 53,
+    "food_order": 63,
+    "medical": 130,
+    "tourism_route": 61,
+    "milk_tea": 44,
+    "tourism_pickup": 41,
+    "coffee": 82,
+    "bakery": 37,
+    "meeting": 41,
+    "tourism_hotel": 49,
+    "transport": 4
+  },
+  "ssot_path": "D:/Programs/github/lingua_1/electron_node/docs/lexicon-assets/full_rebuild_v1/term_domain_tags_corrected.csv",
+  "index_path": "D:/Programs/github/lingua_1/training/model2_v3/dataset/policy_stage_d2/candidate_index_stage_d2.jsonl",
+  "note": "D2 index is already enrich_index_multitag applied. Unenriched sqlite flatten is first-tag-only in index.py L118."
+}

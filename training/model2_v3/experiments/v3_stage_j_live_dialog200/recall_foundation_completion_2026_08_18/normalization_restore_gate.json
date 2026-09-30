@@ -1,0 +1,11 @@
+{
+  "NORMALIZATION_GATE": "PASS",
+  "frozen_owner_reconstructed": true,
+  "opencc_capability_exists": true,
+  "architecture_allows_fw_input_canonicalization": true,
+  "ownership_conflict_if_restored_at_fw_entry": false,
+  "restore_existing_opencc": "YES",
+  "new_normalization_architecture_required": false,
+  "idempotence_all_pass": true,
+  "note": "Restore existing OpenCC at FW Repair entry only; do not add new framework."
+}

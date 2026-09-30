@@ -27,9 +27,22 @@ import {
   type ToneLookupStage,
 } from './tone-first-tier-collector';
 import {
+  isModel3RetryPinyinDomainRecovery,
+  RECALL_MODE_TONE_EXACT,
+  type RecallSemanticMode,
+} from './recall-semantic-mode';
+import {
   resolveToneRecallReadiness,
   type ToneRecallReadiness,
 } from './tone-recall-readiness';
+import { normalizeTraditionalChinese } from '../fw-detector/pinyin-ime-v2/normalize-for-ime-alignment';
+import {
+  SINGLE_CHAR_COLLECTOR_TRACE_V1,
+  classifyLength1CollectorTerminal,
+  compactLength1SqlHits,
+  type Length1CollectorDiagnostic,
+  type Length1ChosenSource,
+} from './single-char-collector-trace';
 import {
   alignVariantWindowText,
   buildFuzzyPinyinVariants,
@@ -63,6 +76,8 @@ export type RecallSpanTopKV2Result = {
   /** Always 0 after Batch 1.1C (Plain fill removed). */
   plainFallbackHitCount?: number;
   toneRecallReadiness?: ToneRecallReadiness;
+  /** Observation-only SINGLE_CHAR_COLLECTOR_TRACE_V1. Absent on 2–5 recall. */
+  length1Collector?: Length1CollectorDiagnostic;
 };
 
 export type RecallSpanTopKV2Input = {
@@ -81,6 +96,12 @@ export type RecallSpanTopKV2Input = {
    * Undefined = enabled; decide from pattern + Runtime support.
    */
   toneCallerEnabled?: boolean;
+  /**
+   * Explicit Recall semantic mode (ACP Stage2 Tone-relax).
+   * Default / omitted = tone_exact (first-pass Mandatory Tone).
+   * model3_retry_pinyin_domain_recovery = Stage2 RETRY only.
+   */
+  recallMode?: RecallSemanticMode;
   weakDomainPlan?: WeakDomainRecallPlan;
   fuzzyRecallEnabled?: boolean;
   /** Fuzzy path SQL cap per variant (default 2). */
@@ -224,7 +245,8 @@ function collectTierCandidates(
   perSpanLimit: number | undefined,
   variantSyllables: string[],
   acousticTonePattern?: number[],
-  toneCallerEnabled?: boolean
+  toneCallerEnabled?: boolean,
+  recallMode?: RecallSemanticMode
 ) {
   return collectTierCandidatesToneFirst(
     runtimeV2,
@@ -234,7 +256,8 @@ function collectTierCandidates(
     perSpanLimit,
     variantSyllables,
     acousticTonePattern,
-    toneCallerEnabled
+    toneCallerEnabled,
+    recallMode ?? RECALL_MODE_TONE_EXACT
   );
 }
 
@@ -377,10 +400,16 @@ function tryExactSurfaceBaseIdentity(
     windowText: string;
     tonePinyinKey: string;
   }
-): { chosen: HotwordEntry | null; lookupMs: number; toneSqlDelta: number } {
+): {
+  chosen: HotwordEntry | null;
+  lookupMs: number;
+  toneSqlDelta: number;
+  sqlHitCount: number;
+  eligibleCount: number;
+} {
   const surface = input.windowText.trim();
   if (!surface) {
-    return { chosen: null, lookupMs: 0, toneSqlDelta: 0 };
+    return { chosen: null, lookupMs: 0, toneSqlDelta: 0, sqlHitCount: 0, eligibleCount: 0 };
   }
   const t0 = Date.now();
   const exactRaw = runtimeV2.lookupBaseByExactSurfacePinyinAndTone(
@@ -393,17 +422,18 @@ function tryExactSurfaceBaseIdentity(
   const eligible = filterEligibleBaseSingleChar(exactRaw);
   // LIMIT 2: 0 → miss; 1 → identity; ≥2 → defensive reject (schema PK makes ≥2 unlikely).
   if (eligible.length !== 1) {
-    return { chosen: null, lookupMs, toneSqlDelta: 1 };
+    return { chosen: null, lookupMs, toneSqlDelta: 1, sqlHitCount: exactRaw.length, eligibleCount: eligible.length };
   }
   const only = eligible[0]!;
   if (only.word !== surface) {
-    return { chosen: null, lookupMs, toneSqlDelta: 1 };
+    return { chosen: null, lookupMs, toneSqlDelta: 1, sqlHitCount: exactRaw.length, eligibleCount: eligible.length };
   }
-  return { chosen: only, lookupMs, toneSqlDelta: 1 };
+  return { chosen: only, lookupMs, toneSqlDelta: 1, sqlHitCount: exactRaw.length, eligibleCount: eligible.length };
 }
 
 /**
  * Controlled length=1 Lattice Recall: base_lexicon only; Mandatory Tone Recall (1.1C).
+ * Model3 RETRY recovery mode: same base-only eligibility; Tone gate off; pinyin key lookup.
  */
 function collectBaseOnlySingleCharCandidate(
   runtimeV2: LexiconRuntimeV2,
@@ -412,6 +442,7 @@ function collectBaseOnlySingleCharCandidate(
     windowText: string;
     acousticTonePattern?: number[];
     toneCallerEnabled?: boolean;
+    recallMode?: RecallSemanticMode;
   }
 ): {
   hit: RecallSpanTopKV2Hit | null;
@@ -421,19 +452,93 @@ function collectBaseOnlySingleCharCandidate(
   toneSqlCount: number;
   queryTonePinyinKey?: string;
   toneRecallReadiness: ToneRecallReadiness;
+  diagnostic: Length1CollectorDiagnostic;
 } {
-  const { syllables, windowText, acousticTonePattern, toneCallerEnabled } = input;
+  const { syllables, windowText, acousticTonePattern, toneCallerEnabled, recallMode } = input;
   const key = syllablesKey(syllables);
   const sqlLimit = LENGTH1_AMBIGUITY_SQL_LIMIT;
+  const windowTextCanonical = normalizeTraditionalChinese((windowText || '').normalize('NFKC'));
+  const minScore = minCandidateScore();
+  const recovery = isModel3RetryPinyinDomainRecovery(recallMode);
 
-  const readiness = resolveToneRecallReadiness({
-    syllables,
-    runtimeSupportsTone: runtimeV2.supportsToneFirstRecall(),
-    acousticTonePattern,
-    toneCallerEnabled,
-  });
+  const readiness = recovery
+    ? ({ state: 'ready', tonePinyinKey: '' } as const)
+    : resolveToneRecallReadiness({
+        syllables,
+        runtimeSupportsTone: runtimeV2.supportsToneFirstRecall(),
+        acousticTonePattern,
+        toneCallerEnabled,
+      });
 
-  if (readiness.state !== 'ready') {
+  const buildDiagnostic = (args: {
+    sqlExecuted: boolean;
+    sqlHits: ReturnType<typeof compactLength1SqlHits>;
+    sqlHitCount: number;
+    eligibleHitCount: number;
+    truncated: boolean;
+    identityLookupRan: boolean;
+    identitySqlHitCount: number;
+    identityEligibleCount: number;
+    chosenSource: Length1ChosenSource;
+    chosenWord: string | null;
+    candidateScore: number | null;
+    scoreRejected: boolean;
+    hitPresent: boolean;
+    queryTonePinyinKey?: string;
+  }): Length1CollectorDiagnostic => {
+    const uniqueToneExact = args.eligibleHitCount === 1 && !args.truncated;
+    const surfaceExactHitCount = args.sqlHits.filter((h) => h.surface === windowText.trim()).length;
+    const canonicalInSqlHits = args.sqlHits.some((h) => h.surface === windowTextCanonical);
+    const terminalReason = classifyLength1CollectorTerminal({
+      syllablesLength: syllables.length,
+      pinyinKey: key,
+      windowText,
+      windowTextCanonical,
+      readinessState: readiness.state,
+      sqlExecuted: args.sqlExecuted,
+      sqlLimit,
+      sqlHitCount: args.sqlHitCount,
+      eligibleHitCount: args.eligibleHitCount,
+      truncated: args.truncated,
+      identityLookupRan: args.identityLookupRan,
+      identitySqlHitCount: args.identitySqlHitCount,
+      identityEligibleCount: args.identityEligibleCount,
+      chosenSource: args.chosenSource,
+      chosenWord: args.chosenWord,
+      candidateScore: args.candidateScore,
+      minCandidateScore: minScore,
+      scoreRejected: args.scoreRejected,
+      hitPresent: args.hitPresent,
+      canonicalInSqlHits,
+    });
+    return {
+      contract: SINGLE_CHAR_COLLECTOR_TRACE_V1,
+      pinyinKey: key,
+      windowText,
+      windowTextCanonical,
+      toneRecallReadiness: readiness.state,
+      queryExecuted: args.sqlExecuted,
+      querySource: 'live',
+      sqlLimit,
+      sqlHitCount: args.sqlHitCount,
+      postLimitCount: args.sqlHitCount,
+      preLimitCount: args.truncated ? null : args.sqlHitCount,
+      truncated: args.truncated,
+      eligibleHitCount: args.eligibleHitCount,
+      toneExactHitCount: args.eligibleHitCount,
+      uniqueToneExact,
+      surfaceExactHitCount,
+      chosenSource: args.chosenSource,
+      selectedCandidate: args.chosenWord,
+      candidateScore: args.candidateScore,
+      minCandidateScore: minScore,
+      terminalReason,
+      sqlHits: args.sqlHits,
+      queryTonePinyinKey: args.queryTonePinyinKey ?? null,
+    };
+  };
+
+  if (!recovery && readiness.state !== 'ready') {
     return {
       hit: null,
       baseLookupMs: 0,
@@ -442,6 +547,96 @@ function collectBaseOnlySingleCharCandidate(
       toneSqlCount: 0,
       queryTonePinyinKey: undefined,
       toneRecallReadiness: readiness,
+      diagnostic: buildDiagnostic({
+        sqlExecuted: false,
+        sqlHits: [],
+        sqlHitCount: 0,
+        eligibleHitCount: 0,
+        truncated: false,
+        identityLookupRan: false,
+        identitySqlHitCount: 0,
+        identityEligibleCount: 0,
+        chosenSource: null,
+        chosenWord: null,
+        candidateScore: null,
+        scoreRejected: false,
+        hitPresent: false,
+      }),
+    };
+  }
+
+  if (recovery) {
+    const t0 = Date.now();
+    const raw = runtimeV2.lookupBaseByPinyinKey(key, 1, sqlLimit);
+    const baseLookupMs = Date.now() - t0;
+    const eligible = filterEligibleBaseSingleChar(raw);
+    const truncated = length1FetchMayBeTruncated(raw.length, sqlLimit);
+    let chosenSource: Length1ChosenSource = null;
+    const chosen = resolveLength1BaseCandidate(eligible, windowText, truncated);
+    if (chosen) {
+      chosenSource = eligible.length === 1 ? 'unique_tone_exact' : 'page_surface_exact';
+    }
+    const scored = chosen
+      ? scoreLength1BaseHit(
+          chosen,
+          syllables,
+          windowText,
+          'pinyin_domain_recovery',
+          acousticTonePattern
+        )
+      : null;
+    const scoreRejected = Boolean(chosen) && !scored;
+    return {
+      hit: scored,
+      baseLookupMs,
+      toneExactHitCount: 0,
+      plainFallbackHitCount: 0,
+      toneSqlCount: 1,
+      queryTonePinyinKey: undefined,
+      toneRecallReadiness: readiness,
+      diagnostic: buildDiagnostic({
+        sqlExecuted: true,
+        sqlHits: compactLength1SqlHits(raw),
+        sqlHitCount: raw.length,
+        eligibleHitCount: eligible.length,
+        truncated,
+        identityLookupRan: false,
+        identitySqlHitCount: 0,
+        identityEligibleCount: 0,
+        chosenSource,
+        chosenWord: chosen?.word ?? null,
+        candidateScore: scored?.candidateScore ?? null,
+        scoreRejected,
+        hitPresent: Boolean(scored),
+      }),
+    };
+  }
+
+  if (readiness.state !== 'ready') {
+    // Unreachable after recovery / fail-closed returns above; keep narrow for tsc.
+    return {
+      hit: null,
+      baseLookupMs: 0,
+      toneExactHitCount: 0,
+      plainFallbackHitCount: 0,
+      toneSqlCount: 0,
+      queryTonePinyinKey: undefined,
+      toneRecallReadiness: readiness,
+      diagnostic: buildDiagnostic({
+        sqlExecuted: false,
+        sqlHits: [],
+        sqlHitCount: 0,
+        eligibleHitCount: 0,
+        truncated: false,
+        identityLookupRan: false,
+        identitySqlHitCount: 0,
+        identityEligibleCount: 0,
+        chosenSource: null,
+        chosenWord: null,
+        candidateScore: null,
+        scoreRejected: false,
+        hitPresent: false,
+      }),
     };
   }
 
@@ -451,11 +646,15 @@ function collectBaseOnlySingleCharCandidate(
   let baseLookupMs = Date.now() - t0;
   let toneSqlCount = 1;
   const eligible = filterEligibleBaseSingleChar(raw);
-  let chosen = resolveLength1BaseCandidate(
-    eligible,
-    windowText,
-    length1FetchMayBeTruncated(raw.length, sqlLimit)
-  );
+  const truncated = length1FetchMayBeTruncated(raw.length, sqlLimit);
+  let chosenSource: Length1ChosenSource = null;
+  let chosen = resolveLength1BaseCandidate(eligible, windowText, truncated);
+  if (chosen) {
+    chosenSource = eligible.length === 1 ? 'unique_tone_exact' : 'page_surface_exact';
+  }
+  let identityLookupRan = false;
+  let identitySqlHitCount = 0;
+  let identityEligibleCount = 0;
   // Batch 1.1B: only when ambiguity yields no Candidate — Tone exact only (1.1C).
   if (!chosen) {
     const exact = tryExactSurfaceBaseIdentity(runtimeV2, {
@@ -465,11 +664,20 @@ function collectBaseOnlySingleCharCandidate(
     });
     baseLookupMs += exact.lookupMs;
     toneSqlCount += exact.toneSqlDelta;
+    identityLookupRan = exact.toneSqlDelta > 0 || Boolean(windowText.trim());
+    identitySqlHitCount = exact.sqlHitCount;
+    identityEligibleCount = exact.eligibleCount;
     chosen = exact.chosen;
+    if (chosen) {
+      chosenSource = 'identity_surface_exact';
+    }
   }
-  const hit = chosen
+  const scored = chosen
     ? scoreLength1BaseHit(chosen, syllables, windowText, 'tone_exact', acousticTonePattern)
     : null;
+  const scoreRejected = Boolean(chosen) && !scored;
+  const hit = scored;
+  const sqlHits = compactLength1SqlHits(raw);
   return {
     hit,
     baseLookupMs,
@@ -478,6 +686,22 @@ function collectBaseOnlySingleCharCandidate(
     toneSqlCount,
     queryTonePinyinKey: tonePinyinKey,
     toneRecallReadiness: readiness,
+    diagnostic: buildDiagnostic({
+      sqlExecuted: true,
+      sqlHits,
+      sqlHitCount: raw.length,
+      eligibleHitCount: eligible.length,
+      truncated,
+      identityLookupRan,
+      identitySqlHitCount,
+      identityEligibleCount,
+      chosenSource,
+      chosenWord: chosen?.word ?? null,
+      candidateScore: scored?.candidateScore ?? null,
+      scoreRejected,
+      hitPresent: Boolean(hit),
+      queryTonePinyinKey: tonePinyinKey,
+    }),
   };
 }
 
@@ -493,10 +717,12 @@ export function recallSpanTopKV2(
     perSpanLimit,
     acousticTonePattern,
     toneCallerEnabled,
+    recallMode,
   } = input;
   const cfg = getLexiconRuntimeV2Config();
   const recallStart = Date.now();
   const fuzzyRecallEnabled = input.fuzzyRecallEnabled === true;
+  const effectiveRecallMode = recallMode ?? RECALL_MODE_TONE_EXACT;
 
   if (topK <= 0 || syllables.length < 1 || syllables.length > 5 || !syllables.length) {
     return {
@@ -523,6 +749,7 @@ export function recallSpanTopKV2(
       windowText,
       acousticTonePattern,
       toneCallerEnabled,
+      recallMode: effectiveRecallMode,
     });
     const hits = collected.hit ? [collected.hit] : [];
     const v2RecallMs = Date.now() - recallStart;
@@ -573,6 +800,7 @@ export function recallSpanTopKV2(
         collected.toneExactHitCount > 0 ? collected.toneExactHitCount : undefined,
       plainFallbackHitCount: undefined,
       toneRecallReadiness: collected.toneRecallReadiness,
+      length1Collector: collected.diagnostic,
     };
   }
 
@@ -616,7 +844,8 @@ export function recallSpanTopKV2(
       perVariantLimit,
       variant.syllables,
       acousticTonePattern,
-      toneCallerEnabled
+      toneCallerEnabled,
+      effectiveRecallMode
     );
 
     toneExactHitCount += tier.toneExactHitCount;

@@ -1,0 +1,12 @@
+path,change,why
+training/model2_v3/policy/feature_hash_v1.py,ADD,MODEL2_FEATURE_HASH_V1
+electron_node/services/model2_runtime/model2_inference_host.py,ADD,Stage P sidecar host
+electron_node/electron-node/main/src/model2-runtime/*,ADD,adapters+host client+tests
+electron_node/.../span-assembly-v4-orchestrator.ts,MODIFY,async + Model2 insert
+electron_node/.../fw-detector-v4-path.ts,MODIFY,await + userProfile pass
+electron_node/.../v4-types.ts,MODIFY,provenance contract delta
+electron_node/.../job-context.ts,MODIFY,userProfileV1 fields
+electron_node/.../inference-service.ts,MODIFY,profile options
+electron_node/.../node-agent-simple.ts,MODIFY,profile plumbing
+electron_node/.../node-agent-job-processor.ts,MODIFY,profile binding
+electron_node/.../recall-scope-wiring.test.ts,MODIFY,await async orchestrator

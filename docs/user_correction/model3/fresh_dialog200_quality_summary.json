@@ -1,0 +1,127 @@
+{
+  "phase": "FULL_PIPELINE_FRESH_DIALOG200_CAUSAL_RECONCILIATION_AUDIT",
+  "run_id": "dialog200_full_pipeline_20260909_001141",
+  "TOTAL_CASES": 200,
+  "RAW_CORRECT": 25,
+  "FINAL_CORRECT": 31,
+  "RAW_ACCURACY": 0.125,
+  "FINAL_ACCURACY": 0.155,
+  "NET_CORRECT_GAIN": 6,
+  "FULL_RESCUE": 6,
+  "PARTIAL_IMPROVEMENT": 60,
+  "UNCHANGED": 109,
+  "DIFFERENT_WRONG": 0,
+  "REGRESSION": 0,
+  "CORRECT_PRESERVED": 25,
+  "CORRECT_BROKEN": 0,
+  "RAW_CER": 0.2303,
+  "FINAL_CER": 0.167,
+  "CER_DELTA": -0.0633,
+  "baseline_compare": {
+    "previous_raw_exact": 24,
+    "previous_final_exact": 30,
+    "fresh_raw_exact": 25,
+    "fresh_final_exact": 31,
+    "class": "MINOR_RUNTIME_VARIANCE"
+  },
+  "breakpoint_counts": {
+    "ASR_INFORMATION_LOSS": 0,
+    "NO_LOCAL_LEXICAL_TARGET": 59,
+    "FINE_SPAN_TARGET_NOT_EXPOSED": 0,
+    "QUERY_NOT_REPAIR_CAPABLE": 100,
+    "LEXICON_COVERAGE_MISSING": 0,
+    "RECALL_MATCHING_FAILED": 14,
+    "DOMAIN_BUCKET_FILTER_LOSS": 0,
+    "MODEL2_FAILURE": 0,
+    "MODEL3_FALSE_KEEP": 0,
+    "MODEL3_FALSE_RETRY": 0,
+    "RETRY_RECALL_FAILED": 0,
+    "ASSEMBLY_CANDIDATE_LOSS": 2,
+    "CANDIDATE_CAP_LOSS": 0,
+    "KENLM_WRONG_SELECTION": 0,
+    "FINAL_APPLY_MISMATCH": 0,
+    "UNKNOWN_NOT_ISOLATED": 0
+  },
+  "VALID_MINIMAL_LEXICAL_TARGET_COUNT": 116,
+  "INVALID_CONTEXT_FRAGMENT_COUNT": 37,
+  "AMBIGUOUS_TARGET_COUNT": 0,
+  "QUERY_NOT_REPAIR_CAPABLE_COUNT": 100,
+  "VALID_LEXICON_COVERAGE_MISSING_COUNT": 0,
+  "RECALL_MATCHING_FAILED_COUNT": 14,
+  "MODEL3_FIRST_BREAKPOINT_COUNT": 0,
+  "KENLM_FIRST_BREAKPOINT_COUNT": 0,
+  "UNKNOWN_NOT_ISOLATED_COUNT": 0,
+  "TOP_FIRST_BREAKPOINT": "QUERY_NOT_REPAIR_CAPABLE",
+  "TOP_ACTIONABLE_BREAKPOINT": "QUERY_NOT_REPAIR_CAPABLE",
+  "TOP_REGRESSION_OWNER": "NONE",
+  "NEXT_DELTA": "LOCAL_REPAIR_QUERY_EFFECTIVENESS_PREDEVELOPMENT_AUDIT",
+  "MODEL3_OWNED_FIRST_BREAKPOINT_COUNT": 0,
+  "MODEL3_REOPEN_REQUIRED": "NO",
+  "RETRY_ARCHITECTURE_VIOLATION_COUNT": 0,
+  "RETRY_EFFECTIVENESS_GAP_COUNT": 100,
+  "RETRY_REOPEN_REQUIRED": "NO",
+  "candidate_cap": {
+    "max": 8,
+    "p50": 1,
+    "p95": 4,
+    "over16": 0,
+    "correctCandidateLostByCap": 0
+  },
+  "performance": {
+    "pipeline": {
+      "p50": 7146,
+      "p95": 15530,
+      "max": 25112
+    },
+    "fw": {
+      "p50": 2414,
+      "p95": 7561,
+      "max": 17915
+    },
+    "kenlm": {
+      "p50": 512,
+      "p95": 655,
+      "max": 4605
+    },
+    "wall": {
+      "p50": 7162,
+      "p95": 15551,
+      "max": 25277
+    },
+    "model3": {
+      "p50": 19,
+      "p95": 86,
+      "max": 193
+    },
+    "retry": {
+      "p50": 42,
+      "p95": 257,
+      "max": 588
+    }
+  },
+  "reconciliation": {
+    "previous_claim_LEXICON_COVERAGE_MISSING": 143,
+    "fresh_LEXICON_COVERAGE_MISSING": 0,
+    "RECLASSIFIED_FROM_LEXICON": 143,
+    "note": "Old 143 used reference-diff windows as lexical targets (STALE). Minimality SSOT rejects STRUCTURAL_COMPOSITION as lexicon owner.",
+    "reclass_destinations_approx": {
+      "QUERY_NOT_REPAIR_CAPABLE": 100,
+      "NO_LOCAL_LEXICAL_TARGET": 59,
+      "RECALL_MATCHING_FAILED": 14,
+      "INVALID_CONTEXT_FRAGMENT_cases_in_minimality_ssot": 84
+    }
+  },
+  "environment": {
+    "NODE_RUNTIME_STARTED": "YES",
+    "DIALOG200_EXECUTED_FRESH": "YES",
+    "DIALOG200_CASES_EXECUTED": 200,
+    "LEXICON_RUNTIME_READY": "YES",
+    "MODEL3_RUNTIME_IDENTITY_VALID": "YES",
+    "BUILD_MAIN_PASS": "YES",
+    "ORACLE_LEAK": "NO",
+    "PRODUCTION_SEMANTIC_DIFF": "NO"
+  },
+  "minimality_ssot": "Lingua_Model3_V2_S3_Lexical_Target_Minimality_Audit_2026_09_03.md",
+  "generated_at": "2026-09-08T12:45:17Z",
+  "verdict": "FULL_PIPELINE_FRESH_DIALOG200_CAUSAL_AUDIT_PASS"
+}

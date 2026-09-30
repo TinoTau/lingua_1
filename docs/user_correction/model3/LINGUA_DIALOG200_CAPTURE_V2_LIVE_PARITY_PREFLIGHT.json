@@ -1,0 +1,494 @@
+{
+  "schema": "LINGUA_DIALOG200_CAPTURE_V2_LIVE_PARITY_PREFLIGHT",
+  "harness_mode": "CONTROLLED_POST_ASR_PIN_FORK",
+  "run_id": "dialog200_capture_v2_20260925100532",
+  "git_commit": "63b253769cab6f4b11d1ded4f9c89c4a610555b3",
+  "PREFLIGHT_CASE_COUNT": 8,
+  "cases": [
+    {
+      "caseId": "d002",
+      "reason_selected": "single-batch capability",
+      "capabilities": [
+        "A_single_batch",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "4eb472261d0396e08d2f9cbec59c77b710b827ee733b04e849c447c783d7aa92",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "46ba9f837b20cccc09764afaa99cf8073025ab5a9171ea5ec5d7be7958718fac",
+      "OFF_PREEXEC_INPUT_HASH": "46ba9f837b20cccc09764afaa99cf8073025ab5a9171ea5ec5d7be7958718fac",
+      "ON_PREEXEC_INPUT_HASH": "46ba9f837b20cccc09764afaa99cf8073025ab5a9171ea5ec5d7be7958718fac",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 16,
+      "on_slice_count": 16,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "on_final": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d001",
+      "reason_selected": "multi-batch capability",
+      "capabilities": [
+        "B_multi_batch",
+        "D_multipath",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "002acced5ba26165012cc966ce64f2d0a42e33740dcb25aa6638f9967cdbe512",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "96bb246054d5743e521ebee654232650689c97a878808db50f166a7af50e1d07",
+      "OFF_PREEXEC_INPUT_HASH": "96bb246054d5743e521ebee654232650689c97a878808db50f166a7af50e1d07",
+      "ON_PREEXEC_INPUT_HASH": "96bb246054d5743e521ebee654232650689c97a878808db50f166a7af50e1d07",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 19,
+      "on_slice_count": 19,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "你好,我想点一杯热拿铁钟贝少糖 今天有蓝没马分吗?",
+      "on_final": "你好,我想点一杯热拿铁钟贝少糖 今天有蓝没马分吗?",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d010",
+      "reason_selected": "Traditional ASR script capability",
+      "capabilities": [
+        "A_single_batch",
+        "C_script_normalized",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "e3f7aa04bebc7c3b694b1789b1d815001304cf8ffab258660b7486c5be0571e9",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "d805fc8323ee421a2ab02d979988a7a0d1644072aedf06abfd4c4f2e9585a8c1",
+      "OFF_PREEXEC_INPUT_HASH": "d805fc8323ee421a2ab02d979988a7a0d1644072aedf06abfd4c4f2e9585a8c1",
+      "ON_PREEXEC_INPUT_HASH": "d805fc8323ee421a2ab02d979988a7a0d1644072aedf06abfd4c4f2e9585a8c1",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 20,
+      "on_slice_count": 20,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "医生您好,我这两天头痛想开点,要并做个些常规",
+      "on_final": "医生您好,我这两天头痛想开点,要并做个些常规",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d003",
+      "reason_selected": "multi-path capability",
+      "capabilities": [
+        "B_multi_batch",
+        "D_multipath",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "22e7d9a20eeaa86356347acabf140122ad789ea59360cfeb2757c5835bd33019",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "ecc8fcd6f1a7b862ae077f12216d6d263c98511ac93d16107112120862a6f302",
+      "OFF_PREEXEC_INPUT_HASH": "ecc8fcd6f1a7b862ae077f12216d6d263c98511ac93d16107112120862a6f302",
+      "ON_PREEXEC_INPUT_HASH": "ecc8fcd6f1a7b862ae077f12216d6d263c98511ac93d16107112120862a6f302",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 17,
+      "on_slice_count": 17,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "请问,这款烟麦拿铁可以烧病吗?我赶时间小背",
+      "on_final": "请问,这款烟麦拿铁可以烧病吗?我赶时间小背",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d004",
+      "reason_selected": "Base Recall active multi-batch",
+      "capabilities": [
+        "B_multi_batch",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "a2223b8aad6e5d6b2cdb256cfd128aaa27c0774a3d572f941c4dd97a76106d8b",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "dde48d905d482e37637ea5a7f09f331b24c0e81816abb40a6b224f9772865714",
+      "OFF_PREEXEC_INPUT_HASH": "dde48d905d482e37637ea5a7f09f331b24c0e81816abb40a6b224f9772865714",
+      "ON_PREEXEC_INPUT_HASH": "dde48d905d482e37637ea5a7f09f331b24c0e81816abb40a6b224f9772865714",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 31,
+      "on_slice_count": 31,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里",
+      "on_final": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d149",
+      "reason_selected": "script-normalized + multi-batch (capability category C)",
+      "capabilities": [
+        "B_multi_batch",
+        "C_script_normalized",
+        "D_multipath",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "cd48db09a5b337d8b34f8e06d1d35487759225acab98761af6b6574c9abdfbb0",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "e62069e6144d23647c52ba2e89bab71c0e5d89b410f16fdfeae8e559fad234d3",
+      "OFF_PREEXEC_INPUT_HASH": "e62069e6144d23647c52ba2e89bab71c0e5d89b410f16fdfeae8e559fad234d3",
+      "ON_PREEXEC_INPUT_HASH": "e62069e6144d23647c52ba2e89bab71c0e5d89b410f16fdfeae8e559fad234d3",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 20,
+      "on_slice_count": 20,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "请问,这双鞋 有私使麻麻不合是三天内可以退换吧",
+      "on_final": "请问,这双鞋 有私使麻麻不合是三天内可以退换吧",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d006",
+      "reason_selected": "single-path / sparse lattice",
+      "capabilities": [
+        "A_single_batch",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "f050903363a0589bcb30fbed7ef5f0a2e35bffd4790ce90c6d8cf11465610a0f",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "de5a1aeb508063a461c4b698cab18382d033102259146f6d5567e712fbefc8a7",
+      "OFF_PREEXEC_INPUT_HASH": "de5a1aeb508063a461c4b698cab18382d033102259146f6d5567e712fbefc8a7",
+      "ON_PREEXEC_INPUT_HASH": "de5a1aeb508063a461c4b698cab18382d033102259146f6d5567e712fbefc8a7",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 26,
+      "on_slice_count": 26,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "on_final": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    },
+    {
+      "caseId": "d005",
+      "reason_selected": "multi-batch multipath heavy",
+      "capabilities": [
+        "B_multi_batch",
+        "D_multipath",
+        "E_base_recall",
+        "F_model2",
+        "G_kenlm",
+        "H_model3"
+      ],
+      "wav_sha256": "a95be8cc42eddea27ff25484ef45ef6eafcd2cd08c55a8ad724a5a6a5ac00306",
+      "CONTROLLED_INPUT_VALID": "PASS",
+      "UPSTREAM_MATERIALIZATION_COUNT": 1,
+      "AUTHORITATIVE_POST_ASR_HASH": "e7302408d4696b90266880c880aa589e2f64c54a81501741029f887c8f4b31fa",
+      "OFF_PREEXEC_INPUT_HASH": "e7302408d4696b90266880c880aa589e2f64c54a81501741029f887c8f4b31fa",
+      "ON_PREEXEC_INPUT_HASH": "e7302408d4696b90266880c880aa589e2f64c54a81501741029f887c8f4b31fa",
+      "OFF_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "ON_INPUT_EQUALS_AUTHORITATIVE": "YES",
+      "AUTHORITATIVE_MUTATED": "NO",
+      "CAPTURE_GATE_ONLY_VARIABLE": "YES",
+      "historical_evidence_loaded": "NO",
+      "final_equal": true,
+      "decision_diffs": [],
+      "decision_diff_count": 0,
+      "capture_artifact_absent_off": true,
+      "capture_artifact_present": true,
+      "CAPTURE_ON_ACOUSTIC_TONE_SLICES_PRESENT": "YES",
+      "pin_slice_count": 29,
+      "on_slice_count": 29,
+      "on_completeness": "COMPLETE",
+      "status": "PASS",
+      "failure_class": null,
+      "off_final": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "on_final": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "off_asr_step_delta": 0,
+      "on_asr_step_delta": 0
+    }
+  ],
+  "PHASE_A_LIVE_PARITY": "PASS",
+  "PREFLIGHT_FINAL_PARITY": "PASS",
+  "PREFLIGHT_DECISION_PARITY": "PASS",
+  "OBSERVER_EFFECT_DETECTED": "NO",
+  "CONTROLLED_INPUT_VALID": "PASS",
+  "RESULT_HINT": "A",
+  "controlled_boundary": {
+    "CONTROLLED_BOUNDARY": "post-ASR JobContext pin → FW Capture OFF/ON fork",
+    "CONTROLLED_FIELDS": [
+      "rawAsrText",
+      "segments",
+      "segmentTimeOffsetsSec",
+      "asrSegmentNodeBatchIndices",
+      "segmentCharOffsets",
+      "acousticToneSlices"
+    ],
+    "FIELD_PROVENANCE": [
+      {
+        "FIELD": "rawAsrText",
+        "PRODUCER": "asr-step (Production ASR)",
+        "DOWNSTREAM_CONSUMER": "FW normalize / WTS baseline",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — ASR text must be identical across Capture OFF/ON"
+      },
+      {
+        "FIELD": "segments (+ words + timestamps)",
+        "PRODUCER": "asr-step",
+        "DOWNSTREAM_CONSUMER": "WTS / FineSpan / Capture B1",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — segmentation identity"
+      },
+      {
+        "FIELD": "segmentTimeOffsetsSec",
+        "PRODUCER": "asr-step multi-batch alignment",
+        "DOWNSTREAM_CONSUMER": "buildWordTimeSpans / Capture B2",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — absolute time mapping"
+      },
+      {
+        "FIELD": "asrSegmentNodeBatchIndices",
+        "PRODUCER": "asr-step",
+        "DOWNSTREAM_CONSUMER": "buildWordTimeSpans / Capture B2",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — batch index mapping"
+      },
+      {
+        "FIELD": "segmentCharOffsets",
+        "PRODUCER": "asr-step",
+        "DOWNSTREAM_CONSUMER": "buildWordTimeSpans / Capture B2",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — char offset mapping"
+      },
+      {
+        "FIELD": "acousticToneSlices",
+        "PRODUCER": "asr-step Tone merge (Production Tone)",
+        "DOWNSTREAM_CONSUMER": "mapped Tone / Capture B4",
+        "WHY_REQUIRED": "MINIMUM_CONTROLLED_BOUNDARY — real Tone SSOT; must not be reconstructed"
+      }
+    ],
+    "UPSTREAM_MATERIALIZATION_MODE": "LIVE_WAV_ASR_TONE_ONCE_PER_CASE"
+  },
+  "config_difference_audit": {
+    "OFF_CONFIG": {
+      "NODE_ENV": "production",
+      "TONE_P10_VAD_CPU": "1",
+      "MODEL2_DIALOG200_TRACE": "1",
+      "MODEL3_CANDIDATE_PROVENANCE_TRACE": "1",
+      "MODEL3_CHECKPOINT_IDENTITY": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "PROFILE_MODE": "NO_PROFILE",
+      "use_lexicon": true,
+      "is_manual_cut": true,
+      "lexicon_v2_intent_enabled": false,
+      "entry_after_fork": "/run-lexicon-mock (post-ASR inject)",
+      "FROZEN_EVIDENCE_CAPTURE_V2": "0"
+    },
+    "ON_CONFIG": {
+      "NODE_ENV": "production",
+      "TONE_P10_VAD_CPU": "1",
+      "MODEL2_DIALOG200_TRACE": "1",
+      "MODEL3_CANDIDATE_PROVENANCE_TRACE": "1",
+      "MODEL3_CHECKPOINT_IDENTITY": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "PROFILE_MODE": "NO_PROFILE",
+      "use_lexicon": true,
+      "is_manual_cut": true,
+      "lexicon_v2_intent_enabled": false,
+      "entry_after_fork": "/run-lexicon-mock (post-ASR inject)",
+      "FROZEN_EVIDENCE_CAPTURE_V2": "1"
+    },
+    "DIFF": [
+      "FROZEN_EVIDENCE_CAPTURE_V2"
+    ],
+    "CAPTURE_GATE_ONLY": "YES"
+  },
+  "runtime_identity": {
+    "pin": {
+      "capture_gate": "OFF",
+      "export_post_asr_pin": true,
+      "health": {
+        "node": {
+          "ok": true,
+          "body": null
+        },
+        "asr": {
+          "ok": true,
+          "body": {
+            "status": "ok",
+            "device": "cuda",
+            "compute_type": "int8_float16",
+            "asr_model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+            "asr_model_loaded": true,
+            "vad_model_loaded": true,
+            "asr_worker": {
+              "is_running": true,
+              "worker_state": "running",
+              "worker_pid": 30372,
+              "queue_depth": 0,
+              "total_tasks": 1,
+              "completed_tasks": 1,
+              "failed_tasks": 0,
+              "worker_restarts": 0,
+              "avg_wait_ms": 12092.69,
+              "pending_results": 0
+            },
+            "readiness": {
+              "process_alive": true,
+              "worker_running": true,
+              "worker_accepting_tasks": true,
+              "queue_depth": 0,
+              "queue_max": 1,
+              "queue_full": false,
+              "utterance_ready": true,
+              "worker_restarting": false,
+              "last_error": null
+            }
+          }
+        }
+      }
+    },
+    "off": {
+      "capture_gate": "OFF",
+      "health": {
+        "node": {
+          "ok": true,
+          "body": null
+        },
+        "asr": {
+          "ok": false,
+          "error": "fetch failed"
+        }
+      }
+    },
+    "on": {
+      "capture_gate": "ON",
+      "health": {
+        "node": {
+          "ok": true,
+          "body": null
+        },
+        "asr": {
+          "ok": false,
+          "error": "fetch failed"
+        }
+      }
+    },
+    "MODEL2_DIALOG200_TRACE": "1",
+    "note": "After live pin, only FROZEN_EVIDENCE_CAPTURE_V2 differs between OFF/ON arms"
+  },
+  "comparison_policy": {
+    "compares": [
+      "P1 finalPostprocessText",
+      "P2 base candidate SET (when exposed)",
+      "P3 model2 selected actions",
+      "P5 path ids",
+      "P6 domain vote",
+      "P7 assembly",
+      "P8 kenlm pool",
+      "P9 kenlm picked",
+      "P10 kenlm gate",
+      "P11 model3 decisions",
+      "P12 final"
+    ],
+    "excludes": [
+      "runtime IDs",
+      "timestamps",
+      "wall latency",
+      "machine paths",
+      "diagnostic truncation dump size",
+      "capture artifact itself"
+    ],
+    "controlled_input_policy": "Semantic parity interpreted only after UPSTREAM_MATERIALIZATION_COUNT=1 and OFF/ON input hashes equal authoritative",
+    "harness_note": "Phase A repaired: dual full-audio ASR path retired. Live pin once → /run-lexicon-mock inject → Capture gate only variable."
+  }
+}

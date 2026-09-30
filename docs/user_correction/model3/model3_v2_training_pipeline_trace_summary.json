@@ -1,0 +1,155 @@
+{
+  "phase": "MODEL3_V2_TRAINING_DATA_PIPELINE_TRACE_COMPLETENESS_AUDIT",
+  "verdict": "MODEL3_TRAINING_PIPELINE_TRACE_COMPLETENESS_PASS_WITH_GOVERNANCE_GAPS",
+  "nextPhase": "MODEL3_V2_TRAINING_DATA_IDENTITY_GUARD_DEVELOPMENT",
+  "acpRequired": "NO",
+  "checkpointIdentity": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "verified": true
+  },
+  "datasetIdentity": {
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "verified": true
+  },
+  "checkpointConfigFields": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "datasetId": {
+      "value": "MODEL3_V2_PRODUCTION_CORE_S3",
+      "status": "PRESENT"
+    },
+    "datasetBuildId": {
+      "value": "prod_core_s3_build_20260830_v1",
+      "status": "PRESENT"
+    },
+    "featureContract": {
+      "value": "packModel3SpanInferFields",
+      "status": "PRESENT"
+    },
+    "labelContractVersion": {
+      "value": "MODEL3_LABEL_CONTRACT_V2_20260829",
+      "status": "PRESENT"
+    },
+    "seed": {
+      "value": 2026083013,
+      "status": "PRESENT"
+    },
+    "weightsSha256_in_config": {
+      "status": "MISSING",
+      "boundVia": "sidecar training_metrics / docs manifest / dataset_manifest"
+    }
+  },
+  "manifestStatus": "PRESENT_SINGLE_dataset_manifest.json_PLUS_summary",
+  "shardContentHashInManifest": "MISSING",
+  "shardHashesDiagnostic": {
+    "train": {
+      "path": "training/model3_dataset/model3_v2_production_core_s3/train/shard-000.jsonl",
+      "sha256": "157be7a4ba36f693ab620c4b2b31d69c39271da821b4fba8c7d0c42f0511c9f9"
+    },
+    "dev": {
+      "path": "training/model3_dataset/model3_v2_production_core_s3/dev/shard-000.jsonl",
+      "sha256": "47d2dfd57d89926df295bb1f58a1dc55f947071ef0b407331b95422ae3f6065a"
+    },
+    "test": {
+      "path": "training/model3_dataset/model3_v2_production_core_s3/test/shard-000.jsonl",
+      "sha256": "770a3e4dc332d3c773407d9e14e1aa5df60a1887db71b2d58b74421d4c0cf08f"
+    }
+  },
+  "splitIntegrity": {
+    "train∩dev": 0,
+    "train∩test": 0,
+    "dev∩test": 0
+  },
+  "familyCounts": {
+    "train": 8024,
+    "dev": 977,
+    "test": 999
+  },
+  "sampleCounts": {
+    "train": 24296,
+    "dev": 2877,
+    "test": 3181
+  },
+  "heldoutStatus": "ZERO_HITS",
+  "heldoutNote": "exact text hits=0 checked=24296 keys=11",
+  "featureContractStatus": "VERIFIED_WITH_DUPLICATE_6D_PARITY",
+  "labelContractStatus": "VERIFIED_V2",
+  "candStatesEndToEnd": {
+    "1": 300486,
+    "0": 163904,
+    "2": 3166
+  },
+  "contamination": {
+    "labeled": 0,
+    "realdist": 0,
+    "mixedBuildIds": [
+      "prod_core_s3_build_20260830_v1"
+    ]
+  },
+  "invalidPriorAuditRootCause": {
+    "classification": "MULTIPLE",
+    "primary": "STALE_HARDCODED_PATH",
+    "secondary": [
+      "MISSING_CHECKPOINT_DATASET_BINDING",
+      "AUDIT_SCRIPT_NO_G0"
+    ],
+    "script": "training/model3_dataset/scripts/audit_model3_v2_localization_training_causality.py",
+    "line": "TRAIN_DIR = .../model3_v2_labeled/train",
+    "also": "run-model3-v2-target-localization-generalization-audit.mjs TRAIN_LABELED",
+    "firstOwner": "STALE_HARDCODED_PATH",
+    "assertedIdentityBeforeLoad": "NO"
+  },
+  "governanceGaps": [
+    "G0 not implemented in audits",
+    "stale labeled defaults still in causality/generalization scripts",
+    "SHARD_CONTENT_HASH_MISSING from dataset_manifest",
+    "loader None→0 silent for cand when field missing",
+    "duplicate 6D formulas (parity confirmed)"
+  ],
+  "identityFunnel": {
+    "checkpointHash": "PASS",
+    "trainScript": "PASS",
+    "datasetId": "PASS",
+    "buildId": "PASS",
+    "manifest": "PASS",
+    "shards": "PASS",
+    "shardBuildConsistency": "PASS",
+    "featureContract": "PASS",
+    "labelContract": "PASS",
+    "splitIntegrity": "PASS",
+    "heldoutIntegrity": "PASS_EXACT_TEXT_ZERO_HITS",
+    "authoritativeChainComplete": "YES_WITH_GOVERNANCE_GAPS"
+  },
+  "g0Readiness": {
+    "fieldsAvailable": [
+      "modelId",
+      "weightsSha256",
+      "datasetId",
+      "datasetBuildId",
+      "featureContract",
+      "labelContractVersion"
+    ],
+    "existingMetadataSufficient": true,
+    "newRegistryNecessary": false,
+    "hardStopOnMismatch": true,
+    "mustRunBeforeSampleLoad": true
+  },
+  "rebuildJustified": "NO",
+  "retrainJustified": "NO",
+  "dataCorrectionJustified": "NO",
+  "governance": {
+    "productionCodeChanged": "NO",
+    "trainingExecuted": "NO",
+    "datasetRebuilt": "NO",
+    "modelChanged": "NO",
+    "thresholdChanged": "NO",
+    "featureContractChanged": "NO",
+    "fineSpanChanged": "NO",
+    "retryChanged": "NO",
+    "recallChanged": "NO",
+    "model2Changed": "NO",
+    "domainVoteChanged": "NO",
+    "jobResultChanged": "NO"
+  }
+}

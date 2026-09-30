@@ -1,0 +1,6 @@
+{
+  "heldout_term_overlap_with_train": [],
+  "PASS": true,
+  "split_rule": "md5(term_id)%5==0 → heldout test; ==1 val; else train",
+  "note": "Same term may appear with different FineSpans across splits only if split tied to term_id"
+}

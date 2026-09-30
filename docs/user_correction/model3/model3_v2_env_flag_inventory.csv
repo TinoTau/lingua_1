@@ -1,0 +1,10 @@
+flag,default,production_reachable,test_only,changes_business_behavior,still_used,classification
+MODEL3_ACCEPTANCE_CAUSAL_FORK,unset,false,yes,yes when=1 (fork+double complete),causal harness runners,TEST_ONLY
+MODEL3_HARNESS_KEEP_ALL,unset,false unless env set,yes,yes (skip infer without forcePack),legacy ab runner+unit tests,OBSOLETE
+MODEL3_CHECKPOINT_IDENTITY,production default model,production,yes,no,yes,PRODUCTION_REQUIRED
+MODEL3_INFERENCE_INPUT_TRACE,on in tests,production if set,yes,no,acceptance runners,TEST_ONLY
+MODEL2_DIALOG200_TRACE,on in tests,production if set,yes,no (trace only),acceptance runners,TEST_ONLY
+model3KeepAll input arg,false,production if orchestrator input set,no,yes,rare test hooks,TEST_ONLY
+model3DecisionOverride input arg,undefined,production if set,no,yes,unit tests,TEST_ONLY
+forcePackSymmetry arg,false,only causal fork path,no,yes (always pack),causal fork,TEST_ONLY
+forceFail arg,false,test only,no,yes,unit tests,TEST_ONLY

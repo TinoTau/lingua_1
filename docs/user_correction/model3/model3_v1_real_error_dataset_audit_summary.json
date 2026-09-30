@@ -1,0 +1,312 @@
+{
+  "phase": "MODEL3_V1_REAL_ASR_ERROR_DATASET_AUDIT",
+  "date": "2026-08-28",
+  "phaseResult": "PASS",
+  "auditSet": {
+    "expectedEligibleSpans": 151,
+    "audited": 153,
+    "proxyFalsePositives": 0,
+    "validAuditSpans": 153,
+    "anchoredUtterancesWithAsrError": 46,
+    "eligibleErrorUtterances": 46,
+    "sampleAdequacy": "SUFFICIENT_FOR_DIRECTION",
+    "countVerification": {
+      "expected_utt_asr_err": 46,
+      "observed_utt_asr_err": 46,
+      "expected_eligible_utt": 46,
+      "observed_eligible_utt": 46,
+      "expected_spans": 151,
+      "observed_spans": 153
+    }
+  },
+  "realErrorDistribution": {
+    "PHONETIC_SUBSTITUTION": {
+      "count": 64,
+      "percent": 41.83,
+      "span_len_p50": 1.0,
+      "span_len_p95": 1.0,
+      "margin_p50": -17.6794,
+      "margin_p95": -15.7234,
+      "margin_max": -15.105
+    },
+    "DELETION": {
+      "count": 3,
+      "percent": 1.96,
+      "span_len_p50": 6.0,
+      "span_len_p95": 9.0,
+      "margin_p50": -16.6613,
+      "margin_p95": -15.9831,
+      "margin_max": -15.9831
+    },
+    "INSERTION": {
+      "count": 5,
+      "percent": 3.27,
+      "span_len_p50": 2.0,
+      "span_len_p95": 4.0,
+      "margin_p50": -16.5733,
+      "margin_p95": -16.5042,
+      "margin_max": -16.5042
+    },
+    "SEGMENTATION_BOUNDARY": {
+      "count": 0,
+      "percent": 0.0,
+      "span_len_p50": null,
+      "span_len_p95": null,
+      "margin_p50": null,
+      "margin_p95": null,
+      "margin_max": null
+    },
+    "MULTI_CHAR_REPLACEMENT": {
+      "count": 68,
+      "percent": 44.44,
+      "span_len_p50": 3.0,
+      "span_len_p95": 6.0,
+      "margin_p50": -17.3872,
+      "margin_p95": -15.1618,
+      "margin_max": -8.3166
+    },
+    "CHARACTER_FORM_VARIANT": {
+      "count": 13,
+      "percent": 8.5,
+      "span_len_p50": 1.0,
+      "span_len_p95": 1.0,
+      "margin_p50": null,
+      "margin_p95": null,
+      "margin_max": null
+    },
+    "LOCAL_ORDER_OR_STRUCTURE": {
+      "count": 0,
+      "percent": 0.0,
+      "span_len_p50": null,
+      "span_len_p95": null,
+      "margin_p50": null,
+      "margin_p95": null,
+      "margin_max": null
+    },
+    "OTHER": {
+      "count": 0,
+      "percent": 0.0,
+      "span_len_p50": null,
+      "span_len_p95": null,
+      "margin_p50": null,
+      "margin_p95": null,
+      "margin_max": null
+    }
+  },
+  "realErrorLength": {
+    "1": {
+      "count": 77,
+      "percent": 50.33
+    },
+    "2": {
+      "count": 34,
+      "percent": 22.22
+    },
+    "3": {
+      "count": 18,
+      "percent": 11.76
+    },
+    "4+": {
+      "count": 24,
+      "percent": 15.69
+    }
+  },
+  "realPhoneticSubtypes": {
+    "UNKNOWN_PHONETIC": 64
+  },
+  "syntheticV1Distribution": {
+    "PHONETIC_SUBSTITUTION": {
+      "count": 12991,
+      "percent": 100.0
+    },
+    "DELETION": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "INSERTION": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "SEGMENTATION_BOUNDARY": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "MULTI_CHAR_REPLACEMENT": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "CHARACTER_FORM_VARIANT": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "LOCAL_ORDER_OR_STRUCTURE": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "OTHER": {
+      "count": 0,
+      "percent": 0.0
+    }
+  },
+  "syntheticErrorLength": {
+    "1": {
+      "count": 12991,
+      "percent": 100.0
+    },
+    "2": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "3": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "4+": {
+      "count": 0,
+      "percent": 0.0
+    }
+  },
+  "syntheticPhoneticSubtypes": {
+    "UNKNOWN_PHONETIC": 5447,
+    "PRONUNCIATION_CONFUSION": 5503,
+    "NEAR_PHONETIC": 2041
+  },
+  "syntheticRetryTotal": 12991,
+  "realVsSynthetic": {
+    "materialDistributionShift": true,
+    "largestOverrepresentedSyntheticFamily": "PHONETIC_SUBSTITUTION",
+    "largestUnderrepresentedSyntheticFamily": "MULTI_CHAR_REPLACEMENT",
+    "missingRealFamilies": [
+      "DELETION",
+      "INSERTION",
+      "MULTI_CHAR_REPLACEMENT"
+    ],
+    "lengthDistributionShift": true,
+    "phoneticSubtypeShift": true
+  },
+  "ownership": {
+    "MODEL3_TARGET": 140,
+    "DOWNSTREAM_NORMALIZATION": 13,
+    "UPSTREAM_FINE_SPAN": 0,
+    "RECALL_PROBLEM": 0,
+    "OUT_OF_SCOPE": 0,
+    "UNCERTAIN": 0
+  },
+  "materialCoverageGaps": [
+    {
+      "id": "GAP-01",
+      "error_family": "LENGTH_BIAS_1CHAR",
+      "real_evidence_count": 77,
+      "real_percentage": 50.33,
+      "synthetic_percentage": 100.0,
+      "why": "Synthetic V1 RETRY surfaces are almost entirely 1-character; real eligible errors include substantial 2+/multi-char local mismatches.",
+      "belongs_to_model3": true,
+      "data_action": "ADD",
+      "detail": "Increase 2+/multi-char local replacement positives under Anchor conditioning."
+    },
+    {
+      "id": "GAP-02",
+      "error_family": "PHONETIC_SUBSTITUTION",
+      "real_evidence_count": 64,
+      "real_percentage": 41.83,
+      "synthetic_percentage": 100.0,
+      "why": "Synthetic RETRY mass is almost only closed-set phonetic families (in_ing/n_l/ch_c/…/seed_phonetic).",
+      "belongs_to_model3": true,
+      "data_action": "DECREASE",
+      "detail": "Keep phonetic as majority but reduce exclusive dominance; broaden subtypes."
+    },
+    {
+      "id": "GAP-03",
+      "error_family": "MULTI_CHAR_REPLACEMENT",
+      "real_evidence_count": 68,
+      "real_percentage": 44.44,
+      "synthetic_percentage": 0.0,
+      "why": "Real ASR often replaces 2–4 char local units; frozen Synthetic RETRY has essentially zero multi-char family coverage.",
+      "belongs_to_model3": true,
+      "data_action": "ADD",
+      "detail": "Add Anchor-conditioned multi-char local replacement RETRY pairs."
+    },
+    {
+      "id": "GAP-04",
+      "error_family": "DELETION",
+      "real_evidence_count": 3,
+      "real_percentage": 1.96,
+      "synthetic_percentage": 0.0,
+      "why": "Real dialog_200 eligible set contains deletion patterns absent from Synthetic RETRY positives.",
+      "belongs_to_model3": true,
+      "data_action": "ADD",
+      "detail": "Pilot small controlled DELETION pilot under Anchor context (not free utterance rewrite)."
+    },
+    {
+      "id": "GAP-05",
+      "error_family": "INSERTION",
+      "real_evidence_count": 5,
+      "real_percentage": 3.27,
+      "synthetic_percentage": 0.0,
+      "why": "Real dialog_200 eligible set contains insertion patterns absent from Synthetic RETRY positives.",
+      "belongs_to_model3": true,
+      "data_action": "ADD",
+      "detail": "Pilot small controlled INSERTION pilot under Anchor context (not free utterance rewrite)."
+    },
+    {
+      "id": "GAP-06",
+      "error_family": "CHARACTER_FORM_VARIANT",
+      "real_evidence_count": 13,
+      "real_percentage": 8.5,
+      "synthetic_percentage": 0.0,
+      "why": "Trad/simp and orthographic variants appear in real ASR but are normalization, not Model3 RETRY semantics.",
+      "belongs_to_model3": false,
+      "data_action": "EXCLUDE",
+      "detail": "Route to downstream normalization; do not train Model3 to RETRY form variants."
+    },
+    {
+      "id": "GAP-07",
+      "error_family": "PHONETIC_SUBTYPE_NARROWNESS",
+      "real_evidence_count": 64,
+      "real_percentage": 41.83,
+      "synthetic_percentage": 100.0,
+      "why": "Synthetic phonetic subtypes are a closed confusion set; real ASR confusions are broader / often UNKNOWN.",
+      "belongs_to_model3": true,
+      "data_action": "INCREASE",
+      "detail": "Broaden phonetic confusion inventory beyond in_ing/n_l/ch_c/z_zh/sh_s/eng_en/h_f."
+    }
+  ],
+  "model3Status": {
+    "architectureFailureProven": false,
+    "runtimeFailureProven": false,
+    "featureContractFailure": false,
+    "trainingDistributionGapProven": true,
+    "retrainingEventuallyJustified": true,
+    "immediateRetrainingRecommended": false
+  },
+  "nextDataset": {
+    "newDatasetNeeded": true,
+    "recommendedFamilyMixPercent": {
+      "PHONETIC_SUBSTITUTION": 45.7,
+      "DELETION": 2.1,
+      "INSERTION": 3.6,
+      "MULTI_CHAR_REPLACEMENT": 48.6
+    },
+    "recommendedLengthMixPercent": {
+      "1": 47.8,
+      "2": 26.1,
+      "3": 15.7,
+      "4+": 10.4
+    },
+    "recommendedPilotScale": "2k–5k Anchor-conditioned RETRY pairs (pilot) before any large-scale generation",
+    "largeScaleGenerationNow": false,
+    "keepControlHint": "Retain Hard KEEP + NATURAL KEEP + NO_ANCHOR discrimination mass; do not flood RETRY."
+  },
+  "decision": {
+    "primaryBottleneck": "TRAINING_DISTRIBUTION",
+    "recommendedNextPhase": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT_DATASET"
+  },
+  "governance": {
+    "runtimeCodeChanged": false,
+    "modelChanged": false,
+    "trainingChanged": false,
+    "datasetGenerated": false,
+    "architectureChanged": false,
+    "reportArtifactCount": 5
+  }
+}

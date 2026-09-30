@@ -1,0 +1,12 @@
+{
+  "authoritative_type": "WindowCandidate",
+  "required_fields": [
+    "termId",
+    "replacement(surface)",
+    "domains",
+    "source/recallCandidateKind",
+    "span binding"
+  ],
+  "provenance_gap": "PROVENANCE_GAP — no BASE_FUZZY/PROFILE_RETRIEVAL enum; recommend contract delta on recallCandidateKind or source without parallel Candidate type",
+  "do_not_create_parallel_candidate_type": true
+}

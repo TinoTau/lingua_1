@@ -1,0 +1,83 @@
+{
+  "full_test_with_leak_feats": {
+    "tp": 2802,
+    "fp": 0,
+    "fn": 0,
+    "tn": 190451,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 1.0
+  },
+  "full_test_without_leak_feats": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2802,
+    "tn": 190451,
+    "keep_precision": 0.9855008719140195,
+    "keep_recall": 1.0,
+    "retry_precision": 0.0,
+    "retry_recall": 0.0,
+    "retry_f1": 0.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 0.49275043595700974
+  },
+  "no_anchor_linear": {
+    "tp": 296,
+    "fp": 0,
+    "fn": 0,
+    "tn": 20559,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 1.0
+  },
+  "no_anchor_length_only": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 296,
+    "tn": 20559,
+    "keep_precision": 0.9858067609685927,
+    "keep_recall": 1.0,
+    "retry_precision": 0.0,
+    "retry_recall": 0.0,
+    "retry_f1": 0.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 0.4929033804842963
+  },
+  "no_anchor_rule_baseline": {
+    "tp": 296,
+    "fp": 0,
+    "fn": 0,
+    "tn": 20559,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 1.0
+  },
+  "no_anchor_bigru": {
+    "tp": 622,
+    "fp": 0,
+    "fn": 0,
+    "tn": 41088,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 1.0,
+    "eligible": 41710,
+    "pred_vs_gold_mismatch": 0,
+    "pred_vs_gold_mismatch_rate": 0.0
+  }
+}

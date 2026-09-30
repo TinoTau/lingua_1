@@ -1,0 +1,23 @@
+{
+  "base_absent_corrupted_n": 38,
+  "status_counts": {
+    "ACTION_AVAILABLE": 38
+  },
+  "catalog": [
+    "domain_none",
+    "domain_soft:tourism_pickup",
+    "domain_soft:tourism_hotel",
+    "domain_soft:tourism_route",
+    "domain_soft:tourism_transport",
+    "domain_soft:coffee",
+    "domain_soft:milk_tea",
+    "domain_soft:bakery",
+    "domain_soft:food_order",
+    "domain_soft:tech_ai",
+    "domain_soft:meeting",
+    "domain_soft:medical",
+    "domain_soft:transport"
+  ],
+  "catalog_source": "training/model2_v3/policy/domain_actions.py build_domain_action_catalog / DOMAIN_SLOT_IDS",
+  "note": "Catalog is static 12 slots + domain_none, not built from live Lexicon at Python Stage D eval start. Node registry is separate."
+}

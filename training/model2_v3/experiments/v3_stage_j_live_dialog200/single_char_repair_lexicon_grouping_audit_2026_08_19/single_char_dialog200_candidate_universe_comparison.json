@@ -1,0 +1,85 @@
+{
+  "true_recall_single_char_targets": 213,
+  "coverage": {
+    "OLD2510": {
+      "n": 200,
+      "rate": 0.9389671361502347
+    },
+    "STRICT": {
+      "n": 183,
+      "rate": 0.8591549295774648
+    },
+    "BALANCED": {
+      "n": 197,
+      "rate": 0.9248826291079812
+    },
+    "FULL_CLD": {
+      "n": 213,
+      "rate": 1.0
+    }
+  },
+  "expected_char_lexical_group": {
+    "OLD2510": {
+      "NOT_PRESENT": 13,
+      "AMBIGUOUS": 178,
+      "UNIQUE": 22
+    },
+    "STRICT": {
+      "NOT_PRESENT": 30,
+      "UNIQUE": 42,
+      "AMBIGUOUS": 141
+    },
+    "BALANCED": {
+      "NOT_PRESENT": 16,
+      "UNIQUE": 33,
+      "AMBIGUOUS": 164
+    },
+    "FULL_CLD": {
+      "AMBIGUOUS": 206,
+      "UNIQUE": 7
+    }
+  },
+  "unique_tone_live_counterfactual": {
+    "OLD2510": {
+      "EXPECTED_UNIQUE_CANDIDATE": 0,
+      "NON_EXPECTED_UNIQUE_CANDIDATE": 23,
+      "AMBIGUOUS_FALLBACK": 133,
+      "NO_CANDIDATE": 44,
+      "IDENTITY_ONLY": 13,
+      "precision_proxy": 0.0,
+      "recall_proxy": 0.0,
+      "n_targets": 213
+    },
+    "STRICT": {
+      "EXPECTED_UNIQUE_CANDIDATE": 2,
+      "NON_EXPECTED_UNIQUE_CANDIDATE": 43,
+      "AMBIGUOUS_FALLBACK": 92,
+      "NO_CANDIDATE": 64,
+      "IDENTITY_ONLY": 12,
+      "precision_proxy": 0.044444444444444446,
+      "recall_proxy": 0.009389671361502348,
+      "n_targets": 213
+    },
+    "BALANCED": {
+      "EXPECTED_UNIQUE_CANDIDATE": 1,
+      "NON_EXPECTED_UNIQUE_CANDIDATE": 26,
+      "AMBIGUOUS_FALLBACK": 114,
+      "NO_CANDIDATE": 59,
+      "IDENTITY_ONLY": 13,
+      "precision_proxy": 0.037037037037037035,
+      "recall_proxy": 0.004694835680751174,
+      "n_targets": 213
+    },
+    "FULL_CLD": {
+      "EXPECTED_UNIQUE_CANDIDATE": 0,
+      "NON_EXPECTED_UNIQUE_CANDIDATE": 21,
+      "AMBIGUOUS_FALLBACK": 144,
+      "NO_CANDIDATE": 39,
+      "IDENTITY_ONLY": 9,
+      "precision_proxy": 0.0,
+      "recall_proxy": 0.0,
+      "n_targets": 213
+    }
+  },
+  "dialog_200_used_as_vocabulary_filter": false
+}

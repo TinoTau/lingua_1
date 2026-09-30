@@ -1,0 +1,14 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "verdict": "KEEP_AS_OPTIONAL_POST_MERGE",
+  "note": "Stage A is closed-set: once Profile Retrieval merges a term_id, Stage A cannot delete it (only reorders / NO_MATCH). Path A deterministic mean_rank=1.12 on n=40 introduced cases. Not required for introduction. Do not keep Stage A as primary Model2 capability.",
+  "paths": {
+    "PathA": "Base+Profile → deterministic retrieval_score order",
+    "PathB": "Base+Profile → Stage A (closed-set; cannot remove new term_id)"
+  }
+}

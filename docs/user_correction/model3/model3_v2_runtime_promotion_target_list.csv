@@ -1,0 +1,12 @@
+item,path,symbol_or_entry,action,in_promotion_boundary,second_semantic_variable
+1,electron_node/electron-node/main/src/model3-runtime/model3-checkpoint-registry.ts,MODEL3_PRODUCTION_IDENTITY_ID,Change default from MODEL3_SYNTHETIC_V1 to MODEL3_V2_S3_RANDOM_INIT_V1,YES,NO
+2,electron_node/electron-node/main/src/model3-runtime/model3-checkpoint-registry.ts,MODEL3_CHECKPOINT_REGISTRY.MODEL3_V2_S3_RANDOM_INIT_V1.role,Set role PRODUCTION (or equivalent authoritative default role),YES,NO
+3,electron_node/electron-node/main/src/model3-runtime/model3-checkpoint-registry.ts,MODEL3_CHECKPOINT_REGISTRY.MODEL3_SYNTHETIC_V1.role,Demote to non-default (e.g. keep loadable via env; role HISTORICAL/CANDIDATE per design),YES,NO
+4,electron_node/electron-node/main/src/model3-runtime/model3-types.ts,MODEL3_EXPECTED_WEIGHTS_SHA256 / MODEL3_EXPECTED_CONFIG_HASH,Align production seal constants to S3 hashes (currently Synthetic; unused by load imports but dual-SSOT),YES,NO
+5,electron_node/electron-node/main/src/model3-runtime/model3-inference-client.ts,MODEL3_LABEL deprecated constant,Update comment/value to avoid implying Synthetic is active default,YES,NO
+6,electron_node/services/model3_runtime/model3_inference_host.py,DEFAULT_LABEL / EXPECTED_WEIGHTS_SHA256 / EXPECTED_CONFIG_HASH / DEFAULT_CKPT_DIR,Align host omitted-hash defaults with new production identity (FAIL_CLOSED semantics unchanged),YES,NO
+7,electron_node/electron-node/main/src/model3-runtime/*.test.ts + integration,default-identity assertions,Update tests that assume no-env default is Synthetic,YES,NO
+8,docs freeze/architecture wording,AUTHORITATIVE vs RUNTIME_DEFAULT,Clarify after promotion (optional doc follow-up; not required to flip default),OPTIONAL_FOLLOWUP,NO
+9,—,datasetId/buildId runtime verify,Do NOT add in this delta,NO,YES_IF_ADDED
+10,—,PRODUCTION_RETRY enablement flag,Do NOT touch / do NOT introduce OFF gate in this delta,NO,YES_IF_CHANGED
+11,—,Model3 retrain/threshold/Retry/FineSpan/Recall/Lexicon/Domain/Assembly/KenLM/ASR/cap,FORBIDDEN,NO,N/A

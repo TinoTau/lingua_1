@@ -1,0 +1,367 @@
+{
+  "phase": "MODEL3_V2_S3_LEXICAL_TARGET_MINIMALITY_NECESSITY_AUDIT",
+  "generatedAt": "2026-09-03T10:39:17Z",
+  "verdict": "MODEL3_S3_TARGET_MINIMALITY_PASS_PRIORITY_RESOLVED",
+  "nextPhase": "MODEL3_V2_S3_RETRY_QUERY_GEOMETRY_CORRECTION_DESIGN_AUDIT",
+  "ssotCorrections": [
+    {
+      "key": "RECALL_MISS_EXISTENCE",
+      "OLD_STATE": "PROVEN_GENERAL (incorrectly recorded in lexical identity freeze/summary) AND PROVEN_LOCAL (narrative)",
+      "NEW_STATE": "PROVEN_LOCAL",
+      "REASON": "Previous phase contradicted itself: narrative said PROVEN_LOCAL while freeze/summary wrote PROVEN_GENERAL based on surface-family inflation (mechanism:norm(target)). Until minimality, authoritative was PROVEN_LOCAL + PENDING. This audit retains PROVEN_LOCAL; does not upgrade with structuralFamilyCount=2.",
+      "EVIDENCE": "recall_primary_events=53; structural_families=['RECALL_TARGET_MISS|NA|L2|COVERS_CHANGE|EXISTING_LEXICON_TERM|RAW_MISS', 'RECALL_TARGET_MISS|NA|L3|COVERS_CHANGE|EXISTING_LEXICON_TERM|RAW_MISS']; dim_sets=1"
+    },
+    {
+      "key": "PROVISIONAL_PREVALENCE_0_5042_0_2458_0_2395",
+      "OLD_STATE": "VALID in corrected_freeze_state (target-share on 476 raw targets)",
+      "NEW_STATE": "SUPERSEDED_BY_REPAIR_EVENT_MINIMALITY",
+      "REASON": "Raw overlapping/context/structural targets inflated prevalence; primary metric is now repairEventShare.",
+      "EVIDENCE": "rawCandidates=476; primaryMinimal=210; repairEvents=237"
+    },
+    {
+      "key": "SURFACE_STRUCTURAL_FAMILIES_89_56_52",
+      "OLD_STATE": "Query89/Lex56/Recall52 via mechanism:norm(lexicalTarget)",
+      "NEW_STATE": "SUPERSEDED_PENDING_STRUCTURAL_FAMILY_REVALIDATION → replaced",
+      "REASON": "Surface diversity is not structural independence.",
+      "EVIDENCE": "corrected family counts Query=3 Lex=0 Recall=2"
+    }
+  ],
+  "counts": {
+    "rawCandidateTargetCount": 476,
+    "expandedNestedLexiconCandidates": 294,
+    "structuralCompositionRaw": 117,
+    "existingLexiconRaw": 359,
+    "primaryMinimalTargetCount": 210,
+    "alternativeMinimalTargetCount": 60,
+    "repairEventCount": 237,
+    "roleCounts": {
+      "PRIMARY_MINIMAL": 210,
+      "PARTIAL_INSUFFICIENT": 290,
+      "SUPERSET_REDUNDANT": 8,
+      "INVALID_LEXICAL_TARGET": 117,
+      "ALTERNATIVE_MINIMAL": 60,
+      "CONTEXT_SUPPORT": 85
+    },
+    "zeroChangedElementOverlapTargets": 85,
+    "multiTargetCasesBefore": 125,
+    "multiRepairEventCasesAfter": 76,
+    "multiTargetDistBefore": {
+      "4+": 58,
+      "1": 43,
+      "3": 27,
+      "2": 40
+    },
+    "multiRepairEventDistAfter": {
+      "4+": 9,
+      "1": 49,
+      "3": 16,
+      "2": 51,
+      "0_primary_events_but_had_candidates": 43
+    },
+    "prevalenceGatePct": 1.0,
+    "prevalenceValid": true,
+    "structuralCompositionPrimaryMinimal": 0
+  },
+  "structuralCompositionAudit": {
+    "implementationFile": "training/model3_dataset/scripts/s3_lexical_target_identity.py::_structural_units",
+    "exactRule": [
+      "If norm(diffCoreRef) length in [2,4], no outside-contract, no leading/trailing function char → emit exact core surface",
+      "Else emit shortest substring L in [max(2,coreLen),4] that fully covers the core within punctuation-bounded run"
+    ],
+    "independentLexicalEvidence": "NONE beyond contiguous CJK/window substring covering the diff",
+    "functionWordsAllowed": "Partial — leading/trailing function chars blocked for exact-core path; interior function chars may remain",
+    "punctuationAllowed": "NO — runs clipped at punctuation; outside_lexicon_contract rejects punct-bearing units",
+    "unchangedContextAllowed": "YES — shortest full cover may include unchanged neighbors",
+    "arbitraryWindows": "YES — any 2–4 char cover of the core can be emitted",
+    "halfWordsPossible": "YES — fragments without lexicon membership",
+    "overlapAloneSufficient": "YES — covering the diff core is the primary condition",
+    "distinguishesLexicalVsSyntacticFragment": "NO",
+    "hardStandardVerdict": "FAILS_INDEPENDENT_LEXICAL_IDENTITY_STANDARD",
+    "prevalenceImplication": "STRUCTURAL_COMPOSITION_SUPPORTED must not produce PRIMARY_MINIMAL TARGET_NOT_IN_LEXICON"
+  },
+  "normalizationBoundary": {
+    "previousReportNormalizationEquivalentRegions": 0,
+    "whyZero": "Region-level NORMALIZATION_EQUIVALENT is only counted when a derived region survives case-level filtering. Cases where fold_cjk_variant / norm_text makes full ASR==reference are classified FINAL_ALREADY_EQUIVALENT before region bundles are emitted, so trad/simp-only utterance diffs never enter repairRegions. Within surviving regions, punctuation/digit-style-only diffs set normalizationEquivalent=True; prior cohort had 0 such surviving regions.",
+    "normalizationOccurs": {
+      "beforeFrozenAsrRefComparison": "partial — audit fold_cjk_variant/norm_text for scope equivalence only",
+      "insideTraceCapture": "NO — frozen raw stores raw_asr / expected as captured",
+      "insideEvaluation": "YES — audit-only norm_text / fold for mechanism matching",
+      "productionNormalizationChange": "NO"
+    },
+    "boundaryCorrectForAudit": true,
+    "doNotAssumeZeroMeansNoNormalizationAnywhere": true
+  },
+  "lexicon117Revalidation": {
+    "INVALID_LEXICAL_TARGET": 117
+  },
+  "query240Revalidation": {
+    "SUPERSET_REDUNDANT": 3,
+    "VALID_MINIMAL": 150,
+    "UNRESOLVED": 3,
+    "ALTERNATIVE_MINIMAL": 30,
+    "CONTEXT_SUPPORT": 54
+  },
+  "recall114Revalidation": {
+    "VALID_MINIMAL": 50,
+    "SUPERSET_REDUNDANT": 5,
+    "ALTERNATIVE_MINIMAL": 28,
+    "CONTEXT_SUPPORT": 30,
+    "UNRESOLVED": 1
+  },
+  "prevalence": [
+    {
+      "mechanism": "TARGET_NOT_IN_LEXICON",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    },
+    {
+      "mechanism": "QUERY_NOT_REPAIR_CAPABLE",
+      "repairEventCount": 166,
+      "primaryTargetCount": 153,
+      "caseAffectedCount": 106,
+      "structuralFamilyCount": 3,
+      "repairEventShare": 0.7004,
+      "caseAffectedRate": 0.848,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {
+        "HIGH": 153
+      }
+    },
+    {
+      "mechanism": "RECALL_TARGET_MISS",
+      "repairEventCount": 67,
+      "primaryTargetCount": 53,
+      "caseAffectedCount": 61,
+      "structuralFamilyCount": 2,
+      "repairEventShare": 0.2827,
+      "caseAffectedRate": 0.488,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {
+        "HIGH": 53
+      }
+    },
+    {
+      "mechanism": "POST_RECALL_TARGET_DROP",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    },
+    {
+      "mechanism": "ASSEMBLY_TARGET_DROP",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    },
+    {
+      "mechanism": "CROSS_PATH_TARGET_DROP",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    },
+    {
+      "mechanism": "KENLM_TARGET_NOT_SELECTED",
+      "repairEventCount": 3,
+      "primaryTargetCount": 3,
+      "caseAffectedCount": 3,
+      "structuralFamilyCount": 1,
+      "repairEventShare": 0.0127,
+      "caseAffectedRate": 0.024,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {
+        "HIGH": 3
+      }
+    },
+    {
+      "mechanism": "TARGET_SURVIVED_NO_FINAL_IMPROVEMENT",
+      "repairEventCount": 1,
+      "primaryTargetCount": 1,
+      "caseAffectedCount": 1,
+      "structuralFamilyCount": 1,
+      "repairEventShare": 0.0042,
+      "caseAffectedRate": 0.008,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {
+        "HIGH": 1
+      }
+    },
+    {
+      "mechanism": "MECHANISM_AMBIGUOUS",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    },
+    {
+      "mechanism": "OUTSIDE_CURRENT_CONTRACT",
+      "repairEventCount": 0,
+      "primaryTargetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "repairEventShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "eligibleRepairEvents": 237,
+      "eligibleCases": 125,
+      "primaryMinimalTargets": 210,
+      "confidenceDistribution": {}
+    }
+  ],
+  "querySubmechanisms": {
+    "RETRY_REGION_PARTIAL_COVERAGE": 159,
+    "NO_RAW_RECALL_REGION": 7
+  },
+  "recallGeneralization": {
+    "existence": "PROVEN_LOCAL",
+    "structuralFamilyCount": 2,
+    "provenGeneral": false,
+    "gate": ">=3 structural families + PRIMARY/ALT minimal + query parity + RAW miss"
+  },
+  "priority": {
+    "resolved": true,
+    "mechanism": "QUERY_NOT_REPAIR_CAPABLE",
+    "shares": {
+      "QUERY_NOT_REPAIR_CAPABLE": 0.7004,
+      "TARGET_NOT_IN_LEXICON": 0.0,
+      "RECALL_TARGET_MISS": 0.2827
+    },
+    "basedOnStructuralEvidence": true
+  },
+  "antiOverfit": {
+    "caseIdBranchesInAlgo": 0,
+    "high12SpecialHandling": false,
+    "dialog200HardcodeInAlgo": false,
+    "manualTargetMap": false,
+    "verdict": "NONE",
+    "emitFileMentionsCaseIdsForReportingOnly": false
+  },
+  "unitTests": {
+    "ok": true,
+    "testsRun": 12
+  },
+  "answers": {
+    "D1": "NO",
+    "D2": "NO",
+    "D3": "NO",
+    "D4": "NO",
+    "D5": "NO",
+    "D6": "NO",
+    "D7": "YES_UNCHANGED_COMPLETE_200_OF_200",
+    "D8": 476,
+    "D9": 237,
+    "D10": 210,
+    "D11": 60,
+    "D12": 85,
+    "D13": 8,
+    "D14": 290,
+    "D15": 0,
+    "D16": 117,
+    "D17": 85,
+    "D18": 125,
+    "D19": 76,
+    "D20": [
+      "If norm(diffCoreRef) length in [2,4], no outside-contract, no leading/trailing function char → emit exact core surface",
+      "Else emit shortest substring L in [max(2,coreLen),4] that fully covers the core within punctuation-bounded run"
+    ],
+    "D21": "YES_ARBITRARY_2_TO_4_CHAR_COVER_FRAGMENTS",
+    "D22": 0,
+    "D23": 0,
+    "D24": {
+      "invalid": 117,
+      "context": 0,
+      "redundant": 0,
+      "unresolved": 0,
+      "reclassified": 0,
+      "alternative": 0
+    },
+    "D25": 166,
+    "D26": {
+      "RETRY_REGION_PARTIAL_COVERAGE": 159,
+      "NO_RAW_RECALL_REGION": 7
+    },
+    "D27": 67,
+    "D28": "YES_BY_CLASSIFIER_CONTRACT_repair_capable_query_required_before_RECALL_TARGET_MISS",
+    "D29": 2,
+    "D30": "NO_RETAIN_PROVEN_LOCAL",
+    "D31": "Narrative retained historical PROVEN_LOCAL; freeze/summary incorrectly wrote PROVEN_GENERAL from surface-based family counts after lexical-target identity phase — internal contradiction, not silent choice.",
+    "D32": "YES_CORRECTION_PROPOSAL_EMITTED",
+    "D33": "YES",
+    "D34": "YES_SUPERSEDED",
+    "D35": {
+      "QUERY": 3,
+      "LEXICON": 0,
+      "RECALL": 2
+    },
+    "D36": 0.7004,
+    "D37": 0.0,
+    "D38": 0.2827,
+    "D39": {
+      "QUERY": 0.848,
+      "LEXICON": 0.0,
+      "RECALL": 0.488
+    },
+    "D40": "YES",
+    "D41": "YES",
+    "D42": "PROVISIONAL_RELIABLE_AT_REPAIR_EVENT_LEVEL",
+    "D43": "NOT_SUPPORTED_AS_GAP_COUNT",
+    "D44": "LOCAL_ONLY",
+    "D45": "NO",
+    "D46": "NO",
+    "D47": "NO",
+    "D48": "LIMITED",
+    "D49": "YES",
+    "D50": "QUERY_NOT_REPAIR_CAPABLE",
+    "D51": "YES",
+    "D52": "NO",
+    "D53": "NO",
+    "D54": "NO",
+    "D55": "NO",
+    "D56": "MODEL3_V2_S3_RETRY_QUERY_GEOMETRY_CORRECTION_DESIGN_AUDIT"
+  },
+  "previousSummarySupersession": {
+    "prevVerdict": "MODEL3_S3_LEXICAL_TARGET_IDENTITY_PASS_PRIORITY_UNRESOLVED",
+    "prevPrevalence": "SUPERSEDED",
+    "prevFamilies": "SUPERSEDED"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "caseId": "p2_u005_036",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U005",
+  "profileStage": "P1",
+  "domain": "retail_service",
+  "difficulty": "multi_clause",
+  "referenceText": "如果水晶珠缺货，就先登记到货通知，同时推荐同价位替代款给顾客。",
+  "audioId": "aud_p2_u005_036",
+  "audioPath": "audio/p2_u005_036.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "sh_s",
+  "relationDirection": "sh_s",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MILD",
+  "profileRef": "prof_u005_p1",
+  "profileBuildSetId": "pbs_u005_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e6b0b4e699b6e78f"
+  ],
+  "evaluationTargetSurface": "水晶珠",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 1638427571,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "ASR_RESILIENCE_CONTROL",
+  "wrongProfileUserId": null,
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u005_036",
+    "byte_size": 193976,
+    "sha256": "6e967bffe416f3b6667c15617d70e38863a1482055938d2a236e24b16efa201e",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 6.06
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "如果髄晶珠缺货，就先登记到货通知，同时推荐同价位替代款给顾客。"
+}

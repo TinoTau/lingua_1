@@ -1,0 +1,320 @@
+{
+  "phase": "MODEL3_V1_RUNTIME_TRIGGER_ERROR_AUDIT",
+  "date": "2026-08-27",
+  "verdict": "MULTIPLE_CAUSES",
+  "verdict_note": "Synthetic replay PASS proves checkpoint+host; dialog RETRY=0 driven by error-family shift + partial production feature parity + low anchor coverage (53/200)",
+  "mainline_integration": "PASS",
+  "dialog200_completed": 200,
+  "non_anchor_spans_observed": 9811,
+  "observed_retry": 0,
+  "dataset_coverage": {
+    "utterances_with_anchor": 53,
+    "anchored_utterances_with_asr_error": 46,
+    "eligible_error_utterances": 48,
+    "eligible_error_spans": 160,
+    "eligible_per_anchored_utterance": 3.019,
+    "dataset_can_validate_retry": "LIMITED"
+  },
+  "synthetic_replay": {
+    "retry_positive_samples": 120,
+    "keep_control_samples": 120,
+    "offline_retry_on_labeled_retry_spans": 115,
+    "runtime_retry_on_labeled_retry_spans": 115,
+    "positive_decision_agreement": 1.0,
+    "keep_decision_agreement": 1.0,
+    "overall_span_agreement": 1.0,
+    "mismatch_examples": [],
+    "feat_parity_sample": [
+      {
+        "feature": "isAnchor",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_rel_position",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "first_pass_cand_log1p",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "current_cjk_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "pinyin_channel_avail",
+        "training_value": 1.0,
+        "runtime_value": 1.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "isAnchor",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_rel_position",
+        "training_value": 0.1,
+        "runtime_value": 0.1,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "first_pass_cand_log1p",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "current_cjk_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "pinyin_channel_avail",
+        "training_value": 1.0,
+        "runtime_value": 1.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "isAnchor",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_rel_position",
+        "training_value": 0.2,
+        "runtime_value": 0.2,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "first_pass_cand_log1p",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "current_cjk_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "pinyin_channel_avail",
+        "training_value": 1.0,
+        "runtime_value": 1.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "isAnchor",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_rel_position",
+        "training_value": 0.3,
+        "runtime_value": 0.3,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "first_pass_cand_log1p",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "current_cjk_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "pinyin_channel_avail",
+        "training_value": 1.0,
+        "runtime_value": 1.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "isAnchor",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "span_rel_position",
+        "training_value": 0.4,
+        "runtime_value": 0.4,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "first_pass_cand_log1p",
+        "training_value": 0.0,
+        "runtime_value": 0.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "current_cjk_len_log1p",
+        "training_value": 0.6931471805599453,
+        "runtime_value": 0.6931471805599453,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      },
+      {
+        "feature": "pinyin_channel_avail",
+        "training_value": 1.0,
+        "runtime_value": 1.0,
+        "training_avail": 1.0,
+        "runtime_avail": 1.0,
+        "parity": "YES"
+      }
+    ],
+    "synthetic_retry_margin_p50": 2.4336,
+    "synthetic_retry_margin_p95": 6.2108,
+    "synthetic_keep_margin_p50": -15.7763,
+    "synthetic_keep_margin_p95": -9.3396
+  },
+  "runtime_adapter_parity": "PASS",
+  "feature_parity_overall": "PARTIAL",
+  "decision_path": {
+    "label_mapping": "PASS",
+    "threshold": "argmax PASS",
+    "eligibility_mask": "PASS",
+    "extra_gates": [],
+    "silent_keep_fallback": "NO"
+  },
+  "score_distribution": {
+    "dialog_all_non_anchor_margin_p50": 0.0,
+    "dialog_all_non_anchor_margin_p95": 0.0,
+    "dialog_all_non_anchor_margin_max": 0.0,
+    "synthetic_retry_positive_p50": 2.4336,
+    "synthetic_retry_positive_p95": 6.2108
+  },
+  "distribution_shift": {
+    "material_feature_shift": true,
+    "material_error_family_shift": true,
+    "main_differences": [
+      "Training positives are single-char phonetic corruptions with simulated anchors",
+      "dialog_200 ASR errors are multi-char/TTS-homophone/utterance-level drift",
+      "Runtime pinyin_channel_avail uses syllable-presence proxy vs training pinyinTextDerived"
+    ]
+  },
+  "model_status": {
+    "frozen_checkpoint_correct": true,
+    "runtime_adapter_correct": true,
+    "runtime_decision_path_correct": true,
+    "actual_under_trigger_proven": false,
+    "retraining_justified": false
+  },
+  "decision": {
+    "mainline_rollback_recommended": false,
+    "model3_retrain_recommended": false,
+    "model3_runtime_fix_recommended": true,
+    "new_evaluation_corpus_needed": true,
+    "recommended_next_phase": "MODEL3_V1_REAL_ASR_ERROR_EVAL_CORPUS"
+  },
+  "governance": {
+    "runtime_business_logic_changed": false,
+    "model_changed": false,
+    "training_changed": false,
+    "threshold_changed": false,
+    "report_artifact_count": 5
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "contract_id": "model2_v3_teacher_utility_contract_phase2",
+  "phase": 2,
+  "utility": {
+    "target_recovery_reward": 10.0,
+    "query_cost": 0.5,
+    "candidate_cost_per_new": 0.08,
+    "false_expansion_cost_per_extra": 0.2,
+    "composed_action_extra_cost": 0.35
+  },
+  "label_mode": "recall_prefer",
+  "note": "Phase2 supervises ALL recovering singles for PARALLEL selection; utility used for ranking diagnostics and composed inclusion",
+  "action_types": ["SINGLE", "PARALLEL_PAIR(policy)", "COMPOSED_PAIR", "IDENTITY"]
+}

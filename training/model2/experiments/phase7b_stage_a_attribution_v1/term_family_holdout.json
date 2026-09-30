@@ -1,0 +1,38 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "exact_surface_unseen": {
+    "n": 1011,
+    "Recall@1": 0.043521266073194856,
+    "Recall@3": 0.09792284866468842,
+    "Recall@4": 0.1404549950544016,
+    "MRR": 0.16471834161003301,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "family_unseen_pinyin_or_syl": {
+    "n": 984,
+    "Recall@1": 0.044715447154471545,
+    "Recall@3": 0.10060975609756098,
+    "Recall@4": 0.1443089430894309,
+    "MRR": 0.16683161576454253,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "exact_unseen_but_pinyin_or_syl_sibling_in_train": {
+    "n": 27,
+    "metrics": {
+      "n": 27,
+      "Recall@1": 0.0,
+      "Recall@3": 0.0,
+      "Recall@4": 0.0,
+      "MRR": 0.08770123909012799,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0
+    }
+  },
+  "note": "Family holdout removes eval terms whose pinyin-key or syllable sequence appeared in train."
+}

@@ -1,0 +1,205 @@
+{
+  "phase": "LINGUA_PILOT200_LEXICON_RECALL_FAILURE_CLASSIFICATION_AUDIT",
+  "authoritativeModel2Ssot": "AUG12_PRE_LEXICAL_EDGE",
+  "baselineExpectedRuns": 600,
+  "lexiconRecallExpectedFailures": 158,
+  "lexiconRecallObservedFailures": 158,
+  "classifiedCount": 158,
+  "unclassifiedCount": 0,
+  "rootCauseCounts": {
+    "TARGET_NOT_IN_LEXICON": 0,
+    "TARGET_LEXICON_ENTRY_PRONUNCIATION_MISMATCH": 0,
+    "RELATION_TRANSFORM_OUTPUT_MISMATCH": 119,
+    "TONE_KEY_MISMATCH_AFTER_READY": 35,
+    "QUERY_KEY_CONSTRUCTION_MISMATCH": 0,
+    "QUERY_ADAPTER_OR_FILTER_DROP": 0,
+    "DOMAIN_OR_SOURCE_FILTER_DROP": 0,
+    "TOPK_OR_BUDGET_DROP": 0,
+    "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 4,
+    "TRACE_OR_EVIDENCE_INSUFFICIENT": 0,
+    "OTHER_VERIFIED": 0
+  },
+  "rootCausePercentages": {
+    "TARGET_NOT_IN_LEXICON": 0.0,
+    "TARGET_LEXICON_ENTRY_PRONUNCIATION_MISMATCH": 0.0,
+    "RELATION_TRANSFORM_OUTPUT_MISMATCH": 75.32,
+    "TONE_KEY_MISMATCH_AFTER_READY": 22.15,
+    "QUERY_KEY_CONSTRUCTION_MISMATCH": 0.0,
+    "QUERY_ADAPTER_OR_FILTER_DROP": 0.0,
+    "DOMAIN_OR_SOURCE_FILTER_DROP": 0.0,
+    "TOPK_OR_BUDGET_DROP": 0.0,
+    "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 2.53,
+    "TRACE_OR_EVIDENCE_INSUFFICIENT": 0.0,
+    "OTHER_VERIFIED": 0.0
+  },
+  "uniqueTargetCount": 109,
+  "uniqueTargetRootCauseCounts": {
+    "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 4,
+    "RELATION_TRANSFORM_OUTPUT_MISMATCH": 70,
+    "TONE_KEY_MISMATCH_AFTER_READY": 35
+  },
+  "targetPresentInLexiconCount": 158,
+  "targetAbsentInLexiconCount": 0,
+  "uniqueTargetPresentCount": 109,
+  "uniqueTargetAbsentCount": 0,
+  "byProfileCondition": {
+    "CORRECT_PROFILE": {
+      "total": 71,
+      "rootCauses": {
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 4,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 32,
+        "TONE_KEY_MISMATCH_AFTER_READY": 35
+      }
+    },
+    "WRONG_PROFILE": {
+      "total": 87,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 87
+      }
+    }
+  },
+  "byRelation": {
+    "n_l": {
+      "total": 23,
+      "rootCauses": {
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 1,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 16,
+        "TONE_KEY_MISMATCH_AFTER_READY": 6
+      }
+    },
+    "in_ing": {
+      "total": 9,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 9
+      }
+    },
+    "z_zh": {
+      "total": 30,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 9,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 21
+      }
+    },
+    "sh_s": {
+      "total": 42,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 11,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 29,
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 2
+      }
+    },
+    "eng_en": {
+      "total": 22,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 16,
+        "TONE_KEY_MISMATCH_AFTER_READY": 6
+      }
+    },
+    "h_f": {
+      "total": 14,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 1,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 13
+      }
+    },
+    "ch_c": {
+      "total": 18,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 15,
+        "TONE_KEY_MISMATCH_AFTER_READY": 2,
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 1
+      }
+    }
+  },
+  "byTargetLength": {
+    "3": {
+      "total": 116,
+      "rootCauses": {
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 2,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 88,
+        "TONE_KEY_MISMATCH_AFTER_READY": 26
+      }
+    },
+    "2": {
+      "total": 37,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 8,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 27,
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 2
+      }
+    },
+    "4": {
+      "total": 5,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 1,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 4
+      }
+    }
+  },
+  "byDomain": {
+    "general_daily": {
+      "total": 33,
+      "rootCauses": {
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 2,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 24,
+        "TONE_KEY_MISMATCH_AFTER_READY": 7
+      }
+    },
+    "software_meeting": {
+      "total": 29,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 7,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 22
+      }
+    },
+    "medical": {
+      "total": 29,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 22,
+        "TONE_KEY_MISMATCH_AFTER_READY": 6,
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 1
+      }
+    },
+    "food_cafe": {
+      "total": 26,
+      "rootCauses": {
+        "TONE_KEY_MISMATCH_AFTER_READY": 8,
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 17,
+        "TARGET_RETURNED_BUT_EVALUATOR_MISCLASSIFIED": 1
+      }
+    },
+    "travel_hotel": {
+      "total": 16,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 13,
+        "TONE_KEY_MISMATCH_AFTER_READY": 3
+      }
+    },
+    "retail_service": {
+      "total": 25,
+      "rootCauses": {
+        "RELATION_TRANSFORM_OUTPUT_MISMATCH": 21,
+        "TONE_KEY_MISMATCH_AFTER_READY": 4
+      }
+    }
+  },
+  "topRootCause": "RELATION_TRANSFORM_OUTPUT_MISMATCH",
+  "topRootCauseCount": 119,
+  "topRootCausePercent": 75.32,
+  "top2CumulativePercent": 97.47,
+  "top3CumulativePercent": 100.0,
+  "cleanControlSuccessAmbiguityAffectsGateEAudit": false,
+  "architectureRegressionChecks": {
+    "ONE_MODEL2_PRODUCTION_INSERTION": "PASS",
+    "NO_POST_PATHFINESPAN_MODEL2": "PASS",
+    "WINDOW_LOCAL_TONE": "PASS",
+    "PACTION_CONTRACT_UNCHANGED": "PASS",
+    "LEXICALEDGE_GATE_UNCHANGED": "PASS",
+    "MODEL3_RETRY_NO_MODEL2": "PASS",
+    "JOBRESULT_BOUNDARY_UNCHANGED": "PASS"
+  },
+  "harnessOrAuditOnlyChange": true,
+  "productCodeChange": false,
+  "outcome": "VALID_FAILURE_CLASSIFICATION_WITH_DOMINANT_ROOT_CAUSE",
+  "oneNextOwner": "RELATION_TRANSFORM_OWNER"
+}

@@ -1,0 +1,17 @@
+consumer,path,role,reads_base_lexicon,length1_behavior,notes
+FW_Recall_length1,electron_node/.../lexicon-v2/recall-span-topk-v2.ts collectBaseOnlySingleCharCandidate,production Lexicon Recall,YES,USES_LENGTH1,primary production consumer; tone-exact unique-only
+FW_Recall_multi,electron_node/.../lexicon-v2/tone-first-tier-collector.ts + recall-span-topk-v2.ts,production Lexicon Recall,YES,FILTERS_LENGTH1,termLength>=2 for multi-char tiers; length1 routed separately
+LexiconRuntimeV2,electron_node/.../lexicon-v2/lexicon-runtime-v2.ts,repository SQL,YES,USES_LENGTH1,lookupBase* supports termLength 1-5
+Domain_Vote,electron_node/.../span-assembly-v4/*domain*,assembly/vote,NO_DIRECT,IGNORES_LENGTH1,consumes candidates not base_lexicon SQL; length1 has no domain vote by design
+Assembly,electron_node/.../span-assembly-v4/*,path assembly,NO_DIRECT,IGNORES_LENGTH1,does not query base_lexicon
+KenLM,fw-detector kenlm path,rerank,NO_DIRECT,IGNORES_LENGTH1,scores sentence candidates
+Model2_PD,model2-runtime infer,P/D only,NO_DIRECT,IGNORES_LENGTH1,retired from single-char decision
+Pinyin_IME_V2_runtime,pinyin-ime-v2-dict-load.ts,IME decode,NO,IGNORES_LENGTH1,loads single_char_dictionary.tsv not sqlite
+Pinyin_IME_export,scripts/pinyin-ime-v2/lib/dict-export-core.mjs,IME dict export tooling,YES,USES_LENGTH1,exports all enabled base_lexicon with no length filter; secondary coupling
+Full_rebuild,scripts/lexicon/lib/full-rebuild-from-csv.mjs,build/import,YES_WRITE_HISTORICAL,USES_LENGTH1,loadSingleCharRows writes length1; audit mode read-only here
+Patch_e2e,scripts/lexicon/run-patch-e2e-runner.mjs,ops/test,YES,UNKNOWN,spot checks by word; not length-specific policy
+Model2_corpus_export,training/model2/corpus/lexicon_export.py,training probe,YES,USES_LENGTH1,export_base_background LIMIT without length filter; tooling only
+Model2_candidates_index,training/model2/candidates/index.py,training index,YES,UNKNOWN,reads base_lexicon; not production FW path
+Length1_integration_tests,lexicon-v2/*length1*.sqlite.integration.test.ts,tests,YES,USES_LENGTH1,assert tone/unique/surface-exact against sqlite fixtures/prod bundle
+Diagnostics_audit_scripts,docs/user_correction/scripts/* + docs/tone-v2/_audit_scratch/*,audit/diagnostics,YES,USES_LENGTH1,read-only probes
+Registry,domain registry install on load,runtime registry,INDIRECT,IGNORES_LENGTH1,domain_hierarchy/tags; length1 has 0 domain tags

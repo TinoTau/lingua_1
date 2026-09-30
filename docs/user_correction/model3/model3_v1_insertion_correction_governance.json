@@ -1,0 +1,39 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_MAINLINE_INSERTION_POINT_CORRECTION_AUDIT",
+    "verdict": "READY_WITH_GAPS",
+    "mode": "READ_ONLY",
+    "ssotCorrected": true,
+    "architectureChangeRequired": false,
+    "safeToEnterDevelopment": true,
+    "recommendedNextPhase": "MODEL3_V1_MAINLINE_INTEGRATION_DEVELOPMENT",
+    "integrationId": "MODEL3_V1_MAINLINE_INTEGRATION",
+    "runtimeChanged": false,
+    "frozenModelChanged": false,
+    "trainingChanged": false
+  },
+  "previousInsertionPoint": {
+    "status": "SUPERSEDED",
+    "reason": "DOMAIN_ANCHOR_PRE_VOTE_SEMANTICS_INCORRECT",
+    "supersedingPlan": "model3_v1_mainline_integration_plan_corrected.csv"
+  },
+  "preferredBoundary": "OPTION_A",
+  "correctOrder": [
+    "Model2 expand",
+    "Domain Vote (voteUtteranceDomainFromPool)",
+    "materializeModel3Anchors",
+    "Model3",
+    "bounded retry",
+    "completeDomainAwareAssemblyFromVote (same vote)",
+    "buildSentenceCandidates / KenLM"
+  ],
+  "reportArtifactCount": 4,
+  "reportArtifactCountLe10": true,
+  "reportArtifacts": [
+    "Lingua_Model3_V1_Mainline_Insertion_Point_Correction_Audit_2026_08_26.md",
+    "model3_v1_insertion_correction_bundle.json",
+    "model3_v1_insertion_correction_governance.json",
+    "model3_v1_mainline_integration_plan_corrected.csv"
+  ],
+  "architectureDriftRule": "Future development must not move Model3 before Domain Vote without Architecture Change Proposal"
+}

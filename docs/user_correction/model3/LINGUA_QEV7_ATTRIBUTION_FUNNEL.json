@@ -1,0 +1,50 @@
+{
+  "phase": "LINGUA_QEV7_RECALL_NON_TARGET_HIT_EXACT_ATTRIBUTION_AUDIT_V1",
+  "expected": 109,
+  "actual": 109,
+  "funnel": {
+    "qev7": 109,
+    "query_target_reachable": 0,
+    "target_geometry_valid": 0,
+    "lexicon_present": 0,
+    "pinyin_compatible": 0,
+    "domain_eligible": 0,
+    "exact_recall_reproduced": 0,
+    "target_raw_retrieved": 0,
+    "target_survives_filter": 0,
+    "target_inside_topk": 0
+  },
+  "owners": {
+    "A2_TARGET_GEOMETRY_NOT_COMPATIBLE": 37,
+    "A1_QUERY_NOT_TARGET_REACHABLE": 72
+  },
+  "ownerTotal": 109,
+  "byCondition": {
+    "CORRECT_PROFILE": 43,
+    "WRONG_PROFILE": 66,
+    "NO_PROFILE": 0
+  },
+  "dominantOwner": "A1_QUERY_NOT_TARGET_REACHABLE",
+  "dominantCount": 72,
+  "conditionOwner": {
+    "CORRECT_PROFILE": {
+      "A2_TARGET_GEOMETRY_NOT_COMPATIBLE": 14,
+      "A1_QUERY_NOT_TARGET_REACHABLE": 29
+    },
+    "WRONG_PROFILE": {
+      "A1_QUERY_NOT_TARGET_REACHABLE": 43,
+      "A2_TARGET_GEOMETRY_NOT_COMPATIBLE": 23
+    },
+    "NO_PROFILE": {}
+  },
+  "a1Secondary": {
+    "WRONG_PROFILE_CONDITIONED_QUERY": 43,
+    "LENGTH_MISALIGNED_EVIDENCE_SLICE": 25,
+    "MODEL2_OR_EVIDENCE_WINDOW_MISS_TARGET_KEY": 4
+  },
+  "queryRelationCounts": {
+    "Q_NOT_TARGET_REACHABLE": 40,
+    "Q_MATCH_TARGET_SUPERSPAN": 61,
+    "Q_MATCH_PHONETICALLY_REACHABLE": 8
+  }
+}

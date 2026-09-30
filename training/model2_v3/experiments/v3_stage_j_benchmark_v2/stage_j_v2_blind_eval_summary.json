@@ -1,0 +1,92 @@
+{
+  "Stage_J_Benchmark_V2": "PARTIAL",
+  "Benchmark_Frozen": true,
+  "J1_Checkpoint_Modified": false,
+  "J1_Retrained": false,
+  "Production_Freeze_Bar": "NOT_PRODUCTION_PROVEN",
+  "P1_Baseline_RR": 0.955,
+  "J1_Blind_P_RR": 1.0104321907600595,
+  "P_N": 699,
+  "P_Heldout_RR": 1.0094562647754137,
+  "P_Regression": "NO",
+  "Weakest_Relation": "in_ing",
+  "D_Oracle_N": 20,
+  "D_RecallRetained": 1.0,
+  "D_N": 20,
+  "D_clean_n": 20,
+  "D_all_n": 45,
+  "D_unique_spans": 14,
+  "Correct": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 1.0,
+    "hits": 20,
+    "CI95": [
+      0.8388698745050667,
+      0.9999999999999998
+    ]
+  },
+  "Empty": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.4,
+    "hits": 8,
+    "CI95": [
+      0.21880396741419272,
+      0.613422057684794
+    ]
+  },
+  "Wrong": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.65,
+    "hits": 13,
+    "CI95": [
+      0.43285051021946475,
+      0.8188104521320554
+    ]
+  },
+  "Swapped": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.5,
+    "hits": 10,
+    "CI95": [
+      0.2992949144298199,
+      0.70070508557018
+    ]
+  },
+  "Correct_Empty": 0.6,
+  "Profile_Value": "STRONG",
+  "PD_Full": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 1.0,
+    "hits": 20,
+    "CI95": [
+      0.8388698745050667,
+      0.9999999999999998
+    ]
+  },
+  "Synergy_Eligible": 0,
+  "Synergy_Success": 0,
+  "Synergy_Rate": 0.0,
+  "Joint_Interference": "NO",
+  "Coverage": {
+    "P": "STRONG",
+    "D": "LIMITED",
+    "PD": "LIMITED",
+    "Heldout": "LIMITED",
+    "Counterfactual": "LIMITED"
+  },
+  "J1_Generalization": "PARTIAL",
+  "J1_Production_Candidate": "NO",
+  "Reason": "D unique span coverage still below MINIMUM 100; D coverage LIMITED; Empty profile expansion high",
+  "Highest_Priority_Failure_Class": "GENERIC_OVERBIAS",
+  "Known_Secondary_Issues": [
+    "WRONG_SWAPPED_DOMAIN_CANDIDATE_BUDGET_SELECTIVITY",
+    "DOWNSTREAM_SAMEDOMAIN_INTERACTION",
+    "REAL_D_ONLY_COVERAGE_LIMITATION"
+  ],
+  "Recommended_Next_Phase": "LEXICON_SOFT_PRIOR_YIELD_AUDIT_THEN_FROZEN_V2_RETEST"
+}

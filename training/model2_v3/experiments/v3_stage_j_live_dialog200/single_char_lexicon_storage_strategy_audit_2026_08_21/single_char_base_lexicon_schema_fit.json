@@ -1,0 +1,17 @@
+{
+  "SCHEMA_REUSE_SUPPORTED": true,
+  "fields": {
+    "surface": "word",
+    "canonical": "canonical_word / normalized",
+    "pinyin": "pinyin_key",
+    "tone": "tone_pinyin_key",
+    "enabled": "enabled",
+    "prior": "prior_score",
+    "source": "source",
+    "term_identity": "id (+ term table)",
+    "alias": "is_alias / aliases"
+  },
+  "missing_for_wordhood": ["pos", "wordhood", "cld_provenance", "lexical_eligibility"],
+  "missing_blocks_option_b": false,
+  "reason": "Curated eligibility is decided offline at import; runtime does not need wordhood columns if inventory is already curated."
+}

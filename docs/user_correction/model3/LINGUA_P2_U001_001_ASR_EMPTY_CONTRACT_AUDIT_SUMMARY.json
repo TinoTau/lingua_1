@@ -1,0 +1,144 @@
+{
+  "phase": "LINGUA_P2_U001_001_ASR_EMPTY_CONTRACT_AUDIT",
+  "auditTimestamp": "2026-09-12T08:35:00.000Z",
+  "auditNature": "READ_ONLY_CONTRACT_EVIDENCE_AUDIT",
+  "caseIdentity": {
+    "caseId": "p2_u001_001",
+    "userId": "U001",
+    "split": "DEV",
+    "domain": "general_daily",
+    "difficulty": "short",
+    "referenceText": "请帮我看看纪念性。",
+    "ttsInputText": "请帮我看看纪戀性。",
+    "perturbation": {
+      "relationFamily": "n_l",
+      "relationDirection": "n_l",
+      "perturbationApplied": true,
+      "perturbationSeverity": "MODERATE",
+      "evaluationTargetSurface": "纪念性",
+      "evaluationTargetTermIds": [
+        "base-rebuild-term-e7baaae5bfb5e680"
+      ],
+      "targetInLexicon": true,
+      "isModel2TargetCase": true,
+      "model2LexiconEligible": true
+    },
+    "profileCondition": {
+      "profileRef": "prof_u001_p2",
+      "profileStage": "P2",
+      "profileBuildSetId": "pbs_u001_p2",
+      "profileBuildTermIds": [
+        "base-rebuild-term-e794b5e884917c64",
+        "base-rebuild-term-e794b7e4baba7c6e",
+        "base-rebuild-term-e593aae9878c7c6e",
+        "base-rebuild-term-e883bde58a9b7c6e",
+        "base-rebuild-term-e5bf83e683857c78",
+        "base-rebuild-term-e4bfa1e5bf837c78",
+        "base-rebuild-term-e4b8b4e8bf917c6c",
+        "base-rebuild-term-e4b8b4e697b67c6c"
+      ]
+    },
+    "expectedResearchPurpose": {
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "purposeDescription": "Test personalized n_l confusion bias in retrieving unseen target '纪念性' in short general-daily utterances."
+    },
+    "audioIdentity": {
+      "audioId": "aud_p2_u001_001",
+      "audioPath": "audio/p2_u001_001.wav",
+      "byte_size": 60972,
+      "sha256": "6ebb032cb8de43058366733d473793b4afbea7bfcada788da8c4bc933c09f8e2",
+      "sample_rate": 16000,
+      "channels": 1,
+      "duration": 1.904
+    },
+    "blockBIdentity": {
+      "batchId": "blockb_2026-09-11T1021",
+      "datasetBuildId": "build_20260911_091806",
+      "noProfileExecution": {
+        "runId": "blockb_2026-09-11T1021_p2_u001_001_NO_PROFILE",
+        "status": "OK",
+        "rawMergedAsrText": "",
+        "rawAsrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "finalText": ""
+      }
+    },
+    "currentCaptureIdentity": {
+      "batchId": "tonecap_pilot200_full_20260912T0437",
+      "evidenceFile": "test wav/LINGUA_DIALOG2000_V2_PILOT200/tone_evidence_captures/tonecap_pilot200_full_20260912T0437/p2_u001_001.evidence.json",
+      "status": "CAPTURE_INVALID",
+      "captureFailureReason": "ASR_SEGMENT_MISSING"
+    }
+  },
+  "auditA": {
+    "A1_testedRelationToTarget": true,
+    "A1_expectedRelation": "n_l",
+    "A1_expectedTargetTerm": "纪念性",
+    "A1_expectedPerturbedText": "请帮我看看纪戀性。",
+    "A2_pilotRequiresNonemptyAsr": "NO",
+    "A2_ssotCitation": "LINGUA_DIALOG2000_V2_PILOT200_SSOT.md freeze gates do not require non-empty ASR; Block C explicitly defines NO_ASR_CONTENT bucket."
+  },
+  "auditB": {
+    "fileExists": true,
+    "fileSize": 60972,
+    "durationSeconds": 1.904,
+    "sampleRate": 16000,
+    "channels": 1,
+    "pcmFormat": "16-bit Signed Integer PCM (fmt.audioFormat=1)",
+    "audioSha256": "6ebb032cb8de43058366733d473793b4afbea7bfcada788da8c4bc933c09f8e2",
+    "nonZeroSamples": 30448,
+    "totalSamples": 30464,
+    "nonZeroRatio": 0.9994747899159664,
+    "rmsDbfs": -15.676172928182115,
+    "frozenAudioFileValid": "YES",
+    "audibleOrNonzeroSpeechEvidence": "YES"
+  },
+  "auditC": {
+    "asrBackend": "faster-whisper-vad",
+    "vadMode": "production_default",
+    "asrExecutionStatus": "SUCCESS_EMPTY",
+    "emptyResultReproducible": "YES",
+    "historicalBlockBAlsoEmpty": "YES",
+    "errorDistinction": "ASR_EXECUTION_SUCCESS_WITH_EMPTY_RESULT (HTTP 200, no exception)"
+  },
+  "auditD": {
+    "harnessInputIdentity": "PASS",
+    "harnessAsrInvocation": "PASS",
+    "harnessResponsePreservation": "PASS",
+    "caseSpecificBranch": "NO",
+    "harnessCaptureBug": "NO"
+  },
+  "auditE": {
+    "productionAsrEmptyAllowed": "YES",
+    "orchestratorReason": "empty_raw",
+    "downstreamBehavior": "Returns spans: [], triggers no Model2 or Tone binding, outputs empty final text without exception."
+  },
+  "auditF": {
+    "acceptanceFailureOwner": "capture harness implementation assumption",
+    "canAuthoritativeCaptureOutcomeBeAsrEmptyUnderCurrentContract": "NO",
+    "contractDefinitionStatus": "NOT_DEFINED"
+  },
+  "decisionTable": {
+    "pilotRequiresNonemptyAsr": "NO",
+    "frozenAudioFileValid": "YES",
+    "nonzeroOrSpeechEvidence": "YES",
+    "asrExecution": "SUCCESS_EMPTY",
+    "emptyReproducible": "YES",
+    "historicalBlockBAlsoEmpty": "YES",
+    "harnessInputIdentity": "PASS",
+    "harnessInvocation": "PASS",
+    "harnessResponsePreservation": "PASS",
+    "productionPermitsAsrEmpty": "YES",
+    "currentReplayContractPermitsAuthoritativeAsrEmptyEvidence": "NO",
+    "caseCanExerciseDeclaredPilotResearchPurpose": "NO"
+  },
+  "verdict": {
+    "P2_U001_001_ASR_EMPTY_STATUS": "VALID_PILOT_RUNTIME_OUTCOME",
+    "FIRST_FAILURE_OWNER": "ASR_EMPTY_REPLAY_CONTRACT",
+    "TONE_FAILURE": "NO",
+    "CAPTURE_SYSTEMIC_FAILURE": "NO",
+    "DATASET_CHANGE_REQUIRED": "NO",
+    "CONTRACT_CHANGE_REQUIRED": "YES",
+    "FULL_PILOT200_REMEASURE_READY": "NO",
+    "ONE_NEXT_OWNER": "ASR_EMPTY_REPLAY_CONTRACT"
+  }
+}

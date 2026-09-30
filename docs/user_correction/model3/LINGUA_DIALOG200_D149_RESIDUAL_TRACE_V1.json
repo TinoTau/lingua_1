@@ -1,0 +1,177 @@
+{
+  "schema": "LINGUA_DIALOG200_D149_RESIDUAL_TRACE_V1",
+  "phase": "DIALOG200_RESIDUAL_DIVERGENCE_ROOT_CAUSE_AUDIT_V1",
+  "mode": "READ_ONLY",
+  "caseId": "d149",
+  "authority": {
+    "evaluation_ssot": "EVALUATION_SSOT_V1",
+    "frozen_evidence": "DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_V1.jsonl",
+    "alignment_repair": "VALIDATED",
+    "replay_equivalence_certified": false
+  },
+  "finals": {
+    "capture": "请问,这双鞋 不合是三天内可以退换吧",
+    "replay": "请问,这双鞋 不合是三天内可以退换吧",
+    "identical": true
+  },
+  "alignment": {
+    "status": "OK",
+    "segmentTimeOffsetsSec": [0, 1.1999999999999997],
+    "asrSegmentNodeBatchIndices": [0, 1],
+    "segmentCharOffsets": [0, 6]
+  },
+  "bypass": {
+    "asr_delta": 0,
+    "tone_skipped": true,
+    "injected": true
+  },
+  "evaluator_observed": {
+    "firstDivergence": "E7_PATH_COUNT:EXPECTED_NONDETERMINISM",
+    "authoritative": false,
+    "stage_counts": {
+      "E3_BASE_RECALL": { "capture_n": 50, "replay_n": 28, "status": "FAIL_SECONDARY" },
+      "E4_MODEL2_UNION": { "capture_n": 84, "replay_n": 44, "status": "FAIL_SECONDARY" },
+      "E6_SEGMENTATION_PATH": { "capture_n": 4, "replay_n": 2, "status": "FAIL_SECONDARY" },
+      "E7_PATH_COUNT": { "capture": 4, "replay": 2, "status": "FAIL" }
+    },
+    "firstDivergence_order_artifact": "comparator order lists E7 before E3; remaps E3 FAIL→FAIL_SECONDARY when E7 fails"
+  },
+  "E3_count_semantics": {
+    "code": "dialog200-frozen-evidence-replay-contract.mjs compareCaptureReplay",
+    "object_counted": "capPaths.flatMap(p => p.base_candidates) length",
+    "per_path_source": "surfacesFromPack(base_candidates).slice(0,48)",
+    "before_or_after_dedup_for_n": "BEFORE unique — cross-path duplicates counted",
+    "equality_predicate": "eqSet → sortedUnique (dedup)",
+    "slice_0_48_involved": true,
+    "truncation_material_for_this_case": false,
+    "capture_flat_n": 50,
+    "replay_flat_n": 28,
+    "capture_unique_n": 21,
+    "replay_unique_n": 21,
+    "per_path_capture_n": [13, 13, 12, 12],
+    "per_path_replay_n": [14, 14],
+    "same_schema_version": true,
+    "same_pipeline_boundary": "compact path-local base surfaces (not utterance-global raw Base table)",
+    "D149_E3_COUNT_COMPARABLE": "NO",
+    "note": "50→28 MUST NOT be treated as Base set-size divergence; it scales with path multiplicity"
+  },
+  "base_unique_set_comparison": {
+    "BASE_FULL_RESULT": "EVALUABLE_AT_COMPACT_SURFACE_SET",
+    "full_raw_window_tables": "NOT_EVALUABLE",
+    "capture_unique": [
+      "一", "三", "亿", "以", "伊", "依", "入园", "内", "出园", "包车", "古桥", "古镇",
+      "可", "合", "合适", "导览", "尾", "推", "是", "鞋", "预订"
+    ],
+    "replay_unique": [
+      "一", "亿", "以", "伊", "何时", "依", "入园", "内", "出园", "包车", "古桥", "古镇",
+      "可", "天", "导览", "尾", "把", "散", "腿", "鞋", "预订"
+    ],
+    "MISSING_IN_REPLAY": ["三", "合", "合适", "推", "是"],
+    "EXTRA_IN_REPLAY": ["何时", "天", "把", "散", "腿"],
+    "classification": "CANDIDATE_RESULT_DIVERGENCE",
+    "same_path_id_subset_comparison": {
+      "path_ids": [
+        "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+        "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4"
+      ],
+      "capture_subset_unique_n": 19,
+      "replay_unique_n": 21,
+      "only_capture": ["三", "合适", "推"],
+      "only_replay": ["何时", "天", "把", "散", "腿"],
+      "capture_path_2913_base": ["鞋", "合适", "三", "内", "可", "以", "一", "亿", "伊", "依", "尾", "推"],
+      "note": "Even restricted to identical path_ids, Base surface sets diverge — not path-count flatMap alone"
+    }
+  },
+  "path_analysis": {
+    "capture_path_ids": [
+      "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+      "f49a89c170e483daff054115cf976c21491c6f66570a683bd06c8c2e4f71753a",
+      "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4"
+    ],
+    "replay_path_ids": [
+      "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4"
+    ],
+    "replay_subset_of_capture": true,
+    "missing_in_replay": [
+      "a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96",
+      "f49a89c170e483daff054115cf976c21491c6f66570a683bd06c8c2e4f71753a"
+    ],
+    "replay_boundaryKeys": [
+      "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16",
+      "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-14|14-15|15-16"
+    ],
+    "path_enum_contract": "identical LexicalEdge graph + caps → deterministic paths",
+    "LEXICAL_EDGE_GRAPH_IDENTICAL": "UNKNOWN",
+    "reason": "E5 comparator uses fine_span_surfaces from fine_spans|path_fine_spans|spans; production trace field is finespans — both compact sides empty → vacuous E5 PASS"
+  },
+  "model2": {
+    "PROFILE_MODE": "NO_PROFILE",
+    "capture_flat_n": 84,
+    "replay_flat_n": 44,
+    "unique_diff_mirrors_base": true,
+    "independently_causal": false,
+    "note": "84→44 is path-multiplicity cascade + Base set cascade; not independent Model2 root"
+  },
+  "upstream_probe_live_only": {
+    "wordTimeSpanCount": 11,
+    "example_mapping_misses": [
+      {
+        "text": "这双鞋",
+        "mappingMissReason": "no_word_timespan_for_slot",
+        "mappingMissAttribution": "word_timespan_mapping_failure"
+      },
+      {
+        "text": "双鞋",
+        "mappingMissReason": "no_word_timespan_for_slot",
+        "mappingMissAttribution": "word_timespan_mapping_failure"
+      }
+    ],
+    "single_char_tone_queries_sample": [
+      { "id": "6:7", "text": "合", "tone": "he2", "queryExecuted": true },
+      { "id": "7:8", "text": "是", "tone": "shi2", "queryExecuted": true },
+      { "id": "8:9", "text": "三", "tone": "san4", "queryExecuted": true }
+    ],
+    "capture_window_query_tables": "NOT_CAPTURED",
+    "D149_WINDOW_QUERY_IDENTICAL": "UNKNOWN"
+  },
+  "true_pipeline_first_divergence": {
+    "stage": "E3_BASE_RECALL_UNIQUE_SURFACE_SET",
+    "pipeline_order_note": "before E7; evaluator firstDivergence E7 is attribution artifact",
+    "proven_delta": "compact Base surface unique sets differ; same-path_id subset also differs (合适 vs 何时)",
+    "evidence_strength": "PROVEN"
+  },
+  "required_answers": {
+    "D149-Q1_ASR_boundaries_identical": "YES (injected frozen ASR+segments; E1 PASS)",
+    "D149-Q2_alignment_identical_to_capture_semantics": "YES (reconstructed OK; offsets/indices/charOffsets present)",
+    "D149-Q3_WordTimeSpans_identical": "UNKNOWN (capture table not compared; live wordTimeSpanCount=11 with some multi-char mapping misses)",
+    "D149-Q4_mapped_Tone_inputs_identical": "UNKNOWN (slices injected; per-window mapping not in capture SSOT)",
+    "D149-Q5_FineSpans_comparable": "NO via current comparator (finespans field ownership miss); live arrays exist but surface extract empty under compact keys",
+    "D149-Q6_WindowQueries_identical": "UNKNOWN",
+    "D149-Q7_CanonicalRecallQueries_identical": "UNKNOWN",
+    "D149-Q8_what_50_and_28_count": "flatMap of per-path compact base_candidates surfaces (cross-path duplicates included)",
+    "D149-Q9_counts_semantically_comparable": "NO",
+    "D149-Q10_full_Base_candidate_sets_available": "PARTIAL (compact surfaces yes; raw window/query tables no)",
+    "D149-Q11_first_candidate_delta": "MISSING_IN_REPLAY includes 合适/合/是/三/推; EXTRA includes 何时/天/散/把/腿; first semantic fork at he|shi compound region on shared path_ids",
+    "D149-Q12_Model2_84_to_44_independently_causal": "NO",
+    "D149-Q13_LexicalEdge_graphs_identical": "UNKNOWN",
+    "D149-Q14_why_path_4_to_2": "Replay retains only 2 of 4 capture path_ids; missing two alternate boundaryKeys. Downstream of non-identical candidate/edge space (edges not directly measurable in compact). NOT EXPECTED_NONDETERMINISM.",
+    "D149-Q15_TRUE_PIPELINE_FIRST_DIVERGENCE": "Base unique surface set divergence (E3 semantic), before Path count",
+    "D149-Q16_production_defect_proven": "NO"
+  },
+  "result_enum": "D149-D",
+  "result_label": "BASE_RECALL_RESULT_DIVERGENCE_PROVEN",
+  "top_level_class": "1 EXPECTED FAILURE? NO — classified as real Capture↔Replay divergence under audit classes",
+  "failure_class": "OBSERVABILITY GAP + residual Capture↔Replay behavioral divergence (Base)",
+  "secondary_tags": [
+    "COUNT_SEMANTICS_MISMATCH",
+    "CANDIDATE_RESULT_DIVERGENCE",
+    "COMPARATOR_SCHEMA_MISMATCH",
+    "LEXICAL_EDGE_CASCADE"
+  ],
+  "evidence_strength": "PROVEN",
+  "production_defect": false,
+  "repair_owner": "FURTHER_RESIDUAL_AUDIT / TARGETED_OBSERVABILITY_CAPTURE (not this round)",
+  "hard_stop": "NO_IMPLEMENTATION"
+}

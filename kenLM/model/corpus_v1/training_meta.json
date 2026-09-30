@@ -1,0 +1,21 @@
+{
+  "corpusChar": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/v1/corpus_v1.char.txt",
+  "corpusLines": 17474810,
+  "tokenCount": 679285642,
+  "vocabularySize": 71613,
+  "ngramCountsByOrder": [71613, 7161301, 83923594],
+  "ngramCountSum": 91156508,
+  "arpaPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/corpus_v1/zh_char_3gram.arpa",
+  "arpaSizeBytes": 2116813606,
+  "arpaSha256": "e9d55845cbfc563231e483539a1ff0bf85b7298a9c0c0bb085a4d538f215601a",
+  "binaryPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/corpus_v1/zh_char_3gram.trie.bin",
+  "binarySizeBytes": 601466261,
+  "binarySha256": "848ebee6dec020449f28d073cada6e53cc9dc70bd7343e6fc2a7ea7fedce61d8",
+  "ngramOrder": 3,
+  "pruning": "none",
+  "memoryFlag": "-S 50%",
+  "discount": "Modified Kneser-Ney with --discount_fallback (1-gram fallback D1=0.5 D2=1 D3+=1.5)",
+  "discountFallback": true,
+  "sourcesPolicy": "wikipedia_only_oscar_abandoned",
+  "buildCommand": "lmplz -o 3 -S 50% -T /tmp --discount_fallback --text corpus_v1.char.txt --arpa zh_char_3gram.arpa && build_binary trie zh_char_3gram.arpa zh_char_3gram.trie.bin"
+}

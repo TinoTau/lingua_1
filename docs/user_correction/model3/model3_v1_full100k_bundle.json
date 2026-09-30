@@ -1,0 +1,393 @@
+{
+  "phase": "MODEL3_V1_ANCHOR_CONTRAST_FULL_100K_DEVELOPMENT",
+  "verdict": "ANCHOR_SIGNAL_DILUTED",
+  "dataset": {
+    "manifest": {
+      "datasetVersion": "model3_v1_anchor_contrast_full100k_20260824",
+      "schemaVersion": "MODEL3_TRAINING_SAMPLE_V1",
+      "generatorVersion": "model3-v1-anchor-contrast-full100k-1.0.0",
+      "seed": 2026082420,
+      "phase": "MODEL3_V1_ANCHOR_CONTRAST_FULL_100K_DEVELOPMENT",
+      "sampleCount": 100000,
+      "excludedCount": 0,
+      "splitCounts": {
+        "train": 76008,
+        "dev": 9182,
+        "test": 14810
+      },
+      "labelDistribution": {
+        "KEEP": 2010973,
+        "MASKED": 81258,
+        "RETRY": 7400
+      },
+      "bucketDistribution": {
+        "NO_ANCHOR": 18742,
+        "NATURAL": 67817,
+        "CONTRAST": 11889,
+        "HARD_KEEP": 1552
+      },
+      "retryRatioEligible": 0.0036663193572248538,
+      "anchorConditionedUtterances": 81258,
+      "noAnchorUtterances": 18742,
+      "realDomainUtterances": 0,
+      "strongPairs": 5721,
+      "sameTargetDifferentLabelSurfaces": 120,
+      "uniqueTargetSurfaces": 1368,
+      "seedIngested": 16000,
+      "holdPronunciationFamilies": [
+        "eng_en",
+        "h_f"
+      ],
+      "createdAt": "2026-08-24T10:01:33.727241+00:00",
+      "notes": [
+        "intendedRole from seeds is construction hint only — not final label",
+        "RETRY requires referenceReachable=YES via Stage2 harness",
+        "SIMULATED_TRAINING anchors are training-only sidecar provenance"
+      ],
+      "topupAdded": 16495
+    },
+    "utterances": 100000,
+    "train": 76008,
+    "dev": 9182,
+    "test": 14810,
+    "buckets": {
+      "NO_ANCHOR": 18742,
+      "NATURAL": 67817,
+      "CONTRAST": 11889,
+      "HARD_KEEP": 1552
+    },
+    "labels": {
+      "KEEP": 2010973,
+      "MASKED": 81258,
+      "RETRY": 7400
+    },
+    "retry_ratio_eligible": 0.0036663193572248538,
+    "no_anchor_utterances": 18742,
+    "entropy": {
+      "unique_surfaces": 1369,
+      "pure_label_surfaces": 1249,
+      "mixed_label_surfaces": 120,
+      "mean_entropy": 0.05139263059486273
+    },
+    "hard_zeros": {
+      "anchor_retry": 0,
+      "illegal_retry": 0,
+      "fake_acoustic": 0,
+      "dialog_200_contamination": 0,
+      "pass": true
+    },
+    "design_notes": []
+  },
+  "baselines": {
+    "surface_lookup": {
+      "tp": 30,
+      "fp": 16,
+      "fn": 1344,
+      "tn": 301147,
+      "retry_precision": 0.6521739130434783,
+      "retry_recall": 0.021834061135371178,
+      "retry_f1": 0.04225352112676056,
+      "false_retry_rate": 5.312737620491229e-05,
+      "macro_f1": 0.8238654028226209,
+      "eligible": 302537
+    },
+    "pinyin_lookup": {
+      "tp": 30,
+      "fp": 16,
+      "fn": 1344,
+      "tn": 301147,
+      "retry_precision": 0.6521739130434783,
+      "retry_recall": 0.021834061135371178,
+      "retry_f1": 0.04225352112676056,
+      "false_retry_rate": 5.312737620491229e-05,
+      "macro_f1": 0.8238654028226209,
+      "eligible": 302537
+    },
+    "surface_shortcut": "CONTROLLED"
+  },
+  "leakage_gate": {
+    "stable": true,
+    "ok": 200,
+    "fail": 0,
+    "gate_pass": true
+  },
+  "training": {
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.015429162855015778,
+        "dev": {
+          "tp": 571,
+          "fp": 10,
+          "fn": 8,
+          "tn": 185081,
+          "retry_precision": 0.9827882960413081,
+          "retry_recall": 0.9861830742659758,
+          "retry_f1": 0.9844827586206897,
+          "false_retry_rate": 5.402747837550178e-05,
+          "macro_f1": 0.9913725367957839,
+          "eligible": 185670
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0014110978432839787,
+        "dev": {
+          "tp": 574,
+          "fp": 17,
+          "fn": 5,
+          "tn": 185074,
+          "retry_precision": 0.9712351945854484,
+          "retry_recall": 0.9913644214162349,
+          "retry_f1": 0.9811965811965813,
+          "false_retry_rate": 9.184671323835302e-05,
+          "macro_f1": 0.985604089547383,
+          "eligible": 185670
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.0011558079416203854,
+        "dev": {
+          "tp": 565,
+          "fp": 3,
+          "fn": 14,
+          "tn": 185088,
+          "retry_precision": 0.9947183098591549,
+          "retry_recall": 0.9758203799654577,
+          "retry_f1": 0.985178727114211,
+          "false_retry_rate": 1.6208243512650533e-05,
+          "macro_f1": 0.9973213379421867,
+          "eligible": 185670
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.0010267702668048202,
+        "dev": {
+          "tp": 575,
+          "fp": 20,
+          "fn": 4,
+          "tn": 185071,
+          "retry_precision": 0.9663865546218487,
+          "retry_recall": 0.9930915371329879,
+          "retry_f1": 0.979557069846678,
+          "false_retry_rate": 0.00010805495675100356,
+          "macro_f1": 0.9831824708810986,
+          "eligible": 185670
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.0009237564921291282,
+        "dev": {
+          "tp": 575,
+          "fp": 11,
+          "fn": 4,
+          "tn": 185080,
+          "retry_precision": 0.9812286689419796,
+          "retry_recall": 0.9930915371329879,
+          "retry_f1": 0.9871244635193134,
+          "false_retry_rate": 5.943022621305196e-05,
+          "macro_f1": 0.9906035285666437,
+          "eligible": 185670
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.0008572859617129631,
+        "dev": {
+          "tp": 571,
+          "fp": 9,
+          "fn": 8,
+          "tn": 185082,
+          "retry_precision": 0.9844827586206897,
+          "retry_recall": 0.9861830742659758,
+          "retry_f1": 0.9853321829163072,
+          "false_retry_rate": 4.8624730537951605e-05,
+          "macro_f1": 0.9922197682022353,
+          "eligible": 185670
+        }
+      }
+    ],
+    "seconds": 968.1542532444,
+    "config": {
+      "embed_dim": 64,
+      "hidden_dim": 128,
+      "feat_dim": 6,
+      "feat_names": [
+        "isAnchor",
+        "span_len_log1p",
+        "span_rel_position",
+        "first_pass_cand_log1p",
+        "current_cjk_len_log1p",
+        "pinyin_channel_avail"
+      ],
+      "batch_size": 64,
+      "epochs": 6,
+      "lr": 0.001,
+      "class_weight_retry": 2.5,
+      "seed": 2026082420,
+      "init": "random_from_scratch"
+    }
+  },
+  "test_metrics": {
+    "tp": 1297,
+    "fp": 23,
+    "fn": 77,
+    "tn": 301140,
+    "retry_precision": 0.9825757575757575,
+    "retry_recall": 0.9439592430858806,
+    "retry_f1": 0.9628804751299183,
+    "false_retry_rate": 7.637060329456142e-05,
+    "macro_f1": 0.9911600639567105,
+    "eligible": 302537
+  },
+  "anchor_zero": {
+    "metrics": {
+      "tp": 1262,
+      "fp": 17,
+      "fn": 112,
+      "tn": 301146,
+      "retry_precision": 0.9867083659108679,
+      "retry_recall": 0.9184861717612809,
+      "retry_f1": 0.9513758009800225,
+      "false_retry_rate": 5.644783721771931e-05,
+      "macro_f1": 0.9931682957756744,
+      "eligible": 302537
+    },
+    "flip": {
+      "compared": 302537,
+      "flip": 51,
+      "flip_rate": 0.00016857442230206553
+    },
+    "delta_f1": 0.011504674149895755
+  },
+  "anchor_shuffle": {
+    "metrics": {
+      "tp": 1253,
+      "fp": 21,
+      "fn": 121,
+      "tn": 301142,
+      "retry_precision": 0.9835164835164835,
+      "retry_recall": 0.9119359534206696,
+      "retry_f1": 0.9463746223564955,
+      "false_retry_rate": 6.972968126894738e-05,
+      "macro_f1": 0.9915574205488665,
+      "eligible": 302537
+    },
+    "flip": {
+      "compared": 302537,
+      "flip": 70,
+      "flip_rate": 0.00023137665806165857
+    },
+    "delta_f1": 0.016505852773422758
+  },
+  "anchor_contribution": "WEAK",
+  "strong_contrast": {
+    "pairs": 1030,
+    "pair_accuracy": 0.6330097087378641,
+    "surface_dominated_rate": 0.059223300970873784
+  },
+  "no_anchor_bucket": {
+    "n": 2649,
+    "metrics": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "tn": 54347,
+      "retry_precision": 0.0,
+      "retry_recall": 0.0,
+      "retry_f1": 0.0,
+      "false_retry_rate": 0.0,
+      "macro_f1": 0.4999908000294399,
+      "eligible": 54348
+    }
+  },
+  "generalization": {
+    "unseen_surface": {
+      "n": 1336,
+      "metrics": {
+        "tp": 570,
+        "fp": 4,
+        "fn": 11,
+        "tn": 36211,
+        "retry_precision": 0.9930313588850174,
+        "retry_recall": 0.9810671256454389,
+        "retry_f1": 0.9870129870129869,
+        "false_retry_rate": 0.0001104514703851995,
+        "macro_f1": 0.9963638380201687,
+        "eligible": 36796
+      }
+    },
+    "unseen_family": {
+      "n": 156,
+      "metrics": {
+        "tp": 4,
+        "fp": 1,
+        "fn": 74,
+        "tn": 1961,
+        "retry_precision": 0.8,
+        "retry_recall": 0.05128205128205128,
+        "retry_f1": 0.09638554216867469,
+        "false_retry_rate": 0.0005096839959225281,
+        "macro_f1": 0.8818181818181818,
+        "eligible": 2040
+      }
+    },
+    "unseen_anchor_context": {
+      "n": 71,
+      "metrics": {
+        "tp": 34,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1913,
+        "retry_precision": 1.0,
+        "retry_recall": 1.0,
+        "retry_f1": 1.0,
+        "false_retry_rate": 0.0,
+        "macro_f1": 1.0,
+        "eligible": 1947
+      }
+    },
+    "real_domain": {
+      "n_test": 0,
+      "n_all": 0,
+      "metrics": null,
+      "status": "INSUFFICIENT_REAL_DOMAIN_SAMPLE"
+    }
+  },
+  "comparison_vs_pilot": {
+    "pilot_retry_f1": 0.6795,
+    "pilot_precision": 0.5167,
+    "pilot_false_retry": 0.044462,
+    "new_retry_f1": 0.9628804751299183,
+    "new_precision": 0.9825757575757575,
+    "new_false_retry": 7.637060329456142e-05,
+    "precision_improved": "YES"
+  },
+  "cpu": {
+    "p50_ms": 3.021150012500584,
+    "p95_ms": 4.552579968003556,
+    "p99_ms": 5.178780960850417,
+    "n": 500
+  },
+  "shadow": {
+    "actual_retry": false,
+    "production_output_changed": false
+  },
+  "model": {
+    "name": "MODEL3_V1_ANCHOR_CONTRAST_FULL100K_BIGRU_V1",
+    "params": 238082,
+    "path": "training/model3_dataset/model3_v1_anchor_contrast_full100k_bigru"
+  },
+  "go": {
+    "anchor_signal_preserved": false,
+    "precision_improved": "YES",
+    "bigru_suitable": true,
+    "synthetic_v1_ready": false,
+    "ready_tts": false,
+    "recommended_next_phase": "MODEL3_V1_FULL100K_DIET_REBALANCE",
+    "note": "Precision improved strongly, but Anchor zero/shuffle flip~0.02% — Anchor signal diluted under natural diet (contrast only ~12%). Rebalance contrast density without returning to pilot 99%."
+  }
+}

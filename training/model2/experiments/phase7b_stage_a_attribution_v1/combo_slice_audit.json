@@ -1,0 +1,74 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "status": "DEFER_INSUFFICIENT_DATA",
+  "n_unseen_feature_combo_flagged_rows": 0,
+  "n_holdout_family_sets_registered": 48,
+  "n_rows_with_combination_key_in_holdout_sets": 0,
+  "phase7a_empty_object_reason": "build_stage_b_trainrows never set unseen_feature_combo=True on baseline_v1 rows (0 flagged). Stage B exporter wrote summarize_ranking([]) → empty/near-empty JSON. Not a PASS; combo holdout registered at plan level but not materialized on trainrows.",
+  "top_combination_keys": [
+    [
+      "NONE",
+      1545
+    ],
+    [
+      "f_h:HIGH",
+      428
+    ],
+    [
+      "an_ang:HIGH",
+      312
+    ],
+    [
+      "ang_an:LOW",
+      299
+    ],
+    [
+      "sh_s:HIGH",
+      298
+    ],
+    [
+      "z_zh:MEDIUM",
+      281
+    ],
+    [
+      "zh_z:LOW",
+      277
+    ],
+    [
+      "an_ang:MEDIUM",
+      262
+    ],
+    [
+      "sh_s:MEDIUM",
+      260
+    ],
+    [
+      "c_ch:MEDIUM",
+      255
+    ],
+    [
+      "ang_an:HIGH",
+      255
+    ],
+    [
+      "h_f:HIGH",
+      251
+    ],
+    [
+      "z_zh:LOW",
+      230
+    ],
+    [
+      "s_sh:LOW",
+      230
+    ],
+    [
+      "z_zh:HIGH",
+      225
+    ]
+  ]
+}

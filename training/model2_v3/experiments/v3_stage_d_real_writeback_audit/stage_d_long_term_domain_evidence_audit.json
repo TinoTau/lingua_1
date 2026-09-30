@@ -1,0 +1,10 @@
+{
+  "training_formula": "normalized_weighted_multitag: for each term, share weight across all tags; L1-normalize over DOMAIN_SLOT_IDS",
+  "inputs": [
+    "personal_terms",
+    "personal_term_evidence",
+    "term_domain_tags via index"
+  ],
+  "production_capability": "NOT_READY — no write-time derivation; no compact field; personal_terms not term_id resolved",
+  "runtime_scan_forbidden": "must not re-scan full history per FineSpan"
+}

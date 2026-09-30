@@ -1,0 +1,16 @@
+{
+  "python_stage_d_path": {
+    "entry": "training/model2_v3/policy/domain_actions.py:soft_domain_retrieve",
+    "second_generator": false,
+    "uses_sql_domain_lookup": false
+  },
+  "node_historical_domain_sql": {
+    "file": "electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts",
+    "function": "queryDomainMultiRowsAtomic",
+    "also": "electron_node/electron-node/main/src/lexicon/local-span-recall.ts"
+  },
+  "SHADOW_PATH": "YES_AT_RUNTIME_IF_BOTH_WIRED",
+  "DOUBLE_RECALL_IN_J1_PYTHON_EVAL": false,
+  "J1_runtime_wired": false,
+  "note": "Python Stage D does not call Node SQL. If future runtime wires Model2 soft_domain_retrieve AND keeps local-span-recall domain SQL, that would be DOUBLE_RECALL."
+}

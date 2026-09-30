@@ -1,0 +1,87 @@
+{
+  "correct_tir": 0.30434782608695654,
+  "empty_tir": 0.0,
+  "correct_gt_empty": true,
+  "pass": true,
+  "suite": {
+    "teacher": {
+      "n": 46,
+      "DomainTop1": 0.30434782608695654,
+      "DomainTop2": 0.34782608695652173,
+      "chose_domain_none": 0.0,
+      "support": "LOW_SUPPORT"
+    },
+    "counterfactual": {
+      "CORRECT": {
+        "n": 46,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.30434782608695654,
+        "Oracle_TIR": 1.0,
+        "RecallRetained": 0.30434782608695654,
+        "TIR_CI95": [
+          0.190796708074489,
+          0.44805918740238165
+        ],
+        "hits": 14,
+        "UnnecessaryExpansion": 1.0,
+        "Latency_P50": 3.977100015617907
+      },
+      "EMPTY": {
+        "n": 46,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.0,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.0,
+          0.07707617732978073
+        ],
+        "hits": 0,
+        "UnnecessaryExpansion": 0.06521739130434782,
+        "Latency_P50": 1.5640999772585928
+      },
+      "WRONG": {
+        "n": 46,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.1956521739130435,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.106504904441218,
+          0.331715377411692
+        ],
+        "hits": 9,
+        "UnnecessaryExpansion": 1.0,
+        "Latency_P50": 2.848900039680302
+      },
+      "SWAPPED": {
+        "n": 46,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.17391304347826086,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.09085683568889252,
+          0.3072363234392253
+        ],
+        "hits": 8,
+        "UnnecessaryExpansion": 1.0,
+        "Latency_P50": 2.7344999834895134
+      },
+      "GENERIC": {
+        "n": 46,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.2391304347826087,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.13912036561131397,
+          0.37935416169118025
+        ],
+        "hits": 11,
+        "UnnecessaryExpansion": 1.0,
+        "Latency_P50": 3.3460999839007854
+      }
+    }
+  }
+}

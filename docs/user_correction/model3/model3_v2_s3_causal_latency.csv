@@ -1,0 +1,6 @@
+metric,p50,p90,p95,max,causal,note
+pipeline_ms_end_to_end_baseline,7029.0,12355.0,15090.0,24050.0,False,Independent full upstream run — NOT post-fork causal
+pipeline_ms_end_to_end_s3,8028.0,12851.0,15328.0,25866.0,False,Independent full upstream run — NOT post-fork causal
+model3_inference_ms_s3_only,13.0,21.0,22.0,28.0,False,Observed on S3 branch only; baseline KEEP_ALL skips inference
+retry_routing_ms_s3_only,14.0,34.0,47.0,83.0,False,No frozen fork replay available
+causal_post_fork_delta,,,,,False,BLOCKED — harness lacks frozen upstream fork replay

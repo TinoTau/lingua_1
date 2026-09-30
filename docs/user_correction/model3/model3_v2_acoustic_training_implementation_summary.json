@@ -1,0 +1,50 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_IMPLEMENTATION",
+  "date": "2026-08-30",
+  "implementationVerdict": "IMPLEMENTATION_PASS_WITH_NONBLOCKING_WARNINGS",
+  "formalB2Materializer": true,
+  "formalHarness": "training/model3_dataset/offline_harness/acoustic_b2_formal_materialize.cjs",
+  "runtimeArchitectureChanged": false,
+  "readyForGate0": true,
+  "formalDatasetBuild": "NOT_EXECUTED",
+  "reservedDatasetId": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "datasetIdAssigned": false,
+  "nonblockingWarnings": [
+    "MODEL2_ANCHOR_PATH_NOT_VALIDATED (host unavailable in smoke; owner wired+executed)",
+    "DOMAIN_ANCHOR coverage: no hit on general smoke text"
+  ],
+  "textIdentity": {
+    "rawActualAsrText": "ASR text",
+    "model3CurrentText": "normalizeForFwRepairInput(raw).repairText"
+  },
+  "splitIdentity": {
+    "semanticFamilyId": "split lock",
+    "materializationRunId": "run identity only"
+  },
+  "featureSerialization": "B_SERIALIZE_EXACT_PACKER_OUTPUTS",
+  "testsPassed": 13,
+  "testsFailed": 0,
+  "harnessSmoke": {
+    "ok": true,
+    "MODEL2_ANCHOR_OWNER_WIRED": true,
+    "MODEL2_ANCHOR_OWNER_EXECUTED": true,
+    "MODEL2_ANCHOR_HOST_AVAILABLE": false,
+    "DOMAIN_ANCHOR_OWNER_EXECUTED": true,
+    "model2AnchorStatus": "UNAVAILABLE"
+  },
+  "nextPhase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0_ACCEPTANCE",
+  "nextPhaseExecuted": false,
+  "primaryReport": "docs/user_correction/model3/Lingua_Model3_V2_Acoustic_Training_State_Implementation_2026_08_30.md",
+  "governance": {
+    "Model3Changed": false,
+    "featureChanged": false,
+    "ToneChanged": false,
+    "RecallChanged": false,
+    "FineSpanChanged": false,
+    "AnchorOwnershipChanged": false,
+    "JobResultChanged": false,
+    "pronunciationPerturbation": false,
+    "formalDataset": false,
+    "training": false
+  }
+}

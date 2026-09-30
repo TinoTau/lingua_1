@@ -1,0 +1,11 @@
+module,role,owner_type,reuses,must_not,stage
+reference_source,Emit referenceId/referenceText/sourcePoolId/holdout flags,NEW_ADAPTER,model3_certified_base_pool_v2 + protection registry,corpus design; TTS; case branches,I
+audio_materializer,materializeAudio(ref)->asset+provenance,NEW_ORCHESTRATION,PiperTtsClient,Piper synthesis internals; Model3 config,II
+pcm_encode,float[-1;1]->PCM16 WAV SSOT,REUSE,training/model2/corruption/bank._float_audio_to_pcm16,duplicate encoders; ASR semantics,II
+asr_fw_tone_runner,Call production /utterance; capture raw+segments+slices,REUSE_ORCHESTRATION,FasterWhisperClient + faster_whisper_vad,new ASR/Tone models; overwrite ASR with reference,II
+production_upstream_runner,normalize->lattice->Model2 expand->compat->vote->anchors->pack,MODIFY_HARNESS,acoustic_b2_materialize patterns + expandActiveCandidatesWithModel2 + materializeModel3Anchors + packModel3SpanInferFields,reimplement Recall/FineSpan/cand formulas,II-III
+training_provenance_validator,LABEL_FEATURE_PROVENANCE_COHERENT + text identity + holdout,NEW,MODEL3_V2 training provenance contract,JobResult mutation; repair-by-rewrite,IV
+v2_label_projector,Per-path V2 labels on model3CurrentText,REUSE_ADAPTER,derive_malformed_regions + label_spans_v2,new aligner/label heuristics; primary-path-only,IV
+sample_serializer,MODEL3_TRAINING_SAMPLE_V1 + acoustic provenance fields,NEW,existing V1 schema,competing feature reconstruction path,IV
+dataset_build_orchestrator,Batch/resume/manifest/aggregates; Gate0 consumer later,NEW,formal runner + validator + serializer,probe caps; pronunciation perturbation,IV-V
+probe_tooling,Regression evidence only,RETAIN_AS_TOOLING,call formal owners when possible,become production dataset owner,cleanup

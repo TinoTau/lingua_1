@@ -1,0 +1,122 @@
+{
+  "train": {
+    "n": 33091,
+    "select": 25186,
+    "abstain": 7905,
+    "unique_chars": 2812,
+    "unique_combos": 8159,
+    "unique_families": 13095,
+    "unique_pinyin_tone": 704,
+    "poly": 0,
+    "cand_n": {
+      "2": 11039,
+      "3": 8100,
+      "4": 9112,
+      "5": 2371,
+      "6": 1327,
+      "7": 822,
+      "8": 320
+    },
+    "domains": {
+      "news_general": 11459,
+      "wiki_general": 5445,
+      "daily": 10564,
+      "meeting": 1022,
+      "service": 683,
+      "finance": 643,
+      "medical": 997,
+      "tourism_hotel": 943,
+      "food": 1335
+    },
+    "sources": {
+      "news": 9149,
+      "wiki": 4138,
+      "template": 4693,
+      "switch": 7206,
+      "news_abstain": 2995,
+      "wiki_abstain": 1365,
+      "template_abstain": 1599,
+      "switch_abstain": 1946
+    }
+  },
+  "dev": {
+    "n": 4136,
+    "select": 3160,
+    "abstain": 976,
+    "unique_chars": 2516,
+    "unique_combos": 2116,
+    "unique_families": 1889,
+    "unique_pinyin_tone": 637,
+    "poly": 0,
+    "cand_n": {
+      "2": 1305,
+      "3": 1049,
+      "4": 1179,
+      "5": 304,
+      "6": 150,
+      "7": 99,
+      "8": 50
+    },
+    "domains": {
+      "daily": 1302,
+      "news_general": 1415,
+      "meeting": 121,
+      "food": 173,
+      "wiki_general": 719,
+      "medical": 120,
+      "service": 88,
+      "tourism_hotel": 123,
+      "finance": 75
+    },
+    "sources": {
+      "switch": 923,
+      "news": 1129,
+      "template": 550,
+      "template_abstain": 182,
+      "wiki_abstain": 169,
+      "switch_abstain": 252,
+      "news_abstain": 373,
+      "wiki": 558
+    }
+  },
+  "test": {
+    "n": 4137,
+    "select": 3177,
+    "abstain": 960,
+    "unique_chars": 2486,
+    "unique_combos": 2106,
+    "unique_families": 1916,
+    "unique_pinyin_tone": 630,
+    "poly": 0,
+    "cand_n": {
+      "2": 1355,
+      "3": 991,
+      "4": 1141,
+      "5": 318,
+      "6": 163,
+      "7": 127,
+      "8": 42
+    },
+    "domains": {
+      "daily": 1258,
+      "wiki_general": 705,
+      "news_general": 1453,
+      "medical": 120,
+      "food": 173,
+      "finance": 83,
+      "tourism_hotel": 137,
+      "service": 73,
+      "meeting": 135
+    },
+    "sources": {
+      "switch": 884,
+      "template": 592,
+      "wiki": 549,
+      "news_abstain": 383,
+      "news": 1152,
+      "wiki_abstain": 164,
+      "switch_abstain": 235,
+      "template_abstain": 178
+    }
+  }
+}

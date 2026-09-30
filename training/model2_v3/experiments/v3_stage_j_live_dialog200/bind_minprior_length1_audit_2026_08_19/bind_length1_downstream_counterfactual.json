@@ -1,0 +1,7 @@
+{
+  "status": "NOT_RUN",
+  "reason": "Safe Assembly/KenLM replay would require injecting CF1 edges into production lattice without changing production data. This audit does not mutate runtime or re-run ASR. Downstream potential improvements/regressions therefore remain unmeasured.",
+  "potential_final_changes": "UNKNOWN",
+  "potential_improvements": "UNKNOWN — expected-target upper bound is 2 sites",
+  "potential_regressions": "UNKNOWN quantitatively; unique-tone substitutions (e.g. 好→毫, 我→涡) are qualitative wrong-substitution opportunities if they became selected-path edges."
+}

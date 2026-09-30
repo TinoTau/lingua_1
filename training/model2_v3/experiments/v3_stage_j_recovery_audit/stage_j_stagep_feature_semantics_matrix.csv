@@ -1,0 +1,13 @@
+Feature,Status,Notes
+span_hash_bag,CHANGED,legacy Python hash() vs MODEL2_FEATURE_HASH_V1 FNV-1a
+phonetic_bias keys,SAME,ACTIVE_SET_V1 / PHONETIC_FEATURE_INDEX_V1
+phonetic unknown key_id,CHANGED,legacy hash(k)%DIM vs stable_bucket under v1
+lexical term key_id,CHANGED,only when lexical present; Stage P frozen unused
+domain evidence slots,NEW_IN_J,Stage J with_domain_head; Stage P frozen absent
+applicability state,SAME,7-dim ACTIVE_SET_V1 bitmask
+base_pool / budgets state,SAME,encode_state formula unchanged
+profile strength/confidence,SAME,clamp/min formulas unchanged for phonetic
+query_budget_head,SAME,QB_CLASSES unchanged
+action_head space,SAME,50 actions
+domain_action_head,NEW_IN_J,13 actions; Stage P frozen model lacked head
+applicability_bonus decode,SAME,False on both freeze and Stage J

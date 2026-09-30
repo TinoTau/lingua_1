@@ -1,0 +1,16 @@
+{
+  "name": "A_FROZEN_SHARED_TRUNK",
+  "init": "D:\\Programs\\github\\lingua_1\\training\\model2_v3\\experiments\\v3_stage_d_stage_j_restored_retrain\\training\\restored_stage_d_controlled.pt",
+  "shared_trunk": "FROZEN",
+  "p_heads": "FROZEN",
+  "domain_head": "TRAINABLE",
+  "budget_heads": "FROZEN_UNCHANGED_DUTY",
+  "joint_exposure": true,
+  "n_train": 2230,
+  "n_d": 1430,
+  "n_p_domain_none": 800,
+  "lr_domain_head": 0.001,
+  "epochs_max": 8,
+  "architecture": "RetrievalPolicyV3 UNCHANGED",
+  "query_budget": 1
+}

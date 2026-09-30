@@ -1,0 +1,19 @@
+Action,Item,Notes
+KEEP,Model2 Runtime Skeleton insertion/merge/lexicon path,FROZEN
+KEEP,Phonetic writeback EMA path,reference
+KEEP,term_domain_tags Lexicon SSOT,ownership
+KEEP,UserProfileV1 as SSOT container,no new DB
+KEEP,CorrectionHistory Scheduler SSOT,
+MODIFY,features.extract_term → lexicon-backed observation,
+MODIFY,Gateway apply → derive compact domain evidence,
+MODIFY,Node UserProfileV1 TS + future Stage D fields,
+MODIFY,SessionBootstrap freshness after profile_version bump,
+ADD,LEXICAL_PROFILE_SEMANTICS contract,
+ADD,UNRESOLVED_LEXICAL_OBSERVATION handling,
+ADD,write-time long_term_domain_evidence compact field or equivalent,
+ADD,incremental domain evidence update,
+DELETE,Correction→domain_updates as Lexicon knowledge writer (deprecate),
+DEFER,Stage J training,
+DEFER,Stage H / Tone / 50k,
+DEFER,Wrong/Swapped budget; SameDomain interaction fix,
+DEFER,session_domain_prior Model2 wiring,

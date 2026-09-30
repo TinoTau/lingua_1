@@ -1,0 +1,13 @@
+stage,object_type,domain_field,source,cardinality,available_before_active_prune,available_before_complete_prune,consumed_for_segmentation,consumed_for_domain_vote,lost_or_transformed,authority
+Lexicon,term_domain_tags / Hotword,domains[] list,Lexicon Domain Contract,0..N fine tags,YES (upstream of lattice),YES,NO,NO (fact only),Copied into candidates,Runtime_SSOT §5-6 · Lexicon_Domain_Contract
+Recall / Model2 materialize,WindowCandidate,domains?: readonly string[]; source,Recall copy of Hotword; Model2 keeps candidate fields,multi-domain allowed,YES,YES,NO,NO yet,May be empty on base_term,v4-types.ts · Runtime_SSOT §7
+candidate merge / LexicalEdge build,LexicalEdge,candidates[].domains (no edge-level domains field),buildLexicalEdges identity first-wins,per kept candidate,YES,YES,NO,NO,Edge shares candidate refs,Implementation Contract §4.2
+inject fallback edges,LexicalEdge fallback,no domain inheritance,Architecture forbid,n/a,YES,YES,NO,NO,Fallback must not vote domains,Lattice Architecture § fallback forbidden domain inheritance
+SegmentationPath enumeration PartialPath,PartialPath.edges[],via edge.candidates[].domains,shared LexicalEdge refs,path-union of candidate tags,YES,YES,NO (structural prune only),NO,AVAILABLE_BUT_NOT_CONSUMED,Lattice §8 structural-only prune
+active prune,PartialPath list,same in-memory metadata,enumerateCompleteSegmentationPaths,n/a,AT_STAGE,YES,NO — must not use Domain Vote/SameDomain/KenLM/LLM/fluency; domains[] also not in prune keys,NO,Paths dropped never reach Vote,Lattice §8 · Contract §8
+complete prune,complete PartialPath,same,same,n/a,YES,AT_STAGE,NO same as active,NO,same,same
+PathFineSpan materialization,PathFineSpan.candidates,domains copied,orchestrator / materializer,same as edge,N/A (after prune),N/A,NO,YES (pool input),Clone domains arrays for assembly,span-assembly-v4-orchestrator
+Domain Vote,UtteranceDomainVoteResult,domainScores; retainedDomains; insufficientEvidence,voteUtteranceDomainFromPool on path pools,retained 0..N,N/A,N/A,NO,YES — owner,base/passive filter; 0.75 ratio; ties,Runtime_SSOT §8-13 · utterance-domain-vote.ts
+SameDomain / Assembly,buckets,retainedDomains membership,Vote output,per retained domain + base,N/A,N/A,NO,consumes Vote,Cross-path stitch forbidden,Lattice §10 · Runtime_SSOT Multi-Bucket
+KenLM,sentence text DTO,no domains metadata,mergeCrossPathSentenceCandidates,n/a,N/A,N/A,NO,NO,domains stripped by contract,Runtime_SSOT KenLM boundary
+Context Prior,diagnostics,prior scores,context-prior.ts stub,n/a,PRESENT_DIAG_ONLY,PRESENT_DIAG_ONLY,NO applied=false,NO,RETIRED as decision SoftBoundary separate,CONTEXT_PRIOR.md

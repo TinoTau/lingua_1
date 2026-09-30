@@ -1,0 +1,12 @@
+{
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+  "datasetBuildId": "prod_core_s1_build_20260830_v1",
+  "epochs": 8,
+  "batch_size": 64,
+  "lr": 0.001,
+  "class_weight_retry": 1.0,
+  "optimizer": "Adam",
+  "decisionThreshold": "argmax",
+  "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "featureContract": "packModel3SpanInferFields"
+}

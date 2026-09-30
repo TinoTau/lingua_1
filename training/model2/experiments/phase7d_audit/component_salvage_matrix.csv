@@ -1,0 +1,11 @@
+Component,Current purpose,Intended-purpose compatibility,Reuse decision,Modification cost
+FuzzyPool,Profile-agnostic phonetic base recall (≤16),Compatible as KEEP_AS_BASE_RECALL under intended pipeline,KEEP_AS_BASE_RECALL,LOW
+Stage A,Closed-set dual-encoder ranker on FuzzyPool,Useful only as optional post-merge ranker; not recall expansion,KEEP_AS_POST_RECALL_RANKER or REPURPOSE,MEDIUM
+CandidateRelation 16D,User×candidate phonetic relation features for binding,Reusable for profile-conditioned retrieval query / scoring,KEEP_FOR_PROFILE_RETRIEVAL + KEEP_FOR_RERANK,LOW
+Stage B User×Relation,Profile delta on existing pool scores,Reusable as post-recall binding; not sufficient alone,KEEP_AS_POST_RECALL_BINDING / REPURPOSE_AS_RETRIEVAL_CONDITION,MEDIUM
+UserProfile schema,Bounded runtime condition SSOT,Directly compatible with intended expansion,KEEP,LOW
+Dataset generator / PseudoUser,Builds in-pool positives + CF profiles,Partly reusable; need absent-target expansion rows,MODIFY,HIGH
+TrainRows Phase5-7,Closed-set ranking/binding samples,Ranking/binding only; not recall-expansion training,PARTIALLY_REUSABLE / DIAGNOSTIC_ONLY for expansion,HIGH
+Metrics ConditionGain etc.,Binding/rerank gates,Wrong primary for product intent; keep as secondary,MODIFY (add introduction metrics as primary),MEDIUM
+Phase 6C/7A artifacts,Binding success evidence,DIAGNOSTIC_ONLY for product recall claim; REUSABLE as binding baseline,DIAGNOSTIC_ONLY for §0 contract; REUSABLE for salvage,LOW
+Phase 7B/7C probes,Stage A generalization causes,DIAGNOSTIC_ONLY; do not drive expansion rebuild,DIAGNOSTIC_ONLY,LOW

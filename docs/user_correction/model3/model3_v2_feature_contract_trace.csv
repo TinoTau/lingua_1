@@ -1,0 +1,7 @@
+feature,rawSource,nodeCjsOwner,pythonLoaderOwner,runtimeHostOwner,formulaParity,missingDefault,notes
+isAnchor,materializeModel3Anchors,anchor flag,bigru_v1.span_features,_pack_spans,DUPLICATE_BUT_PARITY_CONFIRMED,False/0,EXPECTED_CONSTANT=0 on eligible spans
+span_len_log1p,len(surface),packer.surface,log1p(len),log1p(len),DUPLICATE_BUT_PARITY_CONFIRMED,log1p(0),char count
+span_rel_position,seq index,seqIndex only,"i/max(n-1,1)","i/max(n-1,1)",DUPLICATE_BUT_PARITY_CONFIRMED,0 if n=1,index not char offset
+first_pass_cand_log1p,uncovered candidates,model3FirstPassCandidateCount,log1p(recallEvidence...); None→0,log1p(first_pass_cand_count or 0),DUPLICATE_BUT_PARITY_CONFIRMED_WITH_FIELD_BRIDGE,serializer fail-closed; loader silent 0,"S3 cand states={'1': 300486, '0': 163904, '2': 3166}"
+current_cjk_len_log1p,CJK on surface,surface,log1p(cjk),log1p(cjk),DUPLICATE_BUT_PARITY_CONFIRMED,0,same regex
+pinyin_channel_avail,globalSyllables / fa.pinyinTextDerived,model3PinyinTextDerived,fa.pinyinTextDerived,pinyin_channel_avail,DUPLICATE_BUT_PARITY_CONFIRMED,fa often defaults True,traced

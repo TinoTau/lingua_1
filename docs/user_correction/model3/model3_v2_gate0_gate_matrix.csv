@@ -1,0 +1,19 @@
+gate,status,notes
+G1_formal_evidence_origin,PASS,48/48 FORMAL_FRESH_MATERIALIZATION
+G2_nonempty_accepted,PASS,supervisedAccepted=48
+G3_text_identity,PASS,0 MODEL3_CURRENT_TEXT_IDENTITY_INVALID
+G4_same_run_provenance,PASS,0 CROSS_SAMPLE_PROVENANCE_MISMATCH
+G5_production_tone,PASS,tone ready spans=2582
+G6_mandatory_tone_recall,PASS,missing cand=0
+G7_cand_gt0,PASS,candGt0 spans=1573
+G8_retry_cand_gt0,PASS,RETRY+cand>0 utterances=17
+G9_multipath,PASS,multipath utterances=30
+G10_model2_host,PASS,hostAvailable=48/48 attempted/completed
+G11_domain_owner,PASS,domain attempted/completed=48
+G12_exact_packer,PASS,packer ok=2582 missing=0
+G13_v2_labels,PASS,KEEP=2404 RETRY=112
+G14_holdout,PASS,protected accepted=0
+G15_family_split,PASS,0 split leaks
+G16_no_fixture_legacy_probe,PASS,no TEST_FIXTURE/LEGACY/PROBE
+G17_source_frozen,PASS,frozen before outcomes; 0 post additions/removals
+G18_no_architecture_drift,PASS,Model3/Tone/Recall/FineSpan/owners unchanged

@@ -1,0 +1,111 @@
+{
+  "phase": "LINGUA_DIALOG200_RECALL_MODEL2_FIRST_LOSS_DECOMPOSITION_AUDIT_V1",
+  "primary_n": 116,
+  "secondary_diff": {
+    "no_target_after_model2": 118,
+    "first_loss_base_recall_or_model2": 116,
+    "secondary_only": [
+      {
+        "caseId": "d025",
+        "first_loss": "PATH_GENERATION",
+        "final_correct": false,
+        "e1": "NOT_APPLICABLE",
+        "units": [],
+        "reason": "NO_TARGET but E1=N/A (no lexical units) → PATH_GENERATION not BASE_RECALL_OR_MODEL2"
+      },
+      {
+        "caseId": "d159",
+        "first_loss": "NONE_FINAL_CORRECT",
+        "final_correct": true,
+        "e1": "ABSENT",
+        "units": [
+          "发",
+          "头开错",
+          "开",
+          "电",
+          "发",
+          "吗"
+        ],
+        "reason": "NO_TARGET but FINAL_CORRECT (script-norm / keep-raw success) → not a first-loss failure"
+      }
+    ]
+  },
+  "root_cause_distribution": [
+    {
+      "root_cause": "MODEL2_INPUT_MISSING",
+      "count": 59,
+      "pct": 50.86,
+      "failure_class": "OBSERVABILITY GAP"
+    },
+    {
+      "root_cause": "LEXICON_COVERAGE",
+      "count": 57,
+      "pct": 49.14,
+      "failure_class": "DATA / TRAINING FAILURE"
+    }
+  ],
+  "funnel": {
+    "TARGET_IN_LEXICON": 59,
+    "SPAN_WINDOW_PRESENT": 59,
+    "PHONETIC_COMPATIBLE": 58,
+    "BASE_QUERY_ISSUED": 53,
+    "BASE_TARGET_RETURNED": 0,
+    "MODEL2_ELIGIBLE": 59,
+    "MODEL2_INPUT_AVAILABLE": 59,
+    "MODEL2_INVOKED": 59,
+    "MODEL2_TARGET_GENERATED": 0,
+    "AFTER_MODEL2_TARGET_PRESENT": 0
+  },
+  "lexicon_missing_count": 57,
+  "lexicon_present_count": 59,
+  "lexicon_missing_profile": {
+    "MULTI_CHAR|3": 20,
+    "MULTI_CHAR|2": 38,
+    "PROPER_NOUN|5": 2,
+    "MULTI_CHAR|8": 1,
+    "MULTI_CHAR|4": 15,
+    "MULTI_CHAR|6": 4,
+    "SINGLE_CHAR|1": 1,
+    "MULTI_CHAR|5": 3,
+    "MULTI_CHAR|7": 2
+  },
+  "base_theoretic_miss_lex_span_phone": 58,
+  "model2_replay_blocked_count": 59,
+  "model2_contract": {
+    "mode": "HYBRID",
+    "independent_expansion": "YES",
+    "base_candidate_rerank_only": "NO",
+    "evidence": [
+      "expand-windows-with-model2.ts: executeProfileLexiconQueries → materializeProfileHits → mergeProfileIntoWindowCandidates",
+      "Model2 issues independent P/D lexicon queries from selected actions; merges with base (not base-only rerank)"
+    ],
+    "frozen_contract": "Model2 PRE_LEXICAL_EDGE independent expansion",
+    "violation": "NO",
+    "profile_features_consumed": "YES",
+    "checkpoint_active": "UNKNOWN (runtime identity not re-verified this audit)",
+    "can_generate_base_missed_target": "YES (contract+code path exists; yield separate)"
+  },
+  "result_enum": "RESULT G — MULTIPLE COMPARABLE RECALL BLOCKERS",
+  "answers": {
+    "Q1": "57 / 116 = 49.14%",
+    "Q2": "0",
+    "Q3": "0",
+    "Q4": "58 (R1+R2+R3+R5ABSENT; root_cause BASE_* = 0)",
+    "Q5": 0,
+    "Q5_note": "strict P-path executed opportunity; replay-blocked Model2 input cases=59",
+    "Q6": {
+      "invoked": 59,
+      "generated": 0,
+      "not_generated": 59,
+      "true_capability_miss": 0,
+      "replay_input_blocked": 59
+    },
+    "Q7": "YES",
+    "Q8": "MULTIPLE",
+    "Q9_lexicon_span_base_upper_bound": 115,
+    "Q9_note": "ceiling if lexicon/span/phonetic/base fixed; includes MODEL2_INPUT_MISSING cases with weak same-length phonetic compat (not guaranteed Base recovery)",
+    "Q10_model2_opportunity_upper_bound": 0,
+    "Q10_note": "excludes replay-blocked NO_P_ACTION/p_feature_absent; those need live acoustic before Model2 capability claims",
+    "Q11_next_owner": "LEXICON"
+  }
+}

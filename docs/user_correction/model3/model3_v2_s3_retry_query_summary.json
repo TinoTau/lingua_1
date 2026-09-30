@@ -1,0 +1,261 @@
+{
+  "phase": "MODEL3_V2_S3_RETRY_QUERY_GEOMETRY_CORRECTION_DESIGN_AUDIT",
+  "generatedAt": "2026-09-03T11:12:39Z",
+  "verdict": "MODEL3_S3_RETRY_QUERY_GEOMETRY_OWNER_NOT_ISOLATED",
+  "nextPhase": "MODEL3_V2_S3_RETRY_QUERY_GEOMETRY_CAUSAL_LOCALIZATION_COMPLETION",
+  "preferredDesign": "NO_DESIGN_SELECTION_YET",
+  "preferredNote": "KEEP_ON_LOCUS dominates (161/159). OPT1/OPT2 only enumerate windows inside existing RETRY regions and cannot reach KEEP-marked loci. OPT3 (widen into KEEP) violates frozen 'no unrelated KEEP crossing by default'. Model3 change is out of this phase's Query Geometry ownership. Next: causal localization completion separating MODEL3_TRIGGER_KEEP_ON_LOCUS vs in-region Stage-2 SSOT drift (OPT1+OPT2 secondary).",
+  "implementationReady": false,
+  "acp": false,
+  "locusDecisionClass": {
+    "KEEP_ON_LOCUS": 161,
+    "NO_SPAN_ON_LOCUS": 5
+  },
+  "nearestRegionGapBuckets": {
+    "GAP_2_TO_5": 52,
+    "TOUCHING_OR_OVERLAP": 16,
+    "GAP_GT_5": 78,
+    "GAP_1": 13,
+    "NO_REGION": 7
+  },
+  "rootCauseExact": "isRetryEligible requires decision==='RETRY'; locus spans have decision==='KEEP'; flush() breaks pending before KEEP → region excludes locus",
+  "measured": {
+    "eligibleRepairEvents": 237,
+    "queryNotRepairCapable": 166,
+    "shareAmongLexicalEvents": 0.7004,
+    "partialCoverage": 159,
+    "noRawRecallRegion": 7,
+    "shareCaveat": "NOT overall system causal prevalence"
+  },
+  "firstLossAggregate": {
+    "MODEL3_RETRY_SPAN": 166
+  },
+  "dropReasonAggregate": {
+    "SPAN_NOT_MARKED_RETRY_ON_ASR_LOCUS": 166
+  },
+  "coverageRelationAggregate": {
+    "DISJOINT": 159,
+    "NO_QUERY": 7
+  },
+  "resegmentAggregate": {
+    "ANY_OK": 46,
+    "ALL_FAIL": 113,
+    "NO_REGION": 7
+  },
+  "ssotDriftFound": true,
+  "missingTraceFields": [
+    "model3DecisionId",
+    "retryOperationId",
+    "regionalPathId",
+    "queryId",
+    "anchorBarrierLeft/Right",
+    "keepBarrierLeft/Right",
+    "regionalFineSpans",
+    "dropReason"
+  ],
+  "architectureDrift": [
+    {
+      "item": "same_boundary_Retry",
+      "status": "PRESENT_ACTIVE_WHEN_FALLBACK",
+      "notes": "fallbackRegionLocalSpans copies first-pass FineSpan bounds"
+    },
+    {
+      "item": "hard_FineSpan_boundary",
+      "status": "PRESENT_ACTIVE_WHEN_FALLBACK",
+      "notes": "Stage-2 queries = localSpan bounds only; no sliding on Stage-2"
+    },
+    {
+      "item": "hard_coarse_span_boundary",
+      "status": "ABSENT",
+      "notes": "coarse remapped soft into regional lattice"
+    },
+    {
+      "item": "single_preferred_regional_path",
+      "status": "ABSENT",
+      "notes": "collectLocalSpansFromRetainedPathViews unions all views"
+    },
+    {
+      "item": "utterance_singleton_Domain_Vote",
+      "status": "ABSENT",
+      "notes": "path-local vote retained"
+    },
+    {
+      "item": "second_Domain_Vote_during_Retry",
+      "status": "ABSENT",
+      "notes": "trace secondDomainVote=false"
+    },
+    {
+      "item": "second_Model3_invocation",
+      "status": "ABSENT",
+      "notes": "routeModel3Retry does not re-infer"
+    },
+    {
+      "item": "recursive_Retry",
+      "status": "ABSENT",
+      "notes": "attemptedSpanIds guards; one pass"
+    },
+    {
+      "item": "ASR_rerun",
+      "status": "ABSENT",
+      "notes": ""
+    },
+    {
+      "item": "parallel_repair_chain",
+      "status": "ABSENT",
+      "notes": ""
+    },
+    {
+      "item": "Retry_specific_alternate_Recall_engine",
+      "status": "ABSENT",
+      "notes": "reuses recallSpanTopKV2"
+    },
+    {
+      "item": "Stage2_no_sliding_windows",
+      "status": "PRESENT_ACTIVE",
+      "notes": "ARCHITECTURE_DRIFT vs lattice Stage-1 1..5 sliding; Stage-2 one query per localSpan"
+    },
+    {
+      "item": "deriveRetryRegions_RETRY_only_union",
+      "status": "PRESENT_ACTIVE",
+      "notes": "SSOT-compliant barrier; causes REGION_DISJOINT when Model3 misses locus"
+    }
+  ],
+  "answers": {
+    "D1": "deriveRetryRegions (model3-retry-region.ts)",
+    "D2": "isRetryEligible + KEEP flush in deriveRetryRegions; maskAnchorDecisions in run-model3-path-step.ts",
+    "D3": "resegmentRetryRegionWithLattice → runLatticeFineSpanGeneration",
+    "D4": "collectLocalSpansFromRetainedPathViews (all views; preferred-path removed)",
+    "D5": "routeModel3Retry loop over localSpans — NOT buildLexicalWindowQueries (Stage-2 gap)",
+    "D6": "routeModel3Retry: windowText=rawText.slice; windowPinyinKey=syllables.join('|')",
+    "D7": "PARTIAL — query key formula duplicated vs window-construction-core; barrier ownership split path-step+region",
+    "D8": "see call_graph artifact",
+    "D9": "FIRST_GEOMETRY_LOSS_STAGE=MODEL3_RETRY_SPAN for query fails; locusDecisionClass={'KEEP_ON_LOCUS': 161, 'NO_SPAN_ON_LOCUS': 5}; gapBuckets={'GAP_2_TO_5': 52, 'TOUCHING_OR_OVERLAP': 16, 'GAP_GT_5': 78, 'GAP_1': 13, 'NO_REGION': 7}",
+    "D10": {
+      "MODEL3_RETRY_SPAN": 166
+    },
+    "D11": "Exact condition: PathFineSpans overlapping ASR repair locus are KEEP (161/166 query fails). isRetryEligible requires decision==='RETRY'; KEEP flush in deriveRetryRegions excludes locus; Stage-2 never queries it. Not merely 'region too short'.",
+    "D12": "RETRY-only region union IS required by barrier SSOT; but Stage-2 omitting sliding windows is NOT required by SSOT",
+    "D13": "Stage-2 missing sliding windows = obsolete/accidental vs FineSpan soft-boundary SSOT; Model3 miss is model/trigger issue not obsolete barrier",
+    "D14": "YES when fallbackRegionLocalSpans used; NO when lattice succeeds (resegmentOk)",
+    "D15": "NO evidence of hard coarse lock in Retry path",
+    "D16": "YES inside regional lattice Stage-1; NO at Stage-2 RAW_RECALL enumeration",
+    "D17": "YES — collectLocalSpansFromRetainedPathViews unions all retained views",
+    "D18": "Only if some retained localSpan (or Stage-1 window during lattice) equals that unit; Stage-2 does not re-enumerate cross-span windows",
+    "D19": "Stage-2 query set == localSpans after resegment/fallback; no cross-FineSpan sliding at RAW_RECALL",
+    "D20": "No overlapping Retry region and/or no rawRecalls for the ASR locus (often zero RETRY spans on locus)",
+    "D21": "Structurally related to Model3/region miss subclass; not identical to PARTIAL when regions exist elsewhere",
+    "D22": "NO (deriveRetryRegions skips anchors; maskAnchorDecisions)",
+    "D23": "NO by construction (KEEP breaks merge); unrelated KEEP not entered",
+    "D24": "NO",
+    "D25": "NO",
+    "D26": "NO",
+    "D27": "NO",
+    "D28": "NO (preferredPathFineSpanView removed)",
+    "D29": "YES for lattice success path",
+    "D30": "YES — key construction duplicated; Stage-1 vs Stage-2 window enum diverged",
+    "D31": "YES for fallback boundary lock; YES for Stage-2 missing sliding (delete localSpan-only assumption)",
+    "D32": "YES — buildLexicalWindowQueries / buildWindowDescriptorForRange",
+    "D33": "YES",
+    "D34": "YES (trace side-channel only)",
+    "D35": "YES",
+    "D36": "YES",
+    "D37": "YES for geometry correction inside region; Model3 trigger quality out of scope",
+    "D38": "YES",
+    "D39": "YES",
+    "D40": "Per region: ~sum_{L=1..5}(sylLen-L+1) windows; only within region syl length",
+    "D41": "Same order as D40 before utterance cache dedup",
+    "D42": "YES for identical keys; Stage-2 currently sets enableUtteranceRecallCache=false on regional lattice — Stage-2 recall closure uses runtime cache if configured",
+    "D43": "LOW_MODERATE for OPT1/2; HIGH for OPT3",
+    "D44": "LOW if perSpanCap + pool<=16 preserved",
+    "D45": "Controls with NONE_QUERY_ADEQUATE should remain supersets; OPT1 adds windows but should not remove existing keys",
+    "D46": "Should not — existing localSpan queries remain; additive enum",
+    "D47": "NO Query-Geometry-only fix for KEEP_ON_LOCUS majority; secondary SSOT restore OPT1+OPT2 for in-region cases only",
+    "D48": "fallbackRegionLocalSpans as Stage-2 authority (secondary); cannot delete KEEP barrier",
+    "D49": "Bounded buildLexicalWindowQueries on region slice (secondary only)",
+    "D50": "lattice window builders; recallSpanTopKV2; multipath collect",
+    "D51": "OPT1/OPT2 restore SSOT but do not solve KEEP_ON_LOCUS majority",
+    "D52": "NO",
+    "D53": "NO",
+    "D54": "MODEL3_S3_RETRY_QUERY_GEOMETRY_OWNER_NOT_ISOLATED",
+    "D55": "MODEL3_V2_S3_RETRY_QUERY_GEOMETRY_CAUSAL_LOCALIZATION_COMPLETION",
+    "locusDecisionClass": {
+      "KEEP_ON_LOCUS": 161,
+      "NO_SPAN_ON_LOCUS": 5
+    },
+    "nearestRegionGapBuckets": {
+      "GAP_2_TO_5": 52,
+      "TOUCHING_OR_OVERLAP": 16,
+      "GAP_GT_5": 78,
+      "GAP_1": 13,
+      "NO_REGION": 7
+    },
+    "rootCauseExact": "isRetryEligible requires decision==='RETRY'; locus spans have decision==='KEEP'; flush() breaks pending before KEEP → region excludes locus",
+    "measuredShareCaveat": "166/237 is among lexically-evaluable repair events only — NOT overall system prevalence",
+    "lexiconPrevalence": "UNRESOLVED — do not treat as zero"
+  },
+  "options": [
+    {
+      "optionId": "OPT1_RESTORE_STAGE2_SLIDING_WITHIN_REGION",
+      "title": "Reuse buildLexicalWindowQueries inside Retry region for Stage-2 RAW_RECALL",
+      "faultyCondition": "Stage-2 emits one query per localSpan only; multi-char lexical units spanning adjacent FineSpans / alternate segmentations are not enumerated even when inside region bounds",
+      "ssotConflict": "YES — frozen Retry must reuse FineSpan/phonetic sliding windows; Stage-1 already has buildLexicalWindowQueries(1..5); Stage-2 dropped it",
+      "minimalChange": "In routeModel3Retry (or resegment result consumer), enumerate syllable windows 1..MAX inside region using existing buildLexicalWindowQueries / buildWindowDescriptorForRange; dedup by utterance cache; still one Retry operation",
+      "files": "model3-retry-router.ts; optionally thin wrapper in model3-retry-region-resegment.ts; reuse build-lexical-window-queries.ts",
+      "logicRemoved": "Implicit assumption that localSpan set == complete query set",
+      "logicAdded": "Bounded sliding window enumeration WITHIN existing Model3RetryRegion only",
+      "traceImpact": "record each enumerated queryId; dropReason SPAN_NOT_ENUMERATED when skipped by length/barrier",
+      "queryCountImpact": "O(regionSyllables * maxLen) per region; typically small (region << utterance); cache absorbs dupes",
+      "candidateCountImpact": "bounded by existing perSpanCap + utterance pool <=16",
+      "latencyRisk": "LOW_MODERATE — local regions only; utterance recall cache",
+      "regressionRisk": "LOW if limited to region interior; successful controls already covered by localSpans remain subset",
+      "architectureChange": "NO — restores frozen sliding-window reuse",
+      "simplicityBranches": 1,
+      "newConfig": 0,
+      "newDTO": 0,
+      "newJobResultFields": 0,
+      "preferred": "SECONDARY_SSOT_RESTORATION_NOT_SUFFICIENT_FOR_159"
+    },
+    {
+      "optionId": "OPT2_DELETE_FALLBACK_BOUNDARY_LOCK",
+      "title": "On lattice failure, delete fallbackRegionLocalSpans lock; synthesize sliding windows from region syllable slice",
+      "faultyCondition": "fallbackRegionLocalSpans copies first-pass FineSpan boundaries (OLD_BOUNDARY_LOCK)",
+      "ssotConflict": "YES — FineSpan soft boundaries; Retry must not lock to original incorrect boundary",
+      "minimalChange": "Replace fallback path with region-slice window enumeration (same helper as OPT1) without requiring successful lattice paths",
+      "files": "model3-retry-region-resegment.ts fallbackRegionLocalSpans call sites",
+      "logicRemoved": "fallbackRegionLocalSpans as Stage-2 query source",
+      "logicAdded": "same window enum as OPT1 on EMPTY/NO_PATH",
+      "traceImpact": "localSpanSource=SLICE_WINDOWS",
+      "queryCountImpact": "similar to OPT1 when lattice fails",
+      "candidateCountImpact": "bounded",
+      "latencyRisk": "LOW",
+      "regressionRisk": "LOW_MODERATE",
+      "architectureChange": "NO — SSOT restoration",
+      "simplicityBranches": 1,
+      "newConfig": 0,
+      "newDTO": 0,
+      "newJobResultFields": 0,
+      "preferred": "SECONDARY_SSOT_RESTORATION_NOT_SUFFICIENT_FOR_159"
+    },
+    {
+      "optionId": "OPT3_WIDEN_REGION_INTO_KEEP",
+      "title": "Expand deriveRetryRegions into adjacent KEEP to cover soft lexical neighborhood",
+      "faultyCondition": "deriveRetryRegions RETRY-only union → REGION_DISJOINT / TOO_NARROW when Model3 RETRY misses part of lexical unit",
+      "ssotConflict": "CONFLICT — frozen SSOT says do not cross unrelated KEEP by default; widening into KEEP needs structural proof not gold-aware expansion",
+      "minimalChange": "Would alter barrier policy",
+      "files": "model3-retry-region.ts",
+      "logicRemoved": "strict KEEP flush barrier",
+      "logicAdded": "limited soft expansion — HIGH RISK of Anchor/KEEP violation",
+      "traceImpact": "barrier clip reasons",
+      "queryCountImpact": "higher",
+      "candidateCountImpact": "higher",
+      "latencyRisk": "MODERATE",
+      "regressionRisk": "HIGH",
+      "architectureChange": "MAYBE — if KEEP barrier redefined",
+      "simplicityBranches": 2,
+      "newConfig": 0,
+      "newDTO": 0,
+      "newJobResultFields": 0,
+      "preferred": "REJECT_KEEP_CROSSING"
+    }
+  ]
+}

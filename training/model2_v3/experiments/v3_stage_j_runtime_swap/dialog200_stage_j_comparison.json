@@ -1,0 +1,36 @@
+{
+  "A_BASE_Model2_disabled": "NOT_RUN",
+  "B_Previous_Stage_P_reference": {
+    "source": "frozen RUNTIME_INTEGRATION_SKELETON_CLOSED",
+    "PROFILE_TARGET_ABSENT_introduced": [
+      22,
+      22
+    ],
+    "go_summary": {
+      "Model2_Runtime_Integration_MVP_Final_Closure": "PASS",
+      "Label": "RUNTIME_INTEGRATION_SKELETON_CLOSED",
+      "PROFILE_TARGET_ABSENT": {
+        "eligible": 22,
+        "introduced": 22,
+        "rate": 1
+      },
+      "Correct_Empty_Wrong": true,
+      "Multi_Relation": true,
+      "Multi_Tag": true,
+      "Duplicate_Merge": true,
+      "Failure": true,
+      "Sidecar": true,
+      "Downstream_interaction_risk": true,
+      "Stage_D": "DEFERRED",
+      "Stage_J_Required": "YES",
+      "Recommended_Next_Phase": "Stage D real lexical/domain UserProfile writeback → Stage J unified training with MODEL2_FEATURE_HASH_V1 → swap Stage P-only checkpoint"
+    },
+    "dialog_200_replay": "UNSAFE_NOT_REPLAYED"
+  },
+  "C_Stage_J_ONE_Model2": {
+    "dialog_200_live": false,
+    "node_P_e2e_introduced": 22,
+    "node_P_e2e_eligible": 22,
+    "checkpoint_sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda"
+  }
+}

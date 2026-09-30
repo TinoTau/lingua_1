@@ -1,0 +1,164 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "train_positives": {
+    "candidate_count": {
+      "n": 5295,
+      "mean": 15.942020774315392,
+      "p50": 16.0,
+      "p90": 16.0
+    },
+    "fuzzy_distance": {
+      "n": 5295,
+      "mean": 0.0,
+      "p50": 0.0,
+      "p90": 0.0
+    },
+    "fuzzy_prior": {
+      "n": 5295,
+      "mean": 0.8564966949952786,
+      "p50": 0.86,
+      "p90": 0.86
+    },
+    "syl_edit_distance": {
+      "n": 5295,
+      "mean": 0.0,
+      "p50": 0.0,
+      "p90": 0.0
+    },
+    "same_initial_rate": {
+      "n": 5295,
+      "mean": 1.0,
+      "p50": 1.0,
+      "p90": 1.0
+    },
+    "same_final_rate": {
+      "n": 5295,
+      "mean": 1.0,
+      "p50": 1.0,
+      "p90": 1.0
+    }
+  },
+  "train_negatives_in_pool": {
+    "candidate_count": {
+      "n": 5295,
+      "mean": 15.942020774315392,
+      "p50": 16.0,
+      "p90": 16.0
+    },
+    "fuzzy_distance": {
+      "n": 79118,
+      "mean": 1.3717738062135039,
+      "p50": 1.0,
+      "p90": 2.0
+    },
+    "fuzzy_prior": {
+      "n": 79118,
+      "mean": 0.8591527844485451,
+      "p50": 0.86,
+      "p90": 0.86
+    },
+    "syl_edit_distance": {
+      "n": 79118,
+      "mean": 1.3717738062135039,
+      "p50": 1.0,
+      "p90": 2.0
+    },
+    "same_initial_rate": {
+      "n": 61796,
+      "mean": 0.4987836321660517,
+      "p50": 0.5,
+      "p90": 0.6666666666666666
+    },
+    "same_final_rate": {
+      "n": 61796,
+      "mean": 0.5642315036571947,
+      "p50": 0.5,
+      "p90": 1.0
+    }
+  },
+  "unseen_positives": {
+    "candidate_count": {
+      "n": 2518,
+      "mean": 16.0,
+      "p50": 16.0,
+      "p90": 16.0
+    },
+    "fuzzy_distance": {
+      "n": 2518,
+      "mean": 0.0,
+      "p50": 0.0,
+      "p90": 0.0
+    },
+    "fuzzy_prior": {
+      "n": 2518,
+      "mean": 0.8567752184273233,
+      "p50": 0.86,
+      "p90": 0.86
+    },
+    "syl_edit_distance": {
+      "n": 2518,
+      "mean": 0.0,
+      "p50": 0.0,
+      "p90": 0.0
+    },
+    "same_initial_rate": {
+      "n": 2518,
+      "mean": 1.0,
+      "p50": 1.0,
+      "p90": 1.0
+    },
+    "same_final_rate": {
+      "n": 2518,
+      "mean": 1.0,
+      "p50": 1.0,
+      "p90": 1.0
+    }
+  },
+  "unseen_negatives_in_pool": {
+    "candidate_count": {
+      "n": 2518,
+      "mean": 16.0,
+      "p50": 16.0,
+      "p90": 16.0
+    },
+    "fuzzy_distance": {
+      "n": 37770,
+      "mean": 1.3998940958432617,
+      "p50": 1.0,
+      "p90": 2.0
+    },
+    "fuzzy_prior": {
+      "n": 37770,
+      "mean": 0.8593412761450887,
+      "p50": 0.86,
+      "p90": 0.86
+    },
+    "syl_edit_distance": {
+      "n": 37770,
+      "mean": 1.3998940958432617,
+      "p50": 1.0,
+      "p90": 2.0
+    },
+    "same_initial_rate": {
+      "n": 29618,
+      "mean": 0.4926564926733743,
+      "p50": 0.5,
+      "p90": 0.6666666666666666
+    },
+    "same_final_rate": {
+      "n": 29618,
+      "mean": 0.5589112476647083,
+      "p50": 0.5,
+      "p90": 1.0
+    }
+  },
+  "interpretation": {
+    "train_neg_mean_fuzzy_distance": 1.3717738062135039,
+    "unseen_neg_mean_fuzzy_distance": 1.3998940958432617,
+    "train_negs_easier_if_higher_distance": false
+  }
+}

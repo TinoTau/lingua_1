@@ -1,0 +1,191 @@
+{
+  "same_J1_action": true,
+  "n": 47,
+  "mean_n_new_current": 2.4468,
+  "mean_n_new_restored": 20.2128,
+  "intro_current": 46,
+  "intro_restored": 39,
+  "interpretation": "If intro_restored >> intro_current with same J1 actions, model domain choice is OK and executor is the bottleneck.",
+  "head": [
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_pickup",
+        "domain_soft:tourism_route"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 23,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 4
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:transport"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 1,
+      "n_new_restored": 18,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 2
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_pickup",
+        "domain_soft:tourism_route"
+      ],
+      "hit_restored_oracle": false,
+      "hit_current_oracle": false,
+      "intro_current_exec": false,
+      "intro_restored_exec": false,
+      "n_new_current": 0,
+      "n_new_restored": 25,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 2
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:coffee"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 32,
+      "rest_oracle_n": 4,
+      "cur_oracle_n": 5
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:transport"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 1,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:transport"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 6,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:tourism_pickup"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 12,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:tourism_pickup"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 9,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:transport"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 4,
+      "n_new_restored": 6,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:tourism_pickup"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 3,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:transport"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 4,
+      "n_new_restored": 6,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    },
+    {
+      "persona": "CORRECT",
+      "acts": [
+        "domain_soft:tourism_route",
+        "domain_soft:coffee"
+      ],
+      "hit_restored_oracle": true,
+      "hit_current_oracle": true,
+      "intro_current_exec": true,
+      "intro_restored_exec": true,
+      "n_new_current": 2,
+      "n_new_restored": 3,
+      "rest_oracle_n": 2,
+      "cur_oracle_n": 6
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "proposal": {
+    "sources": [
+      "BASE_FUZZY",
+      "PROFILE_RETRIEVAL",
+      "EXACT",
+      "OTHER"
+    ],
+    "fields": [
+      "source",
+      "retrieval_query",
+      "profile_relation_used",
+      "retrieval_score"
+    ],
+    "jobresult_change": "PROPOSAL_ONLY — no cross-service JobResult mutation in Phase 7E"
+  },
+  "spike_implementation": "ProfileRetrievalHit.provenance=PROFILE_RETRIEVAL; merge keeps provenance list"
+}

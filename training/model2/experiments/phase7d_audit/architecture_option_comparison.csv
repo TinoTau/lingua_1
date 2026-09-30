@@ -1,0 +1,4 @@
+Option,Code change,Data rebuild,Retraining,Runtime impact,Architecture risk,Technical debt,Reason
+KEEP_AND_ADJUST,LOW,LOW,LOW,LOW,HIGH,HIGH,Forbidden by decision rule: missing core introduction capability; would leave false recall narrative
+PARTIAL_REBUILD,HIGH,HIGH,HIGH,MEDIUM,MEDIUM,MEDIUM,Add profile-conditioned retrieval + merge + expansion metrics/objective; keep UserProfile/Relation/FuzzyPool base/Stage B binding as post-merge; single authoritative path
+FULL_REBUILD,VERY_HIGH,VERY_HIGH,VERY_HIGH,HIGH,VERY_HIGH,LOW_after_cut,Unnecessary: schema/relation/CF/generators partly salvageable; rebuild cost exceeds benefit if salvage done

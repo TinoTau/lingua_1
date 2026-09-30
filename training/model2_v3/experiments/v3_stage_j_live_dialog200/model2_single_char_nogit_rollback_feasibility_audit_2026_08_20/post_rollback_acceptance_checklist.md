@@ -1,0 +1,21 @@
+# Post-rollback acceptance checklist
+
+- [ ] Filesystem backup `rollback_backup_YYYYMMDD_HHMM` of every RESTORE/DELETE production file
+- [ ] `pre_rollback_file_checksums.csv` recorded before edits (this audit already hashed current key files)
+- [ ] DELETE files gone
+- [ ] RESTORE reverse-deletes applied; no compat shims
+- [ ] expA sha256 unchanged
+- [ ] params 47210
+- [ ] strict load PASS
+- [ ] P regression PASS
+- [ ] D regression PASS
+- [ ] host infer PASS
+- [ ] Recall length-1 collector tests PASS
+- [ ] grep: no production Model2 single-char symbols
+- [ ] `cmd=disambiguate` unknown_cmd or absent
+- [ ] collector KEEP: unique-only / fail-closed
+- [ ] IME 2510 / minPrior / repair lexicon experiments untouched
+- [ ] retired docs bannered
+- [ ] SSOT pointers = Stage J freeze reports
+- [ ] `post_rollback_file_checksums.csv` written
+- [ ] Production Ready still follows Stage J (runtime integration HOLD if dialog_200 incomplete)

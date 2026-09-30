@@ -1,0 +1,351 @@
+{
+  "train": {
+    "n": 33091,
+    "select": 25186,
+    "abstain": 7905,
+    "unique_chars": 2812,
+    "unique_combos": 8159,
+    "unique_families": 13095,
+    "unique_pinyin_tone": 704,
+    "poly": 0,
+    "cand_n": {
+      "2": 11039,
+      "3": 8100,
+      "4": 9112,
+      "5": 2371,
+      "6": 1327,
+      "7": 822,
+      "8": 320
+    },
+    "domains": {
+      "news_general": 11459,
+      "wiki_general": 5445,
+      "daily": 10564,
+      "meeting": 1022,
+      "service": 683,
+      "finance": 643,
+      "medical": 997,
+      "tourism_hotel": 943,
+      "food": 1335
+    },
+    "sources": {
+      "news": 9149,
+      "wiki": 4138,
+      "template": 4693,
+      "switch": 7206,
+      "news_abstain": 2995,
+      "wiki_abstain": 1365,
+      "template_abstain": 1599,
+      "switch_abstain": 1946
+    }
+  },
+  "dev": {
+    "n": 4136,
+    "select": 3160,
+    "abstain": 976,
+    "unique_chars": 2516,
+    "unique_combos": 2116,
+    "unique_families": 1889,
+    "unique_pinyin_tone": 637,
+    "poly": 0,
+    "cand_n": {
+      "2": 1305,
+      "3": 1049,
+      "4": 1179,
+      "5": 304,
+      "6": 150,
+      "7": 99,
+      "8": 50
+    },
+    "domains": {
+      "daily": 1302,
+      "news_general": 1415,
+      "meeting": 121,
+      "food": 173,
+      "wiki_general": 719,
+      "medical": 120,
+      "service": 88,
+      "tourism_hotel": 123,
+      "finance": 75
+    },
+    "sources": {
+      "switch": 923,
+      "news": 1129,
+      "template": 550,
+      "template_abstain": 182,
+      "wiki_abstain": 169,
+      "switch_abstain": 252,
+      "news_abstain": 373,
+      "wiki": 558
+    }
+  },
+  "test": {
+    "n": 4137,
+    "select": 3177,
+    "abstain": 960,
+    "unique_chars": 2486,
+    "unique_combos": 2106,
+    "unique_families": 1916,
+    "unique_pinyin_tone": 630,
+    "poly": 0,
+    "cand_n": {
+      "2": 1355,
+      "3": 991,
+      "4": 1141,
+      "5": 318,
+      "6": 163,
+      "7": 127,
+      "8": 42
+    },
+    "domains": {
+      "daily": 1258,
+      "wiki_general": 705,
+      "news_general": 1453,
+      "medical": 120,
+      "food": 173,
+      "finance": 83,
+      "tourism_hotel": 137,
+      "service": 73,
+      "meeting": 135
+    },
+    "sources": {
+      "switch": 884,
+      "template": 592,
+      "wiki": 549,
+      "news_abstain": 383,
+      "news": 1152,
+      "wiki_abstain": 164,
+      "switch_abstain": 235,
+      "template_abstain": 178
+    }
+  },
+  "held_char": {
+    "n": 23767,
+    "select": 18516,
+    "abstain": 5251,
+    "unique_chars": 1340,
+    "unique_combos": 5199,
+    "unique_families": 10114,
+    "unique_pinyin_tone": 275,
+    "poly": 0,
+    "cand_n": {
+      "2": 4120,
+      "3": 5051,
+      "4": 7187,
+      "5": 3067,
+      "6": 2017,
+      "7": 1403,
+      "8": 922
+    },
+    "domains": {
+      "news_general": 8533,
+      "daily": 6192,
+      "wiki_general": 4099,
+      "tourism_transport": 1083,
+      "medical": 554,
+      "service": 490,
+      "tourism_hotel": 535,
+      "food": 994,
+      "finance": 611,
+      "meeting": 676
+    },
+    "sources": {
+      "news": 7133,
+      "template": 3706,
+      "wiki": 3241,
+      "switch_abstain": 1206,
+      "switch": 4436,
+      "wiki_abstain": 913,
+      "news_abstain": 2042,
+      "template_abstain": 1090
+    }
+  },
+  "held_combo": {
+    "n": 5993,
+    "select": 4646,
+    "abstain": 1347,
+    "unique_chars": 1642,
+    "unique_combos": 1369,
+    "unique_families": 2737,
+    "unique_pinyin_tone": 372,
+    "poly": 0,
+    "cand_n": {
+      "2": 1962,
+      "3": 1537,
+      "4": 1298,
+      "5": 576,
+      "6": 287,
+      "7": 228,
+      "8": 105
+    },
+    "domains": {
+      "wiki_general": 923,
+      "food": 216,
+      "news_general": 2174,
+      "tourism_hotel": 162,
+      "service": 160,
+      "tourism_transport": 274,
+      "daily": 1615,
+      "medical": 147,
+      "finance": 161,
+      "meeting": 161
+    },
+    "sources": {
+      "wiki": 717,
+      "news": 1834,
+      "template_abstain": 308,
+      "switch_abstain": 311,
+      "wiki_abstain": 218,
+      "switch": 1118,
+      "news_abstain": 510,
+      "template": 977
+    }
+  },
+  "held_ctx": {
+    "n": 4729,
+    "select": 4244,
+    "abstain": 485,
+    "unique_chars": 2604,
+    "unique_combos": 2486,
+    "unique_families": 2556,
+    "unique_pinyin_tone": 673,
+    "poly": 0,
+    "cand_n": {
+      "2": 1737,
+      "3": 1206,
+      "4": 891,
+      "5": 441,
+      "6": 242,
+      "7": 136,
+      "8": 76
+    },
+    "domains": {
+      "news_general": 1883,
+      "wiki_general": 950,
+      "service": 261,
+      "daily": 734,
+      "finance": 321,
+      "food": 274,
+      "tourism_transport": 265,
+      "meeting": 39,
+      "medical": 2
+    },
+    "sources": {
+      "news": 1809,
+      "wiki": 874,
+      "template": 1561,
+      "news_abstain": 204,
+      "template_abstain": 193,
+      "wiki_abstain": 88
+    }
+  },
+  "held_dom": {
+    "n": 2579,
+    "select": 1991,
+    "abstain": 588,
+    "unique_chars": 2291,
+    "unique_combos": 1199,
+    "unique_families": 52,
+    "unique_pinyin_tone": 622,
+    "poly": 0,
+    "cand_n": {
+      "2": 941,
+      "3": 595,
+      "4": 873,
+      "5": 94,
+      "6": 44,
+      "7": 26,
+      "8": 6
+    },
+    "domains": {
+      "tourism_transport": 2579
+    },
+    "sources": {
+      "switch_abstain": 314,
+      "switch": 1078,
+      "template": 871,
+      "template_abstain": 262,
+      "news_abstain": 8,
+      "wiki": 14,
+      "news": 28,
+      "wiki_abstain": 4
+    }
+  },
+  "perm": {
+    "n": 2500,
+    "select": 2500,
+    "abstain": 0,
+    "unique_chars": 2240,
+    "unique_combos": 1402,
+    "unique_families": 1367,
+    "unique_pinyin_tone": 581,
+    "poly": 0,
+    "cand_n": {
+      "2": 806,
+      "3": 576,
+      "4": 703,
+      "5": 202,
+      "6": 103,
+      "7": 86,
+      "8": 24
+    },
+    "domains": {
+      "daily": 750,
+      "wiki_general": 441,
+      "news_general": 852,
+      "medical": 77,
+      "food": 116,
+      "finance": 46,
+      "tourism_hotel": 91,
+      "meeting": 85,
+      "service": 42
+    },
+    "sources": {
+      "switch": 703,
+      "template": 453,
+      "wiki": 445,
+      "news": 899
+    }
+  },
+  "all": {
+    "n": 77373,
+    "select": 60007,
+    "abstain": 17366,
+    "unique_chars": 3290,
+    "unique_combos": 16154,
+    "unique_families": 29260,
+    "unique_pinyin_tone": 796,
+    "poly": 0,
+    "cand_n": {
+      "2": 22075,
+      "3": 18274,
+      "4": 21474,
+      "5": 7049,
+      "6": 4187,
+      "7": 2809,
+      "8": 1505
+    },
+    "domains": {
+      "news_general": 26683,
+      "wiki_general": 12744,
+      "daily": 21581,
+      "tourism_transport": 3662,
+      "medical": 1940,
+      "food": 3134,
+      "service": 1724,
+      "tourism_hotel": 1900,
+      "finance": 1856,
+      "meeting": 2149
+    },
+    "sources": {
+      "news": 22001,
+      "news_abstain": 6492,
+      "wiki": 10001,
+      "template": 12477,
+      "switch": 15528,
+      "switch_abstain": 4240,
+      "wiki_abstain": 2911,
+      "template_abstain": 3723
+    }
+  }
+}

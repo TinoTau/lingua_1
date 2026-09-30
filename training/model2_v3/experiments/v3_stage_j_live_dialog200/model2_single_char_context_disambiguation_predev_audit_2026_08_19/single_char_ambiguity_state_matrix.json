@@ -1,0 +1,47 @@
+{
+  "contract": "map vague ambiguity onto existing collector + lexicon structures",
+  "cases": {
+    "A_zero_valid_candidate": {
+      "current": "NO_CANDIDATE / tone not ready / SQL miss / score reject / bind drop",
+      "model2": "MUST_NOT_INVENT",
+      "proposed": "existing fallback"
+    },
+    "B_one_valid_candidate": {
+      "current": "ACCEPT_UNIQUE_TONE_EXACT or ACCEPT_SURFACE_EXACT then bind",
+      "model2": "MUST_NOT_RUN",
+      "proposed": "materialize existing path"
+    },
+    "C_multiple_same_pinyin_tone": {
+      "current": "MULTIPLE_TONE_EXACT_CANDIDATES unless unique surface==windowText",
+      "structures": ["eligible.length>=2", "queryTonePinyinKey", "LENGTH1_AMBIGUITY_SQL_LIMIT=8"],
+      "model2": "MAY_RUN_SELECT_OR_ABSTAIN",
+      "proposed": "primary Model2 case"
+    },
+    "D_polyphonic_lexical_item": {
+      "schema": "multiple base_lexicon rows: PRIMARY KEY (pinyin_key, word) — same hanzi, different pinyin_key/tone_pinyin_key",
+      "runtime_collector": "query is acoustic pinyin+tone, not union of all readings of a character",
+      "model2": "NOT_REQUIRED_ON_CURRENT_QUERY; required only if Recall later unions readings",
+      "lexicon_schema_gap": false,
+      "runtime_union_gap": true
+    },
+    "E_tone_unavailable": {
+      "current": "toneRecallReadiness != ready → no SQL (1.1C)",
+      "model2": "MUST_NOT_INVENT; keep frozen fallback",
+      "proposed": "no Model2"
+    },
+    "F_tone_uncertain_multiple_acoustic": {
+      "current_contract": "single acousticTonePattern per FineSpan after rebind; no multi-tone candidate set in collector",
+      "model2": "DO_NOT_ENLARGE this round",
+      "proposed": "out of scope unless a later tone-contract ACP"
+    },
+    "G_context_required_pronunciation": {
+      "example": "行 xing / hang",
+      "current": "ASR/tone already chose one syllable family; other reading not in same group",
+      "model2": "only if candidate set contains both readings — it currently does not",
+      "proposed": "do not expand Recall to all polyphones in this ACP"
+    }
+  },
+  "cases_requiring_model2": ["C_multiple_same_pinyin_tone"],
+  "optional_later": ["D_if_recall_unions_polyphones", "G_if_multi_reading_set_exists"],
+  "must_not_use_model2": ["A_zero", "B_one", "E_tone_unavailable"]
+}

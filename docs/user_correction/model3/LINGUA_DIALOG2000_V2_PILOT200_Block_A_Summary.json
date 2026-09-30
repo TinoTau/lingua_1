@@ -1,0 +1,81 @@
+{
+  "PHASE": "LINGUA_DIALOG2000_V2_PILOT200_BLOCK_A_DATASET_BUILDER_DEVELOPMENT",
+  "DATASET_ID": "LINGUA_DIALOG2000_V2_PILOT200",
+  "VERSION": "V1",
+  "BUILD_ID": "build_20260911_010554",
+  "SEED": 20260911,
+  "GENERATOR_VERSION": "pilot200-builder-v1",
+  "CASE_COUNT": 200,
+  "USER_COUNTS": {
+    "U001": 40,
+    "U002": 40,
+    "U003": 40,
+    "U004": 40,
+    "U005": 40
+  },
+  "SPLIT_COUNTS": {
+    "DEV": 120,
+    "VALIDATION": 60,
+    "HOLDOUT": 20
+  },
+  "CLASS_COUNTS": {
+    "PROFILE_TARGET": 117,
+    "CLEAN_PRESERVE": 42,
+    "ASR_RESILIENCE_CONTROL": 15,
+    "WRONG_PROFILE_CONTROL": 26
+  },
+  "RELATION_COUNTS": {
+    "n_l": 33,
+    "z_zh": 20,
+    "ch_c": 20,
+    "sh_s": 39,
+    "eng_en": 20,
+    "in_ing": 13,
+    "h_f": 13
+  },
+  "DOMAIN_COUNTS": {
+    "general_daily": 43,
+    "software_meeting": 33,
+    "travel_hotel": 32,
+    "food_cafe": 36,
+    "medical": 30,
+    "retail_service": 26
+  },
+  "PROFILE_STAGE_COUNTS": {
+    "P0": 42,
+    "P1": 52,
+    "P2": 53,
+    "P3": 53
+  },
+  "CLEAN_COUNT": 42,
+  "PROFILE_LEXICAL_ISOLATION": "PASS",
+  "HOLDOUT_ISOLATION": "PASS",
+  "RELATION_DISTRIBUTION": "PASS",
+  "DOMAIN_DECONFOUND": "PASS",
+  "NO_KNOWN_TEST_LEAK": "PASS",
+  "AUDIO_IDENTITY_COMPLETE": "PASS",
+  "REFERENCE_FROZEN": "PASS",
+  "TARGET_NOT_IN_LEXICON_COUNT": 89,
+  "SPEAKER_GENERALIZATION_STATUS": "SPEAKER_GENERALIZATION_NOT_TESTED",
+  "TTS_BACKEND_COUNTS": {
+    "CORRUPTOR_SURFACE_PIPER": 135,
+    "PHONEME_REALIZER": 23,
+    "PIPER_TTS_SURFACE": 42
+  },
+  "PERTURBATION_APPLIED_COUNT": 158,
+  "PERTURBATION_FAILED_COUNT": 0,
+  "OLD_DIALOG200_CHANGED": false,
+  "LEXICON_CHANGED": false,
+  "MODEL2_CHANGED": false,
+  "MODEL3_CHANGED": false,
+  "RETRY_CHANGED": false,
+  "PRODUCTION_SEMANTIC_CHANGE": false,
+  "TESTS": {
+    "block_a_unittest": "PASS",
+    "test_count": 10
+  },
+  "BUILD_STATUS": "PASS",
+  "DATASET_PATH": "test wav/LINGUA_DIALOG2000_V2_PILOT200",
+  "verdict": "LINGUA_DIALOG2000_V2_PILOT200_BLOCK_A_DATASET_FROZEN",
+  "ONE_NEXT_PHASE": "LINGUA_DIALOG2000_V2_PILOT200_BLOCK_B_PROFILE_AWARE_RUNNER_DEVELOPMENT"
+}

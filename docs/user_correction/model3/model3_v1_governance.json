@@ -1,0 +1,62 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_SYNTHETIC_TRAINING_DATA_AND_BASELINE_DEVELOPMENT",
+    "verdict": "PASS_WITH_QUALITY_GAPS",
+    "timestamp": "2026-08-23T20:36:22.103266+00:00",
+    "dataset_samples": 100000,
+    "qa_gate_pass": true,
+    "test_retry_f1": 1.0,
+    "bootstrap_anchor_v0": "NOT_FOUND_IN_REPO",
+    "recommended_next_phase": "MODEL3_TTS_ASR_DATASET_AND_REAL_ERROR_ENHANCEMENT",
+    "quality_gaps": [
+      "RETRY_DENSITY_BELOW_10PCT_TARGET",
+      "NO_REAL_DOMAIN_ANCHOR_SAMPLES"
+    ]
+  },
+  "simulated_anchor_isolation": {
+    "simulated_anchor_visible_as_model_feature": false,
+    "production_anchor_enum_changed": false,
+    "formal_anchor_contract_changed": false,
+    "architecture_changed": false,
+    "training_schema_changed": false,
+    "domain_vote_changed": false,
+    "recall_changed": false,
+    "model2_changed": false,
+    "job_result_changed": false,
+    "runtime_retry_enabled": false
+  },
+  "formal_anchor_contract": {
+    "allowed_runtime_anchor_sources": [
+      "DOMAIN",
+      "MODEL2",
+      "DOMAIN_AND_MODEL2"
+    ],
+    "simulated_training_anchor_in_runtime_enum": false,
+    "simulated_recorded_in_sidecar_only": true
+  },
+  "runtime_impact": {
+    "production_asr_postprocess_changed": false,
+    "production_recall_trigger_changed": false,
+    "shadow_only": true
+  },
+  "modified_file_inventory": [
+    "training/model3_dataset/scripts/stage2_common.py",
+    "training/model3_dataset/scripts/anchor_diet.py",
+    "training/model3_dataset/scripts/run_v1_synthetic_100k.py",
+    "training/model3_dataset/scripts/qa_v1_dataset.py",
+    "training/model3_dataset/scripts/fix_v1_splits.py",
+    "training/model3_dataset/scripts/write_v1_final_report.py",
+    "training/model3_dataset/train/bigru_v1.py",
+    "training/model3_dataset/train/train_v1_bigru.py",
+    "training/model3_dataset/train/bench_shadow_v1.py",
+    "training/model3_dataset/model3_v1_synthetic_100k/",
+    "training/model3_dataset/model3_v1_synthetic_bigru/",
+    "docs/user_correction/model3/Lingua_Model3_V1_Development_Report_2026_08_24.md",
+    "docs/user_correction/model3/model3_v1_dataset_audit.json",
+    "docs/user_correction/model3/model3_v1_training_metrics.json",
+    "docs/user_correction/model3/model3_v1_governance.json",
+    "docs/user_correction/model3/model3_v1_performance_and_shadow.json",
+    "docs/user_correction/model3/model3_v1_human_qa_500.csv",
+    "docs/user_correction/model3/model3_v1_shadow_trace.jsonl"
+  ]
+}

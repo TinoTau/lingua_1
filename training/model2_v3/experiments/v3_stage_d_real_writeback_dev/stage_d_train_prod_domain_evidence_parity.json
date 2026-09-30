@@ -1,0 +1,303 @@
+{
+  "contract": "StageDProfileContractV1",
+  "mode": "normalized_weighted_multitag",
+  "domain_slots": [
+    "tourism_pickup",
+    "tourism_hotel",
+    "tourism_route",
+    "tourism_transport",
+    "coffee",
+    "milk_tea",
+    "bakery",
+    "food_order",
+    "tech_ai",
+    "meeting",
+    "medical",
+    "transport"
+  ],
+  "n_scenarios": 120,
+  "mismatches": 0,
+  "PASS": true,
+  "tolerance": 1e-09,
+  "elapsed_ms": 8.41700000455603,
+  "sample": [
+    {
+      "id": 0,
+      "terms": [
+        {
+          "term_id": "tid-0-0",
+          "evidence": 0.7626953125,
+          "tags": [
+            "coffee",
+            "milk_tea",
+            "food_order"
+          ]
+        }
+      ],
+      "train": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.3333333333333333,
+        "milk_tea": 0.3333333333333333,
+        "bakery": 0.0,
+        "food_order": 0.3333333333333333,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "prod": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.3333333333333333,
+        "milk_tea": 0.3333333333333333,
+        "bakery": 0.0,
+        "food_order": 0.3333333333333333,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "match": true
+    },
+    {
+      "id": 1,
+      "terms": [
+        {
+          "term_id": "tid-1-0",
+          "evidence": 0.4375,
+          "tags": [
+            "tourism_transport",
+            "transport"
+          ]
+        },
+        {
+          "term_id": "tid-1-1",
+          "evidence": 0.4375,
+          "tags": [
+            "tourism_hotel"
+          ]
+        }
+      ],
+      "train": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.5,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.25,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.25
+      },
+      "prod": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.5,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.25,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.25
+      },
+      "match": true
+    },
+    {
+      "id": 2,
+      "terms": [
+        {
+          "term_id": "tid-2-0",
+          "evidence": 0.68359375,
+          "tags": [
+            "tech_ai"
+          ]
+        },
+        {
+          "term_id": "tid-2-1",
+          "evidence": 0.25,
+          "tags": [
+            "food_order",
+            "meeting"
+          ]
+        },
+        {
+          "term_id": "tid-2-2",
+          "evidence": 0.68359375,
+          "tags": [
+            "coffee",
+            "milk_tea",
+            "food_order"
+          ]
+        },
+        {
+          "term_id": "tid-2-3",
+          "evidence": 0.86651611328125,
+          "tags": [
+            "tech_ai",
+            "meeting"
+          ]
+        },
+        {
+          "term_id": "tid-2-4",
+          "evidence": 0.68359375,
+          "tags": [
+            "tourism_route"
+          ]
+        }
+      ],
+      "train": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.2158287244907791,
+        "tourism_transport": 0.0,
+        "coffee": 0.07194290816359304,
+        "milk_tea": 0.07194290816359304,
+        "bakery": 0.0,
+        "food_order": 0.11140873207047837,
+        "tech_ai": 0.3526198138477251,
+        "meeting": 0.17625691326383133,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "prod": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.2158287244907791,
+        "tourism_transport": 0.0,
+        "coffee": 0.07194290816359304,
+        "milk_tea": 0.07194290816359304,
+        "bakery": 0.0,
+        "food_order": 0.11140873207047837,
+        "tech_ai": 0.3526198138477251,
+        "meeting": 0.17625691326383133,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "match": true
+    },
+    {
+      "id": 3,
+      "terms": [
+        {
+          "term_id": "tid-3-0",
+          "evidence": 0.86651611328125,
+          "tags": [
+            "bakery",
+            "food_order"
+          ]
+        },
+        {
+          "term_id": "tid-3-1",
+          "evidence": 0.822021484375,
+          "tags": [
+            "coffee"
+          ]
+        },
+        {
+          "term_id": "tid-3-2",
+          "evidence": 0.7626953125,
+          "tags": [
+            "coffee",
+            "milk_tea",
+            "food_order"
+          ]
+        },
+        {
+          "term_id": "tid-3-3",
+          "evidence": 0.578125,
+          "tags": [
+            "tourism_pickup"
+          ]
+        }
+      ],
+      "train": {
+        "tourism_pickup": 0.19084077126105614,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.35527438062042055,
+        "milk_tea": 0.08392265898360633,
+        "bakery": 0.1430197650756553,
+        "food_order": 0.22694242405926163,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "prod": {
+        "tourism_pickup": 0.19084077126105614,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.35527438062042055,
+        "milk_tea": 0.08392265898360633,
+        "bakery": 0.1430197650756553,
+        "food_order": 0.22694242405926163,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "match": true
+    },
+    {
+      "id": 4,
+      "terms": [
+        {
+          "term_id": "tid-4-0",
+          "evidence": 0.4375,
+          "tags": [
+            "bakery"
+          ]
+        },
+        {
+          "term_id": "tid-4-1",
+          "evidence": 0.86651611328125,
+          "tags": [
+            "tech_ai"
+          ]
+        }
+      ],
+      "train": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.3355019892347297,
+        "food_order": 0.0,
+        "tech_ai": 0.6644980107652703,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "prod": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.3355019892347297,
+        "food_order": 0.0,
+        "tech_ai": 0.6644980107652703,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "match": true
+    }
+  ]
+}

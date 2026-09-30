@@ -1,0 +1,13 @@
+{
+  "linear_with_finespan": true,
+  "evidence": "expand-active-candidates.ts for (const span of args.pathFineSpans) await host.infer",
+  "dialog200_infer_rows_equals_policy_input_spans": true,
+  "correlation": "calls ≈ pathFineSpans_with_syllables × pathCount",
+  "path_count_dialog200": {
+    "1": 170,
+    "2": 21,
+    "4": 9
+  },
+  "infer_p50": 20,
+  "infer_max": 37
+}

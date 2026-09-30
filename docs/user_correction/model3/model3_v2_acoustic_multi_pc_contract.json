@@ -1,0 +1,111 @@
+{
+  "normalAcousticVariationContract": {
+    "scope": "NORMAL_ACOUSTIC_VARIATION_only_not_pronunciation_error",
+    "allowedDimensions": [
+      "multiple_authorized_tts_voices",
+      "bounded_speaking_rate_if_supported",
+      "bounded_prosody_if_supported"
+    ],
+    "excludedDimensions": [
+      "deliberate_mispronunciation",
+      "n_l_d_t_nasal",
+      "zh_ch_sh_vs_z_c_s",
+      "tone_error_injection"
+    ],
+    "semanticFamilyRule": {
+      "sameSemanticFamilyIdAcrossVariants": true,
+      "sameSplitAssignment": true,
+      "distinctMaterializationRunIdPerVariant": true,
+      "crossSplitForbidden": true
+    },
+    "recommendedStrategy": {
+      "primaryRealization": "one_voice_all_references_for_S1_S2_scale",
+      "secondaryRealization": "deterministic_20_30pct_subset_with_2nd_authorized_voice_after_infra_ready",
+      "notRecommended": "all_references_times_all_voices",
+      "acousticRealizationsPerFamily": "1 primary + 0-1 secondary (max 2 for production core)"
+    }
+  },
+  "ttsCapabilityAudit": {
+    "defaultVoice": "zh_CN-huayan-medium",
+    "authorizedMaterializerVoice": "zh_CN-huayan-medium",
+    "modelsPresentInRepo": [
+      "zh_CN-huayan-medium"
+    ],
+    "uniqueVoiceCountInRepo": 1,
+    "authorizedVoiceCountForB2Materialization": 1,
+    "rateControlSupported": false,
+    "prosodyControlSupported": false,
+    "multiSpeakerReadyInCode": true,
+    "materializerUsesVoiceParam": false,
+    "assessment": "NORMAL_ACOUSTIC_VARIATION_INFRASTRUCTURE_GAP"
+  },
+  "multiPcShardArchitecture": {
+    "feasible": true,
+    "preFreezeRequirements": [
+      "sourceSelectionSeed",
+      "shardId",
+      "referenceId_list",
+      "semanticFamilyId_list",
+      "split_assignment",
+      "acousticVariantPlan"
+    ],
+    "workerManifestFields": [
+      "workerId",
+      "machineIdentity",
+      "asrCheckpointIdentity",
+      "toneIdentity",
+      "lexiconSnapshotIdentity",
+      "model2CheckpointIdentity",
+      "ttsVoiceIdentity",
+      "featureContractIdentity",
+      "labelContractIdentity",
+      "provenanceContractIdentity"
+    ],
+    "mergeFailClosedOnMismatch": [
+      "asr_model",
+      "tone_model",
+      "lexicon_snapshot",
+      "model2_model",
+      "normalization_logic",
+      "feature_packer",
+      "label_contract",
+      "provenance_contract"
+    ],
+    "deterministicRetry": "reuse_frozen_shard_no_outcome_resampling"
+  },
+  "deletionSupervisionFunnel": {
+    "diagnosticOnly": true,
+    "stages": [
+      "alignment_derived_deletion_region",
+      "current_text_target_exists",
+      "overlapping_eligible_fineSpan",
+      "anchor_mask_subtraction",
+      "label_contract_outcome",
+      "retry_supervision_emitted"
+    ],
+    "priorAuditObservation": "204_deletion_regions_vs_97_retry_span_rows",
+    "designNote": "Expansion QA tracks funnel rates; no label semantic change"
+  },
+  "surfaceShortcutQaCorrectedFields": [
+    "surface",
+    "keep_span_rows",
+    "retry_span_rows",
+    "keep_unique_semantic_families",
+    "retry_unique_semantic_families",
+    "total_unique_semantic_families",
+    "position_diversity",
+    "anchor_context_diversity",
+    "candidate_state_diversity",
+    "label_entropy"
+  ],
+  "realAudioReferenceLayer": {
+    "role": "validation_and_realism_layer_not_primary_scale_path",
+    "requirements": [
+      "authorized_reference_text",
+      "privacy_consent",
+      "speaker_identity_provenance",
+      "same_semanticFamily_split_lock",
+      "closed_loop_labels_from_actual_asr"
+    ]
+  }
+}

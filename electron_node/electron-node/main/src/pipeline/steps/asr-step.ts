@@ -32,12 +32,22 @@ export interface AsrStepOptions {
   asrCompletedCallback?: (done: boolean) => void;
 }
 
+/** Harness observability only — increments when production ASR step actually runs. */
+let asrStepInvocationCount = 0;
+export function getAsrStepInvocationCount(): number {
+  return asrStepInvocationCount;
+}
+export function resetAsrStepInvocationCount(): void {
+  asrStepInvocationCount = 0;
+}
+
 export async function runAsrStep(
   job: JobAssignMessage,
   ctx: JobContext,
   services: ServicesBundle,
   options?: AsrStepOptions
 ): Promise<void> {
+  asrStepInvocationCount += 1;
   // 获取音频聚合器（从 services bundle 注入，支持热插拔场景）
   if (!services.audioAggregator) {
     throw new Error('AudioAggregator must be provided in services bundle');

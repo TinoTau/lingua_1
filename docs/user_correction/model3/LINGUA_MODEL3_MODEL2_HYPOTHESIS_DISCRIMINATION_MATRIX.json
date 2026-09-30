@@ -1,0 +1,287 @@
+{
+  "phase": "LINGUA_MODEL3_MODEL2_HYPOTHESIS_DISCRIMINATION_AUDIT",
+  "model3VisibleFeatures": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail",
+    "surface_char_tokens"
+  ],
+  "model3NotVisible": [
+    "retrievalProvenance",
+    "model2ActionId",
+    "relationFamily",
+    "replacement",
+    "transformedPronunciation",
+    "queryPinyinKey",
+    "hitPinyinKey",
+    "candidateDomains",
+    "retainedDomains",
+    "KenLM",
+    "FW_confidence"
+  ],
+  "K1_R1_FEATURE_DIFF_MATRIX": [
+    {
+      "FEATURE": "isAnchor",
+      "K1_VALUE": 1,
+      "R1_VALUE": 1,
+      "SAME_OR_DIFFERENT": "SAME",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Both MODEL2-anchored"
+    },
+    {
+      "FEATURE": "span_len_log1p",
+      "K1_VALUE": 1.0986123085021973,
+      "R1_VALUE": 1.0986123085021973,
+      "SAME_OR_DIFFERENT": "SAME",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Length only"
+    },
+    {
+      "FEATURE": "span_rel_position",
+      "K1_VALUE": 0.3,
+      "R1_VALUE": 0.2,
+      "SAME_OR_DIFFERENT": "DIFFERENT",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Path index; not Model2 hypothesis quality"
+    },
+    {
+      "FEATURE": "first_pass_cand_log1p",
+      "K1_VALUE": 0.6931471824645996,
+      "R1_VALUE": 1.0986123085021973,
+      "SAME_OR_DIFFERENT": "DIFFERENT",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Count 1 vs 2; identities 牛/常 not encoded"
+    },
+    {
+      "FEATURE": "current_cjk_len_log1p",
+      "K1_VALUE": 0.6931471824645996,
+      "R1_VALUE": 0.6931471824645996,
+      "SAME_OR_DIFFERENT": "SAME",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": null
+    },
+    {
+      "FEATURE": "pinyin_channel_avail",
+      "K1_VALUE": 1,
+      "R1_VALUE": 1,
+      "SAME_OR_DIFFERENT": "SAME",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": null
+    },
+    {
+      "FEATURE": "surface_tokens",
+      "K1_VALUE": "刘",
+      "R1_VALUE": "藏",
+      "SAME_OR_DIFFERENT": "DIFFERENT",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "ASR glyph difference ≠ Model2 closed-chain / residual discrimination"
+    },
+    {
+      "FEATURE": "bigru_neighbor_surfaces",
+      "K1_VALUE": "了解|若",
+      "R1_VALUE": "把|头",
+      "SAME_OR_DIFFERENT": "DIFFERENT",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "ASR context only; no candidate/Anchor object features"
+    },
+    {
+      "FEATURE": "model2_replacement",
+      "K1_VALUE": "牛",
+      "R1_VALUE": "常",
+      "SAME_OR_DIFFERENT": "ABSENT_FROM_MODEL3",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": true,
+      "WHY": "Would distinguish hypotheses if packed; currently invisible"
+    },
+    {
+      "FEATURE": "retrievalProvenance",
+      "K1_VALUE": "PROFILE_PRONUNCIATION",
+      "R1_VALUE": "PROFILE_PRONUNCIATION",
+      "SAME_OR_DIFFERENT": "ABSENT_FROM_MODEL3",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Same type on K1/R1; still needed vs R2 soft PROFILE_DOMAIN"
+    },
+    {
+      "FEATURE": "raw_margin_retry_minus_keep",
+      "K1_VALUE": 2.725914716720581,
+      "R1_VALUE": 2.8163881301879883,
+      "SAME_OR_DIFFERENT": "APPROX_SAME",
+      "CAN_DIFFERENCE_PLAUSIBLY_SUPPORT_DISCRIMINATION": false,
+      "WHY": "Both strongly RETRY-leaning under current model"
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "p2_u001_039",
+      "group": "K",
+      "subgroup": "K1",
+      "spanSurface": "刘",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "MODEL2",
+      "pathSurfaces": ["顾客", "想", "了解", "刘", "若", "川", "的保", "修", "与", "推换", "政策"],
+      "neighbors": { "left": "了解", "right": "若" },
+      "model2HypothesisVisibility": "NONE",
+      "boundReplacementVisibleToModel3": false,
+      "boundReplacementInPool": "牛",
+      "boundProvenanceInPool": "PROFILE_PRONUNCIATION",
+      "features": {
+        "isAnchor": 1,
+        "span_len_log1p": 1.0986123085021973,
+        "span_rel_position": 0.30000001192092896,
+        "first_pass_cand_log1p": 0.6931471824645996,
+        "current_cjk_len_log1p": 0.6931471824645996,
+        "pinyin_channel_avail": 1
+      },
+      "keepLogit": -1.2829794883728027,
+      "retryLogit": 1.4429352283477783,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "KEEP_OR_PROTECT_USEFUL_HYP",
+      "decisionMatchesAuditExpectation": "NO",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3"
+    },
+    {
+      "caseId": "p2_u004_001",
+      "group": "K",
+      "subgroup": "K2",
+      "spanSurface": "升层",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "pathSurfaces": ["我", "想", "确认", "一", "下", "升层"],
+      "boundReplacementInPool": "生成",
+      "boundProvenanceInPool": "PROFILE_PRONUNCIATION",
+      "features": {
+        "isAnchor": 1,
+        "span_len_log1p": 1.3862943649291992,
+        "span_rel_position": 1,
+        "first_pass_cand_log1p": 2.3025851249694824,
+        "current_cjk_len_log1p": 1.3862943649291992,
+        "pinyin_channel_avail": 1
+      },
+      "keepLogit": -1.4773948192596436,
+      "retryLogit": 1.4527592658996582,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "KEEP_OR_PROTECT_USEFUL_HYP",
+      "decisionMatchesAuditExpectation": "NO",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3"
+    },
+    {
+      "caseId": "p2_u004_009",
+      "group": "R",
+      "subgroup": "R1",
+      "spanSurface": "藏",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "MODEL2",
+      "pathSurfaces": ["请", "把", "藏", "头", "灯", "的库", "存", "数量", "同步", "到系", "统"],
+      "neighbors": { "left": "把", "right": "头" },
+      "boundReplacementInPool": "常",
+      "boundProvenanceInPool": "PROFILE_PRONUNCIATION",
+      "features": {
+        "isAnchor": 1,
+        "span_len_log1p": 1.0986123085021973,
+        "span_rel_position": 0.20000000298023224,
+        "first_pass_cand_log1p": 1.0986123085021973,
+        "current_cjk_len_log1p": 0.6931471824645996,
+        "pinyin_channel_avail": 1
+      },
+      "keepLogit": -1.362792730331421,
+      "retryLogit": 1.4535953998565674,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "RETRY_CAPABLE",
+      "decisionMatchesAuditExpectation": "YES_FOR_ACTIONABILITY_NOT_VIA_HYP_DISCRIMINATION",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3",
+      "note": "Model2-isomorphic to K1; Model3 cannot see 常 vs 牛"
+    },
+    {
+      "caseId": "p2_u004_019",
+      "group": "R",
+      "subgroup": "R2",
+      "spanSurface": "德鸾",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "boundProvenanceInPool": "PROFILE_DOMAIN_SOFT_ONLY",
+      "features": {
+        "isAnchor": 1,
+        "span_len_log1p": 1.3862943649291992,
+        "span_rel_position": 1,
+        "first_pass_cand_log1p": 2.1972246170043945,
+        "current_cjk_len_log1p": 1.3862943649291992,
+        "pinyin_channel_avail": 1
+      },
+      "keepLogit": -1.3951727151870728,
+      "retryLogit": 1.67271089553833,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "RETRY_CAPABLE",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3",
+      "profileTypeCollapseNote": "Model3 cannot see PROFILE_DOMAIN vs PROFILE_PRONUNCIATION"
+    },
+    {
+      "caseId": "p2_u002_012",
+      "group": "R",
+      "subgroup": "R3",
+      "spanSurface": "注册",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "neighbors": { "left": "出", "right": "再决" },
+      "keepLogit": -1.4489730596542358,
+      "retryLogit": 1.3523213863372803,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "RETRY_CAPABLE",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3"
+    },
+    {
+      "caseId": "p2_u001_020",
+      "group": "R",
+      "subgroup": "R4",
+      "spanSurface": "理事",
+      "currentIsAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "keepLogit": -1.144567847251892,
+      "retryLogit": 1.2851874828338623,
+      "decisionMasked": "KEEP",
+      "cfMaskOnlyArgmax": "RETRY",
+      "expectedAuditRole": "RETRY_CAPABLE",
+      "visibilityClass": "M3-C",
+      "primaryRoot": "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL",
+      "secondaryRoot": "D1_FALSE_ANCHOR_BLOCKS_MODEL3"
+    }
+  ],
+  "missingEvidenceClassification": [
+    {
+      "field": "replacement",
+      "class": "REQUIRED_FOR_MODEL3_DISCRIMINATION",
+      "status": "AVAILABLE_UPSTREAM_BUT_LOST_TO_MODEL3_PACK"
+    },
+    {
+      "field": "retrievalProvenance",
+      "class": "REQUIRED_FOR_MODEL3_DISCRIMINATION",
+      "status": "AVAILABLE_UPSTREAM_BUT_LOST_TO_MODEL3_PACK"
+    },
+    {
+      "field": "transformedSyllables/hitPinyin",
+      "class": "UNKNOWN_LIKELY_REQUIRED_FOR_STRICT_CLOSED_CHAIN",
+      "status": "AVAILABLE_UPSTREAM_BUT_LOST"
+    },
+    {
+      "field": "Pilot target",
+      "class": "GROUND_TRUTH_ONLY_FORBIDDEN",
+      "status": "FORBIDDEN"
+    }
+  ]
+}

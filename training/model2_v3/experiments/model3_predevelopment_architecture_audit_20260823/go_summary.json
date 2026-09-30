@@ -1,0 +1,18 @@
+{
+  "stage": "MODEL3_PREDEVELOPMENT_ARCHITECTURE_AUDIT",
+  "verdict": "PASS_WITH_GAPS",
+  "safe_to_develop_model3": true,
+  "architecture_change_proposal_required": false,
+  "recommended_next_phase": "MODEL3_CONTRACT_AND_TRAINING_DESIGN",
+  "gap_closure_before_training": [
+    "Model3AnchorAdapter + pre-assembly span view",
+    "MODEL3_RETRY_TRACE_V1",
+    "Deterministic trigger gate contract",
+    "Offline KEEP/RETRY label generator"
+  ],
+  "insertion_point": "After runDomainAwareAssembly; before buildSentenceCandidates",
+  "before_first_kenlm": true,
+  "jobresult_change": false,
+  "second_recall_pipeline": false,
+  "candidate_cap": 16
+}

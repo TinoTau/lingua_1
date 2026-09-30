@@ -1,0 +1,53 @@
+{
+  "training_FineSpanView": [
+    "span_id",
+    "syllable_start",
+    "syllable_end",
+    "span_syllables",
+    "window_text",
+    "window_pinyin_key",
+    "raw_start",
+    "raw_end",
+    "source"
+  ],
+  "runtime_PathFineSpan": [
+    "spanId",
+    "ranges",
+    "coarseSpanIds",
+    "windowSource",
+    "candidates:WindowCandidate[]",
+    "selectionReason"
+  ],
+  "field_map": [
+    {
+      "TRAINING_FIELD": "span_syllables",
+      "RUNTIME_FIELD": "derived from window/coordinate syllables",
+      "MATCH": "SEMANTIC",
+      "TRANSFORMATION_NEEDED": "YES_ADAPTER",
+      "MISSING": false
+    },
+    {
+      "TRAINING_FIELD": "window_text",
+      "RUNTIME_FIELD": "window text / raw slice",
+      "MATCH": "PARTIAL",
+      "TRANSFORMATION_NEEDED": "YES",
+      "MISSING": false
+    },
+    {
+      "TRAINING_FIELD": "span_id",
+      "RUNTIME_FIELD": "spanId",
+      "MATCH": "YES",
+      "TRANSFORMATION_NEEDED": "NO",
+      "MISSING": false
+    },
+    {
+      "TRAINING_FIELD": "hash_span features",
+      "RUNTIME_FIELD": "N/A compute from syllables",
+      "MATCH": "N/A",
+      "TRANSFORMATION_NEEDED": "YES_STABLE_HASH",
+      "MISSING": false
+    }
+  ],
+  "verdict": "PARTIAL — minimal adapter required; do not redefine FineSpan",
+  "python_hash_risk": "Python hash() in hash_span is process-unstable — MUST replace for ONNX/cross-runtime"
+}

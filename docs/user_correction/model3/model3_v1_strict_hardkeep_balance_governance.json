@@ -1,0 +1,15 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_STRICT_CONTRAST_AND_HARD_KEEP_BALANCE",
+    "verdict": "PRECISION_GAP",
+    "recommended_next_phase": "MODEL3_V1_STRICT_HARDKEEP_REBALANCE",
+    "architecture_changed": false,
+    "full100k_mutated": false,
+    "strict_dataset_mutated": false,
+    "tts": false,
+    "production_retry": false
+  },
+  "report_artifact_count": 4,
+  "report_artifact_count_le_10": true,
+  "hard_keep_manifest": "training/model3_dataset/model3_v1_anchor_conditioned_hard_keep"
+}

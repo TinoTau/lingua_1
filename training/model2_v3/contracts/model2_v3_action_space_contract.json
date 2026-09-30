@@ -1,0 +1,35 @@
+{
+  "contract_id": "model2_v3_action_space_contract",
+  "primitive_kinds": [
+    {
+      "id": "apply_relation_reverse",
+      "params": ["relation_id"],
+      "deterministic": true,
+      "active_set": "ACTIVE_SET_V1_BOUND"
+    },
+    {
+      "id": "compose_two_relations",
+      "params": ["relation_a", "relation_b"],
+      "deterministic": true,
+      "bounded": true,
+      "note": "apply reverse A then B on syllables; order matters; capped pairs"
+    },
+    {
+      "id": "identity_skip",
+      "params": [],
+      "deterministic": true,
+      "note": "no profile expansion"
+    }
+  ],
+  "deferred_primitives": [
+    "apply_tone_variant",
+    "domain_filtered_query",
+    "personal_term_query",
+    "phonetic_distance_query_extra"
+  ],
+  "max_single_actions": 7,
+  "max_pair_actions": 21,
+  "max_actions_evaluated_offline": 32,
+  "model_emits": ["action_scores", "query_budget", "candidate_budget_hint"],
+  "model_must_not_emit": ["term_id", "surface_form"]
+}

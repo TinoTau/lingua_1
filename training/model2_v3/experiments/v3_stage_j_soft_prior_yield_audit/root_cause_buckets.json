@@ -1,0 +1,21 @@
+{
+  "exact_finespan": {
+    "A_NO_D_OPPORTUNITY": 588
+  },
+  "corrupted_observations": {
+    "A_NO_D_OPPORTUNITY": 660,
+    "C_RETRIEVAL_PIPELINE_ATTRITION": 34,
+    "D_MODEL_SELECTION_OPPORTUNITY": 4
+  },
+  "corrupted_pct": {
+    "A_NO_D_OPPORTUNITY": 94.5559,
+    "C_RETRIEVAL_PIPELINE_ATTRITION": 4.8711,
+    "D_MODEL_SELECTION_OPPORTUNITY": 0.5731
+  },
+  "definitions": {
+    "A_NO_D_OPPORTUNITY": "Base already sufficient (identity in base FuzzyPool@16)",
+    "B_DATA_OR_INDEX_LIMITATION": "Base absent but phonetic raw scan misses target",
+    "C_RETRIEVAL_PIPELINE_ATTRITION": "Raw hit but not in final top-8",
+    "D_MODEL_SELECTION_OPPORTUNITY": "Oracle+pipeline introduce target — Model2 must choose action"
+  }
+}

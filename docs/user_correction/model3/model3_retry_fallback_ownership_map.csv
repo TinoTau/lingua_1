@@ -1,0 +1,14 @@
+object,classification,notes
+RetryRegion raw/syllable bounds,AUTHORITATIVE,Hard bound for all Retry Stage-2 queries
+region raw text / global syllables,AUTHORITATIVE,Available at fallback entry via router args
+pinyin key from syllable slice,AUTHORITATIVE,Derived; same as Delta1
+tone evidence (owner FineSpan toneRebind),VALID_SUPPORTING_EVIDENCE,Attached via overlapping original FineSpan owner
+original path FineSpans,VALID_SUPPORTING_EVIDENCE,Ownership/materialization only; STALE_FOR_REINTERPRETATION as query geometry
+first-pass FineSpan bounds as Stage-2 queries,STALE_FOR_REINTERPRETATION,DELTA_RQ_FALLBACK_BOUNDARY_LOCK
+Anchor / KEEP barriers,AUTHORITATIVE,Already applied when RetryRegion derived; unchanged
+regional lattice windows/edges/paths,FAILED_DERIVATION,No retained reinterpretation path when ok=false
+domain hypothesis / retainedDomains,AUTHORITATIVE,Existing vote; no second vote
+source path identity,AUTHORITATIVE,Per-path routeModel3Retry; multipath preserved
+fallbackRegionLocalSpans,EXISTING_FALLBACK_OWNER_OF_LOCK,Must lose query-geometry authority after Delta2
+SHARED_LEXICAL_WINDOW_OWNER,AUTHORITATIVE_FOR_QUERY_GEOMETRY,Same 1..5 owner as Delta1 success path
+overlappingOriginalSpans,AUTHORITATIVE_FOR_CANDIDATE_OWNER,Proven on Delta1 cross-FineSpan windows

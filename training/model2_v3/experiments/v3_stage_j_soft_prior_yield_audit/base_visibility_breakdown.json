@@ -1,0 +1,26 @@
+{
+  "exact_finespan": {
+    "BASE_VISIBLE_SIBLING_IDENTITY": 588
+  },
+  "exact_n": 588,
+  "exact_pct": {
+    "BASE_VISIBLE_SIBLING_IDENTITY": 100.0
+  },
+  "corrupted_observations": {
+    "BASE_VISIBLE_FUZZY": 660,
+    "BASE_ABSENT": 38
+  },
+  "corrupted_n": 698,
+  "corrupted_pct": {
+    "BASE_VISIBLE_FUZZY": 94.5559,
+    "BASE_ABSENT": 5.4441
+  },
+  "why_base_visible": {
+    "base_retrieve_uses_mixed_index": true,
+    "file": "training/model2/retrieval/finespan_retrieval.py",
+    "function": "base_retrieve_span",
+    "lines": "89-107",
+    "domain_records_in_same_fuzzypool": true,
+    "surface_dedup_prefers_base_term_id_on_tie": "term_id ASC so 'base:' < 'domain:'"
+  }
+}

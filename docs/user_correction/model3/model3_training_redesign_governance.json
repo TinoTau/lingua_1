@@ -1,0 +1,62 @@
+{
+  "phase": "MODEL3_V1_TARGETED_TRAINING_DATA_REDESIGN",
+  "date": "2026-08-29",
+  "redesignVerdict": "REDESIGN_READY_FOR_IMPLEMENTATION",
+  "architectureVerdict": "FROZEN_ARCHITECTURE_STILL_VALID",
+  "trainingExecutionGate": "OPEN",
+  "trainingExecutionGateNote": "Started HOLD; opened only after SSOT freeze. OPEN authorizes next phase after review — no training in this phase.",
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_DATA_REDESIGN_IMPLEMENTATION",
+  "doNotExecuteNextPhase": true,
+  "textOnlyPreserved": true,
+  "ttsNotRevived": true,
+  "gates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "OPEN",
+    "TRAINING_EXECUTION_GATE": "OPEN"
+  },
+  "governance": {
+    "Model3Changed": false,
+    "FineSpanChanged": false,
+    "RetryChanged": false,
+    "RecallChanged": false,
+    "LatticeChanged": false,
+    "AnchorOwnershipChanged": false,
+    "DomainVoteChanged": false,
+    "Model2Changed": false,
+    "AssemblyChanged": false,
+    "JobResultChanged": false,
+    "ProductionBusinessFilesModified": 0,
+    "TrainingCodeModified": 0,
+    "TrainingDataModified": 0,
+    "ModelWeightsModified": 0
+  },
+  "frozenSsot": {
+    "labelContractArtifact": "model3_label_contract_v1.csv",
+    "datasetBlueprintArtifact": "model3_training_dataset_v2_blueprint.csv",
+    "retryTriggerDensityPolicy": "REGION_BOUNDED_FULL_COVERAGE",
+    "phoneticCompatibleRole": "DEMOTE_TO_SAMPLE_EVIDENCE",
+    "referenceReachableRole": "RETIRE_FROM_RETRY_LABEL"
+  },
+  "harnessDebt": {
+    "id": "HARNESS_STATE_RESTORE_DEBT",
+    "function": "ensureServicePreferencesForAcceptance",
+    "persistence": "PERSISTENT",
+    "path": "%APPDATA%/lingua-electron-node/electron-node-config.json",
+    "mixedIntoRedesign": false
+  },
+  "oldModel": {
+    "status": "KEEP_AS_BASELINE",
+    "checkpoint": "MODEL3_SYNTHETIC_V1",
+    "seed": "2026082520"
+  },
+  "implementationInventoryFiles": [
+    "training/model3_dataset/scripts/stage2_common.py",
+    "training/model3_dataset/offline_harness/stage2_materialize.cjs",
+    "training/model3_dataset/scripts/run_v1_synthetic_100k.py",
+    "training/model3_dataset/scripts/run_real_distribution_retry_pilot.py",
+    "training/model3_dataset/scripts/finalize_real_distribution_retry_pilot_reports.py",
+    "training/model3_dataset/scripts/qa_v1_dataset.py",
+    "training/model3_dataset/configs/model3_v1_training_config.json"
+  ],
+  "checklistComplete": true
+}

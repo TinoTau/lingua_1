@@ -1,0 +1,81 @@
+{
+  "phase": "LINGUA_REPAIR_SPAN_GEOMETRY_LIFECYCLE_AUDIT_V1",
+  "date": "2026-09-16",
+  "C9_CASES": 23,
+  "steps": [
+    {
+      "name": "first_pass_target_reachable_windows",
+      "count": 23
+    },
+    {
+      "name": "same_geometry_LexicalEdge_exists",
+      "count": 8,
+      "drop": 15,
+      "dropOwners": [
+        "G1",
+        "G8"
+      ]
+    },
+    {
+      "name": "same_geometry_edge_selected",
+      "count": 4,
+      "drop": 4,
+      "dropOwners": [
+        "G2"
+      ]
+    },
+    {
+      "name": "same_geometry_PathFineSpan_exists",
+      "count": 4,
+      "drop": 0,
+      "dropOwners": [
+        "G3"
+      ]
+    },
+    {
+      "name": "same_geometry_PathFineSpan_RETRY",
+      "count": 0,
+      "drop": 4,
+      "dropOwners": [
+        "G4",
+        "G5"
+      ]
+    },
+    {
+      "name": "same_geometry_RetryRegion_exists",
+      "count": 0,
+      "drop": 0,
+      "dropOwners": [
+        "G6"
+      ]
+    }
+  ],
+  "FIRST_PASS_TARGET_REACHABLE_WINDOW": 23,
+  "SAME_GEOMETRY_LEXICAL_EDGE_EXISTS": 8,
+  "SAME_GEOMETRY_EDGE_SELECTED": 4,
+  "SAME_GEOMETRY_PATHFINESPAN_EXISTS": 4,
+  "SAME_GEOMETRY_PATHFINESPAN_RETRY": 0,
+  "SAME_GEOMETRY_RETRYREGION_EXISTS": 0,
+  "gCounts": {
+    "G1_WINDOW_QUERY_EXISTS_BUT_NO_SAME_GEOMETRY_LEXICAL_EDGE": 5,
+    "G2_SAME_GEOMETRY_LEXICAL_EDGE_EXISTS_BUT_SEGMENTATION_SELECTS_OTHER_GEOMETRY": 4,
+    "G3_SELECTED_EDGE_GEOMETRY_CHANGED_DURING_PATHFINESPAN_CONSTRUCTION": 0,
+    "G4_TARGET_GEOMETRY_PATHFINESPAN_EXISTS_BUT_MODEL3_ONLY_RETRIES_SUBSPAN": 4,
+    "G5_TARGET_GEOMETRY_SPLIT_ACROSS_MULTIPLE_PATHFINESPANS_AND_ONLY_SUBSET_RETRY": 0,
+    "G6_RETRY_PATHFINESPAN_GEOMETRY_CORRECT_BUT_RETRYREGION_CHANGES_IT": 0,
+    "G7_NO_GEOMETRY_DIVERGENCE_BEFORE_RETRYREGION": 0,
+    "G8_QUERY_EVIDENCE_GEOMETRY_WAS_NEVER_REPAIRABLE_SPAN_GEOMETRY": 10,
+    "G9_COMPOUND_ASR_OR_FALLBACK_GEOMETRY": 0,
+    "G10_OTHER_PROVEN": 0,
+    "G11_UNRESOLVED": 0
+  },
+  "queryEvidenceStructurallyApplicable": {
+    "YES": 0,
+    "NO": 19,
+    "MIXED": 4,
+    "NOT_PROVEN": 0
+  },
+  "DOMINANT_FIRST_GEOMETRY_DIVERGENCE": "G8_QUERY_EVIDENCE_GEOMETRY_WAS_NEVER_REPAIRABLE_SPAN_GEOMETRY",
+  "DOMINANT_COUNT": 10,
+  "PREVIOUS_C9_INTERPRETATION": "PARTIALLY_REVISED"
+}

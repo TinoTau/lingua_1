@@ -1,0 +1,29 @@
+Requirement_ID,Requirement,CODE_IMPLEMENTATION,TRAINING_IMPLEMENTATION,TEST_VALIDATION,RUNTIME_INTEGRATION,Overall,Notes
+R1,FineSpan authoritative unit,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,PARTIAL,PARTIAL,Train FineSpanView OK; Node PathFineSpan exists but NOT wired to Model2
+R2,UserProfile real Model2 input,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,pack_batch_inputs in training; Node caches profile unused
+R3,SameSpanDifferentUser,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Stage P/D tests PASS; no runtime inference
+R4,Pronunciation profile Stage P,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Stage P FROZEN train; no Node deploy
+R5,Pronunciation policy ownership trainable,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Deterministic primitives + trainable action select in train
+R6,Personal/common terms in UserProfile,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,PARTIAL,PARTIAL,Schema+storage RUNTIME; writeback from correction for terms PARTIAL; train uses synthetic
+R7,Common terms -> domain evidence via term_domain_tags,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,derive_domain_evidence train; D2 multi-tag enrich; no runtime Model2
+R8,Multi-domain tags end-to-end,PARTIAL,IMPLEMENTED,IMPLEMENTED,PARTIAL,PARTIAL,SSOT+D2 index PASS; production CandidateIndex builder still single-tag unless enrich; runtime Model2 MISSING
+R9,Domain soft prior not hard gate,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,N/A_FOR_MODEL2,IMPLEMENTED,domain_actions hard_filter=False; KenLM hard_gate is separate system
+R10,Long-term vs session domain separate,PARTIAL,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,session_domain_prior train-only; UserProfileV1 has domain_bias only
+R11,Trainable core authoritative,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Trainable required ACTIVE contract; runtime not deployed
+R12,Learns how to search not term identity,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,action heads; Stage A archived
+R13,Can introduce new candidates,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Train/test FuzzyPool path; Node merge MISSING
+R14,Lexicon owns word identity,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,N/A,IMPLEMENTED,No term_id classifier as product output in V3
+R15,Performance bounded expansion,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,PARTIAL,Budgets in train eval; no runtime
+R16,UserProfile scale bounded runtime rep,PARTIAL,IMPLEMENTED,IMPLEMENTED,PARTIAL,PARTIAL,32KiB + top-32 encode in train; write-time compact domain evidence designed not fully productionized
+R17,Multi-parameter combination unified,PARTIAL,PARTIAL,PARTIAL,NOT_IMPLEMENTED,PARTIAL,P and D separate heads/checkpoints; no Stage J
+R18,ONE Model2 runtime target,IMPLEMENTED,PARTIAL,PARTIAL,NOT_IMPLEMENTED,PARTIAL,Contract ONE MODEL2; unified trained policy NOT YET
+R19,Speaking habits,NOT_IMPLEMENTED,NOT_IMPLEMENTED,NOT_IMPLEMENTED,NOT_IMPLEMENTED,DEFERRED_BY_DATA,DEFERRED_BY_SCHEMA in feature contract
+R20,Manual correction -> UserProfile,PARTIAL,N/A,IMPLEMENTED,PARTIAL,PARTIAL,phonetic_updates yes; domain_updates/tone empty; personal_terms write path limited
+R21,User adaptation loop,PARTIAL,PARTIAL,PARTIAL,PARTIAL,PARTIAL,Write path partial; Model2 consume MISSING
+R22,Profile version load unload,IMPLEMENTED,N/A,IMPLEMENTED,PARTIAL,PARTIAL,versioning+bootstrap; unload on session end; unused for Model2
+R23,Runtime integration Model2 chain,NOT_IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,NOT_IMPLEMENTED,NOT_IMPLEMENTED,Critical break after sessionUserProfiles Map
+R24,Downstream ownership (no sentence rewrite),IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,Model2 not in assembly; KenLM/assembly separate
+R25,No shadow/legacy active runtime,PARTIAL,PARTIAL,PARTIAL,PASS_RUNTIME,PARTIAL,Stage A/B train artifacts remain; not called from Node
+R26,JobResult boundary,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,IMPLEMENTED,SessionBootstrap not JobResult; Model2 not in JobResult
+R27,Domain SSOT consistency,PARTIAL,IMPLEMENTED,IMPLEMENTED,PARTIAL,PARTIAL,term_domain_tags SSOT; CandidateIndex builder still lossy without D2 enrich; DOMAIN_SLOT_IDS train list OK
+R28,Profile parameter ownership clear,PARTIAL,PARTIAL,PARTIAL,PARTIAL,PARTIAL,See ownership CSV

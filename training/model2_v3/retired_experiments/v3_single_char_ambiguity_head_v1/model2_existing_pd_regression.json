@@ -1,0 +1,13 @@
+{
+  "dummy_logits_allclose": true,
+  "p_rows": 48,
+  "d_rows": 48,
+  "p_logits_allclose": true,
+  "d_logits_allclose": true,
+  "hash_ok": true,
+  "pass": true,
+  "recorded_freeze_p_rr": 0.954,
+  "recorded_freeze_p_heldout": 0.939,
+  "recorded_freeze_d_val": 0.304,
+  "note": "P/D weights frozen; logits must match frozen model. Full 699 RR not re-executed because hashes+logits prove identity."
+}

@@ -1,0 +1,568 @@
+{
+  "elapsed_s": 261.56,
+  "unique_domain_identities": 588,
+  "domain_type_records": 655,
+  "exact_base_visible": 588,
+  "exact_base_absent": 0,
+  "exact_invalid_fs": 0,
+  "corrupt_n": 698,
+  "corrupt_base_absent": 38,
+  "corrupt_raw_hit_absent": 38,
+  "corrupt_raw_miss_absent": 0,
+  "corrupt_introduced": 4,
+  "true_d_opp_rate_exact": 0.0,
+  "true_d_opp_rate_corrupt": 0.054441,
+  "true_d_opp_rate_per_term": 0.054422,
+  "terms_any_introduced": 4,
+  "pipeline_retention_corrupt": 0.105263,
+  "expansion_yield_exact": 0.083333,
+  "expansion_yield_corrupt": 0.08596,
+  "target_expansion_yield_corrupt": 0.005731,
+  "target_expansion_yield_absent": 0.105263,
+  "buckets_corrupt": {
+    "A_NO_D_OPPORTUNITY": 660,
+    "C_RETRIEVAL_PIPELINE_ATTRITION": 34,
+    "D_MODEL_SELECTION_OPPORTUNITY": 4
+  },
+  "window_17_32": 13,
+  "funnel_exact": [
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Domain population",
+      "input_n": 588,
+      "survive_n": 588,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "unique domain lexical identities"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Valid tags",
+      "input_n": 588,
+      "survive_n": 588,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "missing/unregistered domain_ids"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Valid FineSpan",
+      "input_n": 588,
+      "survive_n": 588,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "syllable length outside lattice 1..5"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Base absent",
+      "input_n": 588,
+      "survive_n": 0,
+      "lost_n": 588,
+      "survival_pct": 0.0,
+      "loss_pct": 100.0,
+      "primary_cause": "target identity already in base FuzzyPool@16"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Action available",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "domain not in DOMAIN_SLOT_IDS / catalog"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Raw domain hit",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "phonetic distance>2 or length bucket miss (no domain SQL)"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Fuzzy survive",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "surface-dedup dropped identity or distance gate"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Merge survive",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "not in phonetic pool32 (shared top-k, not union query)"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Dedup survive (lexical identity)",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "identity usually kept; domain: term_id often dropped"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Top-k survive",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "soft rerank rank > 8"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Budget survive",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "domain max_cands=8 already applied as top-k"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Model2 output / FINAL INTRODUCED",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "oracle execute identity in final top-8 and base-absent"
+    },
+    {
+      "funnel": "exact_lexical_finespan",
+      "stage": "Downstream visible",
+      "input_n": 0,
+      "survive_n": 0,
+      "lost_n": 0,
+      "survival_pct": 0.0,
+      "loss_pct": 0.0,
+      "primary_cause": "Python Stage D path does not run Node sameDomain; T8/T9 not in this pipeline"
+    }
+  ],
+  "funnel_corrupt": [
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Domain population",
+      "input_n": 698,
+      "survive_n": 698,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "unique domain lexical identities"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Valid tags",
+      "input_n": 698,
+      "survive_n": 698,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "missing/unregistered domain_ids"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Valid FineSpan",
+      "input_n": 698,
+      "survive_n": 698,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "syllable length outside lattice 1..5"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Base absent",
+      "input_n": 698,
+      "survive_n": 38,
+      "lost_n": 660,
+      "survival_pct": 5.4441,
+      "loss_pct": 94.5559,
+      "primary_cause": "target identity already in base FuzzyPool@16"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Action available",
+      "input_n": 38,
+      "survive_n": 38,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "domain not in DOMAIN_SLOT_IDS / catalog"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Raw domain hit",
+      "input_n": 38,
+      "survive_n": 38,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "phonetic distance>2 or length bucket miss (no domain SQL)"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Fuzzy survive",
+      "input_n": 38,
+      "survive_n": 38,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "surface-dedup dropped identity or distance gate"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Merge survive",
+      "input_n": 38,
+      "survive_n": 13,
+      "lost_n": 25,
+      "survival_pct": 34.2105,
+      "loss_pct": 65.7895,
+      "primary_cause": "not in phonetic pool32 (shared top-k, not union query)"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Dedup survive (lexical identity)",
+      "input_n": 13,
+      "survive_n": 13,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "identity usually kept; domain: term_id often dropped"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Top-k survive",
+      "input_n": 13,
+      "survive_n": 4,
+      "lost_n": 9,
+      "survival_pct": 30.7692,
+      "loss_pct": 69.2308,
+      "primary_cause": "soft rerank rank > 8"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Budget survive",
+      "input_n": 4,
+      "survive_n": 4,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "domain max_cands=8 already applied as top-k"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Model2 output / FINAL INTRODUCED",
+      "input_n": 4,
+      "survive_n": 4,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "oracle execute identity in final top-8 and base-absent"
+    },
+    {
+      "funnel": "relation_corrupted_observations",
+      "stage": "Downstream visible",
+      "input_n": 4,
+      "survive_n": 4,
+      "lost_n": 0,
+      "survival_pct": 100.0,
+      "loss_pct": 0.0,
+      "primary_cause": "Python Stage D path does not run Node sameDomain; T8/T9 not in this pipeline"
+    }
+  ],
+  "zero_domains": {
+    "tech_ai": {
+      "unique_identities": 53,
+      "exact_base_visible": 53,
+      "exact_base_absent": 0,
+      "corrupt_n": 69,
+      "corrupt_base_absent": 1,
+      "corrupt_raw_hit_absent": 1,
+      "corrupt_introduced": 0,
+      "primary": "TOPK_PRUNE"
+    },
+    "meeting": {
+      "unique_identities": 41,
+      "exact_base_visible": 41,
+      "exact_base_absent": 0,
+      "corrupt_n": 47,
+      "corrupt_base_absent": 0,
+      "corrupt_raw_hit_absent": 0,
+      "corrupt_introduced": 0,
+      "primary": "BASE_VISIBLE"
+    },
+    "medical": {
+      "unique_identities": 130,
+      "exact_base_visible": 130,
+      "exact_base_absent": 0,
+      "corrupt_n": 172,
+      "corrupt_base_absent": 9,
+      "corrupt_raw_hit_absent": 9,
+      "corrupt_introduced": 0,
+      "primary": "TOPK_PRUNE"
+    }
+  },
+  "zero_rels": {
+    "sh_s": {
+      "attempted": 106,
+      "no_applicable_edit": 482,
+      "base_visible": 95,
+      "base_absent": 11,
+      "true_d_opportunity": 11,
+      "introduced": 0,
+      "primary": "TOPK_OR_BUDGET"
+    },
+    "eng_en": {
+      "attempted": 80,
+      "no_applicable_edit": 508,
+      "base_visible": 74,
+      "base_absent": 6,
+      "true_d_opportunity": 6,
+      "introduced": 0,
+      "primary": "TOPK_OR_BUDGET"
+    },
+    "h_f": {
+      "attempted": 121,
+      "no_applicable_edit": 467,
+      "base_visible": 120,
+      "base_absent": 1,
+      "true_d_opportunity": 1,
+      "introduced": 0,
+      "primary": "TOPK_OR_BUDGET"
+    }
+  },
+  "vis_exact": {
+    "BASE_VISIBLE_SIBLING_IDENTITY": 588
+  },
+  "vis_corrupt": {
+    "BASE_VISIBLE_FUZZY": 660,
+    "BASE_ABSENT": 38
+  },
+  "exp_exact": {
+    "executed_n": 588,
+    "classes": {
+      "EXISTING_CANDIDATES_REWEIGHTED": 539,
+      "NEW_LEXICAL_CANDIDATES_ADDED": 49
+    },
+    "Expansion_Yield": 0.083333,
+    "Target_Expansion_Yield": 0.0,
+    "new_lexical_n": 49,
+    "reweighted_n": 539,
+    "no_effect_n": 0,
+    "target_introduced_n": 0
+  },
+  "exp_corrupt": {
+    "executed_n": 698,
+    "classes": {
+      "EXISTING_CANDIDATES_REWEIGHTED": 638,
+      "NEW_LEXICAL_CANDIDATES_ADDED": 60
+    },
+    "Expansion_Yield": 0.08596,
+    "Target_Expansion_Yield": 0.005731,
+    "new_lexical_n": 60,
+    "reweighted_n": 638,
+    "no_effect_n": 0,
+    "target_introduced_n": 4
+  },
+  "exp_absent": {
+    "executed_n": 38,
+    "classes": {
+      "EXISTING_CANDIDATES_REWEIGHTED": 33,
+      "NEW_LEXICAL_CANDIDATES_ADDED": 5
+    },
+    "Expansion_Yield": 0.131579,
+    "Target_Expansion_Yield": 0.105263,
+    "new_lexical_n": 5,
+    "reweighted_n": 33,
+    "no_effect_n": 0,
+    "target_introduced_n": 4
+  },
+  "rel_stats": {
+    "n_l": {
+      "no_applicable_edit": 485,
+      "attempted": 103,
+      "BASE_VISIBLE_FUZZY": 100,
+      "BASE_ABSENT": 3,
+      "introduced": 1,
+      "true_d_opportunity": 3
+    },
+    "z_zh": {
+      "no_applicable_edit": 488,
+      "attempted": 100,
+      "BASE_VISIBLE_FUZZY": 96,
+      "BASE_ABSENT": 4,
+      "introduced": 1,
+      "true_d_opportunity": 4
+    },
+    "ch_c": {
+      "no_applicable_edit": 481,
+      "attempted": 107,
+      "BASE_ABSENT": 6,
+      "true_d_opportunity": 6,
+      "BASE_VISIBLE_FUZZY": 101,
+      "introduced": 1
+    },
+    "sh_s": {
+      "attempted": 106,
+      "BASE_VISIBLE_FUZZY": 95,
+      "no_applicable_edit": 482,
+      "BASE_ABSENT": 11,
+      "true_d_opportunity": 11
+    },
+    "eng_en": {
+      "no_applicable_edit": 508,
+      "attempted": 80,
+      "BASE_VISIBLE_FUZZY": 74,
+      "BASE_ABSENT": 6,
+      "true_d_opportunity": 6
+    },
+    "in_ing": {
+      "no_applicable_edit": 507,
+      "attempted": 81,
+      "BASE_VISIBLE_FUZZY": 74,
+      "BASE_ABSENT": 7,
+      "introduced": 1,
+      "true_d_opportunity": 7
+    },
+    "h_f": {
+      "no_applicable_edit": 467,
+      "attempted": 121,
+      "BASE_VISIBLE_FUZZY": 120,
+      "BASE_ABSENT": 1,
+      "true_d_opportunity": 1
+    }
+  },
+  "domain_stats": {
+    "tourism_pickup": {
+      "exact_n": 41,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 41,
+      "corrupt_n": 50,
+      "BASE_VISIBLE_FUZZY": 47,
+      "BASE_ABSENT": 3,
+      "true_d_opportunity": 3
+    },
+    "tourism_hotel": {
+      "exact_n": 49,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 49,
+      "corrupt_n": 60,
+      "BASE_VISIBLE_FUZZY": 57,
+      "BASE_ABSENT": 3,
+      "true_d_opportunity": 3
+    },
+    "tourism_route": {
+      "exact_n": 61,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 61,
+      "corrupt_n": 64,
+      "BASE_VISIBLE_FUZZY": 55,
+      "BASE_ABSENT": 9,
+      "true_d_opportunity": 9
+    },
+    "tourism_transport": {
+      "exact_n": 50,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 50,
+      "corrupt_n": 71,
+      "BASE_VISIBLE_FUZZY": 65,
+      "BASE_ABSENT": 6,
+      "true_d_opportunity": 6
+    },
+    "coffee": {
+      "exact_n": 82,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 82,
+      "corrupt_n": 93,
+      "BASE_VISIBLE_FUZZY": 87,
+      "BASE_ABSENT": 6,
+      "introduced": 3,
+      "true_d_opportunity": 6
+    },
+    "milk_tea": {
+      "exact_n": 44,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 44,
+      "corrupt_n": 47,
+      "BASE_VISIBLE_FUZZY": 42,
+      "BASE_ABSENT": 5,
+      "introduced": 4,
+      "true_d_opportunity": 5
+    },
+    "bakery": {
+      "exact_n": 37,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 37,
+      "corrupt_n": 31,
+      "BASE_VISIBLE_FUZZY": 24,
+      "BASE_ABSENT": 7,
+      "true_d_opportunity": 7,
+      "introduced": 2
+    },
+    "food_order": {
+      "exact_n": 63,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 63,
+      "corrupt_n": 61,
+      "BASE_ABSENT": 8,
+      "true_d_opportunity": 8,
+      "BASE_VISIBLE_FUZZY": 53,
+      "introduced": 4
+    },
+    "tech_ai": {
+      "exact_n": 53,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 53,
+      "corrupt_n": 69,
+      "BASE_VISIBLE_FUZZY": 68,
+      "BASE_ABSENT": 1,
+      "true_d_opportunity": 1
+    },
+    "meeting": {
+      "exact_n": 41,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 41,
+      "corrupt_n": 47,
+      "BASE_VISIBLE_FUZZY": 47
+    },
+    "medical": {
+      "exact_n": 130,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 130,
+      "corrupt_n": 172,
+      "BASE_VISIBLE_FUZZY": 163,
+      "BASE_ABSENT": 9,
+      "true_d_opportunity": 9
+    },
+    "transport": {
+      "exact_n": 4,
+      "exact_BASE_VISIBLE_SIBLING_IDENTITY": 4,
+      "corrupt_n": 3,
+      "BASE_VISIBLE_FUZZY": 3
+    }
+  },
+  "tag_integrity": {
+    "missing_tag": 0,
+    "multi_tag": 44,
+    "first_tag_collapse": 0
+  },
+  "p2": {
+    "n": 6510,
+    "len_delta_1": 6510
+  },
+  "profile_effect": {
+    "n": 38,
+    "empty_hit": 4,
+    "wrong_hit": 4,
+    "correct_hit": 4
+  },
+  "created": "2026-08-17T09:30:05.391323+00:00"
+}

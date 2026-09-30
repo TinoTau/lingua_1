@@ -1,0 +1,105 @@
+{
+  "stage_p_baseline_params": 45533,
+  "stage_j_params": 47210,
+  "parameter_increase": 0.03683043067665204,
+  "parameter_increase_pct": 3.6830430676652037,
+  "epochs": 10,
+  "feature_hash": "v1",
+  "feature_hash_version": "MODEL2_FEATURE_HASH_V1",
+  "loss_weights": {
+    "W_P": 1.25,
+    "W_D": 0.55,
+    "W_QB": 0.35,
+    "curriculum": "P-heavy then balanced"
+  },
+  "init_ckpt": "D:\\Programs\\github\\lingua_1\\training\\model2_v3\\experiments\\v3_phase3_stage_p\\training\\stage_p_checkpoint.pt",
+  "missing_keys": [
+    "domain_action_head.weight",
+    "domain_action_head.bias"
+  ],
+  "unexpected_keys": [],
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "loss": 5.214689899516362,
+      "loss_p_proxy": 43.89044091009325,
+      "loss_d_proxy": 18.75420714450139,
+      "wp": 1.6875,
+      "wd": 0.1925
+    },
+    {
+      "epoch": 2,
+      "loss": 1.9286501612714542,
+      "loss_p_proxy": 20.836072296224614,
+      "loss_d_proxy": 14.31662291865195,
+      "wp": 1.6875,
+      "wd": 0.1925
+    },
+    {
+      "epoch": 3,
+      "loss": 1.7404456731452738,
+      "loss_p_proxy": 18.093899993486303,
+      "loss_d_proxy": 14.81494366353558,
+      "wp": 1.6875,
+      "wd": 0.1925
+    },
+    {
+      "epoch": 4,
+      "loss": 1.4841798386907066,
+      "loss_p_proxy": 15.894741712077971,
+      "loss_d_proxy": 13.961742008886029,
+      "wp": 1.6875,
+      "wd": 0.1925
+    },
+    {
+      "epoch": 5,
+      "loss": 1.3297460657614533,
+      "loss_p_proxy": 14.443041486124839,
+      "loss_d_proxy": 14.729248723676127,
+      "wp": 1.6875,
+      "wd": 0.1925
+    },
+    {
+      "epoch": 6,
+      "loss": 1.4716514294506402,
+      "loss_p_proxy": 13.543848399193056,
+      "loss_d_proxy": 14.654612915490263,
+      "wp": 1.25,
+      "wd": 0.55
+    },
+    {
+      "epoch": 7,
+      "loss": 1.3855001589944285,
+      "loss_p_proxy": 12.563412148465392,
+      "loss_d_proxy": 14.386493754643267,
+      "wp": 1.25,
+      "wd": 0.55
+    },
+    {
+      "epoch": 8,
+      "loss": 1.2990771141103519,
+      "loss_p_proxy": 12.066092616768293,
+      "loss_d_proxy": 14.15801518130046,
+      "wp": 1.25,
+      "wd": 0.55
+    },
+    {
+      "epoch": 9,
+      "loss": 1.2072846915132256,
+      "loss_p_proxy": 11.057370880598663,
+      "loss_d_proxy": 13.457769511848367,
+      "wp": 1.25,
+      "wd": 0.55
+    },
+    {
+      "epoch": 10,
+      "loss": 1.1771323293127038,
+      "loss_p_proxy": 10.49864540561553,
+      "loss_d_proxy": 13.800147402671076,
+      "wp": 1.25,
+      "wd": 0.55
+    }
+  ],
+  "architecture": "RetrievalPolicyV3(with_domain_head=True) UNCHANGED",
+  "known_limitation_note": "Stage P legacy checkpoint uses incompatible hash; Stage J retrains under MODEL2_FEATURE_HASH_V1"
+}

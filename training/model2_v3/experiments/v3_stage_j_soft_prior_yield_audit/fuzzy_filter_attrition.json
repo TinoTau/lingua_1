@@ -1,0 +1,13 @@
+{
+  "raw_hit_n": 38,
+  "FUZZY_FILTER_SURVIVED": 38,
+  "FUZZY_FILTER_DROPPED": 0,
+  "gates": {
+    "distance_threshold": 2,
+    "len_delta_max": 1,
+    "file": "training/model2/fuzzy/pool.py",
+    "function": "build_fuzzy_pool",
+    "lines": "78-147"
+  },
+  "note": "Distance filter is applied before RAW_HIT in this audit; FUZZY_FILTER_DROPPED here is post-score surface-dedup identity loss, which is rare because identity key includes surface."
+}

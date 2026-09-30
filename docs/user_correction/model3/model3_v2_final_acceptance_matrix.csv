@@ -1,0 +1,13 @@
+Gate,Result,Blocking,Evidence
+Architecture,PASS,YES,"KEEP/RETRY-only Model3DecisionLabel; MODEL3_ARCHITECTURE_CONTRACT_V1 + retry contract; no Model3 lexical/domain/ASR ownership in runtime"
+Model identity,PASS,YES,"S3 weights SHA f1e41969…bbb1; config SHA 8c181cb9…; dataset MODEL3_V2_PRODUCTION_CORE_S3; build prod_core_s3_build_20260830_v1; seed 2026083013; A1 not promoted"
+Model3 ownership,PASS,YES,"Trigger only; voteCallCount=1; diagnostics not JobResult; causal audit responsibility PASS"
+Retry ownership,PASS,YES,"Bounded region+windows; secondDomainVote=0; model3Reinvoked=0; recursiveRetry instrumented; reuses Recall"
+Delta1,PASS,YES,"RESOLVED_ACCEPTED_CLOSED; stage2 success-path legal windows tests PASS; DELTA1_SUCCESS_PATH_BEHAVIOR_CHANGE_COUNT=0"
+Delta2,PASS,YES,"RESOLVED_ACCEPTED_CLOSED; fallback legal window contract; FineSpan ownership-support-only; acceptance hardGatesPass=true"
+Anti-test-gaming,PASS,YES,"No dialog case-id/oracle/expected branches in model3-runtime production sources"
+Tests,PASS,YES,"8 suites 56 passed 0 failed 0 skipped"
+Production build,PASS,YES,"npm run build:main exit 0 in electron_node/electron-node"
+Candidate cap,PASS,YES,"maxSentenceCandidates default 16; freeze-contract + acceptance crossPathOver16Cases=0"
+Causal responsibility,PASS,YES,"Prior E2E causal audit PASS; FINAL_IMPROVED=0 attributed downstream not Model3"
+Architecture drift,PASS,YES,"ARCHITECTURE_DRIFT=NONE; barrier counters zero; no STOP_AND_REVIEW triggers found"

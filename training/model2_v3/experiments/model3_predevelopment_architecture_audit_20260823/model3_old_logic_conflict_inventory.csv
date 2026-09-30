@@ -1,0 +1,9 @@
+component,location,status,model3_conflict_risk,action
+detectSuspiciousSpansV1,legacy/archive/fw-detector-span/suspicious-span-detector-v1.ts,ARCHIVED not in V4 orchestrator,MEDIUM if re-wired,DO_NOT_TOUCH / DO_NOT_REINTRODUCE
+shadowBeamSpanSets,removed from orchestrator (freeze-contract),DEAD,MEDIUM,DELETE_LATER reference only
+Model2 single-char ambiguity,removed from recall-span-topk-v2,HIGH if revived,HIGH,DO_NOT_TOUCH
+selectKenlmSuspiciousSpans,asr-repair/kenlm-span-selector.ts,TEST/legacy utility,MEDIUM,DO_NOT_USE as Model3 trigger
+repair_target gate,lexicon + apply-span-replacements,ACTIVE production,LOW — retry must respect,KEEP
+SuspiciousSpan detector gate script,fw-detector-gate.mjs references archived path,TOOLING only,LOW,DO_NOT_TOUCH
+length1 unique fail-closed,recall-span-topk-v2 FROZEN,ACTIVE,HIGH if bypassed,DO_NOT_TOUCH
+general retry architecture,NONE,NOT IMPLEMENTED,N/A,CREATE coordinator only

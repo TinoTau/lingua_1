@@ -1,0 +1,54 @@
+{
+  "phase": "LINGUA_DOMAIN_VOTE_UTTERANCE_SINGLETON_ARCHITECTURE_AUDIT",
+  "timestamp": "2026-09-01T09:47:01.566Z",
+  "verdict": "DOMAIN_VOTE_AUDIT_FOUND_PATH_LOCAL_VOTE_DIVERGENCE",
+  "nextPhase": "DOMAIN_VOTE_UTTERANCE_SINGLETON_RESTORATION_DESIGN_AUDIT",
+  "classification": "PATH_LOCAL_VOTES_WITH_POSSIBLE_DIVERGENCE",
+  "actualVoteSemantics": "PATH_LOCAL_INDEPENDENT_BUSINESS_VOTE",
+  "functionCallCountEqualsRetainedPathCount": true,
+  "independentBusinessVoteCountEqualsRetainedPathCount": true,
+  "metrics": {
+    "totalAuditedUtterances": 200,
+    "multipathUtterances": 107,
+    "onepathUtterances": 93,
+    "totalRetainedPaths": 423,
+    "domainVoteFunctionCalls": 423,
+    "meanVotesPerUtterance": 2.115,
+    "maxVotesPerUtterance": 8,
+    "utterancesWithGt1VoteCall": 107,
+    "utterancesWithGt1DistinctVoteInput": 107,
+    "utterancesWithProvenGt1DistinctRetainedDomainResult": 36,
+    "utterancesWithAnchorDivergenceAny": 33,
+    "utterancesWithDomainAnchorDivergence": 33,
+    "utterancesWithAssemblyDomainContextDivergence": 107,
+    "utterancesWithFinalOutputEvidenceOfVoteDivergence": 0,
+    "secondDomainVoteNonzero": 0
+  },
+  "inputIdentity": "PATH_LOCAL_FINESPANS_AND_MODEL2_EXPANDED_CANDIDATES",
+  "outputIdentity": {
+    "provenDivergenceCases": 36,
+    "identicalOrEmptyHeuristic": 61,
+    "unreliableEvenConcat": 10
+  },
+  "latticeFreeze": "per_path_CURRENT",
+  "model3Wording": "ONE_vote_means_no_retry_revote_not_utterance_singleton",
+  "implementationDriftVsLatticeFreeze": false,
+  "implementationDriftVsThisAuditAssumedUtteranceSingleton": true,
+  "approvedArchitectureChangeFound": true,
+  "approvedChange": "Lattice_V1.0.0_2026_07_26_utterance_vote_to_per_path",
+  "acpRequiredToKeepPerPath": false,
+  "acpRequiredToRestoreUtteranceSingletonVsLatticeFreeze": true,
+  "acceptanceHarness": {
+    "extraVoteBeyondProduction": false,
+    "baselineS3SharePreparedVote": true,
+    "causalHarnessValidity": "VALID",
+    "businessArchitectureValidity": "PATH_LOCAL"
+  },
+  "signalLossAuditImpact": "POTENTIALLY_CONTEXT_CONTAMINATED",
+  "secondDomainVoteProves": "NO_RETRY_SECOND_VOTE_ONLY",
+  "governance": {
+    "domainVoteChanged": false,
+    "productionCodeModified": false,
+    "jobResultChanged": false
+  }
+}

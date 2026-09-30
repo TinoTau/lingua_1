@@ -1,0 +1,71 @@
+{
+  "ranking_mode": "bce_pairwise_top1",
+  "applicability_bonus": false,
+  "HARD_MULTI_qb1": {
+    "RecallRetained": 1.0052083333333333,
+    "QueryReduction": 0.5171568627450981,
+    "CandidateReduction": 0.36655948553054657,
+    "E2ECostReduction": 0.4697014180699866,
+    "B1": {
+      "n": 197,
+      "TargetIntroductionRate": 0.9746192893401016,
+      "QueryCount_mean": 2.0710659898477157,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.7360406091370555,
+      "Latency_P50": 99.68350001145154
+    },
+    "V3": {
+      "n": 197,
+      "TargetIntroductionRate": 0.9796954314720813,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 3.0,
+      "Latency_P50": 53.44849999528378
+    }
+  },
+  "HARD_MULTI_qb2": {
+    "RecallRetained": 1.0260416666666667,
+    "QueryReduction": 0.06617647058823534,
+    "CandidateReduction": 0.037513397642015,
+    "E2ECostReduction": 0.05593063682220966,
+    "B1": {
+      "n": 197,
+      "TargetIntroductionRate": 0.9746192893401016,
+      "QueryCount_mean": 2.0710659898477157,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.7360406091370555,
+      "Latency_P50": 110.56980001740158
+    },
+    "V3": {
+      "n": 197,
+      "TargetIntroductionRate": 1.0,
+      "QueryCount_mean": 1.9340101522842639,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.558375634517766,
+      "Latency_P50": 108.16040000645444
+    }
+  },
+  "phase2_checkpoint_no_bonus_qb1": {
+    "RecallRetained": 0.7760416666666667,
+    "QueryReduction": 0.5220588235294118,
+    "CandidateReduction": 0.39442658092175775,
+    "E2ECostReduction": 0.48137099421062723,
+    "B1": {
+      "n": 197,
+      "TargetIntroductionRate": 0.9746192893401016,
+      "QueryCount_mean": 2.0710659898477157,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.7360406091370555,
+      "Latency_P50": 102.78460002155043
+    },
+    "V3": {
+      "n": 197,
+      "TargetIntroductionRate": 0.7563451776649747,
+      "QueryCount_mean": 0.9898477157360406,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 2.8680203045685277,
+      "Latency_P50": 55.21980000776239
+    }
+  },
+  "n_hard": 197
+}

@@ -1,0 +1,38 @@
+{
+  "$id": "SingleCharDisambiguationDecisionV1",
+  "type": "object",
+  "required": [
+    "contract",
+    "request_id",
+    "decision",
+    "selected_candidate_index",
+    "abstain_reason",
+    "model_head_available",
+    "ambiguity_invoked",
+    "candidate_count"
+  ],
+  "properties": {
+    "contract": { "const": "SingleCharDisambiguationContractV1" },
+    "request_id": { "type": "string" },
+    "decision": { "enum": ["SELECT", "ABSTAIN"] },
+    "selected_candidate_index": { "type": ["integer", "null"], "minimum": 0 },
+    "abstain_reason": {
+      "type": ["string", "null"],
+      "enum": [
+        "N_LT_2_NOT_INVOKED",
+        "HEAD_NOT_AVAILABLE",
+        "INVALID_REQUEST",
+        "INVALID_DECISION",
+        "INDEX_OUT_OF_RANGE",
+        "INFERENCE_ERROR",
+        "TEST_ADAPTER_ABSTAIN",
+        "MALFORMED_RESPONSE",
+        null
+      ]
+    },
+    "model_head_available": { "type": "boolean" },
+    "ambiguity_invoked": { "type": "boolean" },
+    "candidate_count": { "type": "integer" },
+    "latency_ms": { "type": "number" }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "freeze_id": "STAGE_D_RETRIEVAL_RESTORATION_FREEZE_V1",
+  "date": "2026-08-17",
+  "status": "FROZEN",
+  "change_control": [
+    "Architecture Change Proposal",
+    "Contract Change Proposal"
+  ],
+  "implicit_drift": "FORBIDDEN",
+  "frozen": {
+    "architecture": {
+      "status": "FROZEN / KEEP",
+      "model": "RetrievalPolicyV3",
+      "one_model": true,
+      "one_checkpoint_target": true,
+      "runtime_swap_this_round": false
+    },
+    "ownership": {
+      "status": "FROZEN / KEEP",
+      "domain_action_selection": "RetrievalPolicyV3 domain head",
+      "universe_predicate": "Lexicon domain_ids",
+      "phonetic_gates": "build_fuzzy_pool",
+      "base_recall": "base_retrieve_span",
+      "union_and_budget": "execute_domain_action max_cands=8",
+      "identity": "StageDRetrievalTargetIdentityV1"
+    },
+    "interfaces": {
+      "status": "FROZEN / KEEP",
+      "feature_pack": "pack_batch_inputs feature_hash=v1",
+      "domain_execute": "execute_domain_action",
+      "fuzzy_request_field": "FuzzyPoolRequestV1.allowed_domain_ids"
+    },
+    "feature_contracts": {
+      "status": "FROZEN / KEEP",
+      "feature_hash": "MODEL2_FEATURE_HASH_V1",
+      "profile_contract": "StageDProfileContractV1"
+    },
+    "retrieval_contract": {
+      "status": "FROZEN / KEEP",
+      "id": "StageDDomainConditionedRetrievalContractV1",
+      "path": "docs/user_correction/stage_d_domain_conditioned_retrieval_contract_v1.md"
+    },
+    "action_ids": {
+      "status": "FROZEN / KEEP",
+      "catalog": "domain_none + domain_soft:{slot} for DOMAIN_SLOT_IDS",
+      "empty_profile_external_gate": false
+    },
+    "budget_ownership": {
+      "status": "FROZEN / KEEP",
+      "final_candidate_cap": 8,
+      "nested_32_8": "REMOVED",
+      "implementation_safety_cap": 256
+    },
+    "dedup_semantics": {
+      "status": "FROZEN / KEEP",
+      "id": "StageDRetrievalTargetIdentityV1"
+    },
+    "failure_semantics": {
+      "status": "FROZEN / KEEP",
+      "domain_none": "no domain expansion",
+      "empty_allowed_domain_ids": "no domain universe",
+      "fixed_38": "REGRESSION_ANCHOR_ONLY"
+    },
+    "teacher_semantics": {
+      "status": "FROZEN / KEEP",
+      "authoritative": "EXECUTE_VALIDATED",
+      "old_teacher": "SUPERSEDED"
+    },
+    "dataset_semantics": {
+      "status": "FROZEN / KEEP",
+      "d_trainset": "STAGE_D_RESTORED_TRAINSET_V1",
+      "j_trainset": "STAGE_J_RESTORED_TRAINSET_V1",
+      "v2_benchmark": "STAGE_J_PRODUCTION_BENCHMARK_V2",
+      "eligible_d_is": "TRAINING_POPULATION_NOT_EXAM"
+    }
+  },
+  "retired": {
+    "old_shared_pool_rerank_top8": {
+      "status": "RETIRED",
+      "NOT_ACTIVE": true,
+      "NOT_SELECTABLE": true,
+      "NOT_PRODUCTION_AUTHORITY": true,
+      "fallback": false,
+      "compatibility_option": false,
+      "config_switch": false,
+      "shadow_test_path": false,
+      "legacy_runtime_alternative": false
+    }
+  }
+}

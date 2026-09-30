@@ -1,0 +1,25 @@
+{
+  "architecture": "RetrievalPolicyV3(with_domain_head=True)",
+  "feature_hash": "MODEL2_FEATURE_HASH_V1",
+  "curriculum": [
+    "phase1_p_anchor",
+    "phase2_joint"
+  ],
+  "W_P": 1.25,
+  "W_D": 0.55,
+  "W_QB": 0.25,
+  "p_loss": "BCE + 1.25*pairwise(margin=0.75) + 0.25*CE(qb)",
+  "d_loss": "BCE domain actions (execute-validated labels)",
+  "init": "D:\\Programs\\github\\lingua_1\\training\\model2_v3\\experiments\\v3_stage_j_recovery_p1_d1\\training\\p1_stage_p_feature_hash_v1.pt",
+  "phase1_epochs": 6,
+  "phase2_epochs": 8,
+  "lr_phase1": 0.0003,
+  "lr_phase2": 0.0002,
+  "sampler_cap": 8000,
+  "batch": 64,
+  "DATA_COVERAGE_LIMITED": true,
+  "n_d_train": 84,
+  "n_d_test": 48,
+  "n_pd_train": 84,
+  "n_hard_p": 699
+}

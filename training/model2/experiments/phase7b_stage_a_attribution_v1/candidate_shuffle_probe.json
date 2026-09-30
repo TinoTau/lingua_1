@@ -1,0 +1,33 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "n": 256,
+  "original_metric": {
+    "n": 256,
+    "Recall@1": 0.6953125,
+    "Recall@3": 0.93359375,
+    "Recall@4": 0.95703125,
+    "MRR": 0.8163566468253971,
+    "Positive_average_pool_size": 15.9140625,
+    "FuzzyPool_Recall@16_ceiling": 1.0,
+    "mean_target_rank": 0.60546875,
+    "median_target_rank": 0.0
+  },
+  "shuffled_metric": {
+    "n": 256,
+    "Recall@1": 0.6953125,
+    "Recall@3": 0.93359375,
+    "Recall@4": 0.95703125,
+    "MRR": 0.8163566468253971,
+    "Positive_average_pool_size": 15.9140625,
+    "FuzzyPool_Recall@16_ceiling": 1.0,
+    "mean_target_rank": 0.60546875,
+    "median_target_rank": 0.0
+  },
+  "delta_R1": 0.0,
+  "delta_R3": 0.0,
+  "note": "Shuffle permutes candidate lexical tensors within pool while moving the positive index with its slot. If metrics stay high, ranking depends on relative slot structure / query×cand matching rather than absolute term identity position; if they collapse toward random, model relies on absolute candidate identity features in the tensors."
+}

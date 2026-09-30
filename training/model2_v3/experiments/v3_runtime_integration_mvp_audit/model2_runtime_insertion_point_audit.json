@@ -1,0 +1,15 @@
+{
+  "exact_insertion_point": {
+    "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts",
+    "location": "after L300 activeCandidates = compatibility.activeCandidates; before L323 runDomainAwareAssembly",
+    "rationale": "Base FineSpan recall materialized; before SameDomain hard filter / vote / per-span budget",
+    "must_not_rewrite": [
+      "ASR step",
+      "FineSpan generator",
+      "DomainAwareAssembly",
+      "KenLM"
+    ]
+  },
+  "alternate_heavier": "after recallTopKForWindows before buildLexicalEdges (deeper coupling — not preferred)",
+  "profile_source_gap": "getSessionUserProfile exists on NodeAgent but not passed into FW/JobContext — ADD adapter plumbing required"
+}

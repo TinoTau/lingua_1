@@ -1,0 +1,65 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_CORE_S1_TRAINING_EXPERIMENT",
+  "verdict": "S1_TRAINING_EXPERIMENT_FORMAL_GOOD_REAL_WEAK",
+  "deletionAudit": "PASS",
+  "trainingExecuted": true,
+  "preferredInitialization": "RANDOM_INIT_PREFERRED",
+  "s1SufficientForS2": true,
+  "architectureDrift": false,
+  "nextPhase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_S2",
+  "deletionFunnel": {
+    "passed": true,
+    "relabelMismatch": 0,
+    "pathExpandedDeleteRegions": 1676,
+    "uniqueDeleteRegions": 636,
+    "pathExpandedRefMissingInsert": 567,
+    "uniqueRefMissingInsert": 201,
+    "regionPathWithRetryOverlap": 62,
+    "spanPathRetryRowsOverlappingDelete": 84,
+    "noRepairableTargetUnique": 1182,
+    "eligibleUniqueRegions": 21,
+    "explanation": "V2 supervises existing FineSpans only; most alignment delete intervals lack eligible spans or project KEEP"
+  },
+  "training": {
+    "randomInit": {
+      "modelId": "MODEL3_V2_S1_RANDOM_INIT_V1",
+      "seed": 2026083007,
+      "bestEpoch": 8,
+      "testRetryF1": 0.4859,
+      "protectedCaseLevelRetry": "0/13",
+      "outcomeClass": "UNDERFIT"
+    },
+    "realDistInit": {
+      "modelId": "MODEL3_V2_S1_REALDIST_INIT_V1",
+      "seed": 2026083008,
+      "bestEpoch": 8,
+      "testRetryF1": 0.2455,
+      "protectedCaseLevelRetry": "1/13",
+      "protectedUnrelatedRetry": 1,
+      "outcomeClass": "UNDERFIT",
+      "initNote": "partial BiGRU/head load; embedding shape mismatch skipped"
+    }
+  },
+  "initDecision": {
+    "conclusion": "RANDOM_INIT_PREFERRED",
+    "realDistStillHelpsOnS1Only": false,
+    "futureS2DefaultInit": "random_from_scratch"
+  },
+  "historicalBaselines": {
+    "MODEL3_V2_REGION_LABEL_V1": {
+      "testRetryF1": 0.9539,
+      "protectedEligibleRetry": "1/13"
+    },
+    "MODEL3_V2_REALDIST_V1": {
+      "testRetryF1": 0.962,
+      "protectedEligibleRetry": "7/13"
+    }
+  },
+  "governance": {
+    "asrChanged": false,
+    "model3ArchitectureChanged": false,
+    "featuresChanged": false,
+    "labelsRelabeled": false,
+    "thresholdTuned": false
+  }
+}

@@ -1,0 +1,27 @@
+caseId,family,rawRegion,selectedRetryPath,expectedRepairUnit,lexiconExists,queryPinyin,targetPinyin,queryTone,targetTone,windowEligible,domainEligible,rawRecallProduced,survivedLocalCap,survivedGlobalBudget,reachedAssembly,firstMissingPoint,primaryClassification,secondaryFactor,systemicOrCaseSpecific,notes
+d099,MULTI_CHAR_REPLACEMENT,苏和步,苏|和|步,SOHO,false,,,,,false,false,false,true,true,false,EXPECTED_UNREPAIRABLE,EXPECTED_UNREPAIRABLE,Latin transliteration outside Lexicon phonetic contract,CASE_SPECIFIC,not in lexicon
+d099,MULTI_CHAR_REPLACEMENT,苏和步,苏|和|步,不,true,su|he|bu,bu,124,4,false,true,false,true,true,false,EXPECTED_UNREPAIRABLE,EXPECTED_UNREPAIRABLE,Region 苏和步 phonetics unrelated to reference 不,CASE_SPECIFIC,in lexicon
+d099,MULTI_CHAR_REPLACEMENT,苏和步,苏|和|步,堵,true,su|he|bu,du,124,3,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,堵 recallable on own surface; not from 苏|和|步 windows,CASE_SPECIFIC,in lexicon
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,更衣室,false,,geng|yi|shi,,114,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 3-char unit absent,CASE_SPECIFIC,missing
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,柜子,false,,gui|zi,,4,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 2-char unit absent,CASE_SPECIFIC,missing
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,钥匙,true,yao|shi,yao|shi,4,4,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,No FineSpan window covers 钥匙; path has 意识|规|则|要是,CASE_SPECIFIC,in lexicon
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,衣室,false,,yi|shi,,14,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 2-char unit absent,CASE_SPECIFIC,missing
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,规则,true,yao|shi,gui|ze,4,12,true,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,Recallable on own surface only,CASE_SPECIFIC,in lexicon
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,意识,true,yi|shi,yi|shi,42,42,true,true,true,true,true,false,OTHER,OTHER,Recall produces ASR-homophone 意识 not reference 更衣室,CASE_SPECIFIC,in lexicon
+d160,MULTI_CHAR_REPLACEMENT,顺便向木李,顺|便|向|木|李,项目,true,li,xiang|mu,3,44,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,项目 recallable on own surface; single-char windows 向|木 never form 2-char query,CASE_SPECIFIC,in lexicon
+d160,MULTI_CHAR_REPLACEMENT,顺便向木李,顺|便|向|木|李,里,true,li,li,3,3,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,里 not exposed as repair span in selected path,CASE_SPECIFIC,in lexicon
+d160,MULTI_CHAR_REPLACEMENT,顺便向木李,顺|便|向|木|李,向木,false,,xiang|mu,,44,true,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Composite surface not a Lexicon term; pinyin matches 项目,CASE_SPECIFIC,missing as term
+d160,MULTI_CHAR_REPLACEMENT,顺便向木李,顺|便|向|木|李,顺便,true,li,shun|bian,3,44,true,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,Recallable on own surface only,CASE_SPECIFIC,in lexicon
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,更衣室,false,,geng|yi|shi,,114,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 3-char unit absent,CASE_SPECIFIC,missing
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,柜子,false,,gui|zi,,4,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 2-char unit absent,CASE_SPECIFIC,missing
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,钥匙,true,yao|shi,yao|shi,4,4,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,No FineSpan window covers 钥匙,CASE_SPECIFIC,in lexicon
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,衣室,false,,yi|shi,,14,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Required 2-char unit absent,CASE_SPECIFIC,missing
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,规则,true,yao|shi,gui|ze,4,12,true,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,Recallable on own surface only,CASE_SPECIFIC,in lexicon
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,意识,true,yi|shi,yi|shi,42,42,true,true,true,true,true,false,OTHER,OTHER,Recall produces ASR surface 意识,CASE_SPECIFIC,in lexicon
+d049,INSERTION,理,理,李,true,li,li,3,3,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,Insertion target 李 not in Retry window 理,CASE_SPECIFIC,in lexicon
+d049,INSERTION,理,理,李工,false,,li|gong,,31,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Compound title absent from Lexicon,CASE_SPECIFIC,missing
+d049,INSERTION,理,理,够,true,li,gou,3,4,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,Proxy unit unrelated to utterance-start insertion,CASE_SPECIFIC,in lexicon
+d002,PHONETIC_SUBSTITUTION,背,背,杯,true,bei,bei,4,1,false,true,false,true,true,false,TONE_MISMATCH,TONE_MISMATCH,query tone bei4 vs target bei1; recall returns 背,CASE_SPECIFIC,in lexicon
+d003,PHONETIC_SUBSTITUTION,烟,烟,燕,false,,yan,,4,false,false,false,true,true,false,LEXICON_MISSING,LEXICON_MISSING,Proxy single-char 燕 absent,CASE_SPECIFIC,missing
+d003,PHONETIC_SUBSTITUTION,烟,烟,燕麦,true,yan,yan|mai,1,44,false,true,false,true,true,false,WINDOW_BOUNDARY,WINDOW_BOUNDARY,燕麦 needs 烟麦 2-char window; Retry span is 烟 only,CASE_SPECIFIC,in lexicon
+d019,PHONETIC_SUBSTITUTION,成,成,城,true,cheng,cheng,2,2,false,true,false,true,true,false,PHONETIC_RECALL_MISS,PHONETIC_RECALL_MISS,Homophone cheng2; recall exact-surface contract returns 成 not 城,CASE_SPECIFIC,in lexicon

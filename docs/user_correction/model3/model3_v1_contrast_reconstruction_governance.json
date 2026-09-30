@@ -1,0 +1,81 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_CONTRAST_PAIR_RECONSTRUCTION",
+    "verdict": "PASS_WITH_PRECISION_GAP",
+    "recommended_next_phase": "MODEL3_V1_STRICT_CONTRAST_AND_HARD_KEEP_BALANCE",
+    "architecture_changed": false,
+    "formal_anchor_changed": false,
+    "recall_changed": false,
+    "model2_changed": false,
+    "full100k_mutated": false,
+    "tts": false,
+    "production_retry": false
+  },
+  "report_artifact_count": 4,
+  "report_artifact_count_le_10": true,
+  "dataset": {
+    "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/",
+    "strictAccepted": 8000,
+    "utterances": 26413,
+    "checksums": [
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00000.jsonl",
+        "sha256": "5eb805d81b84bf1aee23fe4a844f025eae0976b1bc62c8e3506714142aeb7fcb",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00001.jsonl",
+        "sha256": "431a025b510ca7113cd37e3c1595c88e86b9748985e26c36dd0d0f8807cbede6",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00002.jsonl",
+        "sha256": "863ada837fde43b8698f6986c4d05aabf91e9bdaa86386a6844829e37e36bcc3",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00003.jsonl",
+        "sha256": "e84d6e8d0fe5efb68afecf387447f8111d574999267c18815d3e5725c99ef403",
+        "lines": 1666,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/dev/shard-00000.jsonl",
+        "sha256": "f112829dfc6f00835e399481f20eb2fdb080fdad3ba5a637df649d8bff6f64a9",
+        "lines": 2289,
+        "split": "dev"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/test/shard-00000.jsonl",
+        "sha256": "e20d542616cfaa1e5737eefed9b360095952aac24f7fe5a40d3feeee5c9adc2c",
+        "lines": 5000,
+        "split": "test"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/test/shard-00001.jsonl",
+        "sha256": "c4745dcf1ba572d97b812afa5b764d459f485cf6a3125a0bb2bc1af8f379e899",
+        "lines": 2458,
+        "split": "test"
+      }
+    ]
+  },
+  "model": {
+    "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction_bigru",
+    "name": "MODEL3_V1_STRICT_CONTRAST_RECONSTRUCTION_BIGRU_V1"
+  },
+  "modified_file_inventory": [
+    "training/model3_dataset/scripts/strict_contrast_pair_v1.py",
+    "training/model3_dataset/scripts/run_strict_contrast_reconstruction.py",
+    "training/model3_dataset/train/train_strict_contrast_reconstruction.py",
+    "docs/user_correction/model3/STRICT_ANCHOR_CONTRAST_PAIR_V1.json",
+    "docs/user_correction/model3/Lingua_Model3_V1_Contrast_Pair_Reconstruction_Report_2026_08_25.md",
+    "docs/user_correction/model3/model3_v1_contrast_reconstruction_bundle.json",
+    "docs/user_correction/model3/model3_v1_contrast_reconstruction_governance.json",
+    "docs/user_correction/model3/model3_v1_contrast_reconstruction_comparison.csv",
+    "training/model3_dataset/model3_v1_strict_contrast_reconstruction/",
+    "training/model3_dataset/model3_v1_strict_contrast_reconstruction_bigru/"
+  ]
+}

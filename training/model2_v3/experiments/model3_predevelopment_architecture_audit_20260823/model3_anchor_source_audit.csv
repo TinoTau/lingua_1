@@ -1,0 +1,6 @@
+anchor_source,upstream_stage,existing_fields,anchor_derivation_rule,readiness,notes
+DOMAIN,Domain Vote + SameDomain filter,vote.retainedDomains; DomainFilteredSpanSet.bucketDomain; sameDomainCandidates[]; graphSource domain_term|passive_domain_weak,candidate ∈ sameDomainCandidates AND bucketDomain ∈ retainedDomains AND graphSource in domain set,PARTIAL,Logic exists; no anchorSource field; stripped at SpanReplacementPick
+MODEL2_P,Model2 expand + materializeProfileHits,originSpanId; retrievalProvenance PROFILE_PRONUNCIATION; model2ActionId; retrievalId,PARTIAL,retrievalProvenance=PROFILE_PRONUNCIATION on WindowCandidate,PARTIAL,Assembly strips provenance
+MODEL2_D,Model2 expand + materializeDomainHits,originSpanId; retrievalProvenance PROFILE_DOMAIN; domains[]; termId,PROFILE_DOMAIN or domain_term source with originSpanId,PARTIAL,Length binding enforced in materializeDomainHits
+BASE_TERM,Recall base_lexicon,source=base_term; graphSource base,NOT_ANCHOR,base does not vote domain; assembly only,PARTIAL,Do not auto-anchor base terms
+LENGTH1_RECALL,recallSpanTopKV2 length=1,length1Collector diagnostic; unique-tone fail-closed,NOT_ANCHOR,Single-char V1 frozen; Model2 absent on length1,FROZEN,Model3 must not reopen

@@ -1,0 +1,20 @@
+{
+  "train_subset": 8000,
+  "epochs": 2,
+  "test": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2802,
+    "tn": 190451,
+    "keep_precision": 0.9855008719140195,
+    "keep_recall": 1.0,
+    "retry_precision": 0.0,
+    "retry_recall": 0.0,
+    "retry_f1": 0.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 0.49275043595700974,
+    "eligible": 193253,
+    "pred_vs_gold_mismatch": 2802,
+    "pred_vs_gold_mismatch_rate": 0.014499128085980554
+  }
+}

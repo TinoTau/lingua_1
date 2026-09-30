@@ -1,0 +1,11 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "RUNTIME_LIKE_QUERY": "AVAILABLE_VIA_P1B",
+  "definition": "ASR span_text + ASR_DERIVED_APPROX syllables; no canonical target syllables in query",
+  "note": "P1-B training/eval rows implement this contract; oracle Fuzzy ceiling does not apply."
+}

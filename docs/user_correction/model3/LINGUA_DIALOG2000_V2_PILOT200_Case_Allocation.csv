@@ -1,0 +1,72 @@
+userId,dominant_relations,profile_stage_focus,relation_family,domain,case_class,split,approx_count,notes
+U001,"n_l|in_ing",P1-P3_eval,n_l,general_daily,PROFILE_TARGET,DEV,4,build≠eval terms
+U001,"n_l|in_ing",P1-P3_eval,n_l,software_meeting,PROFILE_TARGET,DEV,3,
+U001,"n_l|in_ing",P1-P3_eval,n_l,medical,PROFILE_TARGET,VALIDATION,4,n_l≥3 domains
+U001,"n_l|in_ing",P1-P3_eval,n_l,food_cafe,PROFILE_TARGET,HOLDOUT,3,
+U001,"n_l|in_ing",P1-P3_eval,in_ing,general_daily,PROFILE_TARGET,DEV,4,
+U001,"n_l|in_ing",P1-P3_eval,in_ing,travel_hotel,PROFILE_TARGET,VALIDATION,3,
+U001,"n_l|in_ing",P1-P3_eval,in_ing,retail_service,PROFILE_TARGET,DEV,3,
+U001,"n_l|in_ing",P0_control,NONE,general_daily,CLEAN_PRESERVE,DEV,4,
+U001,"n_l|in_ing",P0_control,NONE,software_meeting,CLEAN_PRESERVE,VALIDATION,3,
+U001,"n_l|in_ing",mixed,n_l,travel_hotel,ASR_RESILIENCE_CONTROL,DEV,3,
+U001,"n_l|in_ing",WRONG_ctrl,in_ing,food_cafe,WRONG_PROFILE_CONTROL,DEV,3,wrong≠in_ing/n_l
+U001,"n_l|in_ing",WRONG_ctrl,n_l,retail_service,WRONG_PROFILE_CONTROL,VALIDATION,3,
+U001_TOTAL,,,,,,,40,
+U002,"z_zh|sh_s",P1-P3_eval,z_zh,general_daily,PROFILE_TARGET,DEV,4,
+U002,"z_zh|sh_s",P1-P3_eval,z_zh,software_meeting,PROFILE_TARGET,DEV,3,
+U002,"z_zh|sh_s",P1-P3_eval,z_zh,retail_service,PROFILE_TARGET,VALIDATION,4,
+U002,"z_zh|sh_s",P1-P3_eval,z_zh,travel_hotel,PROFILE_TARGET,HOLDOUT,3,
+U002,"z_zh|sh_s",P1-P3_eval,sh_s,food_cafe,PROFILE_TARGET,DEV,4,
+U002,"z_zh|sh_s",P1-P3_eval,sh_s,medical,PROFILE_TARGET,VALIDATION,3,
+U002,"z_zh|sh_s",P1-P3_eval,sh_s,general_daily,PROFILE_TARGET,DEV,3,
+U002,"z_zh|sh_s",P0_control,NONE,food_cafe,CLEAN_PRESERVE,DEV,4,
+U002,"z_zh|sh_s",P0_control,NONE,travel_hotel,CLEAN_PRESERVE,VALIDATION,3,
+U002,"z_zh|sh_s",mixed,z_zh,medical,ASR_RESILIENCE_CONTROL,DEV,3,
+U002,"z_zh|sh_s",WRONG_ctrl,sh_s,software_meeting,WRONG_PROFILE_CONTROL,DEV,3,wrong≠z_zh/sh_s
+U002,"z_zh|sh_s",WRONG_ctrl,z_zh,food_cafe,WRONG_PROFILE_CONTROL,VALIDATION,3,
+U002_TOTAL,,,,,,,40,
+U003,"eng_en|h_f",P1-P3_eval,eng_en,software_meeting,PROFILE_TARGET,DEV,4,
+U003,"eng_en|h_f",P1-P3_eval,eng_en,general_daily,PROFILE_TARGET,DEV,3,
+U003,"eng_en|h_f",P1-P3_eval,eng_en,travel_hotel,PROFILE_TARGET,VALIDATION,4,
+U003,"eng_en|h_f",P1-P3_eval,eng_en,retail_service,PROFILE_TARGET,HOLDOUT,3,
+U003,"eng_en|h_f",P1-P3_eval,h_f,food_cafe,PROFILE_TARGET,DEV,4,
+U003,"eng_en|h_f",P1-P3_eval,h_f,medical,PROFILE_TARGET,VALIDATION,3,
+U003,"eng_en|h_f",P1-P3_eval,h_f,general_daily,PROFILE_TARGET,DEV,3,
+U003,"eng_en|h_f",P0_control,NONE,software_meeting,CLEAN_PRESERVE,DEV,4,
+U003,"eng_en|h_f",P0_control,NONE,medical,CLEAN_PRESERVE,VALIDATION,3,
+U003,"eng_en|h_f",mixed,eng_en,food_cafe,ASR_RESILIENCE_CONTROL,DEV,3,
+U003,"eng_en|h_f",WRONG_ctrl,h_f,travel_hotel,WRONG_PROFILE_CONTROL,DEV,3,
+U003,"eng_en|h_f",WRONG_ctrl,eng_en,medical,WRONG_PROFILE_CONTROL,VALIDATION,3,
+U003_TOTAL,,,,,,,40,
+U004,"ch_c|n_l",P1-P3_eval,ch_c,general_daily,PROFILE_TARGET,DEV,5,
+U004,"ch_c|n_l",P1-P3_eval,ch_c,food_cafe,PROFILE_TARGET,DEV,3,
+U004,"ch_c|n_l",P1-P3_eval,ch_c,retail_service,PROFILE_TARGET,VALIDATION,3,
+U004,"ch_c|n_l",P1-P3_eval,ch_c,travel_hotel,PROFILE_TARGET,HOLDOUT,3,
+U004,"ch_c|n_l",P1-P3_eval,n_l,software_meeting,PROFILE_TARGET,DEV,4,same relation as U001 different lexicon
+U004,"ch_c|n_l",P1-P3_eval,n_l,medical,PROFILE_TARGET,VALIDATION,3,
+U004,"ch_c|n_l",P1-P3_eval,n_l,general_daily,PROFILE_TARGET,DEV,3,
+U004,"ch_c|n_l",P0_control,NONE,retail_service,CLEAN_PRESERVE,DEV,4,
+U004,"ch_c|n_l",P0_control,NONE,travel_hotel,CLEAN_PRESERVE,VALIDATION,3,
+U004,"ch_c|n_l",mixed,ch_c,medical,ASR_RESILIENCE_CONTROL,DEV,3,
+U004,"ch_c|n_l",WRONG_ctrl,ch_c,food_cafe,WRONG_PROFILE_CONTROL,DEV,3,wrong must not share ch_c/n_l
+U004,"ch_c|n_l",WRONG_ctrl,n_l,software_meeting,WRONG_PROFILE_CONTROL,VALIDATION,3,
+U004_TOTAL,,,,,,,40,
+U005,"sh_s",P1-P3_eval,sh_s,general_daily,PROFILE_TARGET,DEV,5,near-standard user control
+U005,"sh_s",P1-P3_eval,sh_s,software_meeting,PROFILE_TARGET,VALIDATION,3,
+U005,"sh_s",P1-P3_eval,sh_s,travel_hotel,PROFILE_TARGET,DEV,3,
+U005,"sh_s",P1-P3_eval,sh_s,food_cafe,PROFILE_TARGET,HOLDOUT,4,
+U005,"sh_s",P1-P3_eval,sh_s,medical,PROFILE_TARGET,DEV,3,
+U005,"sh_s",P1-P3_eval,sh_s,retail_service,PROFILE_TARGET,VALIDATION,3,
+U005,"sh_s",P0_control,NONE,general_daily,CLEAN_PRESERVE,DEV,5,higher clean share
+U005,"sh_s",P0_control,NONE,software_meeting,CLEAN_PRESERVE,VALIDATION,3,
+U005,"sh_s",P0_control,NONE,travel_hotel,CLEAN_PRESERVE,HOLDOUT,4,
+U005,"sh_s",mixed,sh_s,retail_service,ASR_RESILIENCE_CONTROL,DEV,3,
+U005,"sh_s",WRONG_ctrl,sh_s,medical,WRONG_PROFILE_CONTROL,DEV,2,wrong=U001/U003
+U005,"sh_s",P0_control,NONE,food_cafe,CLEAN_PRESERVE,DEV,2,
+U005_TOTAL,,,,,,,40,
+GRAND_TOTAL,,,,,,,200,5×40 unique audio/reference cases
+SPLIT_TARGETS,DEV,,,,,,120,exact target for Block A seed assignment
+SPLIT_TARGETS,VALIDATION,,,,,,60,
+SPLIT_TARGETS,HOLDOUT,,,,,,20,
+CLEAN_TARGET,,,,,,,≥40,≥20%; this plan ≈46 CLEAN_PRESERVE rows
+SEED_NOTE,,,,,,,,"No concrete sentences; Block A materializes under frozen seed + SSOT"

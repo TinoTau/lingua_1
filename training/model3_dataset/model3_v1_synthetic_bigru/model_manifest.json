@@ -1,0 +1,18 @@
+{
+  "modelName": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "architecture": "Small BiGRU",
+  "config": {
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 8,
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 5,
+    "lr": 0.001,
+    "class_weight_retry": 4.0
+  },
+  "vocabSize": 1274,
+  "status": "DEPRECATED_LEAKED_FEATURE_MODEL",
+  "invalid_for_quality_claim": true,
+  "superseded_by": "MODEL3_V1_SYNTHETIC_BASELINE_NOLEAK_V1"
+}

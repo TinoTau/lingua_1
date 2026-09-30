@@ -1,0 +1,9 @@
+Path,Location,Classification,Notes
+Stage A Model2StageAV1,training/model2/model/model_v1.py,DEAD_PRODUCT / TRAIN_ARTIFACT,ARCHIVE_ONLY
+Stage B binding,training/model2 stage_b,DEAD_PRODUCT / TRAIN,DEFERRED
+RelationActivatorV1,training/model2_v2/model/relation_activator.py,TRAIN_TEST_ONLY,SUPERSEDED_AS_PRODUCT_CORE
+V2 neural-not-needed claim,docs + SUPERSEDED md,DOCUMENT_ONLY,SUPERSEDED
+Whole-utterance Model2 retrieval,prohibited in finespan.py,REJECTED,ACTIVE_PROHIBITION
+Applicability bonus decode override,phase2 select_actions removed,REMOVED,REJECTED
+domain_lexicon single-tag CandidateIndex,candidates/index.py,ACTIVE_LOSSY_FOR_MULTITAG,MODIFY_NEEDED_FOR_SSOT_PROPAGATION
+KenLM hard_gate,kenlm-span-gate.ts,ACTIVE_SEPARATE_SYSTEM,NOT_MODEL2

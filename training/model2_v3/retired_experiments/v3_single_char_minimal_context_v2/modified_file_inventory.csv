@@ -1,0 +1,6 @@
+path,action
+training/model2_v3/policy/minimal_context_encoder_v1.py,add
+training/model2_v3/policy/ambiguity_head_v2.py,add
+training/model2_v3/policy/model.py,optional ambiguity_version=v2
+training/model2_v3/tests/test_ambiguity_head_v2_isolation.py,add
+training/model2_v3/scripts/run_v3_single_char_minimal_context_v2_train.py,add

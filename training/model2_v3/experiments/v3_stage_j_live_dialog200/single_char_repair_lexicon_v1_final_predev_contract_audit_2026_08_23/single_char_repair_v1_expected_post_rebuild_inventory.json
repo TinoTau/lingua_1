@@ -1,0 +1,34 @@
+{
+  "enabled_length1_rows": 1125,
+  "old_length1_rows": 2510,
+  "net_delta": -1385,
+  "set_equality_required": true,
+  "length_ge2_change": "NONE_EXPECTED",
+  "domain_data_change": "NONE_EXPECTED",
+  "prior_score_all": 0.9,
+  "source_label": "single-char-repair-v1-strict",
+  "pollution_absent": [
+    "毫",
+    "涡",
+    "皿"
+  ],
+  "function_present": [
+    "的",
+    "吗",
+    "我"
+  ],
+  "active_bundle_before": {
+    "bundleVersion": 13,
+    "singleCharSource": {
+      "path": "docs/pinyin-v2/import/single_char_dictionary.tsv",
+      "sha256": "sha256:551b870598de9a4efe4f7e72fcea4dc9a8355941cabbb4a6eeaf57c41b9bf348",
+      "recordCount": 2510,
+      "skipped": {
+        "empty": 0,
+        "non_cjk": 0,
+        "duplicate": 0,
+        "existing_term": 0
+      }
+    }
+  }
+}

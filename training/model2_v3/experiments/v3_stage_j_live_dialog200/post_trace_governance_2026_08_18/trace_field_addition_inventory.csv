@@ -1,0 +1,11 @@
+field,location,source,kind
+rawStart,compactCandidate,WindowCandidate.rawStart,pass-through
+rawEnd,compactCandidate,WindowCandidate.rawEnd,pass-through
+syllableStart,compactCandidate,WindowCandidate.syllableStart,pass-through
+syllableEnd,compactCandidate,WindowCandidate.syllableEnd,pass-through
+hitKind,compactCandidate,WindowCandidate.hitKind,pass-through
+repairTarget,compactCandidate,WindowCandidate.repairTarget,pass-through
+originSpanId,WindowCandidate + compactCandidate,policyInput.spanId,observation-only-new
+retrievalId,WindowCandidate + compactCandidate + D hits,model2InferenceId :d/:p,observation-only-new
+candidateId,D retrieval hits,materialized WindowCandidate.candidateId or null if rejected,observation-only
+binding_status,D retrieval hits,domainHitBindingStatus,observation-only-new

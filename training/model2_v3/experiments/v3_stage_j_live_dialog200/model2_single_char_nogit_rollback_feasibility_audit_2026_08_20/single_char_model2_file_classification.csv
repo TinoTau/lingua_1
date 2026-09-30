@@ -1,0 +1,31 @@
+path,classification,restore_or_keep_reason
+electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.ts,DELETE,entirely new contract
+electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.test.ts,TEST_RETIRE,feature-only tests
+electron_node/electron-node/main/src/lexicon-v2/single-char-candidate-set-v1.ts,DELETE,Model2 set builder
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,RESTORE,remove ambiguousSet/singleCharAmbiguousSet/imports only
+electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts,RESTORE,remove SELECT materializer + type import
+electron_node/electron-node/main/src/model2-runtime/inference-host.ts,RESTORE,remove disambiguate()
+electron_node/services/model2_runtime/model2_inference_host.py,RESTORE,remove disambiguate cmd/method/stats keys/load metadata
+training/model2_v3/policy/model.py,RESTORE,remove optional head kwargs/block
+training/model2_v3/policy/ambiguity_head_v1.py,DELETE,
+training/model2_v3/policy/ambiguity_head_v2.py,DELETE,
+training/model2_v3/policy/minimal_context_encoder_v1.py,DELETE,
+training/model2_v3/tests/test_ambiguity_head_skeleton.py,TEST_RETIRE,
+training/model2_v3/tests/test_ambiguity_head_v2_isolation.py,TEST_RETIRE,
+training/model2_v3/scripts/run_v3_single_char_ambiguity_head_train_v1.py,DELETE,
+training/model2_v3/scripts/run_v3_single_char_minimal_context_v2_train.py,DELETE,
+training/model2_v3/experiments/v3_single_char_ambiguity_head_v1/,ARTIFACT_RETIRE,EXPERIMENT_FAILED
+training/model2_v3/experiments/v3_single_char_minimal_context_v2/,ARTIFACT_RETIRE,EXPERIMENT_FAILED
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_single_char_candidate_set_interface_v1_2026_08_19/,ARTIFACT_RETIRE,
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_single_char_context_disambiguation_predev_audit_2026_08_19/,ARTIFACT_RETIRE,
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_invocation_granularity_single_char_batching_audit_2026_08_19/,ARTIFACT_RETIRE,
+docs/user_correction/MODEL2_SINGLE_CHAR_CONTEXT_DISAMBIGUATION_ACP.md,DOC_RETIRE,
+docs/user_correction/Lingua_Model2_SingleChar_*.md,DOC_RETIRE,all Model2 single-char reports
+docs/user_correction/single_char_minimal_context_design_v1.md,DOC_RETIRE,
+docs/user_correction/single_char_context_feature_contract_v1.md,DOC_RETIRE,
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.ts,KEEP,pre-Model2-decision collector
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.test.ts,KEEP,
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts,KEEP,length1Collector observability
+training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt,KEEP,
+electron_node/electron-node/main/src/model2-runtime/expand-active-candidates.ts,KEEP,
+training/model2/tests/test_phase5c_ambiguity.py,KEEP,unrelated historical Model2

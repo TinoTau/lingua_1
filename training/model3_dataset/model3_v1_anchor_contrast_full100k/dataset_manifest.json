@@ -1,0 +1,44 @@
+{
+  "datasetVersion": "model3_v1_anchor_contrast_full100k_20260824",
+  "schemaVersion": "MODEL3_TRAINING_SAMPLE_V1",
+  "generatorVersion": "model3-v1-anchor-contrast-full100k-1.0.0",
+  "seed": 2026082420,
+  "phase": "MODEL3_V1_ANCHOR_CONTRAST_FULL_100K_DEVELOPMENT",
+  "sampleCount": 100000,
+  "excludedCount": 0,
+  "splitCounts": {
+    "train": 76008,
+    "dev": 9182,
+    "test": 14810
+  },
+  "labelDistribution": {
+    "KEEP": 2010973,
+    "MASKED": 81258,
+    "RETRY": 7400
+  },
+  "bucketDistribution": {
+    "NO_ANCHOR": 18742,
+    "NATURAL": 67817,
+    "CONTRAST": 11889,
+    "HARD_KEEP": 1552
+  },
+  "retryRatioEligible": 0.0036663193572248538,
+  "anchorConditionedUtterances": 81258,
+  "noAnchorUtterances": 18742,
+  "realDomainUtterances": 0,
+  "strongPairs": 5721,
+  "sameTargetDifferentLabelSurfaces": 120,
+  "uniqueTargetSurfaces": 1368,
+  "seedIngested": 16000,
+  "holdPronunciationFamilies": [
+    "eng_en",
+    "h_f"
+  ],
+  "createdAt": "2026-08-24T10:01:33.727241+00:00",
+  "notes": [
+    "intendedRole from seeds is construction hint only — not final label",
+    "RETRY requires referenceReachable=YES via Stage2 harness",
+    "SIMULATED_TRAINING anchors are training-only sidecar provenance"
+  ],
+  "topupAdded": 16495
+}

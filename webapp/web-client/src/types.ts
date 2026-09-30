@@ -98,12 +98,26 @@ export const DEFAULT_RECONNECT_CONFIG: ReconnectConfig = {
   heartbeatTimeoutMs: 60000, // 60秒
 };
 
-/** 从环境变量读取调度 URL（Vite 构建时注入 VITE_SCHEDULER_URL），无硬编码 */
+/**
+ * Default realtime URL — production Browser path is Gateway only:
+ * Browser → API Gateway /v1/session → Scheduler
+ * Override with VITE_GATEWAY_SESSION_URL. Direct Scheduler WS is not a product path.
+ */
 function getDefaultSchedulerUrl(): string {
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_SCHEDULER_URL) {
-    return (import.meta as any).env.VITE_SCHEDULER_URL as string;
+  const env = typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined;
+  const apiKey = env?.VITE_API_KEY as string | undefined;
+  let base: string;
+  if (env?.VITE_GATEWAY_SESSION_URL) {
+    base = env.VITE_GATEWAY_SESSION_URL as string;
+  } else {
+    base = 'ws://127.0.0.1:8081/v1/session';
   }
-  return 'ws://127.0.0.1:5010/ws/session';
+  // Browser WS cannot set Authorization header; append access_token for Gateway auth.
+  if (apiKey && base.includes('/v1/session') && !base.includes('access_token=')) {
+    const sep = base.includes('?') ? '&' : '?';
+    return `${base}${sep}access_token=${encodeURIComponent(apiKey)}`;
+  }
+  return base;
 }
 
 export const DEFAULT_CONFIG: Config = {

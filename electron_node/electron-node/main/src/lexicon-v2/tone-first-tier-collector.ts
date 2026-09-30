@@ -1,6 +1,10 @@
 /**
  * Tone-first tier recall (Batch 1.1C Mandatory Tone Recall — Fail Closed).
  * No Plain-only path; no underfill Plain fill.
+ *
+ * ACP MODEL3-RETRY-STAGE2-TONE-RELAXATION-V1:
+ * explicit `model3_retry_pinyin_domain_recovery` bypasses Tone hard gate only;
+ * first-pass `tone_exact` remains Fail Closed.
  */
 
 import type { HotwordEntry } from '../lexicon/hotword-types';
@@ -8,12 +12,21 @@ import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { mergeSpanCandidatesCombined, type TierHotwordRow } from './merge-span-candidates';
 import {
+  isModel3RetryPinyinDomainRecovery,
+  type RecallSemanticMode,
+  RECALL_MODE_TONE_EXACT,
+} from './recall-semantic-mode';
+import {
   resolveToneRecallReadiness,
   type ToneRecallReadiness,
 } from './tone-recall-readiness';
 
-/** Production assignment: only tone_exact. Legacy plain_* stages removed (1.1C). */
-export type ToneLookupStage = 'tone_exact';
+/**
+ * Lookup stage on hits.
+ * `tone_exact` — Mandatory Tone path.
+ * `pinyin_domain_recovery` — Model3 RETRY Stage2 Tone-relaxed path only.
+ */
+export type ToneLookupStage = 'tone_exact' | 'pinyin_domain_recovery';
 
 export type TierCandidateStage = {
   hotword: HotwordEntry;
@@ -116,6 +129,44 @@ function lookupToneTiers(
   return { baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
 }
 
+/** Same source eligibility as tone tiers; pinyin key only (Model3 RETRY Stage2 recovery). */
+function lookupPinyinTiers(
+  runtimeV2: LexiconRuntimeV2,
+  key: string,
+  termLength: number,
+  domainIds: readonly string[],
+  sqlLimit: number | undefined
+): Pick<
+  CollectTierCandidatesResult,
+  'baseHits' | 'domainHits' | 'idiomHits' | 'baseLookupMs' | 'domainLookupMs' | 'idiomLookupMs'
+> {
+  const cfg = getLexiconRuntimeV2Config();
+
+  const t0 = Date.now();
+  const baseHits = runtimeV2.lookupBaseByPinyinKey(key, termLength, sqlLimit);
+  const baseLookupMs = Date.now() - t0;
+
+  const domainHits: HotwordEntry[] = [];
+  let domainLookupMs = 0;
+  if (domainIds.length > 0) {
+    const td = Date.now();
+    domainHits.push(
+      ...runtimeV2.lookupDomainsByPinyinKeyMulti(domainIds, key, termLength, sqlLimit)
+    );
+    domainLookupMs = Date.now() - td;
+  }
+
+  let idiomHits: HotwordEntry[] = [];
+  let idiomLookupMs = 0;
+  if (termLength === 4 && cfg.maxIdiomCandidates > 0) {
+    const ti = Date.now();
+    idiomHits = runtimeV2.lookupIdiomByPinyinKey(key, termLength, sqlLimit);
+    idiomLookupMs = Date.now() - ti;
+  }
+
+  return { baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
+}
+
 function countToneSqlQueries(domainIds: readonly string[], termLength: number): number {
   const cfg = getLexiconRuntimeV2Config();
   let count = 1; // base
@@ -147,6 +198,11 @@ function emptySkipResult(
   };
 }
 
+/**
+ * Tier collection.
+ * Default / undefined recallMode: Mandatory Tone exact (Fail Closed).
+ * model3_retry_pinyin_domain_recovery: pinyin + retained domainIds; Tone gate off.
+ */
 export function collectTierCandidatesToneFirst(
   runtimeV2: LexiconRuntimeV2,
   key: string,
@@ -155,11 +211,47 @@ export function collectTierCandidatesToneFirst(
   perSpanLimit: number | undefined,
   variantSyllables: string[],
   acousticTonePattern?: number[],
-  toneCallerEnabled?: boolean
+  toneCallerEnabled?: boolean,
+  recallMode: RecallSemanticMode = RECALL_MODE_TONE_EXACT
 ): CollectTierCandidatesResult {
   const cfg = getLexiconRuntimeV2Config();
   const sqlLimit = perSpanLimit != null ? Math.max(perSpanLimit, 8) : undefined;
   const effectiveLimit = perSpanLimit != null && perSpanLimit > 0 ? perSpanLimit : undefined;
+
+  if (isModel3RetryPinyinDomainRecovery(recallMode)) {
+    if (!key.trim() || termLength < 2) {
+      return emptySkipResult({ state: 'no_pattern' });
+    }
+    const sqlCount = countToneSqlQueries(domainIds, termLength);
+    const tiers = lookupPinyinTiers(runtimeV2, key, termLength, domainIds, sqlLimit);
+    const merged = mergeTierCandidates(
+      tiers.baseHits,
+      tiers.domainHits,
+      tiers.idiomHits,
+      cfg,
+      effectiveLimit,
+      domainIds
+    );
+    const entryStages = new Map<string, ToneLookupStage>();
+    for (const hotword of merged) {
+      entryStages.set(hotword.id, 'pinyin_domain_recovery');
+    }
+    return {
+      entries: merged,
+      entryStages,
+      baseHits: tiers.baseHits,
+      domainHits: tiers.domainHits,
+      idiomHits: tiers.idiomHits,
+      baseLookupMs: tiers.baseLookupMs,
+      domainLookupMs: tiers.domainLookupMs,
+      idiomLookupMs: tiers.idiomLookupMs,
+      toneExactHitCount: 0,
+      plainFallbackHitCount: 0,
+      toneSqlCount: sqlCount,
+      queryTonePinyinKey: undefined,
+      toneRecallReadiness: { state: 'ready', tonePinyinKey: '' },
+    };
+  }
 
   const readiness = resolveToneRecallReadiness({
     syllables: variantSyllables,

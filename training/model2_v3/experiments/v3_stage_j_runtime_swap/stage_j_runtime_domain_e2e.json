@@ -1,0 +1,2418 @@
+{
+  "n": 20,
+  "target_hit": 4,
+  "rate": 0.2,
+  "traces": [
+    {
+      "row_id": "drest-00005",
+      "target_term_id": "domain:tourism_route:包车:bao|che",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.030456315080881962,
+        "tourism_route": 0.8846552065844596,
+        "tourism_transport": 0.054432163253776415,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.030456315080881962,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "导游证",
+        "路线",
+        "导览",
+        "出租车",
+        "古桥",
+        "总路线",
+        "导览图",
+        "铁路线",
+        "闭园",
+        "旺季票",
+        "古镇区",
+        "行程表",
+        "行程",
+        "新景点",
+        "出园口",
+        "预定",
+        "门票",
+        "预定",
+        "博物馆",
+        "租车"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": true,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00007",
+      "target_term_id": "domain:bakery:马芬:ma|fen",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.10572716361665332,
+        "milk_tea": 0.10572716361665332,
+        "bakery": 0.6828185091500399,
+        "food_order": 0.10572716361665332,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "千层酥",
+        "堂食",
+        "蝴蝶酥",
+        "可可包",
+        "打包",
+        "带走",
+        "法棍",
+        "司康",
+        "结账",
+        "可可卷",
+        "蛋挞",
+        "牛角包",
+        "曲奇饼",
+        "面包",
+        "菜单",
+        "蛋黄酥",
+        "结账",
+        "带走",
+        "堂食",
+        "打包"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00009",
+      "target_term_id": "domain:coffee:美式:mei|shi",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.02895188218021684,
+        "tourism_route": 0.02895188218021684,
+        "tourism_transport": 0.0,
+        "coffee": 0.46686675415431306,
+        "milk_tea": 0.14689920327608064,
+        "bakery": 0.07095612656546182,
+        "food_order": 0.24488155800531256,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.012492593638398285
+      },
+      "personal_terms": [
+        "打包",
+        "热美式",
+        "冰美式",
+        "浓缩液",
+        "大杯",
+        "加冰",
+        "结账",
+        "厌氧豆",
+        "热拿铁",
+        "研磨度",
+        "带走",
+        "预订",
+        "预定",
+        "少冰量",
+        "带走",
+        "打包",
+        "小杯",
+        "拿铁",
+        "鳗鱼饭",
+        "带走"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00012",
+      "target_term_id": "domain:tourism_hotel:退房:tui|fang",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.9321250674287551,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.06787493257124493,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "单人房",
+        "客房",
+        "迷你吧",
+        "早餐",
+        "入住单",
+        "加床",
+        "宾馆",
+        "礼宾台",
+        "退房单",
+        "保险箱",
+        "前台",
+        "续住费",
+        "房卡",
+        "钟点房",
+        "大酒店",
+        "吹风机",
+        "单间",
+        "客房服",
+        "早餐",
+        "早餐券"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00024",
+      "target_term_id": "domain:tourism_transport:专车:zhuan|che",
+      "selected_domain_action": "domain_soft:tourism_transport",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.14405646631486724,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.8086078763715715,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.047335657313561194
+      },
+      "personal_terms": [
+        "司机",
+        "检票亭",
+        "导航图",
+        "检票",
+        "候车厅",
+        "去机场",
+        "车牌",
+        "接机",
+        "导航台",
+        "班车",
+        "夜班车",
+        "匝道",
+        "机场",
+        "末班车",
+        "首班车",
+        "班次",
+        "公交站",
+        "网约车",
+        "班车",
+        "飞机场"
+      ],
+      "raw_domain_n": 21,
+      "domain_hits": [
+        {
+          "term_id": "base:_:机场:ji|chang",
+          "sqlite_term_id": null,
+          "surface": "机场",
+          "pinyin_key": "ji|chang",
+          "domain_ids": [
+            "tourism_transport",
+            "transport"
+          ],
+          "prior_score": 0.9,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_transport:高速:gao|su",
+          "sqlite_term_id": null,
+          "surface": "高速",
+          "pinyin_key": "gao|su",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.9,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:专车:zhuan|che",
+          "sqlite_term_id": null,
+          "surface": "专车",
+          "pinyin_key": "zhuan|che",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:到站:dao|zhan",
+          "sqlite_term_id": null,
+          "surface": "到站",
+          "pinyin_key": "dao|zhan",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:匝道:za|dao",
+          "sqlite_term_id": null,
+          "surface": "匝道",
+          "pinyin_key": "za|dao",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:发车:fa|che",
+          "sqlite_term_id": null,
+          "surface": "发车",
+          "pinyin_key": "fa|che",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:右转:you|zhuan",
+          "sqlite_term_id": null,
+          "surface": "右转",
+          "pinyin_key": "you|zhuan",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_transport:导航:dao|hang",
+          "sqlite_term_id": null,
+          "surface": "导航",
+          "pinyin_key": "dao|hang",
+          "domain_ids": [
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": true,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00032",
+      "target_term_id": "domain:meeting:会务:hui|wu",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 1.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "速记员",
+        "会务组",
+        "投影仪",
+        "论坛",
+        "会议",
+        "分会场",
+        "签到簿",
+        "签到台",
+        "座谈会",
+        "董事会",
+        "会议桌",
+        "同传机",
+        "峰会",
+        "主会场",
+        "会场",
+        "参展商",
+        "会议员",
+        "参展",
+        "签到",
+        "展位"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00039",
+      "target_term_id": "domain:medical:住院:zhu|yuan",
+      "selected_domain_action": "domain_soft:medical",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 1.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "护理单",
+        "药房",
+        "医疗费",
+        "医院",
+        "感冒",
+        "药片",
+        "发热量",
+        "外科学",
+        "放射源",
+        "口腔",
+        "双挂号",
+        "挂号",
+        "康复",
+        "儿科学",
+        "内镜",
+        "大处方",
+        "病历",
+        "输液泵",
+        "门诊",
+        "妇科病"
+      ],
+      "raw_domain_n": 52,
+      "domain_hits": [
+        {
+          "term_id": "domain:medical:住院:zhu|yuan",
+          "sqlite_term_id": null,
+          "surface": "住院",
+          "pinyin_key": "zhu|yuan",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:儿科:er|ke",
+          "sqlite_term_id": null,
+          "surface": "儿科",
+          "pinyin_key": "er|ke",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:内科:nei|ke",
+          "sqlite_term_id": null,
+          "surface": "内科",
+          "pinyin_key": "nei|ke",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:内镜:nei|jing",
+          "sqlite_term_id": null,
+          "surface": "内镜",
+          "pinyin_key": "nei|jing",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:出院:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出院",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:化验:hua|yan",
+          "sqlite_term_id": null,
+          "surface": "化验",
+          "pinyin_key": "hua|yan",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:医保:yi|bao",
+          "sqlite_term_id": null,
+          "surface": "医保",
+          "pinyin_key": "yi|bao",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:发热:fa|re",
+          "sqlite_term_id": null,
+          "surface": "发热",
+          "pinyin_key": "fa|re",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": true,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00056",
+      "target_term_id": "domain:food_order:买单:mai|dan",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.057260983288765444,
+        "tourism_route": 0.030765152504622906,
+        "tourism_transport": 0.0,
+        "coffee": 0.15992076313033754,
+        "milk_tea": 0.2114459239298554,
+        "bakery": 0.046245758031955964,
+        "food_order": 0.48067355349176116,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.013687865622701429
+      },
+      "personal_terms": [
+        "卤牛腱",
+        "超大杯",
+        "预订",
+        "加单",
+        "半糖",
+        "发票",
+        "加料",
+        "无糖",
+        "预定",
+        "去冰量",
+        "菜单",
+        "正常糖",
+        "半糖",
+        "加冰",
+        "小杯",
+        "堂食",
+        "过敏原",
+        "少糖",
+        "结账",
+        "堂食"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00059",
+      "target_term_id": "domain:tourism_route:包车:bao|che",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.030456315080881962,
+        "tourism_route": 0.8846552065844596,
+        "tourism_transport": 0.054432163253776415,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.030456315080881962,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "导游证",
+        "路线",
+        "导览",
+        "出租车",
+        "古桥",
+        "总路线",
+        "导览图",
+        "铁路线",
+        "闭园",
+        "旺季票",
+        "古镇区",
+        "行程表",
+        "行程",
+        "新景点",
+        "出园口",
+        "预定",
+        "门票",
+        "预定",
+        "博物馆",
+        "租车"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": true,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00071",
+      "target_term_id": "domain:coffee:冰滴:bing|di",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.6246644106781157,
+        "milk_tea": 0.1699228082244837,
+        "bakery": 0.035489972872916865,
+        "food_order": 0.1699228082244837,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "正常糖",
+        "大杯",
+        "燕麦奶",
+        "中杯",
+        "咖啡豆",
+        "拼配豆",
+        "大杯",
+        "少糖",
+        "热咖啡",
+        "磨豆机",
+        "堂食",
+        "冷萃液",
+        "堂食",
+        "小杯",
+        "咖啡馆",
+        "堂食",
+        "咖啡师",
+        "咖啡店",
+        "无糖",
+        "小杯"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00097",
+      "target_term_id": "domain:tourism_transport:到站:dao|zhan",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.11526490172262747,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.07817671627998472,
+        "tourism_transport": 0.7542453812036664,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.052313000793721594
+      },
+      "personal_terms": [
+        "发车",
+        "路线",
+        "检票口",
+        "飞机场",
+        "网约车",
+        "乘车码",
+        "路线",
+        "出租车",
+        "机场",
+        "匝道",
+        "导航台",
+        "班车",
+        "出站口",
+        "顺风车",
+        "拥堵",
+        "夜班车",
+        "接送",
+        "公交车",
+        "送机",
+        "夜班车"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00105",
+      "target_term_id": "domain:medical:出血:chu|xue",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 1.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "双挂号",
+        "处方笺",
+        "体检科",
+        "处方药",
+        "护理单",
+        "麻醉机",
+        "挂号",
+        "医生",
+        "症状",
+        "药片",
+        "血压",
+        "放射",
+        "超声波",
+        "麻醉",
+        "病历本",
+        "诊室",
+        "康复床",
+        "诊疗",
+        "医保",
+        "骨科"
+      ],
+      "raw_domain_n": 27,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "base:_:出租车:chu|zu|che",
+          "sqlite_term_id": null,
+          "surface": "出租车",
+          "pinyin_key": "chu|zu|che",
+          "domain_ids": [
+            "tourism_route",
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园口:chu|yuan|kou",
+          "sqlite_term_id": null,
+          "surface": "出园口",
+          "pinyin_key": "chu|yuan|kou",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00106",
+      "target_term_id": "domain:medical:出血:chu|xue",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 1.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "双挂号",
+        "处方笺",
+        "体检科",
+        "处方药",
+        "护理单",
+        "麻醉机",
+        "挂号",
+        "医生",
+        "症状",
+        "药片",
+        "血压",
+        "放射",
+        "超声波",
+        "麻醉",
+        "病历本",
+        "诊室",
+        "康复床",
+        "诊疗",
+        "医保",
+        "骨科"
+      ],
+      "raw_domain_n": 27,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "base:_:出租车:chu|zu|che",
+          "sqlite_term_id": null,
+          "surface": "出租车",
+          "pinyin_key": "chu|zu|che",
+          "domain_ids": [
+            "tourism_route",
+            "tourism_transport"
+          ],
+          "prior_score": 0.86,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园口:chu|yuan|kou",
+          "sqlite_term_id": null,
+          "surface": "出园口",
+          "pinyin_key": "chu|yuan|kou",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00143",
+      "target_term_id": "domain:tourism_hotel:大床房:da|chuang|fang",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.8602428126102143,
+        "tourism_route": 0.038009687475112915,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.08975718738978576,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.011990312524887083
+      },
+      "personal_terms": [
+        "早餐",
+        "客房部",
+        "大酒店",
+        "吹风机",
+        "酒店",
+        "钟点房",
+        "预约",
+        "加床",
+        "单人房",
+        "早餐券",
+        "发票",
+        "入住率",
+        "叫醒",
+        "预订",
+        "无烟房",
+        "家庭房",
+        "迷你吧",
+        "保险箱",
+        "大堂",
+        "礼宾部"
+      ],
+      "raw_domain_n": 3,
+      "domain_hits": [
+        {
+          "term_id": "domain:tourism_route:淡季:dan|ji",
+          "sqlite_term_id": null,
+          "surface": "淡季",
+          "pinyin_key": "dan|ji",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:淡季票:dan|ji|piao",
+          "sqlite_term_id": null,
+          "surface": "淡季票",
+          "pinyin_key": "dan|ji|piao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:淡旺季:dan|wang|ji",
+          "sqlite_term_id": null,
+          "surface": "淡旺季",
+          "pinyin_key": "dan|wang|ji",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00155",
+      "target_term_id": "domain:meeting:峰会:feng|hui",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 1.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "路演",
+        "签到",
+        "董事会",
+        "同传间",
+        "投影仪",
+        "签到处",
+        "话筒",
+        "主会场",
+        "展位",
+        "会场",
+        "会务包",
+        "座谈会",
+        "论坛",
+        "议程",
+        "签到簿",
+        "参展国",
+        "投影机",
+        "会议",
+        "闭幕式",
+        "会务组"
+      ],
+      "raw_domain_n": 25,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:徒步:tu|bu",
+          "sqlite_term_id": null,
+          "surface": "徒步",
+          "pinyin_key": "tu|bu",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00204",
+      "target_term_id": "domain:tourism_pickup:早班车:zao|ban|che",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.4917033791495971,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.45569083514608366,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.052605785704319265
+      },
+      "personal_terms": [
+        "接机牌",
+        "送站",
+        "上车点",
+        "到达口",
+        "接送单",
+        "航站楼",
+        "接机",
+        "夜班车",
+        "接送点",
+        "接机",
+        "飞机场",
+        "机场",
+        "班车",
+        "导航图",
+        "接送",
+        "司机",
+        "末班车",
+        "养路费",
+        "班车",
+        "导航台"
+      ],
+      "raw_domain_n": 7,
+      "domain_hits": [
+        {
+          "term_id": "domain:tourism_route:索道车:suo|dao|che",
+          "sqlite_term_id": null,
+          "surface": "索道车",
+          "pinyin_key": "suo|dao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:缆车:lan|che",
+          "sqlite_term_id": null,
+          "surface": "缆车",
+          "pinyin_key": "lan|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:面包车:mian|bao|che",
+          "sqlite_term_id": null,
+          "surface": "面包车",
+          "pinyin_key": "mian|bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:黄包车:huang|bao|che",
+          "sqlite_term_id": null,
+          "surface": "黄包车",
+          "pinyin_key": "huang|bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:租车:zu|che",
+          "sqlite_term_id": null,
+          "surface": "租车",
+          "pinyin_key": "zu|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.85,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00205",
+      "target_term_id": "domain:bakery:白吐司:bai|tu|si",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.08320152910307002,
+        "milk_tea": 0.08320152910307002,
+        "bakery": 0.7226782445590517,
+        "food_order": 0.11091869723480811,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "打包",
+        "堂食",
+        "蛋糕",
+        "餐包",
+        "碱水包",
+        "曲奇",
+        "千层酥",
+        "曲奇饼",
+        "法棍",
+        "佛卡夏",
+        "堂食",
+        "欧包",
+        "结账",
+        "蛋黄酥",
+        "打包",
+        "马芬",
+        "面包",
+        "可颂",
+        "带走",
+        "打包"
+      ],
+      "raw_domain_n": 0,
+      "domain_hits": [],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00211",
+      "target_term_id": "domain:tech_ai:注意力:zhu|yi|li",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 1.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "接口",
+        "联调",
+        "分词",
+        "集成测试",
+        "量化",
+        "特征工程",
+        "蒸馏",
+        "标注员",
+        "单元测试",
+        "回滚",
+        "大模型",
+        "部署",
+        "服务器",
+        "学习率",
+        "集群",
+        "令牌",
+        "重排",
+        "回归测试",
+        "节点端",
+        "候选人"
+      ],
+      "raw_domain_n": 0,
+      "domain_hits": [],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00212",
+      "target_term_id": "domain:tech_ai:注意力:zhu|yi|li",
+      "selected_domain_action": "domain_soft:medical",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 1.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "接口",
+        "联调",
+        "分词",
+        "集成测试",
+        "量化",
+        "特征工程",
+        "蒸馏",
+        "标注员",
+        "单元测试",
+        "回滚",
+        "大模型",
+        "部署",
+        "服务器",
+        "学习率",
+        "集群",
+        "令牌",
+        "重排",
+        "回归测试",
+        "节点端",
+        "候选人"
+      ],
+      "raw_domain_n": 6,
+      "domain_hits": [
+        {
+          "term_id": "domain:medical:活疫苗:huo|yi|miao",
+          "sqlite_term_id": null,
+          "surface": "活疫苗",
+          "pinyin_key": "huo|yi|miao",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:疫苗:yi|miao",
+          "sqlite_term_id": null,
+          "surface": "疫苗",
+          "pinyin_key": "yi|miao",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:医师:yi|shi",
+          "sqlite_term_id": null,
+          "surface": "医师",
+          "pinyin_key": "yi|shi",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.85,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:医生:yi|sheng",
+          "sqlite_term_id": null,
+          "surface": "医生",
+          "pinyin_key": "yi|sheng",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.85,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:medical:医院:yi|yuan",
+          "sqlite_term_id": null,
+          "surface": "医院",
+          "pinyin_key": "yi|yuan",
+          "domain_ids": [
+            "medical"
+          ],
+          "prior_score": 0.85,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    },
+    {
+      "row_id": "drest-00253",
+      "target_term_id": "domain:coffee:大杯:da|bei",
+      "selected_domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.3754751513377419,
+        "milk_tea": 0.2902080793110416,
+        "bakery": 0.03938819715433569,
+        "food_order": 0.29492857219688084,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "意式机",
+        "中杯",
+        "堂食",
+        "磨豆机",
+        "半糖",
+        "菜单",
+        "少冰",
+        "小杯",
+        "催单",
+        "正常糖",
+        "中杯",
+        "去冰",
+        "带走",
+        "去冰",
+        "加冰",
+        "加料",
+        "勺吸管",
+        "少冰",
+        "少糖",
+        "浓缩液"
+      ],
+      "raw_domain_n": 27,
+      "domain_hits": [
+        {
+          "term_id": "base:_:预订:yu|ding",
+          "sqlite_term_id": null,
+          "surface": "预订",
+          "pinyin_key": "yu|ding",
+          "domain_ids": [
+            "food_order",
+            "tourism_hotel",
+            "tourism_route",
+            "transport"
+          ],
+          "prior_score": 0.88,
+          "term_type": "base"
+        },
+        {
+          "term_id": "domain:tourism_route:入园:ru|yuan",
+          "sqlite_term_id": null,
+          "surface": "入园",
+          "pinyin_key": "ru|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:出园:chu|yuan",
+          "sqlite_term_id": null,
+          "surface": "出园",
+          "pinyin_key": "chu|yuan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:包车:bao|che",
+          "sqlite_term_id": null,
+          "surface": "包车",
+          "pinyin_key": "bao|che",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古桥:gu|qiao",
+          "sqlite_term_id": null,
+          "surface": "古桥",
+          "pinyin_key": "gu|qiao",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:古镇:gu|zhen",
+          "sqlite_term_id": null,
+          "surface": "古镇",
+          "pinyin_key": "gu|zhen",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        },
+        {
+          "term_id": "domain:tourism_route:导览:dao|lan",
+          "sqlite_term_id": null,
+          "surface": "导览",
+          "pinyin_key": "dao|lan",
+          "domain_ids": [
+            "tourism_route"
+          ],
+          "prior_score": 0.86,
+          "term_type": "domain"
+        }
+      ],
+      "target_present_after": false,
+      "one_inference": true
+    }
+  ],
+  "PASS": true
+}

@@ -1,0 +1,9 @@
+cohortId,need,selectionHint,exampleCases,unit1Valid
+A_ADEQUATE_LOCALSPAN,legal RetryRegion; resegmentOk; current localSpan query already adequate,From frozen provenance: resegmentOk=true AND mechanism later is RECALL_TARGET_MISS or survived (query geometry already OK),Use recall-miss / kenlm controls with overlapping region+query from prior audits (e.g. successful query controls),YES
+B_CROSS_LOCALSPAN_WINDOW,legal RetryRegion; resegmentOk; lexical unit needs window spanning adjacent retained localSpans,Region sylLen>=2 with ≥2 newLocalSpanSurfaces and primary minimal target length spanning >1 localSpan,Filter dialog_200 resegmentOk regions with len(newLocalSpanSurfaces)>=2 (e.g. d001-style multipath coffee regions),YES — primary semantic target for Unit #1
+C_MULTIPATH,≥2 paths with Retry regions + resegmentOk,"43 cases with multipath+ok in frozen raw (d001,d002,d003,d004,...)","d001,d002,d003,d004",YES
+D_SINGLE_CHAR,region includes L=1 window / sylLen region with length-1 query,resegmentOk regions with syllable length 1 (21 observed) or windows L=1 inside longer region,Pick from sylLen=1 resegmentOk set,YES — proves length-1 Recall contract still enforced
+E_ANCHOR_ADJACENT,RetryRegion adjacent to Anchor; no Anchor crossing,Region rawStart/rawEnd touches Anchor span; sourceSpanIds never include Anchor,From decisions isAnchor + adjacent RETRY merge groups,YES
+F_KEEP_ADJACENT,RetryRegion adjacent to KEEP; no unrelated KEEP crossing,KEEP flush boundaries at region edges,Any deriveRetryRegions group next to KEEP,YES
+X_NO_REGION_EXCLUDE,KEEP_ON_LOCUS / no RetryRegion,Model3 quality cohort,EXCLUDE from Unit #1 acceptance,NO — wrong owner
+Y_FALLBACK_ONLY_EXCLUDE,resegmentOk=false only,146 all-fail style cases,EXCLUDE from Unit #1 primary acceptance (Delta 2),NO — Delta 2

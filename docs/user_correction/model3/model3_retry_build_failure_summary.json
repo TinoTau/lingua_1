@@ -1,0 +1,47 @@
+{
+  "phase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_FAILURE_CAUSAL_AUDIT",
+  "generatedAt": "2026-09-04T10:55:00Z",
+  "verdict": "MODEL3_RETRY_FALLBACK_BUILD_FAILURE_CAUSAL_AUDIT_PASS_REPAIR_READY",
+  "firstCausalFailure": {
+    "command": "npm run build:main",
+    "compiler": "tsc --project tsconfig.main.json",
+    "errorCode": "TS2339",
+    "file": "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts",
+    "line": 358,
+    "message": "Property 'code' does not exist on type 'ResegmentRetryRegionResult | { ok: boolean; localSpans: RetryRegionLocalSpan[]; }'"
+  },
+  "rootCauseClass": "A_DEFAULT_RESEGMENT_RETURN_TYPE_INCOMPLETE",
+  "typeVsRuntime": "TYPE_ONLY",
+  "codeOwner": "ResegmentRetryRegionResult.code",
+  "fallbackReasonSourceCorrect": true,
+  "traceOnlyBoundary": "TRACE_ONLY_INTERNAL_TYPE",
+  "fallbackReasonRequiredForRuntimeSemantics": false,
+  "fallbackReasonRequiredForAcceptanceDiagnostics": true,
+  "unionOrigin": "args.resegment ?? defaultResegment where defaultResegment return omits code",
+  "defaultResegmentContract": "PARTIAL",
+  "preferredRepair": "OPTION_A_ALIGN_DEFAULT_RESEGMENT_RETURN_TO_ResegmentRetryRegionResult",
+  "decisionRequiredBeforeRepair": "EMPTY",
+  "delta2Isolation": "YES_ALL",
+  "productionRepairScopePreferred": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts"
+  ],
+  "developmentGateGap": {
+    "class": "D_DEVELOPMENT_ONLY_TYPECHECK_GAP",
+    "developmentEvidence": "jest_retry_related 37/37 PASS",
+    "jestStillPassesWithBrokenMainTypes": true,
+    "authoritativeGate": "npm run build:main",
+    "jestConfigUsesDefaultTsconfigNotMain": true,
+    "rootTsconfigInclude": "renderer/src only"
+  },
+  "governanceCorrectionRecorded": "DEVELOPMENT_PASS requires npm run build:main PASS",
+  "nextPhase": "MODEL3_RETRY_FALLBACK_BUILD_COMPLETENESS_REPAIR",
+  "acceptanceRerunAfterRepair": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_ACCEPTANCE",
+  "dialog200ReplayThisAudit": "NOT_RUN",
+  "freeze": {
+    "delta1": "RESOLVED_ACCEPTED_CLOSED",
+    "delta2Design": "PASS_IMPLEMENTATION_READY",
+    "delta2Development": "IMPLEMENTED_BUT_NOT_PRODUCTION_BUILD_COMPLETE",
+    "delta2Acceptance": "FAIL_BUILD_BLOCKED",
+    "DELTA_RQ_FALLBACK_BOUNDARY_LOCK": "NOT_ACCEPTED"
+  }
+}

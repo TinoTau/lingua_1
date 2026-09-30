@@ -1,0 +1,285 @@
+{
+  "phase": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "gates": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "fail": 0,
+      "passRate": 1,
+      "previous": {
+        "applicable": 471,
+        "pass": 471,
+        "passRate": 1
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "fail": 53,
+      "passRate": 0.8312101910828026,
+      "previous": {
+        "applicable": 314,
+        "pass": 261,
+        "passRate": 0.8312101910828026
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "fail": 88,
+      "passRate": 0.7197452229299363,
+      "previous": {
+        "applicable": 314,
+        "pass": 226,
+        "passRate": 0.7197452229299363
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "fail": 153,
+      "passRate": 0.5127388535031847,
+      "previous": {
+        "applicable": 314,
+        "pass": 161,
+        "passRate": 0.5127388535031847
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 63,
+      "fail": 534,
+      "passRate": 0.10552763819095477,
+      "previous": {
+        "applicable": 597,
+        "pass": 70,
+        "passRate": 0.11725293132328309
+      },
+      "absoluteDeltaPass": -7,
+      "rateDelta": -0.011725293132328313
+    }
+  },
+  "previousBaseline": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "passRate": 1
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "passRate": 0.8312101910828026
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "passRate": 0.7197452229299363
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "passRate": 0.5127388535031847
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 70,
+      "passRate": 0.11725293132328309
+    }
+  },
+  "conditionTable": {
+    "NO_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 0,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 0,
+      "profilePronunciationAnchorCount": 0,
+      "model3Actionable": 7471,
+      "keep": 5738,
+      "retry": 1733,
+      "stage2Useful": 2702,
+      "retryRecovery": 22,
+      "existingDrop": 2689,
+      "profileDomainCandidates": 3206,
+      "profilePronunciationCandidates": 0,
+      "extraCandidates": 4220
+    },
+    "CORRECT_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 104,
+      "lexiconHit": 3,
+      "lexicalEdge": 3,
+      "anchorCount": 330,
+      "profilePronunciationAnchorCount": 330,
+      "model3Actionable": 14891,
+      "keep": 11537,
+      "retry": 3354,
+      "stage2Useful": 6538,
+      "retryRecovery": 22,
+      "existingDrop": 15413,
+      "profileDomainCandidates": 19938,
+      "profilePronunciationCandidates": 286,
+      "extraCandidates": 22092
+    },
+    "WRONG_PROFILE": {
+      "finalCorrect": 19,
+      "finalCorrectRate": 0.095,
+      "pActionApprox": 122,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 235,
+      "profilePronunciationAnchorCount": 235,
+      "model3Actionable": 16586,
+      "keep": 12908,
+      "retry": 3678,
+      "stage2Useful": 7462,
+      "retryRecovery": 19,
+      "existingDrop": 18539,
+      "profileDomainCandidates": 25393,
+      "profilePronunciationCandidates": 131,
+      "extraCandidates": 26167
+    }
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "finalRepairDelta": 0,
+      "targetActionDelta": 104,
+      "targetLexiconHitDelta": 3,
+      "targetEdgeDelta": 3,
+      "retryDelta": 1621,
+      "stage2UsefulDelta": 3836,
+      "candidateDropDelta": 12724,
+      "previousFinalDelta": 4
+    },
+    "wrongVsNoProfile": {
+      "finalRepairDelta": -3,
+      "extraExpansionCount": 26167,
+      "previousExtraExpansionCount": 21947,
+      "retryDelta": 1945,
+      "candidateDropDelta": 15850
+    },
+    "correctVsWrong": {
+      "finalRepairDelta": 3,
+      "retryDelta": -324
+    }
+  },
+  "domainSafety": {
+    "DOMAIN_ONLY_STAGE2_HITS": 2,
+    "BASE_STAGE2_HITS": 38,
+    "MULTI_DOMAIN_STAGE2_HITS": 0,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0
+  },
+  "e5Cohort": {
+    "E5_CASE_COUNT": 35,
+    "E5_MEASURED_RUNS": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 0,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 0,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 0,
+    "E5_REACHES_KENLM": 0,
+    "E5_FINAL_CORRECT": 2
+  },
+  "finalRepair": {
+    "NO_PROFILE": 22,
+    "CORRECT_PROFILE": 22,
+    "WRONG_PROFILE": 19
+  },
+  "finalCorrectDeltas": {
+    "NO_PROFILE": 0,
+    "CORRECT_PROFILE": -4,
+    "WRONG_PROFILE": -3
+  },
+  "reclassifiedOwners": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 177,
+    "MODEL3_RETRY_STAGE2_QUERY": 257,
+    "SUCCESS": 147,
+    "KENLM": 14,
+    "DOWNSTREAM": 2
+  }
+}

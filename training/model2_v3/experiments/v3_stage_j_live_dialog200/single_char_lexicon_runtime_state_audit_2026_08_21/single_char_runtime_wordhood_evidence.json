@@ -1,0 +1,23 @@
+{
+  "table_columns": [
+    "id",
+    "pinyin_key",
+    "tone_pinyin_key",
+    "word",
+    "normalized",
+    "prior_score",
+    "repair_target",
+    "enabled",
+    "aliases",
+    "source",
+    "canonical_word",
+    "is_alias"
+  ],
+  "wordhood_related_columns": [],
+  "NO_WORDHOOD_EVIDENCE_IN_RUNTIME": true,
+  "source_field_values": {
+    "common-standard-level-1+pinyin-data": 2500,
+    "common-standard-level-1+pinyin-data-extra-function": 10
+  },
+  "note": "base_lexicon has source string only; no POS/CLD/wordhood columns"
+}

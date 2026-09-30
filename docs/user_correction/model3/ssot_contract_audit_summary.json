@@ -1,0 +1,61 @@
+{
+  "phase": "SINGLE_CHAR_RECALL_AND_MULTIPATH_CONSUMER_SSOT_AUDIT",
+  "date": "2026-08-29",
+  "mainVerdict": "SSOT_CONTRACTS_MATCH",
+  "singleCharRecall": {
+    "verdict": "SINGLE_CHAR_CONTRACT_MATCH",
+    "frozenContractSummary": "CR 1.0.2/1.0.4 length=1 base-only; same-tone homophones fail-closed unless ASR surface exact match; cap=1; no homophone Top1",
+    "currentImplementationSummary": "collectBaseOnlySingleCharCandidate → resolveLength1BaseCandidate → pickUniqueSurfaceExact when eligible>=2",
+    "d019FirstExclusionPoint": "resolveLength1BaseCandidate:pickUniqueSurfaceExact — 城 excluded because h.word !== windowText(成)",
+    "representativePairsTested": 10,
+    "systematicSurfaceExactBehavior": true,
+    "d002NegativeControl": "bei4→bei1 returns 背 only (tone mismatch; not same-tone homophone case)"
+  },
+  "multipathConsumer": {
+    "verdict": "MULTIPATH_CONTRACT_MATCH",
+    "pathRankingSsot": "compareSegmentationPathBestFirst",
+    "normalFirstPassConsumption": "ALL_RETAINED_PATHS (orchestrator for-loop) + mergeCrossPathSentenceCandidates",
+    "retryConsumption": "ONE_BEST_PATH (preferredPathFineSpanView)",
+    "sameSemantics": false,
+    "intentionalPhaseDifference": true,
+    "frozenRetryContract": "model3_retry_contract_v1: one bounded local re-segmentation + re-recall",
+    "frozenLatticeContract": "Implementation Contract §9: Domain Vote / Assembly per Path on first pass"
+  },
+  "previousCoverageStatistics": {
+    "reportedRepairUnits": 26,
+    "publishedCategorySum": 29,
+    "cause": "Prior markdown table used WINDOW_BOUNDARY=13; authoritative units CSV primary counts sum to 26 with WINDOW_BOUNDARY=11",
+    "correctPrimaryCounts": {
+      "LEXICON_MISSING": 9,
+      "WINDOW_BOUNDARY": 11,
+      "EXPECTED_UNREPAIRABLE": 2,
+      "TONE_MISMATCH": 1,
+      "PHONETIC_RECALL_MISS": 1,
+      "OTHER": 2
+    },
+    "primaryCountSum": 26,
+    "invariant": "PASS"
+  },
+  "dialog200": {
+    "status": "DIALOG_200_ENV_BLOCKED",
+    "authoritativeProcedure": "ELECTRON_RUN_AS_NODE=1 electron.exe tests/run-dialog200-model3-acceptance.mjs (runner auto-starts node via start-node-detached.mjs; do NOT use --skip-start unless node already running)",
+    "commandAttempted": "ELECTRON_RUN_AS_NODE=1 electron.exe tests/run-dialog200-model3-acceptance.mjs --anchored-only --max-minutes 10",
+    "anchoredCases": 53,
+    "executedPipelineCases": 0,
+    "error": "Full run not completed in audit window; prior --skip-start attempt hung on health check; auto-start requires long-running ASR node bootstrap"
+  },
+  "architectureTrainingGate": "OPEN",
+  "developmentSequenceGate": "OPEN",
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_COVERAGE_FOR_RETRYABLE_LOCAL_REGIONS",
+  "moduleOwnership": {
+    "model3": "KEEP",
+    "retryRegion": "KEEP",
+    "fineSpan": "KEEP",
+    "lattice": "KEEP",
+    "singleCharRecall": "KEEP",
+    "lexicon": "COVERAGE_GAP",
+    "model2": "KEEP",
+    "domainVote": "KEEP",
+    "assembly": "KEEP"
+  }
+}

@@ -1,0 +1,662 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "mode": "correct",
+  "n": 16,
+  "TargetIntroductionRate": 0.0,
+  "ProfileOnlyTargetRecovery": 0.0,
+  "FalseExpansionRate": 0.0,
+  "NewCandidatePrecision_proxy": 0.0,
+  "TargetPerExpansion": 0.0,
+  "new_candidates_mean": 0,
+  "new_candidates_p95": 0.0,
+  "queries_mean": 0.4375,
+  "queries_p95": 1.0,
+  "latency_ms_p50": 0.12820000119972974,
+  "latency_ms_p95": 0.20399999630171806,
+  "failures": [
+    {
+      "utterance_id": "real-acc-7e051b23b1693d1ace84",
+      "observed_text": "電影院在方資料",
+      "observed_syllables": [
+        "dian",
+        "ying",
+        "yuan",
+        "zai",
+        "fang",
+        "zi",
+        "liao"
+      ],
+      "target": "base:_:资料:zi|liao",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-bc33c58e7591c9d620c7",
+      "observed_text": "半车下一站施拉铁",
+      "observed_syllables": [
+        "ban",
+        "che",
+        "xia",
+        "yi",
+        "zhan",
+        "shi",
+        "la",
+        "tie"
+      ],
+      "target": "domain:coffee:拿铁:na|tie",
+      "user_profile": {
+        "n_l": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "ban",
+          "che",
+          "xia",
+          "yi",
+          "zhan",
+          "shi",
+          "na",
+          "tie"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-677c85cfa6e34da469cc",
+      "observed_text": "把快递放到检查档字提点",
+      "observed_syllables": [
+        "ba",
+        "kuai",
+        "di",
+        "fang",
+        "dao",
+        "jian",
+        "cha",
+        "dang",
+        "zi",
+        "ti",
+        "dian"
+      ],
+      "target": "base:_:检查单:jian|cha|dan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e38c86972af75073956d",
+      "observed_text": "请把会议主题改成资料库",
+      "observed_syllables": [
+        "qing",
+        "ba",
+        "hui",
+        "yi",
+        "zhu",
+        "ti",
+        "gai",
+        "cheng",
+        "zi",
+        "liao",
+        "ku"
+      ],
+      "target": "base:_:资料库:zi|liao|ku",
+      "user_profile": {
+        "z_zh": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "ba",
+          "hui",
+          "yi",
+          "zu",
+          "ti",
+          "gai",
+          "cheng",
+          "zi",
+          "liao",
+          "ku"
+        ]
+      ],
+      "relations_used": [
+        "z_zh"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S6_ASR_ALIGNMENT_SHIFT"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-9f1518f792ee2c28c427",
+      "observed_text": "外卖被猪少方钱来",
+      "observed_syllables": [
+        "wai",
+        "mai",
+        "bei",
+        "zhu",
+        "shao",
+        "fang",
+        "qian",
+        "lai"
+      ],
+      "target": "base:_:前来:qian|lai",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-554fa422bd8598d6ddc5",
+      "observed_text": "路线途径锁道车",
+      "observed_syllables": [
+        "lu",
+        "xian",
+        "tu",
+        "jing",
+        "suo",
+        "dao",
+        "che"
+      ],
+      "target": "domain:tourism_route:索道车:suo|dao|che",
+      "user_profile": {
+        "s_sh": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-2b864af77eb99bbf31c3",
+      "observed_text": "倉储货加编号庞氏山周",
+      "observed_syllables": [
+        "cang",
+        "chu",
+        "huo",
+        "jia",
+        "bian",
+        "hao",
+        "pang",
+        "shi",
+        "shan",
+        "zhou"
+      ],
+      "target": "base:_:上周:shang|zhou",
+      "user_profile": {
+        "ang_an": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f4f93b830c8ef0bc5af0",
+      "observed_text": "今晚煮酥丝卷",
+      "observed_syllables": [
+        "jin",
+        "wan",
+        "zhu",
+        "su",
+        "si",
+        "juan"
+      ],
+      "target": "domain:food_order:寿司卷:shou|si|juan",
+      "user_profile": {
+        "sh_s": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "jin",
+          "wan",
+          "zhu",
+          "shu",
+          "shi",
+          "juan"
+        ]
+      ],
+      "relations_used": [
+        "sh_s"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4e700019bd96ea2f36a4",
+      "observed_text": "安檢時申報重來不",
+      "observed_syllables": [
+        "an",
+        "jian",
+        "shi",
+        "shen",
+        "bao",
+        "zhong",
+        "lai",
+        "bu"
+      ],
+      "target": "base:_:从来不:cong|lai|bu",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e5183b29875a19b0e5be",
+      "observed_text": "我们先讨论牛肉面再决定",
+      "observed_syllables": [
+        "wo",
+        "men",
+        "xian",
+        "tao",
+        "lun",
+        "niu",
+        "rou",
+        "mian",
+        "zai",
+        "jue",
+        "ding"
+      ],
+      "target": "base:_:牛肉面:niu|rou|mian",
+      "user_profile": {
+        "n_l": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "wo",
+          "men",
+          "xian",
+          "tao",
+          "nun",
+          "niu",
+          "rou",
+          "mian",
+          "zai",
+          "jue",
+          "ding"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S6_ASR_ALIGNMENT_SHIFT"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-0141c273f202b42b4514",
+      "observed_text": "房间要靠经锁废站",
+      "observed_syllables": [
+        "fang",
+        "jian",
+        "yao",
+        "kao",
+        "jing",
+        "suo",
+        "fei",
+        "zhan"
+      ],
+      "target": "base:_:收费站:shou|fei|zhan",
+      "user_profile": {
+        "sh_s": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "fang",
+          "jian",
+          "yao",
+          "kao",
+          "jing",
+          "shuo",
+          "fei",
+          "zhan"
+        ]
+      ],
+      "relations_used": [
+        "sh_s"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-b7e7c572fbce92528f1a",
+      "observed_text": "致使酷文征奖人生",
+      "observed_syllables": [
+        "zhi",
+        "shi",
+        "ku",
+        "wen",
+        "zheng",
+        "jiang",
+        "ren",
+        "sheng"
+      ],
+      "target": "base:_:人生:ren|sheng",
+      "user_profile": {
+        "en_eng": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-a807427b038ac8c14f5d",
+      "observed_text": "请用中文再说一遍人民币",
+      "observed_syllables": [
+        "qing",
+        "yong",
+        "zhong",
+        "wen",
+        "zai",
+        "shuo",
+        "yi",
+        "bian",
+        "ren",
+        "min",
+        "bi"
+      ],
+      "target": "base:_:人民币:ren|min|bi",
+      "user_profile": {
+        "in_ing": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qin",
+          "yong",
+          "zhong",
+          "wen",
+          "zai",
+          "shuo",
+          "yi",
+          "bian",
+          "ren",
+          "min",
+          "bi"
+        ]
+      ],
+      "relations_used": [
+        "in_ing"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S6_ASR_ALIGNMENT_SHIFT"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-6510453dbd15acca7c87",
+      "observed_text": "请把会议主题改成老人家",
+      "observed_syllables": [
+        "qing",
+        "ba",
+        "hui",
+        "yi",
+        "zhu",
+        "ti",
+        "gai",
+        "cheng",
+        "lao",
+        "ren",
+        "jia"
+      ],
+      "target": "base:_:老人家:lao|ren|jia",
+      "user_profile": {
+        "en_eng": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S6_ASR_ALIGNMENT_SHIFT"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-8d2590bc3918f65505ff",
+      "observed_text": "酒店早餐包含上来",
+      "observed_syllables": [
+        "jiu",
+        "dian",
+        "zao",
+        "can",
+        "bao",
+        "han",
+        "shang",
+        "lai"
+      ],
+      "target": "base:_:上来:shang|lai",
+      "user_profile": {
+        "ang_an": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S6_ASR_ALIGNMENT_SHIFT"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1a217f199a7365d52000",
+      "observed_text": "任立資原政策關於充足",
+      "observed_syllables": [
+        "ren",
+        "li",
+        "zi",
+        "yuan",
+        "zheng",
+        "ce",
+        "guan",
+        "wu",
+        "chong",
+        "zu"
+      ],
+      "target": "base:_:充足:chong|zu",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "ren",
+          "li",
+          "zi",
+          "yuan",
+          "zeng",
+          "ce",
+          "guan",
+          "wu",
+          "chong",
+          "zu"
+        ]
+      ],
+      "relations_used": [
+        "z_zh"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S6_ASR_ALIGNMENT_SHIFT",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    }
+  ],
+  "slice": "S6_ASR_ALIGNMENT_SHIFT",
+  "n_eval": 16,
+  "complementarity": {
+    "BASE_ONLY": 0,
+    "PROFILE_ONLY": 0,
+    "BOTH": 0,
+    "NEITHER": 16,
+    "PROFILE_ONLY_RECOVERY": 0.0
+  },
+  "metrics_REAL_ASR_OBSERVED": {
+    "markers": [
+      "PHASE7F_AUDIT",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 16,
+    "TargetIntroductionRate": 0.0,
+    "ProfileOnlyTargetRecovery": 0.0,
+    "FalseExpansionRate": 0.0,
+    "NewCandidatePrecision_proxy": 0.0,
+    "TargetPerExpansion": 0.0,
+    "new_candidates_mean": 0,
+    "new_candidates_p95": 0.0,
+    "queries_mean": 0.4375,
+    "queries_p95": 1.0,
+    "latency_ms_p50": 0.10990000737365335,
+    "latency_ms_p95": 0.23580000561196357
+  }
+}

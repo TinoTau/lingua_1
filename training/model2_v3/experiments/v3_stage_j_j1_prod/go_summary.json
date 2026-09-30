@@ -1,0 +1,54 @@
+{
+  "Stage_J_J1_Production_Scale": "PASS_WITH_LIMITATIONS",
+  "Architecture": "UNCHANGED",
+  "P1_Baseline_RR": 0.955,
+  "J1_P_RR": 1.0104321907600595,
+  "J1_P_N": 699,
+  "J1_P_Heldout_RR": 1.0094562647754137,
+  "Teacher_Top1": 0.9641319942611191,
+  "Teacher_Top2": 1.0,
+  "P_Regression": "PASS",
+  "Weakest_Relation": "n_l",
+  "D_Oracle_TIR": 1.0,
+  "D_J1_RecallRetained": 1.0,
+  "D_Correct": {
+    "n": 33,
+    "TIR": 1.0,
+    "hits": 33
+  },
+  "D_Empty": {
+    "n": 33,
+    "TIR": 0.45454545454545453,
+    "hits": 15
+  },
+  "D_Wrong": {
+    "n": 33,
+    "TIR": 0.5151515151515151,
+    "hits": 17
+  },
+  "D_Swapped": {
+    "n": 33,
+    "TIR": 0.6666666666666666,
+    "hits": 22
+  },
+  "D_Signal": "PASS",
+  "PD_Full": {
+    "n": 48,
+    "TIR": 1.0,
+    "CI95": [
+      0.9258973488472576,
+      0.9999999999999998
+    ],
+    "hits": 48
+  },
+  "Joint_Interference": "NO",
+  "ONE_Checkpoint": true,
+  "Model_Parameters": 47210,
+  "Param_Increase_vs_P1": 1677,
+  "Inference_P50": 51.76849997951649,
+  "Inference_P95": 70.07230000454001,
+  "Stage_J_Production_Candidate": "NO",
+  "DATA_COVERAGE_LIMITED": true,
+  "Benchmark_Statistical_Coverage": "LIMITED",
+  "Recommended_Next_Phase": "EXPAND_D_PD_BENCHMARK_OR_FIX_JOINT"
+}

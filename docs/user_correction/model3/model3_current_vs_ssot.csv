@@ -1,0 +1,22 @@
+area,frozenSsot,currentCode,status,actualIssue,nextAction
+FineSpan,Multipath lattice; windows 1..5; soft coarse; PathFineSpanView[],runLatticeFineSpanGeneration + buildLexicalWindowQueries; assertPathFineSpansNonOverlapping per path,MATCH_UPSTREAM,Sliding windows exist at lattice Stage-1; path FineSpans are non-overlapping segmentations (by design),KEEP; consumer Retry Stage-2 must re-use windows
+Model2,P/D expansion only; not Retry geometry / Model3 / Domain / length-1 lexical owner,expandActiveCandidatesWithModel2 before path Domain Vote,MATCH,NONE,NONE
+Domain Vote,ONE vote per retained path (Lattice); Retry NO second vote,voteUtteranceDomainFromPool once in prepareModel3PathUpstream; completeFromVote SAME vote,MATCH,NONE — utterance-singleton assumption was DOCUMENT false conflict,NONE
+Anchor,Upstream DOMAIN|MODEL2|DOMAIN_AND_MODEL2; Model3 never creates/mutates,materializeModel3Anchors; maskAnchorDecisions RETRY→KEEP,MATCH,NONE,NONE
+Model3 packer,Text + Anchor mask features; no Lexicon/Recall ownership,packModel3SpanInferFields per PathFineSpan,MATCH,NONE for architecture; quality separate,NONE production; optional MODEL3_TRIGGER_QUALITY_AUDIT later
+Model3 inference,KEEP|RETRY only; one STAGE/utterance may evaluate multiple paths,host.inferPath once per pathFineSpanView inside orchestrator path loop; no post-Retry infer,MATCH_STAGE,Older '≤1 inference/utterance' wording STALE vs multipath STAGE,DOCUMENT cleanup only
+decision mapping,Map KEEP/RETRY back to correct FineSpan/path; Anchor never RETRY,decisions by spanId; maskAnchorDecisions,MATCH,NONE architecture,NONE
+Retry region,Union legal adjacent RETRY spans; KEEP/Anchor break; bounded,deriveRetryRegions / buildRegionFromSpans,MATCH,KEEP barrier correctly excludes KEEP_ON_LOCUS — not a bug,NONE for barrier; do not widen into KEEP by default
+Retry barrier,No Anchor cross; no unrelated KEEP by default,isRetryEligible + KEEP flush + maskAnchorDecisions,MATCH,Ownership split across path-step + region (mild DUPLICATED),Optional consolidation later; not blocking
+Retry resegmentation,Bounded local re-segmentation reusing FineSpan/lattice,resegmentRetryRegionWithLattice → runLatticeFineSpanGeneration on slice,MATCH_WHEN_OK,"On failure, fallback drifts (see Fallback row)",Unit #2 fallback
+regional paths,All retained regional pathFineSpanViews; no preferred-path,collectLocalSpansFromRetainedPathViews + dedupRetryRegionLocalSpans,MATCH,preferred-path ALREADY_FIXED,NONE
+Retry query enumeration,Reuse FineSpan/window sliding enumeration inside region for re-recall,routeModel3Retry: one query per localSpan only; NO buildLexicalWindowQueries at Stage-2,RUNTIME_ARCHITECTURE_DRIFT,DELTA_RQ_STAGE2_NO_SLIDING — semantic windows lost at Stage-2 consumer,Unit #1 SSOT restoration design
+Recall query key,windowText + syllables.join('|') + tone from existing evidence,Same formula in router; duplicated vs window-construction-core,MATCH_SEMANTIC_DUPLICATED_CODE,DUPLICATED_PRODUCTION_LOGIC (formula copy),Reuse helper when Stage-2 restored
+Recall,recallSpanTopKV2 owns hits; no Retry alternate engine; no threshold hide,recallSpanTopKV2 via path-step closure,MATCH,NONE for geometry ownership,NONE
+candidate merge,Per-span merge + existing caps; pool refreshable; vote frozen,mergeSpanCandidates + buildFineSpanCandidatePool if mutated,MATCH,NONE,NONE
+Assembly,Domain-aware assembly under SAME vote,completeDomainAwareAssemblyFromVote,MATCH,Not active causal owner for Query Geometry cohort,NONE
+cross-path merge,<=16 single pool,mergeCrossPathSentenceCandidates,MATCH,NONE,NONE
+KenLM,One final pass; not Model3 trigger,runFwSentenceRerankFromPrefilled after merge,MATCH,LIMITED evidence only; not active primary owner,NONE
+JobResult,Transport only; no Model3 audit fields,diagnostics/provenance side-channel; comments forbid JobResult fields,MATCH,NONE,NONE
+trace infrastructure,Side-channel RetryEventTrace preferred,retry_regions + candidate provenance env gate; missing barrier edges/queryId/dropReason,PARTIAL,Trace completeness gap (AUDIT tooling) — not production delta,With unit #1 design: add side-channel fields only
+Retry fallback,Must reinterpret local boundary; not lock to original FineSpan,fallbackRegionLocalSpans copies first-pass sourceSpanIds bounds,RUNTIME_ARCHITECTURE_DRIFT,DELTA_RQ_FALLBACK_BOUNDARY_LOCK,Unit #2 independent design

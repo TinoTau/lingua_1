@@ -1,0 +1,396 @@
+{
+  "phase": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "date": "2026-09-14",
+  "dataset": "LINGUA_DIALOG2000_V2_PILOT200",
+  "baselineComparison": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "remeasureValidity": "PASS",
+  "validityReason": "COMPLETE_AUTHORITATIVE_600_RUNS",
+  "uniqueCases": 200,
+  "totalRuns": 600,
+  "conditionRuns": {
+    "NO_PROFILE": 200,
+    "CORRECT_PROFILE": 200,
+    "WRONG_PROFILE": 200
+  },
+  "finalRepair": {
+    "NO_PROFILE": 22,
+    "CORRECT_PROFILE": 22,
+    "WRONG_PROFILE": 19,
+    "correctVsNoDelta": 0,
+    "wrongVsNoDelta": -3,
+    "correctVsWrongDelta": 3,
+    "previous": {
+      "NO_PROFILE": 22,
+      "CORRECT_PROFILE": 26,
+      "WRONG_PROFILE": 22
+    }
+  },
+  "gateMetrics": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "fail": 0,
+      "passRate": 1,
+      "previous": {
+        "applicable": 471,
+        "pass": 471,
+        "passRate": 1
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "fail": 53,
+      "passRate": 0.8312101910828026,
+      "previous": {
+        "applicable": 314,
+        "pass": 261,
+        "passRate": 0.8312101910828026
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "fail": 88,
+      "passRate": 0.7197452229299363,
+      "previous": {
+        "applicable": 314,
+        "pass": 226,
+        "passRate": 0.7197452229299363
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "fail": 153,
+      "passRate": 0.5127388535031847,
+      "previous": {
+        "applicable": 314,
+        "pass": 161,
+        "passRate": 0.5127388535031847
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 63,
+      "fail": 534,
+      "passRate": 0.10552763819095477,
+      "previous": {
+        "applicable": 597,
+        "pass": 70,
+        "passRate": 0.11725293132328309
+      },
+      "absoluteDeltaPass": -7,
+      "rateDelta": -0.011725293132328313
+    }
+  },
+  "firstFailureOwnerCounts": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 177,
+    "MODEL3_RETRY_STAGE2_QUERY": 257,
+    "SUCCESS": 147,
+    "KENLM": 14,
+    "DOWNSTREAM": 2
+  },
+  "conditionTable": {
+    "NO_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 0,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 0,
+      "profilePronunciationAnchorCount": 0,
+      "model3Actionable": 7471,
+      "keep": 5738,
+      "retry": 1733,
+      "stage2Useful": 2702,
+      "retryRecovery": 22,
+      "existingDrop": 2689,
+      "profileDomainCandidates": 3206,
+      "profilePronunciationCandidates": 0,
+      "extraCandidates": 4220
+    },
+    "CORRECT_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 104,
+      "lexiconHit": 3,
+      "lexicalEdge": 3,
+      "anchorCount": 330,
+      "profilePronunciationAnchorCount": 330,
+      "model3Actionable": 14891,
+      "keep": 11537,
+      "retry": 3354,
+      "stage2Useful": 6538,
+      "retryRecovery": 22,
+      "existingDrop": 15413,
+      "profileDomainCandidates": 19938,
+      "profilePronunciationCandidates": 286,
+      "extraCandidates": 22092
+    },
+    "WRONG_PROFILE": {
+      "finalCorrect": 19,
+      "finalCorrectRate": 0.095,
+      "pActionApprox": 122,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 235,
+      "profilePronunciationAnchorCount": 235,
+      "model3Actionable": 16586,
+      "keep": 12908,
+      "retry": 3678,
+      "stage2Useful": 7462,
+      "retryRecovery": 19,
+      "existingDrop": 18539,
+      "profileDomainCandidates": 25393,
+      "profilePronunciationCandidates": 131,
+      "extraCandidates": 26167
+    }
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "finalRepairDelta": 0,
+      "targetActionDelta": 104,
+      "targetLexiconHitDelta": 3,
+      "targetEdgeDelta": 3,
+      "retryDelta": 1621,
+      "stage2UsefulDelta": 3836,
+      "candidateDropDelta": 12724,
+      "previousFinalDelta": 4
+    },
+    "wrongVsNoProfile": {
+      "finalRepairDelta": -3,
+      "extraExpansionCount": 26167,
+      "previousExtraExpansionCount": 21947,
+      "retryDelta": 1945,
+      "candidateDropDelta": 15850
+    },
+    "correctVsWrong": {
+      "finalRepairDelta": 3,
+      "retryDelta": -324
+    }
+  },
+  "anchorAuthority": {
+    "profilePronunciationAnchorCount": 565,
+    "domainAnchorCount": 0,
+    "profileDomainAnchorCount": 0,
+    "profileRetrievalAnchorCount": 0,
+    "totalAnchorCount": 565
+  },
+  "model3Exposure": {
+    "decisionUnits": 39513,
+    "anchorMasked": 565,
+    "actionable": 38948,
+    "keep": 30183,
+    "retry": 8765,
+    "retryRate": 0.2250436479408442,
+    "retryRegions": 6067,
+    "stage2Invocations": 33085,
+    "stage2Nonempty": 16702,
+    "stage2Useful": 16702,
+    "stage2TotalCandidates": 18669,
+    "stage2TargetHits": 39,
+    "stage2TargetHitInvocationCount": 157,
+    "retryDownstreamRecovery": 63,
+    "outOfBucketDomainRecallCount": 0,
+    "emptyRetainedDomainAllDomainFallbackCount": 0,
+    "crossPathDomainLeakCount": 0,
+    "retryStage2CandidateDropCount": 0,
+    "retryTargetCandidateDropCount": 9,
+    "perSpanCapSaturationRate": 0.7581289218482601,
+    "stage2CandidatesPerInvocation": {
+      "median": 1,
+      "p95": 1,
+      "max": 4
+    },
+    "previousStage2Useful": "NOT_COMPARABLE_OBSERVABILITY_DEFECT"
+  },
+  "retryFunnel": {
+    "R1_retry_entered": 593,
+    "R2_stage2_mode": 593,
+    "R3_stage2_returned": 589,
+    "R3_target": 39,
+    "R5_target_survived_budget": 27,
+    "R8_final_correct_with_retry": 63
+  },
+  "domainSafety": {
+    "DOMAIN_ONLY_STAGE2_HITS": 2,
+    "BASE_STAGE2_HITS": 38,
+    "MULTI_DOMAIN_STAGE2_HITS": 0,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0
+  },
+  "freezeId": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "RETRY_BUDGET_POLICY_CHANGE": "NO",
+  "PRODUCT_CODE_CHANGE_DURING_PILOT": "NO",
+  "retryBudget": {
+    "existingPresent": 48980,
+    "existingDroppedPostCap": 36641,
+    "existingSurvived": 12339,
+    "survivalRate": 0.2519191506737444,
+    "profileDomainPresent": 47101,
+    "profileDomainDropped": 36641,
+    "profilePronunciationPresent": 0,
+    "collisionExistingWins": 1412,
+    "profileDomainEnteringRetry": 47101,
+    "profileDomainPostRetrySurvive": 10460,
+    "profileDomainPostRetryDrop": 36641
+  },
+  "profileCandidates": {
+    "pronunciation": 417,
+    "domain": 48537,
+    "retrieval": 0
+  },
+  "changedCaseCount": 7,
+  "improvedCaseCount": 0,
+  "regressedCaseCount": 7,
+  "performance": {
+    "pipeline_p50": 5433,
+    "pipeline_p95": 13968,
+    "sampleCount": 597,
+    "status": "WARNING"
+  },
+  "deferredFineSpanBoundaryCaseCount": null,
+  "productCodeChangeThisRound": "NO",
+  "dominantFailureOwner": "MODEL3_RETRY_STAGE2_QUERY",
+  "model2Hypothesis": "NOT_SUPPORTED",
+  "oneNextOwner": "MODEL3_RETRY_STAGE2_QUERY",
+  "oneNextDelta": "Audit production Stage2 query windows/pinyin provenance vs first-pass Model2-conditioned Tone-mismatch keys (E5: Tone-relax active but ASR-space Stage2 never queries target pinyin).",
+  "e5Cohort": {
+    "E5_CASE_COUNT": 35,
+    "E5_MEASURED_RUNS": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 0,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 0,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 0,
+    "E5_REACHES_KENLM": 0,
+    "E5_FINAL_CORRECT": 2
+  },
+  "pilotFinalVerdicts": {
+    "PHASE_B_STATUS": "PASS",
+    "PILOT_DATASET_IDENTITY": "PASS",
+    "PILOT_FROZEN_RAW_IDENTITY": "PASS",
+    "EXPECTED_RUN_COUNT": 600,
+    "ACTUAL_RUN_COUNT": 600,
+    "RUN_COMPLETENESS": "PASS",
+    "PRODUCT_CODE_CHANGE_DURING_PILOT": "NO",
+    "NO_PROFILE_FINAL_CORRECT": "22 / 200",
+    "CORRECT_PROFILE_FINAL_CORRECT": "22 / 200",
+    "WRONG_PROFILE_FINAL_CORRECT": "19 / 200",
+    "CORRECT_MINUS_NO": 0,
+    "WRONG_MINUS_NO": -3,
+    "FINAL_CORRECT_DELTA_NO_PROFILE": 0,
+    "FINAL_CORRECT_DELTA_CORRECT_PROFILE": -4,
+    "FINAL_CORRECT_DELTA_WRONG_PROFILE": -3,
+    "CHANGED_CASE_COUNT": 7,
+    "IMPROVED_CASE_COUNT": 0,
+    "REGRESSED_CASE_COUNT": 7,
+    "UNCHANGED_CASE_COUNT": 593,
+    "E5_CASE_COUNT": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 0,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 0,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 0,
+    "E5_REACHES_KENLM": 0,
+    "E5_FINAL_CORRECT": 2,
+    "STAGE2_INVOCATION_COUNT": 33085,
+    "STAGE2_NONEMPTY_COUNT": 16702,
+    "STAGE2_NONEMPTY_RATE": 0.5048209158228805,
+    "STAGE2_TOTAL_CANDIDATE_COUNT": 18669,
+    "STAGE2_CANDIDATES_PER_INVOCATION_MEDIAN": 1,
+    "STAGE2_CANDIDATES_PER_INVOCATION_P95": 1,
+    "STAGE2_CANDIDATES_PER_INVOCATION_MAX": 4,
+    "STAGE2_TARGET_HIT_COUNT": 39,
+    "RETRY_DOWNSTREAM_RECOVERY_COUNT": 63,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0,
+    "RETRY_EXISTING_CANDIDATE_DROP_COUNT": 36641,
+    "RETRY_STAGE2_CANDIDATE_DROP_COUNT": 0,
+    "RETRY_TARGET_CANDIDATE_DROP_COUNT": 9,
+    "PER_SPAN_CAP_SATURATION_RATE": 0.7581289218482601,
+    "REGRESSION_COUNT": 7,
+    "DOMINANT_FIRST_FAILURE_OWNER": "MODEL3_RETRY_STAGE2_QUERY",
+    "DOMINANT_FIRST_FAILURE_COUNT": 257,
+    "MODEL2_HYPOTHESIS": "NOT_SUPPORTED",
+    "PERFORMANCE_P50_MS": 5433,
+    "PERFORMANCE_P95_MS": 13968,
+    "PERFORMANCE_STATUS": "WARNING",
+    "STAGE2_TONE_RELAXATION_STATUS": "PASS_CLOSED",
+    "DOMAIN_BOUNDED_STAGE2_STATUS": "PASS_CLOSED",
+    "ARCHITECTURE_CHANGE_REQUIRED": "NO",
+    "NEXT_OWNER_PROVEN": "YES",
+    "ONE_NEXT_OWNER": "MODEL3_RETRY_STAGE2_QUERY",
+    "ONE_NEXT_DELTA": "Audit production Stage2 query windows/pinyin provenance vs first-pass Model2-conditioned Tone-mismatch keys (E5: Tone-relax active but ASR-space Stage2 never queries target pinyin)."
+  },
+  "finalCorrectDeltas": {
+    "NO_PROFILE": 0,
+    "CORRECT_PROFILE": -4,
+    "WRONG_PROFILE": -3
+  },
+  "e5ProductionNote": "E5 focused acceptance used GT/proxy pinyin+wrong-tone; production Stage2 queries ASR-space windows (e.g. tan|lei|ke) and never issues Model2-conditioned nei|ke — Tone-relax cannot recover without representable Stage2 query."
+}

@@ -1,0 +1,37 @@
+{
+  "asr_normalization": {
+    "status": "MISSING",
+    "note": "ASR raw text is not traditional→simplified before FineSpan/Recall"
+  },
+  "unicode_nfkc": {
+    "status": "ACTIVE",
+    "owner": "normalizeForImeAlignment only (IME span proposal)"
+  },
+  "traditional_simplified": {
+    "status": "ACTIVE_BUT_NOT_ON_BUSINESS_TEXT",
+    "owner": "opencc-js/t2cn in pinyin-ime-v2/normalize-for-ime-alignment.ts",
+    "dead_for_repair": true
+  },
+  "punctuation_normalization": {
+    "status": "ACTIVE",
+    "owner": "MATERIALIZABLE_TARGET_V1 norm() diagnostics; IME skippable-char class"
+  },
+  "case_folding": {
+    "status": "ACTIVE",
+    "owner": "MATERIALIZABLE_TARGET_V1 norm lowercase"
+  },
+  "surface_canonicalization": {
+    "status": "MISSING",
+    "owner": null
+  },
+  "lexicon_normalization": {
+    "status": "PARTIAL",
+    "owner": "base_lexicon.normalized / canonical_word columns exist; not used as t2s"
+  },
+  "semantic_repair_opencc": {
+    "status": "ACTIVE_OUTSIDE_FW_REPAIR_V4",
+    "owner": "semantic_repair_en_zh OpenCC t2s — not the FW Repair V4 path"
+  },
+  "this_round": "NO_NEW_NORMALIZER",
+  "verdict": "NORMALIZATION_OWNERSHIP_GAP"
+}

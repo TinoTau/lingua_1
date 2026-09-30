@@ -1,0 +1,11 @@
+{
+  "scoped_length1_content_replace": "SUPPORTED_LOGICALLY",
+  "scoped_patch_tool_exists": false,
+  "production_rebuild_mode": "FULL_REBUILD",
+  "how_to_limit_blast_radius": "Swap single-char import source only; keep multi-char CSV/idiom/domain tag SSOT unchanged; full rebuild still rewrites entire sqlite atomically",
+  "multi_char_base_terms_touched": "REWRITTEN_BUT_SHOULD_BE_BYTE_EQUIVALENT_IF_SOURCES_UNCHANGED",
+  "domain_tags_touched": "REBUILT_FROM_SAME_CSV",
+  "aliases_idioms": "REBUILT_FROM_SAME_SOURCES",
+  "SCOPED_REBUILD_SUPPORTED": "PARTIAL",
+  "note": "No length1-only DELETE+INSERT tool in production. Option B is content-scoped via full rebuild source swap, not a live UPDATE patch."
+}

@@ -1,0 +1,11 @@
+item,file,function,lines,still_affects_python_stage_d,classification
+Node SQL domain lookup,electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,queryDomainMultiRowsAtomic,111-153,NO,HISTORICAL_DEAD_LOGIC on Python D path; live on Node recall
+legacy resolveDomainIdsForRecall,electron_node/electron-node/main/src/lexicon-v2/domain-recall-merge.ts,resolveDomainIdsForRecall,17-28,NO,deprecated; V4 uses resolveRecallEnabledFineDomains
+local-span-recall enabledDomains filter,electron_node/electron-node/main/src/lexicon/local-span-recall.ts,passesEnabledDomainFilter,52-56,NO,Node path; not Python Stage D
+sqlite first-tag flatten,training/model2/candidates/index.py,build_candidate_index_from_sqlite,118,NO on D2 index (already enriched),HISTORICAL first-tag; D2 enrich applied
+first_tag_only aggregation mode,training/model2_v3/policy/multitag.py,aggregate_domain_evidence,158-159,NO (D2 uses normalized_weighted_multitag),comparison mode only
+spike merge_pools term_id merge,training/model2/retrieval/spike_retriever.py,merge_pools,157-191,NO for domain actions,P-path merge; D path does not union a second query
+applyDomainPriorQuota,electron_node/electron-node/main/src/fw-detector/span-assembly-v4/apply-domain-prior-quota.ts,applyDomainPriorQuota,33-80,NO (T8 downstream),Node assembly quota prior<=2
+sameDomain bucket,electron_node/electron-node/main/src/fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,isSameDomainCandidate,27-35,NO (T8),must not be counted as Model2 yield
+old domain_none vs identity teacher,training/model2_v3/policy/domain_actions.py,domain_teacher_search,157-207,YES as teacher only,offline exhaustive; not a second recall generator
+FuzzyPool independent of Exact Recall,training/model2/fuzzy/pool.py,build_fuzzy_pool,82-85,YES,FROZEN_DESIGN phonetic generation; UserProfile does not affect generation

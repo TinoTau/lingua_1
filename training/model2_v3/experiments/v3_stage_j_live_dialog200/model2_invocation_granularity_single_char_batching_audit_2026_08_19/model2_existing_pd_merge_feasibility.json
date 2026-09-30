@@ -1,0 +1,9 @@
+{
+  "technically_feasible": "PARTIAL",
+  "same_span_already_inferred": true,
+  "requires_pd_infer_json_change": true,
+  "stage1_infer_json_frozen": true,
+  "inference_shared": "same forward could score extra head but AmbiguityHeadV1 HEAD_ONLY_INSUFFICIENT; frozen h lacks Han context",
+  "regression_risk": "MEDIUM",
+  "verdict": "NOT_WORTH_COMPLEXITY"
+}

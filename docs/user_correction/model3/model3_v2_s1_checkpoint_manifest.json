@@ -1,0 +1,32 @@
+{
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+  "sharedTrainingConfig": {
+    "epochs": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 1.0,
+    "decisionThreshold": "argmax",
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "featureContract": "packModel3SpanInferFields",
+    "architecture": "Small BiGRU embed=64 hidden=128 feat=6"
+  },
+  "randomInit": {
+    "modelId": "MODEL3_V2_S1_RANDOM_INIT_V1",
+    "seed": 2026083007,
+    "checkpointDir": "training/model3_dataset/model3_v2_s1_random_init_v1_ckpts/seed_2026083007",
+    "weightsSha256": "5de52645da92f8db8be224b829a8004029541f64aaa66d05bc1f7b1a7ed01dd7",
+    "init": "random_from_scratch",
+    "bestEpoch": 8
+  },
+  "realDistInit": {
+    "modelId": "MODEL3_V2_S1_REALDIST_INIT_V1",
+    "seed": 2026083008,
+    "checkpointDir": "training/model3_dataset/model3_v2_s1_realdist_init_v1_ckpts/seed_2026083008",
+    "weightsSha256": "see training_metrics.json",
+    "init": "realdist_checkpoint_partial",
+    "initSource": "training/model3_dataset/model3_v2_realdist_v1_ckpts/seed_2026082903",
+    "initNote": "BiGRU/head weights loaded where shapes match; embedding skipped due to S1 vocab size 790 vs RealDist 1668",
+    "bestEpoch": 8
+  }
+}

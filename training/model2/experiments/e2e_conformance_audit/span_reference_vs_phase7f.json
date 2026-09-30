@@ -1,0 +1,28 @@
+{
+  "markers": [
+    "E2E_CONFORMANCE_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "READ_ONLY"
+  ],
+  "n_real_asr_eval": 200,
+  "PHASE7F_whole_utterance": {
+    "TargetIntroductionRate": 0.0,
+    "target_query_generated_rate": 0.0,
+    "queries_mean": 3.43,
+    "new_candidates_mean": 5.665
+  },
+  "SPAN_REFERENCE": {
+    "TargetIntroductionRate_profile_new": 0.19,
+    "target_query_generated_rate": 0.245,
+    "span_recovers_visibility_when_p7f_fails_rate": 0.775,
+    "queries_mean": 3.43,
+    "new_candidates_union_mean": 5.665,
+    "false_expansion_proxy_rate": 0.34
+  },
+  "FAMILY_SYNTH_span_control": {
+    "n": 200,
+    "TargetIntroductionRate": 1.0
+  },
+  "verdict_hint": "TEST_PATH_INVALID_OR_DRIFT — span reference recovers where whole-utt fails"
+}

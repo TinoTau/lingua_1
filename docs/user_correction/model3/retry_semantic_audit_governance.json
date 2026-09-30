@@ -1,0 +1,29 @@
+{
+  "phase": "RETRY_ONE_BOUNDED_RESEGMENTATION_HISTORICAL_SSOT_AUDIT",
+  "mode": "READ_ONLY_HISTORICAL",
+  "date": "2026-08-29",
+  "mainVerdict": "SEMANTIC_IMPLEMENTATION_DRIFT",
+  "productionCodeModified": false,
+  "testsModified": false,
+  "ssotModified": false,
+  "architectureModified": false,
+  "lexiconModified": false,
+  "recallModified": false,
+  "fineSpanModified": false,
+  "latticeModified": false,
+  "model3Modified": false,
+  "trainingModified": false,
+  "configModified": false,
+  "jobResultModified": false,
+  "newFallback": false,
+  "reportArtifactCount": 5,
+  "artifactLimitOk": true,
+  "artifacts": [
+    "Lingua_Retry_One_Bounded_Resegmentation_Historical_SSOT_Audit_2026_08_29.md",
+    "retry_semantic_chronology.csv",
+    "retry_ssot_evidence_matrix.csv",
+    "retry_semantic_audit_summary.json",
+    "retry_semantic_audit_governance.json"
+  ],
+  "didNotFreezeNewInterpretation": true
+}

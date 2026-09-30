@@ -1,0 +1,22 @@
+feature,training,runtime,both,notes
+span_syllables_hash_v1,BOTH,BOTH,YES,hash_span_v1 bag-of-syllables; this FineSpan only; no neighbor sequence
+window_text,TRAINING_ONLY_AS_TRACE,RUNTIME_PASSED_NOT_PACKED,PARTIAL,Node sends windowText; pack_batch_inputs does not encode characters
+left_token_context,NO,AVAILABLE_VIA_rawText,PARTIAL,rawText+rawStart exist; not packed into trunk
+right_token_context,NO,AVAILABLE_VIA_rawText,PARTIAL,same
+whole_utterance,NO,AVAILABLE_VIA_rawText,PARTIAL,same; must not become sentence-corrector input
+acoustic_pinyin,BOTH,BOTH,YES,span_syllables from PathFineSpan / globalSyllables slice
+acoustic_tone,RUNTIME,RUNTIME,PARTIAL,orchestrator passes first FineSpan tone pattern into expand; not in MODEL2_FEATURE_HASH_V1 tensor
+phonetic_bias_ACTIVE_SET_V1,BOTH,BOTH,YES,7 BOUND relations; empty profile → all zero
+personal_terms,BOTH,BOTH,YES,hashed TYPE_LEXICAL items cap 32
+personal_term_evidence,BOTH,BOTH,YES,strengths on lexical items
+long_term_domain_evidence,BOTH,BOTH,YES,TYPE_DOMAIN slots; derived from lexicon tags not SSOT
+base_pool_size,BOTH,BOTH,YES,state[0]
+query_budget_state,BOTH,BOTH,YES,packed but runtime P decode uses STAGE_P_QUERY_BUDGET_OP=1
+cand_budget_state,BOTH,BOTH,YES,packed; D executor max_cands=8
+applicability_mask,BOTH,BOTH,YES,7 floats from phonetic_bias>0
+base_hits_surfaces,RUNTIME,RUNTIME,PARTIAL,sent to host for D union; not in trunk features
+candidate_set_surfaces,NO,NO,NO,GAP: required for proposed disambiguation; must not be char-id classes
+lexicon_membership,NO,NO,NO,Lexicon owns; Model2 must not decide membership
+dialog_200_expectedText,NO,FORBIDDEN,NO,evaluation only
+user_profile_version,RUNTIME,RUNTIME,PARTIAL,metadata not a tensor
+session_id,RUNTIME,RUNTIME,PARTIAL,request correlation only

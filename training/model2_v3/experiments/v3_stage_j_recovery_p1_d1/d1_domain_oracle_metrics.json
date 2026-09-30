@@ -1,0 +1,329 @@
+{
+  "DOMAIN_ORACLE": "execute teacher soft domain action(s); no Model2",
+  "n": 12,
+  "Oracle_TIR": 1.0,
+  "PASS": true,
+  "traces_sample": [
+    {
+      "case_id": "stage_d2_3_CORRECT",
+      "FineSpan": [
+        "chu",
+        "zhu",
+        "ce"
+      ],
+      "target_term_id": "domain:tourism_route:出租车:chu|zu|che",
+      "target_surface": "出租车",
+      "target_domain_ids": [
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "teacher_action": "domain_soft:tourism_pickup",
+      "returned_term_ids": [
+        "base:_:注册:zhu|ce",
+        "base:_:出租车:chu|zu|che",
+        "base:_:主任:zhu|ren",
+        "base:_:主办:zhu|ban",
+        "base:_:主持:zhu|chi",
+        "base:_:主路:zhu|lu",
+        "base:_:主题:zhu|ti",
+        "base:_:代主任:dai|zhu|ren"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_6_CORRECT",
+      "FineSpan": [
+        "jia",
+        "bin"
+      ],
+      "target_term_id": "domain:food_order:加冰:jia|bing",
+      "target_surface": "加冰",
+      "target_domain_ids": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:加冰:jia|bing",
+        "base:_:嘉宾:jia|bin",
+        "base:_:加料:jia|liao",
+        "base:_:加单:jia|dan",
+        "base:_:加床:jia|chuang",
+        "base:_:嘉宾证:jia|bin|zheng",
+        "base:_:夹板:jia|ban",
+        "base:_:礼宾:li|bin"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_9_CORRECT",
+      "FineSpan": [
+        "jia",
+        "niao"
+      ],
+      "target_term_id": "domain:milk_tea:加料:jia|liao",
+      "target_surface": "加料",
+      "target_domain_ids": [
+        "food_order",
+        "milk_tea"
+      ],
+      "teacher_action": "domain_soft:tourism_hotel",
+      "returned_term_ids": [
+        "base:_:加冰:jia|bing",
+        "base:_:加料:jia|liao",
+        "base:_:加单:jia|dan",
+        "base:_:加床:jia|chuang",
+        "base:_:嘉宾:jia|bin",
+        "base:_:夹板:jia|ban",
+        "base:_:驾照:jia|zhao",
+        "base:_:价值:jia|zhi"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_16_CORRECT",
+      "FineSpan": [
+        "jian",
+        "liao"
+      ],
+      "target_term_id": "domain:food_order:加料:jia|liao",
+      "target_surface": "加料",
+      "target_domain_ids": [
+        "food_order",
+        "milk_tea"
+      ],
+      "teacher_action": "domain_soft:tourism_hotel",
+      "returned_term_ids": [
+        "base:_:加料:jia|liao",
+        "base:_:剪彩:jian|cai",
+        "base:_:剪枝:jian|zhi",
+        "base:_:检查:jian|cha",
+        "base:_:检票:jian|piao",
+        "base:_:煎饺:jian|jiao",
+        "base:_:理疗:li|liao",
+        "base:_:监控:jian|kong"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_21_CORRECT",
+      "FineSpan": [
+        "fa",
+        "piaon"
+      ],
+      "target_term_id": "domain:tourism_hotel:发票:fa|piao",
+      "target_surface": "发票",
+      "target_domain_ids": [
+        "food_order",
+        "tourism_hotel"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:发票:fa|piao",
+        "base:_:发热:fa|re",
+        "base:_:发言:fa|yan",
+        "base:_:发车:fa|che",
+        "base:_:法棍:fa|gun",
+        "base:_:罚单:fa|dan",
+        "base:_:发作:fa|zuo",
+        "base:_:发信:fa|xin"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_23_CORRECT",
+      "FineSpan": [
+        "dan",
+        "gaon"
+      ],
+      "target_term_id": "domain:bakery:蛋糕:dan|gao",
+      "target_surface": "蛋糕",
+      "target_domain_ids": [
+        "bakery",
+        "food_order"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:蛋糕:dan|gao",
+        "base:_:单品:dan|pin",
+        "base:_:单间:dan|jian",
+        "base:_:担架:dan|jia",
+        "base:_:淡季:dan|ji",
+        "base:_:蛋挞:dan|ta",
+        "base:_:但是:dan|shi",
+        "base:_:单一:dan|yi"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_45_CORRECT",
+      "FineSpan": [
+        "dai",
+        "zhou"
+      ],
+      "target_term_id": "domain:coffee:带走:dai|zou",
+      "target_surface": "带走",
+      "target_domain_ids": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:带走:dai|zou",
+        "base:_:代糖:dai|tang",
+        "base:_:代表:dai|biao",
+        "base:_:上周:shang|zhou",
+        "base:_:代价:dai|jia",
+        "base:_:代替:dai|ti",
+        "base:_:代理:dai|li",
+        "base:_:代码:dai|ma"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_57_CORRECT",
+      "FineSpan": [
+        "jie",
+        "jin",
+        "pain"
+      ],
+      "target_term_id": "domain:transport:接机牌:jie|ji|pai",
+      "target_surface": "接机牌",
+      "target_domain_ids": [
+        "tourism_pickup",
+        "transport"
+      ],
+      "teacher_action": "domain_soft:tourism_pickup",
+      "returned_term_ids": [
+        "base:_:接机牌:jie|ji|pai",
+        "base:_:接近:jie|jin",
+        "base:_:接口:jie|kou",
+        "base:_:接客:jie|ke",
+        "base:_:地巾:di|jin",
+        "base:_:押金单:ya|jin|dan",
+        "base:_:接待:jie|dai",
+        "base:_:接待单:jie|dai|dan"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_69_CORRECT",
+      "FineSpan": [
+        "mon",
+        "ba",
+        "che"
+      ],
+      "target_term_id": "domain:tourism_pickup:末班车:mo|ban|che",
+      "target_surface": "末班车",
+      "target_domain_ids": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "teacher_action": "domain_soft:tourism_pickup",
+      "returned_term_ids": [
+        "base:_:末班车:mo|ban|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:小巴车:xiao|ba|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:网约车:wang|yue|che",
+        "base:_:专车:zhuan|che",
+        "base:_:候车:hou|che",
+        "base:_:停车:ting|che"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_87_CORRECT",
+      "FineSpan": [
+        "hang",
+        "zan",
+        "nou"
+      ],
+      "target_term_id": "domain:tourism_transport:航站楼:hang|zhan|lou",
+      "target_surface": "航站楼",
+      "target_domain_ids": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "teacher_action": "domain_soft:tourism_pickup",
+      "returned_term_ids": [
+        "base:_:航站楼:hang|zhan|lou",
+        "base:_:航班:hang|ban",
+        "base:_:航班号:hang|ban|hao",
+        "base:_:航班屏:hang|ban|ping",
+        "base:_:航站:hang|zhan",
+        "base:_:赞助:zan|zhu",
+        "base:_:参赞:can|zan",
+        "base:_:咱们:zan|men"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_90_CORRECT",
+      "FineSpan": [
+        "chai",
+        "dan"
+      ],
+      "target_term_id": "domain:food_order:菜单:cai|dan",
+      "target_surface": "菜单",
+      "target_domain_ids": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:菜单:cai|dan",
+        "base:_:下单:xia|dan",
+        "base:_:买单:mai|dan",
+        "base:_:催单:cui|dan",
+        "base:_:加单:jia|dan",
+        "base:_:改单:gai|dan",
+        "base:_:点单:dian|dan",
+        "base:_:订单:ding|dan"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    },
+    {
+      "case_id": "stage_d2_93_CORRECT",
+      "FineSpan": [
+        "dan",
+        "gaon"
+      ],
+      "target_term_id": "domain:food_order:蛋糕:dan|gao",
+      "target_surface": "蛋糕",
+      "target_domain_ids": [
+        "bakery",
+        "food_order"
+      ],
+      "teacher_action": "domain_soft:coffee",
+      "returned_term_ids": [
+        "base:_:蛋糕:dan|gao",
+        "base:_:单品:dan|pin",
+        "base:_:单间:dan|jian",
+        "base:_:担架:dan|jia",
+        "base:_:淡季:dan|ji",
+        "base:_:蛋挞:dan|ta",
+        "base:_:但是:dan|shi",
+        "base:_:单一:dan|yi"
+      ],
+      "target_returned_identity": true,
+      "candidate_budget": 8
+    }
+  ]
+}

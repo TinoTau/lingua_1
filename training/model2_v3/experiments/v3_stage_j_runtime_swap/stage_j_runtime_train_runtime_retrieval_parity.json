@@ -1,0 +1,88 @@
+{
+  "n": 48,
+  "n_match": 48,
+  "rate": 1.0,
+  "domain_filtering": true,
+  "phonetic_fuzzy_gates": true,
+  "domain_none_noop": true,
+  "union_semantics": true,
+  "identity": "StageDRetrievalTargetIdentityV1",
+  "candidate_cap": 8,
+  "node_exact_sql_dual_path": false,
+  "old_shared_pool_rerank": false,
+  "PASS": true,
+  "sample": [
+    {
+      "row_id": "drest-00005",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00007",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00009",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": true
+    },
+    {
+      "row_id": "drest-00012",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00024",
+      "domain_action": "domain_soft:tourism_transport",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00032",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00039",
+      "domain_action": "domain_soft:medical",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    },
+    {
+      "row_id": "drest-00056",
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "gold_n_new": 8,
+      "runtime_n_new": 8,
+      "match": true,
+      "multi_tag": false
+    }
+  ]
+}

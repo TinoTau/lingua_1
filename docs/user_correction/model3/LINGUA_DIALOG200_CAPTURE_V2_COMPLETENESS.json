@@ -1,0 +1,149 @@
+{
+  "schema": "LINGUA_DIALOG200_CAPTURE_V2_COMPLETENESS",
+  "run_id": "dialog200_capture_v2_20260925100532",
+  "CAPTURE_SCHEMA": "DIALOG200_FROZEN_EVIDENCE_CAPTURE_V2",
+  "ARTIFACT_ROLE": "CANDIDATE_CAPTURE_V2",
+  "TOTAL_CASES": 200,
+  "EXECUTED_CASES": 200,
+  "EXECUTED_SUCCESS": 200,
+  "CASE_EXECUTION_FAILED": 0,
+  "COMPLETE_CASES": 200,
+  "CAPTURE_INCOMPLETE_CASES": 0,
+  "SILENTLY_SKIPPED_CASES": 0,
+  "DUPLICATE_CASE_IDS": 0,
+  "MANDATORY_BOUNDARY_MISSING_CASES": 0,
+  "UNAUTHORIZED_TRUNCATION_CASES": 0,
+  "AUTHORITATIVE_TRUNCATION_PRESENT": "NO",
+  "IDENTITY_GUARDS_VALID": "YES",
+  "CASES_WITH_TONE_EXECUTED": 200,
+  "CASES_WITH_ACOUSTIC_TONE_SLICES": 200,
+  "CASES_WITH_LEGITIMATE_NO_TONE": 0,
+  "CASES_WITH_REQUIRED_SLICES_MISSING": 0,
+  "REPLAY_MINIMUM_INJECTION_STATE_COMPLETE": "YES",
+  "boundary_matrix": {
+    "B1": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B2": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B3": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B4": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B5": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B6": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B7": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B8": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B9": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B10": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B11": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B12": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B13": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B14": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B15": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B16": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B17": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "B18": {
+      "complete": 200,
+      "incomplete": 0,
+      "missing": 0
+    }
+  },
+  "incomplete_cases": [],
+  "artifact_sha256": "ae4b569473cbaa01fe905efa6368b58d7f295468451195eeb9d4cd8b4fdca13a",
+  "CANDIDATE_CAPTURE_V2_READY": true,
+  "completeness_artifact_sha256": "8dc362f4d34459f39c8647d47647d3d3d206692b73232960313054f092fca2be",
+  "post_capture_sanity": {
+    "compared_cases": 8,
+    "informational_final_diffs": [
+      {
+        "caseId": "d002",
+        "note": "official_final_differs_from_phase_a_on_final_possible_asr_drift",
+        "phase_a_on_final": "麻烦帮我做一杯美式带走大背就行谢谢",
+        "official_final": "麻烦帮我做一杯时代大背就行谢谢"
+      },
+      {
+        "caseId": "d001",
+        "note": "official_final_differs_from_phase_a_on_final_possible_asr_drift",
+        "phase_a_on_final": "你好,我想点一杯热拿铁钟贝少糖 今天有蓝没马分吗?",
+        "official_final": "你好,我想点一杯热拿铁中贝少糖 今天有蓝没马分吗?"
+      },
+      {
+        "caseId": "d149",
+        "note": "official_final_differs_from_phase_a_on_final_possible_asr_drift",
+        "phase_a_on_final": "请问,这双鞋 有私使麻麻不合是三天内可以退换吧",
+        "official_final": "请问,这双鞋 不合是三天内可以退换吧"
+      },
+      {
+        "caseId": "d005",
+        "note": "official_final_differs_from_phase_a_on_final_possible_asr_drift",
+        "phase_a_on_final": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+        "official_final": "今天德湛会现过一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险"
+      }
+    ],
+    "note": "Fresh ASR between Phase A and Phase B may differ; not treated as observer effect unless ASR-matched decision divergence"
+  }
+}

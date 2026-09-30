@@ -1,0 +1,117 @@
+{
+  "phase": "MODEL3_V2_S3_MINIMAL_GENERALIZATION_CORRECTION_DESIGN",
+  "generator": "training/model3_dataset/scripts/emit_s3_minimal_generalization_correction_design.py",
+  "generatedAt": "2026-09-02T11:54:16Z",
+  "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+  "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+  "datasetBuildId": "prod_core_s3_build_20260830_v1",
+  "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "featureContract": "packModel3SpanInferFields",
+  "g0Required": true,
+  "ssotCorrections": {
+    "firstCausalOwner": "NOT_YET_ISOLATED",
+    "retryRecallPeakedAtSelectedEpoch": false,
+    "bestDevRetryF1Epoch": 8,
+    "bestDevRetryRecallEpoch": 4
+  },
+  "verdict": "MODEL3_S3_MINIMAL_CORRECTION_DESIGN_CLASS_WEIGHT_FIRST",
+  "nextPhase": "MODEL3_V2_S3_CLASS_WEIGHT_EXPERIMENT_DEVELOPMENT",
+  "firstExperimentalFamily": "CLASS_WEIGHT_ONLY",
+  "whyClassWeightFirst": [
+    "Smallest code change: single constant in train_s3_random.py",
+    "Cleanest single-variable attribution",
+    "CLASS_IMBALANCE verified present (14.4:1, weight=1.0)",
+    "Repository precedent: v1 bigru used 4.0 without architecture change",
+    "Does not require new sampler/index infrastructure first"
+  ],
+  "experimentArms": 5,
+  "singleVariableArms": true,
+  "classWeightSearchRange": [
+    2.0,
+    4.0
+  ],
+  "classWeightSearchRationale": "Moderate (2.0) and higher (4.0) — NOT mechanical 14.4; aligned with historical Model3 training scale",
+  "executionOrder": [
+    "CLASS_WEIGHT_A1/A2",
+    "RETRY_SAMPLING_B1 deferred",
+    "HARD_NEG_C1 deferred"
+  ],
+  "combinationForbiddenUntil": "One single-factor arm shows benefit",
+  "baselineMetrics": {
+    "trainRetryRecall": 0.911757,
+    "trainRetryF1": 0.941473,
+    "trainRetryPrecision": 0.97319,
+    "devRetryRecall": 0.790852,
+    "devRetryF1": 0.850018,
+    "devRetryPrecision": 0.918752,
+    "trainKeepFalseRetryRate": 0.001739,
+    "devKeepFalseRetryRate": 0.005159
+  },
+  "diagnosticSubgroups": {
+    "CLEAR_OOS_GENERALIZATION": [
+      "d040",
+      "d042",
+      "d085",
+      "d129",
+      "d172",
+      "d175"
+    ],
+    "LOCAL_PATTERN_TRAIN_FIT_WEAK": [
+      "d065",
+      "d102",
+      "d138"
+    ],
+    "SURFACE_SUPPORT_REPLAY_UNRESOLVED": [
+      "d054",
+      "d109",
+      "d114"
+    ]
+  },
+  "heldOut12Role": "evaluation_only",
+  "unresolved4Role": "diagnostic_only",
+  "acpRequired": false,
+  "questions": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": true,
+    "D5": true,
+    "D6": true,
+    "D7": "NOT_PROVEN",
+    "D8": true,
+    "D9": "NOT_PROVEN",
+    "D10": true,
+    "D11": "NOT_PROVEN",
+    "D12": "CLASS_WEIGHT_ONLY A1/A2",
+    "D13": "train_s3_random.py CLASS_WEIGHT_RETRY + CrossEntropyLoss",
+    "D17": "CLASS_WEIGHT_ONLY",
+    "D18": "CLASS_WEIGHT_ONLY",
+    "D19": 5,
+    "D20": true,
+    "D21": true,
+    "D23": true,
+    "D26": "held-out evaluation only",
+    "D27": "diagnostic only",
+    "D28": false,
+    "D29": false,
+    "D30": false,
+    "D41": false,
+    "D42": "CLASS_WEIGHT_ONLY",
+    "D43": "MODEL3_V2_S3_CLASS_WEIGHT_EXPERIMENT_DEVELOPMENT"
+  },
+  "governance": {
+    "productionCodeChanged": "NO",
+    "trainingExecuted": "NO",
+    "datasetRebuilt": "NO",
+    "modelArchitectureChanged": "NO",
+    "thresholdChanged": "NO",
+    "featureContractChanged": "NO",
+    "fineSpanChanged": "NO",
+    "retryChanged": "NO",
+    "recallChanged": "NO",
+    "model2Changed": "NO",
+    "domainVoteChanged": "NO",
+    "jobResultChanged": "NO"
+  }
+}

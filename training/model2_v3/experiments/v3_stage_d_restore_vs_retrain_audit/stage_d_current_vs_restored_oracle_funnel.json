@@ -1,0 +1,18 @@
+{
+  "note": "AUDIT_SIMULATION_ONLY. Node SQL reproduced from queryDomainMultiRowsAtomic contract. domain_filtered_fuzzy = existing FuzzyPool gates on domain-tagged records only.",
+  "base_absent_n": 38,
+  "current": {
+    "raw_phonetic_in_shared_pool": 38,
+    "pool32_then_top8_introduced": 4
+  },
+  "restored_node_sql_exact": {
+    "raw_query_hit": 0,
+    "union_budget16_introduced": 0,
+    "contract": "domain_id + exact pinyin_key + length; termLength<2 empty; LIMIT 3"
+  },
+  "restored_domain_filtered_fuzzy_union": {
+    "raw_domain_fuzzy_hit": 38,
+    "union_budget16_introduced": 38,
+    "union_budget8_introduced": 38
+  }
+}

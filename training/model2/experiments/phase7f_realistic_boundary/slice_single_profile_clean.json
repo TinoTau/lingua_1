@@ -1,0 +1,2383 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "mode": "correct",
+  "n": 100,
+  "TargetIntroductionRate": 0.42,
+  "ProfileOnlyTargetRecovery": 0.42,
+  "FalseExpansionRate": 0.0,
+  "NewCandidatePrecision_proxy": 0.2413793103448276,
+  "TargetPerExpansion": 0.2413793103448276,
+  "new_candidates_mean": 1.74,
+  "new_candidates_p95": 7.0,
+  "queries_mean": 0.43,
+  "queries_p95": 1.0,
+  "latency_ms_p50": 0.0219999928958714,
+  "latency_ms_p95": 65.93479998991825,
+  "failures": [
+    {
+      "utterance_id": "ts-e1f19a83b63c2f14223429f3",
+      "observed_text": "作",
+      "observed_syllables": [
+        "hua1",
+        "sha3"
+      ],
+      "target": "base:_:花洒:hua|sa",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:化工:hua|gong",
+        "base:_:划分:hua|fen",
+        "base:_:话筒:hua|tong",
+        "base:_:大厦:da|sha",
+        "base:_:化学:hua|xue",
+        "base:_:华表:hua|biao",
+        "base:_:化为:hua|wei",
+        "base:_:华侨:hua|qiao",
+        "base:_:化验:hua|yan",
+        "base:_:化解:hua|jie",
+        "base:_:化石:hua|shi",
+        "base:_:屠杀:tu|sha",
+        "base:_:化疗:hua|liao",
+        "base:_:化肥:hua|fei",
+        "base:_:华人:hua|ren"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-5afbed37d8f0f8c88aa9799c",
+      "observed_text": "社图",
+      "observed_syllables": [
+        "wu3",
+        "she4",
+        "tu3"
+      ],
+      "target": "base:_:五色土:wu|se|tu",
+      "user_profile": {
+        "sh_s": 0.5,
+        "s_sh": 0.8
+      },
+      "base_candidates": [
+        "base:_:全景图:quan|jing|tu",
+        "base:_:折射仪:zhe|she|yi",
+        "base:_:吞吐:tun|tu",
+        "base:_:乌龙茶:wu|long|cha",
+        "base:_:务处理:wu|chu|li",
+        "base:_:无烟房:wu|yan|fang",
+        "base:_:心电图:xin|dian|tu",
+        "base:_:城区图:cheng|qu|tu",
+        "base:_:交通图:jiao|tong|tu",
+        "base:_:地形图:di|xing|tu",
+        "base:_:导览图:dao|lan|tu",
+        "base:_:五分糖:wu|fen|tang",
+        "base:_:分布图:fen|bu|tu",
+        "base:_:分区图:fen|qu|tu",
+        "base:_:乌冬面:wu|dong|mian"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-d92d2276e6b0c09fb70a3300",
+      "observed_text": "显",
+      "observed_syllables": [
+        "xian1",
+        "reng2"
+      ],
+      "target": "base:_:仙人:xian|ren",
+      "user_profile": {
+        "en_eng": 0.2
+      },
+      "base_candidates": [
+        "base:_:限行:xian|xing",
+        "base:_:先锋:xian|feng",
+        "base:_:仙草:xian|cao",
+        "base:_:先行:xian|xing",
+        "base:_:仙桃:xian|tao",
+        "base:_:先生:xian|sheng",
+        "base:_:县境:xian|jing",
+        "base:_:先后:xian|hou",
+        "base:_:先前:xian|qian",
+        "base:_:先驱:xian|qu",
+        "base:_:先是:xian|shi",
+        "base:_:县城:xian|cheng",
+        "base:_:限流:xian|liu",
+        "base:_:先进:xian|jin",
+        "base:_:先令:xian|ling"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-f0caf2a71d034951cc24a84a",
+      "observed_text": "栓",
+      "observed_syllables": [
+        "bu2",
+        "shuan4"
+      ],
+      "target": "base:_:不算:bu|suan",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:不免:bu|mian",
+        "base:_:步道:bu|dao",
+        "base:_:不中:bu|zhong",
+        "base:_:不住:bu|zhu",
+        "base:_:部署:bu|shu",
+        "base:_:不久:bu|jiu",
+        "base:_:不便:bu|bian",
+        "base:_:不一:bu|yi",
+        "base:_:不会:bu|hui",
+        "base:_:不但:bu|dan",
+        "base:_:不停:bu|ting",
+        "base:_:不再:bu|zai",
+        "base:_:不准:bu|zhun",
+        "base:_:步行:bu|xing",
+        "base:_:不下:bu|xia",
+        "base:_:不仅:bu|jin"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-3f35593d590979cc52a00108",
+      "observed_text": "以",
+      "observed_syllables": [
+        "xian1",
+        "chao3"
+      ],
+      "target": "base:_:仙草:xian|cao",
+      "user_profile": {
+        "c_ch": 0.8
+      },
+      "base_candidates": [
+        "base:_:限行:xian|xing",
+        "base:_:先锋:xian|feng",
+        "base:_:先行:xian|xing",
+        "base:_:仙桃:xian|tao",
+        "base:_:仙人:xian|ren",
+        "base:_:元朝:yuan|chao",
+        "base:_:先后:xian|hou",
+        "base:_:先生:xian|sheng",
+        "base:_:先前:xian|qian",
+        "base:_:先驱:xian|qu",
+        "base:_:先是:xian|shi",
+        "base:_:限流:xian|liu",
+        "base:_:先进:xian|jin",
+        "base:_:先令:xian|ling",
+        "base:_:争吵:zheng|chao"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-6e7e8896d6bf3a74b1649e8f",
+      "observed_text": "报",
+      "observed_syllables": [
+        "xie2",
+        "shan1"
+      ],
+      "target": "base:_:协商:xie|shang",
+      "user_profile": {
+        "ang_an": 0.5
+      },
+      "base_candidates": [
+        "base:_:写成:xie|cheng",
+        "base:_:协会:xie|hui",
+        "base:_:写作:xie|zuo",
+        "base:_:写下:xie|xia",
+        "base:_:协作:xie|zuo",
+        "base:_:协调:xie|tiao",
+        "base:_:写出:xie|chu",
+        "base:_:协助:xie|zhu",
+        "base:_:写道:xie|dao",
+        "base:_:协同:xie|tong",
+        "base:_:协定:xie|ding",
+        "base:_:写信:xie|xin",
+        "base:_:协议:xie|yi",
+        "base:_:完善:wan|shan",
+        "base:_:修缮:xiu|shan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-76cdda59f4227046b9fbf99c",
+      "observed_text": "钢柴",
+      "observed_syllables": [
+        "gang1",
+        "chai2"
+      ],
+      "target": "base:_:刚才:gang|cai",
+      "user_profile": {
+        "c_ch": 0.2
+      },
+      "base_candidates": [
+        "base:_:钢材:gang|cai",
+        "base:_:港澳:gang|ao",
+        "base:_:纲领:gang|ling",
+        "base:_:港口:gang|kou",
+        "base:_:钢铁:gang|tie",
+        "base:_:钢筋:gang|jin",
+        "base:_:上线:shang|xian",
+        "base:_:刚好:gang|hao",
+        "base:_:接口:jie|kou",
+        "base:_:刚刚:gang|gang",
+        "base:_:钢琴:gang|qin",
+        "base:_:岗亭:gang|ting",
+        "base:_:候选:hou|xuan",
+        "base:_:钦差:qin|chai",
+        "base:_:岗位:gang|wei"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-6684adc18b943654a4c00bcc",
+      "observed_text": "電",
+      "observed_syllables": [
+        "ming2",
+        "che4"
+      ],
+      "target": "base:_:名册:ming|ce",
+      "user_profile": {
+        "c_ch": 0.8
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:停车:ting|che",
+        "base:_:发车:fa|che",
+        "base:_:名列:ming|lie",
+        "base:_:缆车:lan|che",
+        "base:_:专车:zhuan|che",
+        "base:_:名录:ming|lu",
+        "base:_:名为:ming|wei",
+        "base:_:名义:ming|yi",
+        "base:_:列车:lie|che",
+        "base:_:名人:ming|ren",
+        "base:_:名优:ming|you",
+        "base:_:拼车:pin|che",
+        "base:_:快车:kuai|che"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-962ed81aadfb65005d7b8352",
+      "observed_text": "徒束管接月",
+      "observed_syllables": [
+        "hong2",
+        "dou4",
+        "shang1"
+      ],
+      "target": "base:_:红豆杉:hong|dou|shan",
+      "user_profile": {
+        "an_ang": 0.8
+      },
+      "base_candidates": [
+        "base:_:红豆塔:hong|dou|ta",
+        "base:_:熨斗:yun|dou",
+        "base:_:红豆粒:hong|dou|li",
+        "base:_:红豆包:hong|dou|bao",
+        "base:_:参展商:can|zhan|shang",
+        "base:_:红豆:hong|dou",
+        "base:_:红豆冰:hong|dou|bing",
+        "base:_:生豆:sheng|dou",
+        "base:_:烘焙度:hong|bei|du",
+        "base:_:红豆汤:hong|dou|tang",
+        "base:_:土豆丝:tu|dou|si",
+        "base:_:红丝绒:hong|si|rong",
+        "base:_:磨豆机:mo|dou|ji",
+        "base:_:发展商:fa|zhan|shang",
+        "base:_:熟豆:shu|dou"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-b5c3acfd49a6ffeed8822a54",
+      "observed_text": "融出",
+      "observed_syllables": [
+        "rong2",
+        "chuo4"
+      ],
+      "target": "base:_:容错:rong|cuo",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [
+        "base:_:熔点:rong|dian",
+        "base:_:容易:rong|yi",
+        "base:_:溶于:rong|yu",
+        "base:_:溶解:rong|jie",
+        "base:_:容器:rong|qi",
+        "base:_:溶液:rong|ye",
+        "base:_:上线:shang|xian",
+        "base:_:溶剂:rong|ji",
+        "base:_:融合:rong|he",
+        "base:_:接口:jie|kou",
+        "base:_:融资:rong|zi",
+        "base:_:熔断:rong|duan",
+        "base:_:候选:hou|xuan",
+        "base:_:容量:rong|liang",
+        "base:_:容貌:rong|mao"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-55552ceb07b0ffd0e2a86c2a",
+      "observed_text": ",寄",
+      "observed_syllables": [
+        "hou4",
+        "ji1",
+        "tin1"
+      ],
+      "target": "base:_:候机厅:hou|ji|ting",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:候车区:hou|che|qu",
+        "base:_:机场:ji|chang",
+        "base:_:候船厅:hou|chuan|ting",
+        "base:_:候会区:hou|hui|qu",
+        "base:_:候机楼:hou|ji|lou",
+        "base:_:计划:ji|hua",
+        "base:_:候场区:hou|chang|qu",
+        "base:_:候车厅:hou|che|ting",
+        "base:_:候客区:hou|ke|qu",
+        "base:_:忌口:ji|kou",
+        "base:_:候客室:hou|ke|shi",
+        "base:_:候车亭:hou|che|ting",
+        "base:_:候选:hou|xuan",
+        "base:_:候机:hou|ji"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-ed742c63190616defcfe4f6a",
+      "observed_text": "能",
+      "observed_syllables": [
+        "niao3",
+        "jie3"
+      ],
+      "target": "base:_:了解:liao|jie",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [
+        "base:_:关节:guan|jie",
+        "base:_:凭借:ping|jie",
+        "base:_:交界:jiao|jie",
+        "base:_:分解:fen|jie",
+        "base:_:讲解:jiang|jie",
+        "base:_:世界:shi|jie",
+        "base:_:台阶:tai|jie",
+        "base:_:中介:zhong|jie",
+        "base:_:化解:hua|jie",
+        "base:_:八戒:ba|jie",
+        "base:_:便捷:bian|jie",
+        "base:_:团结:tuan|jie",
+        "base:_:境界:jing|jie",
+        "base:_:勾结:gou|jie",
+        "base:_:各界:ge|jie"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-94ae937092d6320145f7be78",
+      "observed_text": "交快选",
+      "observed_syllables": [
+        "kui1",
+        "shun3"
+      ],
+      "target": "base:_:亏损:kui|sun",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:加单:jia|dan",
+        "base:_:买单:mai|dan",
+        "base:_:下单:xia|dan",
+        "base:_:勺子:shao|zi",
+        "base:_:中杯:zhong|bei",
+        "base:_:外卖:wai|mai",
+        "base:_:上线:shang|xian",
+        "base:_:计划:ji|hua",
+        "base:_:接口:jie|kou",
+        "base:_:生成:sheng|cheng",
+        "base:_:催单:cui|dan",
+        "base:_:候选:hou|xuan",
+        "base:_:中辣:zhong|la",
+        "base:_:傀儡:kui|lei",
+        "base:_:文档:wen|dang"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-d9ac3dec78b8d6fac9d5f88e",
+      "observed_text": "復",
+      "observed_syllables": [
+        "zhang3",
+        "lang3",
+        "guan3"
+      ],
+      "target": "base:_:展览馆:zhan|lan|guan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [
+        "base:_:博物馆:bo|wu|guan",
+        "base:_:吸管:xi|guan",
+        "base:_:开馆:kai|guan",
+        "base:_:勺吸管:shao|xi|guan",
+        "base:_:咖啡馆:ka|fei|guan",
+        "base:_:拔罐:ba|guan",
+        "base:_:布朗尼:bu|lang|ni",
+        "base:_:天文馆:tian|wen|guan",
+        "base:_:氧气管:yang|qi|guan",
+        "base:_:长官:zhang|guan",
+        "base:_:保鲜罐:bao|xian|guan",
+        "base:_:引流管:yin|liu|guan",
+        "base:_:张江:zhang|jiang",
+        "base:_:掌管:zhang|guan",
+        "base:_:导尿管:dao|niao|guan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-869fac386ce253d2fb4aa75e",
+      "observed_text": "沒",
+      "observed_syllables": [
+        "nao3",
+        "po2",
+        "bing3"
+      ],
+      "target": "base:_:老婆饼:lao|po|bing",
+      "user_profile": {
+        "l_n": 0.2
+      },
+      "base_candidates": [
+        "base:_:正常冰:zheng|chang|bing",
+        "base:_:含少冰:han|shao|bing",
+        "base:_:少冰:shao|bing",
+        "base:_:葱油饼:cong|you|bing",
+        "base:_:鲜花饼:xian|hua|bing",
+        "base:_:手抓饼:shou|zhua|bing",
+        "base:_:葱香饼:cong|xiang|bing",
+        "base:_:妇科病:fu|ke|bing",
+        "base:_:脑电图:nao|dian|tu",
+        "base:_:曲奇饼:qu|qi|bing",
+        "base:_:肉松饼:rou|song|bing",
+        "base:_:红豆冰:hong|dou|bing",
+        "base:_:手柄:shou|bing",
+        "base:_:绿豆饼:l|dou|bing",
+        "base:_:皮肤病:pi|fu|bing"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-bc2f231cf778db76c3cab7ef",
+      "observed_text": "收",
+      "observed_syllables": [
+        "yi3",
+        "wan3"
+      ],
+      "target": "base:_:以往:yi|wang",
+      "user_profile": {
+        "ang_an": 0.5
+      },
+      "base_candidates": [
+        "base:_:衣柜:yi|gui",
+        "base:_:议题:yi|ti",
+        "base:_:医保:yi|bao",
+        "base:_:驿站:yi|zhan",
+        "base:_:衣架:yi|jia",
+        "base:_:疫苗:yi|miao",
+        "base:_:议程:yi|cheng",
+        "base:_:一爆:yi|bao",
+        "base:_:意式:yi|shi",
+        "base:_:意面:yi|mian",
+        "base:_:译员:yi|yuan",
+        "base:_:驿道:yi|dao",
+        "base:_:仪式:yi|shi",
+        "base:_:一世:yi|shi",
+        "base:_:盲碗:mang|wan",
+        "base:_:粉碗:fen|wan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-cdce311756c91aa27bb1589e",
+      "observed_text": "傍",
+      "observed_syllables": [
+        "bang1",
+        "che1"
+      ],
+      "target": "base:_:班车:ban|che",
+      "user_profile": {
+        "an_ang": 0.2,
+        "en_eng": 0.5
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:停车:ting|che",
+        "base:_:发车:fa|che",
+        "base:_:缆车:lan|che",
+        "base:_:专车:zhuan|che",
+        "base:_:客车:ke|che",
+        "base:_:堵车:du|che",
+        "base:_:傍晚:bang|wan",
+        "base:_:列车:lie|che",
+        "base:_:帮忙:bang|mang",
+        "base:_:战车:zhan|che",
+        "base:_:帮主:bang|zhu",
+        "base:_:帮助:bang|zhu",
+        "base:_:拼车:pin|che",
+        "base:_:快车:kuai|che"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-625469d780e495197a375613",
+      "observed_text": "花",
+      "observed_syllables": [
+        "za4",
+        "jiang4",
+        "mian4"
+      ],
+      "target": "base:_:炸酱面:zha|jiang|mian",
+      "user_profile": {
+        "zh_z": 0.8
+      },
+      "base_candidates": [
+        "base:_:主讲人:zhu|jiang|ren",
+        "base:_:备降:bei|jiang",
+        "base:_:刀削面:dao|xiao|mian",
+        "base:_:演讲台:yan|jiang|tai",
+        "base:_:江面:jiang|mian",
+        "base:_:拌冷面:ban|leng|mian",
+        "base:_:工作面:gong|zuo|mian",
+        "base:_:匝道:za|dao",
+        "base:_:担担面:dan|dan|mian",
+        "base:_:热干面:re|gan|mian",
+        "base:_:意面:yi|mian",
+        "base:_:张江:zhang|jiang",
+        "base:_:乌冬面:wu|dong|mian",
+        "base:_:焗面:ju|mian",
+        "base:_:演讲者:yan|jiang|zhe"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-ce8dd4ad45517f7082a55aa9",
+      "observed_text": "沒",
+      "observed_syllables": [
+        "bu4",
+        "nang2"
+      ],
+      "target": "base:_:不难:bu|nan",
+      "user_profile": {
+        "an_ang": 0.8
+      },
+      "base_candidates": [
+        "base:_:不免:bu|mian",
+        "base:_:步道:bu|dao",
+        "base:_:不中:bu|zhong",
+        "base:_:不住:bu|zhu",
+        "base:_:部署:bu|shu",
+        "base:_:不久:bu|jiu",
+        "base:_:不便:bu|bian",
+        "base:_:不一:bu|yi",
+        "base:_:不会:bu|hui",
+        "base:_:胶囊:jiao|nang",
+        "base:_:不但:bu|dan",
+        "base:_:不停:bu|ting",
+        "base:_:不再:bu|zai",
+        "base:_:步行:bu|xing",
+        "base:_:不下:bu|xia",
+        "base:_:不仅:bu|jin"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-2648e454e43a6554694b7e16",
+      "observed_text": "化",
+      "observed_syllables": [
+        "hua1",
+        "ming2",
+        "che4"
+      ],
+      "target": "base:_:花名册:hua|ming|ce",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:化妆间:hua|zhuang|jian",
+        "base:_:停车:ting|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:发车:fa|che",
+        "base:_:名册:ming|ce",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:专车:zhuan|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:姓名牌:xing|ming|pai",
+        "base:_:化验:hua|yan",
+        "base:_:名录:ming|lu",
+        "base:_:化验单:hua|yan|dan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-3e61f5e51d90c88d885aaa3e",
+      "observed_text": "篩鎮鑄",
+      "observed_syllables": [
+        "shai4",
+        "zhen1",
+        "zhu1"
+      ],
+      "target": "base:_:赛珍珠:sai|zhen|zhu",
+      "user_profile": {
+        "s_sh": 0.8
+      },
+      "base_candidates": [
+        "base:_:分诊台:fen|zhen|tai",
+        "base:_:石珍珠:shi|zhen|zhu",
+        "base:_:珍珠:zhen|zhu",
+        "base:_:古镇区:gu|zhen|qu",
+        "base:_:白珍珠:bai|zhen|zhu",
+        "base:_:就诊卡:jiu|zhen|ka",
+        "base:_:复诊:fu|zhen",
+        "base:_:宝珍珠:bao|zhen|zhu",
+        "base:_:黑珍珠:hei|zhen|zhu",
+        "base:_:导诊台:dao|zhen|tai",
+        "base:_:会诊单:hui|zhen|dan",
+        "base:_:浦珍珠:pu|zhen|zhu",
+        "base:_:古镇:gu|zhen",
+        "base:_:急诊:ji|zhen",
+        "base:_:满珍珠:man|zhen|zhu"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-0bd79bdc18939938ecb48eab",
+      "observed_text": "扔值",
+      "observed_syllables": [
+        "reng4",
+        "zhi2"
+      ],
+      "target": "base:_:任职:ren|zhi",
+      "user_profile": {
+        "en_eng": 0.8
+      },
+      "base_candidates": [
+        "base:_:酸质:suan|zhi",
+        "base:_:日志:ri|zhi",
+        "base:_:滤纸:l|zhi",
+        "base:_:一直:yi|zhi",
+        "base:_:剪枝:jian|zhi",
+        "base:_:不致:bu|zhi",
+        "base:_:产值:chan|zhi",
+        "base:_:一致:yi|zhi",
+        "base:_:偏置:pian|zhi",
+        "base:_:不知:bu|zhi",
+        "base:_:乃至:nai|zhi",
+        "base:_:不止:bu|zhi",
+        "base:_:争执:zheng|zhi",
+        "base:_:为止:wei|zhi",
+        "base:_:脱脂:tuo|zhi",
+        "base:_:专制:zhuan|zhi"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-8c389d986a3f7c09cef11bb9",
+      "observed_text": "较松克",
+      "observed_syllables": [
+        "shong4",
+        "ke4"
+      ],
+      "target": "base:_:送客:song|ke",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:妇科:fu|ke",
+        "base:_:不可:bu|ke",
+        "base:_:上课:shang|ke",
+        "base:_:眼科:yan|ke",
+        "base:_:专科:zhuan|ke",
+        "base:_:千克:qian|ke",
+        "base:_:内科:nei|ke",
+        "base:_:骨科:gu|ke",
+        "base:_:接客:jie|ke",
+        "base:_:可可:ke|ke",
+        "base:_:即可:ji|ke",
+        "base:_:外科:wai|ke",
+        "base:_:乘客:cheng|ke",
+        "base:_:儿科:er|ke",
+        "base:_:坦克:tan|ke"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-1b7414e81351d9445d766088",
+      "observed_text": "縱圖門",
+      "observed_syllables": [
+        "zong1",
+        "tu2"
+      ],
+      "target": "base:_:中途:zhong|tu",
+      "user_profile": {
+        "zh_z": 0.2
+      },
+      "base_candidates": [
+        "base:_:叛徒:pan|tu",
+        "base:_:宗教:zong|jiao",
+        "base:_:企图:qi|tu",
+        "base:_:吞吐:tun|tu",
+        "base:_:宗室:zong|shi",
+        "base:_:前途:qian|tu",
+        "base:_:出土:chu|tu",
+        "base:_:呕吐:ou|tu",
+        "base:_:总台:zong|tai",
+        "base:_:力图:li|tu",
+        "base:_:地图:di|tu",
+        "base:_:宗旨:zong|zhi",
+        "base:_:师徒:shi|tu",
+        "base:_:国土:guo|tu",
+        "base:_:冲突:chong|tu"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-2c81c23f2b2d99ea31f38b24",
+      "observed_text": "习院士",
+      "observed_syllables": [
+        "xi1",
+        "yang1",
+        "shi4"
+      ],
+      "target": "base:_:吸烟室:xi|yan|shi",
+      "user_profile": {
+        "an_ang": 0.2
+      },
+      "base_candidates": [
+        "base:_:喜事:xi|shi",
+        "base:_:休息室:xiu|xi|shi",
+        "base:_:商务室:shang|wu|shi",
+        "base:_:吸管:xi|guan",
+        "base:_:仪式:yi|shi",
+        "base:_:咖啡师:ka|fei|shi",
+        "base:_:分布式:fen|bu|shi",
+        "base:_:会议室:hui|yi|shi",
+        "base:_:处置室:chu|zhi|shi",
+        "base:_:厌氧豆:yan|yang|dou",
+        "base:_:培养皿:pei|yang|min",
+        "base:_:候客室:hou|ke|shi",
+        "base:_:候车室:hou|che|shi",
+        "base:_:样式:yang|shi",
+        "base:_:值班室:zhi|ban|shi"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-d0d5355bba6ad7bc4b300f57",
+      "observed_text": " ",
+      "observed_syllables": [
+        "meng1",
+        "zheng1"
+      ],
+      "target": "base:_:闷蒸:men|zheng",
+      "user_profile": {
+        "en_eng": 0.5,
+        "h_f": 0.8
+      },
+      "base_candidates": [
+        "base:_:市政:shi|zheng",
+        "base:_:出征:chu|zheng",
+        "base:_:作证:zuo|zheng",
+        "base:_:亲征:qin|zheng",
+        "base:_:保证:bao|zheng",
+        "base:_:专政:zhuan|zheng",
+        "base:_:党政:dang|zheng",
+        "base:_:战争:zhan|zheng",
+        "base:_:执政:zhi|zheng",
+        "base:_:特征:te|zheng",
+        "base:_:军政:jun|zheng",
+        "base:_:内政:nei|zheng",
+        "base:_:反正:fan|zheng",
+        "base:_:完整:wan|zheng",
+        "base:_:整整:zheng|zheng"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-a6d5d0e756ffcef163672559",
+      "observed_text": "静电",
+      "observed_syllables": [
+        "san1",
+        "feng1",
+        "tang2"
+      ],
+      "target": "base:_:三分糖:san|fen|tang",
+      "user_profile": {
+        "s_sh": 0.8,
+        "en_eng": 0.5
+      },
+      "base_candidates": [
+        "base:_:代糖:dai|tang",
+        "base:_:三拼料:san|pin|liao",
+        "base:_:七分糖:qi|fen|tang",
+        "base:_:会堂:hui|tang",
+        "base:_:大堂:da|tang",
+        "base:_:封签:feng|qian",
+        "base:_:多糖:duo|tang",
+        "base:_:去糖:qu|tang",
+        "base:_:全糖:quan|tang",
+        "base:_:五分糖:wu|fen|tang",
+        "base:_:三日线:san|ri|xian",
+        "base:_:峰会:feng|hui",
+        "base:_:微糖:wei|tang",
+        "base:_:低糖:di|tang",
+        "base:_:吹风机:chui|feng|ji"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-088dda2220f8a1a62366ccec",
+      "observed_text": "盲",
+      "observed_syllables": [
+        "mang2",
+        "yu2",
+        "fang4"
+      ],
+      "target": "base:_:鳗鱼饭:man|yu|fan",
+      "user_profile": {
+        "an_ang": 0.8
+      },
+      "base_candidates": [
+        "base:_:城景房:cheng|jing|fang",
+        "base:_:主办方:zhu|ban|fang",
+        "base:_:余韵:yu|yun",
+        "base:_:亲子房:qin|zi|fang",
+        "base:_:园景房:yuan|jing|fang",
+        "base:_:商务房:shang|wu|fang",
+        "base:_:功放:gong|fang",
+        "base:_:无烟房:wu|yan|fang",
+        "base:_:单人房:dan|ren|fang",
+        "base:_:双床房:shuang|chuang|fang",
+        "base:_:处方:chu|fang",
+        "base:_:家庭房:jia|ting|fang",
+        "base:_:主题房:zhu|ti|fang",
+        "base:_:预订:yu|ding",
+        "base:_:卫浴:wei|yu",
+        "base:_:预防:yu|fang"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-75d275be2122b9eebb1c4156",
+      "observed_text": "数被",
+      "observed_syllables": [
+        "shu4",
+        "bei1"
+      ],
+      "target": "base:_:塑杯:su|bei",
+      "user_profile": {
+        "s_sh": 0.2
+      },
+      "base_candidates": [
+        "base:_:漱口杯:shu|kou|bei",
+        "base:_:大杯:da|bei",
+        "base:_:薯条:shu|tiao",
+        "base:_:小杯:xiao|bei",
+        "base:_:书本:shu|ben",
+        "base:_:量杯:liang|bei",
+        "base:_:书写:shu|xie",
+        "base:_:中杯:zhong|bei",
+        "base:_:滤杯:l|bei",
+        "base:_:纸杯:zhi|bei",
+        "base:_:枢纽:shu|niu",
+        "base:_:书院:shu|yuan",
+        "base:_:输液:shu|ye",
+        "base:_:书房:shu|fang",
+        "base:_:熟豆:shu|dou"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-0877bd5376842d5c7ed434c3",
+      "observed_text": "房",
+      "observed_syllables": [
+        "zhu3",
+        "bang4",
+        "fang1"
+      ],
+      "target": "base:_:主办方:zhu|ban|fang",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [
+        "base:_:主讲人:zhu|jiang|ren",
+        "base:_:主持人:zhu|chi|ren",
+        "base:_:主产区:zhu|chan|qu",
+        "base:_:主任:zhu|ren",
+        "base:_:主办:zhu|ban",
+        "base:_:主持:zhu|chi",
+        "base:_:主持者:zhu|chi|zhe",
+        "base:_:主办者:zhu|ban|zhe",
+        "base:_:无烟房:wu|yan|fang",
+        "base:_:住房:zhu|fang",
+        "base:_:主会场:zhu|hui|chang",
+        "base:_:单人房:dan|ren|fang",
+        "base:_:家庭房:jia|ting|fang",
+        "base:_:主席台:zhu|xi|tai",
+        "base:_:主题房:zhu|ti|fang"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-bfad7a85b6c4fa332080aa38",
+      "observed_text": "规",
+      "observed_syllables": [
+        "qian2",
+        "fan1"
+      ],
+      "target": "base:_:前方:qian|fang",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [
+        "base:_:侵犯:qin|fan",
+        "base:_:前厅:qian|ting",
+        "base:_:签到:qian|dao",
+        "base:_:焗饭:ju|fan",
+        "base:_:前后:qian|hou",
+        "base:_:前去:qian|qu",
+        "base:_:前台:qian|tai",
+        "base:_:前夕:qian|xi",
+        "base:_:签约:qian|yue",
+        "base:_:嵌入:qian|ru",
+        "base:_:做饭:zuo|fan",
+        "base:_:前往:qian|wang",
+        "base:_:前列:qian|lie",
+        "base:_:前景:qian|jing",
+        "base:_:前提:qian|ti"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-99b29883bd17dbc329d327a1",
+      "observed_text": "画明车",
+      "observed_syllables": [
+        "hua1",
+        "ming2",
+        "che4"
+      ],
+      "target": "base:_:花名册:hua|ming|ce",
+      "user_profile": {
+        "c_ch": 0.2
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:化妆间:hua|zhuang|jian",
+        "base:_:停车:ting|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:发车:fa|che",
+        "base:_:名册:ming|ce",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:专车:zhuan|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:姓名牌:xing|ming|pai",
+        "base:_:化验:hua|yan",
+        "base:_:名录:ming|lu",
+        "base:_:化验单:hua|yan|dan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-20a4f23bd0ed1481aa418549",
+      "observed_text": "地方",
+      "observed_syllables": [
+        "nian4",
+        "nu4"
+      ],
+      "target": "base:_:链路:lian|lu",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [
+        "base:_:年轻:nian|qing",
+        "base:_:年检:nian|jian",
+        "base:_:匈奴:xiong|nu",
+        "base:_:农奴:nong|nu",
+        "base:_:年初:nian|chu",
+        "base:_:年代:nian|dai",
+        "base:_:年度:nian|du",
+        "base:_:年末:nian|mo",
+        "base:_:年级:nian|ji",
+        "base:_:年纪:nian|ji",
+        "base:_:年底:nian|di",
+        "base:_:年均:nian|jun",
+        "base:_:年间:nian|jian",
+        "base:_:年薪:nian|xin",
+        "base:_:年份:nian|fen",
+        "base:_:年产:nian|chan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-6a730e9b1cb0c9eb49beb5b0",
+      "observed_text": " ",
+      "observed_syllables": [
+        "men2",
+        "lin2"
+      ],
+      "target": "base:_:门铃:men|ling",
+      "user_profile": {
+        "ing_in": 0.5
+      },
+      "base_candidates": [
+        "base:_:树林:shu|lin",
+        "base:_:门内:men|nei",
+        "base:_:来临:lai|lin",
+        "base:_:门禁:men|jin",
+        "base:_:闷蒸:men|zheng",
+        "base:_:门人:men|ren",
+        "base:_:门诊:men|zhen",
+        "base:_:森林:sen|lin",
+        "base:_:园林:yuan|lin",
+        "base:_:门下:men|xia",
+        "base:_:少林:shao|lin",
+        "base:_:造林:zao|lin",
+        "base:_:门厅:men|ting",
+        "base:_:门牌:men|pai",
+        "base:_:门前:men|qian"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-5bd2f78cb41e0b9a727dbd6e",
+      "observed_text": "山穴",
+      "observed_syllables": [
+        "shan4",
+        "xue2"
+      ],
+      "target": "base:_:上学:shang|xue",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [
+        "base:_:光学:guang|xue",
+        "base:_:医学:yi|xue",
+        "base:_:同学:tong|xue",
+        "base:_:人学:ren|xue",
+        "base:_:出血:chu|xue",
+        "base:_:剥削:bo|xue",
+        "base:_:办学:ban|xue",
+        "base:_:哲学:zhe|xue",
+        "base:_:中学:zhong|xue",
+        "base:_:冰雪:bing|xue",
+        "base:_:力学:li|xue",
+        "base:_:史学:shi|xue",
+        "base:_:入学:ru|xue",
+        "base:_:善于:shan|yu",
+        "base:_:化学:hua|xue"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-9135323f5758bfd9e0fae1ae",
+      "observed_text": "现横",
+      "observed_syllables": [
+        "xian1",
+        "heng1"
+      ],
+      "target": "base:_:先锋:xian|feng",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [
+        "base:_:限行:xian|xing",
+        "base:_:仙草:xian|cao",
+        "base:_:先行:xian|xing",
+        "base:_:仙桃:xian|tao",
+        "base:_:仙人:xian|ren",
+        "base:_:先生:xian|sheng",
+        "base:_:先后:xian|hou",
+        "base:_:县境:xian|jing",
+        "base:_:先前:xian|qian",
+        "base:_:先驱:xian|qu",
+        "base:_:先是:xian|shi",
+        "base:_:县城:xian|cheng",
+        "base:_:限流:xian|liu",
+        "base:_:先进:xian|jin",
+        "base:_:先令:xian|ling"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-24e4a345c29b0dcae695607b",
+      "observed_text": "酿",
+      "observed_syllables": [
+        "zhu4",
+        "shui3",
+        "niang4"
+      ],
+      "target": "base:_:注水量:zhu|shui|liang",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [
+        "base:_:主讲人:zhu|jiang|ren",
+        "base:_:主持人:zhu|chi|ren",
+        "base:_:主产区:zhu|chan|qu",
+        "base:_:主任:zhu|ren",
+        "base:_:主办:zhu|ban",
+        "base:_:主办方:zhu|ban|fang",
+        "base:_:主持:zhu|chi",
+        "base:_:主办者:zhu|ban|zhe",
+        "base:_:主持者:zhu|chi|zhe",
+        "base:_:主题:zhu|ti",
+        "base:_:主会场:zhu|hui|chang",
+        "base:_:碱水包:jian|shui|bao",
+        "base:_:注水圈:zhu|shui|quan",
+        "base:_:主席台:zhu|xi|tai",
+        "base:_:主路:zhu|lu"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-95033f5e91cfd8a5dd71eafe",
+      "observed_text": "松占",
+      "observed_syllables": [
+        "shong4",
+        "zhan4",
+        "yuan2"
+      ],
+      "target": "base:_:送站员:song|zhan|yuan",
+      "user_profile": {
+        "z_zh": 0.2,
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:接站员:jie|zhan|yuan",
+        "base:_:博物院:bo|wu|yuan",
+        "base:_:值机员:zhi|ji|yuan",
+        "base:_:出园:chu|yuan",
+        "base:_:过敏原:guo|min|yuan",
+        "base:_:入园:ru|yuan",
+        "base:_:出院:chu|yuan",
+        "base:_:住院:zhu|yuan",
+        "base:_:书院:shu|yuan",
+        "base:_:动物园:dong|wu|yuan",
+        "base:_:到站:dao|zhan",
+        "base:_:出站:chu|zhan",
+        "base:_:参展:can|zhan",
+        "base:_:信号源:xin|hao|yuan",
+        "base:_:会议员:hui|yi|yuan"
+      ],
+      "generated_queries": [
+        [
+          "shong",
+          "zan",
+          "yuan"
+        ]
+      ],
+      "relations_used": [
+        "z_zh"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "CANDIDATE_BUDGET_PRUNED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-a932149b228ac41b6f0ef7e5",
+      "observed_text": "聲",
+      "observed_syllables": [
+        "yang2",
+        "chong1",
+        "quan1"
+      ],
+      "target": "base:_:洋葱圈:yang|cong|quan",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [
+        "base:_:手冲:shou|chong",
+        "base:_:手冲壶:shou|chong|hu",
+        "base:_:停车券:ting|che|quan",
+        "base:_:缓冲区:huan|chong|qu",
+        "base:_:样机台:yang|ji|tai",
+        "base:_:珍珠泉:zhen|zhu|quan",
+        "base:_:糖霜圈:tang|shuang|quan",
+        "base:_:甜甜圈:tian|tian|quan",
+        "base:_:发言权:fa|yan|quan",
+        "base:_:羊肉串:yang|rou|chuan",
+        "base:_:样本:yang|ben",
+        "base:_:发布权:fa|bu|quan",
+        "base:_:早餐券:zao|can|quan",
+        "base:_:氧气管:yang|qi|guan",
+        "base:_:注水圈:zhu|shui|quan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-930ad3b31521eec0e4307d7e",
+      "observed_text": "被",
+      "observed_syllables": [
+        "reng2",
+        "xing4"
+      ],
+      "target": "base:_:人性:ren|xing",
+      "user_profile": {
+        "en_eng": 0.5
+      },
+      "base_candidates": [
+        "base:_:限行:xian|xing",
+        "base:_:不行:bu|xing",
+        "base:_:中型:zhong|xing",
+        "base:_:步行:bu|xing",
+        "base:_:杯型:bei|xing",
+        "base:_:个性:ge|xing",
+        "base:_:绕行:rao|xing",
+        "base:_:习性:xi|xing",
+        "base:_:仍旧:reng|jiu",
+        "base:_:直行:zhi|xing",
+        "base:_:不幸:bu|xing",
+        "base:_:房型:fang|xing",
+        "base:_:车型:che|xing",
+        "base:_:叫醒:jiao|xing",
+        "base:_:举行:ju|xing"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-4aa9034441e4c28a21812d43",
+      "observed_text": "開",
+      "observed_syllables": [
+        "tong1",
+        "xun4",
+        "nu4"
+      ],
+      "target": "base:_:通讯录:tong|xun|lu",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [
+        "base:_:问询台:wen|xun|tai",
+        "base:_:通关单:tong|guan|dan",
+        "base:_:通道口:tong|dao|kou",
+        "base:_:通道:tong|dao",
+        "base:_:同传间:tong|chuan|jian",
+        "base:_:农奴:nong|nu",
+        "base:_:同声:tong|sheng",
+        "base:_:同意书:tong|yi|shu",
+        "base:_:咨询台:zi|xun|tai",
+        "base:_:烟熏调:yan|xun|tiao",
+        "base:_:中旬:zhong|xun",
+        "base:_:通关口:tong|guan|kou",
+        "base:_:同传机:tong|chuan|ji",
+        "base:_:下旬:xia|xun",
+        "base:_:通行证:tong|xing|zheng"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-dbbb0f780e5b7a15533931a6",
+      "observed_text": "湯楚或加編號龐氏",
+      "observed_syllables": [
+        "zao3",
+        "bang1",
+        "che1"
+      ],
+      "target": "base:_:早班车:zao|ban|che",
+      "user_profile": {
+        "an_ang": 0.8
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:停车:ting|che",
+        "base:_:发车:fa|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:布草车:bu|cao|che",
+        "base:_:专车:zhuan|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:手推车:shou|tui|che",
+        "base:_:工具车:gong|ju|che",
+        "base:_:抢救车:qiang|jiu|che",
+        "base:_:快车:kuai|che",
+        "base:_:小巴车:xiao|ba|che"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-7ee9f1ecf3ca83825e3d7f27",
+      "observed_text": "行",
+      "observed_syllables": [
+        "jing3",
+        "guan1",
+        "hang2"
+      ],
+      "target": "base:_:景观房:jing|guan|fang",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [
+        "base:_:通关单:tong|guan|dan",
+        "base:_:景观:jing|guan",
+        "base:_:吸管:xi|guan",
+        "base:_:净化器:jing|hua|qi",
+        "base:_:开馆:kai|guan",
+        "base:_:海关区:hai|guan|qu",
+        "base:_:观众:guan|zhong",
+        "base:_:拔罐:ba|guan",
+        "base:_:警务点:jing|wu|dian",
+        "base:_:景区图:jing|qu|tu",
+        "base:_:通关口:tong|guan|kou",
+        "base:_:中关村:zhong|guan|cun",
+        "base:_:观景:guan|jing",
+        "base:_:警官:jing|guan",
+        "base:_:导航:dao|hang"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-c54d6a1f3fff8b80518aaa1f",
+      "observed_text": "紅",
+      "observed_syllables": [
+        "hong2",
+        "dou4",
+        "tan1"
+      ],
+      "target": "base:_:红豆汤:hong|dou|tang",
+      "user_profile": {
+        "ang_an": 0.5
+      },
+      "base_candidates": [
+        "base:_:红豆塔:hong|dou|ta",
+        "base:_:熨斗:yun|dou",
+        "base:_:红豆粒:hong|dou|li",
+        "base:_:红豆包:hong|dou|bao",
+        "base:_:红豆杉:hong|dou|shan",
+        "base:_:红豆:hong|dou",
+        "base:_:红豆冰:hong|dou|bing",
+        "base:_:生豆:sheng|dou",
+        "base:_:烘焙度:hong|bei|du",
+        "base:_:土豆丝:tu|dou|si",
+        "base:_:红丝绒:hong|si|rong",
+        "base:_:磨豆机:mo|dou|ji",
+        "base:_:绿豆粒:l|dou|li",
+        "base:_:绿豆饼:l|dou|bing",
+        "base:_:熟豆:shu|dou"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-1884542011fd1a7eaa5e438b",
+      "observed_text": ",",
+      "observed_syllables": [
+        "shan4",
+        "zhou1"
+      ],
+      "target": "base:_:上周:shang|zhou",
+      "user_profile": {
+        "ang_an": 0.8
+      },
+      "base_candidates": [
+        "base:_:宇宙:yu|zhou",
+        "base:_:山前:shan|qian",
+        "base:_:山头:shan|tou",
+        "base:_:善人:shan|ren",
+        "base:_:山路:shan|lu",
+        "base:_:各州:ge|zhou",
+        "base:_:山中:shan|zhong",
+        "base:_:善于:shan|yu",
+        "base:_:山下:shan|xia",
+        "base:_:山石:shan|shi",
+        "base:_:善良:shan|liang",
+        "base:_:山上:shan|shang",
+        "base:_:山地:shan|di",
+        "base:_:山谷:shan|gu",
+        "base:_:山道:shan|dao"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-989447cb9b7f44a729dc6afd",
+      "observed_text": "建空高井來",
+      "observed_syllables": [
+        "chu1",
+        "chan3"
+      ],
+      "target": "base:_:出场:chu|chang",
+      "user_profile": {
+        "ang_an": 0.5
+      },
+      "base_candidates": [
+        "base:_:出园:chu|yuan",
+        "base:_:储存:chu|cun",
+        "base:_:出任:chu|ren",
+        "base:_:特产:te|chan",
+        "base:_:出兵:chu|bing",
+        "base:_:储备:chu|bei",
+        "base:_:出院:chu|yuan",
+        "base:_:出发:chu|fa",
+        "base:_:出入:chu|ru",
+        "base:_:出于:chu|yu",
+        "base:_:处方:chu|fang",
+        "base:_:处理:chu|li",
+        "base:_:出站:chu|zhan",
+        "base:_:储量:chu|liang",
+        "base:_:除颤仪:chu|chan|yi",
+        "base:_:丰产:feng|chan"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-2934a0fcdfb2abc162abf4be",
+      "observed_text": "道蒙金",
+      "observed_syllables": [
+        "meng2",
+        "jin4"
+      ],
+      "target": "base:_:门禁:men|jin",
+      "user_profile": {
+        "en_eng": 0.8
+      },
+      "base_candidates": [
+        "base:_:亲近:qin|jin",
+        "base:_:地巾:di|jin",
+        "base:_:浴巾:yu|jin",
+        "base:_:严谨:yan|jin",
+        "base:_:促进:cu|jin",
+        "base:_:严禁:yan|jin",
+        "base:_:临近:lin|jin",
+        "base:_:不尽:bu|jin",
+        "base:_:东晋:dong|jin",
+        "base:_:毛巾:mao|jin",
+        "base:_:不禁:bu|jin",
+        "base:_:先进:xian|jin",
+        "base:_:使劲:shi|jin",
+        "base:_:不仅:bu|jin",
+        "base:_:仅仅:jin|jin"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-b9419efcd24696b542188277",
+      "observed_text": "南美",
+      "observed_syllables": [
+        "nan2",
+        "mei2",
+        "ta3"
+      ],
+      "target": "base:_:蓝莓塔:lan|mei|ta",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [
+        "base:_:恰巴塔:qia|ba|ta",
+        "base:_:草莓冻:cao|mei|dong",
+        "base:_:柠檬塔:ning|meng|ta",
+        "base:_:南瓜包:nan|gua|bao",
+        "base:_:水果塔:shui|guo|ta",
+        "base:_:南瓜泥:nan|gua|ni",
+        "base:_:南瓜派:nan|gua|pai",
+        "base:_:草莓卷:cao|mei|juan",
+        "base:_:蓝莓派:lan|mei|pai",
+        "base:_:草莓塔:cao|mei|ta",
+        "base:_:媒体:mei|ti",
+        "base:_:灯塔:deng|ta",
+        "base:_:红豆塔:hong|dou|ta",
+        "base:_:布丁塔:bu|ding|ta",
+        "base:_:草莓丁:cao|mei|ding"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-3b185fbab7523f0e30e2cffa",
+      "observed_text": "搬哈做",
+      "observed_syllables": [
+        "ha1",
+        "zuo4"
+      ],
+      "target": "base:_:发作:fa|zuo",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [
+        "base:_:当做:dang|zuo",
+        "base:_:写作:xie|zuo",
+        "base:_:协作:xie|zuo",
+        "base:_:叫做:jiao|zuo",
+        "base:_:动作:dong|zuo",
+        "base:_:合作:he|zuo",
+        "base:_:比作:bi|zuo",
+        "base:_:当作:dang|zuo",
+        "base:_:创作:chuang|zuo",
+        "base:_:制作:zhi|zuo",
+        "base:_:操作:cao|zuo",
+        "base:_:用作:yong|zuo",
+        "base:_:叫作:jiao|zuo",
+        "base:_:乘坐:cheng|zuo",
+        "base:_:哈哈:ha|ha"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-8271abf104db591e5c62b57b",
+      "observed_text": "间",
+      "observed_syllables": [
+        "jin3",
+        "chi4",
+        "yu2"
+      ],
+      "target": "base:_:仅次于:jin|ci|yu",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [
+        "base:_:主持人:zhu|chi|ren",
+        "base:_:不同于:bu|tong|yu",
+        "base:_:电池包:dian|chi|bao",
+        "base:_:主持:zhu|chi",
+        "base:_:进站:jin|zhan",
+        "base:_:主持者:zhu|chi|zhe",
+        "base:_:不利于:bu|li|yu",
+        "base:_:金杯液:jin|bei|ye",
+        "base:_:一隅:yi|yu",
+        "base:_:水煮鱼:shui|zhu|yu",
+        "base:_:金萱茶:jin|xuan|cha",
+        "base:_:不吃:bu|chi",
+        "base:_:酸菜鱼:suan|cai|yu",
+        "base:_:卫浴:wei|yu",
+        "base:_:延迟:yan|chi"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-910e292dda6e3fcd9e88ded4",
+      "observed_text": "后",
+      "observed_syllables": [
+        "chong2",
+        "mei2"
+      ],
+      "target": "base:_:从没:cong|mei",
+      "user_profile": {
+        "c_ch": 0.2
+      },
+      "base_candidates": [
+        "base:_:充电:chong|dian",
+        "base:_:冲出:chong|chu",
+        "base:_:传媒:chuan|mei",
+        "base:_:倒霉:dao|mei",
+        "base:_:充满:chong|man",
+        "base:_:妹妹:mei|mei",
+        "base:_:充实:chong|shi",
+        "base:_:充足:chong|zu",
+        "base:_:冲动:chong|dong",
+        "base:_:冲击:chong|ji",
+        "base:_:冲破:chong|po",
+        "base:_:充当:chong|dang",
+        "base:_:优美:you|mei",
+        "base:_:冲突:chong|tu",
+        "base:_:充分:chong|fen"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-2977bfb36ca5f63066dc25ef",
+      "observed_text": " ",
+      "observed_syllables": [
+        "shong4",
+        "wu4",
+        "che1"
+      ],
+      "target": "base:_:送物车:song|wu|che",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:任务组:ren|wu|zu",
+        "base:_:停车:ting|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:医务站:yi|wu|zhan",
+        "base:_:专车:zhuan|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:会务:hui|wu",
+        "base:_:会务包:hui|wu|bao",
+        "base:_:动物园:dong|wu|yuan",
+        "base:_:会务组:hui|wu|zu",
+        "base:_:储物间:chu|wu|jian"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-5fc301ebac5441e5d987a3d4",
+      "observed_text": "并",
+      "observed_syllables": [
+        "hu4",
+        "li3",
+        "dang1"
+      ],
+      "target": "base:_:护理单:hu|li|dan",
+      "user_profile": {
+        "an_ang": 0.8
+      },
+      "base_candidates": [
+        "base:_:玻璃杯:bo|li|bei",
+        "base:_:处理费:chu|li|fei",
+        "base:_:湖泊区:hu|bo|qu",
+        "base:_:呼吸科:hu|xi|ke",
+        "base:_:护理:hu|li",
+        "base:_:护理液:hu|li|ye",
+        "base:_:呼吸机:hu|xi|ji",
+        "base:_:文档:wen|dang",
+        "base:_:护士长:hu|shi|zhang",
+        "base:_:护栏区:hu|lan|qu",
+        "base:_:护理费:hu|li|fei",
+        "base:_:护士:hu|shi",
+        "base:_:处理:chu|li",
+        "base:_:修理费:xiu|li|fei",
+        "base:_:推理:tui|li"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-669df3ff620d6fcde882b347",
+      "observed_text": "在山",
+      "observed_syllables": [
+        "zai4",
+        "shan1"
+      ],
+      "target": "base:_:再三:zai|san",
+      "user_profile": {
+        "s_sh": 0.8
+      },
+      "base_candidates": [
+        "base:_:再说:zai|shuo",
+        "base:_:在线:zai|xian",
+        "base:_:再次:zai|ci",
+        "base:_:在场:zai|chang",
+        "base:_:在外:zai|wai",
+        "base:_:再生:zai|sheng",
+        "base:_:在内:zai|nei",
+        "base:_:再有:zai|you",
+        "base:_:在家:zai|jia",
+        "base:_:再度:zai|du",
+        "base:_:在于:zai|yu",
+        "base:_:修缮:xiu|shan",
+        "base:_:在位:zai|wei",
+        "base:_:在校:zai|xiao",
+        "base:_:再也:zai|ye"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-cf34120a9525a5f73567104b",
+      "observed_text": "粗銷敬",
+      "observed_syllables": [
+        "qian1",
+        "gong1",
+        "qin3"
+      ],
+      "target": "base:_:千公顷:qian|gong|qing",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [
+        "base:_:签约国:qian|yue|guo",
+        "base:_:欠拟合:qian|ni|he",
+        "base:_:签到:qian|dao",
+        "base:_:前厅:qian|ting",
+        "base:_:签约台:qian|yue|tai",
+        "base:_:签到台:qian|dao|tai",
+        "base:_:签到簿:qian|dao|bo",
+        "base:_:签到处:qian|dao|chu",
+        "base:_:千层酥:qian|ceng|su",
+        "base:_:功放:gong|fang",
+        "base:_:攻略:gong|le",
+        "base:_:签约:qian|yue",
+        "base:_:嵌入:qian|ru",
+        "base:_:浅烘焙:qian|hong|bei",
+        "base:_:签名墙:qian|ming|qiang"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S10_WEAK_PROFILE",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-474a2c771c2e74887ff0e936",
+      "observed_text": "裡請寫",
+      "observed_syllables": [
+        "mo4",
+        "bang1",
+        "che1"
+      ],
+      "target": "base:_:末班车:mo|ban|che",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [
+        "base:_:候车:hou|che",
+        "base:_:包车:bao|che",
+        "base:_:停车:ting|che",
+        "base:_:发车:fa|che",
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:布草车:bu|cao|che",
+        "base:_:专车:zhuan|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:手推车:shou|tui|che",
+        "base:_:工具车:gong|ju|che",
+        "base:_:抢救车:qiang|jiu|che",
+        "base:_:快车:kuai|che",
+        "base:_:小巴车:xiao|ba|che"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-4a2630fc8ec1126d4eb26eeb",
+      "observed_text": "頭",
+      "observed_syllables": [
+        "men2",
+        "lin2"
+      ],
+      "target": "base:_:门铃:men|ling",
+      "user_profile": {
+        "ing_in": 0.5
+      },
+      "base_candidates": [
+        "base:_:树林:shu|lin",
+        "base:_:门内:men|nei",
+        "base:_:来临:lai|lin",
+        "base:_:门禁:men|jin",
+        "base:_:闷蒸:men|zheng",
+        "base:_:门人:men|ren",
+        "base:_:门诊:men|zhen",
+        "base:_:森林:sen|lin",
+        "base:_:园林:yuan|lin",
+        "base:_:门下:men|xia",
+        "base:_:少林:shao|lin",
+        "base:_:造林:zao|lin",
+        "base:_:门厅:men|ting",
+        "base:_:门牌:men|pai",
+        "base:_:门前:men|qian"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    },
+    {
+      "utterance_id": "ts-b6998e660238e0ac90bb9849",
+      "observed_text": "行",
+      "observed_syllables": [
+        "tui4",
+        "hang2"
+      ],
+      "target": "base:_:退房:tui|fang",
+      "user_profile": {
+        "f_h": 0.5
+      },
+      "base_candidates": [
+        "base:_:五行:wu|hang",
+        "base:_:同行:tong|hang",
+        "base:_:单行:dan|hang",
+        "base:_:推动:tui|dong",
+        "base:_:推举:tui|ju",
+        "base:_:推广:tui|guang",
+        "base:_:推出:tui|chu",
+        "base:_:推向:tui|xiang",
+        "base:_:导航:dao|hang",
+        "base:_:推开:tui|kai",
+        "base:_:退票:tui|piao",
+        "base:_:退单:tui|dan",
+        "base:_:推测:tui|ce",
+        "base:_:推拿:tui|na",
+        "base:_:两行:liang|hang",
+        "base:_:推理:tui|li"
+      ],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "FAMILY_SYNTH"
+    }
+  ],
+  "slice": "S1_SINGLE_PROFILE_CLEAN",
+  "n_eval": 100,
+  "complementarity": {
+    "BASE_ONLY": 49,
+    "PROFILE_ONLY": 9,
+    "BOTH": 33,
+    "NEITHER": 9,
+    "PROFILE_ONLY_RECOVERY": 0.09
+  },
+  "metrics_FAMILY_SYNTH": {
+    "markers": [
+      "PHASE7F_AUDIT",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 100,
+    "TargetIntroductionRate": 0.42,
+    "ProfileOnlyTargetRecovery": 0.42,
+    "FalseExpansionRate": 0.0,
+    "NewCandidatePrecision_proxy": 0.2413793103448276,
+    "TargetPerExpansion": 0.2413793103448276,
+    "new_candidates_mean": 1.74,
+    "new_candidates_p95": 7.0,
+    "queries_mean": 0.43,
+    "queries_p95": 1.0,
+    "latency_ms_p50": 0.01889999839477241,
+    "latency_ms_p95": 62.92399999802001
+  }
+}

@@ -252,7 +252,7 @@ describe('Step 3 Lattice structured failure isolation', () => {
 
   it('orchestrator source uses Lattice production entry only', () => {
     const orch = fs.readFileSync(path.join(__dirname, 'span-assembly-v4-orchestrator.ts'), 'utf8');
-    expect(orch).toMatch(/runLatticeFineSpanGeneration/);
+    expect(orch).toMatch(/runLatticeFineSpanGenerationWithPreEdgeModel2/);
     expect(orch).not.toContain(LEGACY_ENTRY);
     expect(orch).not.toContain(LEGACY_MODULE);
     expect(orch).not.toContain(LEGACY_MODE);

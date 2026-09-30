@@ -1,0 +1,61 @@
+{
+  "schema": "LINGUA_DIALOG200_REPLAY_ALIGNMENT_STATE_REPAIR_V1_TRACE",
+  "phase": "DIALOG200_REPLAY_ALIGNMENT_STATE_REPAIR_V1",
+  "modified_files": [
+    {
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-replay-alignment-state.mjs",
+      "kind": "REPLAY_STATE_REPAIR",
+      "role": "reconstructMultiBatchAlignmentState from evidenceProduction"
+    },
+    {
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-replay-alignment-state.test.mjs",
+      "kind": "REPLAY_STATE_REPAIR_TEST",
+      "role": "T1–T7 unit tests"
+    },
+    {
+      "path": "electron_node/electron-node/tests/run-dialog200-frozen-evidence-replay-v1.mjs",
+      "kind": "REPLAY_STATE_REPAIR",
+      "role": "reconstruct + inject alignment into /run-lexicon-mock payload; hard-fail NOT_RECONSTRUCTABLE"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/inference/inference-service.ts",
+      "kind": "REPLAY_STATE_REPAIR",
+      "role": "extend existing runPipelineWithMockAsr inject options to set JobContext alignment fields only — no ASR/Tone/Recall algorithm change"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/test-server.ts",
+      "kind": "REPLAY_STATE_REPAIR",
+      "role": "pass-through alignment fields on /run-lexicon-mock"
+    }
+  ],
+  "production_algorithm_files_touched": [],
+  "frozen_evidence_delta": false,
+  "evaluation_ssot_delta": false,
+  "d157_before_after": {
+    "before": {
+      "segmentTimeOffsetsSec": null,
+      "asrSegmentNodeBatchIndices": null,
+      "word_但_batch1_span": [0.74, 1.18],
+      "e18": "FAIL",
+      "final_replay": "您好我定,但显示 但物流三天没更新能帮我查一下吗?"
+    },
+    "after": {
+      "segmentTimeOffsetsSec": [0, 1.6],
+      "asrSegmentNodeBatchIndices": [0, 1],
+      "word_但_batch1_span": [2.34, 2.78],
+      "e18": "PASS",
+      "final_replay": "您好我定,但显示 耽误三天没更新能帮我查一下吗?"
+    }
+  },
+  "seven_case_offsets_reconstructed_not_hardcoded": {
+    "d019": [0, 1.2],
+    "d045": [0, 1.4],
+    "d061": [0, 2.9],
+    "d110": [0, 0.9],
+    "d112": [0, 3.2],
+    "d156": [0, 3.3],
+    "d157": [0, 1.6]
+  },
+  "dialog200_replay_run_id": "dialog200_frozen_replay_v1_20260922223418",
+  "remaining_mid_stage_soft": ["d149_E7_PATH_COUNT", "d160_E14_KENLM_RANKING"]
+}

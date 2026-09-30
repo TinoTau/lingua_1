@@ -1,0 +1,15 @@
+Step,Name,File,Symbol,Input,Output,Owner
+1,ASR result,asr-step.ts,runAsrStep,JobAssign+audio,JobContext.asrText/rawAsrText,ASR pipeline
+2,FW inject,pipeline-mode-fw.ts,applyFwDetectorPipelineMode,pipeline,FW_SPAN_DETECTOR after ASR,FW mode
+3,FW step,fw-detector-step.ts,runFwDetectorStep,JobContext,orchestrator,FW detector
+4,FW v4 path,fw-detector-v4-path.ts,runFwDetectorV4Path,ctx,segmentForJobResult apply,FW detector
+5,Span assembly orch,span-assembly-v4-orchestrator.ts,runSpanAssemblyV4Orchestrator,rawText+runtime,fwSpans+sentence pool,Lattice/Assembly
+6,FineSpan gen,lattice-fine-span-runtime.ts,runLatticeFineSpanGeneration,LatticeFineSpanGenerationInput,PathFineSpanView[],Lattice FineSpan
+7,Base lexicon recall,recall-topk-for-windows.ts / recall-span-topk-v2.ts,recallTopKForWindows / recallSpanTopKV2,windows+syllables+domainIds,WindowCandidate[],LexiconRuntimeV2
+8,Materialize PathFineSpan,materialize-path-fine-spans.ts,materializePathFineSpans,path+coordinate,PathFineSpan.candidates,Lattice
+9,Compatibility,span-assembly-v4-orchestrator,resolveCompatibilityRelations,pathCandidates,activeCandidates,Assembly prep
+10,*** MODEL2 INSERTION POINT ***,span-assembly-v4-orchestrator.ts ~L300-323,AFTER activeCandidates BEFORE runDomainAwareAssembly,activeCandidates+UserProfile,merged activeCandidates,Model2 owner proposed
+11,DomainAwareAssembly,assemble-domain-aware-span-sets.ts,runDomainAwareAssembly,activeCandidates+coarse+priors,spanSets/vote,Assembly owner
+12,Sentence candidates,orchestrator,buildSentenceCandidates+mergeCrossPath,span sets,<=16 sentences,FW
+13,KenLM,rerank-fw-sentences.ts,rerankFwSentences / gate,sentence pool,approved picks or raw,KenLM owner
+14,Apply+JobResult,fw-detector-v4-path + result-builder,applyFwSpanReplacements / buildJobResult,ctx,JobResult.text_asr,Pipeline

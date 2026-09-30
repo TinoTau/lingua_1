@@ -1,0 +1,36 @@
+{
+  "Seen_span_P": {},
+  "Unseen_span_P": {
+    "RecallRetained": 0.9210526315789475,
+    "QueryReduction": 0.5294117647058824,
+    "CandidateReduction": 0.40454545454545454,
+    "E2ECostReduction": 0.4868217054263566,
+    "B1": {
+      "n": 40,
+      "TargetIntroductionRate": 0.95,
+      "RecallHitRate": 0.95,
+      "QueryCount_mean": 2.125,
+      "CandidateCount_mean": 5.5,
+      "Latency_P50": 114.7400000190828,
+      "Latency_P95": 190.19459999981336
+    },
+    "V3": {
+      "n": 40,
+      "TargetIntroductionRate": 0.875,
+      "RecallHitRate": 0.875,
+      "QueryCount_mean": 1.0,
+      "CandidateCount_mean": 3.275,
+      "Latency_P50": 60.14859999413602,
+      "Latency_P95": 73.53300001705065
+    }
+  },
+  "D_test_as_heldout_profile_pattern": {
+    "n": 363,
+    "TargetIntroductionRate": 0.0,
+    "RecallHitRate": 0.0,
+    "QueryCount_mean": 1.8292011019283747,
+    "CandidateCount_mean": 8.0,
+    "Latency_P50": 115.77009997563437,
+    "Latency_P95": 567.5527999992482
+  }
+}

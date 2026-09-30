@@ -1,0 +1,61 @@
+{
+  "baselineId": "LINGUA_DIALOG200_BASELINE_V1",
+  "frozenAt": "2026-09-10",
+  "phase": "MODEL3_FULL_ASR_PIPELINE_FREEZE_AND_NEXT_OPTIMIZATION_AUDIT",
+  "runId": "dialog200_full_pipeline_20260909_001141",
+  "corpus": "dialog_200",
+  "totalCases": 200,
+  "executed": 200,
+  "failed": 0,
+  "quality": {
+    "RAW_CORRECT": 25,
+    "FINAL_CORRECT": 31,
+    "RAW_ACCURACY": 0.125,
+    "FINAL_ACCURACY": 0.155,
+    "NET_CORRECT_GAIN": 6,
+    "RAW_CER": 0.2303,
+    "FINAL_CER": 0.167,
+    "CER_DELTA": -0.0633,
+    "CORRECT_BROKEN": 0,
+    "FULL_RESCUE": 6,
+    "PARTIAL_IMPROVEMENT": 60,
+    "UNCHANGED": 109,
+    "CORRECT_PRESERVED": 25,
+    "REGRESSION": 0
+  },
+  "runtime": {
+    "model3": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "configSha256": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "lexiconRuntimeReady": true,
+    "candidateCap": 16,
+    "observedMaxPool": 8,
+    "over16": 0
+  },
+  "comparisonRequiredForFutureDeltas": [
+    "RAW_CORRECT",
+    "FINAL_CORRECT",
+    "NET_CORRECT_GAIN",
+    "RAW_CER",
+    "FINAL_CER",
+    "CORRECT_BROKEN"
+  ],
+  "regressionRules": {
+    "CORRECT_BROKEN_must_be_explained_if_gt": 0,
+    "rejectIfFinalCorrectLessThan": 31,
+    "rejectIfFinalCerMateriallyWorseThan": 0.167
+  },
+  "evidenceRefs": [
+    "fresh_dialog200_quality_summary.json",
+    "fresh_dialog200_runtime_provenance.json",
+    "fresh_dialog200_case_results.csv",
+    "Full_Pipeline_Fresh_Dialog200_Causal_Reconciliation_Audit.md"
+  ],
+  "staleAttributionsDoNotUse": [
+    "LEXICON_COVERAGE_MISSING=143",
+    "QUERY_NOT_REPAIR_CAPABLE=100",
+    "NO_LOCAL_LEXICAL_TARGET=59",
+    "RECALL_MATCHING_FAILED=14",
+    "ASSEMBLY_CANDIDATE_LOSS=2"
+  ]
+}

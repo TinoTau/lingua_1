@@ -1,0 +1,4 @@
+route,description,semantic_parity,reuse_existing_owner,no_duplicated_logic,no_arch_runtime_change,train_scale,label_compatibility,repeatability,complexity,synthetic_bias_risk,authorization_status,overall,blocking_gap
+A_REAL_STATE,real audio or live packed traces through production Tone/Recall,PASS,PASS,PASS,PASS,FAIL,FAIL,PARTIAL,LOW,LOW,PARTIALLY_AVAILABLE,PARTIAL,scale+no RETRY GT+holdout; OK for reference/validation only
+B_ACOUSTIC_MATERIALIZATION,text→TTS/audio→ASR→Tone→Recall→cand for train samples,PARTIAL_TO_PASS,PASS,PASS,PASS_IF_RUNTIME_UNCHANGED,PARTIAL,PARTIAL,PARTIAL,HIGH,HIGH,NEW_TRAINING_DATA_GENERATION_DECISION_REQUIRED,PARTIAL,policy not frozen; TTS readiness superseded; alignment/yield risks
+C_FROZEN_SIMULATOR,corruption metadata→frozen tone-state simulator→Recall,UNKNOWN,FAIL,N/A,N/A,UNKNOWN,UNKNOWN,UNKNOWN,N/A,UNKNOWN,NOT_CURRENTLY_AUTHORIZED,FAIL,DOES_NOT_EXIST — do not invent in this phase

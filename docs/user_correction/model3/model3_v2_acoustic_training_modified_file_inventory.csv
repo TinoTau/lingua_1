@@ -1,0 +1,26 @@
+action,path,reason
+NEW,training/model3_dataset/acoustic_training/__init__.py,package
+NEW,training/model3_dataset/acoustic_training/holdout_registry.py,central protection registry
+NEW,training/model3_dataset/acoustic_training/family_identity.py,semanticFamilyId vs materializationRunId
+NEW,training/model3_dataset/acoustic_training/pcm_encode.py,PCM SSOT re-export
+NEW,training/model3_dataset/acoustic_training/reference_source.py,reference adapter
+NEW,training/model3_dataset/acoustic_training/audio_materializer.py,Piper orchestration
+NEW,training/model3_dataset/acoustic_training/provenance.py,gates + HARD/SEMANTIC split
+NEW,training/model3_dataset/acoustic_training/serializer.py,V1 sample serialize
+NEW,training/model3_dataset/acoustic_training/manifest.py,manifest/resume
+NEW,training/model3_dataset/acoustic_training/orchestrator.py,formal B2 orchestrator
+NEW,training/model3_dataset/acoustic_training/gate0.py,Gate0 checker
+NEW,training/model3_dataset/offline_harness/acoustic_b2_formal_materialize.cjs,formal owner harness with Model2
+NEW,training/model3_dataset/tests/test_acoustic_training_state.py,focused tests
+NEW,docs/user_correction/model3/model3_v2_protection_registry.json,holdout registry file
+MODIFY,training/model3_dataset/offline_harness/acoustic_b2_materialize.cjs,mark LEGACY
+MODIFY,training/model3_dataset/scripts/run_acoustic_b2_yield_probe.py,use formal harness
+MODIFY,training/model3_dataset/scripts/run_acoustic_b2_yield_probe_extension.py,use formal harness
+MODIFY,docs/user_correction/model3/model3_v2_training_provenance_contract.json,promote authoritative
+NEW,docs/user_correction/model3/Lingua_Model3_V2_Acoustic_Training_State_Implementation_2026_08_30.md,primary report
+NEW,docs/user_correction/model3/model3_v2_acoustic_training_implementation_summary.json,summary
+NEW,docs/user_correction/model3/model3_v2_acoustic_training_test_results.csv,tests
+NEW,docs/user_correction/model3/model3_v2_acoustic_training_gate0_readiness.json,Gate0 readiness
+NEW,docs/user_correction/model3/model3_v2_training_sample_contract_final.json,sample contract
+NEW,docs/user_correction/model3/model3_v2_training_split_identity_validation.csv,split validation
+NEW,docs/user_correction/model3/model3_v2_acoustic_training_modified_file_inventory.csv,this inventory

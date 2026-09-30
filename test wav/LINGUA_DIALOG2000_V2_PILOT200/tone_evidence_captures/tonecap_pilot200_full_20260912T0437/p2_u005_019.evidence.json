@@ -1,0 +1,283 @@
+{
+  "caseId": "p2_u005_019",
+  "captureBatchId": "tonecap_pilot200_full_20260912T0437",
+  "datasetBuildId": "build_20260911_091806",
+  "split": "VALIDATION",
+  "userId": "U005",
+  "domain": "retail_service",
+  "audioId": "aud_p2_u005_019",
+  "audioPath": "audio/p2_u005_019.wav",
+  "audioSha256": "6705aa4aeca3c9c01fc072d5e69d099bc5a5dfbe74fd36974be83c9cf8334bf0",
+  "profileConditionAtCapture": "NO_PROFILE",
+  "rawMergedAsrText": "或家有归病似",
+  "rawAsrHash": "3e204f76ce27f39cf857f6e1af517b0f47a9c658f9fb9d9edb08ed9b4b11c24b",
+  "segments": [
+    {
+      "text": "或家有归病似",
+      "start": 0,
+      "end": 1.3,
+      "no_speech_prob": 0.2271728515625,
+      "avg_logprob": -0.65101834860715,
+      "compression_ratio": 0.6206896551724138,
+      "words": [
+        {
+          "word": "或",
+          "start": 0,
+          "end": 0.34,
+          "probability": 0.560546875
+        },
+        {
+          "word": "家",
+          "start": 0.34,
+          "end": 0.52,
+          "probability": 0.67236328125
+        },
+        {
+          "word": "有",
+          "start": 0.52,
+          "end": 0.66,
+          "probability": 0.90087890625
+        },
+        {
+          "word": "归",
+          "start": 0.66,
+          "end": 0.94,
+          "probability": 0.6429443359375
+        },
+        {
+          "word": "病",
+          "start": 0.94,
+          "end": 1.18,
+          "probability": 0.347900390625
+        },
+        {
+          "word": "似",
+          "start": 1.18,
+          "end": 1.3,
+          "probability": 0.63916015625
+        }
+      ]
+    }
+  ],
+  "segmentEvidenceHash": "81c89d64679687dbe88ae09b334adc14c0c927e04f3ab7e80e7b155fc8d26c0a",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "acousticToneSlices": [
+      {
+        "start": 0,
+        "end": 0.34,
+        "tonePosterior": {
+          "t1": 0.000024136415959219448,
+          "t2": 0.00004624803113983944,
+          "t3": 0.0001536078634671867,
+          "t4": 0.9997743964195251,
+          "t5": 0.000001678959733908414
+        },
+        "confidence": 0.9997743964195251
+      },
+      {
+        "start": 0.34,
+        "end": 0.52,
+        "tonePosterior": {
+          "t1": 0.0666794553399086,
+          "t2": 0.6883966326713562,
+          "t3": 0.17673097550868988,
+          "t4": 0.06769885122776031,
+          "t5": 0.0004941300139762461
+        },
+        "confidence": 0.6883966326713562
+      },
+      {
+        "start": 0.52,
+        "end": 0.66,
+        "tonePosterior": {
+          "t1": 0.00045644474448636174,
+          "t2": 0.03137693181633949,
+          "t3": 0.8157656788825989,
+          "t4": 0.12472831457853317,
+          "t5": 0.027672698721289635
+        },
+        "confidence": 0.8157656788825989
+      },
+      {
+        "start": 0.66,
+        "end": 0.94,
+        "tonePosterior": {
+          "t1": 0.000006542215032823151,
+          "t2": 0.9945533275604248,
+          "t3": 0.005436156876385212,
+          "t4": 0.000003143737558275461,
+          "t5": 7.207848398138594e-7
+        },
+        "confidence": 0.9945533275604248
+      },
+      {
+        "start": 0.94,
+        "end": 1.18,
+        "tonePosterior": {
+          "t1": 0.00660535367205739,
+          "t2": 0.4573809504508972,
+          "t3": 0.17728577554225922,
+          "t4": 0.3514566421508789,
+          "t5": 0.007271168753504753
+        },
+        "confidence": 0.4573809504508972
+      },
+      {
+        "start": 1.18,
+        "end": 1.3,
+        "tonePosterior": {
+          "t1": 0.002318258862942457,
+          "t2": 0.019870992749929428,
+          "t3": 0.12172648310661316,
+          "t4": 0.5296393036842346,
+          "t5": 0.3264450132846832
+        },
+        "confidence": 0.5296393036842346
+      }
+    ],
+    "sliceCount": 6,
+    "toneConfidenceAvg": 0.7475850482781728,
+    "evidenceProduction": [
+      {
+        "word": "或",
+        "startSec": 0,
+        "endSec": 0.34,
+        "durationSec": 0.34,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "家",
+        "startSec": 0.34,
+        "endSec": 0.52,
+        "durationSec": 0.18,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "有",
+        "startSec": 0.52,
+        "endSec": 0.66,
+        "durationSec": 0.14,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "归",
+        "startSec": 0.66,
+        "endSec": 0.94,
+        "durationSec": 0.2799999999999999,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "病",
+        "startSec": 0.94,
+        "endSec": 1.18,
+        "durationSec": 0.24,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "似",
+        "startSec": 1.18,
+        "endSec": 1.3,
+        "durationSec": 0.1200000000000001,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      }
+    ],
+    "model": "tone_cnn_production_v2",
+    "version": "p10-p1-direct-replacement-v1"
+  },
+  "acousticToneSlices": [
+    {
+      "start": 0,
+      "end": 0.34,
+      "tonePosterior": {
+        "t1": 0.000024136415959219448,
+        "t2": 0.00004624803113983944,
+        "t3": 0.0001536078634671867,
+        "t4": 0.9997743964195251,
+        "t5": 0.000001678959733908414
+      },
+      "confidence": 0.9997743964195251
+    },
+    {
+      "start": 0.34,
+      "end": 0.52,
+      "tonePosterior": {
+        "t1": 0.0666794553399086,
+        "t2": 0.6883966326713562,
+        "t3": 0.17673097550868988,
+        "t4": 0.06769885122776031,
+        "t5": 0.0004941300139762461
+      },
+      "confidence": 0.6883966326713562
+    },
+    {
+      "start": 0.52,
+      "end": 0.66,
+      "tonePosterior": {
+        "t1": 0.00045644474448636174,
+        "t2": 0.03137693181633949,
+        "t3": 0.8157656788825989,
+        "t4": 0.12472831457853317,
+        "t5": 0.027672698721289635
+      },
+      "confidence": 0.8157656788825989
+    },
+    {
+      "start": 0.66,
+      "end": 0.94,
+      "tonePosterior": {
+        "t1": 0.000006542215032823151,
+        "t2": 0.9945533275604248,
+        "t3": 0.005436156876385212,
+        "t4": 0.000003143737558275461,
+        "t5": 7.207848398138594e-7
+      },
+      "confidence": 0.9945533275604248
+    },
+    {
+      "start": 0.94,
+      "end": 1.18,
+      "tonePosterior": {
+        "t1": 0.00660535367205739,
+        "t2": 0.4573809504508972,
+        "t3": 0.17728577554225922,
+        "t4": 0.3514566421508789,
+        "t5": 0.007271168753504753
+      },
+      "confidence": 0.4573809504508972
+    },
+    {
+      "start": 1.18,
+      "end": 1.3,
+      "tonePosterior": {
+        "t1": 0.002318258862942457,
+        "t2": 0.019870992749929428,
+        "t3": 0.12172648310661316,
+        "t4": 0.5296393036842346,
+        "t5": 0.3264450132846832
+      },
+      "confidence": 0.5296393036842346
+    }
+  ],
+  "toneEvidenceHash": "0f0db956e5950b11ee661ee24afad1ccd3428ca9df848f2397d3c40732b0e75b",
+  "toneSliceCount": 6,
+  "toneSkippedReason": null,
+  "toneEvidencePresent": true,
+  "sessionId": "pilot200-tonecap::p2_u005_019::tonecap_pilot200_full_20260912T0437",
+  "captureTimestamp": "2026-09-12T04:58:06.778Z",
+  "runnerVersion": "pilot200-frozen-tone-evidence-full-capture-v1",
+  "asrExecutedForCapture": true,
+  "status": "OK"
+}

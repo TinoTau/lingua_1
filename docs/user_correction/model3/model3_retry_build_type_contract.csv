@@ -1,0 +1,9 @@
+symbol,role,declared_or_inferred,has_code_field,notes
+ResegmentRetryRegionResult,authoritative_result_contract,"{ ok; localSpans; code?: string }",YES_OPTIONAL,Existing SSOT for regional resegment outcomes
+Model3RetryRegionResegmentFn,DI_fn_contract,() => ResegmentRetryRegionResult | Promise<...>,VIA_RESULT,Production intended injection type
+resegmentRetryRegionWithLattice,production_producer,Promise<ResegmentRetryRegionResult>,YES_ON_FAIL,"EMPTY_SLICE | lattice.code | NO_PATH | exception"
+defaultResegment,DI_default_stub,"declared { ok; localSpans } ONLY",NO,"Always ok:true; pre-Delta2; PARTIAL contract"
+args.resegment ?? defaultResegment,selection_site,union of both returns,UNION_BREAK,"Origin of TS2339 union"
+resegmentResult,consumer_binding,ResegmentRetryRegionResult | { ok; localSpans },ILLEGAL_READ,.code read at router.ts:358
+fallbackReason,trace_side_channel,string | undefined,N/A,TRACE_ONLY; source=resegmentResult.code when !ok
+fallbackGeometrySource,trace_side_channel,RETRY_REGION_LEGAL_WINDOW_SPACE when !ok,N/A,TRACE_ONLY; no behavior branch

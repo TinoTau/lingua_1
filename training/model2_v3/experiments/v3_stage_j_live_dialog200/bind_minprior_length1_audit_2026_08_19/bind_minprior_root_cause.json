@@ -1,0 +1,19 @@
+{
+  "primary_verdict": "FROZEN_CONTRACT_INCOMPATIBILITY",
+  "secondary_finding": [
+    "IME TSV weight stored as operational prior_score (semantic mix)",
+    "OWNERSHIP_DRIFT_POSSIBLE: bind re-filters collector-accepted length-1 hits",
+    "CONTRACT_GAP: no length-specific prior policy in Lattice CR"
+  ],
+  "not_implementation_drift": "No freeze text required length-1 bypass of minPrior.",
+  "not_prior_data_bug": "2510 build matches the Aug-18 rebuild mapping (weight→prior_score). July-27 0.85–0.95 applied to a different (whitelist) inventory and was not the 2510 generation algorithm.",
+  "not_working_as_designed_for_zero_lexical_edges": "Lattice 1.0.2 intends formal length-1 edges from operational recall; importing 2510 was to enable that. Zero yield is the combination of two contracts, not an explicit product goal of 0 lexical edges.",
+  "evidence": [
+    "bindLexiconHitsToWindow has no length branch; minPrior default 0.5",
+    "2510 priorScore 0.08–0.30; >=0.5 count = 0",
+    "2331/2331 collector accepts unbound",
+    "path0 lexical 1-char FineSpan = 0",
+    "2/3-char sqlite priors mostly >=0.5; live bound multi-char priors also >=0.5",
+    "TSV has weight not prior; rebuild copies weight"
+  ]
+}

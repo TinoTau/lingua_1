@@ -1,0 +1,115 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_DESIGN",
+  "verdict": "PRODUCTION_DATASET_EXPANSION_DESIGN_READY_WITH_NONBLOCKING_WARNINGS",
+  "readyForBulkExpansion": false,
+  "blockers": [
+    "NORMAL_ACOUSTIC_VARIATION_INFRASTRUCTURE_GAP"
+  ],
+  "warnings": [
+    "source_pool_taxonomy_keyword_method",
+    "supplement_source_dominance",
+    "sparse_categories_in_full_pool"
+  ],
+  "decisions": {
+    "D1_usable_pool_size": 18994,
+    "D2_taxonomy_distribution": {
+      "shopping_food": 5056,
+      "scheduling": 4074,
+      "time_dates": 6053,
+      "tech_device": 644,
+      "question": 2319,
+      "answer": 3524,
+      "family_social": 60,
+      "transport": 1576,
+      "names_places": 1190,
+      "numbers_quantities": 5118,
+      "negation": 13711,
+      "casual_social": 15396,
+      "weather_plans": 74,
+      "daily_request": 7037,
+      "workplace": 435,
+      "hotel": 207,
+      "travel": 272,
+      "confirmation": 9174,
+      "customer_service": 565,
+      "correction_clarify": 2737
+    },
+    "D3_sparse_categories": [
+      "family_social",
+      "weather_plans"
+    ],
+    "D4_vocabulary": {
+      "pool_unique_cjk": 1059,
+      "pool_unique_bigrams": 6520,
+      "pool_unique_trigrams": 11850,
+      "seed_char_ratio": 0.373
+    },
+    "D5_source_bias": {
+      "prior_certified_v1": 1813,
+      "MODEL3_SPOKEN_BASE_SUPPLEMENT_V1": 17181
+    },
+    "D6_max_pool_ceiling_without_new_sources": 18994,
+    "D7_recommended_stages": [
+      "S0:280",
+      "S1:1000",
+      "S2:5000",
+      "S3:10000",
+      "S3b:18994",
+      "S4:25000+new_sources"
+    ],
+    "D8_first_serious_training_scale": "S2_5000_families_recommended_not_mandatory_gate",
+    "D9_10k_before_production_decision": "recommended_checkpoint_not_hard_gate",
+    "D10_25k_justified_when": "learning_curve_plateau_and_new_reference_sources_authorized",
+    "D11_tts_adequate_speaker_diversity": false,
+    "D12_normal_acoustic_strategy": {
+      "primaryRealization": "one_voice_all_references_for_S1_S2_scale",
+      "secondaryRealization": "deterministic_20_30pct_subset_with_2nd_authorized_voice_after_infra_ready",
+      "notRecommended": "all_references_times_all_voices",
+      "acousticRealizationsPerFamily": "1 primary + 0-1 secondary (max 2 for production core)"
+    },
+    "D13_acoustic_realizations_per_family": "1_primary_plus_0_to_1_secondary_max_2",
+    "D14_variants_all_or_subset": "subset_for_secondary_voice_after_infra_ready",
+    "D15_pronunciation_perturbation_trigger": "separate_future_phase_after_normal_variation_and_learning_curve",
+    "D16_multi_pc_safe": true,
+    "D17_worker_identities_must_match": [
+      "asr_model",
+      "tone_model",
+      "lexicon_snapshot",
+      "model2_model",
+      "normalization_logic",
+      "feature_packer",
+      "label_contract",
+      "provenance_contract"
+    ],
+    "D18_cost_estimates": "see model3_v2_expansion_scale_plan.csv",
+    "D19_seed_280_lineage": "versioned_retained_not_mutated_parent_of_S1+",
+    "D20_next_phase": "MODEL3_V2_NORMAL_ACOUSTIC_VARIATION_PREPARATION"
+  },
+  "readinessGates": {
+    "R1_full_pool_taxonomy_profiled": true,
+    "R2_pool_vocabulary_profiled": true,
+    "R3_source_bias_audited": true,
+    "R4_selection_policy_frozen": false,
+    "R5_holdout_policy_active": true,
+    "R6_acoustic_variation_contract_resolved": true,
+    "R7_tts_capability_sufficient": false,
+    "R8_semanticFamily_split_lock": true,
+    "R9_multi_pc_identity_contract_defined": true,
+    "R10_merge_qa_defined": true,
+    "R11_dataset_lineage_defined": true,
+    "R12_no_architecture_drift": true
+  },
+  "nextPhase": "MODEL3_V2_NORMAL_ACOUSTIC_VARIATION_PREPARATION",
+  "currentPoolSufficient": {
+    "S1": true,
+    "S2": true,
+    "S3": true,
+    "S3b": true
+  },
+  "needNewReferenceSource": "LATER_for_S4_25k+",
+  "acousticVariationReady": false,
+  "sourcePoolCoverageGapCategories": [
+    "family_social",
+    "weather_plans"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "P_after_J": {
+    "RR": 0.9016393442622951,
+    "TIR_CI95": [
+      0.8382225855927441,
+      0.8888260125551175
+    ]
+  },
+  "D_test": {
+    "n": 72,
+    "support": "LOW_SUPPORT",
+    "TIR": 0.4583333333333333,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.4583333333333333,
+    "TIR_CI95": [
+      0.34828438695135916,
+      0.5726033580329238
+    ],
+    "hits": 33,
+    "UnnecessaryExpansion": 0.9444444444444444,
+    "Latency_P50": 3.176099999109283
+  },
+  "V2_D_CLEAN": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.65,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.65,
+    "TIR_CI95": [
+      0.43285051021946475,
+      0.8188104521320554
+    ],
+    "hits": 13,
+    "UnnecessaryExpansion": 1.0,
+    "Latency_P50": 3.093000006629154
+  },
+  "V3_D": {
+    "n": 72,
+    "support": "LOW_SUPPORT",
+    "TIR": 0.4583333333333333,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.4583333333333333,
+    "TIR_CI95": [
+      0.34828438695135916,
+      0.5726033580329238
+    ],
+    "hits": 33,
+    "UnnecessaryExpansion": 0.9444444444444444,
+    "Latency_P50": 3.16620001103729
+  }
+}

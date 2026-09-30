@@ -188,6 +188,23 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         info!("SessionMigrationOrchestrator enabled (NODE_MIGRATION_BASE_URL_*)");
     }
 
+    let correction_db_path = std::env::var("LINGUA_CORRECTION_DB_PATH")
+        .unwrap_or_else(|_| "data/correction_events.sqlite3".to_string());
+    let correction_service = match crate::services::SqliteCorrectionRepository::open(&correction_db_path)
+    {
+        Ok(repo) => {
+            info!(path = %correction_db_path, "CorrectionRepository (SQLite) ready");
+            Some(std::sync::Arc::new(crate::services::CorrectionService::new(
+                std::sync::Arc::new(repo),
+            )))
+        }
+        Err(e) => {
+            tracing::error!(error = %e, "CorrectionRepository init failed");
+            None
+        }
+    };
+    let correction_api_token = std::env::var("LINGUA_CORRECTION_API_TOKEN").ok();
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -211,6 +228,8 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         minimal_scheduler,
         pool_service,
         session_migration_orchestrator,
+        correction_service,
+        correction_api_token,
     };
 
     if let Some(ref rt) = redis_runtime {

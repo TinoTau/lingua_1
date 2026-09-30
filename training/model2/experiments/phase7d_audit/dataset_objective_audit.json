@@ -1,0 +1,23 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "datasets_scanned": [
+    {
+      "path": "training/model2/dataset/baseline_v1/stage_b_trainrows/model2_train_rows.jsonl",
+      "filter": "is_term_positive",
+      "n": 10381,
+      "target_present_before_Model2_rate": 1.0,
+      "target_absent_before_Model2_rate": 0.0,
+      "note": "target_in_pool True for all term-positive rows used in Stage B binding"
+    },
+    {
+      "path": "training/model2/dataset/baseline_v1/model2_train_rows.jsonl",
+      "n": 16616,
+      "usable_for_pool_stats": false,
+      "note": "stub eligibility metadata only; no fuzzy_pool_term_ids"
+    }
+  ],
+  "phase5_7_pattern": "TrainRows are constructed so FuzzyPool already contains target (ExactMiss→FuzzyHit / visibility gates ~100%). Positives require positive_pool_index.",
+  "training_essence": "closed-set ranking / profile binding",
+  "not_training": "open-set / profile-conditioned recall expansion",
+  "verdict": "DATASET_MATCHES_CLOSED_SET_RANKING_NOT_RECALL_EXPANSION"
+}

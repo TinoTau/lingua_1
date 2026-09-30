@@ -1,0 +1,26 @@
+{
+  "label": "MODEL2_V3_STAGE_J_LIVE_DIALOG200_FULL_PATH_TRACE_ACCEPTANCE",
+  "ts": "2026-08-18T04:18:10.368Z",
+  "manifest": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200\\cases.manifest.json",
+  "manifest_exists": true,
+  "case_count": 200,
+  "wav_present": 200,
+  "expectedText_intact": true,
+  "profile_in_manifest": 0,
+  "runner": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\run-dialog200-timed-batch.mjs",
+  "this_runner": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\run-dialog200-stagej-full-path-trace.mjs",
+  "node_modules": true,
+  "electron_exe": true,
+  "lexicon_sqlite": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "lexicon_sqlite_exists": true,
+  "kenlm_model": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+  "kenlm_available": true,
+  "test_server_port": 5020,
+  "asr_port": 6007,
+  "checkpoint": "D:\\Programs\\github\\lingua_1\\training\\model2_v3\\experiments\\v3_stage_j_p_preservation\\training\\expA_frozen_trunk.pt",
+  "checkpoint_exists": true,
+  "required_env": [
+    "PROJECT_ROOT"
+  ],
+  "missing_wavs": []
+}

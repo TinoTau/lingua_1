@@ -1,0 +1,47 @@
+{
+  "modelName": "MODEL3_V2_REGION_LABEL_V1",
+  "architecture": "Small BiGRU",
+  "status": "CANDIDATE",
+  "seed": 2026082901,
+  "weightsSha256": "d0291b7d4c4bdf6c7b5c3b5f0169e7b60840bae21caa41bec7c3bd711b3e029a",
+  "config": {
+    "modelId": "MODEL3_V2_REGION_LABEL_V1",
+    "datasetId": "MODEL3_V2_LABELED",
+    "datasetVersion": "model3_v2_labeled_20260829",
+    "seed": 2026082901,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 8,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "sampling": "uniform_shuffle_utterance",
+    "pair_loss_enabled": false,
+    "init": "random_from_scratch",
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829"
+  },
+  "vocabSize": 1660,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "v1BaselinePreserved": "MODEL3_SYNTHETIC_V1 seed_2026082520",
+  "trainSeconds": 1248.7590403556824
+}

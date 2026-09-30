@@ -1,0 +1,57 @@
+{
+  "same_span_different_user": {
+    "groups": 120,
+    "checked_correct_vs_empty_recoverable": 29,
+    "policy_differs": 29,
+    "pass": true,
+    "note": "Same FineSpan + different UserProfile → different teacher policy (recoverable Correct only)"
+  },
+  "cost": {
+    "TIR_B1": 1.0,
+    "TIR_V3": 0.6811594202898551,
+    "QueryReduction": 0.34722222222222215,
+    "CandidateReduction": 0.3272727272727272,
+    "LatencyReduction": 0.0,
+    "EndToEndCostProxyReduction": 0.3258234238036818,
+    "slice": "multi_highcard_recoverable",
+    "RecallRetained": 0.6811594202898551,
+    "single_CORRECT_recoverable": {
+      "B1": {
+        "n": 29,
+        "TargetIntroductionRate": 1.0,
+        "QueryCount_mean": 1.0,
+        "QueryCount_P50": 1.0,
+        "QueryCount_P95": 1.0,
+        "CandidateCount_mean": 3.2413793103448274,
+        "CandidateCount_P50": 3.0,
+        "CandidateCount_P95": 8.0,
+        "Latency_P50": 46.732199989492074,
+        "Latency_P95": 72.81779998447746,
+        "RecallPerQuery": 1.0,
+        "RecallPerCandidate": 0.30851063829787234
+      },
+      "V3": {
+        "n": 29,
+        "TargetIntroductionRate": 1.0,
+        "QueryCount_mean": 1.0,
+        "QueryCount_P50": 1.0,
+        "QueryCount_P95": 1.0,
+        "CandidateCount_mean": 3.2413793103448274,
+        "CandidateCount_P50": 3.0,
+        "CandidateCount_P95": 8.0,
+        "Latency_P50": 59.989400004269555,
+        "Latency_P95": 266.4199999999255,
+        "RecallPerQuery": 1.0,
+        "RecallPerCandidate": 0.30851063829787234
+      },
+      "RecallRetained": 1.0
+    }
+  },
+  "teacher": {
+    "n": 120,
+    "teacher_recover_rate": 0.24166666666666667,
+    "exhaustive_recover_rate": 0.24166666666666667,
+    "mean_exhaustive_queries": 0.4666666666666667,
+    "mean_exhaustive_candidates": 2.175
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "label": "phase7c_p1_query_channel_20260812_eval_on_7A_rows",
+  "SEEN": {
+    "n": 2360,
+    "Recall@1": 0.6576271186440678,
+    "Recall@3": 0.9076271186440678,
+    "Recall@4": 0.9389830508474576,
+    "MRR": 0.7843394623267491,
+    "Positive_average_pool_size": 15.955508474576272,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "UNSEEN": {
+    "n": 1011,
+    "Recall@1": 0.03461918892185954,
+    "Recall@3": 0.10880316518298715,
+    "Recall@4": 0.1572700296735905,
+    "MRR": 0.16661928713115645,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "SEEN_random_order": {
+    "n": 800,
+    "Recall@1": 0.615,
+    "Recall@3": 0.89125,
+    "Recall@4": 0.9325,
+    "MRR": 0.7558364638833391,
+    "Positive_average_pool_size": 15.9425,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "UNSEEN_random_order": {
+    "n": 800,
+    "Recall@1": 0.04125,
+    "Recall@3": 0.11125,
+    "Recall@4": 0.16375,
+    "MRR": 0.1717951753108003,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "shortcut_SEEN": {
+    "n": 512,
+    "normal": {
+      "n": 512,
+      "Recall@1": 0.626953125,
+      "Recall@3": 0.890625,
+      "Recall@4": 0.9296875,
+      "MRR": 0.7624366654395951,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 1.02734375
+    },
+    "null_query": {
+      "n": 512,
+      "Recall@1": 0.43359375,
+      "Recall@3": 0.76953125,
+      "Recall@4": 0.8359375,
+      "MRR": 0.6220526570868369,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 1.826171875
+    },
+    "shuffle_query": {
+      "n": 512,
+      "Recall@1": 0.435546875,
+      "Recall@3": 0.6796875,
+      "Recall@4": 0.73828125,
+      "MRR": 0.5832754891592783,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 3.232421875
+    },
+    "candidate_only": {
+      "n": 512,
+      "Recall@1": 0.48828125,
+      "Recall@3": 0.779296875,
+      "Recall@4": 0.84375,
+      "MRR": 0.655044123086115,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 1.669921875
+    }
+  },
+  "shortcut_UNSEEN": {
+    "n": 512,
+    "normal": {
+      "n": 512,
+      "Recall@1": 0.025390625,
+      "Recall@3": 0.087890625,
+      "Recall@4": 0.146484375,
+      "MRR": 0.15689046196858725,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 8.345703125
+    },
+    "null_query": {
+      "n": 512,
+      "Recall@1": 0.029296875,
+      "Recall@3": 0.07421875,
+      "Recall@4": 0.130859375,
+      "MRR": 0.14947906639801206,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 8.896484375
+    },
+    "shuffle_query": {
+      "n": 512,
+      "Recall@1": 0.01953125,
+      "Recall@3": 0.0859375,
+      "Recall@4": 0.13671875,
+      "MRR": 0.15012396186712643,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 8.60546875
+    },
+    "candidate_only": {
+      "n": 512,
+      "Recall@1": 0.025390625,
+      "Recall@3": 0.064453125,
+      "Recall@4": 0.115234375,
+      "MRR": 0.14519931023837335,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 8.97265625
+    }
+  },
+  "phonetic_agreement_UNSEEN": {
+    "n_rows": 800,
+    "pairwise_agreement_rate": 0.5431692295774102,
+    "fuzzy_order_reversal_rate": 0.4568307704225898,
+    "n_pairs": 25817,
+    "rank_agreement_with_fuzzy_distance": 0.03625,
+    "n_rank_compare": 800
+  },
+  "per_relation": {
+    "n_l": {
+      "seen_n": 324,
+      "unseen_n": 160,
+      "seen_R1": 0.6080246913580247,
+      "unseen_R1": 0.0,
+      "seen_R3": 0.9012345679012346,
+      "unseen_R3": 0.00625
+    },
+    "z_zh": {
+      "seen_n": 397,
+      "unseen_n": 87,
+      "seen_R1": 0.6423173803526449,
+      "unseen_R1": 0.05747126436781609,
+      "seen_R3": 0.8790931989924433,
+      "unseen_R3": 0.09195402298850575
+    },
+    "ch_c": {
+      "seen_n": 338,
+      "unseen_n": 170,
+      "seen_R1": 0.5680473372781065,
+      "unseen_R1": 0.029411764705882353,
+      "seen_R3": 0.8816568047337278,
+      "unseen_R3": 0.11764705882352941
+    },
+    "sh_s": {
+      "seen_n": 329,
+      "unseen_n": 211,
+      "seen_R1": 0.6899696048632219,
+      "unseen_R1": 0.03317535545023697,
+      "seen_R3": 0.8996960486322189,
+      "unseen_R3": 0.15165876777251186
+    },
+    "eng_en": {
+      "seen_n": 329,
+      "unseen_n": 130,
+      "seen_R1": 0.6930091185410334,
+      "unseen_R1": 0.046153846153846156,
+      "seen_R3": 0.9270516717325228,
+      "unseen_R3": 0.12307692307692308
+    },
+    "in_ing": {
+      "seen_n": 295,
+      "unseen_n": 135,
+      "seen_R1": 0.6644067796610169,
+      "unseen_R1": 0.022222222222222223,
+      "seen_R3": 0.8983050847457628,
+      "unseen_R3": 0.08888888888888889
+    },
+    "h_f": {
+      "seen_n": 302,
+      "unseen_n": 248,
+      "seen_R1": 0.5529801324503312,
+      "unseen_R1": 0.05241935483870968,
+      "seen_R3": 0.847682119205298,
+      "unseen_R3": 0.10080645161290322
+    }
+  },
+  "nomatch_fp": {
+    "NO_MATCH_FP_rate": 0.42628300207653513,
+    "n": 3371,
+    "fp": 1437
+  },
+  "seen_unseen_gap_R1": 0.6230079297222082,
+  "param_note": "same Stage A M0 capacity as 7A unless probe adds aux head"
+}

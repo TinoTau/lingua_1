@@ -1,0 +1,71 @@
+{
+  "phase": "ASR_FASTER_WHISPER_CONTROLLABLE_PERFORMANCE_SURFACE_AUDIT",
+  "generatedAt": "2026-09-05T08:10:00Z",
+  "service": {
+    "id": "faster-whisper-vad",
+    "port": 6007,
+    "endpoint": "POST /utterance",
+    "health": "GET /health",
+    "process": "faster_whisper_vad_service.py (FastAPI/uvicorn) + ASRWorkerManager child process",
+    "serviceJson": "electron_node/services/faster_whisper_vad/service.json"
+  },
+  "model": {
+    "ASR_MODEL": "medium",
+    "ASR_MODEL_PATH_resolved": "electron_node/services/faster_whisper_vad/models/faster-whisper-medium",
+    "device": "cuda",
+    "device_index": "DEFAULT_UNVERIFIED (not explicitly set; WhisperModel default)",
+    "compute_type": "int8_float16",
+    "cpu_threads": "DEFAULT_UNVERIFIED (WhisperModel/CTranslate2 default; not set in Lingua)",
+    "num_workers": "N/A (single worker subprocess)",
+    "classification": {
+      "ASR_MODEL": "ARCHITECTURE_REQUIRED / FUTURE_MODEL_REPLACEMENT only",
+      "device_cuda": "ARCHITECTURE_REQUIRED (CPU disallowed)",
+      "compute_type": "POTENTIAL_PERFORMANCE_SURFACE (quality risk)",
+      "cpu_threads": "DEFAULT_UNVERIFIED"
+    }
+  },
+  "transcribe": {
+    "beam_size": 1,
+    "best_of": null,
+    "temperature": 0.0,
+    "patience": 1.0,
+    "length_penalty": "NOT_SET",
+    "condition_on_previous_text": false,
+    "vad_filter": false,
+    "word_timestamps": true,
+    "language": "supplied from Node src_lang when not auto (dialog evidence: zh)",
+    "task": "transcribe",
+    "initial_prompt": "disabled on FW path (use_text_context=false)",
+    "batch_size": "NOT_APPLICABLE (non-batched utterance API)"
+  },
+  "node_fw_path": {
+    "strategy": "electron_node/electron-node/main/src/task-router/faster-whisper-asr-strategy.ts",
+    "beam_size": 1,
+    "temperature": 0,
+    "disableAsrRerun": true,
+    "use_context_buffer": false,
+    "use_text_context": false,
+    "skip_text_dedup": true,
+    "audio_format_to_service": "pcm16"
+  },
+  "vad": {
+    "implementation": "Silero ONNX (vad.py / models.vad_session)",
+    "location": "Python service, once per /utterance before worker transcribe",
+    "whisper_internal_vad_filter": false,
+    "TONE_P10_VAD_CPU": "test-only override; production requires CUDA EP"
+  },
+  "queue": {
+    "QUEUE_MAX": 1,
+    "workers": 1,
+    "serialization": "single worker subprocess; serial tasks"
+  },
+  "lifecycle": {
+    "MODEL_LOAD_PER_UTTERANCE": false,
+    "model_load_sites": [
+      "models.py in FastAPI main (WhisperModel + VAD; asr_model unused by production path)",
+      "asr_worker_process.py WhisperModel (authoritative inference owner)"
+    ],
+    "explicit_warmup": false,
+    "first_request_pays_lazy_cuda_cost": "POSSIBLE (not separately instrumented)"
+  }
+}

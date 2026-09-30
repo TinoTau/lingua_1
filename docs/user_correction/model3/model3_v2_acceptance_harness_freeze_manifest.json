@@ -1,0 +1,127 @@
+{
+  "phase": "MODEL3_V2_ACCEPTANCE_HARNESS_FREEZE",
+  "timestamp": "2026-09-01T00:30:00.000Z",
+  "verdict": "ACCEPTANCE_HARNESS_FREEZE_PASS",
+  "authorizesPhaseB": true,
+  "harnessIdentity": {
+    "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+    "forkFunction": "runModel3PathStepCausalFork",
+    "prepare": "prepareModel3PathUpstream",
+    "complete": "completeModel3PathFromUpstream",
+    "snapshotSchema": "MODEL3_ACCEPTANCE_UPSTREAM_SNAPSHOT_V1",
+    "hashAlgorithm": "sha256_canonical_json_v1",
+    "decisionOverride": "keepOverrideFromPacked",
+    "testGate": "MODEL3_ACCEPTANCE_CAUSAL_FORK=1",
+    "runner": "electron_node/electron-node/tests/run-dialog200-acceptance-harness-correction.mjs",
+    "finalAcceptanceRunner": "electron_node/electron-node/tests/run-dialog200-s3-final-causal-acceptance.mjs",
+    "previousRunner": "electron_node/electron-node/tests/run-dialog200-s3-mainline-ab.mjs",
+    "previousRunnerStatus": "SUPERSEDED_FOR_CAUSAL_ACCEPTANCE"
+  },
+  "forkBoundary": {
+    "after": [
+      "ASR",
+      "FW",
+      "normalization",
+      "FineSpan paths",
+      "first-pass Recall",
+      "Model2",
+      "Domain Vote",
+      "SameDomain",
+      "Anchor materialization",
+      "Model3 pack",
+      "Model3 host inference"
+    ],
+    "before": [
+      "actionable Model3 decision effect",
+      "Retry routing",
+      "Retry Recall",
+      "Assembly refresh",
+      "KenLM final selection"
+    ],
+    "isolates": "MODEL3_ACTIONABLE_DECISION_EFFECT",
+    "file": "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts"
+  },
+  "singleUpstreamPrinciple": {
+    "oneUpstreamExecutionPerCase": true,
+    "crossRunAsrDeterminismRequired": false,
+    "withinRunSnapshotParityRequired": true
+  },
+  "baselineSemantics": {
+    "skipsModel3": false,
+    "skipsPacking": false,
+    "skipsHostInference": false,
+    "usesSamePackedState": true,
+    "effectiveNonAnchorDecision": "KEEP",
+    "MODEL3_HARNESS_KEEP_ALL": "MUST_NOT_BE_USED_FOR_CAUSAL_AB"
+  },
+  "s3Branch": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "expectedWeightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "buildId": "prod_core_s3_build_20260830_v1",
+    "featureContract": "packModel3SpanInferFields",
+    "labelContract": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "overrideExceptAnchorMask": false
+  },
+  "snapshotGovernance": {
+    "scope": "TEST_AUDIT_ONLY",
+    "jobResultField": false,
+    "productionApi": false,
+    "runtimePersistentState": false,
+    "crossServiceDto": false
+  },
+  "parityRequirements": {
+    "target": "200/200",
+    "fields": [
+      "snapshotHash",
+      "currentText",
+      "paths",
+      "FineSpanIdentities",
+      "candidateState",
+      "retainedDomains",
+      "AnchorState",
+      "packedTokenIds",
+      "packedFeatVector",
+      "availMask"
+    ]
+  },
+  "frozenValidationEvidence": {
+    "subsetParity": "30/30",
+    "fullParity": "200/200",
+    "packedSymmetry": "200/200",
+    "mutationIsolation": "200/200",
+    "snapshotCapture": "200/200",
+    "unitTests": "9/9",
+    "integrationTests": "12/12",
+    "sourcePhase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION",
+    "sourceReport": "Lingua_Model3_V2_Acceptance_Harness_Correction_Report_2026_08_31.md"
+  },
+  "model3StageSemantics": "ONE_MAINLINE_DECISION_STAGE_PER_UTTERANCE_MAY_EVALUATE_MULTIPLE_RETAINED_PATHS_RETRY_MUST_NOT_INVOKE_SECOND_STAGE",
+  "retryMetricUnits": {
+    "RAW_PATH_RETRY_SPAN": "path-level Model3 RETRY decision count",
+    "LOGICAL_UNIQUE_RETRY_SPAN": "dedup (caseId,start,end,surface)",
+    "RETRY_REGION": "merged retry region from routeModel3Retry",
+    "RETRY_ROUTING_ATTEMPT": "per-span retry routing call",
+    "CANDIDATE_RETURN_EVENT": "recall return with count>0",
+    "CASE_WITH_ANY_RETRY": "case with >=1 actionable RETRY"
+  },
+  "previousAcceptanceHistory": {
+    "status": "HISTORICAL_NON_CAUSAL_ACCEPTANCE_EVIDENCE",
+    "improved": 28,
+    "regressed": 18,
+    "assemblyOrKenlm": 17,
+    "validForPromotion": false,
+    "validForOwnership": false,
+    "deleted": false
+  },
+  "livePackerStatus": {
+    "LIVE_PACKER_CONTRACT_PARITY": "PASS",
+    "generalizationAuditAllZero": "AUDIT_EXTRACTION_DEFECT_UNRESOLVED_NONBLOCKING_FOR_SEPARABILITY",
+    "reopenProductionPacker": false
+  },
+  "governance": {
+    "productionDualChain": false,
+    "jobResultUntouched": true,
+    "businessArchitectureChanged": false
+  }
+}

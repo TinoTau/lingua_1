@@ -1,0 +1,38 @@
+{
+  "phase": "MODEL3_BASE_CORPUS_CAPACITY_AND_STAGE2_PREDEVELOPMENT_AUDIT",
+  "date": "2026-08-23",
+  "domain_vote_reuse": {
+    "production_vote_module": "electron_node/electron-node/main/src/fw-detector/span-assembly-shared/utterance-domain-vote.ts",
+    "assembly_module": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts",
+    "reuse_mode": "thin_offline_node_harness_same_code_path",
+    "training_specific_vote_algorithm": "FORBIDDEN",
+    "offline_harness_exists": false,
+    "same_domain_anchor_materializable_once_harness_exists": true,
+    "multi_retained_domains": "KEEP_SET_NO_SINGLE_WINNER",
+    "domain_tag_alone_is_anchor": false
+  },
+  "model2_anchor_status": {
+    "first_synthetic_batch_model2AnchorStatus": "UNAVAILABLE",
+    "forge_from_corruption_family": "FORBIDDEN",
+    "forge_from_frequency": "FORBIDDEN",
+    "forge_from_pseudo_user_fields_without_materialize": "FORBIDDEN",
+    "future_accepts_real_materialized_evidence": true,
+    "schema_change_required_for_future": false,
+    "DATASET_LIMITATION": "Domain-anchor primary allowed for first SYNTHETIC_TEXT batch"
+  },
+  "repairability": {
+    "lexicon_membership_alone": "FORBIDDEN",
+    "reuse_apis": ["recallSpanTopKV2", "recallTopKForWindows"],
+    "offline_harness_exists": false,
+    "offline_retry_equivalence_target": "PARTIAL_or_YES",
+    "unknown_policy": "EXCLUDE_FROM_SUPERVISED"
+  },
+  "schema_governance": {
+    "authoritative_sample_schema": "MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json",
+    "authoritative_dataset_contract": "MODEL3_TRAINING_DATASET_V1_CONTRACT.md",
+    "old_draft": "model3_training_sample_schema_v1.json",
+    "old_draft_status": "SUPERSEDED",
+    "schema_change_required": false,
+    "must_update_reference": "training/model2_v3/experiments/model3_contract_and_training_design_20260823/model3_stage2_target_list.csv"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "phase": "LINGUA_RETRY_REGION_GEOMETRY_SSOT_AUTHORITY_AUDIT_V1",
+  "date": "2026-09-16",
+  "INTERPRETATION": "A_RETRY_PATH_FINE_SPAN_UNION",
+  "ARCHITECTURE_STATUS": "SSOT_CLEAR",
+  "CURRENT_IMPLEMENTATION": "CONFORMANT",
+  "RESULT": "C_CURRENT_IMPLEMENTATION_IS_INTENTIONAL",
+  "C9_EXPECTED_LIMITATION": "YES",
+  "IMPLEMENTATION_DEFECT_FOUND": "NO",
+  "ARCHITECTURE_GAP_FOUND": "NO",
+  "ARCHITECTURE_CONFLICT_FOUND": "NO",
+  "ACP_REQUIRED": "YES",
+  "ACP_REASON": "Frozen SSOT requires RetryRegion = contiguous RETRY PathFineSpan union and forbids KEEP/Anchor expansion. C9 shows first-pass target evidence often extends beyond that union. Changing recovery scope to cover such evidence would be an architecture change, not a conformance repair.",
+  "caseClassification": {
+    "R1_IMPLEMENTATION_CONFORMS_AND_COVERAGE_NOT_REQUIRED": 23,
+    "R2_IMPLEMENTATION_VIOLATES_EXISTING_RECOVERY_GEOMETRY_SSOT": 0,
+    "R3_EXISTING_SSOT_DOES_NOT_DEFINE_REQUIRED_COVERAGE": 0,
+    "R4_EXISTING_SSOT_CONFLICTS_INTERNALLY": 0,
+    "R5_CASE_NOT_DECIDABLE_FROM_AVAILABLE_EVIDENCE": 0,
+    "TOTAL": 23
+  },
+  "coverage": {
+    "PARTIAL": 20,
+    "NONE": 3,
+    "FULL": 0
+  },
+  "ONE_NEXT_OWNER": "RETRY_RECOVERY_SCOPE_ARCHITECTURE_CHANGE",
+  "ONE_NEXT_DELTA": "Draft ACP only if broader recovery than RETRY PathFineSpan union is desired; do not treat C9 as deriveRetryRegions defect"
+}

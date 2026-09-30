@@ -1,0 +1,205 @@
+{
+  "count": 20,
+  "examples": [
+    {
+      "id": "ex_01",
+      "class": "A",
+      "scenario": "pronunciation-only ASCII",
+      "asr": "na",
+      "corr": "la",
+      "expected_observation": "phonetic n_l",
+      "actual_writeback": "phonetic_updates populated; no personal_term if short",
+      "gap": "none for Stage P"
+    },
+    {
+      "id": "ex_02",
+      "class": "A",
+      "scenario": "CJK pronunciation without pinyin",
+      "asr": "那",
+      "corr": "拉",
+      "expected_observation": "phonetic if romanized",
+      "actual_writeback": "phonetic unsupported; personal_term if >=2? single char skip",
+      "gap": "CJK phonetic needs Node/other path — out of Stage D scope"
+    },
+    {
+      "id": "ex_03",
+      "class": "B",
+      "scenario": "known lexical term",
+      "asr": "我要看街口文档",
+      "corr": "我要看接口文档",
+      "expected_observation": "lexicon term_id(s) for 接口/文档/接口文档 per policy",
+      "actual_writeback": "span targets >=2 as free-text personal_terms; no term_id",
+      "gap": "G1 Lexicon resolve"
+    },
+    {
+      "id": "ex_04",
+      "class": "B",
+      "scenario": "single known term replace",
+      "asr": "街口",
+      "corr": "接口",
+      "expected_observation": "term_id 接口 + multi-tags",
+      "actual_writeback": "personal_terms+=接口",
+      "gap": "no domain evidence derive"
+    },
+    {
+      "id": "ex_05",
+      "class": "C",
+      "scenario": "repeated common term x5",
+      "asr": "街口",
+      "corr": "接口",
+      "expected_observation": "evidence grows; bounded",
+      "actual_writeback": "evidence +=1.0 each apply; TopK 100",
+      "gap": "no decay; SINGLE_CORRECTION_DOMINANCE"
+    },
+    {
+      "id": "ex_06",
+      "class": "C",
+      "scenario": "repeated x50",
+      "asr": "街口",
+      "corr": "接口",
+      "expected_observation": "saturating weight",
+      "actual_writeback": "evidence~50 additive",
+      "gap": "TRAIN_PRODUCTION weight scale may mismatch synthetic ranks"
+    },
+    {
+      "id": "ex_07",
+      "class": "D",
+      "scenario": "multi-domain term 订单",
+      "asr": "钉单",
+      "corr": "订单",
+      "expected_observation": "lexical + all domain tags aggregated",
+      "actual_writeback": "surface 订单 only",
+      "gap": "no multitag derive"
+    },
+    {
+      "id": "ex_08",
+      "class": "D",
+      "scenario": "multi-domain 计划",
+      "asr": "计化",
+      "corr": "计划",
+      "expected_observation": "multi-tag soft evidence",
+      "actual_writeback": "surface only",
+      "gap": "G1"
+    },
+    {
+      "id": "ex_09",
+      "class": "E",
+      "scenario": "generic term 文档",
+      "asr": "文党",
+      "corr": "文档",
+      "expected_observation": "generic multi-domain soft prior",
+      "actual_writeback": "personal_terms+=文档",
+      "gap": "must not force single domain"
+    },
+    {
+      "id": "ex_10",
+      "class": "E",
+      "scenario": "generic 接口",
+      "asr": "街口",
+      "corr": "接口",
+      "expected_observation": "same",
+      "actual_writeback": "surface",
+      "gap": "same"
+    },
+    {
+      "id": "ex_11",
+      "class": "F",
+      "scenario": "unknown lexicon neologism",
+      "asr": "米福",
+      "corr": "米尔福德",
+      "expected_observation": "UNRESOLVED_LEXICAL_OBSERVATION",
+      "actual_writeback": "stores 米尔福德 free text",
+      "gap": "no unresolved policy; free-text pollution"
+    },
+    {
+      "id": "ex_12",
+      "class": "F",
+      "scenario": "unknown brand",
+      "asr": "苹果派",
+      "corr": "苹柏派",
+      "expected_observation": "unresolved or soft",
+      "actual_writeback": "free text if >=2",
+      "gap": "G5"
+    },
+    {
+      "id": "ex_13",
+      "class": "G",
+      "scenario": "overlapping 接口文档",
+      "asr": "街口文党",
+      "corr": "接口文档",
+      "expected_observation": "one authoritative match policy",
+      "actual_writeback": "may store 接口文档 as whole and/or span pieces",
+      "gap": "OVERLAPPING_TERM_DOUBLE_COUNT_RISK"
+    },
+    {
+      "id": "ex_14",
+      "class": "G",
+      "scenario": "macro vs span",
+      "asr": "看A",
+      "corr": "看接口文档系统",
+      "expected_observation": "lexicon matches only",
+      "actual_writeback": "macro may take full corrected <=16 chars",
+      "gap": "macro free-text inflation"
+    },
+    {
+      "id": "ex_15",
+      "class": "H",
+      "scenario": "multiple corrected terms",
+      "asr": "街口和文党",
+      "corr": "接口和文档",
+      "expected_observation": "two lexicon terms",
+      "actual_writeback": "per-span targets if align yields Replace spans >=2",
+      "gap": "alignment dependent"
+    },
+    {
+      "id": "ex_16",
+      "class": "H",
+      "scenario": "three terms",
+      "asr": "A B C",
+      "corr": "订单 经理 前台",
+      "expected_observation": "three observations",
+      "actual_writeback": "likely multi personal_terms free text",
+      "gap": "no term_id"
+    },
+    {
+      "id": "ex_17",
+      "class": "I",
+      "scenario": "wrong ASR surface != intended",
+      "asr": "奶流",
+      "corr": "奶牛",
+      "expected_observation": "intended 奶牛 as lexical; wrong not personal_term",
+      "actual_writeback": "stores 奶牛 (target)",
+      "gap": "OK for lexical; phonetic separate"
+    },
+    {
+      "id": "ex_18",
+      "class": "I",
+      "scenario": "homophone wrong form",
+      "asr": "在见",
+      "corr": "再见",
+      "expected_observation": "再见 lexicon term",
+      "actual_writeback": "再见 surface",
+      "gap": "resolve missing"
+    },
+    {
+      "id": "ex_19",
+      "class": "J",
+      "scenario": "punctuation-only change",
+      "asr": "你好。",
+      "corr": "你好！",
+      "expected_observation": "empty lexical/domain",
+      "actual_writeback": "often no >=2 novel term",
+      "gap": "none"
+    },
+    {
+      "id": "ex_20",
+      "class": "J",
+      "scenario": "delete-only",
+      "asr": "请打开那个文件啊",
+      "corr": "请打开那个文件",
+      "expected_observation": "no personal_term from Delete",
+      "actual_writeback": "Delete spans skip term",
+      "gap": "none"
+    }
+  ]
+}

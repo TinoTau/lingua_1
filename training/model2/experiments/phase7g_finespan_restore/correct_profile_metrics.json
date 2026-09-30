@@ -1,0 +1,29 @@
+{
+  "markers": [
+    "PHASE7G",
+    "AUTHORITATIVE_PATH",
+    "NO_WHOLE_UTTERANCE",
+    "NOT_FROZEN"
+  ],
+  "mode": "correct",
+  "n": 163,
+  "TargetIntroductionRate": 0.4171779141104294,
+  "ProfileOnlyTargetRecovery": 0.4171779141104294,
+  "FalseExpansionRate": 0.44171779141104295,
+  "NewCandidatePrecisionProxy": 0.04579124579124579,
+  "new_candidates_mean": 9.110429447852761,
+  "new_candidates_p95": 22.0,
+  "queries_mean": 5.337423312883436,
+  "latency_ms_p50": 1454.8937000072328,
+  "latency_ms_p95": 2324.7398999956204,
+  "funnel": {
+    "total": 163,
+    "lexicon_ok": 163,
+    "finespan_exists": 163,
+    "length_compatible": 163,
+    "profile_applicable_active": 163,
+    "introduced": 68,
+    "query_generated": 141,
+    "miss_after_retrieval": 95
+  }
+}

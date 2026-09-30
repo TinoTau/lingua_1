@@ -1,0 +1,40 @@
+{
+  "verdict": "HEAD_ONLY_INSUFFICIENT",
+  "auto_script_verdict": "GENERALIZATION_FAIL",
+  "verdict_override_reason": "context_pass compared full model to a no-context head that collapsed to always-ABSTAIN (coverage=0). That is not evidence of context disambiguation. Full model loses to candidate-identity-only (0.413 vs 0.613). Select precision never reaches a usable precision-first operating point. Spec §78 applies.",
+  "standard": {
+    "n": 4137,
+    "select_precision": 0.3218,
+    "select_recall": 0.35,
+    "wrong_select_rate": 0.5666,
+    "coverage": 0.8354,
+    "accepted_decision_accuracy": 0.4133,
+    "out_of_set": 0
+  },
+  "held_char": {
+    "n": 9000,
+    "select_precision": 0.2733,
+    "wrong_select_rate": 0.5736,
+    "coverage": 0.7892,
+    "accepted_decision_accuracy": 0.3649
+  },
+  "gates": {
+    "context": false,
+    "vs_identity": false,
+    "vs_random": true,
+    "vs_majority": true,
+    "char": false,
+    "combo": false,
+    "ctx": false,
+    "perm": true,
+    "oos": true,
+    "hash": true,
+    "pd": true
+  },
+  "new_ckpt": "D:/Programs/github/lingua_1/training/model2_v3/experiments/v3_single_char_ambiguity_head_v1/retrieval_policy_v3_single_char_ambiguity_v1.pt",
+  "sha256": "076390abdd19c485a26a7199fa40ae7b328aade3d3f5d46bc63d8369d63770fc",
+  "tau": 0.2,
+  "elapsed_s": 142.4,
+  "production_ready": false,
+  "runtime_integration_ready": false
+}

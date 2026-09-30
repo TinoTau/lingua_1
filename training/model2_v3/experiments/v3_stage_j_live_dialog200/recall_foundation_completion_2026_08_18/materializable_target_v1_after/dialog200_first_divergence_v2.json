@@ -1,0 +1,30 @@
+{
+  "trace_contract": "MATERIALIZABLE_TARGET_V1",
+  "n_failures": 176,
+  "by_dialog": [
+    {
+      "class": "LEXICAL_RECALL_MISS",
+      "count": 172,
+      "percentage": 0.9772727272727273
+    },
+    {
+      "class": "FINESPAN_NO_COVERAGE",
+      "count": 4,
+      "percentage": 0.022727272727272728
+    }
+  ],
+  "by_correction_unit_reason": [
+    {
+      "class": "LEXICAL_RECALL_MISS",
+      "count": 550
+    },
+    {
+      "class": "FINESPAN_NO_COVERAGE",
+      "count": 15
+    },
+    {
+      "class": "CANDIDATE_SPAN_BINDING_MISMATCH",
+      "count": 1
+    }
+  ]
+}

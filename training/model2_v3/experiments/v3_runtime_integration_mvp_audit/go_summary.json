@@ -1,0 +1,40 @@
+{
+  "Model2_Runtime_Integration_MVP_Audit": "HOLD",
+  "reason": "P0 blockers: no inference host; profile not plumbed into FW; relation-transform primitive missing on Node; Stage J still required for final unified checkpoint",
+  "Frozen_Architecture_Conformance": "PASS",
+  "Exact_Runtime_Insertion_Point": "span-assembly-v4-orchestrator.ts after activeCandidates before runDomainAwareAssembly",
+  "FineSpan_Runtime_Contract": "PARTIAL",
+  "UserProfile_Runtime_Contract": "PARTIAL",
+  "Stage_P_Runtime_Deployability": "PARTIAL",
+  "Stage_D_Runtime_Deployability": "BLOCKED",
+  "Unified_ONE_Model2_Runtime_Checkpoint_Exists": "NO",
+  "Stage_J_Required_Before_Final_Runtime": "YES",
+  "Runtime_Integration_Skeleton_Can_Be_Developed_Before_Stage_J": "YES",
+  "Model_Inference_Deployment_Mechanism": "ONNX in-process preferred after export; else approved existing Python sidecar pattern — NOT dual Model2",
+  "New_Microservice_Required": "NO (prefer); YES only if architecture-approved reuse of existing sidecar pattern",
+  "Candidate_Introduction_Path": "PARTIAL",
+  "Merge_Dedup": "PARTIAL",
+  "CandidateIndex_MultiTag_TrainingBuilder": "FAIL",
+  "MultiTag_Runtime_Defect_NodeLexicon": "NO",
+  "Session_Domain_Prior": "NOT_IMPLEMENTED",
+  "Manual_Correction_Pronunciation_Data": "PARTIAL",
+  "Manual_Correction_Lexical_Domain_Data": "PARTIAL",
+  "Estimated_Runtime_Cost": "policy + few lexicon queries; measure on Node; do not change sentence cap",
+  "Shadow_Path_Required": "NO",
+  "Compatibility_Fallback_Required": "NO",
+  "Legacy_Model2_Required": "NO",
+  "P0_Runtime_Blockers": [
+    "Model2 inference host missing (PyTorch .pt not loadable by Node)",
+    "UserProfile not passed from NodeAgent into FW/span-assembly",
+    "Phonetic relation transform + profile query adapter missing on Node (TRAIN_ONLY execute_action/FuzzyPool)"
+  ],
+  "P1_Blockers": [
+    "No Stage J unified checkpoint for final ONE Model2 P+D policy",
+    "Stage D real lexical/domain writeback incomplete",
+    "SameDomain hard filter may drop soft-prior cross-domain candidates — interaction risk",
+    "PROVENANCE_GAP for PROFILE_RETRIEVAL",
+    "Python hash_span unstable for export"
+  ],
+  "Recommended_Next_Development_Phase": "MODEL2_RUNTIME_INTEGRATION_MVP_DEVELOPMENT (skeleton + Stage P-only single checkpoint) AFTER resolving P0 inference+profile plumbing; OR MODEL2_RUNTIME_CONTRACT_BLOCKER_FIX if choosing ONNX export + hash fix first as explicit prep",
+  "skeleton_label": "RUNTIME_INTEGRATION_SKELETON_READY eligible — not MODEL2_RUNTIME_COMPLETE"
+}

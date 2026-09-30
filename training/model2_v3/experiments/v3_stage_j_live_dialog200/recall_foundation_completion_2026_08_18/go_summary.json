@@ -1,0 +1,68 @@
+{
+  "Recall_Foundation_Round": "PASS",
+  "ACCOUNTING_GATE": "PASS",
+  "dialog_200": "200/200 NO_PROFILE INVOKED",
+  "accounting_conserved": true,
+  "367_vs_345": "EXPLAINED",
+  "26_vs_4": "EXPLAINED",
+  "before_funnel_dialogs": {
+    "total": 200,
+    "requiring_correction": 175,
+    "lexical_recoverable": 6,
+    "path_recoverable": 1,
+    "sentence_recoverable": 1,
+    "actually_assembled": 1,
+    "kenlm_available": 1,
+    "final_correct": 25
+  },
+  "after_funnel_dialogs": {
+    "total": 200,
+    "requiring_correction": 176,
+    "lexical_recoverable": 4,
+    "path_recoverable": 0,
+    "sentence_recoverable": 0,
+    "actually_assembled": 0,
+    "kenlm_available": 0,
+    "final_correct": 24
+  },
+  "script_normalization": {
+    "before": 145,
+    "after": 153
+  },
+  "single_char": {
+    "n": 224,
+    "in_lex": 206,
+    "raw": 206,
+    "mat": 0,
+    "sqlite_len1_before": 0,
+    "sqlite_len1_after": 2510
+  },
+  "query_generation_gap": {
+    "before": 34,
+    "after": 59
+  },
+  "waterfall_after": {
+    "LEXICON_COVERAGE_GAP": 160,
+    "EXPECTED_NON_CANDIDATE_RECOVERY": 20,
+    "CANDIDATE_MATERIALIZATION_GAP": 155,
+    "QUERY_GENERATION_GAP": 59,
+    "SUCCESS_POST_BUDGET": 8
+  },
+  "false_intervention_same_raw": 0,
+  "candidate_mean_before": 18.065,
+  "candidate_mean_after": 18.075,
+  "candidate_p95_before": 24,
+  "candidate_p95_after": 24,
+  "decision": {
+    "Normalization": "FREEZE",
+    "Single_Char_Lexicon": "FREEZE",
+    "Multi_Char_Lexicon": "MORE_WORK",
+    "Recall_Algorithm": "KEEP_FROZEN",
+    "FineSpan": "NEXT_SECONDARY_AUDIT",
+    "Model2": "KEEP_FROZEN",
+    "Assembly": "KEEP_FROZEN",
+    "Architecture_Change_Proposal": "NO",
+    "Primary_Remaining_Bottleneck": "CANDIDATE_MATERIALIZATION_GAP (155) + QUERY_GENERATION_GAP (59); residual multi-char LEXICON_COVERAGE_GAP without general source",
+    "Recommended_Next_Phase": "FineSpan 1-char fallback vs multi-char lexical replacement audit; no training"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "Single-Char Collector Live Audit": "DESIGN_LIMITATION",
+  "dialog_200": "200 / 200",
+  "one_char_windows": 4477,
+  "accept_rate": 0.5206611570247934,
+  "largest_reject": "MULTIPLE_TONE_EXACT_CANDIDATES",
+  "target_units": 213,
+  "target_accept_expected": 2,
+  "no_valid_1char_path": 41,
+  "next_phase": "BIND_MIN_PRIOR_LENGTH1_AUDIT",
+  "impl_bug_windows": 0,
+  "lexicon": {
+    "bundleVersion": 13,
+    "checksum": "sha256:eb7f6e32955c559fc2ce9faf8b46be5071bbf226beb7cb8a0713434f7ac725b7",
+    "expected_bundleVersion": 13,
+    "expected_checksum": "sha256:eb7f6e32955c559fc2ce9faf8b46be5071bbf226beb7cb8a0713434f7ac725b7",
+    "single_char_enabled_non_alias": 2510,
+    "expected_single_char": 2510,
+    "match": true
+  },
+  "funnel": {
+    "windows_total": 4477,
+    "route_applicable": 4477,
+    "query_executed": 4027,
+    "sql_hit_ge1": 3377,
+    "tone_ready": 4027,
+    "tone_pattern_present": 4027,
+    "tone_exact_ge1": 3377,
+    "fallback": 2146,
+    "bound_zero": 4477,
+    "unique_tone_exact": 984,
+    "accepted": 2331,
+    "accept_unique_tone_exact": 984,
+    "accept_then_unbound": 2331,
+    "tone_pattern_absent": 450,
+    "surface_exact_ge1": 1799,
+    "accept_surface_exact": 1347
+  },
+  "terminal": {
+    "MULTIPLE_TONE_EXACT_CANDIDATES": 1046,
+    "ACCEPT_UNIQUE_TONE_EXACT": 984,
+    "NO_TONE_PATTERN": 450,
+    "ACCEPT_SURFACE_EXACT": 1347,
+    "SQL_NO_HIT": 650
+  },
+  "target_terminal": {
+    "ACCEPT_SURFACE_EXACT": 83,
+    "ACCEPT_UNIQUE_TONE_EXACT": 39,
+    "MULTIPLE_TONE_EXACT_CANDIDATES": 49,
+    "SQL_NO_HIT": 20,
+    "NO_TONE_PATTERN": 12,
+    "NO_VALID_SINGLE_CHAR_FINESPAN": 10
+  },
+  "root": {
+    "largest_reject_reason": "MULTIPLE_TONE_EXACT_CANDIDATES",
+    "largest_n": 1046,
+    "percentage": 0.23363859727496092,
+    "fail_closed_1_1C": "SECONDARY",
+    "uniqueness": "SECONDARY",
+    "surface_exact": "NOT_CAUSE",
+    "score": "NOT_CAUSE",
+    "LIMIT": "NOT_CAUSE",
+    "normalization": "NOT_CAUSE",
+    "hypotheses": {
+      "1.1C_fail_closed": "MINOR",
+      "uniqueness": "MINOR",
+      "surface_exact": "NOT_SUPPORTED",
+      "score": "NOT_SUPPORTED",
+      "LIMIT": "NOT_SUPPORTED",
+      "normalization": "NOT_SUPPORTED"
+    },
+    "impl_bug_windows": 0,
+    "function_word_units_separate": 31,
+    "accept_then_unbound": 2331,
+    "bind_min_prior_drops_all_collector_accepts": true,
+    "path0_lexical_1char_finespan": 0
+  },
+  "change": {
+    "Collector_Working_As_Designed": true,
+    "Implementation_Bug_Found": false,
+    "Implementation_Fix_Required": false,
+    "Frozen_Contract_Is_Primary_Limitation": false,
+    "Bind_MinPrior_Is_Primary_Limitation_For_Lexical_FineSpan": true,
+    "Contract_Change_Proposal_Required": false,
+    "FineSpan_Change_Required": false,
+    "Lexicon_Change_Required": false,
+    "Model2_Change_Required": false,
+    "Budget_Change_Required": false,
+    "Assembly_Change_Required": false,
+    "Training_Required": false,
+    "Recommended_Next_Phase": "BIND_MIN_PRIOR_LENGTH1_AUDIT",
+    "verdict": "DESIGN_LIMITATION"
+  },
+  "conformance": {
+    "base_only": "PASS",
+    "exact_only": "PASS",
+    "no_fuzzy": "PASS",
+    "no_domain": "PASS",
+    "cap_1": "PASS",
+    "frozen_collector_semantics": "PASS",
+    "hidden_filter": "YES",
+    "unjustified_filter": [
+      "bindLexiconHitsToWindow minPrior=0.5 vs length-1 priorScore<=0.3"
+    ],
+    "conditions": {
+      "tone_fail_closed": "FROZEN_REQUIRED",
+      "unique_only": "FROZEN_REQUIRED",
+      "surface_exact_windowText": "FROZEN_REQUIRED",
+      "LIMIT_8": "FROZEN_REQUIRED",
+      "minCandidateScore": "SAFETY_CAP",
+      "eligible_alias_prior": "IMPLEMENTATION_DETAIL",
+      "normalization_overlay": "TRACE_ONLY"
+    }
+  }
+}

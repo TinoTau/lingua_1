@@ -1,0 +1,9 @@
+dataset_or_consumer,path_or_default,status,purpose_or_action,affectsS3Training,affectsS3CausalityAudit,notes
+MODEL3_V2_PRODUCTION_CORE_S3,model3_v2_production_core_s3,AUTHORITATIVE_FOR_S3,Train S3 model,train_s3_random.py,SHOULD be SSOT,verified
+MODEL3_V2_PRODUCTION_CORE_S2,model3_v2_production_core_s2,VALID_HISTORICAL,S2 + S3 lineage source,reuse re-tagged,learning-curve,parent
+MODEL3_V2_PRODUCTION_CORE_S1,model3_v2_production_core_s1,VALID_HISTORICAL,S1 experiment,NO,learning-curve,
+MODEL3_V2_LABELED,model3_v2_labeled,QUARANTINE_CANDIDATE,V1 text relabel pilot,NO,YES_INVALID (stale),STALE_HARDCODED_PATH
+MODEL3_V2_REALDIST_EXPANDED_V1,model3_v2_realdist_expanded_v1,QUARANTINE_CANDIDATE,RealDist pilot cand=0 hardcode,NO,NO,
+audit_model3_v2_localization_training_causality.py,model3_v2_labeled/train,STALE_HARDCODED_PATH,MUST_MODIFY_LATER + G0,NO,YES_INVALID,first owner of prior wrong audit
+run-model3-v2-target-localization-generalization-audit.mjs,model3_v2_labeled/train,STALE_HARDCODED_PATH,MUST_MODIFY_LATER,NO,YES_INVALID,
+train_s3_random.py,model3_v2_production_core_s3,CORRECT,MAY add stronger G0 recording,YES_CORRECT,N/A,

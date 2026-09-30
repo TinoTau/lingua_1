@@ -1,0 +1,186 @@
+{
+  "phase": "MODEL3_V2_REAL_DISTRIBUTION_DATA_EXPANSION",
+  "date": "2026-08-29",
+  "verdict": "REAL_DISTRIBUTION_EXPANSION_READY",
+  "primaryGap": "REAL_RETRY_FEATURE_COMBINATION_MISSING",
+  "primaryGapDetail": "TRAIN RETRY span_rel_position heavily TAIL (p50≈1.0); REAL HIGH RETRY HEAD/MID (p50≈0.34); MULTI_CHAR/INSERTION underrepresented relative to real case mix",
+  "featureCapacityStop": false,
+  "datasetExpanded": true,
+  "newModelTrained": false,
+  "datasetId": "MODEL3_V2_REALDIST_EXPANDED_V1",
+  "originalSamples": 114418,
+  "newSamples": 4900,
+  "totalSamples": 119318,
+  "expansionPercent": 4.282542956527819,
+  "labelDistribution": {
+    "KEEP": 2218643,
+    "MASKED": 104651,
+    "RETRY": 28414,
+    "EXCLUDE_FROM_SUPERVISED": 1
+  },
+  "beforeAfter": {
+    "real_retry_pos": {
+      "count": 13,
+      "min": 0.0,
+      "p10": 0.05263157894736842,
+      "p25": 0.15,
+      "p50": 0.34210526315789475,
+      "p75": 0.5333333333333333,
+      "p90": 0.6538461538461539,
+      "max": 0.7142857142857143,
+      "mean": 0.33498964373458295
+    },
+    "v2_retry_pos": {
+      "count": 18302,
+      "min": 0.0,
+      "p10": 0.4666666666666667,
+      "p25": 0.5357142857142857,
+      "p50": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "max": 1.0,
+      "mean": 0.836597757301854
+    },
+    "expanded_retry_pos": {
+      "count": 28414,
+      "min": 0.0,
+      "p10": 0.1724137931034483,
+      "p25": 0.4166666666666667,
+      "p50": 0.5925925925925926,
+      "p75": 1.0,
+      "p90": 1.0,
+      "max": 1.0,
+      "mean": 0.654603721600465
+    },
+    "expansion_only_retry_pos": {
+      "count": 10112,
+      "min": 0.0,
+      "p10": 0.07142857142857142,
+      "p25": 0.15384615384615385,
+      "p50": 0.3157894736842105,
+      "p75": 0.47619047619047616,
+      "p90": 0.6,
+      "max": 0.8,
+      "mean": 0.32520747541698836
+    },
+    "head_mid_counts": {
+      "real": {
+        "head_le_0.35": 7,
+        "mid_0.2_0.8": 8,
+        "tail_ge_0.7": 1,
+        "n": 13
+      },
+      "before": {
+        "head_le_0.35": 41,
+        "mid_0.2_0.8": 5517,
+        "tail_ge_0.7": 13025,
+        "n": 18302
+      },
+      "after": {
+        "head_le_0.35": 5697,
+        "mid_0.2_0.8": 12443,
+        "tail_ge_0.7": 13287,
+        "n": 28414
+      },
+      "expansion_only": {
+        "head_le_0.35": 5656,
+        "mid_0.2_0.8": 6926,
+        "tail_ge_0.7": 262,
+        "n": 10112
+      }
+    }
+  },
+  "qa": [
+    {
+      "check": "RETRY_span_rel_position_HEAD(<=0.35)",
+      "status": "PASS",
+      "real": "n=13 head=7 ratio=0.538 p50=0.34210526315789475",
+      "before": "n=18302 head=41 ratio=0.002 p50=1.0",
+      "after": "n=28414 head=5697 ratio=0.200 p50=0.5925925925925926",
+      "expansion_only": "n=10112 head=5656 p50=0.3157894736842105",
+      "count": ""
+    },
+    {
+      "check": "RETRY_span_rel_position_MID(0.2-0.8)",
+      "status": "PASS",
+      "real": "mid=8",
+      "before": "mid=5517",
+      "after": "mid=12443",
+      "expansion_only": "mid=6926",
+      "count": ""
+    },
+    {
+      "check": "MULTI_CHAR_HEADMID_family",
+      "status": "PASS",
+      "real": "MULTI_CHAR_REPLACEMENT=6/13 HIGH cases",
+      "before": "MULTI_CHAR present but TAIL-biased",
+      "after": "expansion MULTI_CHAR RETRY spans=6518",
+      "expansion_only": "see family counts",
+      "count": ""
+    },
+    {
+      "check": "INSERTION_HEADMID_family",
+      "status": "PASS",
+      "real": "INSERTION=4/13",
+      "before": "underrepresented vs real mix",
+      "after": "expansion INSERTION RETRY spans=2594",
+      "expansion_only": "",
+      "count": ""
+    },
+    {
+      "check": "HARD_KEEP_HEADMID_contrast",
+      "status": "PASS",
+      "real": "KEEP controls exist",
+      "before": "present",
+      "after": "hardkeep HEAD+MID samples=1200",
+      "expansion_only": "1200",
+      "count": ""
+    },
+    {
+      "check": "dialog_200_leakage",
+      "status": "PASS",
+      "real": "",
+      "before": "",
+      "after": "",
+      "expansion_only": "",
+      "count": 0
+    },
+    {
+      "check": "anchor_never_retry",
+      "status": "PASS",
+      "real": "",
+      "before": "",
+      "after": "",
+      "expansion_only": "",
+      "count": 0
+    },
+    {
+      "check": "label_contract_version",
+      "status": "PASS",
+      "real": "",
+      "before": "",
+      "after": "",
+      "expansion_only": "",
+      "count": ""
+    },
+    {
+      "check": "v2_baseline_not_overwritten",
+      "status": "PASS",
+      "real": "",
+      "before": "",
+      "after": "",
+      "expansion_only": "",
+      "count": ""
+    },
+    {
+      "check": "v2_checkpoint_preserved",
+      "status": "PASS",
+      "real": "",
+      "before": "",
+      "after": "",
+      "expansion_only": "",
+      "count": ""
+    }
+  ],
+  "recommendedNextPhase": "MODEL3_V2_REALDIST_MODEL_TRAINING"
+}

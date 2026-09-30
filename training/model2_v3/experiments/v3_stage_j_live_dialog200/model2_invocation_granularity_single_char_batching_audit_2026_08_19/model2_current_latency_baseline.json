@@ -1,0 +1,25 @@
+{
+  "do_not_use_52ms_blindly": true,
+  "training_eval_p_rr_harness": {
+    "source": "training/model2_v3/experiments/v3_stage_j_p_preservation/stage_j_latency.json",
+    "P_P50_ms": 52.02,
+    "P_P95_ms": 71.47,
+    "includes": "select_p_actions + execute_action lexicon retrieval, not production sidecar JSONL"
+  },
+  "production_sidecar_jest_warm": {
+    "source": "training/model2_v3/experiments/v3_runtime_integration_mvp_final_closure/model2_runtime_latency_final.json",
+    "p50_ms": 3,
+    "p95_ms": 4,
+    "sidecar_warm_100_mean_ms": 1.6,
+    "note": "tiny 47210-param MLP; spawn cold-start excluded"
+  },
+  "dialog200_per_infer_latency_ms": null,
+  "dialog200_per_utterance_model2_total_latency_ms": "NOT_IN_TRACE; estimate sequential 20*(1.6 to 5)ms compute plus JSON IPC",
+  "utterance_estimate_if_3ms_compute": {
+    "p50_ms": 60,
+    "p95_ms": 93,
+    "max_ms": 111
+  },
+  "ipc_likely_material": true,
+  "model_compute_small": true
+}

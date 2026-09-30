@@ -1,0 +1,13 @@
+{
+  "corrupted_n": 698,
+  "taxonomy": {
+    "DOMAIN_IDENTITY_DROPPED_BUT_LEXICAL_TARGET_SURVIVED": 698
+  },
+  "sort": "distance ASC, prior DESC, term_id ASC",
+  "first_wins_per_surface": true,
+  "base_term_id_sorts_before_domain": true,
+  "file": "training/model2/fuzzy/pool.py",
+  "lines": "124-135",
+  "original_purpose": "Avoid duplicate surface slots / candidate explosion — NOT documented as base>domain precedence",
+  "precedence_status": "UNJUSTIFIED_IMPLEMENTATION_BEHAVIOR (tie-break term_id ASC)"
+}

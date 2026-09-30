@@ -1,0 +1,9 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "stack": "span_text/ASR text → syllables (Node CLI or pypinyin) → normalize_for_lexicon_lookup → relation reverse → FuzzyPool",
+  "SSOT_normalize": "training/model2/retrieval/normalize.py",
+  "duplicate_normalize_risk": "fuzzy/pool.normalize_syllable still used inside FuzzyPool; must stay compatible",
+  "separate_pronunciation_model_needed_for_original_objective": "UNPROVEN",
+  "verdict_for_span_text_plus_profile": "PARTIAL — sufficient when span residue invertible; not proven insufficient after restoring span path",
+  "note": "Whole-utt G2P failure must NOT justify new pronunciation model"
+}

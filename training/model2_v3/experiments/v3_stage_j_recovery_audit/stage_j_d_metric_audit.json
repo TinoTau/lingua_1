@@ -1,0 +1,10 @@
+{
+  "vacuous_PASS_bug": true,
+  "prior_bug": "Correct=0 Empty=0 still PASS via >= comparison",
+  "required_contract": "PASS only if Correct TIR > 0 AND Correct > Empty",
+  "StageJ_TIR_definition": "tid in base|new_ids (NO surface fallback)",
+  "StageD1_hit_definition": "tid OR surface match",
+  "StageD2_primary_metric": "DomainActionHit (action domain ∩ target_domains)",
+  "METRIC_CONTRACT_DRIFT": true,
+  "Stage_D_Metric_Contract": "FAIL"
+}

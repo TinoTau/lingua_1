@@ -1,0 +1,8 @@
+Feature,TrainingSource,ProductionSource,RuntimeAvailable,Status
+span_hash,hash_span_v1,Node feature-hash-v1.ts,YES,MATCH
+phonetic_bias,profile_phonetic,UserProfile.phonetic_bias,YES,MATCH
+personal_terms,TopK surfaces,UserProfile.personal_terms,YES,MATCH
+term_evidence,EMA-clamped,personal_term_evidence by term_id/surface,YES,MATCH
+long_term_domain_evidence,normalized_weighted_multitag,UserProfile.long_term_domain_evidence,YES,MATCH
+session_domain_prior,NOT USED,NOT IN Stage J model,NO,EXCLUDED
+legacy_python_hash,forbidden,forbidden,NO,EXCLUDED

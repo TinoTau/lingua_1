@@ -1,0 +1,10 @@
+caseId_or_family,rule_id,rule_type,description,allowed,forbidden_example,acceptance_check
+*,SC-01,SAME_SURFACE_BOTH_LABELS,"For any surface with TRAIN_RETRY>=N_min AND natural KEEP usage exists in corpus/production, require TRAIN_KEEP>=K_min for that surface",YES,"if token==四 then force KEEP",surface_leakage_gate
+*,SC-02,SAME_SURFACE_RETRY_FROM_KEEP,"For high-frequency KEEP surfaces that appear inside a labeled malformed region under V2 region semantics, allow RETRY supervision on that region projection",YES,"if token==对 then always RETRY",surface_leakage_gate
+*,SC-03,NO_TOKEN_BLACKLIST,"No generation/filter rule may branch on literal token equality for 四/温/背/烧/上/对/苏 or any fixed char list",YES,hardcoded token allow/deny lists,governance_gate
+*,SC-04,NO_CASE_PATCH,"No rule may branch on dialog_200 caseId (d002/d179/...)",YES,if case==d002,governance_gate
+*,SC-05,HARD_NEGATIVE_STRUCTURAL,"KEEP examples: surface may equal RETRY-heavy surfaces when local region is clean / non-malformed; prefer alternate paths and clean utterances",YES,manual 四 KEEP dumps only,hard_negative_coverage
+*,SC-06,HARD_RETRY_STRUCTURAL,"RETRY examples: common KEEP surfaces inside independently labeled malformed regions get RETRY by region projection not by token",YES,force RETRY on all 在,hard_retry_coverage
+*,SC-07,LEAKAGE_METRIC,"Per surface with support>=S: ratio=RETRY/(KEEP+RETRY); classify LEAKAGE_RISK_HIGH/MODERATE/LOW",YES,require exact 50/50,token_leakage_report
+d160,SC-08,STALE_TARGET,"Do not create RETRY for 顺/便 from historical 向木李; current 顺便看看项目里 is STALE_TARGET_NOT_COMPARABLE",YES,train RETRY on 顺 because d160,holdout_and_stale_gate
+*,SC-09,HOLDOUT_SURFACES_OK,"Holdout inventory surfaces may appear in train only via unrelated non-copy utterances; no near-duplicate of holdout sourceText",YES,copy d002 text into train,split_leakage_gate

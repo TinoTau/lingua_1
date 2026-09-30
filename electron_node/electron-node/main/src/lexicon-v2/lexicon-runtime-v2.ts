@@ -183,6 +183,7 @@ export class LexiconRuntimeV2 {
   private tierCacheHits = 0;
   private tierCacheMisses = 0;
 
+  private sqlitePath: string | null = null;
   private stmtBase: Database.Statement | null = null;
   private stmtIdiom: Database.Statement | null = null;
   private stmtDomain: Database.Statement | null = null;
@@ -206,6 +207,11 @@ export class LexiconRuntimeV2 {
 
   getManifestVersion(): string | undefined {
     return this.manifest?.schemaVersion;
+  }
+
+  /** Absolute sqlite path for Model2 Stage-J sidecar index (identity only). */
+  getSqlitePath(): string | null {
+    return this.sqlitePath;
   }
 
   getCacheStats() {
@@ -293,6 +299,7 @@ export class LexiconRuntimeV2 {
 
       this.db = new Database(sqlitePath, { readonly: true });
       this.manifest = manifest;
+      this.sqlitePath = sqlitePath;
 
       this.hasToneColumn = true;
       const toneSelect = 'tone_pinyin_key,';
@@ -761,6 +768,7 @@ export class LexiconRuntimeV2 {
   }
 
   private closeDbOnly(): void {
+    this.sqlitePath = null;
     this.stmtBase = null;
     this.stmtIdiom = null;
     this.stmtDomain = null;

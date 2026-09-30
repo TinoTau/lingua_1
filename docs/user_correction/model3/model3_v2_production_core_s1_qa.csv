@@ -1,0 +1,20 @@
+gate,status,notes
+provenanceCoherence,PASS,
+holdoutCollision,PASS,
+semanticFamilySplitLeak,PASS,
+candidateMissing,PASS,
+packerMissing,PASS,
+toneRecallInvalid,PASS,
+anchorSourceValidity,PASS,
+model2OwnerAvailability,PASS,
+domainOwnerExecution,PASS,
+multipathRetention,PASS,
+labelCounts,PASS,
+evidenceOrigin,PASS,
+candidateNonCollapsed,PASS,
+retryCandGt0,PASS,
+families_target,PASS,999 >= 950 threshold
+frozen_vs_supervised,NONBLOCKING,1000 frozen; 999 supervised; 1 HARD_REJECT f5212176ded1
+one_sided_surfaces,NONBLOCKING,40 surfaces KEEP-only at high support
+error_family_audit,PASS,"{""DELETION"": 1676, ""SUBSTITUTION"": 1423, ""MULTI_CHAR_REPLACEMENT"": 846}"
+deletion_funnel_audit,PASS,"{""regions"": 1676, ""retry_span"": 62}"

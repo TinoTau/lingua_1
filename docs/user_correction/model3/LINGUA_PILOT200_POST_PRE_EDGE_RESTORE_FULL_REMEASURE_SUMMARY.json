@@ -1,0 +1,311 @@
+{
+  "phase": "LINGUA_PILOT200_POST_PRE_EDGE_RESTORE_FULL_REMEASURE",
+  "authoritativeModel2Ssot": "AUG12_PRE_LEXICAL_EDGE",
+  "dataset": "LINGUA_DIALOG2000_V2_PILOT200",
+  "build": "build_20260911_091806",
+  "uniqueCases": 200,
+  "expectedRuns": 600,
+  "attemptedRuns": 600,
+  "completedRuns": 600,
+  "validRuns": 600,
+  "invalidRuns": 0,
+  "conditionRuns": {
+    "NO_PROFILE": 200,
+    "CORRECT_PROFILE": 200,
+    "WRONG_PROFILE": 200
+  },
+  "runtimeOutcomeDistribution": {
+    "ASR_EMPTY": 3,
+    "EVALUATED": 471,
+    "CLEAN_OR_CONTROL": 126
+  },
+  "gateMetrics": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "fail": 0,
+      "passRate": 1
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "fail": 53,
+      "passRate": 0.8312101910828026
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "fail": 88,
+      "passRate": 0.7197452229299363
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "fail": 153,
+      "passRate": 0.5127388535031847
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 70,
+      "fail": 527,
+      "passRate": 0.11725293132328309
+    }
+  },
+  "firstFailureOwnerCounts": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "LEXICON_RECALL": 158,
+    "MODEL2_ACTION": 53,
+    "SUCCESS": 150,
+    "DOWNSTREAM": 1
+  },
+  "model2ApplicableFirstFailureOwnerCounts": {
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "LEXICON_RECALL": 158,
+    "MODEL2_ACTION": 53,
+    "SUCCESS": 24,
+    "DOWNSTREAM": 1
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "targetActionRateGain": 261,
+      "targetLexiconHitGain": 3,
+      "targetEdgeCreatedGain": 3,
+      "finalRepairDelta": 4,
+      "finalRepairRateCorrect": 0.13,
+      "finalRepairRateNoProfile": 0.11
+    },
+    "wrongVsNoProfile": {
+      "extraExpansionCount": 21947,
+      "falseTargetHits": 0,
+      "finalRepairDelta": 0,
+      "finalRepairRateWrong": 0.11
+    }
+  },
+  "usefulExpansionMetrics": {
+    "any_expansion": 66,
+    "target_relevant_expansion": 104,
+    "target_lexicon_hit": 3,
+    "target_edge_created": 3,
+    "target_edge_survived": 3,
+    "final_repair_correct": 26
+  },
+  "falseExpansionMetrics": {
+    "wrongProfileExtraExpansions": 21947,
+    "wrongProfileFalseTargetHits": 0,
+    "wrongProfileFinalDegradation": 0
+  },
+  "finalRepairMetrics": {
+    "noProfileCorrect": 22,
+    "correctProfileCorrect": 26,
+    "wrongProfileCorrect": 22,
+    "gainOverNoProfile": 4,
+    "wrongDeltaFromNoProfile": 0
+  },
+  "bySplit": {
+    "DEV": {
+      "totalRuns": 360,
+      "correctProfileFinalPass": 16,
+      "noProfileFinalPass": 13,
+      "wrongProfileFinalPass": 13,
+      "model2Hits": 2
+    },
+    "VALIDATION": {
+      "totalRuns": 180,
+      "correctProfileFinalPass": 7,
+      "noProfileFinalPass": 6,
+      "wrongProfileFinalPass": 6,
+      "model2Hits": 0
+    },
+    "HOLDOUT": {
+      "totalRuns": 60,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 3,
+      "wrongProfileFinalPass": 3,
+      "model2Hits": 1
+    }
+  },
+  "byUser": {
+    "U001": {
+      "totalRuns": 120,
+      "correctProfileFinalPass": 4,
+      "noProfileFinalPass": 4,
+      "wrongProfileFinalPass": 4,
+      "model2Hits": 0
+    },
+    "U002": {
+      "totalRuns": 120,
+      "correctProfileFinalPass": 8,
+      "noProfileFinalPass": 6,
+      "wrongProfileFinalPass": 6,
+      "model2Hits": 2
+    },
+    "U003": {
+      "totalRuns": 120,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 3,
+      "wrongProfileFinalPass": 3,
+      "model2Hits": 0
+    },
+    "U004": {
+      "totalRuns": 120,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 2,
+      "wrongProfileFinalPass": 2,
+      "model2Hits": 1
+    },
+    "U005": {
+      "totalRuns": 120,
+      "correctProfileFinalPass": 8,
+      "noProfileFinalPass": 7,
+      "wrongProfileFinalPass": 7,
+      "model2Hits": 0
+    }
+  },
+  "byDomain": {
+    "general_daily": {
+      "totalRuns": 129,
+      "correctProfileFinalPass": 7,
+      "noProfileFinalPass": 5,
+      "wrongProfileFinalPass": 5,
+      "model2Hits": 1
+    },
+    "software_meeting": {
+      "totalRuns": 99,
+      "correctProfileFinalPass": 5,
+      "noProfileFinalPass": 4,
+      "wrongProfileFinalPass": 4,
+      "model2Hits": 1
+    },
+    "medical": {
+      "totalRuns": 90,
+      "correctProfileFinalPass": 2,
+      "noProfileFinalPass": 1,
+      "wrongProfileFinalPass": 1,
+      "model2Hits": 0
+    },
+    "food_cafe": {
+      "totalRuns": 108,
+      "correctProfileFinalPass": 4,
+      "noProfileFinalPass": 4,
+      "wrongProfileFinalPass": 4,
+      "model2Hits": 0
+    },
+    "travel_hotel": {
+      "totalRuns": 96,
+      "correctProfileFinalPass": 2,
+      "noProfileFinalPass": 2,
+      "wrongProfileFinalPass": 2,
+      "model2Hits": 1
+    },
+    "retail_service": {
+      "totalRuns": 78,
+      "correctProfileFinalPass": 6,
+      "noProfileFinalPass": 6,
+      "wrongProfileFinalPass": 6,
+      "model2Hits": 0
+    }
+  },
+  "byRelation": {
+    "n_l": {
+      "totalRuns": 99,
+      "correctProfileFinalPass": 1,
+      "noProfileFinalPass": 1,
+      "wrongProfileFinalPass": 1,
+      "model2Hits": 0
+    },
+    "in_ing": {
+      "totalRuns": 39,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 3,
+      "wrongProfileFinalPass": 3,
+      "model2Hits": 0
+    },
+    "NONE": {
+      "totalRuns": 126,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    },
+    "z_zh": {
+      "totalRuns": 60,
+      "correctProfileFinalPass": 5,
+      "noProfileFinalPass": 5,
+      "wrongProfileFinalPass": 5,
+      "model2Hits": 1
+    },
+    "sh_s": {
+      "totalRuns": 117,
+      "correctProfileFinalPass": 11,
+      "noProfileFinalPass": 8,
+      "wrongProfileFinalPass": 8,
+      "model2Hits": 1
+    },
+    "eng_en": {
+      "totalRuns": 60,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 3,
+      "wrongProfileFinalPass": 3,
+      "model2Hits": 0
+    },
+    "h_f": {
+      "totalRuns": 39,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    },
+    "ch_c": {
+      "totalRuns": 60,
+      "correctProfileFinalPass": 3,
+      "noProfileFinalPass": 2,
+      "wrongProfileFinalPass": 2,
+      "model2Hits": 1
+    }
+  },
+  "architectureRegressionChecks": {
+    "ONE_MODEL2_PRODUCTION_INSERTION": "PASS",
+    "NO_POST_PATHFINESPAN_MODEL2": "PASS",
+    "NO_DUAL_MODEL2_PATH": "PASS",
+    "WINDOW_LOCAL_TONE": "PASS",
+    "PACTION_CONTRACT_UNCHANGED": "PASS",
+    "LEXICALEDGE_CANDIDATE_GATE_UNCHANGED": "PASS",
+    "MODEL3_RETRY_NO_MODEL2": "PASS",
+    "JOBRESULT_BOUNDARY_UNCHANGED": "PASS"
+  },
+  "pilotHypothesisStatus": "PARTIALLY_SUPPORTED",
+  "outcome": "VALID_BASELINE_WITH_DOMINANT_FAILURE",
+  "dominantFailureOwner": "LEXICON_RECALL",
+  "harnessOnlyChange": true,
+  "productCodeChange": false,
+  "oneNextOwner": "LEXICON_RECALL_OWNER"
+}

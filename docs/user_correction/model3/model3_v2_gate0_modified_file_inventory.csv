@@ -1,0 +1,13 @@
+path,action,purpose
+training/model3_dataset/acoustic_training/gate0.py,MODIFY,independent evidence derivation + status vocabulary
+training/model3_dataset/acoustic_training/serializer.py,MODIFY,candidate fail-closed; packer field required
+training/model3_dataset/acoustic_training/orchestrator.py,MODIFY,TEST_FIXTURE isolation; near_dup_key; cand HARD_REJECT
+training/model3_dataset/acoustic_training/provenance.py,MODIFY,ATTEMPTED via ownerDiagnostics
+training/model3_dataset/offline_harness/acoustic_b2_formal_materialize.cjs,MODIFY,ownerDiagnostics; readiness fail-closed; evidenceSource
+training/model3_dataset/tests/test_gate0_evidence_independence.py,NEW,focused negative/mutation/formal-path tests
+training/model3_dataset/tests/test_acoustic_training_state.py,MODIFY,empty-batch + fixture Gate0 expectations
+docs/user_correction/model3/Lingua_Model3_V2_Gate0_Evidence_Independence_Correction_2026_08_30.md,NEW,primary report
+docs/user_correction/model3/model3_v2_gate0_evidence_independence_correction_summary.json,NEW,summary artifact
+docs/user_correction/model3/model3_v2_gate0_corrected_evidence_contract.json,NEW,evidence contract
+docs/user_correction/model3/model3_v2_gate0_correction_test_results.csv,NEW,test results
+docs/user_correction/model3/model3_v2_gate0_modified_file_inventory.csv,NEW,this inventory

@@ -1,0 +1,6 @@
+{
+  "default_path": "bounded rebuild from TopK<=100 resolved term_id evidence after each apply",
+  "full_history_scan": false,
+  "cost": "O(TopK * tags) bounded",
+  "rebuild_utility": "migrate_legacy_free_text_keys + rebuild_long_term_domain_evidence"
+}

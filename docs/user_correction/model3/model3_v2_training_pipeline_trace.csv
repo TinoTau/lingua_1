@@ -1,0 +1,14 @@
+stageId,owner,function,produces,matchesB2,notes
+S0_ENTRY,run_production_core_s3_build.py,main / freeze_phase / materialize_phase / finalize_phase,MODEL3_V2_PRODUCTION_CORE_S3 shards,YES,Authoritative S3 entry; train_s3_random.py consumes this dir
+S1_SOURCE_SELECT,run_production_core_s3_build.py + select_pool_candidates,select_new_references / select_pool_candidates,referenceText + semanticFamilyId + split,YES,semanticFamilyId split lock via family_identity.assign_split
+S2_TTS,acoustic_training/audio_materializer.py,materialize_audio,fixed Piper TTS PCM,YES,TTS materialization only; no multi-speaker/prosody aug
+S3_ASR_FW,orchestrator.py FasterWhisperClient,transcribe_pcm16,rawActualAsrText + tone slices,YES,ASR errors create natural malformed regions
+S4_LATTICE,offline_harness/acoustic_b2_formal_materialize.cjs,materialize / runLatticeFineSpanGeneration,FineSpan paths + Recall candidates,YES,fuzzyRecallEnabled=true; production Recall owner
+S5_MODEL2,acoustic_b2_formal_materialize.cjs,expandActiveCandidatesWithModel2,expanded candidates per path,YES,await real Model2; MODEL2_RUNTIME_DISABLED popped
+S6_DOMAIN_ANCHOR,acoustic_b2_formal_materialize.cjs,voteUtteranceDomainFromPool + materializeModel3Anchors,path-local Domain Vote + Anchors,YES,path-local; no second vote
+S7_PACKER,model3-feature-pack.ts,packModel3SpanInferFields / model3FirstPassCandidateCount,firstPassCandidateCount + pinyinChannelAvail,YES,SSOT half-pack; span_rel_position computed later in loader
+S8_LABEL,scripts/stage2_v2_label.py,label_spans_v2 / derive_malformed_regions,KEEP/RETRY via ASR≠ref SequenceMatcher regions,YES,corruptions=[] on S3 path; no synthetic placement
+S9_SERIALIZE,acoustic_training/serializer.py,serialize_path_samples / extract_first_pass_candidate_count,MODEL3_TRAINING_SAMPLE_V1 JSONL,YES,fail-closed if cand field missing; true zero allowed
+S10_TRAIN_LOADER,train/bigru_v1.py,span_features / sample_to_tensors,6-D feature tensors,PARTIAL,duplicates production host packing; None→0 default exists but S3 fields present
+ALT_LABELED,scripts/run_v2_dataset_build.py,relabel_sample_v2,model3_v2_labeled shards,NO,TEXT RELABEL ONLY — no ASR/Recall/Model2; cand collapsed; NOT S3 SSOT
+ALT_REALDIST,scripts/build_v2_realdist_expanded.py,make_1char_spans,realdist expanded samples,NO,HARDCODES firstPassCandidateCount=0

@@ -1,0 +1,43 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "fields": {
+    "span_text": {
+      "SOURCE": "ASR_OBSERVED",
+      "value_example": "幫",
+      "note": "ASR hypothesis fragment used as query chars"
+    },
+    "span_syllables (baseline)": {
+      "SOURCE": "CANONICAL_TARGET",
+      "value_example": [
+        "jue",
+        "ce"
+      ],
+      "note": "Phase7B: equals target term pinyin 100% — oracle leak into query"
+    },
+    "span_syllables (P1-B)": {
+      "SOURCE": "ASR_DERIVED_APPROX",
+      "note": "Derived via syllables_from_text(span_text); may use node bridge or pypinyin fallback"
+    },
+    "candidate surface/syllables": {
+      "SOURCE": "CANDIDATE_METADATA",
+      "note": "From CandidateIndex lexicon snapshot"
+    },
+    "observed_syllables_for_relation": {
+      "SOURCE": "SYNTHETIC_LABEL",
+      "note": "Corruption-family synthesized observed form for Stage B relation; not ASR G2P"
+    },
+    "target_term_id": {
+      "SOURCE": "SYNTHETIC_LABEL",
+      "value_example": "base:_:决策:jue|ce"
+    },
+    "fuzzy_pool_distances (baseline enrich)": {
+      "SOURCE": "DERIVED_FROM_ASR",
+      "note": "Computed vs span_syllables; under baseline contract this is vs CANONICAL_TARGET"
+    }
+  }
+}

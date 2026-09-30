@@ -1,0 +1,46 @@
+{
+  "phase": "LINGUA_EVALUATION_CONTRACT_REPAIR_V1",
+  "production_changed": false,
+  "lexicon_changed": false,
+  "model2_changed": false,
+  "evaluation_ssot_created": true,
+  "evaluation_ssot_paths": {
+    "doc": "docs/user_correction/model3/LINGUA_EVALUATION_SSOT_V1.md",
+    "module": "electron_node/electron-node/tests/lib/evaluation-ssot-v1.mjs"
+  },
+  "invalid_diff_to_lexical_consumers_removed": 2,
+  "field_rename": {
+    "from": "requires_lexical",
+    "to": "is_reference_diff_hunk",
+    "legacy_compatibility_branch": false
+  },
+  "replay_capability_guard_active": true,
+  "tone_missing_maps_to": "NOT_EVALUABLE",
+  "model2_p_missing_maps_to": "NOT_EVALUABLE",
+  "divergence_class_rename": {
+    "from": "LEXICON_TARGET_ABSENT",
+    "to": "REFERENCE_DIFF_SURFACE_NOT_RECALLED"
+  },
+  "tests": {
+    "T1": "PASS",
+    "T2": "PASS",
+    "T3": "PASS",
+    "T4": "PASS",
+    "T5": "PASS",
+    "T6": "PASS",
+    "T7": "PASS",
+    "T8": "PASS"
+  },
+  "acceptance_gates": {
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS",
+    "G7": "PASS",
+    "G8": "PASS",
+    "G9": "PASS",
+    "G10": "PASS"
+  }
+}

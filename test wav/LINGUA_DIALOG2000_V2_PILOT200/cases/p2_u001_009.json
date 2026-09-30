@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u001_009",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U001",
+  "profileStage": "P1",
+  "domain": "medical",
+  "difficulty": "medium",
+  "referenceText": "护士站提醒患者准备好智能体相关材料。",
+  "audioId": "aud_p2_u001_009",
+  "audioPath": "audio/p2_u001_009.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "n_l",
+  "relationDirection": "n_l",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MODERATE",
+  "profileRef": "prof_u001_p1",
+  "profileBuildSetId": "pbs_u001_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e",
+    "base-rebuild-term-e5bf83e683857c78",
+    "base-rebuild-term-e4bfa1e5bf837c78"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e699bae883bde4bd"
+  ],
+  "evaluationTargetSurface": "智能体",
+  "split": "VALIDATION",
+  "holdoutClass": "NONE",
+  "seed": 3222103040,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "PROFILE_TARGET",
+  "wrongProfileUserId": null,
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u001_009",
+    "byte_size": 125246,
+    "sha256": "fb06d7979684b5dfa8f8429711a3fe519a8b84125725053a8f2df1b4be8a72b8",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 3.913
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "护士站提醒患者准备好智碐体相关材料。"
+}

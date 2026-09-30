@@ -1,0 +1,13 @@
+source_field,tensor,file,function,visibility,dim,risk,note
+spans[].surface → char token ids,"tokens [B,N,8]",training/model3_dataset/train/bigru_v1.py,encode_surface / sample_to_tensors,MODEL_VISIBLE,embed_dim=64 via Embedding,,
+spans[].isAnchor,"feats[:,0]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,,
+len(surface),"feats[:,1]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,,
+spans[].phoneticCompatible,"feats[:,2]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,LABEL_RELATED_CORRUPTION_MARKER,
+recallEvidence.firstPassCandidateCount,"feats[:,3]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,,
+referenceSurface != surface,"feats[:,4]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,DIRECT_LABEL_LEAKAGE,
+repairability.referenceReachable == YES,"feats[:,5]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,REPAIRABILITY_LABEL_SHORTCUT,
+repairability.referenceReachable == NO,"feats[:,6]",training/model3_dataset/train/bigru_v1.py,span_features,MODEL_VISIBLE,1,REPAIRABILITY_LABEL_SHORTCUT,
+spans[].targetMask,"feats[:,7] AND loss mask",training/model3_dataset/train/bigru_v1.py,span_features / collate_batch,MODEL_VISIBLE+LOSS_ONLY,1,TARGET_MASK_AS_FEATURE,
+label / labelClass,labels (loss only),sample_to_tensors,sample_to_tensors,LOSS_ONLY,1,,
+anchorDietBucket / SIMULATED provenance,none,sidecar,n/a,QA_ONLY,0,,
+referenceText / full utterance reference,not directly,n/a,n/a,NOT_MODEL_VISIBLE,0,,but per-span referenceSurface inequality IS packed

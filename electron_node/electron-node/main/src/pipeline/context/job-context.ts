@@ -99,12 +99,22 @@ export interface JobContext {
   domainBoostApplied?: number;
   /** Soft session domain priors from Web (never written into enabledDomains). */
   domainPriors?: import('../../fw-detector/domain-context-contract').DomainPrior[];
+  /**
+   * Session UserProfile from SessionBootstrap cache (NodeAgent).
+   * Bound at job start — not re-fetched from Gateway.
+   */
+  userProfileV1?: import('@shared/protocols/messages').UserProfileV1 | null;
+  userProfileVersion?: number | null;
+  sessionId?: string;
   /** FW detector override: restrict enabledDomains for this job */
   fwDetectorEnabledDomainsOverride?: string[];
   /** FW detector override: disable/enable KenLM gate for this job */
   fwDetectorEnableKenLMGateOverride?: boolean;
   fwDetectorKenlmGateModeOverride?: KenlmGateMode;
   fwDetectorKenlmVetoThresholdOverride?: number;
+  /** Canonical FW Repair input after existing OpenCC t→cn (does not replace rawAsrText). */
+  fwRepairNormalizedText?: string;
+  fwRepairScriptNormalized?: boolean;
 
   /** Legacy Recover / CTC / window recall partition. FW main chain must not read/write. */
   legacy?: LegacyContext;

@@ -1,0 +1,12 @@
+{
+  "path": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+  "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+  "params": 47210,
+  "architecture": "RetrievalPolicyV3(with_domain_head=True)",
+  "verified_on_disk_2026_08_20": true,
+  "production_host_load": "RetrievalPolicyV3(with_domain_head=True) with_ambiguity_head omitted/False",
+  "must_not_retrain": true,
+  "v1_experiment_ckpt": "training/model2_v3/experiments/v3_single_char_ambiguity_head_v1/retrieval_policy_v3_single_char_ambiguity_v1.pt",
+  "v2_experiment_ckpt": "training/model2_v3/experiments/v3_single_char_minimal_context_v2/retrieval_policy_v3_single_char_ambiguity_v2.pt",
+  "production_uses_v1_or_v2": false
+}

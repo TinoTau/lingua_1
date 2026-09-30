@@ -1,0 +1,9 @@
+funnelStage,valueState,owner,file,firstLoss,notes
+production_runtime,NONZERO_OBSERVED,model3FirstPassCandidateCount(span.candidates.filter !isCovered),electron_node/.../model3-feature-pack.ts,NO,14/30 localization spans nonzero in prior capture
+S3_formal_harness,NONZERO_WRITTEN,acoustic_b2_formal_materialize.cjs → packModel3SpanInferFields,training/.../acoustic_b2_formal_materialize.cjs,NO,Writes recallEvidence.firstPassCandidateCount from real lattice
+S3_serializer,PRESERVED_FAIL_CLOSED,extract_first_pass_candidate_count,acoustic_training/serializer.py,NO,Missing field → RECALL_STATE_INVALID; true 0 allowed
+S3_final_shard,NZ_RATE=0.6491,MODEL3_V2_PRODUCTION_CORE_S3,model3_v2_production_core_s3/train/shard-000.jsonl,NO,"cand hist ~ {0:131194,1:240086,2:2609}; gap NOT present"
+S3_train_loader,READS_RECALL_EVIDENCE,span_features,train/bigru_v1.py,NO_ON_S3,None→0 default exists but S3 always has field; would collapse unlabeled/missing
+prior_audit_measurement,ALL_ZERO,audit_model3_v2_localization_training_causality.py TRAIN_DIR,scripts/audit_model3_v2_localization_training_causality.py,YES_MEASUREMENT,Indexed model3_v2_labeled → claimed training cand NZ=0
+labeled_builder,ALL_ZERO,run_v2_dataset_build / relabel_sample_v2,scripts/run_v2_dataset_build.py,YES_FOR_LABELED,No Recall/Model2 materialization; inherits/zeros cand
+realdist_expanded,HARDCODED_0,make_1char_spans,scripts/build_v2_realdist_expanded.py:120,YES_EXPLICIT_DEFAULT,Explicit trainingBug: firstPassCandidateCount=0

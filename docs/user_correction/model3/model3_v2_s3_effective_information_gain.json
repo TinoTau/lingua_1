@@ -1,0 +1,277 @@
+{
+  "s3MinusS2": {
+    "newFamilies": 5006,
+    "newChars": 25,
+    "newBigrams": 586,
+    "newTrigrams": 1621,
+    "charGrowthPct": 2.42,
+    "bigramGrowthPct": 10.25,
+    "trigramGrowthPct": 17.05
+  },
+  "unusedPool": {
+    "remainingFamilies": 8994,
+    "newCharsVsS3": 0,
+    "newBigramsVsS3": 217,
+    "newTrigramsVsS3": 722,
+    "charGrowthPctVsS3": 0.0,
+    "note": "raw remaining families != demonstrated failure-cluster coverage"
+  },
+  "unusedPoolVocab": {
+    "chars": 330,
+    "bigrams": 2274,
+    "trigrams": 5313
+  },
+  "s2": {
+    "families": 4994,
+    "uniqueTexts": 4994,
+    "chars": 1034,
+    "bigrams": 5717,
+    "trigrams": 9507
+  },
+  "s3": {
+    "families": 10000,
+    "uniqueTexts": 10000,
+    "chars": 1059,
+    "bigrams": 6303,
+    "trigrams": 11128
+  },
+  "pathWeighting": {
+    "families": 8024,
+    "pathsPerFamily_p50": 2.0,
+    "pathsPerFamily_p90": 8.0,
+    "pathsPerFamily_max": 8,
+    "spanPathPerFamily_p50": 33.0,
+    "spanPathPerFamily_p90": 117.0,
+    "retrySpanPathPerFamily_p90": 8.0,
+    "topPathFamiliesShare": 0.26407639117550213
+  },
+  "trainingDynamics": {
+    "S1": {
+      "bestEpoch": 8,
+      "epochs": 8,
+      "finalTrainLoss": 0.1432779970945734,
+      "devF1Curve": [
+        0.0,
+        0.0,
+        0.0,
+        0.013937282229965157,
+        0.09180327868852459,
+        0.14603174603174604,
+        0.3611111111111111,
+        0.3743016759776537
+      ],
+      "bestDevF1": 0.3743016759776537,
+      "finalDevF1": 0.3743016759776537,
+      "stillImprovingAtEpoch8": true,
+      "earlyPeak": false
+    },
+    "S2": {
+      "bestEpoch": 8,
+      "epochs": 8,
+      "finalTrainLoss": 0.05171204284868307,
+      "devF1Curve": [
+        0.017114914425427875,
+        0.54983922829582,
+        0.7146702557200538,
+        0.7503267973856209,
+        0.7723868446760014,
+        0.793821356615178,
+        0.801877304726785,
+        0.8143866409762364
+      ],
+      "bestDevF1": 0.8143866409762364,
+      "finalDevF1": 0.8143866409762364,
+      "stillImprovingAtEpoch8": true,
+      "earlyPeak": false
+    },
+    "S3": {
+      "bestEpoch": 8,
+      "epochs": 8,
+      "finalTrainLoss": 0.026588784886131946,
+      "devF1Curve": [
+        0.5973310739250158,
+        0.7468186134852802,
+        0.791229039985259,
+        0.8233890214797136,
+        0.8398770911573915,
+        0.8465627214741319,
+        0.8382245047688921,
+        0.8500178126113288
+      ],
+      "bestDevF1": 0.8500178126113288,
+      "finalDevF1": 0.8500178126113288,
+      "stillImprovingAtEpoch8": true,
+      "earlyPeak": false
+    },
+    "classification": "TRAINING_DYNAMICS_POSSIBLE"
+  },
+  "featureSeparability": {
+    "mixedSurfaceCount": 170,
+    "topMixed": [
+      {
+        "surface": "我",
+        "KEEP": 6690,
+        "RETRY": 9,
+        "support": 6699
+      },
+      {
+        "surface": "不",
+        "KEEP": 5398,
+        "RETRY": 36,
+        "support": 5434
+      },
+      {
+        "surface": "是",
+        "KEEP": 4585,
+        "RETRY": 24,
+        "support": 4609
+      },
+      {
+        "surface": "一",
+        "KEEP": 4019,
+        "RETRY": 15,
+        "support": 4034
+      },
+      {
+        "surface": "这",
+        "KEEP": 3891,
+        "RETRY": 39,
+        "support": 3930
+      },
+      {
+        "surface": "别",
+        "KEEP": 2266,
+        "RETRY": 30,
+        "support": 2296
+      },
+      {
+        "surface": "边",
+        "KEEP": 2236,
+        "RETRY": 25,
+        "support": 2261
+      },
+      {
+        "surface": "的",
+        "KEEP": 1860,
+        "RETRY": 66,
+        "support": 1926
+      },
+      {
+        "surface": "再",
+        "KEEP": 1910,
+        "RETRY": 13,
+        "support": 1923
+      },
+      {
+        "surface": "点",
+        "KEEP": 1853,
+        "RETRY": 16,
+        "support": 1869
+      },
+      {
+        "surface": "有",
+        "KEEP": 1815,
+        "RETRY": 20,
+        "support": 1835
+      },
+      {
+        "surface": "安",
+        "KEEP": 1670,
+        "RETRY": 31,
+        "support": 1701
+      },
+      {
+        "surface": "个",
+        "KEEP": 1544,
+        "RETRY": 8,
+        "support": 1552
+      },
+      {
+        "surface": "面",
+        "KEEP": 1469,
+        "RETRY": 35,
+        "support": 1504
+      },
+      {
+        "surface": "要",
+        "KEEP": 1397,
+        "RETRY": 19,
+        "support": 1416
+      }
+    ],
+    "KEEP_feat": {
+      "span_len_log1p": {
+        "n": 153676,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "span_rel_position": {
+        "n": 153676,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "first_pass_cand_log1p": {
+        "n": 153676,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "current_cjk_len_log1p": {
+        "n": 153676,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "pinyin_channel_avail": {
+        "n": 153676,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      }
+    },
+    "RETRY_feat": {
+      "span_len_log1p": {
+        "n": 12927,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "span_rel_position": {
+        "n": 12927,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "first_pass_cand_log1p": {
+        "n": 12927,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "current_cjk_len_log1p": {
+        "n": 12927,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "pinyin_channel_avail": {
+        "n": 12927,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p10": 0.0,
+        "p90": 0.0
+      }
+    }
+  }
+}

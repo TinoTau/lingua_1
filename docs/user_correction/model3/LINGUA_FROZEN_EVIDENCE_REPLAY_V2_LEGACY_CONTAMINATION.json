@@ -1,0 +1,91 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_REPLAY_V2_LEGACY_CONTAMINATION",
+  "version": "V1",
+  "audit_mode": "READ_ONLY",
+  "note": "V1 Replay artifacts inspected only as defect/history evidence. Not authority over V2.",
+  "hits": [
+    {
+      "id": "L1",
+      "path": "electron_node/electron-node/tests/run-dialog200-frozen-evidence-replay-v1.mjs",
+      "marker": "POST /run-lexicon-mock + reconstructMultiBatchAlignmentState",
+      "classification": "DEAD_HISTORICAL",
+      "v2_risk": "If reused as Replay V2 entry → ACTIVE_V2_CONTAMINATION (reconstruction + mock path semantics).",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L2",
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-evidence-replay-contract.mjs",
+      "marker": "E1–E18 comparator / decidePromotion / decideReplayEquivalence; E16/E17 NOT_EVALUABLE when Model3 input missing",
+      "classification": "DEAD_HISTORICAL",
+      "v2_risk": "E-stage naming and Capture V1 field assumptions (fine_spans) must not be imported into B1–B18 V2 path.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L3",
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-replay-alignment-state.mjs",
+      "marker": "reconstructMultiBatchAlignmentState from Tone evidence",
+      "classification": "DEAD_HISTORICAL",
+      "v2_risk": "B2 is INJECTION_STATE in V2 — reconstruction must NOT be authoritative; VALIDATION_CROSS_CHECK only.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L4",
+      "path": "electron_node/electron-node/main/src/test-server.ts",
+      "marker": "POST /run-lexicon-mock accepts segments + acousticToneSlices + alignment triples",
+      "classification": "ACTIVE_BUT_V2_SAFE",
+      "v2_risk": "Production-capable injection surface exists and is reusable IF Capture V2 supplies slices + alignment. Not V2 Replay itself.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L5",
+      "path": "electron_node/electron-node/main/src/inference/inference-service.ts",
+      "marker": "runPipelineWithMockAsr injection of rawAsr/segments/slices/alignment/profile",
+      "classification": "ACTIVE_BUT_V2_SAFE",
+      "v2_risk": "Authorized Production entry for Replay V2 injection. Must not inject COMPARISON_ONLY answers.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L6",
+      "path": "electron_node/electron-node/main/src/model2-runtime/dialog200-path-trace.ts",
+      "marker": "DIALOG200_CANDIDATE_CAP=24 + .slice display cap",
+      "classification": "DIAGNOSTIC_ONLY",
+      "v2_risk": "Must not be used as authoritative Base/Model2 comparator source (DISPLAY_CAPS).",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L7",
+      "path": "multiple tests/** using /run-lexicon-mock (pilot200, audits, probes)",
+      "marker": "pilot200_replay / lexicon-mock remesure harnesses",
+      "classification": "DEAD_HISTORICAL",
+      "v2_risk": "Not Replay V2. Must not become dual baseline or fallback.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L8",
+      "path": "docs/user_correction/model3/DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_V1.jsonl",
+      "marker": "V1 evidence contains acousticToneSlices (e.g. d149 n=15); Candidate Capture V2 contains 0",
+      "classification": "DIAGNOSTIC_ONLY",
+      "v2_risk": "Using V1 slices to fill V2 Replay injection = historical baseline fallback → contamination.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L9",
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-evidence-replay-contract.mjs decidePromotion",
+      "marker": "promote always false; e18Rate/e7Rate diagnostic only (thresholds previously removed)",
+      "classification": "DEAD_HISTORICAL",
+      "v2_risk": "Do not reintroduce percentage promotion into Replay V2 certification.",
+      "active_on_v2_path": false
+    },
+    {
+      "id": "L10",
+      "path": "(absent) Replay V2 runner/comparator",
+      "marker": "No run-dialog200-frozen-evidence-replay-v2.* / no B1–B18 V2 comparator module",
+      "classification": "UNKNOWN",
+      "v2_risk": "Greenfield required. Absence is IMPLEMENTATION_REQUIRED, not contamination.",
+      "active_on_v2_path": false
+    }
+  ],
+  "ACTIVE_V2_CONTAMINATION_COUNT": 0,
+  "ACTIVE_V1_CONTAMINATION": "NO",
+  "summary": "No active V2 Replay path exists yet, so V1 semantics are not currently executing on a V2 path. Contamination risk is latent if V1 reconstruction/mock harness is reused without role-matrix enforcement."
+}

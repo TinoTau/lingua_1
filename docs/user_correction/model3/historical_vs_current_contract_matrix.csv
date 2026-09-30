@@ -1,0 +1,13 @@
+contract_topic,historical_authority,historical_status,current_code_behavior,conformance,gap_or_conflict,notes
+path_caps_purpose,Lattice Architecture: 路径限宽=资源保护≠语言决策; PROBE 8/8,FROZEN principle + PROBE values,v4-limits 8/8 structural prune before Domain Vote,CONFORMS_TO_PRUNE_SSOT,PROBE_UNFINISHED_acts_as_PARTIAL_business_ranker,Resource intent frozen; values not FINAL; sensitivity shows pre-Vote losses
+domain_vote_timing,Lattice: SegmentationPath[] then per-path Domain Vote; replaced unique-boundary-before-Vote,FROZEN,orchestrator path loop: materialize PFS → Model3 step includes Vote,CONFORMS,,Vote cannot see paths already pruned
+domain_may_prune_paths,Architecture §8 Must not prune using Domain Vote/SameDomain/KenLM/LLM/fluency,FROZEN_FORBIDDEN,enumerate has zero domain fields,CONFORMS,,DOMAIN_TO_SEGMENTATION_FEEDBACK=FORBIDDEN
+context_guided_path_width,SoftBoundary SessionPrior plan: context guides FineSpan/Recall quota,RETIRED_NOT_RUNTIME,Context Prior applied=false; path width numeric-only,N/A_retired,HISTORICAL_CONTEXT_GUIDED_PATH_SPACE_CONTROL=NOT_FOUND,Do not revive SoftBoundary as path-cap owner without ACP
+context_prior_decision,Runtime SSOT §23 / CONTEXT_PRIOR.md diagnostics-only,FROZEN,context-prior.ts stub applied:false,CONFORMS,,Not a path-space controller
+unreasonable_domain_bucket_prune,Runtime retainedDomains + Multi-Bucket SameDomain,FROZEN,vote retainedDomains then SameDomain filter,CONFORMS,,Owner AFTER_SEGMENTATION at DOMAIN_VOTE/SAMEDOMAIN
+no_domain_then_expand,Runtime: No domain votes → base-only/insufficientEvidence; SoftBoundary other-domain quota RETIRED,FROZEN_base_only; RETIRED_quota,base-only assembly when insufficientEvidence; does NOT widen path caps,CONFORMS_to_base_only,NO_PATH_SPACE_EXPANSION_CONTRACT,Expansion owner ≠ path budget; trigger=NO_DOMAIN at Vote not path enum
+path_level_independent_buckets,Lattice path-scoped Vote+SameDomain,FROZEN,per-path voteScope/assemblyScope,CONFORMS,,Must not merge buckets across paths
+candidate_cap_vs_path_cap,maxSentenceCandidates=16 FROZEN; path 8/8 PROBE separate,FROZEN_vs_PROBE,separate code owners,CONFORMS,CANDIDATE_CAP_AND_PATH_CAP_ARE_SAME_CONTRACT=NO,Confirmed prior audits
+PROBE_to_FINAL_ACP,None found 2026-07-26→present,ABSENCE,still PROBE comments in v4-limits,N/A,ARCHITECTURE_GAP_on_final_values,Do not treat 8 as FINAL
+pre_DomainVote_target_loss_7_of_17,Budget sensitivity audit diagnostic,DIAGNOSTIC_ONLY,matches structural cap behavior,EXPECTED_under_PROBE,PROBE_BUDGET_SIDE_EFFECT_primary,Not implementation defect of Domain Vote
+parentEdgeCount_in_contract,Implementation Contract §8.3 lists parent; code removed Aug 2026,CONTRACT_TEXT_DRIFT,comparator without parentEdgeCount,MINOR_DRIFT,docs_vs_code,Out of scope to fix this round

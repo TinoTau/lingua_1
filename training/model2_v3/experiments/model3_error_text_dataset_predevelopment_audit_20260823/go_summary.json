@@ -1,0 +1,12 @@
+{
+  "stage": "MODEL3_ERROR_TEXT_DATASET_PREDEVELOPMENT_AUDIT",
+  "verdict": "PASS",
+  "safe_to_develop_error_text_generator": true,
+  "recommended_next_phase": "MODEL3_ERROR_TEXT_GENERATOR_PILOT_DEVELOPMENT",
+  "pilot_target_samples": 3000,
+  "primary_clean_base": "training/model2/dataset/baseline_v1",
+  "active_confusion_families": 7,
+  "runtime_unchanged": true,
+  "model3_contract_unchanged": true,
+  "not_done": ["generator_impl", "corpus_gen", "tts", "training"]
+}

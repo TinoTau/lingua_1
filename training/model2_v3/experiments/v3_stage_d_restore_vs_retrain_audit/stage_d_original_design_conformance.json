@@ -1,0 +1,16 @@
+{
+  "FineSpan_authoritative": "YES",
+  "UserProfile_authoritative": "YES",
+  "ONE_Model2": "YES",
+  "Trainable_policy": "YES",
+  "Domain_soft_prior": "YES (never hard-filter base)",
+  "Domain_conditioned_expansion": "YES if domain-filtered fuzzy UNION; NO if keep current rerank; NO if Node exact-only",
+  "Lexicon_SSOT": "YES (domain_ids from term_domain_tags / index)",
+  "Base_recall_unchanged": "YES",
+  "No_hard_filter": "YES",
+  "No_whole_utterance": "YES",
+  "No_second_model": "YES",
+  "No_shadow_path": "YES if retire current executor role",
+  "Single_candidate_merge": "YES (UNION then one budget)",
+  "Single_downstream_budget_owner": "YES (proposed)"
+}

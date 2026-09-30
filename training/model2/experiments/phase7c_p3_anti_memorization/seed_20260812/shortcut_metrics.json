@@ -1,0 +1,88 @@
+{
+  "SEEN": {
+    "n": 512,
+    "normal": {
+      "n": 512,
+      "Recall@1": 0.833984375,
+      "Recall@3": 0.9609375,
+      "Recall@4": 0.9765625,
+      "MRR": 0.9020368303571427,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 0.302734375
+    },
+    "null_query": {
+      "n": 512,
+      "Recall@1": 0.326171875,
+      "Recall@3": 0.60546875,
+      "Recall@4": 0.6640625,
+      "MRR": 0.4932218307950734,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 4.08984375
+    },
+    "shuffle_query": {
+      "n": 512,
+      "Recall@1": 0.294921875,
+      "Recall@3": 0.50390625,
+      "Recall@4": 0.572265625,
+      "MRR": 0.4452339327339329,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 5.3203125
+    },
+    "candidate_only": {
+      "n": 512,
+      "Recall@1": 0.400390625,
+      "Recall@3": 0.689453125,
+      "Recall@4": 0.7578125,
+      "MRR": 0.5741436162578735,
+      "Positive_average_pool_size": 15.91015625,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 2.70703125
+    }
+  },
+  "UNSEEN": {
+    "n": 512,
+    "normal": {
+      "n": 512,
+      "Recall@1": 0.041015625,
+      "Recall@3": 0.1953125,
+      "Recall@4": 0.240234375,
+      "MRR": 0.20149496770590533,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 7.162109375
+    },
+    "null_query": {
+      "n": 512,
+      "Recall@1": 0.041015625,
+      "Recall@3": 0.1640625,
+      "Recall@4": 0.24609375,
+      "MRR": 0.2023470073763046,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 6.76953125
+    },
+    "shuffle_query": {
+      "n": 512,
+      "Recall@1": 0.03515625,
+      "Recall@3": 0.142578125,
+      "Recall@4": 0.193359375,
+      "MRR": 0.18178358371229494,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 7.626953125
+    },
+    "candidate_only": {
+      "n": 512,
+      "Recall@1": 0.03125,
+      "Recall@3": 0.126953125,
+      "Recall@4": 0.1875,
+      "MRR": 0.17396259610615109,
+      "Positive_average_pool_size": 16.0,
+      "FuzzyPool_Recall@16_ceiling": 1.0,
+      "mean_target_rank": 7.748046875
+    }
+  }
+}

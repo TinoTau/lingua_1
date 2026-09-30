@@ -1,0 +1,33 @@
+{
+  "contract": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT_DRAFT",
+  "evidenceLevel": "TTS_ASR",
+  "sampleIds": [
+    "d001",
+    "d004",
+    "d005",
+    "d010",
+    "d040",
+    "d055",
+    "d080",
+    "d100",
+    "d120",
+    "d140",
+    "d170",
+    "d190"
+  ],
+  "audioSourceProvenance": "EXISTING_PIPER_DIALOG200_WAV+HISTORICAL_FW_DUMP",
+  "LABEL_FEATURE_PROVENANCE_COHERENT_ok": 10,
+  "LABEL_FEATURE_PROVENANCE_COHERENT_fail": 2,
+  "CROSS_SAMPLE_PROVENANCE_MISMATCH": [
+    {
+      "id": "d055",
+      "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+    },
+    {
+      "id": "d190",
+      "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+    }
+  ],
+  "protectedHoldoutExcluded": true,
+  "pronunciationPerturbation": false
+}

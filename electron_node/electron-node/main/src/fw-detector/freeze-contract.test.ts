@@ -334,7 +334,7 @@ describe('P1~P4 freeze simplification contract', () => {
     const buildSentSrc = readSrc('fw-detector/build-sentence-candidates.ts');
     const ban = (...parts: string[]) => parts.join('');
 
-    expect(orchSrc).toContain('runLatticeFineSpanGeneration');
+    expect(orchSrc).toContain('runLatticeFineSpanGenerationWithPreEdgeModel2');
     expect(orchSrc).not.toContain(ban('runL', 'trFineSpanGeneration'));
     expect(orchSrc).toContain("generatorMode: 'multi_path_lattice'");
     expect(orchSrc).toContain("voteScope: 'per_path'");

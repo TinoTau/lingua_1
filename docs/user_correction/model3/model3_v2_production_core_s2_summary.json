@@ -1,0 +1,224 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_CORE_S2",
+  "precheck": {
+    "passed": true,
+    "conflicts": [],
+    "contracts": {
+      "labelContract": "MODEL3_LABEL_CONTRACT_V2_20260829",
+      "featureContract": "packModel3SpanInferFields",
+      "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+      "protectionRegistry": "MODEL3_V2_PROTECTION_REGISTRY"
+    },
+    "ownershipFilesPresent": {
+      "feature_pack": true,
+      "path_step": true,
+      "formal_harness": true,
+      "holdout_registry": true,
+      "family_split": true,
+      "v2_label": true,
+      "serializer": true,
+      "protection_registry": true
+    },
+    "architectureDrift": false,
+    "ssotConflict": false
+  },
+  "poolAudit": {
+    "remainingAfterS1": 17995,
+    "sourceComposition": {
+      "prior_certified_v1": 1480,
+      "MODEL3_SPOKEN_BASE_SUPPLEMENT_V1": 16515
+    },
+    "lengthDistribution": {
+      "short": 1412,
+      "medium": 8926,
+      "long": 7657
+    }
+  },
+  "datasetBuilt": true,
+  "trainingAuthorized": true,
+  "families": 4994,
+  "verdict": "S2_BUILD_AND_TRAIN_PASS_CONTINUE_S3",
+  "manifest": {
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S2",
+    "datasetBuildId": "prod_core_s2_build_20260830_v1",
+    "createdAt": "2026-08-30T06:43:54.769798+00:00",
+    "parentDatasets": [
+      "MODEL3_V2_PRODUCTION_CORE_S1"
+    ],
+    "lineageStrategy": "S1_999_reuse_plus_4001_new_materialization",
+    "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+    "featureContractIdentity": "packModel3SpanInferFields",
+    "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "ttsVoiceIdentity": "zh_CN-huayan-medium",
+    "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+    "acousticVariationForModel3": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+    "sourceSelectionSeed": 2026083010,
+    "sourcePoolIdentities": [
+      "model3_certified_base_pool_v2"
+    ],
+    "s1ReuseFamilies": 999,
+    "newMaterializationFamiliesFrozen": 4001,
+    "newMaterializationDispositions": {
+      "SUPERVISED_ACCEPTED": 3995,
+      "HARD_REJECT": 6
+    },
+    "splitCounts": {
+      "train": 11513,
+      "dev": 1351,
+      "test": 1550
+    },
+    "families": 4994,
+    "utterances": 4994,
+    "paths": 14414,
+    "spanPathSamples": 208073,
+    "labels": {
+      "KEEP": 185257,
+      "MASKED": 7267,
+      "RETRY": 15549
+    },
+    "trainingAuthorized": true,
+    "verdict": "S2_DATASET_PASS_TRAINING_PENDING"
+  },
+  "qa": {
+    "gates": {
+      "datasetIdentity": "PASS",
+      "familyScale": "PASS",
+      "s1LineageIntact": "PASS",
+      "sourceFrozenBeforeOutcomes": "PASS",
+      "protectedCollision": "PASS",
+      "gate0Collision": "PASS",
+      "semanticFamilySplitLeak": "PASS",
+      "provenanceCoherence": "PASS",
+      "candidateMissing": "PASS",
+      "packerIdentity": "PASS",
+      "labelContract": "PASS",
+      "labelReprojection": "PASS",
+      "toneRecall": "PASS",
+      "model2Owner": "PASS",
+      "domainOwner": "PASS",
+      "anchorSource": "PASS",
+      "multipathRetention": "PASS",
+      "evidenceOrigin": "PASS",
+      "candidateNonCollapsed": "PASS",
+      "architectureDrift": "PASS"
+    },
+    "criticalFailures": [],
+    "authorized": true,
+    "familyCount": 4994,
+    "reprojection": {
+      "checked": 208073,
+      "mismatch": 0,
+      "pass": true
+    }
+  },
+  "vocabulary": {
+    "s1": {
+      "chars": 680,
+      "bigrams": 2337,
+      "trigrams": 3532
+    },
+    "s2": {
+      "chars": 1034,
+      "bigrams": 5724,
+      "trigrams": 9521
+    }
+  },
+  "auditLabels": {
+    "KEEP": 185257,
+    "MASKED": 7267,
+    "RETRY": 15549
+  },
+  "anchors": {
+    "NONE": 200806,
+    "DOMAIN_AND_MODEL2": 2091,
+    "MODEL2": 3943,
+    "DOMAIN": 1233
+  },
+  "multipathUtterances": 3074,
+  "candHist": {
+    "1": 136262,
+    "0": 70178,
+    "2": 1633
+  },
+  "trainingCompleted": true,
+  "nextPhase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_S3",
+  "s3Authorized": true,
+  "s1VsS2": {
+    "s1": {
+      "formal": {
+        "keep_precision": 0.9532506702412868,
+        "keep_recall": 0.9977200982111539,
+        "retry_precision": 0.9139072847682119,
+        "retry_recall": 0.33093525179856115,
+        "retry_f1": 0.48591549295774655,
+        "tp": 138,
+        "fp": 13,
+        "fn": 279,
+        "tn": 5689,
+        "pred_keep": 5968,
+        "pred_retry": 151,
+        "true_retry_rate": 0.06814839025984638,
+        "pred_retry_rate": 0.024677234842294494
+      },
+      "protected": {
+        "eligible_cases": 13,
+        "case_level_any_retry": 0,
+        "target_region_retry_cases": 0,
+        "unrelated_retry_cases": 0,
+        "keep_control_false_retry": 0,
+        "keep_controls_total": 6
+      },
+      "latency": {
+        "samples": 400,
+        "per_span_ms_p50": 0.1839333369086186,
+        "per_span_ms_p95": 0.23999999393709004,
+        "per_utterance_ms_p50": 3.0475000385195017,
+        "per_utterance_ms_p95": 4.119599936529994
+      }
+    },
+    "s2": {
+      "formal": {
+        "keep_precision": 0.9864476582702806,
+        "keep_recall": 0.9911943027620056,
+        "retry_precision": 0.8837357052096569,
+        "retry_recall": 0.8309438470728794,
+        "retry_f1": 0.856527093596059,
+        "tp": 1391,
+        "fp": 183,
+        "fn": 283,
+        "tn": 20599,
+        "pred_keep": 20882,
+        "pred_retry": 1574,
+        "true_retry_rate": 0.07454577841111507,
+        "pred_retry_rate": 0.07009262557890987
+      },
+      "protected": {
+        "eligible_cases": 13,
+        "case_level_any_retry": 13,
+        "target_region_retry_cases": 9,
+        "unrelated_retry_cases": 4,
+        "keep_control_false_retry": 0,
+        "keep_controls_total": 6
+      },
+      "latency": {
+        "samples": 400,
+        "per_span_ms_p50": 0.17973889286319414,
+        "per_span_ms_p95": 0.22840001620352268,
+        "per_utterance_ms_p50": 2.944299951195717,
+        "per_utterance_ms_p95": 4.072299925610423
+      }
+    }
+  },
+  "preferredInit": "RANDOM_FROM_SCRATCH",
+  "complexityAudit": {
+    "newRuntimeLogic": false,
+    "newFeatures": false,
+    "newGates": false,
+    "newCompatibilityPaths": false,
+    "unnecessaryComplexity": false
+  },
+  "learningCurveConclusion": "MATERIAL_IMPROVEMENT_SCALE_HELPS",
+  "nonblockingWarnings": [
+    "protected_unrelated_retry_4_of_13_monitor_in_S3"
+  ]
+}

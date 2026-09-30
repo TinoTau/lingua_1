@@ -1,0 +1,24 @@
+{
+  "formalRunId": "gate0_accept_20260830_v1",
+  "sourceBatchId": "gate0_src_20260830_v1",
+  "sourceCount": 48,
+  "sourceSeed": 2026083003,
+  "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+  "featureContractIdentity": "packModel3SpanInferFields",
+  "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "provenanceContractIdentity": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT",
+  "asrIdentity": "faster_whisper_vad_/utterance",
+  "asrEnvIdentity": "TONE_P10_VAD_CPU=1",
+  "toneIdentity": "production_ToneModule",
+  "model2Identity": "STAGE_J_RUNTIME_CHECKPOINT_SWAP expandActiveCandidatesWithModel2",
+  "model2RuntimeDisabled": false,
+  "evidenceSource": "FORMAL_FRESH_MATERIALIZATION",
+  "datasetId": "NOT_ASSIGNED",
+  "runAttempts": 1,
+  "infrastructureRetries": 0,
+  "infrastructureNotes": [
+    "Cleared MODEL2_RUNTIME_DISABLED for acceptance",
+    "Formal harness disposes Model2 host after stdin EOF so batch process exits",
+    "Fresh batch lattices attested formal_lattice_attested=True (same-run harness; not TEST_FIXTURE)"
+  ]
+}

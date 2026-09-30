@@ -1,0 +1,22 @@
+action,path_or_symbol,reason,business_semantics_impact,test_impact,stage
+REUSE,electron_node/.../normalize-for-fw-repair.ts,model3CurrentText owner,NONE,identity unit/integration,I-II
+REUSE,electron_node/services/faster_whisper_vad (/utterance),ASR+FW+Tone same-run,NONE,live integration,II
+REUSE,runLatticeFineSpanGeneration,FineSpan/path/Mandatory Tone Recall,NONE,cand noncollapse,II
+REUSE,expandActiveCandidatesWithModel2,Model2 Anchor evidence owner (missing in probe harness),NONE,MODEL2 path availability,III
+REUSE,voteUtteranceDomainFromPool + materializeModel3Anchors,Domain/MODEL2/DOMAIN_AND_MODEL2 anchors,NONE,Domain parity,III
+REUSE,model3FirstPassCandidateCount + packModel3SpanInferFields,cand+six-feature SSOT,NONE,pack parity,II-IV
+REUSE,derive_malformed_regions + label_spans_v2,V2 alignment/labels,NONE,label projection multipath,IV
+REUSE,training/model2/adapters/piper_tts_client.py,TTS orchestration,NONE,audio smoke,II
+REUSE,training/model2/adapters/faster_whisper_client.py,ASR HTTP client,NONE,ASR smoke,II
+REUSE,training/model2/corruption/bank.py:_float_audio_to_pcm16,PCM encode SSOT,NONE,PCM nonzero regression,II
+REUSE,docs/.../MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json,base sample schema,NONE,schema validate,IV
+MODIFY,training/model3_dataset/offline_harness/acoustic_b2_materialize.cjs (evolve or successor harness),Add Model2 expand; emit training-shaped payloads; keep owners,NONE (orchestration),anchor+pack integration,II-III
+MODIFY,docs/.../model3_v2_training_provenance_contract.json,Promote DRAFT->authoritative for training materialization,NONE (contract status),provenance tests,I
+NEW,training/model3_dataset/ formal orchestrator modules (Python+harness),Clean owner replacing probe as production training entry,NONE,e2e formal B2,II-IV
+NEW,training provenance validator + sample serializer + manifest writer,Fail-closed gates + V1 serialization,NONE,reject+idempotency,IV
+NEW,holdout protection registry adapter,Centralize protected ids/texts (no generator case branches),NONE,holdout collision,I-IV
+NEW,future Gate0 checker script,Acceptance before targeted-dist resume,NONE,Gate0 suite,V
+RETAIN_AS_TOOLING,run_acoustic_b2_yield_probe.py / run_acoustic_b2_yield_probe_extension.py,Evidence/regression only; must not become dataset owner,NONE,optional regression call-through,cleanup
+REMOVE_LATER,duplicate probe-only materialize forks / hardcoded probe work paths,Avoid two materialization implementations after formal owner lands,NONE,delete after cutover,cleanup
+DO_NOT_TOUCH,Model3 runtime / Tone / Recall / FineSpan / Retry / JobResult / thresholds,Frozen, N/A,N/A,all
+DO_NOT_ASSIGN,MODEL3_V2_TARGETED_DIST_CORRECTED_V1,Dataset ID reserved until post-Gate0 build,NONE,N/A,this_phase

@@ -1,0 +1,310 @@
+{
+  "phase": "LINGUA_MODEL3_CANDIDATE_STATE_INPUT_OWNERSHIP_AUDIT",
+  "date": "2026-09-13",
+  "candidate_awareness_A_to_H": [
+    { "id": "A", "item": "candidate_existence_only", "class": "HISTORICALLY_ALLOWED" },
+    { "id": "B", "item": "candidate_count", "class": "HISTORICALLY_REQUIRED" },
+    { "id": "C", "item": "candidate_replacement_text_identity", "class": "HISTORICALLY_NOT_REQUIRED" },
+    { "id": "D", "item": "candidate_lexical_evidence", "class": "NOT_SPECIFIED" },
+    { "id": "E", "item": "candidate_pronunciation_compatibility", "class": "HISTORICALLY_NOT_REQUIRED" },
+    { "id": "F", "item": "candidate_provenance_source_module", "class": "HISTORICALLY_NOT_REQUIRED" },
+    { "id": "G", "item": "candidate_domain_membership", "class": "HISTORICALLY_NOT_REQUIRED" },
+    { "id": "H", "item": "model2_relation_action_details", "class": "HISTORICALLY_NOT_REQUIRED" }
+  ],
+  "model2_coupling": [
+    { "field": "candidate_came_from_model2", "class": "OBSERVABILITY_ONLY" },
+    { "field": "PROFILE_PRONUNCIATION", "class": "MODEL2_INTERNAL" },
+    { "field": "PROFILE_DOMAIN", "class": "MODEL2_INTERNAL" },
+    { "field": "PROFILE_RETRIEVAL", "class": "MODEL2_INTERNAL" },
+    { "field": "model2ActionId", "class": "NOT_SPECIFIED" },
+    { "field": "relationFamily", "class": "MODEL2_INTERNAL" },
+    { "field": "nChanged", "class": "MODEL2_INTERNAL" },
+    { "field": "changedPositions", "class": "MODEL2_INTERNAL" },
+    { "field": "transformed_syllables", "class": "MODEL2_INTERNAL" },
+    { "field": "model2_query_pinyin", "class": "MODEL2_INTERNAL" }
+  ],
+  "candidate_state_vs_model2_state": {
+    "CANDIDATE_STATE_for_Model3_V1": "ASR surface geometry + first-pass candidate COUNT only",
+    "MODEL2_STATE_for_Model3_V1": "NOT business input; upstream Anchor / observability / future ACP only"
+  },
+  "six_d_feature_audit": [
+    {
+      "feature": "surface_tokens_BiGRU",
+      "historical_requirement_source": "MODEL3_ARCHITECTURE_CONTRACT_V1 + allowlist",
+      "semantic_role": "linguistic_ASR_text",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "isAnchor",
+      "historical_requirement_source": "allowlist + architecture",
+      "semantic_role": "anchor_conditioning_and_mask",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "span_len_log1p",
+      "historical_requirement_source": "allowlist",
+      "semantic_role": "geometry",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "span_rel_position",
+      "historical_requirement_source": "allowlist",
+      "semantic_role": "sequence_context",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "first_pass_cand_log1p",
+      "historical_requirement_source": "allowlist",
+      "semantic_role": "candidate_count_not_identity",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "current_cjk_len_log1p",
+      "historical_requirement_source": "allowlist",
+      "semantic_role": "length_proxy",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false
+    },
+    {
+      "feature": "pinyin_channel_avail",
+      "historical_requirement_source": "allowlist + feature_mask_contract",
+      "semantic_role": "availability_bit_not_acoustic_tensor",
+      "correct_implementation": true,
+      "insufficient_implementation": false,
+      "legacy_accidental": false,
+      "note": "Not full acoustic evidence by design (TEXT_ONLY)"
+    }
+  ],
+  "implementation_boundary_trace": [
+    {
+      "boundary": "WindowCandidate_LexicalEdge",
+      "available_candidate_state": "full_hyp_identity",
+      "available_model2_internal_state": "often_present",
+      "actually_consumed_by_model3": false,
+      "dropped_before_model3": true,
+      "drop_class": "EXPECTED_BY_SSOT"
+    },
+    {
+      "boundary": "PathFineSpan",
+      "available_candidate_state": "surface_plus_candidates_array",
+      "available_model2_internal_state": "via_candidate_fields",
+      "actually_consumed_by_model3": "surface_plus_cand_count",
+      "dropped_before_model3": "identity_provenance",
+      "drop_class": "EXPECTED_BY_SSOT"
+    },
+    {
+      "boundary": "DomainVote_SameDomain",
+      "available_candidate_state": "domain_membership",
+      "available_model2_internal_state": "n/a",
+      "actually_consumed_by_model3": "indirect_via_isAnchor",
+      "dropped_before_model3": "membership_tensors",
+      "drop_class": "EXPECTED_BY_SSOT"
+    },
+    {
+      "boundary": "AnchorAdapter",
+      "available_candidate_state": "n/a",
+      "available_model2_internal_state": "provenance_for_anchor_rules",
+      "actually_consumed_by_model3": "isAnchor_boolean",
+      "dropped_before_model3": "anchorSource_not_packed",
+      "drop_class": "EXPECTED_BY_SSOT"
+    },
+    {
+      "boundary": "Model3FeaturePack_Host",
+      "available_candidate_state": "count_and_surface",
+      "available_model2_internal_state": "none_in_pack",
+      "actually_consumed_by_model3": "6D_plus_BiGRU",
+      "dropped_before_model3": "replacement_and_model2_internals",
+      "drop_class": "EXPECTED_BY_SSOT"
+    }
+  ],
+  "ownership_table": [
+    {
+      "information": "raw_ASR_surface",
+      "owner": "ASR_FineSpan",
+      "model3_needs_it": true,
+      "why": "linguistic_input",
+      "currently_available": true,
+      "currently_consumed": true,
+      "gap": false
+    },
+    {
+      "information": "candidate_replacement",
+      "owner": "Recall_Assembly",
+      "model3_needs_it": false,
+      "why": "not_trigger_identity_V1",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "candidate_set",
+      "owner": "PathFineSpan_Assembly",
+      "model3_needs_it": "count_only",
+      "why": "lattice_density_signal",
+      "currently_available": true,
+      "currently_consumed": "count_only",
+      "gap": false
+    },
+    {
+      "information": "candidate_score",
+      "owner": "Recall_KenLM",
+      "model3_needs_it": false,
+      "why": "ranking_ownership",
+      "currently_available": "often",
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "candidate_pronunciation",
+      "owner": "Lexicon_Tone_upstream",
+      "model3_needs_it": false,
+      "why": "TEXT_ONLY_V1",
+      "currently_available": "partial",
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "candidate_provenance",
+      "owner": "Model2_AnchorAdapter",
+      "model3_needs_it": false,
+      "why": "upstream_anchor_only",
+      "currently_available": true,
+      "currently_consumed": "via_isAnchor_only",
+      "gap": false
+    },
+    {
+      "information": "candidate_domain",
+      "owner": "DomainVote",
+      "model3_needs_it": false,
+      "why": "builds_domain_anchor_upstream",
+      "currently_available": true,
+      "currently_consumed": "via_isAnchor",
+      "gap": false
+    },
+    {
+      "information": "Model2_action",
+      "owner": "Model2",
+      "model3_needs_it": false,
+      "why": "MODEL2_INTERNAL",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "Model2_relation",
+      "owner": "Model2",
+      "model3_needs_it": false,
+      "why": "MODEL2_INTERNAL",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "transformed_syllables",
+      "owner": "Model2",
+      "model3_needs_it": false,
+      "why": "MODEL2_INTERNAL",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "Tone_acoustic_evidence",
+      "owner": "Tone_Recall",
+      "model3_needs_it": false,
+      "why": "TEXT_ONLY_V1",
+      "currently_available": "upstream",
+      "currently_consumed": "pinyin_channel_avail_bit_only",
+      "gap": false
+    },
+    {
+      "information": "Anchor_status",
+      "owner": "AnchorAdapter",
+      "model3_needs_it": true,
+      "why": "conditioning_and_mask",
+      "currently_available": true,
+      "currently_consumed": true,
+      "gap": "sufficiency_width_is_Anchor_issue_not_input_SSOT"
+    },
+    {
+      "information": "Anchor_reason_source",
+      "owner": "AnchorAdapter_diagnostics",
+      "model3_needs_it": false,
+      "why": "provenance_not_model_visible",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "Domain_Vote",
+      "owner": "DomainVote",
+      "model3_needs_it": false,
+      "why": "neighbor_frozen",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "SameDomain",
+      "owner": "DomainVote",
+      "model3_needs_it": false,
+      "why": "feeds_anchors",
+      "currently_available": true,
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "left_right_context",
+      "owner": "FineSpan_sequence_geometry",
+      "model3_needs_it": "partial_rel_position",
+      "why": "sequence_not_hyp_text",
+      "currently_available": true,
+      "currently_consumed": true,
+      "gap": false
+    },
+    {
+      "information": "assembled_candidate_sentence",
+      "owner": "Assembly",
+      "model3_needs_it": false,
+      "why": "after_Model3",
+      "currently_available": "after",
+      "currently_consumed": false,
+      "gap": false
+    },
+    {
+      "information": "KenLM_score",
+      "owner": "KenLM",
+      "model3_needs_it": false,
+      "why": "forbidden_before_KenLM",
+      "currently_available": "after",
+      "currently_consumed": false,
+      "gap": false
+    }
+  ],
+  "document_inventory_authority": [
+    { "doc": "MODEL3_ARCHITECTURE_CONTRACT_V1.md", "authority": "AUTHORITATIVE", "superseded": false },
+    { "doc": "MODEL3_SYNTHETIC_V1_FROZEN.md", "authority": "AUTHORITATIVE", "superseded": false },
+    { "doc": "MODEL3_V1_TEXT_ONLY_ROLE_CORRECTION_REPORT_2026_08_26.md", "authority": "AUTHORITATIVE_FREEZE_CORRECTION", "superseded": false },
+    { "doc": "model3_input_contract_v1.md", "authority": "AUTHORITATIVE_COMPANION", "superseded": false },
+    { "doc": "model3_v1_model_visible_feature_allowlist.json", "authority": "AUTHORITATIVE_PACKER_SSOT", "superseded": false },
+    { "doc": "model3_output_contract_v1.md", "authority": "AUTHORITATIVE", "superseded": false },
+    { "doc": "model3_anchor_contract_v1.md", "authority": "AUTHORITATIVE", "superseded": false },
+    { "doc": "prior Pilot discrimination audits", "authority": "AUDIT_ONLY", "superseded": false, "note": "must_not_redefine_SSOT" }
+  ],
+  "k1_r1_sanity": {
+    "used_as_architecture_source": false,
+    "model3_allowed_to_see": ["ASR_surface", "isAnchor", "geometry", "cand_count", "pinyin_avail_bit"],
+    "model3_not_required_to_see": ["replacement_text", "model2_action", "relationFamily", "retrievalProvenance", "substituted_local_sentence"]
+  }
+}

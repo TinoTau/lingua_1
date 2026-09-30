@@ -1,0 +1,42 @@
+{
+  "Stage_J_ONE_Unified_Model": "HOLD",
+  "ONE_Checkpoint": "YES",
+  "Architecture": "UNCHANGED",
+  "Model_Parameters": 47210,
+  "Stage_P_Baseline_Parameters": 45533,
+  "Parameter_Increase_pct": 3.683,
+  "MODEL2_FEATURE_HASH_V1": "PASS",
+  "StageDProfileContractV1": "PASS",
+  "Train_Production_Feature_Parity": "PASS",
+  "Stage_P_Regression": "FAIL",
+  "Stage_P_RecallRetained": 0.8132387706855791,
+  "Stage_P_QueryReduction": 0.5354497354497354,
+  "Stage_P_CandidateReduction": 0.4352533564313556,
+  "Stage_P_E2ECostReduction": 0.5025589991470002,
+  "Stage_D_Profile_Sensitivity": "FAIL",
+  "Stage_D_note": "Correct/Empty/Wrong all TargetIntroduction=0 on D2 eval slice \u2014 vacuous; not real sensitivity",
+  "P_plus_D_Combined": "PASS_PROXY",
+  "Target_Absent_Introduced_P": 0.7835990888382688,
+  "Target_Absent_Introduced_D": 0.0,
+  "UnnecessaryExpansion_top1_soft": "see updated metric after re-eval",
+  "Inference_P50": 59.441299992613494,
+  "Inference_P95": 75.5401000205893,
+  "FailureClassification": [
+    "FEATURE_CONTRACT",
+    "TRAINING_OBJECTIVE",
+    "PROFILE_SIGNAL"
+  ],
+  "FailureDetail": {
+    "P_regression": "V1 hash retrain reaches RR~0.81 vs frozen legacy RR~1.0; below 0.95 HOLD gate",
+    "D_introduction": "domain actions do not introduce D2 targets on candidate index (TIR=0)",
+    "not_architecture": "capacity +3.7%; no router/gate added"
+  },
+  "Stage_J_Production_Candidate": "NO",
+  "Runtime_Wired": false,
+  "Recommended_Next_Phase": "DATA/LOSS: (1) Stage-P-style Top-1 refine under FEATURE_HASH_V1; (2) verify D2 teacher recoverability vs domain execute; (3) rebalance joint loss. NO architecture change without user approval.",
+  "Known_Limitations": [
+    "Stage P regression not recovered under MODEL2_FEATURE_HASH_V1 within current capacity/epochs",
+    "Stage D target introduction metric currently 0 on D2 slice",
+    "Unnecessary expansion: soft domain often appears in top-2 even when top-1 is domain_none"
+  ]
+}

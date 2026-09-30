@@ -1,0 +1,37 @@
+{
+  "funnel": {
+    "raw": 9968,
+    "lexicon_covered": 9968,
+    "finespan_exists": 9968,
+    "target_in_base": 6335,
+    "target_absent_base": 3633,
+    "profile_not_active_set": 2198,
+    "relation_not_applicable": 1303,
+    "relation_applicable": 132
+  },
+  "contract": {
+    "markers": [
+      "PHASE7G",
+      "AUTHORITATIVE_PATH"
+    ],
+    "production_entry": "runLatticeFineSpanGeneration / buildLexicalWindowQueries",
+    "production_types": [
+      "PathFineSpan",
+      "GlobalWindowDescriptor"
+    ],
+    "window_length": {
+      "min": 1,
+      "max": 5,
+      "mismatch_with_report": false
+    },
+    "fields_for_model2": {
+      "span_syllables": "REQUIRED — from window / GlobalSyllables slice",
+      "window_text": "USEFUL — alignment when char≈syl",
+      "window_pinyin_key": "USEFUL — already toneless key form",
+      "boundaries": "USEFUL — diagnostics / funnel"
+    },
+    "Can_existing_FineSpan_provide_everything": "PARTIAL",
+    "note": "Offline Phase7G uses lattice-equivalent 1..5 windows from ASR syllables. Full PathFineSpan candidate lists / coarse refs not required for profile expansion. No new span representation invented beyond missing offline materialization.",
+    "prohibited": "whole utterance as Model2 retrieval unit"
+  }
+}

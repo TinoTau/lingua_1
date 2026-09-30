@@ -1,0 +1,16 @@
+Step,Design_responsibility,Current_implementation,File,Symbol,Input,Output,Trainable,Runtime,Status
+1 Manual correction submit,User correction event,Gateway /v1/corrections,rest_api.rs handle_submit_correction,HTTP JSON,proxied CorrectionEvent,N/A,YES,IMPLEMENTED
+2 Scheduler CorrectionService,CorrectionHistory SSOT,submit_correction,routes_api.rs / service.rs,CorrectionEvent,features+delta,N/A,YES,IMPLEMENTED
+3 ProfileDelta build,Extract phonetic features,build_profile_delta,profile_delta.rs,CorrectionFeatures,ProfileDelta,N/A,YES,PARTIAL_domain_empty
+4 Apply UserProfile,Update UserProfile SSOT,apply_profile_delta,user_profile_repository.rs,ProfileDelta,UserProfileV1 bytes<=32KiB,N/A,YES,IMPLEMENTED
+5 Session init inject,Attach profile to session,inject_identity_into_session_init,session_proxy.rs,session_init,session_init+user_profile,N/A,YES,IMPLEMENTED
+6 SessionBootstrap to Node,Deliver profile once/session,maybe_send_session_bootstrap,session_bootstrap.rs,session,NodeMessage.SessionBootstrap,N/A,YES,IMPLEMENTED
+7 Node cache,Session-only cache,sessionUserProfiles.set,node-agent-simple.ts,SessionBootstrap,Map entry,N/A,YES,IMPLEMENTED_UNUSED
+8 Node consume profile for Model2,Feed Model2,MISSING,MISSING,UserProfile,model features,YES,NO,NOT_IMPLEMENTED
+9 FineSpan for Model2,Authoritative retrieval unit,PathFineSpan vs FineSpanView,lattice-fine-span-runtime.ts / finespan.py,ASR/lattice,FineSpan,N/A,SPLIT,PARTIAL_UNWIRED
+10 Model2 inference,Retrieval policy,RetrievalPolicyV3.forward,training/model2_v3/policy/model.py,span+profile tensors,action/domain logits,YES,NO,TRAIN_ONLY
+11 Policy decode,Select actions/budget,select_actions / select_domain_actions,phase2/stage_d2 scripts,logits,action ids,YES,NO,TRAIN_ONLY
+12 Retrieval primitives,Deterministic transforms+FuzzyPool,execute_action / soft_domain_retrieve,actions.py / domain_actions.py,action+span,term_ids,NO,NO,TRAIN_ONLY
+13 Lexicon FuzzyPool,Lexical memory,build_fuzzy_pool,fuzzy/pool.py,syllables,hits,NO,NO,TRAIN_ONLY_FOR_MODEL2
+14 New candidate merge,Introduce missing candidates,MISSING into assembly,MISSING,term_ids,merged candidates,N/A,NO,NOT_IMPLEMENTED
+15 Sentence assembly,Downstream ownership,DomainAwareAssembly / KenLM,span-assembly / kenlm-span-gate,lexicon candidates,text,N/A,YES,IMPLEMENTED_INDEPENDENT

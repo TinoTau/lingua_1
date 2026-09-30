@@ -1,0 +1,31 @@
+{
+  "phase": "MODEL3_V2_RUNTIME_DEFAULT_PROMOTION_DELTA",
+  "date": "2026-09-08",
+  "method": "no-env resolveModel3CheckpointIdentityId + on-disk SHA256 after build:main",
+  "env": {
+    "MODEL3_CHECKPOINT_IDENTITY": null
+  },
+  "selected": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "role": "PRODUCTION",
+    "checkpointDirRelative": "training/model3_dataset/model3_v2_s3_random_init_v1_ckpts/seed_2026083013"
+  },
+  "hashes": {
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "configSha256": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "weightsMatchExpected": true,
+    "configMatchExpected": true,
+    "sealConstantsMatchRegistry": true
+  },
+  "rollbackProbe": {
+    "env": "MODEL3_CHECKPOINT_IDENTITY=MODEL3_SYNTHETIC_V1",
+    "expectedModelId": "MODEL3_SYNTHETIC_V1",
+    "coveredBy": "model3-checkpoint-registry.test.ts"
+  },
+  "invalidIdentityProbe": {
+    "env": "MODEL3_CHECKPOINT_IDENTITY=INVALID_MODEL3_IDENTITY",
+    "expected": "throw unknown_model3_checkpoint_identity",
+    "coveredBy": "model3-checkpoint-registry.test.ts"
+  },
+  "pass": true
+}

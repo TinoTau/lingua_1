@@ -1,0 +1,81 @@
+{
+  "B1": {
+    "n": 699,
+    "TargetIntroductionRate": 0.9599427753934192,
+    "QueryCount_mean": 2.124463519313305,
+    "QueryCount_P50": 2.0,
+    "QueryCount_P95": 3.0,
+    "CandidateCount_mean": 5.253218884120171,
+    "CandidateCount_P50": 5.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 88.64319999702275,
+    "Latency_P95": 152.9881999886129
+  },
+  "V3_dynamic": {
+    "n": 699,
+    "TargetIntroductionRate": 0.9699570815450643,
+    "QueryCount_mean": 2.072961373390558,
+    "QueryCount_P50": 2.0,
+    "QueryCount_P95": 3.0,
+    "CandidateCount_mean": 5.145922746781116,
+    "CandidateCount_P50": 5.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 99.91299998364411,
+    "Latency_P95": 188.84539999999106
+  },
+  "V3_fixed2": {
+    "n": 699,
+    "TargetIntroductionRate": 0.9585121602288984,
+    "QueryCount_mean": 1.96137339055794,
+    "QueryCount_P50": 2.0,
+    "QueryCount_P95": 2.0,
+    "CandidateCount_mean": 4.997138769670959,
+    "CandidateCount_P50": 5.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 98.86759999790229,
+    "Latency_P95": 130.15959999756888
+  },
+  "V3_fixed4": {
+    "n": 699,
+    "TargetIntroductionRate": 0.9742489270386266,
+    "QueryCount_mean": 2.2489270386266096,
+    "QueryCount_P50": 2.0,
+    "QueryCount_P95": 3.0,
+    "CandidateCount_mean": 5.363376251788269,
+    "CandidateCount_P50": 6.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 121.1765999905765,
+    "Latency_P95": 215.68179997848347
+  },
+  "cost_dynamic": {
+    "RecallRetained": 1.0104321907600595,
+    "QueryReduction": 0.024242424242424312,
+    "CandidateReduction": 0.020424836601307138,
+    "LatencyReduction": 0.0,
+    "E2ECostReduction": 0.01890204949091696,
+    "B1": {
+      "n": 699,
+      "TargetIntroductionRate": 0.9599427753934192,
+      "QueryCount_mean": 2.124463519313305,
+      "QueryCount_P50": 2.0,
+      "QueryCount_P95": 3.0,
+      "CandidateCount_mean": 5.253218884120171,
+      "CandidateCount_P50": 5.0,
+      "CandidateCount_P95": 8.0,
+      "Latency_P50": 88.64319999702275,
+      "Latency_P95": 152.9881999886129
+    },
+    "V3": {
+      "n": 699,
+      "TargetIntroductionRate": 0.9699570815450643,
+      "QueryCount_mean": 2.072961373390558,
+      "QueryCount_P50": 2.0,
+      "QueryCount_P95": 3.0,
+      "CandidateCount_mean": 5.145922746781116,
+      "CandidateCount_P50": 5.0,
+      "CandidateCount_P95": 8.0,
+      "Latency_P50": 99.91299998364411,
+      "Latency_P95": 188.84539999999106
+    }
+  }
+}

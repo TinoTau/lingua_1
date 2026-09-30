@@ -1,0 +1,23 @@
+{
+  "ts": "2026-08-23",
+  "automatic_label_generation": "PARTIAL",
+  "gaps": [
+    {
+      "id": "SPAN_REF_ALIGNMENT",
+      "description": "No stable ASR-path span to reference character alignment for per-span error labels"
+    },
+    {
+      "id": "ANCHOR_MASK_EXPORT",
+      "description": "Anchor membership not exported in training traces"
+    },
+    {
+      "id": "RETRY_COUNTERFACTUAL",
+      "description": "KEEP/RETRY label requires policy: retry iff re-recall would yield reference given frozen anchors"
+    },
+    {
+      "id": "LENGTH1_TRACE",
+      "description": "length1Collector only under MODEL2_DIALOG200_TRACE=1"
+    }
+  ],
+  "closure_path": "Offline label generator on dialog_200 + anchor adapter snapshots; not automatic from JobResult alone"
+}

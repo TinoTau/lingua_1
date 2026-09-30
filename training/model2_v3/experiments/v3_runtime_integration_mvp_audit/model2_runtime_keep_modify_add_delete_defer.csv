@@ -1,0 +1,19 @@
+Action,Item,Notes
+KEEP,FineSpan PathFineSpan,authoritative unit
+KEEP,UserProfileV1+SessionBootstrap,profile SSOT
+KEEP,LexiconRuntimeV2 recallSpanTopKV2,lexical SSOT recall
+KEEP,DomainAwareAssembly,sentence assembly owner
+KEEP,KenLM rerank/gate,downstream scoring
+KEEP,Stage P FROZEN weights as train artifact,policy source for skeleton
+MODIFY,span-assembly-v4-orchestrator,insert Model2 merge point
+MODIFY,NodeAgent->FW profile plumbing,UserProfile actual input
+MODIFY,WindowCandidate source/kind,provenance contract delta if needed
+ADD,Model2 runtime adapter + inference host,missing G1
+ADD,phonetic relation transform + profile query adapter on Node,MISSING primitive port
+ADD,runtime acceptance tests A-H,validation
+DELETE,none in MVP unless discovering shadow path,no dual path to remove yet
+DEFER,Stage J unified checkpoint,final ONE policy
+DEFER,Stage D production deploy,data+J
+DEFER,Stage H/Tone/50k,HOLD
+DEFER,Wrong/Swapped budget selectivity,G5 secondary
+DEFER,Python CandidateIndex multi-tag builder fix,if Node lexicon reused

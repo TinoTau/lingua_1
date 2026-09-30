@@ -1,0 +1,36 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "expected": {
+    "SEEN_TERM.Recall@1": 0.7283898305084746,
+    "SEEN_TERM.Recall@3": 0.9449152542372882,
+    "UNSEEN_TERM.Recall@1": 0.043521266073194856,
+    "UNSEEN_TERM.Recall@3": 0.09792284866468842,
+    "UNSEEN_TERM.FuzzyPool_Recall@16_ceiling": 1.0,
+    "StageB.ConditionGain@3": 0.24593301435406698,
+    "StageB.TargetRankDelta_mean": 4.533014354066986
+  },
+  "got": {
+    "SEEN_TERM.Recall@1": 0.7283898305084746,
+    "SEEN_TERM.Recall@3": 0.9449152542372882,
+    "UNSEEN_TERM.Recall@1": 0.043521266073194856,
+    "UNSEEN_TERM.Recall@3": 0.09792284866468842,
+    "UNSEEN_TERM.FuzzyPool_Recall@16_ceiling": 1.0,
+    "StageB.ConditionGain@3": 0.24593301435406698,
+    "StageB.TargetRankDelta_mean": 4.533014354066986
+  },
+  "checks": {
+    "SEEN_TERM.Recall@1": true,
+    "SEEN_TERM.Recall@3": true,
+    "UNSEEN_TERM.Recall@1": true,
+    "UNSEEN_TERM.Recall@3": true,
+    "UNSEEN_TERM.FuzzyPool_Recall@16_ceiling": true,
+    "StageB.ConditionGain@3": true,
+    "StageB.TargetRankDelta_mean": true
+  },
+  "pass": true,
+  "note": "Compared against Phase 7A artifact files (metrics.json / go_summary.json)."
+}

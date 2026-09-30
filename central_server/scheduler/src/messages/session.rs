@@ -46,6 +46,15 @@ pub enum SessionMessage {
         /// 追踪 ID（可选，客户端提供或由 Scheduler 生成）
         #[serde(skip_serializing_if = "Option::is_none")]
         trace_id: Option<String>,
+        /// Stable user identity (from Web User Gateway; optional for legacy clients)
+        #[serde(skip_serializing_if = "Option::is_none")]
+        user_id: Option<String>,
+        /// Bounded Runtime UserProfile snapshot for this session (optional)
+        #[serde(skip_serializing_if = "Option::is_none")]
+        user_profile: Option<crate::messages::user_profile::UserProfileV1>,
+        /// Profile version accompanying user_profile
+        #[serde(skip_serializing_if = "Option::is_none")]
+        profile_version: Option<u64>,
     },
     #[serde(rename = "session_init_ack")]
     SessionInitAck {

@@ -1,0 +1,12 @@
+{
+  "n": 0,
+  "taxonomy": {},
+  "no_domain_tag_predicate_on_this_path": true,
+  "historical_sql_exists_on_node": {
+    "file": "electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts",
+    "function": "queryDomainMultiRowsAtomic",
+    "lines": "111-153",
+    "predicate": "domain_id IN (...) AND pinyin_key = ? AND length(word) = ?",
+    "used_by_python_stage_d": false
+  }
+}

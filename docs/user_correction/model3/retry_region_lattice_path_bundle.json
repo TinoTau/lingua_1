@@ -1,0 +1,83 @@
+{
+  "bundleVersion": "2026-08-28",
+  "artifactPolicy": {
+    "maxFilesPerPhaseArc": 10,
+    "preferredFileCount": 5,
+    "files": [
+      "Lingua_Retry_Region_Lattice_Path_Correction_Report_2026_08_28.md",
+      "retry_region_lattice_path_bundle.json",
+      "retry_region_controlled_cases.csv",
+      "retry_region_metrics.csv",
+      "retry_region_candidate_lifecycle.csv"
+    ]
+  },
+  "phases": {
+    "audit": {
+      "phase": "RETRY_REGION_LATTICE_ALTERNATIVE_PATH_AUDIT",
+      "mode": "READ_ONLY",
+      "verdict": "LATTICE_INPUT_DRIFT",
+      "trainingGate": "HOLD",
+      "primaryBottleneck": "LATTICE_INPUT_DRIFT",
+      "rootCause": "Retry lattice omitted acousticSlices/wordTimeSpans; toneActive=false; no multi-char lexical edges"
+    },
+    "inputParity": {
+      "phase": "RETRY_REGION_LATTICE_INPUT_PARITY_CORRECTION",
+      "verdict": "PASS",
+      "trainingGate": "OPEN",
+      "filesModified": [
+        "model3-retry-region-resegment.ts",
+        "run-model3-path-step.ts",
+        "span-assembly-v4-orchestrator.ts"
+      ],
+      "beforeAfter": {
+        "regionsWith2charEdges": [0, 6],
+        "regionsWithMoreThan1Path": [0, 6],
+        "segmentationChanged": [0, 3],
+        "toneEvidencePassed": [0, 13]
+      }
+    },
+    "pathSelection": {
+      "phase": "RETRY_REGION_PATH_SELECTION_MINIMAL_CORRECTION",
+      "verdict": "PASS_WITH_COVERAGE_GAPS",
+      "trainingGate": "OPEN",
+      "ssot": "compareSegmentationPathBestFirst",
+      "filesModified": [
+        "enumerate-complete-segmentation-paths.ts",
+        "model3-retry-region-resegment.ts",
+        "enumerate-complete-segmentation-paths.test.ts"
+      ],
+      "multiPathSelectionChanged": 0,
+      "multiPathCaseCount": 6,
+      "remainingBottleneck": "PHONETIC_RECALL_COVERAGE / LEXICON_COVERAGE"
+    },
+    "asrEnv": {
+      "phase": "MODEL3_V1_RETRY_REGION_CONTROLLED_VALIDATION_ASR_ENV_RERUN",
+      "verdict": "PASS",
+      "referenceReachable": "5/13",
+      "latticeOkN": 13,
+      "segmentationChangedN": 3,
+      "performanceMs": { "median": 2, "p95": 15 }
+    }
+  },
+  "governance": {
+    "Model3Changed": false,
+    "FineSpanCoreChanged": false,
+    "LatticeAlgorithmChanged": false,
+    "RecallChanged": false,
+    "LexiconChanged": false,
+    "DomainVoteChanged": false,
+    "AssemblyChanged": false,
+    "KenLMChanged": false,
+    "TrainingChanged": false,
+    "ArchitectureChanged": false,
+    "ProductionFilesAdded": 0,
+    "NewConfigKeys": 0,
+    "NewServices": 0,
+    "NewFallbackPaths": 0,
+    "JobResultChanged": false,
+    "NewRankingLogic": false,
+    "ExistingSSOTReused": true
+  },
+  "trainingGate": "OPEN",
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_COVERAGE_FOR_RETRYABLE_LOCAL_REGIONS"
+}

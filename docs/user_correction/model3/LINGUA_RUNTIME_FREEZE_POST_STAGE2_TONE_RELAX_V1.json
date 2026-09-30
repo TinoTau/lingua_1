@@ -1,0 +1,130 @@
+{
+  "FREEZE_ID": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "phase": "LINGUA_POST_STAGE2_TONE_RELAX_SSOT_FREEZE_AND_CONTROLLED_PILOT200_REMEASURE",
+  "mode": "PHASE_A_DOCUMENTATION_FREEZE",
+  "date": "2026-09-14",
+  "PHASE_A_STATUS": "PASS",
+  "ACP_STATUS": "APPROVED_IMPLEMENTED_FROZEN",
+  "DUPLICATE_ACTIVE_SSOT": "NO",
+  "SSOT_CONFLICT_COUNT": 1,
+  "UNRESOLVED_SSOT_CONFLICT_COUNT": 0,
+  "CODE_SSOT_MATCH": "PASS",
+  "FREEZE_IDENTITY_CREATED": "YES",
+  "PRODUCT_CODE_CHANGED_DURING_FREEZE": "NO",
+  "PILOT_ALLOWED": "YES",
+  "architecture_version": "POST_STAGE2_TONE_RELAX_V1",
+  "active_acp_ids": [
+    "LINGUA-ACP-MODEL3-RETRY-STAGE2-TONE-RELAXATION-V1"
+  ],
+  "git_commit": "63b253769cab6f4b11d1ded4f9c89c4a610555b3",
+  "git_commit_note": "Working tree may contain unrelated local dirt; freeze product inventory is Stage2 Tone-relax files only",
+  "modified_product_file_inventory": [
+    "electron_node/electron-node/main/src/lexicon-v2/recall-semantic-mode.ts",
+    "electron_node/electron-node/main/src/lexicon-v2/tone-first-tier-collector.ts",
+    "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+    "electron_node/electron-node/main/src/lexicon/tone-recall-sort.ts",
+    "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts"
+  ],
+  "ssot_file_inventory": {
+    "ACTIVE_SSOT": [
+      "docs/user_correction/model3/LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1.md",
+      "docs/user_correction/model3/LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1.json",
+      "docs/user_correction/model3/LINGUA_DIALOG2000_V2_PILOT200_SSOT.md",
+      "docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md"
+    ],
+    "IMPLEMENTED_ACP": [
+      "docs/user_correction/model3/LINGUA_ACP_MODEL3_RETRY_STAGE2_TONE_RELAXATION_V1.md"
+    ],
+    "ACCEPTANCE_EVIDENCE": [
+      "docs/user_correction/model3/LINGUA_STAGE2_TONE_RELAX_ACCEPTANCE_REPORT.md",
+      "docs/user_correction/model3/LINGUA_STAGE2_TONE_RELAX_IMPLEMENTATION_DEV_REPORT.md",
+      "docs/user_correction/model3/LINGUA_STAGE2_TONE_RELAX_E5_TARGETED_RESULT.json"
+    ],
+    "SUPERSEDED_SOFT": [
+      {
+        "path": "docs/user_correction/model3/model3_retry_contract_v1.md",
+        "statement": "Tone gates PARTIALLY_SUPPORTED / Stage6 relaxation",
+        "SUPERSEDED_BY": "LINGUA-ACP-MODEL3-RETRY-STAGE2-TONE-RELAXATION-V1"
+      }
+    ],
+    "AUDIT_ONLY": [
+      "docs/user_correction/model3/LINGUA_MODEL3_RETRY_STAGE2_TONE_CONSTRAINT_AUDIT.md",
+      "docs/user_correction/model3/LINGUA_STAGE2_TONE_RELAX_DOMAIN_PREDEV_AUDIT.md",
+      "docs/user_correction/model3/LINGUA_GATE_E_LEXICON_RECALL_FAILURE_OWNERSHIP_AUDIT.md"
+    ],
+    "TEST_REPORT_BASELINE": [
+      "docs/user_correction/model3/LINGUA_PILOT200_POST_ANCHOR_ACP_REMEASURE_REPORT.md",
+      "docs/user_correction/model3/LINGUA_PILOT200_POST_ANCHOR_ACP_SUMMARY.json"
+    ]
+  },
+  "build_identity": {
+    "command": "npm run build:main",
+    "cwd": "electron_node/electron-node",
+    "when": "immediately_before_phase_b_pilot",
+    "hash": "NOT_AVAILABLE"
+  },
+  "pilot_dataset_identity": "LINGUA_DIALOG2000_V2_PILOT200",
+  "pilot_frozen_raw_identity": "LINGUA_PILOT200_FROZEN_TONE_EVIDENCE_MANIFEST.json",
+  "comparison_baseline_pilot": "LINGUA_PILOT200_POST_ANCHOR_ACP_CONTROLLED_REMEASURE",
+  "baseline_headline_verified": {
+    "NO_PROFILE": 22,
+    "CORRECT_PROFILE": 26,
+    "WRONG_PROFILE": 22,
+    "CORRECT_MINUS_NO": 4,
+    "WRONG_MINUS_NO": 0,
+    "BASELINE_MISMATCH": "NO"
+  },
+  "model2_model_identity": "NOT_AVAILABLE",
+  "model3_model_identity": "NOT_AVAILABLE",
+  "tone_model_identity": "NOT_AVAILABLE",
+  "lexicon_identity": {
+    "path": "node_runtime/lexicon/v3",
+    "checksum": "59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19"
+  },
+  "configuration_identity": "production_defaults_no_tuning",
+  "code_ssot_checks": {
+    "first_pass_recallMode_tone_exact": "PASS",
+    "first_pass_tone_missing_fail_closed": "PASS",
+    "stage2_recovery_mode_explicit": "PASS",
+    "stage2_only_from_model3_retry": "PASS",
+    "stage2_runtime_retainedDomains": "PASS",
+    "stage2_no_domain_vote_rerun": "PASS",
+    "stage2_no_model2": "PASS",
+    "model3_unchanged": "PASS",
+    "anchor_profile_pronunciation_only": "PASS",
+    "domain_no_anchor": "PASS",
+    "retry_geometry_unchanged": "PASS",
+    "shared_budget_unchanged": "PASS",
+    "samedomain_assembly_kenlm_unchanged": "PASS",
+    "no_generic_pinyin_only_fallback": "PASS",
+    "no_all_domain_retry_fallback": "PASS",
+    "no_compatibility_path": "PASS"
+  },
+  "closed_findings": [
+    "MODEL2_PRE_EDGE_INSERTION",
+    "FINESPAN_LOCAL_TONE_BINDING",
+    "MODEL2_GLOBAL_RELATION_APPLICATION",
+    "COMPOUND_NON_PROFILE_ASR_ERROR",
+    "MODEL2_WINDOW_BINDING_BUG",
+    "MODEL3_INPUT_SSOT",
+    "ANCHOR_PROFILE_PRONUNCIATION_ONLY",
+    "DOMAIN_ANCHOR_AUTHORITY",
+    "RETRY_SHARED_BUDGET",
+    "NORMAL_FIRST_PASS_TONE_EXACT",
+    "STAGE2_EXPLICIT_RECOVERY_MODE",
+    "STAGE2_TONE_RELAXATION",
+    "STAGE2_RUNTIME_RETAINED_DOMAIN_REUSE",
+    "DOMAIN_ONLY_TONE_RELAXED_RECOVERY",
+    "DOMAIN_ONLY_NEGATIVE_FILTER",
+    "MULTI_DOMAIN_RECOVERY",
+    "EMPTY_RETAINED_DOMAIN_BASE_ONLY",
+    "CROSS_PATH_DOMAIN_ISOLATION"
+  ],
+  "deferred": [
+    "MODEL2_USER_TONE_PROFILE",
+    "FINESPAN_BOUNDARY_SSOT_CHECK",
+    "MODEL2_CHANGED_POSITION_COVERAGE_LOSS",
+    "RETRY_PROFILEDOMAIN_SCORE_SCALE",
+    "PERFORMANCE_OPTIMIZATION"
+  ]
+}

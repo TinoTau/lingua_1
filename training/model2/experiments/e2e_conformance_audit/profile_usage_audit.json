@@ -1,0 +1,12 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "fields": [
+    {"field": "phonetic_bias", "intended": "condition fuzzy recall", "current": "7E/7F retrieval reverse-map (BOUND subset)", "Status": "PARTIAL"},
+    {"field": "tone_bias", "intended": "future tone condition", "current": "schema only; Stage A/B mask often 0", "Status": "DEFERRED_BY_DESIGN"},
+    {"field": "domain_bias", "intended": "domain-conditioned recall/prior", "current": "trainrow domain_prior vectors; NOT in profile retrieval spike", "Status": "NOT_IMPLEMENTED"},
+    {"field": "personal_terms", "intended": "user lexical preference", "current": "profile schema + train features; NOT retrieval expansion", "Status": "NOT_IMPLEMENTED"},
+    {"field": "confusion_bias", "intended": "confusion tendencies", "current": "schema; unused in retrieval", "Status": "UNUSED"},
+    {"field": "speaking_habits", "intended": "product language for accent/habits", "current": "NO dedicated field; folded into phonetic_bias narrative", "Status": "NOT_IMPLEMENTED"},
+    {"field": "strength LOW/MED/HIGH", "intended": "relation strength", "current": "SPIKE ACTIVE/INACTIVE via >0; NOT_FINAL", "Status": "PARTIAL"}
+  ]
+}

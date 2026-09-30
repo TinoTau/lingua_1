@@ -1,0 +1,15 @@
+{
+  "n": 160,
+  "CorrectProfileBetterThanOppositeRate": 0.9875,
+  "CorrectProfileBetterThanIrrelevantRate": 0.9875,
+  "tie_opposite_rate": 0.0,
+  "tie_irrelevant_rate": 0.0,
+  "worse_opposite_rate": 0.0125,
+  "worse_irrelevant_rate": 0.0125,
+  "legacy_correct_leq_opposite_rate_was_non_strict_rank": "renamed_and_strictified",
+  "pass": true,
+  "metric_semantics": {
+    "better": "rank_correct < rank_other OR (same rank AND score_correct > score_other)",
+    "ties_do_not_count_as_pass": true
+  }
+}

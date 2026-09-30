@@ -1,0 +1,43 @@
+{
+  "created": "2026-08-17T11:27:13.252438+00:00",
+  "elapsed_s": 150.50349370000185,
+  "Stage_D_Retrieval_Restoration": "PASS",
+  "Original_Design": "RESTORED",
+  "Current_Authoritative_Executor": "domain-conditioned FuzzyPool UNION single budget",
+  "Old_Shared_Pool_Rerank": "RETIRED",
+  "38": {
+    "n": 38,
+    "domain_raw_hit": 38,
+    "final_introduced": 38,
+    "raw_to_final_retention": 1.0,
+    "implementation_safety_cap": 256,
+    "implementation_safety_cap_hit_n": 0,
+    "max_domain_raw_n": 60,
+    "safety_cap_is_bottleneck": false
+  },
+  "Base_Regression": "PASS",
+  "Soft_Prior": "PASS",
+  "Hard_Filter": "NO",
+  "MultiTag": "PASS",
+  "Single_Retrieval_Path": true,
+  "Shadow_Path": false,
+  "Nested_32_8": "REMOVED",
+  "Old_Teacher": "SUPERSEDED",
+  "New_Teacher": "EXECUTE_VALIDATED",
+  "new_d_eligible": 404,
+  "unique_spans": 404,
+  "unique_terms": 281,
+  "source_counts": {
+    "REAL": 7,
+    "DERIVED_REAL": 57,
+    "SYNTHETIC": 340
+  },
+  "pd_cases": 64,
+  "true_synergy": 0,
+  "Retrain_Ready": true,
+  "Training_Executed": false,
+  "Recommended_Initialization": "P1_PLUS_FRESH_DOMAIN_HEAD",
+  "feature_hash": "MODEL2_FEATURE_HASH_V1",
+  "identity_contract": "StageDRetrievalTargetIdentityV1",
+  "v2_unique_stats_exists": true
+}

@@ -1,0 +1,105 @@
+{
+  "phase": "MODEL3_V2_S3_FINAL_CAUSAL_MAINLINE_ACCEPTANCE",
+  "timestamp": "2026-08-31T13:13:25.450Z",
+  "harnessFreeze": "ACCEPTANCE_HARNESS_FREEZE_PASS",
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "verdict": "S3_FINAL_CAUSAL_ACCEPTANCE_SAFE_BUT_UTILITY_NOT_DEMONSTRATED",
+  "nextPhase": "MODEL3_V2_RETRY_REGION_SIGNAL_LOSS_AUDIT",
+  "primaryOwner": "RETRY_REGION",
+  "s3Identity": {
+    "verified": true,
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "buildId": "prod_core_s3_build_20260830_v1"
+  },
+  "denominator": {
+    "requested": 200,
+    "completed": 200,
+    "parityPass": 200,
+    "reportedAsDialog200": true
+  },
+  "quality": {
+    "IMPROVED": 0,
+    "REGRESSED": 0,
+    "UNCHANGED": 200,
+    "INDETERMINATE": 0,
+    "unchangedSubtypes": {
+      "UNCHANGED_RETRY_CANDIDATE_NO_ASSEMBLY_CHANGE": 173,
+      "UNCHANGED_RETRY_NO_CANDIDATE": 14,
+      "UNCHANGED_NO_RETRY": 12,
+      "UNCHANGED_RETRY_ASSEMBLY_CHANGED_WINNER_SAME": 1
+    }
+  },
+  "baselineAlreadyCorrect": 30,
+  "rescuable": {
+    "total": 170,
+    "triggered": 160,
+    "candidateReturn": 148,
+    "viableInAssembly": 17,
+    "poolChanged": 1,
+    "kenlmSelectedRepair": 0,
+    "finalImproved": 0
+  },
+  "retryDistribution": {
+    "RAW_PATH_RETRY_SPAN": 1666,
+    "LOGICAL_UNIQUE_RETRY_SPAN": 851,
+    "RETRY_REGION": 1154,
+    "CASE_WITH_ANY_RETRY": 188,
+    "CASE_WITH_ANY_RETRY_rate": 0.94,
+    "logicalRetryRateApprox": 0.08746145940390544
+  },
+  "falseRetryBusinessImpact": {
+    "LATENCY_ONLY_EFFECT": 188
+  },
+  "dominantSignalLossStage": "RETRY_REGION_NO_USEFUL_REINTERPRETATION",
+  "signalLossCounts": {
+    "ASSEMBLY_DROPS_VIABLE_CANDIDATE": 17,
+    "RETRY_REGION_NO_USEFUL_REINTERPRETATION": 131,
+    "RECALL_NO_VIABLE_CANDIDATE": 12,
+    "BASELINE_ALREADY_CORRECT_OR_EQUIVALENT": 30,
+    "MODEL3_TRIGGER_NO_USEFUL_TARGET": 10
+  },
+  "latency": {
+    "model3InferenceMs": {
+      "p50": 20,
+      "p90": 64,
+      "p95": 92,
+      "max": 307
+    },
+    "retryIncrementalMs": {
+      "p50": 14,
+      "p90": 88,
+      "p95": 132,
+      "max": 363
+    },
+    "totalModel3MainlineIncrementMs": {
+      "p50": 33,
+      "p90": 141,
+      "p95": 238,
+      "max": 522
+    }
+  },
+  "acceptanceMatrix": {
+    "QUALITY_SAFETY": "PASS",
+    "QUALITY_UTILITY": "NOT_DEMONSTRATED",
+    "ARCHITECTURE": "PASS",
+    "LATENCY": "CONCERN",
+    "PROMOTION": "NOT_READY"
+  },
+  "previousAcceptance": "HISTORICAL_NON_CAUSAL_ACCEPTANCE_EVIDENCE",
+  "governance": {
+    "s3Changed": false,
+    "training": false,
+    "dataset": false,
+    "feature": false,
+    "threshold": false,
+    "retry": false,
+    "recall": false,
+    "assembly": false,
+    "kenlm": false,
+    "jobResult": false,
+    "asr": false,
+    "productionDualChain": false
+  }
+}

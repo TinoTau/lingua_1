@@ -1,0 +1,94 @@
+{
+  "policy": {
+    "BOUND": [
+      "n_l",
+      "z_zh",
+      "ch_c",
+      "sh_s",
+      "eng_en",
+      "in_ing",
+      "h_f"
+    ],
+    "WEAK": [
+      "s_sh",
+      "en_eng"
+    ],
+    "REVERSED": [
+      "l_n",
+      "zh_z",
+      "c_ch",
+      "an_ang",
+      "ang_an",
+      "ing_in",
+      "f_h"
+    ],
+    "schema_keys": [
+      "n_l",
+      "l_n",
+      "zh_z",
+      "z_zh",
+      "ch_c",
+      "c_ch",
+      "sh_s",
+      "s_sh",
+      "an_ang",
+      "ang_an",
+      "en_eng",
+      "eng_en",
+      "in_ing",
+      "ing_in",
+      "f_h",
+      "h_f"
+    ],
+    "note": "Runtime schema stays 16D; Phase6C primary trains BOUND only."
+  },
+  "active_bound": [
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1
+  ],
+  "active_bound_features": [
+    "n_l",
+    "z_zh",
+    "ch_c",
+    "sh_s",
+    "eng_en",
+    "in_ing",
+    "h_f"
+  ],
+  "weak_deferred_primary": [
+    "s_sh",
+    "en_eng"
+  ],
+  "schema_mask": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "phase": "LINGUA_STAGE2_QUERY_PROVENANCE_EVIDENCE_LIFECYCLE_AUDIT",
+  "date": "2026-09-15",
+  "DUPLICATE_ACTIVE_SSOT": "NO",
+  "documents": [
+    {
+      "path": "docs/user_correction/model3/LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1.md",
+      "class": "ACTIVE_SSOT",
+      "relevant": "MODEL2_ON_MODEL3_RETRY=NO; Stage2 Tone-relax; no Model2 on Retry"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_ACP_MODEL3_RETRY_STAGE2_TONE_RELAXATION_V1.md",
+      "class": "IMPLEMENTED_ACP",
+      "relevant": "Changes Tone hard gate only; does NOT redefine Stage2 pinyin source"
+    },
+    {
+      "path": "docs/user_correction/model3/Lingua_Model3_Retry_Stage2_SSOT_Restoration_Design.md",
+      "class": "ACTIVE_SSOT_GEOMETRY",
+      "relevant": "Stage2 = SHARED_LEXICAL_WINDOW_OWNER consumer; windowPinyinKey from global syllables"
+    },
+    {
+      "path": "docs/user_correction/model3/model3_retry_contract_v1.md",
+      "class": "HISTORICAL_REFERENCE",
+      "relevant": "Retry limits; Tone Stage6 line SUPERSEDED_BY Stage2 Tone-relax ACP"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_MODEL2_FULL_EXPLANATION_EVIDENCE_PREDEV_AUDIT.md",
+      "class": "AUDIT_ONLY",
+      "relevant": "Prior evidence: transform lost at materializeProfileHits"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_GATE_E_LEXICON_RECALL_FAILURE_OWNERSHIP_AUDIT.md",
+      "class": "AUDIT_ONLY",
+      "relevant": "E5=35 Tone-key mismatch; true Lexicon engine miss=0"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE_REPORT.md",
+      "class": "TEST_REPORT",
+      "relevant": "E5 Stage2 target hit 0/35; ASR-space Stage2 queries"
+    }
+  ],
+  "QUERY_EVIDENCE_LIFETIME_SSOT": "NOT_SPECIFIED",
+  "QUERY_EVIDENCE_RETRY_CONSUMER_SSOT": "NO",
+  "CURRENT_STAGE2_ASR_QUERY_POLICY_AUTHORITY": "DERIVED_FROM_RESEGMENTATION_DESIGN",
+  "MODEL2_ON_MODEL3_RETRY_AUTHORITY": "EXPLICIT_ACTIVE_SSOT",
+  "CONTRACT_GAP": [
+    "Whether first-pass Model2-conditioned Recall query (semantic syllables/pinyinKey + geometry) may be preserved as Recall-owned evidence for Stage2 reuse is NOT_SPECIFIED",
+    "No SSOT explicitly requires ASR-only Stage2 queries forever; current ASR reconstruction follows shared lexical window + no Model2-on-Retry"
+  ],
+  "NOT_IMPLEMENTATION_DRIFT": [
+    "Stage2 using globalSyllables matches restoration design + MODEL2_ON_MODEL3_RETRY=NO",
+    "materializeProfileHits writing observed windowPinyinKey matches long-standing candidate materialize contract"
+  ],
+  "SSOT_CONFLICT_COUNT": 0,
+  "UNRESOLVED_SSOT_CONFLICT_COUNT": 0
+}

@@ -1,0 +1,22 @@
+{
+  "cpu_latency": {
+    "device": "cpu",
+    "utterance_inference": true,
+    "n_samples": 500,
+    "p50_ms": 2.458999981172383,
+    "p95_ms": 3.740539954742417,
+    "p99_ms": 4.163557036081329,
+    "mean_ms": 2.531185403233394,
+    "sequence_length_mean": 20.514,
+    "sequence_length_p95": 26.0
+  },
+  "shadow": {
+    "one_inference_per_utterance": true,
+    "actual_retry_triggered": false,
+    "production_output_changed": false,
+    "mode": "shadow_only_offline_harness",
+    "trace_span_rows": 9873,
+    "trace_file": "docs/user_correction/model3/model3_v1_shadow_trace.jsonl",
+    "utterances_traced": 500
+  }
+}

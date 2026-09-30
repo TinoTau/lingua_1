@@ -1,0 +1,9 @@
+source,status,vote_scope,notes
+docs/fw-detector/freeze/FROZEN.md,CURRENT,per_path,Vote scope | per_path · voteUtteranceDomainFromPool
+docs/tone-v2/Runtime_SSOT_Contract_Freeze.md,CURRENT,per_path,Forbidden: utterance-wide single Vote over mixed Paths
+docs/fw-detector/assembly/FROZEN_V1_2.md,CURRENT,per_path,pool = this Path only; then mergeCrossPathSentenceCandidates
+span-assembly-v4-orchestrator architectureCompliance,CURRENT_CODE,per_path,voteScope: 'per_path'; votePoolSource: 'path_fine_span'
+Lingua_Model3_V1_Mainline_Insertion_Point_Correction_Audit_2026_08_26.md,MODEL3_DOC,ONE_vote_ambiguous,ONE vote after Model2; implemented as once per path step, no Retry re-vote
+Lingua_Model3_V1_Mainline_Integration_Development_Report_2026_08_27.md,MODEL3_DOC,ONCE_frozen,voteUtteranceDomainFromPool (ONCE, frozen) — Retry invariant, not utterance singleton
+archive SUPERSEDED Lattice predev 2026-07-26,HISTORICAL_ACP,CHANGED_utterance_to_per_path,Explicit MODIFY: 整句一次 vote → 每 path 一次
+This audit assumed frozen (utterance singleton),CONFLICTS_WITH_CURRENT_FW_FREEZE,utterance_singleton,Do not rewrite Lattice SSOT to match; do not rewrite Lattice SSOT away either without ACP

@@ -1,0 +1,80 @@
+{
+  "phase": "MODEL3_V2_REALDIST_ACCEPTANCE_AND_PROMOTION_AUDIT",
+  "date": "2026-08-29",
+  "candidate": "MODEL3_V2_REALDIST_V1",
+  "checkpointAcceptance": "REALDIST_CHECKPOINT_REJECTED",
+  "readyForProductionPromotion": false,
+  "fullElectronMainlineExecuted": true,
+  "autoPromoted": false,
+  "failureClassification": "MULTI_FACTOR",
+  "failureFactors": [
+    "RETRY_REGION_ATTRIBUTION_FAILURE",
+    "OFFLINE_TO_LIVE_FINESPAN_GAP",
+    "RETRY_TRIGGERED_BUT_FINAL_UNCHANGED"
+  ],
+  "recommendedNextPhase": "MODEL3_V2_FEATURE_CAPACITY_AUDIT",
+  "nextPhaseExecuted": false,
+  "identity": {
+    "modelId": "MODEL3_V2_REALDIST_V1",
+    "checkpointDir": "training/model3_dataset/model3_v2_realdist_v1_ckpts/seed_2026082903",
+    "expectedSha256": "fbb8d85dc4bec117af510a9d8f0a5021a86187a1e1490ee63f9b66831bad648e",
+    "actualSha256": "fbb8d85dc4bec117af510a9d8f0a5021a86187a1e1490ee63f9b66831bad648e",
+    "identityValidation": "PASS"
+  },
+  "hashLockOwnership": [
+    "CHECKPOINT_INTEGRITY_GUARD",
+    "MODEL_RUNTIME_COMPATIBILITY_GUARD",
+    "PRODUCTION_IDENTITY_SEAL",
+    "TEST_ENVIRONMENT_IDENTITY_SEAL",
+    "ACCIDENTAL_HARDCODED_COUPLING"
+  ],
+  "existingCandidateMechanismBefore": false,
+  "validationPathChange": "minimal_registry_plus_MODEL3_CHECKPOINT_IDENTITY",
+  "integrityProtectionWeakened": false,
+  "productionDefaultCheckpointChanged": false,
+  "filesChangedForCandidatePath": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-checkpoint-registry.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-inference-client.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-types.ts",
+    "electron_node/services/model3_runtime/model3_inference_host.py",
+    "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts",
+    "electron_node/electron-node/tests/run-dialog200-model3-acceptance.mjs"
+  ],
+  "mainline": {
+    "cases": 51,
+    "improved": 15,
+    "unchanged": 36,
+    "regressed": 0,
+    "model3RetryCases": 3,
+    "meaningfulInventory13Retry": 0,
+    "unrelatedInventory13Retry": 1,
+    "inventory13NoRetry": 12
+  },
+  "architectureChanged": false,
+  "trainingReopened": false,
+  "promotionPlanProduced": false,
+  "checklist": {
+    "checkpointLoadingCallChainAudited": true,
+    "hashLockOwnershipClassified": true,
+    "existingCandidateMechanismChecked": true,
+    "productionHashValidationNotDisabled": true,
+    "productionDefaultCheckpointUnchanged": true,
+    "candidateModelIdVerified": true,
+    "candidateExpectedShaVerified": true,
+    "candidateActualShaVerified": true,
+    "exactRealDistCheckpointLoaded": true,
+    "fullElectronDialog200Executed": true,
+    "pythonOnlyProbeNotSubstituted": true,
+    "mainlineInvariantsChecked": true,
+    "retryAttributionCompleted": true,
+    "inventory13Evaluated": true,
+    "retryFunnelProduced": true,
+    "falseRetryAudited": true,
+    "baselineComparisonCompleted": true,
+    "latencyMeasured": true,
+    "architectureUnchanged": true,
+    "trainingNotReopened": true,
+    "checkpointNotAutoPromoted": true,
+    "nextPhaseNotExecuted": true
+  }
+}

@@ -1,0 +1,5 @@
+file,change,new_framework
+electron_node/electron-node/main/src/fw-detector/normalize-for-fw-repair.ts,Restore existing OpenCC t2cn + NFKC as FW Repair input canonicalizer,NO
+electron_node/electron-node/main/src/fw-detector/fw-detector-orchestrator.ts,Canonical repairText before V4 path; keep ctx.rawAsrText,NO
+electron_node/electron-node/main/src/pipeline/context/job-context.ts,Observation fields fwRepairNormalizedText / fwRepairScriptNormalized,NO
+electron_node/electron-node/main/src/fw-detector/fw-detector-v4-path.ts,Attach repairNormalization diagnostics to FwDetectorResult,NO

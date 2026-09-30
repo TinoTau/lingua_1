@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model3_corruption_record_v1",
+  "title": "CORRUPTION_RECORD_V1",
+  "type": "object",
+  "required": [
+    "spanStart",
+    "spanEnd",
+    "referenceSurface",
+    "errorSurface",
+    "corruptionFamily",
+    "sourcePinyin",
+    "sourceTone",
+    "targetPinyin",
+    "targetTone",
+    "replacementSource",
+    "isPhonetic",
+    "isPolyphonic",
+    "generationReason"
+  ],
+  "properties": {
+    "spanStart": { "type": "integer" },
+    "spanEnd": { "type": "integer" },
+    "referenceSurface": { "type": "string" },
+    "errorSurface": { "type": "string" },
+    "corruptionFamily": { "type": "string" },
+    "sourcePinyin": { "type": "string" },
+    "sourceTone": { "type": "string" },
+    "targetPinyin": { "type": "string" },
+    "targetTone": { "type": "string" },
+    "replacementSource": {
+      "enum": ["BASE_LEXICON", "DOMAIN_LEXICON", "SURFACE_MAP_LEGACY", "NONE"]
+    },
+    "isPhonetic": { "type": "boolean" },
+    "isPolyphonic": { "type": "boolean" },
+    "generationReason": { "type": "string" }
+  }
+}

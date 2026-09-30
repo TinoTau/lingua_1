@@ -1,0 +1,116 @@
+{
+  "schema": "LINGUA_D157_FROZEN_REPLAY_BOUNDARY_DIFF_V1",
+  "phase": "D157_FROZEN_REPLAY_UPSTREAM_BOUNDARY_TRACE_AUDIT_V1",
+  "mode": "READ_ONLY",
+  "caseId": "d157",
+  "observed_first_divergence": "E6_SEGMENTATION_PATH",
+  "true_pipeline_first_divergence": {
+    "FIELD": "WordTimeSpan.start/end for ASR batch-1 words (via ctx.segmentTimeOffsetsSec + ctx.asrSegmentNodeBatchIndices)",
+    "FUNCTION_INPUT": "buildWordTimeSpans(rawText, asrSegments, segmentTimeOffsetsSec, segmentCharOffsets, asrSegmentNodeBatchIndices)",
+    "OWNER": "asr-step.ts (Capture sets) / runPipelineWithMockAsr inject (Replay omits)",
+    "CAPTURE_VALUE": {
+      "segmentTimeOffsetsSec": [0, 1.6],
+      "asrSegmentNodeBatchIndices": [0, 1],
+      "example_word": { "word": "但", "batch": 1, "segment_local": [0.74, 1.18], "absolute_after_offset": [2.34, 2.78] }
+    },
+    "REPLAY_VALUE": {
+      "segmentTimeOffsetsSec": null,
+      "asrSegmentNodeBatchIndices": null,
+      "effective_offsets": "all 0",
+      "example_word": { "word": "但", "batch": 1, "used_as_absolute": [0.74, 1.18], "wrong_vs_capture_absolute": true }
+    },
+    "DOWNSTREAM_EFFECT": "mapToneEvidenceForRecall selects wrong acousticToneSlices for batch-1 windows → acousticTonePattern / CanonicalRecallQuery toneNorm differs → Base Recall set 37 vs 35 → LexicalEdge/Path/Final cascade",
+    "EVIDENCE_STRENGTH": "PROVEN"
+  },
+  "asr_boundary": {
+    "ASR_BOUNDARY_IDENTICAL": "YES",
+    "rawMergedAsrText": "您好我定,但顯示 但物流三天沒更新能幫我查一下嗎?",
+    "segments_injected": true,
+    "note": "E1 PASS; same frozen raw + segments object used as inject source"
+  },
+  "tone_slices_boundary": {
+    "SLICES_ARRAY_IDENTICAL_AT_INJECT": "YES",
+    "TONE_BOUNDARY_IDENTICAL": "NO",
+    "note": "Frozen acousticToneSlices equality does NOT equal downstream mapped Tone equality; mapping uses WordTimeSpans"
+  },
+  "batch_offset_proof": {
+    "evidenceProduction_source": "tone.utterance_tone.evidenceProduction",
+    "word_count": 21,
+    "ep_count": 21,
+    "offsetsByBatch": { "0": [0], "1": [1.6] },
+    "slice_time_range": [0, 5.38],
+    "segment_word_time_range_unoffset": [0, 3.78],
+    "slices_are_absolute": true,
+    "segment_word_times_are_batch_local": true
+  },
+  "missing_replay_ctx_fields": [
+    {
+      "FIELD_NAME": "ctx.segmentTimeOffsetsSec",
+      "CAPTURE_SOURCE": "asr-step cumulativeTimeSec per audio batch",
+      "REPLAY_SOURCE": "NOT_INJECTED",
+      "IN_FROZEN_SCHEMA_AS_FIRST_CLASS": false,
+      "RECONSTRUCTABLE_FROM": "evidenceProduction.startSec - segments.words.start (batch 1 → 1.6)",
+      "CAN_AFFECT_BASE_RECALL": true
+    },
+    {
+      "FIELD_NAME": "ctx.asrSegmentNodeBatchIndices",
+      "CAPTURE_SOURCE": "asr-step per JobResult segment → batch index",
+      "REPLAY_SOURCE": "NOT_INJECTED",
+      "IN_FROZEN_SCHEMA_AS_FIRST_CLASS": false,
+      "RECONSTRUCTABLE_FROM": "evidenceProduction.batchIndex ordered with segments",
+      "CAN_AFFECT_BASE_RECALL": true
+    },
+    {
+      "FIELD_NAME": "ctx.segmentCharOffsets",
+      "CAPTURE_SOURCE": "asr-step cumulativeCharOffset",
+      "REPLAY_SOURCE": "NOT_INJECTED",
+      "CAN_AFFECT_BASE_RECALL": "UNKNOWN (secondary; searchFrom reset across batches)",
+      "EVIDENCE_STRENGTH": "PARTIAL"
+    },
+    {
+      "FIELD_NAME": "ctx.toneEvidenceProduction",
+      "CAPTURE_SOURCE": "asr-step / captured in utterance_tone.evidenceProduction",
+      "REPLAY_SOURCE": "NOT_INJECTED",
+      "CAN_AFFECT_BASE_RECALL": false,
+      "note": "used for miss attribution diagnostics in recall-topk; not required for pattern mapping itself"
+    }
+  ],
+  "boundaries": {
+    "B0_entry": {
+      "CAPTURE": "POST /run-pipeline-with-audio",
+      "REPLAY": "POST /run-lexicon-mock → runPipelineWithMockAsr",
+      "lexicon_v2_intent_enabled": {
+        "CAPTURE": false,
+        "REPLAY_BODY": false,
+        "REPLAY_APPLIED": "IGNORED by /run-lexicon-mock (job flag unset → intentSchedulingEnabled defaults true)",
+        "CAUSAL_FOR_D157_BASE": "NON_CAUSAL_RUNTIME_DIFFERENCE (same-turn; resolveRecallScope ignores sessionIntent)"
+      }
+    },
+    "B1_asr": { "IDENTICAL": "YES" },
+    "B2_tone_slices": { "IDENTICAL_AT_STORE": "YES", "MAPPED_IDENTICAL": "NO" },
+    "B3_fw_input": {
+      "rawAsrText": "identical inject",
+      "repairText": "OpenCC both paths",
+      "asrSegments": "identical inject",
+      "acousticToneSlices": "identical inject",
+      "segmentTimeOffsetsSec": "DIVERGES",
+      "asrSegmentNodeBatchIndices": "DIVERGES"
+    },
+    "B4_finespan": { "IDENTICAL": "UNKNOWN", "reason": "finespans not in compact capture; no raw path_trace dump for replay" },
+    "B5_windowquery": { "IDENTICAL": "NO", "reason": "toneNorm component of CanonicalRecallQuery differs for batch-1 windows (PROVEN mechanism; full query tables NOT_EVALUABLE without live dump)" },
+    "B6_base_query": { "IDENTICAL": "NO", "reason": "canonical key includes toneNorm" },
+    "B7_base_raw": { "IDENTICAL": "NOT_EVALUABLE", "reason": "only slice(0,48) compact surfaces persisted" },
+    "B8_base_post": { "IDENTICAL": "UNKNOWN" },
+    "B9_B14": { "note": "downstream cascade after Base; not independently attributed" }
+  },
+  "base_37_vs_35": {
+    "capture_flatMap_n": 37,
+    "replay_flatMap_n": 35,
+    "capture_path_bases": [18, 19],
+    "ARISE_AT": "Base Recall results under divergent toneNorm query keys for batch-1 windows",
+    "FULL_RAW_COMPARE": "NOT_EVALUABLE",
+    "EVIDENCE_STRENGTH": "STRONG"
+  },
+  "final_result": "A",
+  "next_owner": "REPLAY_STATE_REPAIR"
+}

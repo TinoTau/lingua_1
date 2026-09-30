@@ -1,0 +1,26 @@
+{
+  "phase": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "note": "Reclassified after Stage2 Tone-relax: Gate-E LEXICON_RECALL not treated as Lexicon engine miss when Retry+Stage2 miss target.",
+  "previous": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "LEXICON_RECALL": 158,
+    "MODEL2_ACTION": 53,
+    "SUCCESS": 150,
+    "MODEL3_RETRY_NO_USEFUL_STAGE2": 1
+  },
+  "current_reclassified": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 177,
+    "MODEL3_RETRY_STAGE2_QUERY": 257,
+    "SUCCESS": 147,
+    "KENLM": 14,
+    "DOWNSTREAM": 2
+  },
+  "dominantFailureOwner": "MODEL3_RETRY_STAGE2_QUERY",
+  "dominantFailureCount": 257,
+  "oneNextOwner": "MODEL3_RETRY_STAGE2_QUERY",
+  "oneNextDelta": "Audit production Stage2 query windows/pinyin provenance vs first-pass Model2-conditioned Tone-mismatch keys (E5: Tone-relax active but ASR-space Stage2 never queries target pinyin)."
+}

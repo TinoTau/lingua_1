@@ -1,0 +1,27 @@
+field,level,required,notes
+contract,utterance,YES,MODEL3_RETRY_TRACE_V1
+utteranceId,utterance,YES,
+pathId,utterance,YES,
+model3Eligible,utterance,YES,
+model3Invoked,utterance,YES,
+triggerReasons,utterance,CONDITIONAL,
+retryCycleCount,utterance,YES,0 or 1
+retainedDomains,utterance,YES,
+finalText,utterance,YES,
+kenlmWinnerText,utterance,YES,
+spanId,span,YES,fineSpanId
+rawSurface,span,YES,
+firstPassSurface,span,YES,
+isAnchor,span,YES,
+anchorSource,span,YES,NONE|DOMAIN|MODEL2|DOMAIN_AND_MODEL2
+candidateProvenance,span,YES,
+pinyinProvenance,span,YES,
+toneProvenance,span,YES,
+toneEvidenceSummary,span,YES,
+acousticEvidenceStatus,span,YES,AVAILABLE|PARTIAL|ABSENT
+model2PronunciationEvidence,span,YES,
+targetMask,span,YES,0|1
+model3Decision,span,YES,KEEP|RETRY|SKIPPED_ANCHOR|NOT_RUN
+retryPassId,span,YES,0|1
+reRecallCandidates,span,CONDITIONAL,
+finalSelectedCandidate,span,YES,

@@ -1,0 +1,10 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "correct_role": "OPTIONAL_POST_MERGE_RANKER",
+  "owns_recall": false,
+  "defines_Model2_success_historically": true,
+  "flag": "METRIC_NAMING_DRIFT (Recall@K)",
+  "suppresses_new_candidates": "NO by architecture (closed-set cannot drop unknown ids once merged); can demote rank",
+  "production_runs": false,
+  "classification": "ARCHIVE_ONLY for product narrative; KEEP_OPTIONAL as post-merge experiment artifact"
+}

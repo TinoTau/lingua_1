@@ -1,0 +1,21 @@
+{
+  "phase": "MODEL3_V2_S3_FINAL_CAUSAL_MAINLINE_ACCEPTANCE",
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "checks": {
+    "snapshotParity": "200/200",
+    "packedSymmetry": "200/200",
+    "secondDomainVote": 0,
+    "effectiveAnchorRetry": 0,
+    "anchorMutation": 0,
+    "recursiveModel3": 0,
+    "candidateCapViolations": 0,
+    "baselineMaxPool": 6,
+    "s3MaxPool": 6,
+    "casesHitting16": 0,
+    "multipathPreserved": true,
+    "jobResultUnchanged": true,
+    "productionDualChain": false,
+    "model3StageSemantics": "ONE_MAINLINE_DECISION_STAGE_PER_UTTERANCE_MAY_EVALUATE_MULTIPLE_RETAINED_PATHS"
+  },
+  "pass": true
+}

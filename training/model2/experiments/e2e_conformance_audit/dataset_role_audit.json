@@ -1,0 +1,9 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "datasets": [
+    {"name": "baseline_v1 trainrows", "span_level": true, "target_absent_native": "partial", "oracle_risk": "observed≡canonical rows", "role": "REUSE_PARTIALLY"},
+    {"name": "Phase7E spike", "span_level": true, "role": "DIAGNOSTIC_ONLY / KEEP mechanism"},
+    {"name": "Phase7F REAL_ASR whole-utt", "span_level": false, "role": "DIAGNOSTIC_ONLY — INVALID as architecture verdict source"},
+    {"name": "E2E span reference traces", "span_level": true, "role": "KEEP for conformance"}
+  ]
+}

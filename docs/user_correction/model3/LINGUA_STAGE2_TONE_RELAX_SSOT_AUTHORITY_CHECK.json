@@ -1,0 +1,24 @@
+{
+  "phase": "LINGUA_MODEL3_RETRY_STAGE2_TONE_RELAXATION_SINGLE_DELTA_IMPLEMENTATION",
+  "date": "2026-09-14",
+  "activeSsot": {
+    "id": "LINGUA-ACP-MODEL3-RETRY-STAGE2-TONE-RELAXATION-V1",
+    "path": "docs/user_correction/model3/LINGUA_ACP_MODEL3_RETRY_STAGE2_TONE_RELAXATION_V1.md",
+    "status": "APPROVED_IMPLEMENTED_FROZEN",
+    "runtimeContract": "Stage2 RETRY recallMode=model3_retry_pinyin_domain_recovery; first-pass recallMode=tone_exact (default)",
+    "runtimeFreeze": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1"
+  },
+  "supersededOrAligned": [
+    {
+      "path": "docs/user_correction/model3/model3_retry_contract_v1.md",
+      "note": "Tone gates PARTIALLY_SUPPORTED / Stage6 relaxation language superseded for Stage2 by this ACP IMPLEMENTED contract; first-pass Mandatory Tone unchanged"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_STAGE2_TONE_RELAX_DOMAIN_PREDEV_AUDIT.md",
+      "note": "Predev APPROVE evidence; implementation supersedes draft-only status"
+    }
+  ],
+  "DUPLICATE_ACTIVE_SSOT": "NO",
+  "SSOT_UPDATED": "YES",
+  "conflictsRemaining": []
+}

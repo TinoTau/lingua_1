@@ -1,0 +1,43 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "mode": "correct",
+  "n": 500,
+  "TargetIntroductionRate": 0.998,
+  "n_introduced": 499,
+  "FalseIntroductionRate_non_target_expansion": 0.0,
+  "NewCandidatePrecision_target_over_new": 0.3429553264604811,
+  "new_candidates_mean": 2.91,
+  "new_candidates_p95": 8.0,
+  "queries_generated_mean": 1.012,
+  "queries_generated_p95": 1.0,
+  "latency_ms_p50": 52.262500001234,
+  "latency_ms_p95": 65.82469999557361,
+  "failures": [
+    {
+      "sample_id": "ts-d6e65a11e1ef11f0f82b4d30",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:发挥:fa|hui",
+      "family": "h_f",
+      "observed": [
+        "fa1",
+        "fui1"
+      ],
+      "bias": {
+        "h_f": 0.8
+      },
+      "queries": [
+        [
+          "ha",
+          "hui"
+        ]
+      ],
+      "new_ids_head": [],
+      "failure_class": "BUDGET_PRUNED"
+    }
+  ]
+}

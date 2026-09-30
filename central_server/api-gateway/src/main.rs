@@ -1,44 +1,27 @@
 use anyhow::Result;
 use axum::{
     extract::{ws::WebSocketUpgrade, State},
-    http::StatusCode,
+    middleware,
     response::Response,
     routing::get,
-    middleware,
     Router,
 };
 use std::net::SocketAddr;
 use std::sync::Arc;
-use tracing::{info, error};
-use tracing_subscriber;
-
-mod config;
-mod tenant;
-mod auth;
-mod rate_limit;
-mod scheduler_client;
-mod rest_api;
-mod ws_api;
-
-use config::Config;
-use tenant::TenantManager;
-use rate_limit::RateLimiter;
-use scheduler_client::SchedulerClient;
-use rest_api::create_rest_router;
-use ws_api::handle_public_websocket;
+use tracing::info;
 use uuid::Uuid;
 
-#[derive(Clone)]
-pub struct AppState {
-    pub tenant_manager: Arc<TenantManager>,
-    pub rate_limiter: Arc<RateLimiter>,
-    pub scheduler_client: Arc<SchedulerClient>,
-    pub config: Config,
-}
-
-// 从请求扩展中提取 tenant_id
-#[derive(Clone)]
-struct TenantId(String);
+use lingua_api_gateway::auth;
+use lingua_api_gateway::config::Config;
+use lingua_api_gateway::rate_limit::RateLimiter;
+use lingua_api_gateway::rest_api::create_rest_router;
+use lingua_api_gateway::scheduler_client::SchedulerClient;
+use lingua_api_gateway::session_proxy::handle_session_proxy;
+use lingua_api_gateway::tenant::TenantManager;
+use lingua_api_gateway::user_identity::AuthContext;
+use lingua_api_gateway::user_profile_repository::SqliteUserProfileRepository;
+use lingua_api_gateway::ws_api::handle_public_websocket;
+use lingua_api_gateway::AppState;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -46,49 +29,70 @@ async fn main() -> Result<()> {
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .init();
 
-    info!("启动 Lingua API Gateway...");
+    info!("启动 Lingua API Gateway / Web User Gateway...");
 
     let config = Config::load()?;
-    info!("配置加载成功: {:?}", config);
+    info!(
+        port = config.server.port,
+        scheduler_url = %config.scheduler.url,
+        profile_db = %config.persistence.user_profile_db_path,
+        correction_token_configured = config
+            .scheduler
+            .correction_api_token
+            .as_ref()
+            .map(|t| !t.is_empty())
+            .unwrap_or(false)
+            || std::env::var("LINGUA_CORRECTION_API_TOKEN").is_ok(),
+        "配置加载成功 (secrets redacted)"
+    );
 
     let tenant_manager = Arc::new(TenantManager::new());
     let rate_limiter = Arc::new(RateLimiter::new());
     let scheduler_client = Arc::new(SchedulerClient::new(config.scheduler.url.clone()));
+    let profile_repo = Arc::new(SqliteUserProfileRepository::open(
+        &config.persistence.user_profile_db_path,
+    )?);
+    let lexicon = lingua_api_gateway::lexicon_readonly::try_open_lexicon(
+        config.persistence.lexicon_db_path.as_deref(),
+    );
 
     let app_state = AppState {
         tenant_manager,
         rate_limiter,
         scheduler_client,
+        profile_repo,
+        lexicon,
         config: config.clone(),
     };
 
-    // 启动时创建一个默认租户（方便本地快速跑通）
-    // - 优先使用环境变量 LINGUA_API_KEY
-    // - 如果未设置，则自动生成一个随机 key，并在日志中打印出来
-    let default_api_key = std::env::var("LINGUA_API_KEY").unwrap_or_else(|_| Uuid::new_v4().to_string());
+    let default_api_key =
+        std::env::var("LINGUA_API_KEY").unwrap_or_else(|_| Uuid::new_v4().to_string());
     let default_tenant = app_state
         .tenant_manager
         .create_tenant("default".to_string(), default_api_key.clone())
         .await;
     info!(
-        "默认租户已创建: tenant_id={}, api_key={} (仅用于开发/测试)",
-        default_tenant.tenant_id, default_api_key
+        "默认租户已创建: tenant_id={}, api_key_len={} (api_key redacted; 仅开发/测试)",
+        default_tenant.tenant_id,
+        default_api_key.len()
     );
 
-    // 需要鉴权的路由（REST + WS）
     let protected = Router::new()
-        .route("/v1/stream", get(handle_ws))
+        .route("/v1/stream", get(handle_ws_stream))
+        .route("/v1/session", get(handle_ws_session))
         .merge(create_rest_router())
-        .route_layer(middleware::from_fn_with_state(app_state.clone(), auth::auth_middleware));
+        .route_layer(middleware::from_fn_with_state(
+            app_state.clone(),
+            auth::auth_middleware,
+        ));
 
-    // 不需要鉴权的路由
     let app = Router::new()
         .route("/health", get(health_check))
         .merge(protected)
         .with_state(app_state);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
-    info!("API Gateway 监听地址: {}", addr);
+    info!("API Gateway 监听地址: {} (session proxy: /v1/session)", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
     axum::serve(listener, app).await?;
@@ -96,7 +100,7 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-async fn handle_ws(
+async fn handle_ws_stream(
     ws: WebSocketUpgrade,
     State(state): State<AppState>,
     axum::extract::Extension(tenant_id): axum::extract::Extension<String>,
@@ -104,7 +108,14 @@ async fn handle_ws(
     ws.on_upgrade(move |socket| handle_public_websocket(socket, tenant_id, state))
 }
 
+async fn handle_ws_session(
+    ws: WebSocketUpgrade,
+    State(state): State<AppState>,
+    axum::extract::Extension(auth): axum::extract::Extension<AuthContext>,
+) -> Response {
+    ws.on_upgrade(move |socket| handle_session_proxy(socket, auth, state))
+}
+
 async fn health_check() -> &'static str {
     "OK"
 }
-

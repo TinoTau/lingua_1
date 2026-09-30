@@ -359,6 +359,9 @@ async fn create_job_with_minimal_scheduler(
     
     let node_id = Some(node_id_str.clone());
 
+    // SessionBootstrap: once per session↔node (not every utterance)
+    crate::services::maybe_send_session_bootstrap(state, session_id, &node_id_str).await;
+
     if let Some(ref rt) = state.redis_runtime {
         use crate::services::SessionAffinityService;
         let affinity = SessionAffinityService::new(rt.clone());

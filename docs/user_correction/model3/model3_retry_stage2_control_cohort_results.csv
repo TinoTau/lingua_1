@@ -1,0 +1,7 @@
+cohortId,result,note
+A_ADEQUATE_LOCALSPAN,PASS,prior localSpan queries remain members of window space
+B_CROSS_LOCALSPAN_WINDOW,PASS,便向/顺便向 now appear; were impossible under localSpan-only
+C_MULTIPATH,PASS,no preferred-path collapse; region-level window space; owner via overlappingOriginalSpans
+D_SINGLE_CHAR,PASS,R=1 → 1 query; Recall entrypoint still recallSpanTopKV2
+E_ANCHOR_ADJACENT,PASS,anchorCrossingCount=0; two R=1 regions
+F_KEEP_ADJACENT,PASS,keepCrossingCount=0; queries confined to RetryRegion

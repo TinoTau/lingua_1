@@ -1,0 +1,24 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_LOSS_WEIGHT_AND_EFFECTIVE_GRADIENT_AUDIT",
+    "verdict": "PASS_FINDING",
+    "primary_root_cause": "CONFIG_DRIFT_PLUS_DOUBLE_COUNTING",
+    "recommended_next_phase": "MODEL3_V1_OBJECTIVE_REBALANCE",
+    "dataset_changed": false,
+    "strict_contract_changed": false,
+    "hard_keep_contract_changed": false,
+    "runtime_changed": false,
+    "tts": false,
+    "production_retry": false
+  },
+  "report_artifact_count": 4,
+  "report_artifact_count_le_10": true,
+  "unauthorized_training_parameter_drift": true,
+  "modified_file_inventory": [
+    "training/model3_dataset/train/audit_loss_weight_gradient.py",
+    "docs/user_correction/model3/Lingua_Model3_V1_Loss_Weight_Gradient_Audit_2026_08_25.md",
+    "docs/user_correction/model3/model3_v1_loss_gradient_audit_bundle.json",
+    "docs/user_correction/model3/model3_v1_loss_gradient_governance.json",
+    "docs/user_correction/model3/model3_v1_loss_ablation_comparison.csv"
+  ]
+}

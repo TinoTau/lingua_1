@@ -1,0 +1,15 @@
+{
+  "ts": "2026-08-23",
+  "tone_evidence_chain": "raw audio → ASR segments → buildWordTimeSpans → AcousticToneSlice[] → recallTopKForWindows (acousticTonePattern) → rebindToneForFineSpan",
+  "acoustic_vs_text_derived": {
+    "acoustic_tone": "AcousticToneSlice + toneRebindTrace.acousticTonePattern on PathFineSpan",
+    "text_derived_pinyin": "windowPinyinKey from syllable stream / IME coordinate",
+    "text_derived_fake_tone_risk": "LOW if Model3 uses toneRebindTrace + candidate tone fields; RISK if only dictionary tone from ASR surface"
+  },
+  "tone_provenance_risk": "PARTIAL — must contract-label pinyin/tone fields as ACOUSTIC vs TEXT_DERIVED",
+  "asr_fw_evidence": {
+    "asr_confidence": "PARTIAL via segments",
+    "fw_alignment": "PARTIAL via wordTimeSpans",
+    "per_span_native": "ABSENT — join required"
+  }
+}

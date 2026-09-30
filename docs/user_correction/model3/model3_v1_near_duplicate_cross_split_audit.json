@@ -1,0 +1,10 @@
+{
+  "structural_signature_overlap": {
+    "train_dev": 2019,
+    "train_test": 2089,
+    "dev_test": 964
+  },
+  "note": "coarse structural signature; not exact sourceSentenceId (already 0 leakage)",
+  "generation_order": "group split by sourceSentenceId BEFORE variant generation (fixed after fix_v1_splits); surfacePairKey no longer overrides split",
+  "seed_label_correlation": "SEED used for sampling; no evidence seed encodes label"
+}

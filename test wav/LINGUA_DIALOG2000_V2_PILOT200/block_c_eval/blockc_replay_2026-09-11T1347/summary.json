@@ -1,0 +1,508 @@
+{
+  "PHASE": "LINGUA_DIALOG2000_V2_PILOT200_BLOCK_C_PROFILE_AWARE_EVALUATOR_DEVELOPMENT",
+  "DATASET_BUILD_ID": "build_20260911_091806",
+  "BLOCK_B_BATCH_ID": "blockb_2026-09-11T1021",
+  "REPLAY_BATCH_ID": "replay_2026-09-11T1347",
+  "EVALUATOR_VERSION": "pilot200-block-c-evaluator-v1",
+  "INPUT_FINGERPRINTS": {
+    "dataset_manifest_sha256": "1425b7ae7a84f1d6fe69ec4f86d0da3dc9acbb471e58b26af20e248d4ab8822c",
+    "cases_sha256": "f8a4ae13f6bb9584f020c0f1a94a16f6694f7b059edd430acd48849583b72c57",
+    "replay_executions_sha256": "64deb7793c149f4f3f9107913dcb979ac07d544708cb0c713b810f9c36901e3e",
+    "block_b_executions_sha256": "da76f24fed8a81e50f1c77eba9f348a9d69f506023ebe5be079342e027d999b8"
+  },
+  "TOTAL_CASES": 200,
+  "RAW_NORMALIZED_CORRECT_COUNT": 20,
+  "RAW_REPAIR_NEEDED_COUNT": 179,
+  "NO_ASR_CONTENT_COUNT": 1,
+  "RAW_NORMALIZED_CER": 0.1885480486726944,
+  "CASE_ACCOUNTING": {
+    "TOTAL": 200,
+    "NO_ASR_CONTENT": 1,
+    "RAW_ALREADY_CORRECT": 20,
+    "RAW_REPAIR_NEEDED": 179,
+    "TARGET_NOT_IN_LEXICON": 0,
+    "INVALID_PROFILE_CONTROL": 0,
+    "ASR_RESILIENT_CASE": 9,
+    "MODEL2_EFFECT_ELIGIBLE": 148,
+    "BASE_ALREADY_HAS_TARGET": "EVIDENCE_GAP_NOT_COMPUTABLE",
+    "NOTE": "Eligible uses repair-needed ∩ lexicon ∩ target-case ∩ relation ∩ wrong-control ∩ Model2 invoked; base-lacks-target not applied (gap)."
+  },
+  "PRIMARY_FUNNEL": {
+    "pilot_cases": 200,
+    "raw_repair_needed": 179,
+    "lexicon_eligible_among_repair_needed": 148,
+    "target_cases_among_those": 148,
+    "model2_effect_eligible": 148,
+    "model2_useful_expansion": 0,
+    "useful_expansion_rate": {
+      "numerator": 0,
+      "denominator": 148,
+      "rate": 0
+    },
+    "model2_no_expansion_among_eligible": 148,
+    "final_correct_better_than_no_among_eligible": 0,
+    "NOTE_BASE_LACKS_TARGET": "STEP_SKIPPED_EVIDENCE_GAP"
+  },
+  "MODEL2_EFFECT_ELIGIBLE_CASE_COUNT": 148,
+  "BASE_ALREADY_HAS_TARGET_COUNT": null,
+  "BASE_ALREADY_HAS_TARGET_STATUS": "EVIDENCE_GAP",
+  "USEFUL_EXPANSION_NO": 0,
+  "USEFUL_EXPANSION_CORRECT": 0,
+  "USEFUL_EXPANSION_WRONG": 0,
+  "USEFUL_EXPANSION_CORRECT_RATE": {
+    "numerator": 0,
+    "denominator": 148,
+    "rate": 0
+  },
+  "FALSE_EXPANSION_NO": 0,
+  "FALSE_EXPANSION_CORRECT": 0,
+  "FALSE_EXPANSION_WRONG": 0,
+  "FALSE_EXPANSION_NOTE": "False expansion by SSOT requires candidate membership; with p_added=d_added=0 across conditions, attributed false expansion = 0. Item-level false expansion not computable if additions>0 without frozen lists.",
+  "NO_EXPANSION_AMONG_ELIGIBLE": 148,
+  "P_ACTION_NO": 0,
+  "P_ACTION_CORRECT": 0,
+  "P_ACTION_WRONG": 0,
+  "D_ACTION_NO": 0,
+  "D_ACTION_CORRECT": 0,
+  "D_ACTION_WRONG": 0,
+  "MODEL2_PERMISSION_CONTRACT_VIOLATION_COUNT": 0,
+  "NO_PROFILE_FINAL_CER": 0.19260530842933093,
+  "CORRECT_PROFILE_FINAL_CER": 0.19260530842933093,
+  "WRONG_PROFILE_FINAL_CER": 0.19260530842933093,
+  "PROFILE_GAIN_CER": 0,
+  "WRONG_PROFILE_DELTA_CER": 0,
+  "CORRECT_BETTER_THAN_NO": 0,
+  "CORRECT_SAME_AS_NO": 200,
+  "CORRECT_WORSE_THAN_NO": 0,
+  "WRONG_BETTER_THAN_NO": 0,
+  "WRONG_SAME_AS_NO": 200,
+  "WRONG_WORSE_THAN_NO": 0,
+  "THREE_WAY": {
+    "CORRECT_UNIQUE_BEST": 0,
+    "CORRECT_TIED_BEST": 0,
+    "NO_UNIQUE_BEST": 0,
+    "WRONG_UNIQUE_BEST": 0,
+    "ALL_EQUAL": 200
+  },
+  "OUTCOME_COUNTS_BY_CONDITION": {
+    "NO_PROFILE": {
+      "ASR_REPAIR_UNCHANGED": 180,
+      "ALREADY_CORRECT_NORMALIZED": 20
+    },
+    "CORRECT_PROFILE": {
+      "ASR_REPAIR_UNCHANGED": 180,
+      "ALREADY_CORRECT_NORMALIZED": 20
+    },
+    "WRONG_PROFILE": {
+      "ASR_REPAIR_UNCHANGED": 180,
+      "ALREADY_CORRECT_NORMALIZED": 20
+    }
+  },
+  "USEFUL_EXPANSION_WITH_FINAL_GAIN": 0,
+  "USEFUL_EXPANSION_WITH_NO_FINAL_GAIN": 0,
+  "USEFUL_EXPANSION_WITH_REGRESSION": 0,
+  "CLEAN_CASE_COUNT": 42,
+  "CLEAN_CORRECT_PRESERVED": {
+    "NO": 11,
+    "CORRECT": 11,
+    "WRONG": 11
+  },
+  "CLEAN_REGRESSION": {
+    "NO": 0,
+    "CORRECT": 0,
+    "WRONG": 0
+  },
+  "CLEAN_FALSE_EXPANSION": {
+    "NO": 0,
+    "CORRECT": 0,
+    "WRONG": 0
+  },
+  "CANDIDATE_CAP_AUDIT": {
+    "CANDIDATE_CAP_MAX_OWNER": "path_assembly_candidate_max ← dialog200_path_trace[].assembly.sentence_count (path assembly / KenLM path sentence candidates), NOT Model2 union size",
+    "REPLAY_SUMMARY_CANDIDATE_CAP_MAX": 1,
+    "NOTE": "Replay runner used Array.isArray(base_candidates) against compactCandidates {count,items} → base/union counts frozen as 0 (schema mismatch). p_added/d_added from model2_summary remain usable.",
+    "MODEL2_UNION_COUNT_FROZEN": "UNRELIABLE_ALWAYS_ZERO_DUE_TO_SCHEMA_MISMATCH",
+    "P_D_ACTION_COUNTS_FROZEN": "USABLE_FROM_model2_summary.p_added/d_added"
+  },
+  "CANDIDATE_P50": 1,
+  "CANDIDATE_P95": 1,
+  "CANDIDATE_MAX": 1,
+  "CANDIDATE_OVER16": 0,
+  "CANDIDATE_FIELD_NOTE": "Stats are over path_assembly_candidate_max (assembly sentence candidates), not Model2 union.",
+  "PROFILE_STAGE_METRICS": {
+    "P0": {
+      "case_count": 42,
+      "eligible": 0,
+      "p_actions_correct": 0,
+      "d_actions_correct": 0,
+      "useful_expansion": 0,
+      "no_expansion": 0,
+      "final_cer_correct": 0.11594794094794095,
+      "correct_better_than_no": 0,
+      "correct_worse_than_no": 0
+    },
+    "P1": {
+      "case_count": 52,
+      "eligible": 50,
+      "p_actions_correct": 0,
+      "d_actions_correct": 0,
+      "useful_expansion": 0,
+      "no_expansion": 50,
+      "final_cer_correct": 0.21332938535273524,
+      "correct_better_than_no": 0,
+      "correct_worse_than_no": 0
+    },
+    "P2": {
+      "case_count": 53,
+      "eligible": 47,
+      "p_actions_correct": 0,
+      "d_actions_correct": 0,
+      "useful_expansion": 0,
+      "no_expansion": 47,
+      "final_cer_correct": 0.23184733280168177,
+      "correct_better_than_no": 0,
+      "correct_worse_than_no": 0
+    },
+    "P3": {
+      "case_count": 53,
+      "eligible": 51,
+      "p_actions_correct": 0,
+      "d_actions_correct": 0,
+      "useful_expansion": 0,
+      "no_expansion": 51,
+      "final_cer_correct": 0.19377757526832656,
+      "correct_better_than_no": 0,
+      "correct_worse_than_no": 0
+    }
+  },
+  "RELATION_METRICS": {
+    "n_l": {
+      "case_count": 33,
+      "eligible": 32,
+      "useful_correct": 0,
+      "no_expansion_eligible": 32,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 32,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "in_ing": {
+      "case_count": 13,
+      "eligible": 13,
+      "useful_correct": 0,
+      "no_expansion_eligible": 13,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 13,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "null": {
+      "case_count": 42,
+      "eligible": 0,
+      "useful_correct": 0,
+      "no_expansion_eligible": 0,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "rate": null
+      },
+      "profile_gain_cer": 0
+    },
+    "z_zh": {
+      "case_count": 20,
+      "eligible": 17,
+      "useful_correct": 0,
+      "no_expansion_eligible": 17,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 17,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "sh_s": {
+      "case_count": 39,
+      "eligible": 35,
+      "useful_correct": 0,
+      "no_expansion_eligible": 35,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 35,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "eng_en": {
+      "case_count": 20,
+      "eligible": 20,
+      "useful_correct": 0,
+      "no_expansion_eligible": 20,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 20,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "h_f": {
+      "case_count": 13,
+      "eligible": 13,
+      "useful_correct": 0,
+      "no_expansion_eligible": 13,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 13,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "ch_c": {
+      "case_count": 20,
+      "eligible": 18,
+      "useful_correct": 0,
+      "no_expansion_eligible": 18,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 18,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    }
+  },
+  "DOMAIN_METRICS": {
+    "general_daily": {
+      "case_count": 43,
+      "eligible": 30,
+      "useful_correct": 0,
+      "no_expansion_eligible": 30,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 30,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "software_meeting": {
+      "case_count": 33,
+      "eligible": 21,
+      "useful_correct": 0,
+      "no_expansion_eligible": 21,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 21,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "medical": {
+      "case_count": 30,
+      "eligible": 27,
+      "useful_correct": 0,
+      "no_expansion_eligible": 27,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 27,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "food_cafe": {
+      "case_count": 36,
+      "eligible": 29,
+      "useful_correct": 0,
+      "no_expansion_eligible": 29,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 29,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "travel_hotel": {
+      "case_count": 32,
+      "eligible": 21,
+      "useful_correct": 0,
+      "no_expansion_eligible": 21,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 21,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "retail_service": {
+      "case_count": 26,
+      "eligible": 20,
+      "useful_correct": 0,
+      "no_expansion_eligible": 20,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 20,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    }
+  },
+  "USER_METRICS": {
+    "U001": {
+      "case_count": 40,
+      "eligible": 32,
+      "useful_correct": 0,
+      "no_expansion_eligible": 32,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 32,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "U002": {
+      "case_count": 40,
+      "eligible": 29,
+      "useful_correct": 0,
+      "no_expansion_eligible": 29,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 29,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "U003": {
+      "case_count": 40,
+      "eligible": 33,
+      "useful_correct": 0,
+      "no_expansion_eligible": 33,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 33,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "U004": {
+      "case_count": 40,
+      "eligible": 31,
+      "useful_correct": 0,
+      "no_expansion_eligible": 31,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 31,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    },
+    "U005": {
+      "case_count": 40,
+      "eligible": 23,
+      "useful_correct": 0,
+      "no_expansion_eligible": 23,
+      "correct_better": 0,
+      "correct_worse": 0,
+      "useful_expansion_rate": {
+        "numerator": 0,
+        "denominator": 23,
+        "rate": 0
+      },
+      "profile_gain_cer": 0
+    }
+  },
+  "HOLDOUT_AGGREGATE": {
+    "case_count": 20,
+    "raw_repair_needed": 19,
+    "eligible": 15,
+    "useful_expansion": {
+      "numerator": 0,
+      "denominator": 15,
+      "rate": 0
+    },
+    "no_expansion_among_eligible": 15,
+    "profile_gain_cer": 0,
+    "wrong_profile_delta_cer": 0,
+    "final_cer": {
+      "NO": 0.3039920563716203,
+      "CORRECT": 0.3039920563716203,
+      "WRONG": 0.3039920563716203
+    }
+  },
+  "BLOCK_B_FULL_AUDIO_CORROBORATION": {
+    "FULL_AUDIO_NO_PROFILE_FINAL_CER": 0.19260530842933093,
+    "FULL_AUDIO_CORRECT_PROFILE_FINAL_CER": 0.2705427455833472,
+    "FULL_AUDIO_WRONG_PROFILE_FINAL_CER": 0.1915438868047155,
+    "RAW_ASR_STABLE_CASE_COUNT": 118,
+    "RAW_ASR_VARIANCE_CASE_COUNT": 82,
+    "NOTE": "Block B is FULL_AUDIO corroboration only; variance cases must not claim profile causality."
+  },
+  "BLOCK_B_STABLE_SUBSET_CORROBORATION": {
+    "case_count": 118,
+    "direction_agree_replay": 0,
+    "direction_disagree_replay": 0,
+    "direction_both_same": 118,
+    "NOTE": "Compares CORRECT vs NO distance direction only; finals need not be identical (Tone path differs)."
+  },
+  "TONE_REPLAY_LIMITATION": "Replay Tone path = NOT_INVOKED; valid for controlled profile attribution, not bit-identical full-audio post-ASR.",
+  "EVIDENCE_GAPS": [
+    "Frozen compact Model2 traces lack base_candidates.items / after_model2_candidates.items / introduced_term_ids — SSOT useful/false expansion by candidate membership cannot be fully verified when additions>0.",
+    "BASE_ALREADY_HAS_TARGET cannot be proven from frozen artifacts (base set not stored).",
+    "Replay Tone path NOT_INVOKED (no asrSegments/acousticToneSlices in Block B dumps)."
+  ],
+  "MODEL2_EXPANSION_VERDICT": "MODEL2_EXPANSION_NOT_OBSERVED",
+  "FINAL_REPAIR_CONVERSION_VERDICT": "FINAL_REPAIR_CONVERSION_NOT_APPLICABLE_NO_USEFUL_EXPANSION",
+  "verdict": "MODEL2_PROFILE_EFFECT_NOT_OBSERVED",
+  "ONE_NEXT_OWNER": "MODEL2_PROFILE_PERMISSION / P ACTION",
+  "ONE_NEXT_PHASE": "USER_REVIEW_BLOCK_C_THEN_ONE_OWNER_DELTA",
+  "EVALUATOR_ACCEPTANCE": {
+    "INPUT_IDENTITIES_VERIFIED": true,
+    "NO_RUNTIME_MUTATION": true,
+    "NO_PIPELINE_REEXECUTION": true,
+    "CASE_ACCOUNTING_COMPLETE": true,
+    "DENOMINATORS_EXPLICIT": true,
+    "USEFUL_EXPANSION_DEFINITION_MATCHES_SSOT": true,
+    "FALSE_EXPANSION_DEFINITION_MATCHES_SSOT": true,
+    "NORMALIZED_QUALITY_LOGIC_REUSED": true,
+    "REPLAY_AND_BLOCK_B_EVIDENCE_SEPARATED": true,
+    "HOLDOUT_GOVERNANCE": true,
+    "DETERMINISTIC_REPLAY": true,
+    "BUILD_STATUS": "PASS"
+  }
+}

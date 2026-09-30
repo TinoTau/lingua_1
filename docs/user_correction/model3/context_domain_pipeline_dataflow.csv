@@ -1,0 +1,17 @@
+stage,HAS_CONTEXT,HAS_COARSE_DOMAIN,HAS_CANDIDATE_DOMAIN_TAGS,HAS_PATH_DOMAIN_HYPOTHESIS,CAN_PRUNE_PATH,CAN_EXPAND_SEARCH,CAN_DROP_DOMAIN,CAN_CREATE_DOMAIN_BUCKET,notes
+ASR,NO,NO,NO,NO,NO,NO,NO,NO,Raw text/audio only
+FineSpan_lexical_windows,NO,NO,NO,NO,NO,NO,NO,NO,Syllable windows 1..5; no domain prune of legal windows (Lattice forbids)
+Base_Exact_Recall,NO,NO,YES,NO,NO,PARTIAL,NO,NO,Lexicon may attach term_domain_tags on hits; recall expansion ≠ path expansion
+Model2_expansion,PARTIAL,PARTIAL,YES,NO,NO,YES,NO,NO,User-conditioned P/D queries; may use profile/domainIds for retrieval; does not prune SegmentationPath
+candidate_merge,NO,NO,YES,NO,NO,NO,NO,NO,Base+profile merge by termId pre-LexicalEdge
+LexicalEdge,NO,NO,YES,NO,NO,NO,NO,NO,Candidates carry domains[] but edge graph is geometry+candidates
+segmentation_enumeration,NO,NO,AVAILABLE_BUT_NOT_CONSUMED,NO,NO,NO,NO,NO,DAG complete-path enum; domain tags present on edge candidates but unused
+structural_pruning,NO,NO,AVAILABLE_BUT_NOT_CONSUMED,NO,YES,NO,NO,NO,ONLY structural comparator + numeric PROBE caps; FORBIDDEN to use Domain Vote/SameDomain/KenLM
+PathFineSpan,NO,NO,YES,NO,NO,NO,NO,NO,1:1 from selected LexicalEdge on retained paths
+Domain_Vote,NO,NO,YES,YES,NO,NO,YES,YES,FIRST path-level domain hypothesis; base does not vote; retainedDomains / insufficientEvidence
+Anchor,NO,NO,YES,YES,NO,NO,NO,NO,Anchor-conditioned; does not select domain/path budget
+Model3,NO,NO,YES,YES,NO,NO,NO,NO,KEEP/RETRY only; not path/domain selector
+Retry_Stage2,NO,NO,YES,YES,NO,PARTIAL,NO,NO,RetryRegion windows; not path-budget expansion
+SameDomain,NO,NO,YES,YES,NO,NO,YES,YES,Per retainedDomains buckets + Base; excludes cross-domain domain_terms for bucket
+Assembly,NO,NO,YES,YES,NO,NO,NO,NO,Sentence combinations within buckets
+KenLM,NO,NO,NO,NO,NO,NO,NO,NO,Cross-path sentence scoring only; no domain scores in KenLM DTO

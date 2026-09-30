@@ -1,0 +1,247 @@
+{
+  "artifact": "LINGUA_DIALOG200_REAL_AUDIO_REPLAY_CAPABILITY_MATRIX_V1",
+  "mode": "READ_ONLY_FEASIBILITY_AUDIT",
+  "primary_question": "Frozen_ASR_plus_WAV_to_Tone_Base_Model2_downstream_without_ASR_rerun",
+  "primary_answer": "NO",
+  "feasibility_class": "PARTIAL_TEXT_PATH_FINAL__MISSING_ACOUSTIC",
+  "result_enum": "E_ASR_RERUN_REQUIRED",
+  "q15_recommendation": "C_ASR_RERUN_REQUIRED_THEN_A_BUILD_MINIMAL_REAL_AUDIO_REPLAY",
+  "production_change_required": false,
+  "evaluation_ssot": "EVALUATION_SSOT_V1",
+  "stages": [
+    {
+      "stage": "Frozen_ASR",
+      "required_evidence": ["caseId", "rawMergedAsrText"],
+      "current_evidence": "AVAILABLE",
+      "replay_capability": "READY_FOR_TEXT",
+      "production_equivalent": true,
+      "blocker": null,
+      "required_delta": "NONE"
+    },
+    {
+      "stage": "Timestamp",
+      "required_evidence": ["SegmentInfo.words[].start", "SegmentInfo.words[].end"],
+      "current_evidence": "ABSENT",
+      "replay_capability": "NOT_POSSIBLE",
+      "production_equivalent": false,
+      "blocker": "FROZEN_DUMP_OMITS_ASR_SEGMENTS",
+      "required_delta": "CAPTURE_PERSIST_asrSegments_ON_FULL_AUDIO_RUN",
+      "timestamp_requirement": "FW_WORD",
+      "timestamp_available": "ABSENT",
+      "timestamp_equivalence": "ABSENT",
+      "authority": {
+        "file": "electron_node/services/faster_whisper_vad/tone_module/inference.py",
+        "function": "run_tone_inference",
+        "align_file": "electron_node/electron-node/main/src/fw-detector/tone-time-align.ts",
+        "align_function": "buildWordTimeSpans"
+      }
+    },
+    {
+      "stage": "Audio_Coordinate",
+      "required_evidence": ["wav_identity", "processed_audio_or_vad_map_or_frozen_slices"],
+      "current_evidence": "WAV_AVAILABLE_TIMESTAMPS_ABSENT",
+      "replay_capability": "UNKNOWN",
+      "production_equivalent": false,
+      "blocker": "NO_FROZEN_TIMESTAMPS;_VAD_MAY_REMAP_AXIS",
+      "required_delta": "FREEZE_slices_OR_processed_audio_WITH_segments",
+      "classification": "UNKNOWN"
+    },
+    {
+      "stage": "ToneSlice",
+      "required_evidence": ["acousticToneSlices_from_processed_audio_plus_word_times"],
+      "current_evidence": "ABSENT",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "NO_TIMESTAMPS_NO_FROZEN_SLICES",
+      "required_delta": "ASR_TONE_CAPTURE_LIKE_PILOT200"
+    },
+    {
+      "stage": "Tone",
+      "required_evidence": ["ToneSlice", "zh_language", "tone_checkpoint"],
+      "current_evidence": "CHECKPOINT_ON_DISK_SLICES_ABSENT",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "MISSING_SLICES_OR_TIMESTAMPS",
+      "required_delta": "CAPTURE_THEN_INJECT_OR_LIVE_FULL_AUDIO",
+      "tone_replay": "MISSING_EVIDENCE"
+    },
+    {
+      "stage": "Base_Recall",
+      "required_evidence": ["window_text", "pinyin", "acoustic_tone_pattern", "lexicon_db"],
+      "current_evidence": "TEXT_AND_DB_AVAILABLE_TONE_PATTERN_MISSING",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "BASE_TONE_EXACT_NOT_EVALUABLE_WITHOUT_TONE",
+      "required_delta": "RESTORE_TONE_THEN_CALL_PRODUCTION_RECALL",
+      "base_recall_replay": "MISSING_EVIDENCE",
+      "prefer": "HARNESS_CALLS_PRODUCTION_LOGIC"
+    },
+    {
+      "stage": "Model2_P",
+      "required_evidence": ["UserProfile.phonetic_bias", "WindowEvidence", "base_pool"],
+      "current_evidence": "PROFILE_BIAS_NOT_IN_DUMP_TONE_SHAPED_POOL_MISSING",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "P_FEATURE_FROM_PROFILE_NOT_FROZEN_PLUS_UPSTREAM_POOL",
+      "required_delta": "FREEZE_OR_INJECT_PROFILE_PLUS_TONE_BASE",
+      "model2_p_replay": "MISSING_EVIDENCE",
+      "p_feature_dependency_graph": {
+        "phonetic_bias": "MISSING_FROM_DIALOG200_DUMP",
+        "window_syllables_text": "RECOMPUTABLE_FROM_FROZEN_ASR",
+        "base_tone_exact_pool": "MISSING",
+        "tone_cnn_as_direct_p_presence": "NOT_PRODUCTION_SOURCE"
+      }
+    },
+    {
+      "stage": "Model2_D",
+      "required_evidence": ["long_term_domain_evidence", "personal_term_evidence", "WindowEvidence"],
+      "current_evidence": "PROFILE_FIELDS_NOT_IN_DUMP",
+      "replay_capability": "MINOR_HARNESS_REQUIRED",
+      "production_equivalent": false,
+      "blocker": "PROFILE_NOT_FROZEN_PER_CASE",
+      "required_delta": "PROFILE_INJECT_HARNESS",
+      "model2_d_replay": "MINOR_HARNESS_REQUIRED"
+    },
+    {
+      "stage": "LexicalEdge",
+      "required_evidence": ["Base_and_or_Model2_candidates"],
+      "current_evidence": "COMPACT_HISTORICAL_ONLY",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "UPSTREAM_ACOUSTIC",
+      "required_delta": "RESTORE_UPSTREAM",
+      "reimplement_risk": "HIGH_DRIFT_RISK"
+    },
+    {
+      "stage": "SegmentationPath",
+      "required_evidence": ["LexicalEdge[]"],
+      "current_evidence": "COMPACT_path_count_AVAILABLE_HISTORICAL",
+      "replay_capability": "MISSING_EVIDENCE",
+      "production_equivalent": false,
+      "blocker": "UPSTREAM",
+      "required_delta": "RESTORE_UPSTREAM"
+    },
+    {
+      "stage": "Path_Cap",
+      "required_evidence": ["multiple_SegmentationPath"],
+      "current_evidence": "HISTORICAL_MULTI_PATH_IN_DUMP",
+      "replay_capability": "READY_AFTER_UPSTREAM_RESTORE",
+      "production_equivalent": "CONDITIONAL",
+      "blocker": "ACOUSTIC_RESTORE_FIRST",
+      "required_delta": "NONE_TO_CAP_VALUE_KEEP_8_8",
+      "historical_path_count_distribution": { "1": 88, "2": 75, "3": 3, "4": 21, "6": 4, "8": 9 },
+      "track_a_reevaluable_after_restore": true
+    },
+    {
+      "stage": "Domain_Vote",
+      "required_evidence": ["path_specific_candidates"],
+      "current_evidence": "COMPACT_IN_DUMP",
+      "replay_capability": "PARTIAL_HISTORICAL",
+      "production_equivalent": false,
+      "blocker": "REEXEC_NEEDS_UPSTREAM",
+      "required_delta": "RESTORE_UPSTREAM"
+    },
+    {
+      "stage": "SameDomain",
+      "required_evidence": ["Domain_Vote"],
+      "current_evidence": "COMPACT_IN_DUMP",
+      "replay_capability": "PARTIAL_HISTORICAL",
+      "production_equivalent": false,
+      "blocker": "REEXEC_NEEDS_UPSTREAM",
+      "required_delta": "RESTORE_UPSTREAM"
+    },
+    {
+      "stage": "Assembly",
+      "required_evidence": ["paths_post_vote"],
+      "current_evidence": "assembly_sentences_IN_DUMP",
+      "replay_capability": "PARTIAL_HISTORICAL",
+      "production_equivalent": false,
+      "blocker": "REEXEC_NEEDS_UPSTREAM",
+      "required_delta": "RESTORE_UPSTREAM"
+    },
+    {
+      "stage": "KenLM",
+      "required_evidence": ["candidate_texts", "kenlm_trie"],
+      "current_evidence": "kenlm_top_texts_AVAILABLE_trie_PATH_IN_PROVENANCE",
+      "replay_capability": "PARTIAL_HISTORICAL",
+      "production_equivalent": false,
+      "blocker": "REEXEC_NEEDS_CANDIDATE_POOL",
+      "required_delta": "PIN_TRIE_IDENTITY"
+    },
+    {
+      "stage": "Model3",
+      "required_evidence": ["anchors", "Domain_Vote", "SameDomain", "Model2_evidence", "spans"],
+      "current_evidence": "COMPACT_DECISIONS_AVAILABLE",
+      "replay_capability": "PARTIAL",
+      "production_equivalent": false,
+      "blocker": "FULL_ACOUSTIC_CONDITIONED_REEVAL_NOT_EVALUABLE",
+      "required_delta": "RESTORE_UPSTREAM",
+      "model3_replay": "PARTIAL"
+    },
+    {
+      "stage": "Final",
+      "required_evidence": ["finalPostprocessText", "reference"],
+      "current_evidence": "AVAILABLE",
+      "replay_capability": "READY_FOR_FINAL_CORRECTNESS",
+      "production_equivalent": true,
+      "blocker": null,
+      "required_delta": "NONE"
+    }
+  ],
+  "downstream_replay_capability_matrix": {
+    "LexicalEdge": "MISSING_EVIDENCE",
+    "SegmentationPath": "MISSING_EVIDENCE",
+    "Path_Cap": "READY_AFTER_UPSTREAM_RESTORE",
+    "Domain_Vote": "PARTIAL_HISTORICAL",
+    "SameDomain": "PARTIAL_HISTORICAL",
+    "Assembly": "PARTIAL_HISTORICAL",
+    "Global_Candidate_Budget": "MISSING_EVIDENCE",
+    "KenLM": "PARTIAL_HISTORICAL",
+    "Model3": "PARTIAL",
+    "Final": "READY_FOR_FINAL_CORRECTNESS"
+  },
+  "asr_rerun_required": true,
+  "asr_rerun_drift_risks": [
+    "asr_model_version",
+    "decoder_params",
+    "hotword",
+    "nbest",
+    "timestamps",
+    "normalization",
+    "vad_preprocessing",
+    "tone_checkpoint_selection",
+    "lexicon_db_drift"
+  ],
+  "minimum_harness_delta": {
+    "production_behavior_change": "NONE",
+    "expected_loc_range": "150-400",
+    "new_files": ["dialog200_frozen_tone_evidence_schema_loader"],
+    "reuse": [
+      "run-fresh-dialog200-causal-reconciliation.mjs",
+      "run-pilot200-frozen-tone-evidence-full-capture.mjs",
+      "test-server pilot200_replay inject"
+    ],
+    "risk": "MEDIUM_CAPTURE_COMPLETENESS"
+  },
+  "annotation": {
+    "ANNOTATION_REQUIRED_FOR_BASELINE": "NO",
+    "ANNOTATION_REQUIRED_FOR_FIRST_LOSS": "YES"
+  },
+  "q_answers": {
+    "Q1": "YES",
+    "Q2": "YES_TEXT_ONLY",
+    "Q3": "NO",
+    "Q4": "UNKNOWN_N_A",
+    "Q5": "NO",
+    "Q6": "NOT_UNTIL_TONE",
+    "Q7": "NO",
+    "Q8": "PARTIAL",
+    "Q9": "YES_AFTER_RESTORE",
+    "Q10": "SEE_MATRIX",
+    "Q11": "YES",
+    "Q12": "NO_FOR_BASELINE",
+    "Q13": "CAPTURE_PLUS_INJECT_ADAPTER",
+    "Q14": "NO",
+    "Q15": "C_THEN_A"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "phase": "MODEL3_V1_V2_DATASET_TRAINING",
+  "date": "2026-08-29",
+  "checkpointVerdict": "V2_MODEL_PROMISING_NOT_ACCEPTED",
+  "failureClassification": "SYNTHETIC_TO_REAL_GENERALIZATION_GAP",
+  "readyForPromotion": false,
+  "productionPromotion": "NOT_READY_FOR_PROMOTION",
+  "recommendedNextPhase": "MODEL3_V2_REAL_DISTRIBUTION_DATA_EXPANSION",
+  "doNotExecuteNextPhase": true,
+  "modelId": "MODEL3_V2_REGION_LABEL_V1",
+  "seed": 2026082901,
+  "checkpointDir": "training/model3_dataset/model3_v2_region_label_v1_ckpts/seed_2026082901",
+  "weightsSha256": "d0291b7d4c4bdf6c7b5c3b5f0169e7b60840bae21caa41bec7c3bd711b3e029a",
+  "v1BaselinePreserved": true,
+  "v1Baseline": "MODEL3_SYNTHETIC_V1 seed_2026082520",
+  "training": {
+    "dataset": "MODEL3_V2_LABELED",
+    "class_weight_retry": 1.0,
+    "classWeightTunedAfterResults": false,
+    "thresholdTuned": false,
+    "architectureChanged": false
+  },
+  "datasetTest": {
+    "retry_precision": 0.9714,
+    "retry_recall": 0.9370,
+    "retry_f1": 0.9539,
+    "ALL_KEEP": false,
+    "OVER_RETRY": false
+  },
+  "realHeldOut": {
+    "eligible_cases": 13,
+    "v1_case_retry": 0,
+    "v2_case_retry": 1,
+    "v2_case_recall": 0.0769,
+    "v2_positive_margins_all_non_anchor": 2,
+    "false_retry_keep_controls": 0
+  },
+  "dialog200MainlineV2": "BLOCKED_BY_PRODUCTION_CHECKPOINT_HASH_LOCK",
+  "governance": {
+    "Model3ArchitectureChanged": false,
+    "FineSpanChanged": false,
+    "RetryChanged": false,
+    "RecallChanged": false,
+    "LatticeChanged": false,
+    "DomainVoteChanged": false,
+    "Model2Changed": false,
+    "AssemblyChanged": false,
+    "JobResultChanged": false,
+    "ProductionBusinessFilesModified": 0,
+    "CheckpointAutoPromoted": false
+  }
+}

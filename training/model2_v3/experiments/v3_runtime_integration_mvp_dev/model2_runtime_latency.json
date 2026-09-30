@@ -1,0 +1,8 @@
+{
+  "note": "Measured on Stage P host infer path in jest (~3s includes process spawn cold start per test isolation; production singleton load-once)",
+  "expected_warm_P50_ms": "5-30 model + lexicon queries",
+  "expected_warm_P95_ms": "lexeme-query dominated",
+  "cold_spawn_ms": "~3000 observed in test reset",
+  "sentence_cap_unchanged": 16,
+  "finespan_count_unchanged": true
+}

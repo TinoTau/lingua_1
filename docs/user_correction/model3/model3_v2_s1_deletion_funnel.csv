@@ -1,0 +1,27 @@
+stage,metric,value,unit
+D0,D0_alignment_delete_tag,636,unique_region_or_row
+D0,D0_ref_missing_insert,567,unique_region_or_row
+D1,CURRENT_SURFACE_CONTEXT_AVAILABLE,636,unique_region_or_row
+D1,NO_CURRENT_SURFACE,567,unique_region_or_row
+D2,NO_ELIGIBLE_FINESPAN,1182,unique_region_or_row
+D2,ELIGIBLE_FINESPAN,21,unique_region_or_row
+D3,NON_ANCHOR,21,unique_region_or_row
+D4,NO_REPAIRABLE_TARGET,1182,unique_region_or_row
+D4,RETRY,21,unique_region_or_row
+D5,RETRY_overlapping_delete_region,84,unique_region_or_row
+D5,all_span_labels,"{'KEEP': 36872, 'MASKED': 1600, 'RETRY': 2920}",unique_region_or_row
+units,unique_alignment_delete_regions,636,unique_region_or_row
+units,unique_ref_missing_insert_regions,201,unique_region_or_row
+units,utterances_with_delete_region,489,unique_region_or_row
+units,semantic_families_with_delete_region,489,unique_region_or_row
+units,utterances_with_ref_missing,199,unique_region_or_row
+units,semantic_families_with_ref_missing,199,unique_region_or_row
+units,unique_eligible_spans_delete_overlap,30,unique_region_or_row
+units,path_expanded_eligible_span_rows,84,unique_region_or_row
+units,multipath_utterances,611,unique_region_or_row
+units,total_path_samples,2757,unique_region_or_row
+subtype,MIXED_LENGTH_CHANGE_REGION,636,unique_region_or_row
+path_expanded,alignment_delete_regions,1676,2757 paths
+path_expanded,ref_missing_insert_regions,567,multipath inflated
+path_expanded,delete_region_with_retry,62,region×path
+path_expanded,retry_span_rows_overlapping_delete,84,span×path rows

@@ -1,0 +1,104 @@
+{
+  "n": 8,
+  "all_equal_share": true,
+  "cases": [
+    {
+      "surface": "中杯",
+      "tags": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "weights": {
+        "coffee": 0.3333333333333333,
+        "milk_tea": 0.3333333333333333,
+        "food_order": 0.3333333333333333
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "订单",
+      "tags": [
+        "food_order",
+        "meeting"
+      ],
+      "weights": {
+        "food_order": 0.5,
+        "meeting": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "文档",
+      "tags": [
+        "tech_ai",
+        "meeting"
+      ],
+      "weights": {
+        "tech_ai": 0.5,
+        "meeting": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "地铁",
+      "tags": [
+        "tourism_transport",
+        "transport"
+      ],
+      "weights": {
+        "tourism_transport": 0.5,
+        "transport": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "机场",
+      "tags": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "weights": {
+        "tourism_pickup": 0.5,
+        "tourism_transport": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "高铁",
+      "tags": [
+        "transport",
+        "tourism_transport"
+      ],
+      "weights": {
+        "transport": 0.5,
+        "tourism_transport": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "蛋糕",
+      "tags": [
+        "bakery",
+        "food_order"
+      ],
+      "weights": {
+        "bakery": 0.5,
+        "food_order": 0.5
+      },
+      "equal_share": true
+    },
+    {
+      "surface": "美式",
+      "tags": [
+        "coffee",
+        "food_order"
+      ],
+      "weights": {
+        "coffee": 0.5,
+        "food_order": 0.5
+      },
+      "equal_share": true
+    }
+  ]
+}

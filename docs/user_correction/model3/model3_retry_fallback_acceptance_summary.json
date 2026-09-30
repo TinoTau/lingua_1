@@ -1,0 +1,183 @@
+{
+  "phase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_ACCEPTANCE",
+  "generatedAt": "2026-09-04T12:05:37Z",
+  "beforeArtifact": "model3_retry_stage2_acceptance_after_raw.jsonl",
+  "afterArtifact": "model3_retry_fallback_acceptance_after_raw.jsonl",
+  "population": {
+    "utteranceCount": 200,
+    "errorOrIncompleteCount": 0,
+    "RetryRegionCreatedUtterances": 196,
+    "resegmentOkRegionCount": 168,
+    "fallbackRegionCount": 384,
+    "multipathRetryUtteranceCount": 100,
+    "fallbackUsableRgt0": 384
+  },
+  "fallbackReasons": {
+    "EMPTY_DOMAIN_SCOPE": 384
+  },
+  "fallbackWindowContract": {
+    "fallbackRegionCount": 384,
+    "fallbackUsableRegionCount": 384,
+    "expectedWindowCount": 2463,
+    "actualWindowCount": 2463,
+    "missingWindowCount": 0,
+    "extraWindowCount": 0,
+    "duplicateLogicalQueryCount": 0,
+    "outOfRegionWindowCount": 0,
+    "fallbackGeometrySourceOkCount": 384,
+    "fallbackGeometrySourceBadCount": 0
+  },
+  "crossFineSpan": {
+    "crossFineSpanFallbackRegionCount": 282,
+    "crossFineSpanPotentialWindowCount": 1260,
+    "crossFineSpanActuallyQueriedCount": 1260,
+    "crossFineSpanWindowsWithRecallHits": 0
+  },
+  "resegmentOkParity": {
+    "fallbackRegionCount": 384,
+    "fallbackRegionsFlippedToSuccess": 0
+  },
+  "delta1Parity": {
+    "successRegionsCompared": 168,
+    "DELTA1_SUCCESS_PATH_BEHAVIOR_CHANGE_COUNT": 0,
+    "missingWindowCount": 0,
+    "extraWindowCount": 0,
+    "outOfRegionWindowCount": 0
+  },
+  "ownership": {
+    "fallbackQueriesWithRecallHits": 686,
+    "fallbackCandidatesProduced": 687,
+    "existingOwnerBindings": 686,
+    "missingOwnerBindings": 0,
+    "NEW_CANDIDATE_OWNER_TYPE_COUNT": 0,
+    "status": "OBSERVED",
+    "crossFineSpanRecallUtility": "QUERY_GEOMETRY_RESTORED_RECALL_UTILITY_UNPROVEN"
+  },
+  "domainMultipathBarriers": {
+    "secondDomainVoteCount": 0,
+    "model3ReinvokedCount": 0,
+    "preferredPathCollapseCount": 0,
+    "crossPathOwnershipContaminationCount": 0,
+    "outOfRetryRegionQueryCount": 0,
+    "anchorCrossingCount": 0,
+    "unrelatedKeepCrossingCount": 0
+  },
+  "singleChar": {
+    "fallbackSingleCharQueryCount": 1115,
+    "singleCharContractViolationCount": 0
+  },
+  "performance": {
+    "classification": "NONBLOCKING_INCREASE",
+    "rows": [
+      {
+        "metric": "utterancePipelineMs_p50",
+        "value": 9958
+      },
+      {
+        "metric": "utterancePipelineMs_p95",
+        "value": 22853
+      },
+      {
+        "metric": "utterancePipelineMs_max",
+        "value": 37134
+      },
+      {
+        "metric": "maxPostRetryWorking",
+        "value": 32
+      },
+      {
+        "metric": "p50PostRetryWorking",
+        "value": 13
+      },
+      {
+        "metric": "p95PostRetryWorking",
+        "value": 25
+      },
+      {
+        "metric": "maxRawRetryCandidates",
+        "value": 8
+      },
+      {
+        "metric": "maxMergedRetryCandidates",
+        "value": 0
+      },
+      {
+        "metric": "maxCrossPathCandidateSentenceCount",
+        "value": 6
+      },
+      {
+        "metric": "queryAmplificationRatio",
+        "value": 2.2933
+      },
+      {
+        "metric": "beforeFallbackQueryCount",
+        "value": 1074
+      },
+      {
+        "metric": "afterFallbackQueryCount",
+        "value": 2463
+      },
+      {
+        "metric": "fallbackExpectedWindowCount",
+        "value": 2463
+      },
+      {
+        "metric": "uniqueQueryKeys",
+        "value": 3351
+      },
+      {
+        "metric": "recallInvocationCount",
+        "value": 3351
+      }
+    ]
+  },
+  "candidateBudget": {
+    "maxCrossPathCandidateSentenceCount": 6,
+    "crossPathOver16Cases": 0
+  },
+  "finalOutput": {
+    "finalUnchanged": 113,
+    "finalImproved": 0,
+    "finalRegressed": 0,
+    "finalChangedNeutral": 87,
+    "baselineCorrectRegressed": 0,
+    "CAUSALLY_COMPARABLE": 109,
+    "ASR_CONTAMINATED": 91
+  },
+  "hardGates": {
+    "fallback_missingWindowCount": 0,
+    "fallback_extraWindowCount": 0,
+    "fallback_outOfRegionWindowCount": 0,
+    "crossFineSpan_equal": true,
+    "crossFineSpanPotential": 1260,
+    "crossFineSpanQueried": 1260,
+    "fallbackRegionsFlippedToSuccess": 0,
+    "DELTA1_SUCCESS_PATH_BEHAVIOR_CHANGE_COUNT": 0,
+    "missingOwnerBindings": 0,
+    "NEW_CANDIDATE_OWNER_TYPE_COUNT": 0,
+    "secondDomainVoteCount": 0,
+    "crossPathOver16Cases": 0,
+    "singleCharContractViolationCount": 0,
+    "FIRST_UNEXPECTED_CHANGE_COUNT": 0
+  },
+  "hardGatesPass": true,
+  "FIRST_PASS_FINESPAN_FALLBACK_ROLE": "OWNERSHIP_SUPPORT_ONLY_NOT_QUERY_AUTHORITY",
+  "staleArtifactExcluded": {
+    "path": "model3_v1_retry_region_controlled_validation.json",
+    "status": "STALE_INVALID_FOR_CURRENT_ACCEPTANCE"
+  },
+  "verdict": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_ACCEPTANCE_PASS_WITH_NONBLOCKING_FINDINGS",
+  "nextPhase": "MODEL3_RETRY_POST_DELTA_RECONCILIATION",
+  "DECISION_REQUIRED_BEFORE_FREEZE": "EMPTY",
+  "freeze": {
+    "DELTA_RQ_FALLBACK_BOUNDARY_LOCK": "RESOLVED_ACCEPTED",
+    "RETRY_FALLBACK_QUERY_GEOMETRY": "LEGAL_BOUNDED_RETRY_REGION_WINDOW_SPACE_1_TO_5",
+    "FIRST_PASS_FINESPAN_FALLBACK_ROLE": "OWNERSHIP_SUPPORT_ONLY_NOT_QUERY_AUTHORITY",
+    "DELTA1": "RESOLVED_ACCEPTED_CLOSED"
+  },
+  "buildRepairRuntimeParity": {
+    "RUNTIME_LOGIC_CHANGE_COUNT": 0,
+    "typeOnly": true
+  },
+  "governanceGate": "DEVELOPMENT_PASS requires npm run build:main PASS"
+}

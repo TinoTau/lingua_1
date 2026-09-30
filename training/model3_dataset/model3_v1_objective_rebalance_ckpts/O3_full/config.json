@@ -1,0 +1,27 @@
+{
+  "class_weight_retry": 1.0,
+  "auto_class_weight_formula": false,
+  "no_auto_formula": true,
+  "explicit_source": "MODEL3_V1_OBJECTIVE_REBALANCE_HARDCODED_BASELINE",
+  "pair_loss_enabled": true,
+  "pair_loss_type": "PURE_MARGIN",
+  "pair_ce_enabled": false,
+  "pair_lambda": 0.2,
+  "pair_margin": 0.25,
+  "sampling_view_id": "BALANCE_D_30_30_25_15",
+  "sampling_view": {
+    "STRICT": 0.3,
+    "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+    "NATURAL": 0.25,
+    "NO_ANCHOR": 0.15
+  },
+  "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+  "init": "random_from_scratch",
+  "optimizer": "Adam",
+  "lr": 0.001,
+  "batch_size": 64,
+  "config_hash": "45eb2b1168d4d4241a55d6e50e03bbc97cdc4001b050db12e2c1cf3dff577b82",
+  "objective_id": "O3",
+  "seed": 2026082615,
+  "epochs": 8
+}

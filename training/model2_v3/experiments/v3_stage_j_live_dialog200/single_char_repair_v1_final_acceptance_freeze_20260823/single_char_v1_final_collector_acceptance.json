@@ -1,0 +1,76 @@
+{
+  "ts": "2026-08-23T03:11:42.225117+00:00",
+  "probes": {
+    "single_legal": {
+      "pinyin": "hao/hao3",
+      "hits": [
+        [
+          "好",
+          0.9,
+          "single-char-repair-v1-strict"
+        ]
+      ],
+      "pass": true
+    },
+    "ambiguous": {
+      "ba1": [
+        [
+          "八",
+          0.9,
+          "single-char-repair-v1-strict"
+        ],
+        [
+          "巴",
+          0.9,
+          "single-char-repair-v1-strict"
+        ]
+      ],
+      "pass": true
+    },
+    "no_candidate": {
+      "hits": [],
+      "pass": true
+    },
+    "tone_mismatch": {
+      "ke1_hits": [
+        [
+          "科",
+          0.9,
+          "single-char-repair-v1-strict"
+        ],
+        [
+          "棵",
+          0.9,
+          "single-char-repair-v1-strict"
+        ],
+        [
+          "颗",
+          0.9,
+          "single-char-repair-v1-strict"
+        ]
+      ],
+      "pass": true
+    }
+  },
+  "pollution_absent": {
+    "毫": true,
+    "涡": true,
+    "皿": true
+  },
+  "valid_present": {
+    "的": true,
+    "吗": true,
+    "我": true
+  },
+  "representatives": {
+    "pronoun": true,
+    "particle": true,
+    "function_word": true,
+    "verb": true,
+    "direction_location": true
+  },
+  "prior_all_09": true,
+  "source_all_strict": true,
+  "ime_leakage": 0,
+  "verdict": "PASS"
+}

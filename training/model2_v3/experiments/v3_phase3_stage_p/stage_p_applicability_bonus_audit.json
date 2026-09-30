@@ -1,0 +1,59 @@
+{
+  "location": "training/model2_v3/scripts/run_v3_phase2_pipeline.py:select_actions (+0.15/-0.5)",
+  "formula": "score = sigmoid(logit) + (0.15 if nchg>0 else -0.5)",
+  "hardcoded_constant": true,
+  "constants": {
+    "applicable_bonus": 0.15,
+    "inapplicable_penalty": -0.5
+  },
+  "changes_action_top1": false,
+  "top1_changed_rate": 0.0,
+  "metrics_with_bonus_HARD_MULTI_qb1": {
+    "RecallRetained": 0.717948717948718,
+    "QueryReduction": 0.52,
+    "CandidateReduction": 0.43321917808219174,
+    "E2ECostReduction": 0.4916820610957126,
+    "B1": {
+      "n": 120,
+      "TargetIntroductionRate": 0.975,
+      "QueryCount_mean": 2.0833333333333335,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.866666666666666,
+      "Latency_P50": 104.84769998583943
+    },
+    "V3": {
+      "n": 120,
+      "TargetIntroductionRate": 0.7,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 2.7583333333333333,
+      "Latency_P50": 55.38780000642873
+    }
+  },
+  "metrics_without_bonus_HARD_MULTI_qb1": {
+    "RecallRetained": 0.717948717948718,
+    "QueryReduction": 0.52,
+    "CandidateReduction": 0.43321917808219174,
+    "E2ECostReduction": 0.4922355833642552,
+    "B1": {
+      "n": 120,
+      "TargetIntroductionRate": 0.975,
+      "QueryCount_mean": 2.0833333333333335,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.866666666666666,
+      "Latency_P50": 107.61269999784417
+    },
+    "V3": {
+      "n": 120,
+      "TargetIntroductionRate": 0.7,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 2.7583333333333333,
+      "Latency_P50": 55.0418000202626
+    }
+  },
+  "classification": "HARDCODED_POLICY_OVERRIDE",
+  "rationale": "Decode-time constant offsets reorder actions independently of learned logits; this substitutes for Model2 Top-1 ranking responsibility.",
+  "action": "REMOVED_FROM_AUTHORITATIVE_POLICY_PATH",
+  "phase3_default": "applicability_bonus=False"
+}

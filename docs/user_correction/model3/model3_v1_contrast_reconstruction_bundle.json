@@ -1,0 +1,388 @@
+{
+  "phase": "MODEL3_V1_CONTRAST_PAIR_RECONSTRUCTION",
+  "verdict": "PASS_WITH_PRECISION_GAP",
+  "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+  "dataset_manifest": {
+    "datasetVersion": "model3_v1_strict_contrast_reconstruction_20260825",
+    "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+    "contractVersion": "1.0.0",
+    "candidateGroups": 12797,
+    "strictAccepted": 8000,
+    "strictRejected": 4797,
+    "acceptanceRate": 0.6251465187153239,
+    "pairNotMaterializable": 2003,
+    "stage2Rejected": 0,
+    "rejectReasons": {
+      "PAIR_NOT_MATERIALIZABLE_retry_label": 2003,
+      "target_offset_mismatch": 2,
+      "target_end_mismatch": 2,
+      "anchor_equals_target": 2
+    },
+    "uniqueTargetSurfaces": 121,
+    "pairsPerSurface": {
+      "mean": 66.11570247933884,
+      "max": 161,
+      "top10": [
+        [
+          "制",
+          161
+        ],
+        [
+          "精",
+          155
+        ],
+        [
+          "身",
+          153
+        ],
+        [
+          "飞",
+          153
+        ],
+        [
+          "蓝",
+          152
+        ],
+        [
+          "苏",
+          151
+        ],
+        [
+          "烦",
+          151
+        ],
+        [
+          "致",
+          151
+        ],
+        [
+          "至",
+          151
+        ],
+        [
+          "思",
+          151
+        ]
+      ]
+    },
+    "modelVisibleStrongRate": 1.0,
+    "invariants": {
+      "same_currentText": 1.0,
+      "same_target": 1.0,
+      "same_offsets": 1.0,
+      "anchor_removed_tensor_identical": 1.0
+    },
+    "materializeOnce": true,
+    "utterances": 26413,
+    "mixCounts": {
+      "STRICT": 16000,
+      "NATURAL": 5714,
+      "HARD_KEEP": 1271,
+      "NO_ANCHOR": 3428
+    },
+    "full100kMutated": false,
+    "checksums": [
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00000.jsonl",
+        "sha256": "5eb805d81b84bf1aee23fe4a844f025eae0976b1bc62c8e3506714142aeb7fcb",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00001.jsonl",
+        "sha256": "431a025b510ca7113cd37e3c1595c88e86b9748985e26c36dd0d0f8807cbede6",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00002.jsonl",
+        "sha256": "863ada837fde43b8698f6986c4d05aabf91e9bdaa86386a6844829e37e36bcc3",
+        "lines": 5000,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/train/shard-00003.jsonl",
+        "sha256": "e84d6e8d0fe5efb68afecf387447f8111d574999267c18815d3e5725c99ef403",
+        "lines": 1666,
+        "split": "train"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/dev/shard-00000.jsonl",
+        "sha256": "f112829dfc6f00835e399481f20eb2fdb080fdad3ba5a637df649d8bff6f64a9",
+        "lines": 2289,
+        "split": "dev"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/test/shard-00000.jsonl",
+        "sha256": "e20d542616cfaa1e5737eefed9b360095952aac24f7fe5a40d3feeee5c9adc2c",
+        "lines": 5000,
+        "split": "test"
+      },
+      {
+        "path": "training/model3_dataset/model3_v1_strict_contrast_reconstruction/test/shard-00001.jsonl",
+        "sha256": "c4745dcf1ba572d97b812afa5b764d459f485cf6a3125a0bb2bc1af8f379e899",
+        "lines": 2458,
+        "split": "test"
+      }
+    ]
+  },
+  "qa": {
+    "model_visible_strong_rate": 1.0,
+    "strict_pairs_total": 8000
+  },
+  "training": {
+    "paired_sampling": true,
+    "pair_consistency_loss": true,
+    "pair_loss_semantics": "pilot_ce_keep_retry_plus_margin_0.35",
+    "class_weight_retry": 2.6160994112052585,
+    "epochs": 8,
+    "train_seconds": 411.6103081703186,
+    "pair_index": 4667,
+    "from_scratch": true,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.08072762211278024,
+        "dev": {
+          "tp": 578,
+          "fp": 12388,
+          "fn": 2,
+          "tn": 25107,
+          "retry_precision": 0.044578127410149625,
+          "retry_recall": 0.996551724137931,
+          "retry_f1": 0.08533884541562085,
+          "false_retry_rate": 0.33039071876250165,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0542619362200514,
+        "dev": {
+          "tp": 580,
+          "fp": 21361,
+          "fn": 0,
+          "tn": 16134,
+          "retry_precision": 0.026434528964039927,
+          "retry_recall": 1.0,
+          "retry_f1": 0.05150748190577683,
+          "false_retry_rate": 0.5697026270169356,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.057653022339474766,
+        "dev": {
+          "tp": 580,
+          "fp": 7262,
+          "fn": 0,
+          "tn": 30233,
+          "retry_precision": 0.07396072430502423,
+          "retry_recall": 1.0,
+          "retry_f1": 0.13773450486820235,
+          "false_retry_rate": 0.1936791572209628,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.022691234523409057,
+        "dev": {
+          "tp": 577,
+          "fp": 2352,
+          "fn": 3,
+          "tn": 35143,
+          "retry_precision": 0.19699556162512802,
+          "retry_recall": 0.9948275862068966,
+          "retry_f1": 0.3288686235394699,
+          "false_retry_rate": 0.06272836378183758,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.014437672723587817,
+        "dev": {
+          "tp": 577,
+          "fp": 2998,
+          "fn": 3,
+          "tn": 34497,
+          "retry_precision": 0.1613986013986014,
+          "retry_recall": 0.9948275862068966,
+          "retry_f1": 0.27773766546329726,
+          "false_retry_rate": 0.07995732764368582,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.011504935403978915,
+        "dev": {
+          "tp": 577,
+          "fp": 1369,
+          "fn": 3,
+          "tn": 36126,
+          "retry_precision": 0.2965056526207605,
+          "retry_recall": 0.9948275862068966,
+          "retry_f1": 0.4568487727632621,
+          "false_retry_rate": 0.03651153487131618,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.011592413227866008,
+        "dev": {
+          "tp": 580,
+          "fp": 5913,
+          "fn": 0,
+          "tn": 31582,
+          "retry_precision": 0.08932696750346528,
+          "retry_recall": 1.0,
+          "retry_f1": 0.16400395871624487,
+          "false_retry_rate": 0.1577010268035738,
+          "eligible": 38075
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.01538042568376866,
+        "dev": {
+          "tp": 577,
+          "fp": 2254,
+          "fn": 3,
+          "tn": 35241,
+          "retry_precision": 0.20381490639350053,
+          "retry_recall": 0.9948275862068966,
+          "retry_f1": 0.3383172090296101,
+          "false_retry_rate": 0.06011468195759435,
+          "eligible": 38075
+        }
+      }
+    ]
+  },
+  "quality": {
+    "tp": 2745,
+    "fp": 5833,
+    "fn": 8,
+    "tn": 99388,
+    "retry_precision": 0.3200046630916297,
+    "retry_recall": 0.9970940791863422,
+    "retry_f1": 0.48451151707704526,
+    "false_retry_rate": 0.05543570199865046,
+    "eligible": 107974
+  },
+  "anchor_overall": {
+    "zero_f1": 0.379328165374677,
+    "shuffle_f1": 0.24364834697565643,
+    "zero_delta": 0.10518335170236826,
+    "shuffle_delta": 0.24086317010138883
+  },
+  "strict_pair": {
+    "normal": {
+      "pairs": 2753,
+      "pair_accuracy": 0.9974573192880494,
+      "correct": 2746
+    },
+    "anchor_zero": {
+      "pairs": 2753,
+      "pair_accuracy": 0.0,
+      "correct": 0
+    },
+    "anchor_shuffle": {
+      "pairs": 2753,
+      "pair_accuracy": 0.0,
+      "correct": 0
+    },
+    "zero_delta": 0.9974573192880494,
+    "shuffle_delta": 0.9974573192880494
+  },
+  "safety": {
+    "hard_keep": {
+      "n": 329,
+      "tp": 0,
+      "fp": 50,
+      "fn": 0,
+      "tn": 9038,
+      "retry_precision": 0.0,
+      "retry_recall": 0.0,
+      "retry_f1": 0.0,
+      "false_retry_rate": 0.005501760563380281,
+      "eligible": 9088
+    },
+    "no_anchor": {
+      "n": 593,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 11850,
+      "retry_precision": 0.0,
+      "retry_recall": 0.0,
+      "retry_f1": 0.0,
+      "false_retry_rate": 0.0,
+      "eligible": 11850
+    }
+  },
+  "cpu_ms": {
+    "p50": 1.9100999925285578,
+    "p95": 2.655800082720816,
+    "p99": 3.1946999952197075
+  },
+  "comparison": {
+    "Original_Pilot": {
+      "precision": 0.5167,
+      "recall": 0.9924,
+      "f1": 0.6795,
+      "false_retry": 0.044462,
+      "strict_pair": 0.9896,
+      "strict_zero": null,
+      "strict_shuffle": null,
+      "no_anchor_fp": null
+    },
+    "Full100K": {
+      "precision": 0.9826,
+      "recall": 0.944,
+      "f1": 0.9629,
+      "false_retry": 7.6e-05,
+      "strict_pair": 0.633,
+      "strict_zero": null,
+      "strict_shuffle": null,
+      "no_anchor_fp": 0.0
+    },
+    "Diet_B": {
+      "precision": 0.9609,
+      "recall": 0.9702,
+      "f1": 0.9655,
+      "false_retry": 0.00018,
+      "strict_pair": 0.6657,
+      "strict_zero": 0.668,
+      "strict_shuffle": 0.6453,
+      "no_anchor_fp": 0.0
+    },
+    "Strict_Reconstruction": {
+      "precision": 0.3200046630916297,
+      "recall": 0.9970940791863422,
+      "f1": 0.48451151707704526,
+      "false_retry": 0.05543570199865046,
+      "strict_pair": 0.9974573192880494,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.0,
+      "no_anchor_fp": 0.0
+    }
+  },
+  "root_cause_closure": {
+    "STRONG_PAIR_INVARIANT_LOST": "CLOSED",
+    "PAIR_CONSISTENCY_LOSS_LOST": "CLOSED",
+    "PAIR_SAMPLING_WEAKER_THAN_PILOT": "CLOSED",
+    "STAGE2_MATERIALIZATION_BREAKS_PAIR": "CLOSED"
+  },
+  "decision": {
+    "strict_pair_construction_proven": true,
+    "anchor_causality_restored": true,
+    "precision_guard": "PARTIAL",
+    "safe_rebuild_full100k_contrast": true,
+    "ready_tts": false,
+    "next_phase": "MODEL3_V1_STRICT_CONTRAST_AND_HARD_KEEP_BALANCE"
+  }
+}

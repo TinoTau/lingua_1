@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "lexicon-v3-runtime-v3",
+  "bundleVersion": 12,
+  "bundleTag": "v3-runtime",
+  "buildTime": "2026-08-02T14:01:33.634Z",
+  "checksum": "sha256:b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58",
+  "tables": {
+    "base": 9256,
+    "idiom": 22192,
+    "domain": 655,
+    "routing": 655,
+    "term": 9256,
+    "term_domain_tags": 655,
+    "domain_hierarchy": 12
+  },
+  "sourceInputs": {
+    "mode": "FULL_REBUILD",
+    "sourceDir": "electron_node/docs/lexicon-assets/full_rebuild_v1",
+    "loadOrder": [
+      "lexicon_full_corrected_review.csv",
+      "terms_to_remove_or_rebuild.csv",
+      "supplemental_terms.csv",
+      "term_domain_tags_corrected.csv",
+      "idiom_zh_v2/entries.jsonl",
+      "profile-registry.json"
+    ],
+    "termSources": [
+      {
+        "file": "lexicon_full_corrected_review.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/lexicon_full_corrected_review.csv",
+        "sha256": "sha256:6f651073432e9850f16a93450a1e81c2993fb5b0031b629faf12d53d8c7433df",
+        "recordCount": 9223,
+        "matchesTmpExtract": false
+      },
+      {
+        "file": "term_domain_tags_corrected.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/term_domain_tags_corrected.csv",
+        "sha256": "sha256:ed1549d5f0c3a3b3356fbb36dd4b9aa20187e6e9a078def67233887a6be405de",
+        "recordCount": 620,
+        "matchesTmpExtract": false
+      },
+      {
+        "file": "supplemental_terms.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/supplemental_terms.csv",
+        "sha256": "sha256:6625b4d00fad25f7f504bb7b970629087d6d60a04d778c1b57961aa26739ee90",
+        "recordCount": 45,
+        "matchesTmpExtract": false
+      },
+      {
+        "file": "terms_to_remove_or_rebuild.csv",
+        "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/terms_to_remove_or_rebuild.csv",
+        "sha256": "sha256:5911d4ac8a00dba7ecd3a7e319af5a489df2356bd1b38496e29db4583bbc13e1",
+        "recordCount": 12,
+        "matchesTmpExtract": false
+      }
+    ],
+    "idiomSource": {
+      "path": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
+      "sha256": "sha256:017f68a5aa52db8425250ae3a3dd3a8e7a4a09c068781efb7531349c385f8668",
+      "recordCount": 22192
+    },
+    "hierarchySource": {
+      "path": "electron_node/electron-node/data/lexicon/profile-registry.json",
+      "sha256": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b"
+    },
+    "excludedTermCount": 12,
+    "supplementalRowCount": 45,
+    "reviewKeptCount": 9211,
+    "domainTagCount": 655
+  },
+  "historicalInputs": {
+    "note": "p1_3 seed JSONL / seed-only shadow are NOT production Full Rebuild inputs",
+    "seedOnlyShadow": "NOT PRODUCTION FULL REBUILD"
+  },
+  "overlayInputs": [],
+  "lastPatchId": null,
+  "lastAppliedAt": null,
+  "domainAvailability": {
+    "tourism_transport": 50,
+    "tech_ai": 53,
+    "food_order": 63,
+    "medical": 130,
+    "tourism_route": 61,
+    "milk_tea": 44,
+    "tourism_pickup": 41,
+    "coffee": 82,
+    "bakery": 37,
+    "meeting": 41,
+    "tourism_hotel": 49,
+    "transport": 4
+  },
+  "domainHierarchyVersion": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b",
+  "rebuild": {
+    "mode": "FULL_REBUILD",
+    "patchId": "lexicon-full-rebuild-v1",
+    "sources": [
+      "lexicon_full_corrected_review.csv",
+      "term_domain_tags_corrected.csv",
+      "supplemental_terms.csv"
+    ],
+    "excluded": [
+      "terms_to_remove_or_rebuild.csv"
+    ],
+    "remove_term_excluded_count": 12,
+    "no_merge": true,
+    "idiomSource": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
+    "hierarchySource": "electron_node/electron-node/data/lexicon/profile-registry.json"
+  },
+  "atomicityNote": "ATOMICITY CONTENT CLEANUP NOT EXECUTED",
+  "atomicity": {
+    "mode": "enforce",
+    "report": "atomicity_report.json",
+    "csv": "atomicity_report.csv",
+    "summary": {
+      "ACCEPT": 9248,
+      "ACCEPT_EXCEPTION": 8,
+      "REJECT_COMPOSITE": 0,
+      "UNRESOLVED": 0
+    },
+    "total": 9256,
+    "enforceReady": true,
+    "runtimeSchemaExtended": false
+  }
+}

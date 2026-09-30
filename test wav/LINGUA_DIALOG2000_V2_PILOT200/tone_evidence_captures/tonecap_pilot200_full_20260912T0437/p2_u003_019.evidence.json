@@ -1,0 +1,283 @@
+{
+  "caseId": "p2_u003_019",
+  "captureBatchId": "tonecap_pilot200_full_20260912T0437",
+  "datasetBuildId": "build_20260911_091806",
+  "split": "VALIDATION",
+  "userId": "U003",
+  "domain": "medical",
+  "audioId": "aud_p2_u003_019",
+  "audioPath": "audio/p2_u003_019.wav",
+  "audioSha256": "6b1035573c84127bf8c923eb767aa041f98d1ca9a50c5fea4a24aeb143609a1f",
+  "profileConditionAtCapture": "NO_PROFILE",
+  "rawMergedAsrText": "并立写了粉囤",
+  "rawAsrHash": "96ec17b287a273a5905d816a4ac4afdf730b95424c6845d8db8081ca4873962b",
+  "segments": [
+    {
+      "text": "并立写了粉囤",
+      "start": 0,
+      "end": 1.24,
+      "no_speech_prob": 0.1689453125,
+      "avg_logprob": -0.39406999200582504,
+      "compression_ratio": 0.6666666666666666,
+      "words": [
+        {
+          "word": "并",
+          "start": 0,
+          "end": 0.28,
+          "probability": 0.807373046875
+        },
+        {
+          "word": "立",
+          "start": 0.28,
+          "end": 0.48,
+          "probability": 0.47509765625
+        },
+        {
+          "word": "写",
+          "start": 0.48,
+          "end": 0.62,
+          "probability": 0.837158203125
+        },
+        {
+          "word": "了",
+          "start": 0.62,
+          "end": 0.84,
+          "probability": 0.99609375
+        },
+        {
+          "word": "粉",
+          "start": 0.84,
+          "end": 1.02,
+          "probability": 0.28271484375
+        },
+        {
+          "word": "囤",
+          "start": 1.02,
+          "end": 1.24,
+          "probability": 0.9189453125
+        }
+      ]
+    }
+  ],
+  "segmentEvidenceHash": "48c3efcfd6fbfc88f392ec81da0f3c2cc3275bd319e0018d3cafda34f8e5f3bb",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "acousticToneSlices": [
+      {
+        "start": 0,
+        "end": 0.28,
+        "tonePosterior": {
+          "t1": 0.0004662678111344576,
+          "t2": 0.000050993607146665454,
+          "t3": 0.00011380529031157494,
+          "t4": 0.9993657469749451,
+          "t5": 0.000003268656655563973
+        },
+        "confidence": 0.9993657469749451
+      },
+      {
+        "start": 0.28,
+        "end": 0.48,
+        "tonePosterior": {
+          "t1": 0.003276878036558628,
+          "t2": 0.035492800176143646,
+          "t3": 0.6306666135787964,
+          "t4": 0.31813547015190125,
+          "t5": 0.012428224086761475
+        },
+        "confidence": 0.6306666135787964
+      },
+      {
+        "start": 0.48,
+        "end": 0.62,
+        "tonePosterior": {
+          "t1": 0.0005150107899680734,
+          "t2": 0.0943542867898941,
+          "t3": 0.10295231640338898,
+          "t4": 0.018995806574821472,
+          "t5": 0.7831826210021973
+        },
+        "confidence": 0.7831826210021973
+      },
+      {
+        "start": 0.62,
+        "end": 0.84,
+        "tonePosterior": {
+          "t1": 0.00007734553946647793,
+          "t2": 0.9294344782829285,
+          "t3": 0.07039836794137955,
+          "t4": 0.00003971119076595642,
+          "t5": 0.00005020764729124494
+        },
+        "confidence": 0.9294344782829285
+      },
+      {
+        "start": 0.84,
+        "end": 1.02,
+        "tonePosterior": {
+          "t1": 0.0009393597720190883,
+          "t2": 0.9470782279968262,
+          "t3": 0.05172918364405632,
+          "t4": 0.00023488608712796122,
+          "t5": 0.00001837620402511675
+        },
+        "confidence": 0.9470782279968262
+      },
+      {
+        "start": 1.02,
+        "end": 1.24,
+        "tonePosterior": {
+          "t1": 0.005627462640404701,
+          "t2": 0.852291464805603,
+          "t3": 0.02438604272902012,
+          "t4": 0.0063530439510941505,
+          "t5": 0.1113419234752655
+        },
+        "confidence": 0.852291464805603
+      }
+    ],
+    "sliceCount": 6,
+    "toneConfidenceAvg": 0.8570031921068827,
+    "evidenceProduction": [
+      {
+        "word": "并",
+        "startSec": 0,
+        "endSec": 0.28,
+        "durationSec": 0.28,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "立",
+        "startSec": 0.28,
+        "endSec": 0.48,
+        "durationSec": 0.19999999999999996,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "写",
+        "startSec": 0.48,
+        "endSec": 0.62,
+        "durationSec": 0.14,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "了",
+        "startSec": 0.62,
+        "endSec": 0.84,
+        "durationSec": 0.21999999999999997,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "粉",
+        "startSec": 0.84,
+        "endSec": 1.02,
+        "durationSec": 0.18000000000000005,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "囤",
+        "startSec": 1.02,
+        "endSec": 1.24,
+        "durationSec": 0.21999999999999997,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      }
+    ],
+    "model": "tone_cnn_production_v2",
+    "version": "p10-p1-direct-replacement-v1"
+  },
+  "acousticToneSlices": [
+    {
+      "start": 0,
+      "end": 0.28,
+      "tonePosterior": {
+        "t1": 0.0004662678111344576,
+        "t2": 0.000050993607146665454,
+        "t3": 0.00011380529031157494,
+        "t4": 0.9993657469749451,
+        "t5": 0.000003268656655563973
+      },
+      "confidence": 0.9993657469749451
+    },
+    {
+      "start": 0.28,
+      "end": 0.48,
+      "tonePosterior": {
+        "t1": 0.003276878036558628,
+        "t2": 0.035492800176143646,
+        "t3": 0.6306666135787964,
+        "t4": 0.31813547015190125,
+        "t5": 0.012428224086761475
+      },
+      "confidence": 0.6306666135787964
+    },
+    {
+      "start": 0.48,
+      "end": 0.62,
+      "tonePosterior": {
+        "t1": 0.0005150107899680734,
+        "t2": 0.0943542867898941,
+        "t3": 0.10295231640338898,
+        "t4": 0.018995806574821472,
+        "t5": 0.7831826210021973
+      },
+      "confidence": 0.7831826210021973
+    },
+    {
+      "start": 0.62,
+      "end": 0.84,
+      "tonePosterior": {
+        "t1": 0.00007734553946647793,
+        "t2": 0.9294344782829285,
+        "t3": 0.07039836794137955,
+        "t4": 0.00003971119076595642,
+        "t5": 0.00005020764729124494
+      },
+      "confidence": 0.9294344782829285
+    },
+    {
+      "start": 0.84,
+      "end": 1.02,
+      "tonePosterior": {
+        "t1": 0.0009393597720190883,
+        "t2": 0.9470782279968262,
+        "t3": 0.05172918364405632,
+        "t4": 0.00023488608712796122,
+        "t5": 0.00001837620402511675
+      },
+      "confidence": 0.9470782279968262
+    },
+    {
+      "start": 1.02,
+      "end": 1.24,
+      "tonePosterior": {
+        "t1": 0.005627462640404701,
+        "t2": 0.852291464805603,
+        "t3": 0.02438604272902012,
+        "t4": 0.0063530439510941505,
+        "t5": 0.1113419234752655
+      },
+      "confidence": 0.852291464805603
+    }
+  ],
+  "toneEvidenceHash": "4a4c1a28870136e1c2e0e96c602ce3c6b1003cc7e3e466b1e3c235df0921b901",
+  "toneSliceCount": 6,
+  "toneSkippedReason": null,
+  "toneEvidencePresent": true,
+  "sessionId": "pilot200-tonecap::p2_u003_019::tonecap_pilot200_full_20260912T0437",
+  "captureTimestamp": "2026-09-12T04:51:49.004Z",
+  "runnerVersion": "pilot200-frozen-tone-evidence-full-capture-v1",
+  "asrExecutedForCapture": true,
+  "status": "OK"
+}

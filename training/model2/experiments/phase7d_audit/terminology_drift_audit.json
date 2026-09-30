@@ -1,0 +1,41 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "terms": [
+    {
+      "term": "recall",
+      "used_as": "Model2 Recall@K; User-Conditioned Fuzzy Recall; 扩大候选召回",
+      "actual_behavior": "For Model2 metrics: rank of in-pool target. For FuzzyPool: true lexicon retrieval.",
+      "correct_terminology": false,
+      "flag": "TERMINOLOGY_DRIFT"
+    },
+    {
+      "term": "expansion / candidate expansion",
+      "used_as": "Hybrid expands via Fuzzy Pre-Pool then Model2 scores",
+      "actual_behavior": "Expansion is FuzzyPool-only; Model2 does not expand",
+      "correct_terminology": "PARTIAL — accurate for Hybrid system, inaccurate if attributed to Model2+profile",
+      "flag": "TERMINOLOGY_DRIFT"
+    },
+    {
+      "term": "retrieval / retrieve",
+      "used_as": "Candidate Retrieval / Ranking in design diagrams",
+      "actual_behavior": "Model2 path is scoring/ranking; FuzzyPool is retrieval",
+      "correct_terminology": false,
+      "flag": "TERMINOLOGY_DRIFT"
+    },
+    {
+      "term": "binding / condition",
+      "used_as": "User×Relation binding; ConditionGain",
+      "actual_behavior": "Profile changes scores of existing candidates",
+      "correct_terminology": true,
+      "flag": null
+    },
+    {
+      "term": "ranking / rerank",
+      "used_as": "Stage A/B ranking; sometimes avoided in favor of 'recall'",
+      "actual_behavior": "Accurate description of Model2 neural path",
+      "correct_terminology": true,
+      "flag": null
+    }
+  ],
+  "summary": "Docs call Model2 a recall model; code implements closed-set conditioned ranking. FuzzyPool owns actual recall."
+}

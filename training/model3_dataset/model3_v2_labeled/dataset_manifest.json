@@ -1,0 +1,60 @@
+{
+  "datasetId": "MODEL3_V2_LABELED",
+  "datasetVersion": "model3_v2_labeled_20260829",
+  "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "generatorVersion": "model3-v2-dataset-build-1.0.0",
+  "createdAt": "2026-08-28T18:24:49.009055+00:00",
+  "sourceRoots": [
+    "model3_v1_anchor_contrast_full100k",
+    "model3_v1_real_distribution_retry_pilot",
+    "model3_v1_strict_contrast_reconstruction"
+  ],
+  "sampleCount": 114418,
+  "splitCounts": {
+    "train": 80034,
+    "dev": 11777,
+    "test": 22607
+  },
+  "relabelStats": {
+    "unchanged": 109508,
+    "relabelled": 4905,
+    "synthetic_added": 5
+  },
+  "dialog200Excluded": 0,
+  "failed": {},
+  "validationFailures": {},
+  "labelDistribution": {
+    "KEEP": 2139954,
+    "MASKED": 94851,
+    "RETRY": 18302,
+    "EXCLUDE_FROM_SUPERVISED": 1
+  },
+  "eligibleSpanCount": 2158236,
+  "retryRatioEligible": 0.008480073541540406,
+  "familyDistributionEligible": {
+    "CLEAN_KEEP": 2064160,
+    "PHONETIC_RETRY": 14336,
+    "HARD_KEEP": 75794,
+    "MALFORMED_REGION_RETRY": 3953,
+    "ANCHOR_ADJACENT_RETRY": 12,
+    "TONE_RETRY": 1
+  },
+  "fineSpanLengthEligible": {
+    "1": 2253085
+  },
+  "labelTransitions": {
+    "RETRY->KEEP": 3717,
+    "KEEP->RETRY": 2173
+  },
+  "sourceSampleCounts": {
+    "model3_v1_anchor_contrast_full100k": 85000,
+    "model3_v1_real_distribution_retry_pilot": 3000,
+    "model3_v1_strict_contrast_reconstruction": 26413
+  },
+  "v1BaselinePreserved": "MODEL3_SYNTHETIC_V1 seed_2026082520",
+  "notes": [
+    "V2 region supervision; phoneticCompatible and referenceReachable are not RETRY gates",
+    "dialog_200 held out",
+    "No model training in this phase"
+  ]
+}

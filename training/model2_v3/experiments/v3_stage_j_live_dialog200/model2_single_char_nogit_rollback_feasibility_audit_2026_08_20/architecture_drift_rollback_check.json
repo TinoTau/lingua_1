@@ -1,0 +1,10 @@
+{
+  "pre_single_char_architecture": "RetrievalPolicyV3 + P + D",
+  "current_default_runtime_architecture": "same (head not loaded)",
+  "drift_in_production_weights": false,
+  "drift_in_default_constructor": false,
+  "drift_in_source_tree": true,
+  "drift_kind": "optional additive modules + host cmd + unused Recall field",
+  "rollback_removes_drift": true,
+  "p_d_logic_rewritten": false
+}

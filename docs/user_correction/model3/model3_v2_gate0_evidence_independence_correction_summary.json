@@ -1,0 +1,31 @@
+{
+  "phase": "MODEL3_V2_GATE0_EVIDENCE_INDEPENDENCE_CORRECTION",
+  "date": "2026-08-30",
+  "correctionVerdict": "GATE0_EVIDENCE_INDEPENDENCE_CORRECTION_PASS",
+  "selfFulfillingGateRemoved": true,
+  "formalRuntimeArchitectureChanged": false,
+  "readyForGate0Acceptance": true,
+  "gate0AcceptanceExecuted": false,
+  "tests": {
+    "passed": 37,
+    "failed": 0,
+    "suites": [
+      "training.model3_dataset.tests.test_gate0_evidence_independence",
+      "training.model3_dataset.tests.test_acoustic_training_state"
+    ]
+  },
+  "keyFixes": [
+    "hardcoded_accounting_removed",
+    "empty_batch_insufficient_evidence",
+    "fixture_evidence_isolation_TEST_FIXTURE",
+    "model2_status_WIRED_ATTEMPTED_COMPLETED_HOST_HIT",
+    "candidate_missing_fail_closed",
+    "tone_readiness_no_default_ready",
+    "multipath_requires_observed_paths",
+    "cand_signals_from_span_counts",
+    "anchor_histogram_from_serialized_sources",
+    "near_dup_key_enforced_when_supplied"
+  ],
+  "nextPhase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0_ACCEPTANCE",
+  "nextPhaseExecuted": false
+}

@@ -1,0 +1,71 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "fields": [
+    {
+      "field": "ASR text / span_text",
+      "class": "RUNTIME_OBSERVABLE"
+    },
+    {
+      "field": "observed_syllables (ASR-derived / family-synth proxy)",
+      "class": "RUNTIME_OBSERVABLE"
+    },
+    {
+      "field": "FineSpan window",
+      "class": "RUNTIME_OBSERVABLE"
+    },
+    {
+      "field": "UserProfile.phonetic_bias",
+      "class": "PROFILE"
+    },
+    {
+      "field": "lexicon term_id/surface/pinyin/syllables/prior",
+      "class": "LEXICON_METADATA"
+    },
+    {
+      "field": "tone digits on observed syllables",
+      "class": "RUNTIME_OBSERVABLE",
+      "note": "stripped before lexicon lookup because CandidateIndex is toneless"
+    },
+    {
+      "field": "tone-stripped hypothesized syllables",
+      "class": "LEXICON_METADATA",
+      "note": "derived for index query; not an oracle target leak"
+    },
+    {
+      "field": "canonical_syllables",
+      "class": "ORACLE_FORBIDDEN"
+    },
+    {
+      "field": "target_term_id",
+      "class": "ORACLE_FORBIDDEN"
+    },
+    {
+      "field": "corruption_family as query input",
+      "class": "ORACLE_FORBIDDEN"
+    },
+    {
+      "field": "positive_pool_index",
+      "class": "TRAINING_ONLY"
+    },
+    {
+      "field": "intended_strength label",
+      "class": "TRAINING_ONLY"
+    }
+  ],
+  "query_inputs_allowed": [
+    "observed_syllables",
+    "UserProfile.phonetic_bias (ACTIVE relations)",
+    "lexicon index metadata",
+    "tone-stripped hypothesized syllables"
+  ],
+  "query_inputs_forbidden": [
+    "canonical_syllables",
+    "target_term_id",
+    "oracle corruption relation as forced query"
+  ]
+}

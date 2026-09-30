@@ -1,0 +1,38 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "verdict": "PASS",
+  "Profile_Conditioned_Candidate_Introduction": "PROVEN",
+  "Artificial_Miss_TIR": 0.988,
+  "Natural_Miss_TIR": 1.0,
+  "Correct_vs_Empty": {
+    "correct": 0.998,
+    "empty": 0.0,
+    "gain": 0.998
+  },
+  "Correct_vs_Wrong": {
+    "correct": 0.998,
+    "wrong": 0.0
+  },
+  "Correct_vs_Swapped": {
+    "correct": 0.998,
+    "swapped": 0.062
+  },
+  "ProfileOnlyTargetRecovery": 1.0,
+  "NO_CHANGE_false_expansion": 0.0375,
+  "candidate_budget_p95": 8.0,
+  "NATURAL_BASE_MISS_INSUFFICIENT": false,
+  "MECHANISM_PROVEN": true,
+  "PRODUCT_GENERALIZATION_NOT_PROVEN": false,
+  "neural_retrieval_needed_now": "NO",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD",
+  "next_phase": "Phase 7F — Recall Expansion Dataset & Trainable Retrieval Design",
+  "Stage_A": "KEEP_AS_OPTIONAL_POST_MERGE",
+  "Stage_B": "KEEP_AS_POST_RECALL_BINDING"
+}

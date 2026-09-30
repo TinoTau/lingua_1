@@ -1,0 +1,52 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_FULL100K_DIET_REBALANCE",
+    "verdict": "ANCHOR_SIGNAL_STILL_WEAK",
+    "training_diet_problem_confirmed": true,
+    "balanced_diet_found": false,
+    "anchor_signal_restored": "NO",
+    "precision_preserved": "YES",
+    "family_generalization": "PASS",
+    "bigru_suitable": true,
+    "ready_tts": false,
+    "recommended_next_phase": "MODEL3_V1_CONTRAST_CONSTRUCTION_REVIEW"
+  },
+  "dataset_hashes": {
+    "corpus_regenerated": false,
+    "train_hash_stable": true,
+    "dev_hash_stable": true,
+    "test_hash_stable": true,
+    "labels_changed": false,
+    "hashes_before": {
+      "train": "4bb73e4e4ead1033f157723aa38e6bf8f2f14ae731f6ed5ecb7fa959133e7701",
+      "dev": "2c58d6d8efbe8f161c6595fdc7e6ebb5cacc9417f0fe3325c2c65d46dfd3d0d8",
+      "test": "bf348a4dfbd6281ee1ffddb57fd87de8e0ef4c90c7e7c8f21b3aec04d8949e29"
+    },
+    "hashes_after": {
+      "train": "4bb73e4e4ead1033f157723aa38e6bf8f2f14ae731f6ed5ecb7fa959133e7701",
+      "dev": "2c58d6d8efbe8f161c6595fdc7e6ebb5cacc9417f0fe3325c2c65d46dfd3d0d8",
+      "test": "bf348a4dfbd6281ee1ffddb57fd87de8e0ef4c90c7e7c8f21b3aec04d8949e29"
+    }
+  },
+  "runtime_impact": {
+    "architecture_changed": false,
+    "dataset_regenerated": false,
+    "label_contract_changed": false,
+    "recall_changed": false,
+    "formal_anchor_changed": false,
+    "model2_changed": false,
+    "job_result_changed": false,
+    "tts_started": false,
+    "production_retry": false
+  },
+  "report_artifact_count": 4,
+  "report_artifact_count_le_10": true,
+  "modified_file_inventory": [
+    "training/model3_dataset/train/train_diet_rebalance.py",
+    "training/model3_dataset/model3_v1_diet_rebalance_ckpts/",
+    "docs/user_correction/model3/Lingua_Model3_V1_Full100K_Diet_Rebalance_Report_2026_08_24.md",
+    "docs/user_correction/model3/model3_v1_diet_rebalance_bundle.json",
+    "docs/user_correction/model3/model3_v1_diet_rebalance_governance.json",
+    "docs/user_correction/model3/model3_v1_diet_rebalance_comparison.csv"
+  ]
+}

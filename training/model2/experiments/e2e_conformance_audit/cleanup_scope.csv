@@ -1,0 +1,14 @@
+Component,Action,Notes
+Phase7F whole-utt REAL_ASR as architecture verdict,DELETE,Reclassify TEST_PATH_INVALID
+Stage A as Model2 recall narrative,DELETE/ARCHIVE,KEEP_OPTIONAL post-merge only
+Duplicate whole-utt query path conclusions,DELETE,Keep diagnostic script only
+FineSpan as Model2 input unit,RESTORE,Match Lattice windows 1..5
+Profile retrieval on span syllables,RESTORE/KEEP,Already in 7E mechanism
+Normalization SSOT,KEEP,retrieval/normalize.py
+FuzzyPool engine,KEEP,single retrieval primitive
+Stage B post-recall,KEEP,recompute relations on new cands
+BOUND-only activation,MODIFY or mark SPIKE_ONLY,Expand only with evidence
+Domain/personal_terms retrieval,DEFER,Do not drop from product contract
+Pronunciation model,DEFER,Not justified by whole-utt test failure
+Neural retrieval,DEFER,After span-conforming eval
+Node Model2 wire,DEFER,After contract restore

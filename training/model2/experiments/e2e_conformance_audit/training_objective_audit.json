@@ -1,0 +1,9 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "items": [
+    {"name": "Stage A CE / listwise on pool", "class": "RERANKING", "obsolete_as_Model2_core": true},
+    {"name": "Stage B ConditionGain", "class": "BINDING", "obsolete_as_Model2_core": true},
+    {"name": "Phase7E/7F TargetIntroduction", "class": "RECALL_EXPANSION", "keep": true},
+    {"name": "Phase5–7A trainrows target_in_pool≈1", "class": "RERANKING", "flag": "OBSOLETE for recall training"}
+  ]
+}

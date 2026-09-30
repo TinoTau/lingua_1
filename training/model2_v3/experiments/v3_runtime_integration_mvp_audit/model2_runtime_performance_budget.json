@@ -1,0 +1,6 @@
+{
+  "expected_P50_delta_ms": "TBD measure; estimate +2..15ms policy + N lexicon queries if ONNX in-process; higher if Python IPC",
+  "expected_P95_delta_ms": "TBD; risk dominated by extra lexicon queries not net forward",
+  "constraints": "Do not change FineSpan count / sentence budget / assembly for perf in MVP",
+  "reuse": "utterance query cache / SQLite batch if present — no new worker pool"
+}

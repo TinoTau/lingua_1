@@ -1,0 +1,27 @@
+{
+  "verdict": "PARTIAL_PASS",
+  "go": {
+    "base_preservation": true,
+    "tiny_ranking": true,
+    "condition_gain_recall3": false,
+    "rank_delta_pos": false,
+    "margin_gain_pos": true,
+    "profile_swap": false,
+    "wrong_direction": true,
+    "interaction_ablation": true,
+    "params_ok": true,
+    "primary": "B2",
+    "stage_b_ranking_pass": false
+  },
+  "ConditionGain@3": -0.03624161073825505,
+  "TargetRankDelta_mean": -0.2523489932885906,
+  "MarginGain_mean": 0.5090739269184587,
+  "SwapDamage@3": 0.0,
+  "MRRSwapDamage": 0.0,
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "next": "CONDITION_CALIBRATION_CONTINUE"
+}

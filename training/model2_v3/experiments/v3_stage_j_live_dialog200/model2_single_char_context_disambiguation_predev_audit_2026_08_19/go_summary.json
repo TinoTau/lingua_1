@@ -1,0 +1,22 @@
+{
+  "Model2 Single-Char Context Disambiguation Audit": "FEASIBLE_WITH_SMALL_CHANGE",
+  "proceed_to_development": false,
+  "proceed_to_training": false,
+  "lexicon_must_be_finalized_first_for_production": true,
+  "lexicon_must_be_finalized_first_for_model2_training": false,
+  "recommended_architecture": "OPTION_A_SAME_MODEL_CONDITIONAL_TASK_NEW_HEAD",
+  "second_model": false,
+  "second_pipeline": false,
+  "jobresult_change": false,
+  "open_vocabulary": false,
+  "candidate_set_decision_already_supported": "NO",
+  "abstain_for_lexical_choice": false,
+  "action_space_gap": true,
+  "new_head_required": true,
+  "interference_risk": "MEDIUM",
+  "vocab_update_requires_retrain_if_candidate_index": false,
+  "ime_2510_change": "NO",
+  "minPrior_change": "NO",
+  "recommended_next_phase": "WAIT_USER_CONFIRM_ACP_THEN_CANDIDATE_SET_INTERFACE_V1",
+  "independent_holds": ["SINGLE_CHAR_REPAIR_LEXICON_IMPORT", "MINPRIOR_PRIOR", "CLD_LICENSE_REVIEW"]
+}

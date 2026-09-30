@@ -1,0 +1,156 @@
+section,metric,value,notes
+pool,raw_lines,22177,
+pool,usable_unique_families,18994,authoritative recomputed
+pool,gate0_excluded,48,
+pool_excluded,length_invalid,3120,
+pool_excluded,spoken_prefix_short,15,
+pool_excluded,gate0,48,
+pool,avg_cjk_len,20.23,
+pool,median_cjk_len,21.0,
+pool,avg_categories_per_family,4.222,multi-label
+source,MODEL3_SPOKEN_BASE_SUPPLEMENT_V1,17181,pct=90.45
+source_families,MODEL3_SPOKEN_BASE_SUPPLEMENT_V1,17181,
+source,prior_certified_v1,1813,pct=9.55
+source_families,prior_certified_v1,1813,
+taxonomy,daily_request,7037,pool_pct=37.05;assess=good
+taxonomy_texts,daily_request,7037,
+taxonomy_avg_len,daily_request,20.9,
+taxonomy_question_rate,daily_request,0.565,
+taxonomy_ne_rate,daily_request,0.0755,
+taxonomy,question,2319,pool_pct=12.21;assess=good
+taxonomy_texts,question,2319,
+taxonomy_avg_len,question,19.17,
+taxonomy_question_rate,question,0.7822,
+taxonomy_ne_rate,question,0.1246,
+taxonomy,answer,3524,pool_pct=18.55;assess=good
+taxonomy_texts,answer,3524,
+taxonomy_avg_len,answer,19.96,
+taxonomy_question_rate,answer,0.683,
+taxonomy_ne_rate,answer,0.0848,
+taxonomy,confirmation,9174,pool_pct=48.3;assess=good
+taxonomy_texts,confirmation,9174,
+taxonomy_avg_len,confirmation,21.49,
+taxonomy_question_rate,confirmation,0.756,
+taxonomy_ne_rate,confirmation,0.1166,
+taxonomy,negation,13711,pool_pct=72.19;assess=good
+taxonomy_texts,negation,13711,
+taxonomy_avg_len,negation,21.07,
+taxonomy_question_rate,negation,0.7347,
+taxonomy_ne_rate,negation,0.0834,
+taxonomy,correction_clarify,2737,pool_pct=14.41;assess=good
+taxonomy_texts,correction_clarify,2737,
+taxonomy_avg_len,correction_clarify,24.63,
+taxonomy_question_rate,correction_clarify,0.6047,
+taxonomy_ne_rate,correction_clarify,0.0965,
+taxonomy,casual_social,15396,pool_pct=81.06;assess=good
+taxonomy_texts,casual_social,15396,
+taxonomy_avg_len,casual_social,21.16,
+taxonomy_question_rate,casual_social,0.6798,
+taxonomy_ne_rate,casual_social,0.0883,
+taxonomy,shopping_food,5056,pool_pct=26.62;assess=good
+taxonomy_texts,shopping_food,5056,
+taxonomy_avg_len,shopping_food,20.65,
+taxonomy_question_rate,shopping_food,0.5576,
+taxonomy_ne_rate,shopping_food,0.0587,
+taxonomy,transport,1576,pool_pct=8.3;assess=good
+taxonomy_texts,transport,1576,
+taxonomy_avg_len,transport,20.1,
+taxonomy_question_rate,transport,0.7049,
+taxonomy_ne_rate,transport,0.2849,
+taxonomy,workplace,435,pool_pct=2.29;assess=partial
+taxonomy_texts,workplace,435,
+taxonomy_avg_len,workplace,15.9,
+taxonomy_question_rate,workplace,0.3977,
+taxonomy_ne_rate,workplace,0.0598,
+taxonomy,scheduling,4074,pool_pct=21.45;assess=good
+taxonomy_texts,scheduling,4074,
+taxonomy_avg_len,scheduling,20.88,
+taxonomy_question_rate,scheduling,0.5565,
+taxonomy_ne_rate,scheduling,0.0928,
+taxonomy,travel,272,pool_pct=1.43;assess=partial
+taxonomy_texts,travel,272,
+taxonomy_avg_len,travel,16.86,
+taxonomy_question_rate,travel,0.8346,
+taxonomy_ne_rate,travel,0.0551,
+taxonomy,hotel,207,pool_pct=1.09;assess=partial
+taxonomy_texts,hotel,207,
+taxonomy_avg_len,hotel,20.07,
+taxonomy_question_rate,hotel,0.029,
+taxonomy_ne_rate,hotel,0.0725,
+taxonomy,customer_service,565,pool_pct=2.97;assess=partial
+taxonomy_texts,customer_service,565,
+taxonomy_avg_len,customer_service,19.39,
+taxonomy_question_rate,customer_service,0.6938,
+taxonomy_ne_rate,customer_service,0.5416,
+taxonomy,tech_device,644,pool_pct=3.39;assess=partial
+taxonomy_texts,tech_device,644,
+taxonomy_avg_len,tech_device,20.36,
+taxonomy_question_rate,tech_device,0.8649,
+taxonomy_ne_rate,tech_device,0.441,
+taxonomy,family_social,60,pool_pct=0.32;assess=sparse
+taxonomy_texts,family_social,60,
+taxonomy_avg_len,family_social,10.58,
+taxonomy_question_rate,family_social,1.0,
+taxonomy_ne_rate,family_social,0.1,
+taxonomy,weather_plans,74,pool_pct=0.39;assess=sparse
+taxonomy_texts,weather_plans,74,
+taxonomy_avg_len,weather_plans,11.31,
+taxonomy_question_rate,weather_plans,0.0,
+taxonomy_ne_rate,weather_plans,0.2432,
+taxonomy,numbers_quantities,5118,pool_pct=26.95;assess=good
+taxonomy_texts,numbers_quantities,5118,
+taxonomy_avg_len,numbers_quantities,21.64,
+taxonomy_question_rate,numbers_quantities,0.5557,
+taxonomy_ne_rate,numbers_quantities,0.0733,
+taxonomy,time_dates,6053,pool_pct=31.87;assess=good
+taxonomy_texts,time_dates,6053,
+taxonomy_avg_len,time_dates,20.3,
+taxonomy_question_rate,time_dates,0.552,
+taxonomy_ne_rate,time_dates,0.0636,
+taxonomy,names_places,1190,pool_pct=6.27;assess=good
+taxonomy_texts,names_places,1190,
+taxonomy_avg_len,names_places,20.05,
+taxonomy_question_rate,names_places,0.6563,
+taxonomy_ne_rate,names_places,1.0,
+vocabulary,unique_cjk_chars,1059,full pool
+vocabulary,unique_bigrams,6520,
+vocabulary,unique_trigrams,11850,
+vocabulary,long_tail_hapax_chars,242,freq=1
+vocabulary_seed,unique_cjk_chars,395,280 seed
+vocabulary_seed,unique_bigrams,1201,
+vocabulary_seed,unique_trigrams,1774,
+vocabulary_ratio,seed_chars_over_pool,0.373,measured
+vocabulary_ratio,seed_bigrams_over_pool,0.1842,measured
+linguistic,question,10916,families=10916
+linguistic,imperative,5464,families=5464
+linguistic,statement_only,5017,families=5017
+linguistic,negation,13711,families=13711
+linguistic,modal,7757,families=7757
+linguistic,short_cjk_lt14,1759,families=0
+linguistic,medium_cjk_14_21,9318,families=0
+linguistic,long_cjk_ge22,7917,families=0
+linguistic,has_digit,0,families=0
+linguistic,time_expr,6053,families=6053
+linguistic,quantity_expr,5117,families=5117
+linguistic,ne_like,1745,families=1745
+linguistic,multi_clause,11036,families=11036
+spot_audit,daily_request,"我麻烦你问一下这个能不能少放一点盐,免得后面又要重新弄; 等一下先别急,帮我看看行李放在哪里再继续",high_overlap_with_function_words
+spot_audit,question,"现场我觉得帮我看看行李放在哪里,免得后面又要重新弄; 早一点问一下早餐几点开始,我确认完再跟你说",none_obvious
+spot_audit,answer,一会儿我听说帮我拿一下旁边那个袋子可以吗; 前面刚才帮我看看这个零件是不是松了行不行,none_obvious
+spot_audit,confirmation,"一会儿帮我看看附近有没有停车位,我确认完再跟你说; 先应该确认一下今天是不是正常营业行不行",none_obvious
+spot_audit,negation,"我这边没别的要求,看看这个接口是不是又报错了就可以; 先先别急,确认一下要不要提前预约再继续",high_overlap_with_function_words
+spot_audit,correction_clarify,"他感觉把最新版本发给我看一下,免得后面又要重新弄; 现场看起来帮我确认一下房间准备好了没有,免得后面又要重新弄",none_obvious
+spot_audit,casual_social,"我想问一下问一下回来的车几点出发,你这边好安排; 最近我觉得问一下这个能不能少放一点盐行不行",none_obvious
+spot_audit,shopping_food,"她我想问一下帮我看看这个菜里面有没有辣椒,免得后面又要重新弄; 店里我记得先把旧的那套逻辑放一边,免得后面又要重新弄",none_obvious
+spot_audit,transport,刚才我想问一下看看前面能不能掉头行不行; 你一会儿问一下回来的车几点出发然后告诉我,none_obvious
+spot_audit,workplace,客户服务里提到了陶瓷杯; 现场这两天确认一下会议是不是改到下午了我有点不确定,none_obvious
+spot_audit,scheduling,"看起来确认一下是不是从这里集合,你们这边好安排; 我觉得确认一下车是不是停在外面,她这边好安排",none_obvious
+spot_audit,travel,"要是方便的话帮我看看行李放在哪里,不用特意等我; 帮我看看行李放在哪里以后跟我说一声就行",none_obvious
+spot_audit,hotel,"之前我确认一下确认一下退房时间是几点我想先确认清楚; 她应该确认一下退房时间是几点,免得后面又要重新弄",none_obvious
+spot_audit,customer_service,"我估计看看这个接口是不是又报错了,家里这边好安排; 现场早一点看看这个接口是不是又报错了别弄错了",none_obvious
+spot_audit,tech_device,"系统显示会上已经完成; 她麻烦你看看这个接口是不是又报错了,免得后面又要重新弄",none_obvious
+spot_audit,family_social,中午一起吃大模型可以吗; 中午一起吃充足可以吗,none_obvious
+spot_audit,weather_plans,天气不错我们去吹风机走走; 天气不错我们去切换台走走,none_obvious
+spot_audit,numbers_quantities,到时候我想问一下问一下这个能不能少放一点盐是不是; 等一下我确认一下看看这个杯子是不是我的行不行,none_obvious
+spot_audit,time_dates,"他先确认一下测试结果有没有更新我有点不确定; 家里看起来把门先关一下有点冷,免得后面又要重新弄",none_obvious
+spot_audit,names_places,"仓储货架编号旁是机场; 公司我听说看看这个价格有没有包含费用,免得后面又要重新弄",none_obvious

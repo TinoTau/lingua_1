@@ -1,0 +1,53 @@
+{
+  "V2_D_CLEAN": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.05,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.05,
+    "TIR_CI95": [
+      0.008881219432873143,
+      0.23613589351256678
+    ],
+    "hits": 1,
+    "UnnecessaryExpansion": 1.0,
+    "Latency_P50": 3.3048999903257936
+  },
+  "V3": {
+    "REAL": {
+      "n": 0,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": null
+    },
+    "DERIVED_REAL": {
+      "n": 9,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": 0.2222222222222222,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.2222222222222222,
+      "TIR_CI95": [
+        0.0632237623122272,
+        0.5474166563271946
+      ],
+      "hits": 2,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.6544999855104834,
+      "source_class": "DERIVED_REAL"
+    },
+    "SYNTHETIC": {
+      "n": 63,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.2222222222222222,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.2222222222222222,
+      "TIR_CI95": [
+        0.13724883861823153,
+        0.33912515601983817
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.976799994939938,
+      "source_class": "SYNTHETIC"
+    }
+  }
+}

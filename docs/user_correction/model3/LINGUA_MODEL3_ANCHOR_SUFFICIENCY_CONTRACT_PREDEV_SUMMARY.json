@@ -1,0 +1,91 @@
+{
+  "phase": "LINGUA_MODEL3_ANCHOR_SUFFICIENCY_CONTRACT_PREDEV_AUDIT",
+  "BASELINE_IDENTITY": "PASS",
+  "previousPhase": "LINGUA_MODEL3_ANCHOR_EVIDENCE_SUFFICIENCY_AUDIT",
+  "FALSE_GROUP_COUNT": 9,
+  "CONTROL_GROUP_COUNT": 12,
+  "CONTROL_GROUP_VALID": "YES",
+  "CURRENT_SUFFICIENCY_CONTRACT": "ABSENT",
+  "RUNTIME_SUFFICIENCY_EVIDENCE_AVAILABLE": "PARTIAL",
+  "EVIDENCE_LOSS_LOCATION": "candidate-materialize.ts drops hit.pinyin_key / hotword pinyin; relation-lexicon-adapter drops nChanged & transformed query syllables before WindowCandidate; dialog200 trace caps candidates at 24 (adapter itself sees full activeCandidates)",
+  "PROFILE_DOMAIN_SUFFICIENCY_ROLE": "CONDITIONAL",
+  "PROFILE_DOMAIN_IS_SUFFICIENCY_EVIDENCE": "CONDITIONAL",
+  "DOMAIN_MEMBERSHIP_SUFFICIENCY_ROLE": "SUPPORT_ONLY",
+  "RETAINED_DOMAIN_MEMBERSHIP_ALONE_CAN_PROVE_ANCHOR": "NO",
+  "MODEL2_PRONUNCIATION_SUFFICIENCY_ROLE": "NONE",
+  "LEXICAL_EVIDENCE_SUFFICIENCY_ROLE": "CONDITIONAL",
+  "RECOMMENDED_CONTRACT": "CONTRACT_A: FULL_GEOMETRY_EXACT_SURFACE_AND_RETAINED_DOMAIN",
+  "RECOMMENDED_CONTRACT_SEMANTICS": "Anchor iff exists activeCandidate bound with full PathFineSpan geometry (raw+syllable equality) whose replacement===spanSurface AND domains ∩ vote.retainedDomains nonempty. PROFILE_DOMAIN soft hits with mismatched surfaces do NOT count. BASE_FUZZY surface-echo without domains does NOT count. PROFILE_PRONUNCIATION alone does NOT count.",
+  "FALSE_ANCHOR_REJECTION": "9/9",
+  "LEGITIMATE_ANCHOR_PRESERVATION": "0/62_current_control_anchors (all classified CURRENT_OVERPROTECTED soft-domain); positive exemplar 行程 preserved under CONTRACT_A",
+  "CAN_FIX_REMAIN_INSIDE_ANCHOR_OWNER": "YES",
+  "JOBRESULT_CHANGE_REQUIRED": "NO",
+  "NEW_MODEL_CALL_REQUIRED": "NO",
+  "NEW_DB_CALL_REQUIRED": "NO",
+  "NEW_MODEL2_CALLS": 0,
+  "PATCH_FREE_LOCAL_REFACTOR_FEASIBLE": "YES",
+  "ARCHITECTURE_CHANGE_PROPOSAL_REQUIRED": "NO",
+  "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+  "ONE_NEXT_OWNER": "ANCHOR_EVIDENCE_SUFFICIENCY_OWNER",
+  "ONE_NEXT_DELTA": "In model3-anchor-adapter.ts materializeModel3Anchors, replace domainOk||model2Ok with FULL_GEOMETRY_EXACT_SURFACE_AND_RETAINED_DOMAIN sufficiency predicate; keep Model2/Domain Vote/FineSpan/Model3/Retry unchanged; service-internal decision reason enum only.",
+  "Q_ANSWERS": {
+    "Q1": "Full-geometry candidate with replacement===spanSurface AND retained-domain membership on that candidate",
+    "Q2": "PROFILE_DOMAIN soft mismatch; retained membership alone; any PROFILE_* existence; BASE_FUZZY ASR surface echo without domain; PROFILE_PRONUNCIATION alone",
+    "Q3": "CONDITIONAL — only if candidate.surface===spanSurface (domain-named lexical), never soft list mismatch",
+    "Q4": "NO",
+    "Q5": "NO — cannot independently prove; mono/partial relation does not prove protection",
+    "Q6": "CONDITIONAL — only with full-geometry exact surface; stronger when combined with retained domain (CONTRACT_A)",
+    "Q7": "Surface equality: E1 at adapter (replacement + rawText slice). Pronunciation coverage positions: upstream relation-lexicon-adapter only",
+    "Q8": "hit.pinyin_key and transformed query syllables / nChanged dropped at candidate-materialize; coverage never reaches Anchor adapter",
+    "Q9": "YES for recommended contract — derive surface equality + domain∩retained from existing WindowCandidate fields; no frozen upstream semantic change",
+    "Q10": "YES",
+    "Q11": "NO",
+    "Q12": "NO"
+  },
+  "contractsCompared": {
+    "CONTRACT_A": {
+      "falseReject": "9/9",
+      "controlCurrentPreserve": "0/62",
+      "note": "recommended"
+    },
+    "CONTRACT_B": {
+      "falseReject": "7/9",
+      "failsOn": [
+        "p2_u002_012 注册",
+        "p2_u004_009 藏"
+      ],
+      "controlCurrentPreserve": "0/62"
+    },
+    "CONTRACT_C": {
+      "falseReject": "7/9",
+      "failsOn": [
+        "p2_u002_012",
+        "p2_u004_009"
+      ],
+      "controlCurrentPreserve": "0/62"
+    }
+  },
+  "acceptance": {
+    "BASELINE_IDENTITY": "PASS",
+    "FALSE_CASES": 9,
+    "CONTROL_CASES": 12,
+    "FALSE_AND_CONTROL_GROUPS_BOTH_AUDITED": "YES",
+    "NO_PILOT_TARGET_USED_AS_RUNTIME_INPUT": "YES",
+    "CURRENT_RUNTIME_FIELDS_INVENTORIED": "YES",
+    "EVIDENCE_LOSS_TRACED": "YES",
+    "P_AND_D_EVIDENCE_SEPARATED": "YES",
+    "DOMAIN_MEMBERSHIP_SEMANTICS_AUDITED": "YES",
+    "PROFILE_DOMAIN_SEMANTICS_AUDITED": "YES",
+    "PRONUNCIATION_COVERAGE_AVAILABILITY_AUDITED": "YES",
+    "MAX_CONTRACT_CANDIDATES": 3,
+    "ALL_CONTRACTS_COUNTERFACTUALLY_TESTED": "YES",
+    "LEGITIMATE_ANCHOR_PROTECTION_RISK_AUDITED": "YES",
+    "MINIMAL_DATA_DELTA_IDENTIFIED": "YES",
+    "OWNERSHIP_BOUNDARY_AUDITED": "YES",
+    "PERFORMANCE_DELTA_AUDITED": "YES",
+    "NO_PRODUCT_CHANGE": "YES",
+    "EXACTLY_ONE_RECOMMENDED_CONTRACT": "YES",
+    "EXACTLY_ONE_NEXT_DELTA": "YES"
+  },
+  "productCodeChange": false
+}

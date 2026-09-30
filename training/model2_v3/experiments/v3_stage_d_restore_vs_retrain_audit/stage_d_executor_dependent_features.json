@@ -1,0 +1,44 @@
+{
+  "EXECUTOR_DEPENDENT_FEATURES": "SOME",
+  "fields": [
+    {
+      "name": "span hash",
+      "dependent": false,
+      "file": "feature_hash_v1.py / pack_batch_inputs"
+    },
+    {
+      "name": "phonetic profile items",
+      "dependent": false
+    },
+    {
+      "name": "lexical term hashes",
+      "dependent": false
+    },
+    {
+      "name": "domain_evidence slots",
+      "dependent": false,
+      "note": "derived from personal_terms × term_domain_tags"
+    },
+    {
+      "name": "state.base_pool",
+      "dependent": true,
+      "note": "count of current base FuzzyPool; still k=16 if base_retrieve_span unchanged"
+    },
+    {
+      "name": "state.n_applicable / applicability",
+      "dependent": false,
+      "note": "P-path phonetic applicability"
+    },
+    {
+      "name": "state.query_budget / cand_budget",
+      "dependent": false,
+      "note": "eval hardcodes 8; not pool32 rank"
+    },
+    {
+      "name": "pool32 rank / rerank score / top8 outcome",
+      "dependent": false,
+      "present": false
+    }
+  ],
+  "Input_Feature_Contract_Changes": false
+}

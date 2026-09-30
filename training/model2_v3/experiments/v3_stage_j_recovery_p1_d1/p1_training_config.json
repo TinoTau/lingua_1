@@ -1,0 +1,19 @@
+{
+  "feature_hash": "v1",
+  "feature_hash_version": "MODEL2_FEATURE_HASH_V1",
+  "with_domain_head": false,
+  "ranking_mode": "bce_pairwise_top1",
+  "pairwise_weight": 1.25,
+  "pairwise_margin": 0.75,
+  "qb_ce_weight": 0.25,
+  "lr": 0.0003,
+  "epochs": 12,
+  "batch_size": 64,
+  "sampler_cap": 8000,
+  "hard_weight": 5.0,
+  "hard_oversample": 3,
+  "init": "phase2_strict",
+  "param_count": 45533,
+  "query_budget_decode": 1,
+  "applicability_bonus": false
+}

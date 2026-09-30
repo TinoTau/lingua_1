@@ -1,0 +1,115 @@
+{
+  "phase": "LINGUA_CORRECT_PROFILE_TARGET_QUERY_LIFECYCLE_ATTRIBUTION_AUDIT_V1",
+  "date": "2026-09-16",
+  "EXPECTED_CASES": 43,
+  "ACTUAL_CASES": 43,
+  "OWNER_MATRIX_TOTAL": 43,
+  "ownerCounts": {
+    "C1_TARGET_LENGTH_WINDOW_NEVER_ENUMERATED": 0,
+    "C2_TARGET_WINDOW_NOT_MODEL2_ELIGIBLE": 0,
+    "C3_MODEL2_ACTION_NOT_TARGET_REACHABLE": 0,
+    "C4_RELATION_TRANSFORM_NOT_TARGET_REACHABLE": 3,
+    "C5_COMPOUND_NON_PROFILE_ASR_ERROR": 17,
+    "C6_TARGET_QUERY_NOT_EXECUTED_FIRST_PASS": 0,
+    "C7_EXECUTED_QUERY_EVIDENCE_NOT_EMITTED": 0,
+    "C8_EVIDENCE_STORE_LIFETIME_LOSS": 0,
+    "C9_RETRY_REGION_CANNOT_COVER_TARGET_QUERY": 23,
+    "C10_STAGE2_TARGET_WINDOW_NOT_ENUMERATED": 0,
+    "C11_QUERY_EVIDENCE_GEOMETRY_CONTRACT_LIMIT": 0,
+    "C12_EVIDENCE_SELECTION_POLICY": 0,
+    "C13_STAGE2_QUERY_EXECUTION_CONTRADICTION": 0,
+    "C14_TARGET_QUERY_REACHED_STAGE2_RECALL": 0,
+    "C15_OTHER_PROVEN": 0,
+    "C16_UNRESOLVED": 0
+  },
+  "steps": [
+    {
+      "name": "CORRECT_PROFILE_residual_QEV7",
+      "count": 43
+    },
+    {
+      "name": "target_length_first_pass_window_exists",
+      "count": 43,
+      "dropOwner": "C1",
+      "drop": 0
+    },
+    {
+      "name": "window_Model2_eligible",
+      "count": 43,
+      "dropOwner": "C2",
+      "drop": 0
+    },
+    {
+      "name": "target_capable_Model2_action_path",
+      "count": 43,
+      "dropOwner": "C3",
+      "drop": 0
+    },
+    {
+      "name": "target_reachable_transformed_query",
+      "count": 23,
+      "dropOwners": [
+        "C4",
+        "C5"
+      ],
+      "drop": 20
+    },
+    {
+      "name": "first_pass_Recall_executed",
+      "count": 23,
+      "dropOwner": "C6",
+      "drop": 0
+    },
+    {
+      "name": "RecallQueryEvidence_emitted",
+      "count": 23,
+      "dropOwner": "C7",
+      "drop": 0
+    },
+    {
+      "name": "evidence_survives_store",
+      "count": 23,
+      "dropOwner": "C8",
+      "drop": 0
+    },
+    {
+      "name": "RetryRegion_fully_covers_target_query",
+      "count": 0,
+      "dropOwner": "C9",
+      "drop": 23
+    },
+    {
+      "name": "target_length_Stage2_window_exists",
+      "count": 0,
+      "dropOwner": "C10",
+      "drop": 0
+    },
+    {
+      "name": "mapper_can_consume_target_evidence",
+      "count": 0,
+      "dropOwner": "C11",
+      "drop": 0
+    },
+    {
+      "name": "target_evidence_selected",
+      "count": 0,
+      "dropOwner": "C12",
+      "drop": 0
+    },
+    {
+      "name": "target_query_reaches_Stage2_Recall",
+      "count": 0,
+      "dropOwner": "C14",
+      "drop": 0
+    }
+  ],
+  "TARGET_REACHABLE_QUERY_EVER_EXISTED_FIRST_PASS": "23/43",
+  "TARGET_REACHABLE_EVIDENCE_STORE_EXISTS": "23/43",
+  "TARGET_REACHABLE_EVIDENCE_BUT_RETRY_REGION_FAIL": 23,
+  "TARGET_REACHABLE_EVIDENCE_AND_REGION_OK_BUT_STAGE2_WINDOW_FAIL": 0,
+  "TARGET_REACHABLE_EVIDENCE_AND_STAGE2_WINDOW_OK_BUT_MAPPER_FAIL": 0,
+  "C9_PARTIAL_COVERAGE": 20,
+  "C9_NO_COVERAGE": 3,
+  "DOMINANT_PROVEN_FIRST_OWNER": "C9_RETRY_REGION_CANNOT_COVER_TARGET_QUERY",
+  "ONE_NEXT_OWNER": "RETRY_REGION GEOMETRY"
+}

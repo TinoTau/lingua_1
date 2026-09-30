@@ -1,0 +1,327 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_BOUNDARY_INVENTORY",
+  "version": "V2_PREDESIGN_AUDIT",
+  "mode": "AUDIT_ONLY",
+  "production_pipeline_chain": [
+    "ASR_HTTP → JobContext.rawAsrText + asrSegments + words",
+    "normalizeForFwRepairInput(rawAsrText) → repairText (OpenCC t→cn + NFKC)",
+    "JobContext acousticToneSlices + segmentTimeOffsetsSec + asrSegmentNodeBatchIndices + segmentCharOffsets",
+    "runFwDetectorV4Path(rawText=repairText)",
+    "buildWordTimeSpans(repairText, asrSegments, offsets…)",
+    "partitionCoarseSpans → buildLexicalWindowQueries → latticeHardBlockFilter → recallTopKForWindows",
+    "mapToneEvidenceForRecall → normalizeToneNorm → CanonicalRecallQuery → SQLite",
+    "expandWindowsWithModel2 (pre-edge) → buildLexicalEdges",
+    "enumerateCompleteSegmentationPaths (pre/post cap)",
+    "materializePathFineSpans → rebindToneForFineSpan",
+    "domain vote / same-domain assembly → sentence candidates",
+    "mergeCrossPathSentenceCandidates → KenLM rerank → apply replacements",
+    "runModel3PathStep (anchors/decisions/retry) → final text"
+  ],
+  "critical_script_transform": {
+    "function": "normalizeForFwRepairInput",
+    "file": "electron_node/electron-node/main/src/fw-detector/normalize-for-fw-repair.ts",
+    "caller": "fw-detector-orchestrator.ts → runFwDetectorV4Path({ rawText: repairText })",
+    "does_not_mutate": "ctx.rawAsrText",
+    "sets": ["ctx.fwRepairNormalizedText", "ctx.fwRepairScriptNormalized"],
+    "impact_on_WTS": "buildWordTimeSpans uses repairText (Simplified) while asrSegments.words tokens may remain Traditional → indexOf misses (explains Replay live WTS n=11 vs Traditional offline rebuild n=15). Capture V1 did not persist consumer-visible WTS or repairText."
+  },
+  "boundaries": [
+    {
+      "id": "B1",
+      "name": "ASR_Representation",
+      "producer": "ASR service → inference JobContext / run-pipeline-with-audio",
+      "consumer": "normalizeForFwRepairInput; buildWordTimeSpans (via segments); partitionCoarseSpans",
+      "source_files": [
+        "inference-service.ts",
+        "normalize-for-fw-repair.ts",
+        "fw-detector-orchestrator.ts"
+      ],
+      "runtime_types": {
+        "rawAsrText": "string (ctx.rawAsrText / rawMergedAsrText)",
+        "repairText": "string (FwRepairNormalizedText.repairText)",
+        "scriptNormalized": "boolean",
+        "asrSegments": "SegmentInfo[] with words[].word|start|end|probability"
+      },
+      "job_context_fields": ["rawAsrText", "asrSegments", "fwRepairNormalizedText", "fwRepairScriptNormalized"],
+      "mutable": false,
+      "normalized_transformed": "YES — Traditional→Simplified via OpenCC in normalizeForFwRepairInput",
+      "current_observability": "JobResult may expose fw_repair_normalized_text / fw_repair_script_normalized; Capture V1 does not persist them (asr.normalizedText=NOT_APPLICABLE)",
+      "capture_v1": "rawMergedAsrText + segments + word_timestamps analysis; NO repairText",
+      "capture_v2_required": "FULL: rawAsrText + repairText + scriptNormalized + segments.words (local times) + hashes"
+    },
+    {
+      "id": "B2",
+      "name": "MultiBatch_Alignment_State",
+      "producer": "inference multi-batch merge / reconstruction helper (Replay)",
+      "consumer": "buildWordTimeSpans; Tone slice absolute time consumers",
+      "source_files": ["inference-service.ts", "tone-time-align.ts", "fw-detector-v4-path.ts"],
+      "runtime_types": {
+        "segmentTimeOffsetsSec": "number[]",
+        "asrSegmentNodeBatchIndices": "number[]",
+        "segmentCharOffsets": "number[]"
+      },
+      "job_context_fields": ["segmentTimeOffsetsSec", "asrSegmentNodeBatchIndices", "segmentCharOffsets"],
+      "mutable": false,
+      "normalized_transformed": false,
+      "current_observability": "JobContext fields; Replay inject echo",
+      "capture_v1": "NOT persisted explicitly; reconstructable from segments×audio in Multi-Batch Alignment Repair V1",
+      "capture_v2_required": "FULL consumer-visible values AT span-assembly entry + reconstruction validation hash (prefer store actual values, hash as guard)"
+    },
+    {
+      "id": "B3",
+      "name": "WordTimeSpan",
+      "producer": "buildWordTimeSpans",
+      "consumer": "recallTopKForWindows (mapToneEvidenceForRecall); rebindToneForFineSpan; Model3 retry regionLocalWordTimeSpans",
+      "source_files": ["tone-time-align.ts", "span-assembly-v4-orchestrator.ts:279", "recall-topk-for-windows.ts"],
+      "runtime_type": "WordTimeSpan { word?, rawStart?, rawEnd?, start, end, segmentIndex?, probability? }",
+      "job_context_fields": "none (local orchestrator variable)",
+      "mutable": false,
+      "normalized_transformed": "rawStart/rawEnd indexed into repairText; absolute start/end = local + segmentTimeOffsetsSec[batch]",
+      "current_observability": "tone_diag.wordTimeSpanCount only; full table NOT exported",
+      "capture_v1": "ABSENT",
+      "capture_v2_required": "FULL_PAYLOAD WordTimeSpan[] canonical serialize + sha256; counts. DO NOT treat offline rebuild as Capture evidence."
+    },
+    {
+      "id": "B4",
+      "name": "Mapped_Tone",
+      "producer": "mapToneEvidenceForRecall / extractAcousticTonePatternForRecall",
+      "consumer": "normalizeToneNorm → CanonicalRecallQuery; WindowCandidate tone fields; FineSpan toneRebindTrace",
+      "source_files": ["tone-time-align.ts", "recall-topk-for-windows.ts", "tone-fine-span-rebind.ts", "utterance-recall-cache.ts"],
+      "runtime_types": {
+        "acousticToneSlices": "AcousticToneSlice[] (frozen inject / JobContext)",
+        "MapToneEvidenceResult": "{ pattern, windowTimeRange, missReason?, failedWordSpan? }",
+        "toneNorm": "string via normalizeToneNorm (digits joined by ',')",
+        "queryTonePinyinKey": "runtime recall key combining pinyin+tone digits (observed e.g. he2|shi2)"
+      },
+      "layers": [
+        "1_raw_Tone_model_output",
+        "2_frozen_acousticToneSlices",
+        "3_mapped_MapToneEvidenceResult.pattern",
+        "4_window_acousticTonePattern",
+        "5_toneNorm_on_CanonicalRecallQuery"
+      ],
+      "current_observability": "exampleToneWindows (truncated); mappingMissReasonCounts; E2 proves slices only",
+      "capture_v1": "acousticToneSlices FULL; mapped pattern ABSENT",
+      "capture_v2_required": "FULL per-window: windowId, rawStart/End, syllableStart/End, windowTimeRange, pattern, missReason, toneNorm; slices remain FULL or HASH_PLUS_SUMMARY"
+    },
+    {
+      "id": "B5",
+      "name": "FineSpan_finespans",
+      "producer": "materializePathFineSpans / lattice pathFineSpanViews; compactFineSpan for trace",
+      "consumer": "domain assembly; Model3 anchors; path packs",
+      "source_files": ["span-assembly-v4-orchestrator.ts", "dialog200-path-trace.ts compactFineSpan", "path-fine-span-types"],
+      "runtime_field": "finespans (NOT fine_spans)",
+      "compact_identity_fields": [
+        "span_id",
+        "source_text",
+        "start",
+        "end",
+        "syllable_start",
+        "syllable_end",
+        "phonetic_representation",
+        "tone_representation",
+        "coarse_span_ids",
+        "window_source",
+        "selection_reason",
+        "boundary_cross_count",
+        "candidate_count"
+      ],
+      "current_observability": "MODEL2_DIALOG200_TRACE→dialog200_path_trace.paths[].finespans",
+      "capture_v1_defect": "compactPath looks for fine_spans|path_fine_spans|spans — NEVER finespans → fine_span_count always 0",
+      "capture_v2_required": "FULL untruncated finespans per path_id using Production field name; identity = span_id + geometry + phonetic + tone_representation"
+    },
+    {
+      "id": "B6",
+      "name": "WindowQuery",
+      "producer": "buildLexicalWindowQueries + latticeHardBlockFilter (Production). NOTE: generate-global-windows.ts is harness-only — NOT the Production window producer.",
+      "consumer": "recallTopKForWindows",
+      "source_files": ["build-lexical-window-queries.ts", "lattice-fine-span-runtime.ts", "window-construction-core.ts", "recall-topk-for-windows.ts"],
+      "runtime_type": "GlobalWindowDescriptor / recallableWindows after hard-block filter: windowId, windowText, rawStart/End, syllableStart/End, windowPinyinKey, spanIds, blocked",
+      "counts_must_separate": [
+        "globalWindowGeneratedCount",
+        "logicalWindowRecallCount",
+        "blockedWindowCount",
+        "uniqueRecallKeyCount"
+      ],
+      "capture_v1": "ABSENT",
+      "capture_v2_required": "FULL logical recall window list AFTER hard-block filter, BEFORE SQL (no truncation); also record generated vs blocked counts"
+    },
+    {
+      "id": "B7",
+      "name": "CanonicalRecallQuery",
+      "producer": "buildSpanV3CanonicalQuery + serializeCanonicalRecallQueryKey",
+      "consumer": "UtteranceRecallCache + lexicon exact lookup",
+      "source_files": ["utterance-recall-cache.ts", "recall-topk-for-windows.ts"],
+      "CanonicalRecallQueryIdentity": {
+        "derived_from_production": true,
+        "serializeCanonicalRecallQueryKey": "v2|kind|pinyinKey|toneNorm|domainsSorted|exactTopK|lexiconVersion|surfaceText",
+        "fields": {
+          "kind": "span_v3_bundle",
+          "pinyinKey": "string",
+          "toneNorm": "normalizeToneNorm(acousticTonePattern) — comma-joined digits or ''",
+          "domainScope": "sorted unique domain ids (empty for length-1)",
+          "exactTopK": "1 for single-char else V4_LIMITS.exactTopK",
+          "lexiconVersion": "string",
+          "surfaceText": "window.windowText"
+        }
+      },
+      "capture_v1": "ABSENT",
+      "capture_v2_required": "FULL every issued query: canonical object + serialized key + cache hit/miss"
+    },
+    {
+      "id": "B8",
+      "name": "Base_SQL_Lexicon_Recall",
+      "producer": "lexicon-v2 recall-span-topk / SQLite statements",
+      "consumer": "LexiconFactHit → WindowCandidate binding",
+      "source_files": ["lexicon-v2/*", "recall-topk-for-windows.ts", "utterance-recall-cache.ts"],
+      "counts_must_separate": [
+        "logicalQueryCount",
+        "uniqueRecallKeyCount",
+        "physicalSqlStatementCount",
+        "cacheHitCount",
+        "cacheMissCount",
+        "sql_row_occurrence_count",
+        "unique_sql_row_identity_count"
+      ],
+      "capture_v1": "ABSENT (only truncated base_candidates surfaces)",
+      "capture_v2_required": "HASH_PLUS_SUMMARY or FULL per query: bound params, tone_exact/fuzzy stage, ordered row identities (termId/surface/pinyin/tone/domains); DECISION_REQUIRED on FULL vs HASH for row payloads"
+    },
+    {
+      "id": "B9",
+      "name": "Base_Materialization",
+      "producer": "recall hit → WindowCandidate; compactCandidate for trace",
+      "consumer": "Model2 expand; LexicalEdge; path packs base_candidates",
+      "source_files": ["recall-topk-for-windows.ts", "dialog200-path-trace.ts"],
+      "identity_fields": [
+        "candidateId",
+        "termId",
+        "surface(=replacement)",
+        "pinyin(=windowPinyinKey)",
+        "provenance",
+        "source",
+        "syllableStart",
+        "syllableEnd",
+        "rawStart",
+        "rawEnd",
+        "score",
+        "domains",
+        "hitKind"
+      ],
+      "comparator_recommendation": {
+        "primary_for_E3_set_identity": "unique set of surface|candidateId|syllable range (SET equality)",
+        "secondary": "multiset occurrence counts",
+        "not_default": "ordered list equality"
+      },
+      "capture_v1": "truncated surfaces slice(0,48) — INVALID for set proof",
+      "capture_v2_required": "FULL untruncated unique set + occurrence multiset + provenance to windowId/canonicalKey"
+    },
+    {
+      "id": "B10",
+      "name": "Model2_Input",
+      "producer": "window-evidence / expand-windows-with-model2",
+      "consumer": "Model2 inference",
+      "source_files": ["expand-windows-with-model2.ts", "window-evidence.ts"],
+      "capture_v1": "PARTIAL path_trace model2 summary; compactWindowEvidence available in code but not always persisted full",
+      "capture_v2_required": "FULL or HASH_PLUS_SUMMARY of WindowEvidence list (windowId, text, geometry, pinyin, acousticTonePattern, baseCandidates identity)"
+    },
+    {
+      "id": "B11",
+      "name": "Model2_Output",
+      "producer": "Model2 expand diagnostics",
+      "consumer": "LexicalEdge / after_model2_candidates",
+      "capture_v1": "PARTIAL truncated model2_union surfaces; path_trace model2 when TRACE=1",
+      "capture_v2_required": "FULL selected_actions + introduced termIds + after_model2 candidate identity set (untruncated)"
+    },
+    {
+      "id": "B12",
+      "name": "LexicalEdge_Graph",
+      "producer": "buildLexicalEdges",
+      "consumer": "enumerateCompleteSegmentationPaths",
+      "source_files": ["build-lexical-edges.ts", "lattice-fine-span-runtime.ts"],
+      "capture_v1": "ABSENT",
+      "capture_v2_required": "FULL edge list identity: syllableStart/End, edgeKind, recallEvidence flags; HASH of sorted edge keys"
+    },
+    {
+      "id": "B13",
+      "name": "SegmentationPath_PreCap",
+      "producer": "enumerateCompleteSegmentationPaths completePathCountBeforePrune",
+      "consumer": "path cap / prune",
+      "source_files": ["enumerate-complete-segmentation-paths.ts"],
+      "capture_v1": "ABSENT",
+      "capture_v2_required": "FULL: completePathCountBeforePrune + path_id/boundaryKey list before prune OR HASH of sorted path identities"
+    },
+    {
+      "id": "B14",
+      "name": "SegmentationPath_PostCap",
+      "producer": "enumerateCompleteSegmentationPaths retained paths + pathCapEvents",
+      "consumer": "pathFineSpanViews",
+      "limits": "V4_LIMITS.maxCompleteSegmentationPaths=8; maxActivePathsPerPosition",
+      "capture_v1": "pathCount + path_ids only (post-cap survivors)",
+      "capture_v2_required": "FULL retained path_ids + pathCapEvents + pruned path traces (or HASH_PLUS_SUMMARY)"
+    },
+    {
+      "id": "B15",
+      "name": "DomainVote_SameDomain_Assembly",
+      "producer": "assemble-domain-aware-span-sets / vote",
+      "consumer": "sentence candidates; Model3 voteFrozen",
+      "capture_v1": "PARTIAL domain_vote retained_domains",
+      "capture_v2_required": "FULL domainScores, retainedDomains, utteranceDomain, insufficientEvidence, per-path assembly sentence texts (untruncated or HASH+full text list)"
+    },
+    {
+      "id": "B16",
+      "name": "Global_Sentence_KenLM",
+      "producer": "mergeCrossPathSentenceCandidates + runFwSentenceRerankFromPrefilled",
+      "consumer": "applyFwSpanReplacements",
+      "source_files": ["span-assembly-v4-orchestrator.ts", "kenlm/run-fw-sentence-rerank-from-prefilled.ts"],
+      "capture_v1": "kenlm_input_texts slice(0,24); kenlm_top_texts slice(0,16); pool count; TRACE kenlm_rerank partial",
+      "capture_v2_required": "FULL pool texts; picked text; pickedIsRaw; kenlmQueryCount; per-candidate scores if available; gate decision; DECISION_REQUIRED float equality"
+    },
+    {
+      "id": "B17",
+      "name": "Model3_Input_Anchor_Output",
+      "producer": "runModel3PathStep / materializeModel3Anchors",
+      "consumer": "retry router; final path text",
+      "source_files": ["run-model3-path-step.ts", "model3-anchor-adapter.ts"],
+      "trace_fields_when_DIALOG200_TRACE": [
+        "anchors",
+        "decisions",
+        "inference_input_trace",
+        "retry_regions",
+        "checkpoint_identity"
+      ],
+      "capture_v1_gap": "Capture compactPath drops anchors/inference_input_trace → E16 NOT_EVALUABLE corpus-wide",
+      "capture_v2_required": "FULL anchors + decisions + inference_input_trace (or packed feature HASH + identity fields) per path; checkpoint sha"
+    },
+    {
+      "id": "B18",
+      "name": "Final_Selection",
+      "producer": "applyFwSpanReplacements / postprocess",
+      "consumer": "JobResult final text",
+      "capture_v1": "finalPostprocessText AVAILABLE",
+      "capture_v2_required": "FULL final text + hash (already adequate); keep as COMPARISON_ONLY terminal"
+    }
+  ],
+  "existing_side_channels": [
+    {
+      "name": "MODEL2_DIALOG200_TRACE=1",
+      "sink": "JobResult.extra.dialog200_path_trace (via result-builder-core; not business JobResult core schema)",
+      "content": "paths[].finespans, base_candidates (cap 24), model2, model3 anchors/decisions/inference_input_trace, assembly, domain_vote"
+    },
+    {
+      "name": "spanAssemblyV4.tone diagnostics",
+      "sink": "FwDetectorResult.spanAssemblyV4.tone",
+      "content": "counts + truncated exampleToneWindows; wordTimeSpanCount"
+    },
+    {
+      "name": "UtteranceRecallCacheStats",
+      "sink": "lattice utteranceRecallStats",
+      "content": "request/unique/hit/miss/physicalSql counts — no per-query payload"
+    }
+  ],
+  "observer_effect_rules": [
+    "snapshot/copy only; never mutate Maps/Sets in place for serialization",
+    "gate with dedicated CAPTURE/TRACE env; default OFF",
+    "must not change cache keys, SQL, path order, model inputs, thresholds",
+    "compactCandidates DIALOG200_CANDIDATE_CAP=24 must NOT be used as V2 equivalence payload"
+  ]
+}

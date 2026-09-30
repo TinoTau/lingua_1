@@ -1,0 +1,16 @@
+{
+  "lattice_cr_1_0_2_requires_minPrior_for_length1": "NOT_STATED",
+  "lattice_cr_1_0_2_requires_bypass_minPrior": "NOT_STATED",
+  "collector_frozen": {
+    "base_only": true,
+    "exact_only": true,
+    "no_fuzzy": true,
+    "no_domain": true,
+    "cap_1": true
+  },
+  "collector_already_noise_control": true,
+  "extra_generic_minPrior_on_accepted_hits": true,
+  "double_filtering": "YES_FOR_LENGTH1_NOISE",
+  "implementation_drift_rule_met": false,
+  "reason_not_drift": "No freeze evidence of length-1 bypass or length-1 minPrior < 0.5"
+}

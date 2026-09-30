@@ -1,0 +1,108 @@
+{
+  "evaluatorId": "MODEL3_V2_L3_EVALUATOR_V1",
+  "evaluatorVersion": "20260831_v1",
+  "marginBuckets": {
+    "WEAK": "0 < margin < 1",
+    "MODERATE": "1 <= margin < 3",
+    "STRONG": "margin >= 3",
+    "NONPOSITIVE": "margin <= 0"
+  },
+  "localClasses": [
+    "SAME_LOCAL_ERROR_REGION",
+    "TARGET_ADJACENT",
+    "TARGET_OVERLAP"
+  ],
+  "dedup": "logical_(caseId,start,end,surface)_max_margin",
+  "reconciliation": {
+    "resolved": true,
+    "historicalSource": "model3_v2_s2_retry_margin_analysis.csv + S2 localization report",
+    "historicalLogicalClear": 24,
+    "historicalStrong": 10,
+    "authoritativeLogicalClear": 24,
+    "authoritativeStrong": 11,
+    "authoritativeLegacyBucketStrong": 11,
+    "onlyStrongInAuthoritative": [
+      [
+        "d176",
+        "16",
+        "17",
+        "忙"
+      ]
+    ],
+    "onlyStrongInHistorical": [],
+    "boundaryCrossings": [
+      {
+        "key": [
+          "d176",
+          "16",
+          "17",
+          "忙"
+        ],
+        "histMargin": 2.853264331817627,
+        "authMargin": 3.242930054664612
+      }
+    ],
+    "causeTags": [
+      "HISTORICAL_CSV_VS_AUTHORITATIVE_REPLAY",
+      "ONE_SPAN_MARGIN_CROSSED_OR_REPLAYED_ABOVE_3",
+      "SAME_LOGICAL_CLEAR_COUNT_EXPECTED_24"
+    ],
+    "note": "Discrepancy is evaluation SSOT (historical snapshot margins vs single authoritative replay dedup), not model/registry drift. Freeze uses authoritative recompute."
+  },
+  "baselines": {
+    "S2": {
+      "L1": 6,
+      "L2": 13,
+      "L3": {
+        "affectedCases": 12,
+        "logicalUniqueSpans": 24,
+        "STRONG": 11,
+        "MODERATE": 9,
+        "WEAK": 4,
+        "NONPOSITIVE": 0,
+        "legacyBucketCounts": {
+          "MODERATE": 9,
+          "WEAK": 4,
+          "STRONG": 11
+        },
+        "meanMargin": 3.337160721886903,
+        "medianMargin": 2.777118444442749,
+        "maxMargin": 7.750890731811523,
+        "minMargin": 0.06182343512773514
+      },
+      "L4": {
+        "falseRetryCases": 0,
+        "controls": 6,
+        "logicalSpans": 0,
+        "maxMargin": null
+      }
+    },
+    "S3": {
+      "L1": 6,
+      "L2": 13,
+      "L3": {
+        "affectedCases": 8,
+        "logicalUniqueSpans": 17,
+        "STRONG": 12,
+        "MODERATE": 3,
+        "WEAK": 2,
+        "NONPOSITIVE": 0,
+        "legacyBucketCounts": {
+          "MODERATE": 3,
+          "STRONG": 12,
+          "WEAK": 2
+        },
+        "meanMargin": 5.837132639744702,
+        "medianMargin": 5.264155864715576,
+        "maxMargin": 13.26422119140625,
+        "minMargin": 0.4164907783269882
+      },
+      "L4": {
+        "falseRetryCases": 0,
+        "controls": 6,
+        "logicalSpans": 0,
+        "maxMargin": null
+      }
+    }
+  }
+}

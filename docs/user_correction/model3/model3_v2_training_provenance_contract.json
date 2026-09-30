@@ -1,0 +1,57 @@
+{
+  "contractId": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT",
+  "status": "AUTHORITATIVE_FOR_TRAINING_MATERIALIZATION",
+  "promotedFrom": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT_DRAFT",
+  "date": "2026-08-30",
+  "model3RuntimeModality": "TEXT_ONLY",
+  "textIdentity": {
+    "rawActualAsrText": "ASR /utterance text (provenance/audit only)",
+    "model3CurrentText": "normalizeForFwRepairInput(rawActualAsrText).repairText",
+    "gate": "MODEL3_CURRENT_TEXT_IDENTITY_VALID"
+  },
+  "featureProvenanceMayBeAcousticDependent": true,
+  "primaryFeature": "rawFirstPassCandidateCount → first_pass_cand_log1p",
+  "productionCandChainFrozen": [
+    "Audio",
+    "FW/ASR timestamps",
+    "ToneModule",
+    "AcousticToneSlice[]",
+    "WordTimeSpan[]",
+    "acousticTonePattern",
+    "resolveToneRecallReadiness=ready",
+    "Tone SQL Recall",
+    "PathFineSpan.candidates",
+    "model3FirstPassCandidateCount"
+  ],
+  "forbidden": [
+    "text→dictionary tone→lexicon as cand substitute",
+    "Plain Recall restore",
+    "Model3-specific Recall",
+    "override actual ASR text with planned corruption",
+    "ASR mismatch == automatic RETRY",
+    "fake cand / fake acousticTonePattern",
+    "silent Anchor NONE when Domain/Model2 owners skipped",
+    "JobResult training provenance blob"
+  ],
+  "preferredSupervisedRoute": "B2_CLOSED_LOOP_ASR",
+  "coherenceGate": {
+    "name": "LABEL_FEATURE_PROVENANCE_COHERENT",
+    "passWhen": [
+      "model3CurrentText equals text used for FineSpan/cand/path materialization",
+      "malformedRegion from align(model3CurrentText, referenceText)",
+      "features+anchors from same ASR/Tone/Recall/materialization run"
+    ],
+    "failCode": "CROSS_SAMPLE_PROVENANCE_MISMATCH"
+  },
+  "splitIdentity": {
+    "semanticFamilyId": "split locking — same reference / near-dup family",
+    "materializationRunId": "concrete audio/ASR/Tone run — NOT used for split",
+    "forbidden": "familyId = hash(referenceId + audioRunId + asrRunId)"
+  },
+  "accounting": {
+    "HARD_REJECT": "invalid pipeline/sample state",
+    "SEMANTIC_EXCLUDE": "valid materialization but no KEEP/RETRY target (e.g. NO_REPAIRABLE_TARGET)"
+  },
+  "jobResult": "MUST_NOT_INCLUDE_FULL_TRAINING_PROVENANCE_BLOB",
+  "formalHarness": "training/model3_dataset/offline_harness/acoustic_b2_formal_materialize.cjs"
+}

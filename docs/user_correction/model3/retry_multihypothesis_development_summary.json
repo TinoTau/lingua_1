@@ -1,0 +1,32 @@
+{
+  "phase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_DEVELOPMENT",
+  "date": "2026-08-29",
+  "dedupSemanticEquivalence": "PASS",
+  "dedupKey": "syllableStart:syllableEnd:rawStart:rawEnd",
+  "pathDependentSemanticsLost": false,
+  "preferredPathFineSpanView": "REMOVED",
+  "controlledCaseCount": 13,
+  "multipathCaseCount": 6,
+  "regionsWithNewlyVisibleSpans": 6,
+  "crossAnchor": 0,
+  "crossKeep": 0,
+  "outOfRegion": 0,
+  "maxFinalCandidates": 26,
+  "budgetLe16": false,
+  "d160": {
+    "retainedPaths": 4,
+    "beforeLocalSpans": "顺|便|向|木|李",
+    "afterDedupLocalSpans": "顺|便|向|木|李|向木|顺便",
+    "newlyVisible": "向木|顺便",
+    "stage2RecallReached": true,
+    "alternativeHypothesisVisible": true
+  },
+  "performance": {
+    "environment": "ELECTRON_RUN_AS_NODE",
+    "realSqliteRecall": true,
+    "medianRetryRegionLatencyMs": 6,
+    "p95RetryRegionLatencyMs": 25
+  },
+  "singlePathRegression": true,
+  "verdict": "PENDING_DIALOG200"
+}

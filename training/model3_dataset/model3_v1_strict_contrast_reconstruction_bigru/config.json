@@ -1,0 +1,22 @@
+{
+  "embed_dim": 64,
+  "hidden_dim": 128,
+  "feat_dim": 6,
+  "feat_names": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "batch_size": 64,
+  "epochs": 8,
+  "lr": 0.001,
+  "class_weight_retry": 2.6160994112052585,
+  "seed": 2026082503,
+  "init": "random_from_scratch",
+  "pair_consistency_loss": true,
+  "paired_sampling": true,
+  "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1"
+}

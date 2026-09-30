@@ -1,0 +1,84 @@
+{
+  "phase": "MODEL3_V1_SYNTHETIC_TRAINING_DATA_AND_BASELINE_DEVELOPMENT",
+  "validation": {
+    "schema_pass": true,
+    "alignment_pass": true,
+    "anchor_retry": 0,
+    "retry_without_reachability_yes": 0,
+    "fake_acoustic": 0,
+    "dialog_200": 0,
+    "split_leakage_zero": true,
+    "validation_fail_reasons": {},
+    "sample_count": 100000,
+    "retry_ratio_eligible_non_anchor": 0.014312,
+    "hard_negative_spans": 58600,
+    "anchor_conditioned_utterances": 79227,
+    "human_qa_sample_count": 500,
+    "gate_pass": true,
+    "human_qa": "PASS"
+  },
+  "split_leakage": {
+    "sourceSentenceId_leakage": {
+      "train_dev": 0,
+      "train_test": 0,
+      "dev_test": 0
+    },
+    "contrastGroupId_leakage": {
+      "train_dev": 0,
+      "train_test": 0,
+      "dev_test": 0
+    },
+    "surfacePairKey_leakage": {
+      "train_dev": 63,
+      "train_test": 62,
+      "dev_test": 57
+    },
+    "dialog_200": 0,
+    "gate_note": "Gate uses sourceSentenceId/contrastGroupId zero leakage only"
+  },
+  "dataset_distribution": {
+    "total": 100000,
+    "train": 79912,
+    "dev": 10042,
+    "test": 10046
+  },
+  "anchor_distribution": {
+    "utterance_anchor_conditioned": 79227,
+    "utterance_no_anchor": 20773,
+    "sidecar_buckets": {
+      "SIMULATED_TRAINING": 79227,
+      "NO_ANCHOR": 20773
+    },
+    "real_domain_utterances": 0
+  },
+  "label_distribution": {
+    "KEEP": 1896795,
+    "MASKED": 79227,
+    "RETRY": 27541
+  },
+  "corruption_distribution": {
+    "z_zh": 6532,
+    "sh_s": 33989,
+    "ch_c": 11332,
+    "n_l": 11630,
+    "in_ing": 14314,
+    "eng_en": 5371,
+    "h_f": 1740,
+    "ORTHOGRAPHIC_DE_DI_DE": 1233
+  },
+  "corruption_variant_kinds": {
+    "SINGLE_PHONETIC": 65014,
+    "CLEAN_KEEP": 20023,
+    "DOUBLE_PHONETIC": 14024,
+    "ORTHO_HARD_NEG": 939
+  },
+  "repairability_distribution": {
+    "eligible_non_anchor": 1924336,
+    "RETRY": 27541
+  },
+  "dataset_paths": {
+    "root": "training/model3_dataset/model3_v1_synthetic_100k",
+    "manifest": "training/model3_dataset/model3_v1_synthetic_100k/dataset_manifest.json",
+    "sidecar": "training/model3_dataset/model3_v1_synthetic_100k/anchor_provenance_sidecar.jsonl"
+  }
+}

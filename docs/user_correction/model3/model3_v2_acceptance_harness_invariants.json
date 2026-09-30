@@ -1,0 +1,25 @@
+{
+  "phase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION",
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "invariants": {
+    "domainVoteOncePerPathUpstream": true,
+    "noRecursiveModel3": true,
+    "retryAtMostOncePerPath": true,
+    "effectiveAnchorRetry": 0,
+    "anchorMutation": 0,
+    "candidateSentenceCap": 16,
+    "multipathPreserved": true,
+    "jobResultUnchanged": true,
+    "model3StageSemantics": "ONE_DECISION_STAGE_PER_PATH_MAY_EVALUATE_MULTIPLE_SPANS_NO_SECOND_STAGE_AFTER_RETRY"
+  },
+  "checks": {
+    "secondDomainVote": "FAIL_IF_vote_call_count_gt_1",
+    "recursiveModel3": "FAIL_IF_retry_triggers_prepare_again",
+    "anchorRetry": "FAIL_IF_isAnchor_and_decision_RETRY",
+    "candidateCap": "FAIL_IF_kenlm_pool_gt_16",
+    "packedSymmetry": "FAIL_IF_baselinePacked_ne_s3Packed",
+    "mutationIsolation": "FAIL_IF_hash_after_branch_ne_original"
+  },
+  "productionBehaviorChange": false,
+  "permanentDualMainline": false
+}

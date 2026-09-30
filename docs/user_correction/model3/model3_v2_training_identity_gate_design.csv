@@ -1,0 +1,10 @@
+gateId,classification,design,onMismatch,thresholdFreeze
+G0,REQUIRED_BLOCKING,checkpoint↔manifest↔shards identity before sample load,HARD STOP DATASET_IDENTITY_MISMATCH,N/A
+G1,REQUIRED_BLOCKING,semanticFamilyId overlap==0,HARD STOP,N/A
+G2,REQUIRED_BLOCKING,feature contract + cand field present,HARD STOP,N/A
+G3,USEFUL_NONBLOCKING,EXPECTED_VARIABLE non-collapse,HARD if expected variable collapsed,do not freeze floors yet
+G4,USEFUL_NONBLOCKING,position shortcut principle,TBD,NO 0.35/0.10 not SSOT
+G5,USEFUL_NONBLOCKING,cand zero AND nonzero present,HARD if all-zero,no histogram match
+G6,REQUIRED_BLOCKING,V2 label contract,HARD STOP,N/A
+G7,USEFUL_NONBLOCKING,geometry advisory,soft,PREMATURE
+G8,REQUIRED_BLOCKING,heldout contamination==0,HARD STOP,N/A

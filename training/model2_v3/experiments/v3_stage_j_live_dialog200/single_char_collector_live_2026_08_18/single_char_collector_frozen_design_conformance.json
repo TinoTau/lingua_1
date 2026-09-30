@@ -1,0 +1,21 @@
+{
+  "base_only": "PASS",
+  "exact_only": "PASS",
+  "no_fuzzy": "PASS",
+  "no_domain": "PASS",
+  "cap_1": "PASS",
+  "frozen_collector_semantics": "PASS",
+  "hidden_filter": "YES",
+  "unjustified_filter": [
+    "bindLexiconHitsToWindow minPrior=0.5 vs length-1 priorScore<=0.3"
+  ],
+  "conditions": {
+    "tone_fail_closed": "FROZEN_REQUIRED",
+    "unique_only": "FROZEN_REQUIRED",
+    "surface_exact_windowText": "FROZEN_REQUIRED",
+    "LIMIT_8": "FROZEN_REQUIRED",
+    "minCandidateScore": "SAFETY_CAP",
+    "eligible_alias_prior": "IMPLEMENTATION_DETAIL",
+    "normalization_overlay": "TRACE_ONLY"
+  }
+}

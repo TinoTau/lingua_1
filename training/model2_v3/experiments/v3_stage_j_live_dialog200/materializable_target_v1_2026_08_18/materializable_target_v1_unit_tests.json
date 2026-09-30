@@ -1,0 +1,19 @@
+{
+  "trace_contract": "MATERIALIZABLE_TARGET_V1",
+  "runner": "node --test electron_node/electron-node/tests/lib/materializable-target-v1.test.mjs",
+  "result": "12/12 PASS",
+  "cases": [
+    "unchanged ngram is not a required correction unit",
+    "single substitution unit",
+    "multi substitution produces multiple required units or one hunk",
+    "insert unit",
+    "delete unit",
+    "legacy hasTarget counts unchanged ngram — V1 must not",
+    "candidate surface shorter / longer still binds if it is the correction",
+    "candidate exists but wrong span is not path_recoverable",
+    "candidate exists and eligible is path_recoverable",
+    "assembled partial vs full correction",
+    "overlapping windows: reconstructEligibility nested → parent fragment",
+    "trace_contract is versioned"
+  ]
+}

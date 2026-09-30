@@ -1,0 +1,253 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_COMPLETENESS_MATRIX",
+  "version": "V2_PREDESIGN_AUDIT",
+  "legend": {
+    "V2_Required": ["FULL", "HASH_ONLY", "HASH_PLUS_SUMMARY", "RECONSTRUCTABLE", "NOT_REQUIRED"],
+    "Missing": ["YES", "NO", "PARTIAL"]
+  },
+  "rows": [
+    {
+      "Boundary": "B1_ASR",
+      "ProductionConcept": "rawAsrText + repairText + segments.words",
+      "Producer": "ASR + normalizeForFwRepairInput",
+      "Consumer": "V4 path rawText=repairText; WTS builder",
+      "V1Evidence": "rawMergedAsrText+segments; repairText ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "side-channel snapshot at orchestrator entry + ASR inject boundary",
+      "Comparator": "exact string + segment word token/time equality",
+      "ReplayRequirement": "INJECT raw ASR+segments; RECOMPUTE repairText; COMPARE repairText",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B2_Alignment",
+      "ProductionConcept": "segmentTimeOffsetsSec / batchIndices / charOffsets",
+      "Producer": "inference merge",
+      "Consumer": "buildWordTimeSpans",
+      "V1Evidence": "ABSENT (Replay reconstructs)",
+      "V2Required": "FULL",
+      "CaptureMethod": "snapshot JobContext values at span-assembly call",
+      "Comparator": "exact numeric arrays (float bit-identical preferred)",
+      "ReplayRequirement": "INJECTION_STATE (already repaired)",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B3_WordTimeSpan",
+      "ProductionConcept": "WordTimeSpan[] consumer-visible",
+      "Producer": "buildWordTimeSpans(repairText,…)",
+      "Consumer": "mapToneEvidenceForRecall; FineSpan tone rebind",
+      "V1Evidence": "ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "snapshot array immediately after buildWordTimeSpans + sha256",
+      "Comparator": "ordered list equality of {word,rawStart,rawEnd,start,end,segmentIndex}",
+      "ReplayRequirement": "COMPARISON_ONLY (recompute; never inject Capture WTS)",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B4_MappedTone",
+      "ProductionConcept": "per-window acousticTonePattern + toneNorm",
+      "Producer": "mapToneEvidenceForRecall",
+      "Consumer": "CanonicalRecallQuery",
+      "V1Evidence": "slices only; mapped ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "per-window snapshot in recallTopKForWindows (audit sink)",
+      "Comparator": "pattern array + toneNorm + missReason exact",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B5_FineSpan",
+      "ProductionConcept": "paths[].finespans",
+      "Producer": "materializePathFineSpans + compactFineSpan",
+      "Consumer": "assembly / Model3",
+      "V1Evidence": "broken field name fine_spans → empty",
+      "V2Required": "FULL",
+      "CaptureMethod": "persist dialog200_path_trace.finespans untruncated",
+      "Comparator": "set of span_id+geometry+phonetic+tone_representation",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B6_WindowQuery",
+      "ProductionConcept": "logical recall windows (post latticeHardBlockFilter)",
+      "Producer": "buildLexicalWindowQueries + latticeHardBlockFilter",
+      "Consumer": "recallTopKForWindows",
+      "V1Evidence": "ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "snapshot windows before SQL loop",
+      "Comparator": "multiset of windowId+geometry+surface+pinyinKey",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B7_CanonicalRecallQuery",
+      "ProductionConcept": "serializeCanonicalRecallQueryKey identity",
+      "Producer": "buildSpanV3CanonicalQuery",
+      "Consumer": "utterance recall cache / SQL",
+      "V1Evidence": "ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "log every canonical object + key + cache outcome",
+      "Comparator": "set equality of serialized keys (+ surface/toneNorm fields)",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B8_BaseSQL",
+      "ProductionConcept": "bound params + returned row identities",
+      "Producer": "lexicon SQLite recall",
+      "Consumer": "materialization",
+      "V1Evidence": "ABSENT",
+      "V2Required": "HASH_PLUS_SUMMARY",
+      "CaptureMethod": "per-query params + ordered termId/surface list; optional FULL rows",
+      "Comparator": "params exact; row identity sequence exact under identical params",
+      "ReplayRequirement": "COMPARISON_ONLY (same lexicon IDENTITY_GUARD)",
+      "Missing": "YES",
+      "note": "FULL row payload size = DECISION_REQUIRED D3"
+    },
+    {
+      "Boundary": "B9_BaseMaterialization",
+      "ProductionConcept": "WindowCandidate / base_candidates identity",
+      "Producer": "recall binding",
+      "Consumer": "Model2 / edges",
+      "V1Evidence": "truncated surfaces",
+      "V2Required": "FULL",
+      "CaptureMethod": "untruncated candidate objects + unique set + multiset",
+      "Comparator": "SET primary; MULTISET secondary; order NOT required",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B10_Model2Input",
+      "ProductionConcept": "WindowEvidence",
+      "Producer": "window-evidence builder",
+      "Consumer": "Model2",
+      "V1Evidence": "PARTIAL",
+      "V2Required": "HASH_PLUS_SUMMARY",
+      "CaptureMethod": "compactWindowEvidence full list + hash",
+      "Comparator": "hash + summary identity fields",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B11_Model2Output",
+      "ProductionConcept": "selected_actions + after_model2 candidates",
+      "Producer": "expand-windows-with-model2",
+      "Consumer": "edges",
+      "V1Evidence": "PARTIAL truncated",
+      "V2Required": "FULL",
+      "CaptureMethod": "TRACE path pack untruncated",
+      "Comparator": "set equality of introduced candidates/actions",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B12_LexicalEdge",
+      "ProductionConcept": "LexicalEdge graph",
+      "Producer": "buildLexicalEdges",
+      "Consumer": "path enum",
+      "V1Evidence": "ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "snapshot edge keys + kinds + evidence flags",
+      "Comparator": "set equality of edge identity keys",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B13_PathPreCap",
+      "ProductionConcept": "complete paths before prune",
+      "Producer": "enumerateCompleteSegmentationPaths",
+      "Consumer": "cap",
+      "V1Evidence": "ABSENT",
+      "V2Required": "HASH_PLUS_SUMMARY",
+      "CaptureMethod": "count + sorted path identity hash + optional full list",
+      "Comparator": "count + hash",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B14_PathPostCap",
+      "ProductionConcept": "retained paths + pathCapEvents",
+      "Producer": "enumerateCompleteSegmentationPaths",
+      "Consumer": "FineSpan views",
+      "V1Evidence": "pathCount + path_ids",
+      "V2Required": "FULL",
+      "CaptureMethod": "retained path_ids + capEvents",
+      "Comparator": "ordered retained path_id list (deterministic enum)",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B15_DomainAssembly",
+      "ProductionConcept": "vote + sentence assembly",
+      "Producer": "assemble-domain-aware-span-sets",
+      "Consumer": "KenLM pool",
+      "V1Evidence": "PARTIAL domain_vote",
+      "V2Required": "FULL",
+      "CaptureMethod": "vote fields + sentence text list",
+      "Comparator": "vote equality + sentence text set",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B16_KenLM",
+      "ProductionConcept": "pool + scores + gate",
+      "Producer": "mergeCrossPath + kenlm scorer",
+      "Consumer": "final apply",
+      "V1Evidence": "truncated texts; scores often ABSENT",
+      "V2Required": "FULL",
+      "CaptureMethod": "full pool texts + picked + gate flags + scores if produced",
+      "Comparator": "text identity exact; scores DECISION_REQUIRED",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "PARTIAL"
+    },
+    {
+      "Boundary": "B17_Model3",
+      "ProductionConcept": "anchors + inference input + decisions",
+      "Producer": "runModel3PathStep",
+      "Consumer": "retry / keep",
+      "V1Evidence": "decisions truncated; anchors/input NOT persisted → E16 NOT_EVALUABLE",
+      "V2Required": "FULL",
+      "CaptureMethod": "persist TRACE model3.anchors + inference_input_trace + decisions untruncated",
+      "Comparator": "anchor set + decision map + input trace hash",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "YES"
+    },
+    {
+      "Boundary": "B18_Final",
+      "ProductionConcept": "finalPostprocessText",
+      "Producer": "apply replacements / postprocess",
+      "Consumer": "JobResult",
+      "V1Evidence": "AVAILABLE",
+      "V2Required": "FULL",
+      "CaptureMethod": "existing",
+      "Comparator": "exact string",
+      "ReplayRequirement": "COMPARISON_ONLY",
+      "Missing": "NO"
+    },
+    {
+      "Boundary": "IDENTITY_LexiconModelConfig",
+      "ProductionConcept": "lexicon/model2/model3/kenlm/runtime pins",
+      "Producer": "runtime manifests",
+      "Consumer": "all stages",
+      "V1Evidence": "PARTIAL pins",
+      "V2Required": "FULL",
+      "CaptureMethod": "artifact identity block",
+      "Comparator": "exact sha",
+      "ReplayRequirement": "IDENTITY_GUARD",
+      "Missing": "PARTIAL"
+    }
+  ],
+  "reconstructable_policy": {
+    "allowed_only_if": [
+      "reconstruction function frozen",
+      "all exact inputs captured",
+      "reconstruction equivalence independently validated"
+    ],
+    "explicitly_forbidden_as_sole_evidence": [
+      "WordTimeSpan (must capture consumer-visible array)",
+      "mapped Tone (slices ≠ mapped toneNorm)",
+      "CanonicalRecallQuery"
+    ],
+    "B2_alignment": "values FULL preferred; reconstruction may remain as validation cross-check only"
+  },
+  "no_unknown_remaining": true
+}

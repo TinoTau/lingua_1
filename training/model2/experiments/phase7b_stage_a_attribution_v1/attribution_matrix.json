@@ -1,0 +1,137 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "case": "A_deterministic_beats_stageA",
+  "matrix": [
+    {
+      "hypothesis": "Term memorization (implicit)",
+      "evidence_for": [
+        "SEEN null_query R@1=0.480",
+        "SEEN shuffle_query R@1=0.412",
+        "SEEN R@1=0.728 vs UNSEEN R@1=0.044",
+        "candidate_only (mean query) SEEN R@1=0.457 → TERM_SPECIFIC_SHORTCUT_RISK",
+        "null_query SEEN R@1=0.480 while UNSEEN null_query R@1≈0.037",
+        "span_text equals target surface rate=0.0 (ASR chars conflict)"
+      ],
+      "evidence_against": [
+        "term_id stress PASS (no explicit term_id input)"
+      ],
+      "confidence": "HIGH",
+      "verdict": "PRIMARY"
+    },
+    {
+      "hypothesis": "Lexical embedding shortcut",
+      "evidence_for": [
+        "NN geometry_hint=lexical",
+        "lexical_rate=0.02",
+        "phonetic_rate=0.0"
+      ],
+      "evidence_against": [],
+      "confidence": "MEDIUM",
+      "verdict": "SECONDARY"
+    },
+    {
+      "hypothesis": "Easy-negative shortcut",
+      "evidence_for": [],
+      "evidence_against": [
+        "train/unseen negative distance distributions not clearly easier"
+      ],
+      "confidence": "LOW",
+      "verdict": "NOT_SUPPORTED"
+    },
+    {
+      "hypothesis": "Distribution shift",
+      "evidence_for": [
+        "case=A_deterministic_beats_stageA",
+        "phonetic UNSEEN R@1=0.9792284866468842",
+        "fuzzy UNSEEN R@1=0.9792284866468842",
+        "stageA UNSEEN R@1=0.043521266073194856"
+      ],
+      "evidence_against": [
+        "FuzzyPool ceiling=1.0 on unseen"
+      ],
+      "confidence": "MEDIUM",
+      "verdict": "SUPPORTED"
+    },
+    {
+      "hypothesis": "Relation memorization",
+      "evidence_for": [
+        "scope=global",
+        "gap_R1_mean=0.6586406478460016",
+        "gap_R1_std=0.06056110351501604"
+      ],
+      "evidence_against": [
+        "gaps large across BOUND-7 → global not relation-specific"
+      ],
+      "confidence": "MEDIUM",
+      "verdict": "NOT_SUPPORTED"
+    },
+    {
+      "hypothesis": "Carrier shortcut",
+      "evidence_for": [
+        "seen_carrier_unseen_term R@1=0.044876886417791896",
+        "unseen_carrier_unseen_term R@1=None"
+      ],
+      "evidence_against": [],
+      "confidence": "MEDIUM",
+      "verdict": "NOT_SUPPORTED"
+    },
+    {
+      "hypothesis": "Loss misalignment",
+      "evidence_for": [
+        "Listwise CE on FuzzyPool can be minimized by memorizing which candidate surfaces co-occur with which query hashes on tra",
+        "OVERTRAINING signal=OVERTRAINING_COMPONENT"
+      ],
+      "evidence_against": [],
+      "confidence": "MEDIUM",
+      "verdict": "SECONDARY"
+    },
+    {
+      "hypothesis": "Dataset query-channel artifact (oracle syllables + ASR char conflict)",
+      "evidence_for": [
+        "span_syllables == target pinyin on 100% sampled term-positives (oracle syllable channel)",
+        "positive_pool_index==0 on 97.4% rows; positive fuzzy distance always 0",
+        "Deterministic Fuzzy/Phonetic UNSEEN R@1≈0.979 using oracle syllables"
+      ],
+      "evidence_against": [
+        "Oracle syllables mean task is solvable without memorization; Stage A still fails → not insufficient evidence of ranking signal, but Stage A fails to use transferable channel"
+      ],
+      "confidence": "HIGH",
+      "verdict": "SECONDARY"
+    }
+  ],
+  "primary_root_cause": "Term memorization (implicit)",
+  "secondary_root_causes": [
+    "Lexical embedding shortcut",
+    "Loss misalignment",
+    "Dataset query-channel artifact (oracle syllables + ASR char conflict)"
+  ],
+  "not_supported": [
+    "Easy-negative shortcut",
+    "Relation memorization",
+    "Carrier shortcut"
+  ],
+  "inconclusive": [],
+  "category_primary": "REPRESENTATION",
+  "categories": [
+    "REPRESENTATION",
+    "OBJECTIVE"
+  ],
+  "query_cand_flag": "TERM_SPECIFIC_SHORTCUT_RISK",
+  "candidate_shuffle_delta_R1": 0.0,
+  "family_holdout": {
+    "exact_unseen_R1": 0.043521266073194856,
+    "family_unseen_R1": 0.044715447154471545
+  },
+  "dataset_construction": {
+    "span_syllables_eq_target_pinyin_rate": 1.0,
+    "span_text_eq_surface_rate": 0.0,
+    "positive_pool_index_eq_0_rate": 0.9737,
+    "positive_fuzzy_distance_eq_0_rate": 1.0,
+    "implication": "Phonetic/Fuzzy baselines are near-oracle on syllable identity; Case A still shows Stage A fails to exploit this transferable signal and instead memorizes SEEN candidate/query patterns."
+  },
+  "primary_mechanism": "Stage A query fuses conflicting ASR char evidence with oracle syllables; training minimizes pool CE largely via SEEN-term candidate lexical geometry; UNSEEN terms lose that geometry and the model does not fall back to syllable-identity matching."
+}

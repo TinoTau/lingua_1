@@ -1,0 +1,445 @@
+{
+  "count": 55,
+  "cases": [
+    {
+      "id": "r01",
+      "class": "A",
+      "scenario": "pronunciation",
+      "example": "na→la",
+      "expect": "phonetic only",
+      "note": "no lexical"
+    },
+    {
+      "id": "r02",
+      "class": "B",
+      "scenario": "known_lexical",
+      "example": "街口→接口",
+      "expect": "resolve 接口",
+      "note": "domain tech_ai"
+    },
+    {
+      "id": "r03",
+      "class": "C",
+      "scenario": "repeat",
+      "example": "接口 x5",
+      "expect": "EMA evidence grow",
+      "note": "1x < 5x"
+    },
+    {
+      "id": "r04",
+      "class": "D",
+      "scenario": "multitag",
+      "example": "中杯",
+      "expect": "coffee/milk_tea/food_order equal share",
+      "note": ""
+    },
+    {
+      "id": "r05",
+      "class": "E",
+      "scenario": "generic",
+      "example": "文档",
+      "expect": "multi-tag soft",
+      "note": ""
+    },
+    {
+      "id": "r06",
+      "class": "F",
+      "scenario": "unknown",
+      "example": "米尔福德",
+      "expect": "UNRESOLVED",
+      "note": "no domain"
+    },
+    {
+      "id": "r07",
+      "class": "G",
+      "scenario": "overlap_phrase",
+      "example": "接口文档 with phrase term",
+      "expect": "single phrase",
+      "note": "no triple"
+    },
+    {
+      "id": "r08",
+      "class": "G2",
+      "scenario": "overlap_adjacent",
+      "example": "接口文档 without phrase",
+      "expect": "接口+文档",
+      "note": "no overlap reject"
+    },
+    {
+      "id": "r09",
+      "class": "H",
+      "scenario": "multi_terms",
+      "example": "接口 and 文档 spans",
+      "expect": "two resolved",
+      "note": ""
+    },
+    {
+      "id": "r10",
+      "class": "I",
+      "scenario": "wrong_vs_intended",
+      "example": "奶流→奶牛",
+      "expect": "store intended if resolved",
+      "note": "wrong not preference"
+    },
+    {
+      "id": "r11",
+      "class": "J",
+      "scenario": "noop_useful",
+      "example": "punct only",
+      "expect": "empty lexical",
+      "note": ""
+    },
+    {
+      "id": "r12",
+      "class": "A",
+      "scenario": "pronunciation",
+      "example": "na→la",
+      "expect": "phonetic only",
+      "note": "no lexical"
+    },
+    {
+      "id": "r13",
+      "class": "B",
+      "scenario": "known_lexical",
+      "example": "街口→接口",
+      "expect": "resolve 接口",
+      "note": "domain tech_ai"
+    },
+    {
+      "id": "r14",
+      "class": "C",
+      "scenario": "repeat",
+      "example": "接口 x5",
+      "expect": "EMA evidence grow",
+      "note": "1x < 5x"
+    },
+    {
+      "id": "r15",
+      "class": "D",
+      "scenario": "multitag",
+      "example": "中杯",
+      "expect": "coffee/milk_tea/food_order equal share",
+      "note": ""
+    },
+    {
+      "id": "r16",
+      "class": "E",
+      "scenario": "generic",
+      "example": "文档",
+      "expect": "multi-tag soft",
+      "note": ""
+    },
+    {
+      "id": "r17",
+      "class": "F",
+      "scenario": "unknown",
+      "example": "米尔福德",
+      "expect": "UNRESOLVED",
+      "note": "no domain"
+    },
+    {
+      "id": "r18",
+      "class": "G",
+      "scenario": "overlap_phrase",
+      "example": "接口文档 with phrase term",
+      "expect": "single phrase",
+      "note": "no triple"
+    },
+    {
+      "id": "r19",
+      "class": "G2",
+      "scenario": "overlap_adjacent",
+      "example": "接口文档 without phrase",
+      "expect": "接口+文档",
+      "note": "no overlap reject"
+    },
+    {
+      "id": "r20",
+      "class": "H",
+      "scenario": "multi_terms",
+      "example": "接口 and 文档 spans",
+      "expect": "two resolved",
+      "note": ""
+    },
+    {
+      "id": "r21",
+      "class": "I",
+      "scenario": "wrong_vs_intended",
+      "example": "奶流→奶牛",
+      "expect": "store intended if resolved",
+      "note": "wrong not preference"
+    },
+    {
+      "id": "r22",
+      "class": "J",
+      "scenario": "noop_useful",
+      "example": "punct only",
+      "expect": "empty lexical",
+      "note": ""
+    },
+    {
+      "id": "r23",
+      "class": "A",
+      "scenario": "pronunciation",
+      "example": "na→la",
+      "expect": "phonetic only",
+      "note": "no lexical"
+    },
+    {
+      "id": "r24",
+      "class": "B",
+      "scenario": "known_lexical",
+      "example": "街口→接口",
+      "expect": "resolve 接口",
+      "note": "domain tech_ai"
+    },
+    {
+      "id": "r25",
+      "class": "C",
+      "scenario": "repeat",
+      "example": "接口 x5",
+      "expect": "EMA evidence grow",
+      "note": "1x < 5x"
+    },
+    {
+      "id": "r26",
+      "class": "D",
+      "scenario": "multitag",
+      "example": "中杯",
+      "expect": "coffee/milk_tea/food_order equal share",
+      "note": ""
+    },
+    {
+      "id": "r27",
+      "class": "E",
+      "scenario": "generic",
+      "example": "文档",
+      "expect": "multi-tag soft",
+      "note": ""
+    },
+    {
+      "id": "r28",
+      "class": "F",
+      "scenario": "unknown",
+      "example": "米尔福德",
+      "expect": "UNRESOLVED",
+      "note": "no domain"
+    },
+    {
+      "id": "r29",
+      "class": "G",
+      "scenario": "overlap_phrase",
+      "example": "接口文档 with phrase term",
+      "expect": "single phrase",
+      "note": "no triple"
+    },
+    {
+      "id": "r30",
+      "class": "G2",
+      "scenario": "overlap_adjacent",
+      "example": "接口文档 without phrase",
+      "expect": "接口+文档",
+      "note": "no overlap reject"
+    },
+    {
+      "id": "r31",
+      "class": "H",
+      "scenario": "multi_terms",
+      "example": "接口 and 文档 spans",
+      "expect": "two resolved",
+      "note": ""
+    },
+    {
+      "id": "r32",
+      "class": "I",
+      "scenario": "wrong_vs_intended",
+      "example": "奶流→奶牛",
+      "expect": "store intended if resolved",
+      "note": "wrong not preference"
+    },
+    {
+      "id": "r33",
+      "class": "J",
+      "scenario": "noop_useful",
+      "example": "punct only",
+      "expect": "empty lexical",
+      "note": ""
+    },
+    {
+      "id": "r34",
+      "class": "A",
+      "scenario": "pronunciation",
+      "example": "na→la",
+      "expect": "phonetic only",
+      "note": "no lexical"
+    },
+    {
+      "id": "r35",
+      "class": "B",
+      "scenario": "known_lexical",
+      "example": "街口→接口",
+      "expect": "resolve 接口",
+      "note": "domain tech_ai"
+    },
+    {
+      "id": "r36",
+      "class": "C",
+      "scenario": "repeat",
+      "example": "接口 x5",
+      "expect": "EMA evidence grow",
+      "note": "1x < 5x"
+    },
+    {
+      "id": "r37",
+      "class": "D",
+      "scenario": "multitag",
+      "example": "中杯",
+      "expect": "coffee/milk_tea/food_order equal share",
+      "note": ""
+    },
+    {
+      "id": "r38",
+      "class": "E",
+      "scenario": "generic",
+      "example": "文档",
+      "expect": "multi-tag soft",
+      "note": ""
+    },
+    {
+      "id": "r39",
+      "class": "F",
+      "scenario": "unknown",
+      "example": "米尔福德",
+      "expect": "UNRESOLVED",
+      "note": "no domain"
+    },
+    {
+      "id": "r40",
+      "class": "G",
+      "scenario": "overlap_phrase",
+      "example": "接口文档 with phrase term",
+      "expect": "single phrase",
+      "note": "no triple"
+    },
+    {
+      "id": "r41",
+      "class": "G2",
+      "scenario": "overlap_adjacent",
+      "example": "接口文档 without phrase",
+      "expect": "接口+文档",
+      "note": "no overlap reject"
+    },
+    {
+      "id": "r42",
+      "class": "H",
+      "scenario": "multi_terms",
+      "example": "接口 and 文档 spans",
+      "expect": "two resolved",
+      "note": ""
+    },
+    {
+      "id": "r43",
+      "class": "I",
+      "scenario": "wrong_vs_intended",
+      "example": "奶流→奶牛",
+      "expect": "store intended if resolved",
+      "note": "wrong not preference"
+    },
+    {
+      "id": "r44",
+      "class": "J",
+      "scenario": "noop_useful",
+      "example": "punct only",
+      "expect": "empty lexical",
+      "note": ""
+    },
+    {
+      "id": "r45",
+      "class": "A",
+      "scenario": "pronunciation",
+      "example": "na→la",
+      "expect": "phonetic only",
+      "note": "no lexical"
+    },
+    {
+      "id": "r46",
+      "class": "B",
+      "scenario": "known_lexical",
+      "example": "街口→接口",
+      "expect": "resolve 接口",
+      "note": "domain tech_ai"
+    },
+    {
+      "id": "r47",
+      "class": "C",
+      "scenario": "repeat",
+      "example": "接口 x5",
+      "expect": "EMA evidence grow",
+      "note": "1x < 5x"
+    },
+    {
+      "id": "r48",
+      "class": "D",
+      "scenario": "multitag",
+      "example": "中杯",
+      "expect": "coffee/milk_tea/food_order equal share",
+      "note": ""
+    },
+    {
+      "id": "r49",
+      "class": "E",
+      "scenario": "generic",
+      "example": "文档",
+      "expect": "multi-tag soft",
+      "note": ""
+    },
+    {
+      "id": "r50",
+      "class": "F",
+      "scenario": "unknown",
+      "example": "米尔福德",
+      "expect": "UNRESOLVED",
+      "note": "no domain"
+    },
+    {
+      "id": "r51",
+      "class": "G",
+      "scenario": "overlap_phrase",
+      "example": "接口文档 with phrase term",
+      "expect": "single phrase",
+      "note": "no triple"
+    },
+    {
+      "id": "r52",
+      "class": "G2",
+      "scenario": "overlap_adjacent",
+      "example": "接口文档 without phrase",
+      "expect": "接口+文档",
+      "note": "no overlap reject"
+    },
+    {
+      "id": "r53",
+      "class": "H",
+      "scenario": "multi_terms",
+      "example": "接口 and 文档 spans",
+      "expect": "two resolved",
+      "note": ""
+    },
+    {
+      "id": "r54",
+      "class": "I",
+      "scenario": "wrong_vs_intended",
+      "example": "奶流→奶牛",
+      "expect": "store intended if resolved",
+      "note": "wrong not preference"
+    },
+    {
+      "id": "r55",
+      "class": "J",
+      "scenario": "noop_useful",
+      "example": "punct only",
+      "expect": "empty lexical",
+      "note": ""
+    }
+  ]
+}

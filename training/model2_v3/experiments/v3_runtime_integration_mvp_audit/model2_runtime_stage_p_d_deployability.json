@@ -1,0 +1,21 @@
+{
+  "Stage_P": {
+    "Checkpoint": "stage_p_checkpoint.pt",
+    "Input_available_runtime": "PARTIAL (phonetic_bias if corrections)",
+    "Model_export_ready": "NO",
+    "Runtime_adapter": "NO",
+    "Real_user_data": "PARTIAL (phonetic)",
+    "Deployable_today": "NO",
+    "Skeleton_allowed": "YES — single checkpoint P-only as ONE Model2 subset"
+  },
+  "Stage_D": {
+    "Checkpoint": "stage_d/d2 with domain head",
+    "Input_available_runtime": "PARTIAL/WEAK (personal_terms writeback incomplete; domain evidence not precomputed)",
+    "Model_export_ready": "NO",
+    "Runtime_adapter": "NO",
+    "Real_user_data": "SYNTHETIC_TRAINING_ONLY",
+    "Deployable_today": "NO",
+    "Dual_runtime_with_P": "FORBIDDEN"
+  },
+  "ONE_MODEL2_rule": "Never deploy P.onnx + D.onnx as two runtimes; Stage J merges policy; skeleton may load one weight file only"
+}

@@ -1,0 +1,8 @@
+caseId,lossStage,targetGeometry,targetPathDomainEvidence,retainedPathDomainEvidenceSummary,unsupportedDomainCompetitorsPresent,domainEvidenceCouldReduceCompetition,domainEvidenceWouldPreserveTarget,reason
+p2_u001_003,ACTIVE_CAP,11:14,DOMAIN_EVIDENCE:tourism_route (proxy),8/8 DOMAIN_EVIDENCE:tourism_route,NO,NO,NO,DIAGNOSTIC_PROXY_termId; ALL_RETAINED_ALREADY_HAVE_DOMAIN_PROXY; target edge itself may lack domain:* termId
+p2_u004_033,COMPLETE_CAP,9:11,DOMAIN_EVIDENCE:tourism_route (proxy),8/8 DOMAIN_EVIDENCE:tourism_route,NO,NO,NO,DIAGNOSTIC_PROXY_termId; competition is structural not no-domain
+p2_u005_004,COMPLETE_CAP,9:11,DOMAIN_EVIDENCE:tourism_pickup (proxy),8/8 DOMAIN_EVIDENCE:tourism_pickup,NO,NO,NO,DIAGNOSTIC_PROXY_termId; ALL_RETAINED_ALREADY_HAVE_DOMAIN_PROXY
+p2_u005_015,ACTIVE_CAP,6:9,DOMAIN_EVIDENCE:tourism_pickup (proxy),8/8 DOMAIN_EVIDENCE:tourism_pickup,NO,NO,NO,DIAGNOSTIC_PROXY_termId; target edge base-heavy; path still has domain from other edges
+p2_u003_017,ACTIVE_CAP,10:13,DOMAIN_EVIDENCE:medical (proxy),8/8 DOMAIN_EVIDENCE medical(+tourism_route mix),NO,NO,NO,DIAGNOSTIC_PROXY_termId; retained already domain-bearing
+p2_u004_010,ACTIVE_CAP,5:8,DOMAIN_EVIDENCE:tourism_route (proxy),8/8 DOMAIN_EVIDENCE:tourism_route,NO,NO,NO,DIAGNOSTIC_PROXY_termId; ALL_RETAINED_ALREADY_HAVE_DOMAIN_PROXY
+p2_u004_036,ACTIVE_CAP,3:6,DOMAIN_EVIDENCE:tourism_route (proxy),8/8 DOMAIN_EVIDENCE:tourism_route,NO,NO,NO,DIAGNOSTIC_PROXY_termId; ALL_RETAINED_ALREADY_HAVE_DOMAIN_PROXY

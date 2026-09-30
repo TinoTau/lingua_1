@@ -1,0 +1,20 @@
+{
+  "formula": "score_final = score_base + softplus(relation_gate) * tanh(mlp(user×relation, base)) * delta_cap",
+  "unavailable": "delta_condition = 0 → score_final == score_base",
+  "frozen": [
+    "shared",
+    "query_encoder",
+    "candidate_encoder",
+    "base_scorer",
+    "no_match"
+  ],
+  "trainable": [
+    "condition_compat",
+    "relation_gate"
+  ],
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ]
+}

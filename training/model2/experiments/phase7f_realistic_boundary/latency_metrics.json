@@ -1,0 +1,19 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "primary_correct": {
+    "p50": 35.04439999233,
+    "p95": 100.84030000143684,
+    "queries_mean": 0.7,
+    "new_candidates_mean": 2.612
+  },
+  "budget": {
+    "max_active_profile_relations_per_span": 2,
+    "max_generated_phonetic_queries": 8,
+    "max_total_profile_candidates": 8,
+    "distance_threshold": 2
+  }
+}

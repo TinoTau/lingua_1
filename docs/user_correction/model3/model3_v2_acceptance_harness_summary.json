@@ -1,0 +1,77 @@
+{
+  "phase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION",
+  "timestamp": "2026-08-31T12:02:41.524Z",
+  "verdict": "ACCEPTANCE_HARNESS_CORRECTION_PASS",
+  "nextPhase": "MODEL3_V2_S3_FINAL_CAUSAL_MAINLINE_ACCEPTANCE",
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "forkPoint": {
+    "function": "runModel3PathStepCausalFork",
+    "prepareUpstream": "prepareModel3PathUpstream",
+    "completeFromUpstream": "completeModel3PathFromUpstream",
+    "file": "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts",
+    "boundary": "after packModel3SpanInferFields + host infer; before routeModel3Retry"
+  },
+  "snapshotSchema": "MODEL3_ACCEPTANCE_UPSTREAM_SNAPSHOT_V1",
+  "hashAlgorithm": "sha256_canonical_json_v1",
+  "decisionOverrideMechanism": "keepOverrideFromPacked",
+  "envGate": "MODEL3_ACCEPTANCE_CAUSAL_FORK=1",
+  "runner": "electron_node/electron-node/tests/run-dialog200-acceptance-harness-correction.mjs",
+  "supersededRunner": "electron_node/electron-node/tests/run-dialog200-s3-mainline-ab.mjs",
+  "s3Identity": {
+    "verified": true,
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "buildId": "prod_core_s3_build_20260830_v1"
+  },
+  "previousAcceptance": "HISTORICAL_NON_CAUSAL_ACCEPTANCE_EVIDENCE",
+  "previousAssemblyKenlmOwnership": "REJECTED",
+  "subsetValidation": {
+    "cases": 30,
+    "parityPass": 30,
+    "passRate": 1
+  },
+  "denominator": {
+    "requested": 200,
+    "completed": 200,
+    "reportedAsDialog200": true,
+    "subset": false
+  },
+  "parity": {
+    "snapshotCaptured": 200,
+    "parityPass": 200,
+    "packedSymmetric": 200,
+    "mutationIsolated": 200,
+    "parityPassRate": 1
+  },
+  "determinism": {
+    "sameRunPackedSymmetry": "PASS",
+    "sameRunMutationIsolation": "PASS",
+    "crossRunUpstreamHash": "NOT_REQUIRED_ASR_MAY_DIFFER",
+    "unitTests": "model3-acceptance-snapshot.test.ts 9/9",
+    "integrationTests": "model3-mainline.integration.test.ts 12/12"
+  },
+  "postForkLatencyMsP50": {
+    "baseline": 1,
+    "s3": 16,
+    "delta": 15,
+    "unit": "per_case_sum_of_path_post_fork_ms"
+  },
+  "preliminaryCausalOutcomesOnParityCases": {
+    "note": "sanity only — not promotion acceptance",
+    "UNCHANGED": 200
+  },
+  "governance": {
+    "businessArchitectureChanged": false,
+    "s3Changed": false,
+    "training": false,
+    "features": false,
+    "threshold": false,
+    "retry": false,
+    "recall": false,
+    "assembly": false,
+    "kenlm": false,
+    "jobResult": false,
+    "productionDualChain": false
+  }
+}

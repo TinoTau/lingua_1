@@ -1,0 +1,74 @@
+{
+  "phase": "RETRY_REGION_RECALL_LEXICON_COVERAGE_AUDIT",
+  "date": "2026-08-28",
+  "verdict": "PASS_EXPECTED_COVERAGE_GAPS",
+  "controlledRetry": 13,
+  "referenceReachable": 5,
+  "referenceNotReachable": 8,
+  "auditedNotReachable": 8,
+  "ownerCountsByRepairUnit": {
+    "LEXICON_MISSING": 9,
+    "PHONETIC_RECALL_MISS": 1,
+    "TONE_MISMATCH": 1,
+    "WINDOW_BOUNDARY": 13,
+    "DOMAIN_SCOPE": 0,
+    "CANDIDATE_BUDGET_LOSS": 0,
+    "EXPECTED_UNREPAIRABLE": 3,
+    "STRUCTURAL_REVIEW_REQUIRED": 0,
+    "OTHER": 2
+  },
+  "ownerCountsByCase": {
+    "LEXICON_MISSING": 3,
+    "PHONETIC_RECALL_MISS": 1,
+    "TONE_MISMATCH": 1,
+    "WINDOW_BOUNDARY": 1,
+    "DOMAIN_SCOPE": 0,
+    "CANDIDATE_BUDGET_LOSS": 0,
+    "EXPECTED_UNREPAIRABLE": 2,
+    "STRUCTURAL_REVIEW_REQUIRED": 0,
+    "OTHER": 0
+  },
+  "repairUnitCount": 26,
+  "caseVerdicts": {
+    "d099": "EXPECTED_UNREPAIRABLE",
+    "d131": "LEXICON_MISSING",
+    "d160": "WINDOW_BOUNDARY",
+    "d176": "LEXICON_MISSING",
+    "d049": "EXPECTED_UNREPAIRABLE",
+    "d002": "TONE_MISMATCH",
+    "d003": "LEXICON_MISSING",
+    "d019": "PHONETIC_RECALL_MISS"
+  },
+  "architectureCheck": {
+    "model3StructuralDefect": false,
+    "retryRegionStructuralDefect": false,
+    "fineSpanStructuralDefect": false,
+    "latticeStructuralDefect": false,
+    "recallSystemicContractDefect": false,
+    "lexiconCoverageGap": true,
+    "domainVoteSsotDefect": false,
+    "candidateBudgetDefect": false
+  },
+  "systemicRecallContractDefect": false,
+  "systemicFineSpanLatticeDefect": false,
+  "lexiconCoverageGap": true,
+  "moduleOwnership": {
+    "model3": "KEEP",
+    "retryRegion": "KEEP",
+    "fineSpan": "KEEP",
+    "lattice": "KEEP",
+    "recall": "KEEP",
+    "lexicon": "COVERAGE_GAP",
+    "domainVote": "KEEP",
+    "assembly": "KEEP"
+  },
+  "dialog200": {
+    "status": "DIALOG_200_ENV_BLOCKED",
+    "command": "ELECTRON_RUN_AS_NODE=1 electron.exe tests/run-dialog200-model3-acceptance.mjs --skip-start --anchored-only --max-minutes 0.5",
+    "error": "Hung after preflight waiting for test server health (--skip-start; no ASR node listening on port). Process killed after ~378s with no pipeline output."
+  },
+  "trainingGate": "OPEN",
+  "trainingReason": "Retry structural chain sound (13/13 lattice, 13/13 tone). Remaining 8 NOT_REACHABLE cases decompose into case-specific Lexicon gaps, window-boundary limits of frozen segmentation, tone/homophone recall boundaries, and expected-unrepairable references. No systemic Recall contract defect across cases.",
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_COVERAGE_FOR_RETRYABLE_LOCAL_REGIONS",
+  "lexiconFollowUp": "LEXICON_COVERAGE_DECISION_REQUIRED for 更衣室/柜子/衣室/李工/燕 (do not auto-add in this phase)"
+}

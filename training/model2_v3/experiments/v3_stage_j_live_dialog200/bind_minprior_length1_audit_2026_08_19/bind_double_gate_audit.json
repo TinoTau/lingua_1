@@ -1,0 +1,53 @@
+{
+  "gate_stack": [
+    {
+      "gate": "SQL match (tone WHERE, length=1, enabled)",
+      "risk": "inventory miss / tone miss",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "tone ready / pattern present",
+      "risk": "unsafe tone-less recall",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "tone exact",
+      "risk": "wrong-tone homophone",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "uniqueness (eligible==1, not truncated)",
+      "risk": "single-char ambiguity / mis-repair",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "surface exact (after uniqueness fail)",
+      "risk": "identity-only rescue",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "collector minCandidateScore (default 0)",
+      "risk": "score floor",
+      "class": "COMPLEMENTARY",
+      "live_reject_n": 0
+    },
+    {
+      "gate": "cap=1",
+      "risk": "candidate volume",
+      "class": "COMPLEMENTARY"
+    },
+    {
+      "gate": "bind minPrior=0.5",
+      "risk": "low operational prior / homophone_variant noise (historical multi-char)",
+      "class": "REDUNDANT",
+      "note": "Redundant with collector noise control for frozen length-1 exact-only path; complementary for 2–5 fuzzy/homophone_variant. Live: drops 2331/2331 accepts."
+    },
+    {
+      "gate": "FineSpan bind / path selection",
+      "risk": "graph connectivity",
+      "class": "COMPLEMENTARY"
+    }
+  ],
+  "double_filtering_length1": true,
+  "minPrior_before_or_after_collector_accept": "AFTER"
+}

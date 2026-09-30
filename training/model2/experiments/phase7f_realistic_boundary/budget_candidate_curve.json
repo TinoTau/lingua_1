@@ -1,0 +1,30 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "curve": [
+    {
+      "K": 2,
+      "TargetIntroductionRate": 0.865,
+      "new_candidates_mean": 1.655,
+      "NewCandidatePrecision_proxy": 0.5226586102719033,
+      "latency_ms_p95": 127.09200000972487
+    },
+    {
+      "K": 4,
+      "TargetIntroductionRate": 0.895,
+      "new_candidates_mean": 2.845,
+      "NewCandidatePrecision_proxy": 0.3145869947275923,
+      "latency_ms_p95": 136.03670000156853
+    },
+    {
+      "K": 8,
+      "TargetIntroductionRate": 0.92,
+      "new_candidates_mean": 5.19,
+      "NewCandidatePrecision_proxy": 0.17726396917148363,
+      "latency_ms_p95": 127.01799999922514
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+﻿capability,frozen_design_expectation,current_implementation,status,evidence
+FineSpan-local expansion,YES,Per FineSpan Stage-J expand after base activeCandidates; skip span if no syllables,IMPLEMENTED,span-assembly-v4-orchestrator.ts + expand-active-candidates.ts
+pronunciation-conditioned,YES,phonetic_bias profile items + P relation actions + hypothesized syllables → lexicon recall,PARTIAL,finespan-adapter.ts phoneticBias; P gated on phonetic_bias>0; empty profile → P effectively inert
+tone-confusion-aware,expected within user pronunciation expansion,tone_bias exists on UserProfileV1 schema but adapter does NOT read tone_bias; neural pack has no tone tensor,MISSING,finespan-adapter.ts (no tone_bias); host pack_batch_inputs span hash + profile items only
+user-profile-conditioned,YES,phonetic_bias / personal_terms / long_term_domain_evidence CONNECTED; tone_bias/domain_bias/confusion_bias STORED-NOT-CONSUMED,PARTIAL,finespan-adapter.ts + profile_delta.rs write path
+domain-conditioned,YES,Stage D domain_soft actions via long_term_domain_evidence (not domain_bias),PARTIAL,model2 domain executor + adapter longTermDomainEvidence
+trainable behavior,YES,RetrievalPolicyV3 predicts P/D retrieval ACTIONS (not corrected text); Stage-J checkpoint frozen,IMPLEMENTED,training/model2_v3 ranking_loss.py — retrieval-ACTION ranking
+candidate expansion,YES,termId UNION base ∪ P ∪ D into model2_union; budgets cand=8 per P/D,IMPLEMENTED,merge-profile-candidates.ts
+direct correction,NO,No surface typo dictionary in Model2 path; phonetic relation SSOT only,IMPLEMENTED,relation-direction.ts; no illegal-word map in model2-runtime
+final selection,NO,Model2 does not select final sentence; KenLM downstream,IMPLEMENTED,orchestrator order Model2 → Domain → Model3 → Assembly → KenLM

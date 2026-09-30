@@ -1,0 +1,19 @@
+{
+  "n_rows": 48,
+  "personas": {
+    "CORRECT": 12,
+    "EMPTY": 12,
+    "WRONG": 12,
+    "SWAPPED": 12
+  },
+  "same_span_same_target_only_profile": true,
+  "oracle_policy": "profile_evidence_guided_actions; EMPTY=domain_none+zero_soft only",
+  "oracle_TIR": {
+    "CORRECT": 1.0,
+    "EMPTY": 0.0,
+    "WRONG": 0.25,
+    "SWAPPED": 0.4166666666666667
+  },
+  "COUNTERFACTUAL_DATASET_INVALID": false,
+  "VALID": true
+}

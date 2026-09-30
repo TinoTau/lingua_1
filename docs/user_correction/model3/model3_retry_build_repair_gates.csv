@@ -1,0 +1,11 @@
+gate,command_or_check,result,notes
+production_build,npm run build:main,PASS,tsc tsconfig.main.json; prior TS2339 cleared
+retry_cohort_model3-retry,jest --testPathPattern=model3-retry,PASS_26_26,4 suites
+retry_cohort_dev_equivalent,jest model3-retry-stage2-windows|model3-retry-region|model3-mainline,PASS_38_38,prior development cited 37/37
+delta1_success_fixture,stage2-windows DELTA1 parity it(),PASS,DELTA1_SUCCESS_FIXTURE_CHANGE_COUNT=0
+delta2_fallback_fixture,stage2-windows DELTA2 it(),PASS,resegmentOk=false; 6/6 windows; geometry source locked
+runtime_semantic_change,FIRST_RUNTIME_SEMANTIC_CHANGE,NONE,type-contract only
+drift_gate,all unexpected YES checks,NO,REPAIR_DRIFT_DETECTED=false
+anti_workaround,forbidden cast/ignore/guard search,NONE,producer contract fixed
+decision_required,DECISION_REQUIRED_FOR_USER,EMPTY,
+governance_recorded,DEVELOPMENT_PASS requires build:main,RECORDED,no new CI

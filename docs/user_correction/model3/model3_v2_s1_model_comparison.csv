@@ -1,0 +1,9 @@
+model,metric_group,retry_f1,retry_precision,retry_recall,keep_precision,keep_recall,pred_retry_rate,true_retry_rate,notes
+MODEL3_V2_S1_RANDOM_INIT_V1,formal_test,0.4859,0.9139,0.3309,0.9533,0.9977,0.0247,0.0681,UNDERFIT
+MODEL3_V2_S1_RANDOM_INIT_V1,protected_real,,,,,,0,13,target=0 unrelated=0 keep_fp=0
+MODEL3_V2_S1_RANDOM_INIT_V1,latency,0.1793210517222944,0.2433857215302331,2.9064000118523836,4.0345999877899885,,,,ms p50/p95 span/utt
+MODEL3_V2_S1_REALDIST_INIT_V1,formal_test,0.2455,0.7625,0.1463,0.941,0.9967,0.0131,0.0681,UNDERFIT
+MODEL3_V2_S1_REALDIST_INIT_V1,protected_real,,,,,,1,13,target=0 unrelated=1 keep_fp=0
+MODEL3_V2_S1_REALDIST_INIT_V1,latency,0.17644781821771807,0.22040000961472592,2.8908001258969307,4.045399837195873,,,,ms p50/p95 span/utt
+MODEL3_V2_REGION_LABEL_V1,historical_baseline,0.9539,,,,,1,13,historical_accepted
+MODEL3_V2_REALDIST_V1,historical_baseline,0.962,,,,,7,13,historical_accepted

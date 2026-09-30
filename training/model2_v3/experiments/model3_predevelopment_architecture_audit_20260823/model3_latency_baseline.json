@@ -1,0 +1,25 @@
+{
+  "ts": "2026-08-23",
+  "source": "training/model2_v3/experiments/v3_stage_j_live_dialog200/dialog200_latency_breakdown.json",
+  "stagej_p50_ms": {
+    "asr": 2252,
+    "finespan_fw_step": 1947,
+    "model2": 28.6,
+    "kenlm": 538,
+    "postprocess_total": 5884
+  },
+  "stagej_p95_ms": {
+    "asr": 3460,
+    "finespan_fw_step": 2643,
+    "model2": 62.1,
+    "kenlm": 626,
+    "postprocess_total": 9209
+  },
+  "recall_per_window_note": "lexicon trace samples ~1-4ms/window",
+  "model3_budget_recommendation_ms": {
+    "per_trigger_inference_p50": "5-15 (small BiGRU CPU target)",
+    "retry_recall_overhead": "1-4ms per retried span + partial assembly",
+    "kenlm_if_single_pass_after_retry": "~538 p50",
+    "average_utterance_overhead": "depends on trigger rate NOT_MEASURED"
+  }
+}

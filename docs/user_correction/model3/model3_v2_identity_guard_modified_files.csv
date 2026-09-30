@@ -1,0 +1,6 @@
+path,change
+training/model3_dataset/acoustic_training/dataset_identity.py,ADD shared G0
+training/model3_dataset/scripts/audit_model3_v2_localization_training_causality.py,G0 before load; remove labeled TRAIN_DIR
+electron_node/electron-node/tests/run-model3-v2-target-localization-generalization-audit.mjs,G0 before load; remove TRAIN_LABELED
+training/model3_dataset/train/bigru_v1.py,candidate missing fail-closed
+training/model3_dataset/tests/test_dataset_identity_guard.py,ADD tests

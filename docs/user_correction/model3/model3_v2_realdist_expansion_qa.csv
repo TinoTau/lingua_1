@@ -1,0 +1,11 @@
+check,status,real,before,after,expansion_only,count
+RETRY_span_rel_position_HEAD(<=0.35),PASS,n=13 head=7 ratio=0.538 p50=0.34210526315789475,n=18302 head=41 ratio=0.002 p50=1.0,n=28414 head=5697 ratio=0.200 p50=0.5925925925925926,n=10112 head=5656 p50=0.3157894736842105,
+RETRY_span_rel_position_MID(0.2-0.8),PASS,mid=8,mid=5517,mid=12443,mid=6926,
+MULTI_CHAR_HEADMID_family,PASS,MULTI_CHAR_REPLACEMENT=6/13 HIGH cases,MULTI_CHAR present but TAIL-biased,expansion MULTI_CHAR RETRY spans=6518,see family counts,
+INSERTION_HEADMID_family,PASS,INSERTION=4/13,underrepresented vs real mix,expansion INSERTION RETRY spans=2594,,
+HARD_KEEP_HEADMID_contrast,PASS,KEEP controls exist,present,hardkeep HEAD+MID samples=1200,1200,
+dialog_200_leakage,PASS,,,,,0
+anchor_never_retry,PASS,,,,,0
+label_contract_version,PASS,,,,,
+v2_baseline_not_overwritten,PASS,,,,,
+v2_checkpoint_preserved,PASS,,,,,

@@ -366,3 +366,154 @@ pub async fn get_prometheus_metrics(
     )
 }
 
+/// POST /api/v1/corrections — CorrectionHistory SSOT entry (Phase 1 foundation).
+pub async fn submit_correction(
+    axum::extract::State(state): axum::extract::State<AppState>,
+    headers: axum::http::HeaderMap,
+    axum::Json(req): axum::Json<crate::services::correction::SubmitCorrectionRequest>,
+) -> axum::response::Response {
+    use axum::response::IntoResponse;
+
+    let expected = match &state.correction_api_token {
+        Some(t) if !t.is_empty() => t.clone(),
+        _ => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                axum::Json(serde_json::json!({
+                    "error": "CORRECTION_API_TOKEN_NOT_CONFIGURED"
+                })),
+            )
+                .into_response();
+        }
+    };
+    let provided = headers
+        .get(axum::http::header::AUTHORIZATION)
+        .and_then(|h| h.to_str().ok())
+        .and_then(|s| s.strip_prefix("Bearer "))
+        .unwrap_or("");
+    if provided != expected {
+        return (
+            axum::http::StatusCode::UNAUTHORIZED,
+            axum::Json(serde_json::json!({"error":"UNAUTHORIZED"})),
+        )
+            .into_response();
+    }
+
+    // Soft session relation check when session is still live
+    if let Some(sess) = state.session_manager.get_session(&req.session_id).await {
+        if let Some(ref uid) = sess.user_id {
+            if uid != &req.user_id {
+                return (
+                    axum::http::StatusCode::FORBIDDEN,
+                    axum::Json(serde_json::json!({
+                        "error":"USER_SESSION_MISMATCH"
+                    })),
+                )
+                    .into_response();
+            }
+        }
+    }
+
+    let Some(svc) = state.correction_service.as_ref() else {
+        return (
+            axum::http::StatusCode::SERVICE_UNAVAILABLE,
+            axum::Json(serde_json::json!({"error":"CORRECTION_REPO_UNAVAILABLE"})),
+        )
+            .into_response();
+    };
+
+    match svc.submit(req) {
+        Ok(resp) => (axum::http::StatusCode::OK, axum::Json(resp)).into_response(),
+        Err(crate::services::correction::CorrectionError::Validation(m)) => (
+            axum::http::StatusCode::BAD_REQUEST,
+            axum::Json(serde_json::json!({"error": m})),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            axum::Json(serde_json::json!({"error": e.to_string()})),
+        )
+            .into_response(),
+    }
+}
+
+#[derive(serde::Deserialize)]
+pub struct SessionProfileRefreshRequest {
+    pub session_id: String,
+    pub profile_version: u64,
+    pub user_profile: crate::messages::user_profile::UserProfileV1,
+}
+
+/// POST /api/v1/sessions/profile-refresh — Gateway pushes updated UserProfile after correction.
+pub async fn refresh_session_profile(
+    axum::extract::State(state): axum::extract::State<AppState>,
+    headers: axum::http::HeaderMap,
+    axum::Json(req): axum::Json<SessionProfileRefreshRequest>,
+) -> axum::response::Response {
+    use axum::response::IntoResponse;
+    use crate::core::session::SessionUpdate;
+
+    let expected = match &state.correction_api_token {
+        Some(t) if !t.is_empty() => t.clone(),
+        _ => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                axum::Json(serde_json::json!({
+                    "error": "CORRECTION_API_TOKEN_NOT_CONFIGURED"
+                })),
+            )
+                .into_response();
+        }
+    };
+    let provided = headers
+        .get(axum::http::header::AUTHORIZATION)
+        .and_then(|h| h.to_str().ok())
+        .and_then(|s| s.strip_prefix("Bearer "))
+        .unwrap_or("");
+    if provided != expected {
+        return (
+            axum::http::StatusCode::UNAUTHORIZED,
+            axum::Json(serde_json::json!({"error":"UNAUTHORIZED"})),
+        )
+            .into_response();
+    }
+
+    if req.session_id.trim().is_empty() {
+        return (
+            axum::http::StatusCode::BAD_REQUEST,
+            axum::Json(serde_json::json!({"error":"session_id required"})),
+        )
+            .into_response();
+    }
+
+    let ok = state
+        .session_manager
+        .update_session(
+            &req.session_id,
+            SessionUpdate::RefreshUserProfile {
+                user_profile: req.user_profile,
+                profile_version: req.profile_version,
+            },
+        )
+        .await;
+    if !ok {
+        return (
+            axum::http::StatusCode::NOT_FOUND,
+            axum::Json(serde_json::json!({"error":"SESSION_NOT_FOUND","refreshed":false})),
+        )
+            .into_response();
+    }
+
+    crate::services::session_bootstrap::force_send_session_bootstrap(&state, &req.session_id).await;
+
+    (
+        axum::http::StatusCode::OK,
+        axum::Json(serde_json::json!({
+            "refreshed": true,
+            "session_id": req.session_id,
+            "profile_version": req.profile_version,
+        })),
+    )
+        .into_response()
+}
+

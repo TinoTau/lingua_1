@@ -1,0 +1,47 @@
+{
+  "$id": "SingleCharCandidateV1",
+  "type": "object",
+  "required": [
+    "candidate_index",
+    "term_id",
+    "surface",
+    "canonical_surface",
+    "pinyin",
+    "tone",
+    "origin_span_id",
+    "raw_start",
+    "raw_end",
+    "syllable_start",
+    "syllable_end",
+    "lexical_source",
+    "candidate_features"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "candidate_index": { "type": "integer", "minimum": 0, "maximum": 7 },
+    "term_id": { "type": "string", "minLength": 1 },
+    "surface": { "type": "string", "minLength": 1 },
+    "canonical_surface": { "type": "string" },
+    "pinyin": { "type": "string" },
+    "tone": { "type": ["integer", "null"] },
+    "origin_span_id": { "type": "string" },
+    "raw_start": { "type": "integer" },
+    "raw_end": { "type": "integer" },
+    "syllable_start": { "type": "integer" },
+    "syllable_end": { "type": "integer" },
+    "lexical_source": { "enum": ["synthetic", "test_provider", "base_lexicon_internal"] },
+    "candidate_features": {
+      "type": "object",
+      "properties": {
+        "surface_hash_aux": { "type": "integer", "description": "AUXILIARY hashed surface — not a character class id" },
+        "pinyin_hash_aux": { "type": "integer" },
+        "tone": { "type": "integer" },
+        "relative_index": { "type": "integer" },
+        "candidate_count": { "type": "integer" }
+      }
+    }
+  },
+  "not": {
+    "required": ["expectedText"]
+  }
+}

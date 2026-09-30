@@ -1,0 +1,41 @@
+{
+  "harnessId": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "phase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION",
+  "forkFunction": "prepareModel3PathUpstream + completeModel3PathFromUpstream via runModel3PathStepCausalFork",
+  "forkFiles": [
+    "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-acceptance-snapshot.ts",
+    "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts",
+    "electron_node/electron-node/main/src/fw-detector/fw-detector-v4-path.ts"
+  ],
+  "forkBoundary": "After Domain Vote + Anchor materialization + packModel3SpanInferFields/host infer; before actionable RETRY routing",
+  "snapshotSchema": "MODEL3_ACCEPTANCE_UPSTREAM_SNAPSHOT_V1",
+  "hashAlgorithm": "sha256_canonical_json_v1",
+  "decisionOverrideMechanism": "keepOverrideFromPacked(packedDecisions) for BASELINE; packed S3 decisions for S3 branch",
+  "envGate": {
+    "MODEL3_ACCEPTANCE_CAUSAL_FORK": "1",
+    "MODEL2_DIALOG200_TRACE": "1",
+    "MODEL3_CHECKPOINT_IDENTITY": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "MODEL3_HARNESS_KEEP_ALL": "MUST_NOT_BE_SET_FOR_CAUSAL_AB"
+  },
+  "s3Checkpoint": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "expectedWeightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "featureContract": "packModel3SpanInferFields",
+    "labelContract": "MODEL3_LABEL_CONTRACT_V2_20260829"
+  },
+  "downstreamReused": {
+    "retry": "routeModel3Retry",
+    "recall": "recallSpanTopKV2",
+    "resegment": "resegmentRetryRegionWithLattice",
+    "assembly": "completeDomainAwareAssemblyFromVote + buildSentenceCandidates + mergeCrossPathSentenceCandidates",
+    "kenlm": "runFwSentenceRerankFromPrefilled"
+  },
+  "jobResultUntouched": true,
+  "productionDualChain": false,
+  "testOnlySnapshot": true,
+  "runner": "electron_node/electron-node/tests/run-dialog200-acceptance-harness-correction.mjs"
+}

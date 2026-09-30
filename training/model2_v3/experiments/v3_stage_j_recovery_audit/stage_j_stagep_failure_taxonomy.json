@@ -1,0 +1,50 @@
+{
+  "observed_on_b1_hit_v3_miss": {
+    "OTHER": 10,
+    "TOP1_RANK_MISS": 47
+  },
+  "primary_classes_for_0p813_gap": {
+    "TRAINING_REPRODUCTION_PROBLEM": {
+      "weight": "PRIMARY",
+      "evidence": [
+        "Stage J never ran run_v3_phase3_stage_p_refine.py Top-1 recipe under V1",
+        "labels=multi-hot label_actions not top1_labels teacher soft",
+        "loss=bce_pairwise/elementwise not bce_pairwise_top1 (margin 0.75, pair wt 1.25)",
+        "no hard×3 oversample; lr/epochs differ",
+        "model with_domain_head=True vs frozen without"
+      ]
+    },
+    "DATASET_DRIFT": {
+      "weight": "PRIMARY",
+      "evidence": [
+        "eval denominator 439 held-out vs freeze 197 all-split",
+        "phase2 grew"
+      ]
+    },
+    "METRIC_CONTRACT_DRIFT": {
+      "weight": "SECONDARY",
+      "evidence": [
+        "B1 query count formula",
+        "E2E without latency"
+      ]
+    },
+    "HASH_COLLISION_OR_REPRESENTATION": {
+      "weight": "SECONDARY_CHANGE_NOT_COLLAPSE",
+      "evidence": "V1 changes vectors vs legacy but unique/entropy not collapsed — requires retrain, does not alone explain gap vs refine recipe"
+    },
+    "TOP1_RANK_MISS": {
+      "weight": "LIKELY_IF_TOP2_HIGH",
+      "counts": {
+        "OTHER": 10,
+        "TOP1_RANK_MISS": 47
+      }
+    },
+    "FEATURE_SEMANTIC_MISMATCH_NON_HASH": {
+      "weight": "MINOR",
+      "evidence": "domain head present; phonetic packing same aside from unknown-key hash"
+    }
+  },
+  "PRIMARY_STAGE_P_FAILURE_CLASS": "TRAINING_REPRODUCTION_PROBLEM",
+  "VERDICT_A": "MIXED",
+  "VERDICT_A_detail": "TRAINING_REPRODUCTION_PROBLEM + DATASET_DRIFT (+ TOP1_RANKING under incomplete recipe); NOT hash information-loss collapse; NOT capacity"
+}

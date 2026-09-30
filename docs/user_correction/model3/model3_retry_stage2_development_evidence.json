@@ -1,0 +1,55 @@
+{
+  "phase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DEVELOPMENT",
+  "generatedAt": "2026-09-03T20:27:33Z",
+  "verdict": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DEVELOPMENT_PASS",
+  "controlVariable": "RETRY_STAGE2_QUERY_ENUMERATION_SOURCE",
+  "preferredDesign": "OPT_A_REENUMERATE_WINDOWS_ON_SUCCESS",
+  "firstSemanticChange": "STAGE2_QUERY_ENUMERATION",
+  "productionFilesModified": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-stage2-windows.ts"
+  ],
+  "productionFilesModifiedCount": 2,
+  "maxAllowedProductionFiles": 3,
+  "semanticOwner": "SHARED_LEXICAL_WINDOW_OWNER",
+  "reused": [
+    "buildLexicalWindowQueries",
+    "buildWindowDescriptorForRange",
+    "theoreticalLexicalWindowCount"
+  ],
+  "removed": [
+    "success-path localSpan-only Stage-2 for-loop as sole query source"
+  ],
+  "delta2BehaviorChangeCount": 0,
+  "windowSetAssertion": {
+    "missingWindowCount": 0,
+    "extraWindowCount": 0,
+    "outOfRegionWindowCount": 0
+  },
+  "antiOverfit": {
+    "OVERFITTING_DETECTED": "NO",
+    "REFERENCE_LEAKAGE": "NO",
+    "TEST_GAMING": "NO",
+    "CASE_SPECIFIC_RUNTIME_PATCH": "NO"
+  },
+  "driftGate": "PASS",
+  "DECISION_REQUIRED": "EMPTY",
+  "DEVELOPMENT_EVIDENCE_STATE": "Unit #1 success-path Stage-2 query enumeration restored to legal 1..min(5,R) region window space; fallback unchanged; architecture SSOT unchanged",
+  "nextPhase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_ACCEPTANCE",
+  "tests": {
+    "model3-retry-stage2-windows.test.ts": "PASS",
+    "model3-retry-region.test.ts": "PASS",
+    "model3-retry-region-resegment.test.ts": "PASS",
+    "model3-mainline.integration.test.ts": "PASS"
+  },
+  "performance": {
+    "enumerationBound": "SUM(R-L+1) for L=1..min(5,R)",
+    "candidateCapUnchanged": 16,
+    "note": "More Stage-2 queries; no cap/Recall algorithm change"
+  },
+  "downstreamReplay": {
+    "status": "NOT_RUN_FULL_DIALOG200_IN_THIS_UNIT",
+    "note": "Semantic contract verified via unit/fixture traces; full dialog_200 replay deferred to ACCEPTANCE phase; neutral final-text does not invalidate SSOT restoration",
+    "fixtureDownstream": "unchanged_entrypoint_recallSpanTopKV2_materialize_merge"
+  }
+}

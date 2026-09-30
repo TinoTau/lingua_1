@@ -1,0 +1,5 @@
+path,change,trained,used_for_production_select
+training/model2_v3/policy/ambiguity_head_v1.py,add AmbiguityHeadV1 module,no,no
+training/model2_v3/policy/model.py,optional with_ambiguity_head=False; forward() unchanged,no,no
+electron_node/services/model2_runtime/model2_inference_host.py,cmd=disambiguate always ABSTAIN HEAD_NOT_AVAILABLE this round,no,no
+electron_node/electron-node/main/src/model2-runtime/inference-host.ts,disambiguate() wrapper fail-closed,no,no

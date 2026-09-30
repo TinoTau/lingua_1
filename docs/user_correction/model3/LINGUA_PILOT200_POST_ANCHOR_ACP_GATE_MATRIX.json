@@ -1,0 +1,310 @@
+{
+  "phase": "LINGUA_PILOT200_POST_ANCHOR_ACP_CONTROLLED_REMEASURE",
+  "gates": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "fail": 0,
+      "passRate": 1,
+      "previous": {
+        "applicable": 471,
+        "pass": 471,
+        "passRate": 1
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "fail": 53,
+      "passRate": 0.8312101910828026,
+      "previous": {
+        "applicable": 314,
+        "pass": 261,
+        "passRate": 0.8312101910828026
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "fail": 88,
+      "passRate": 0.7197452229299363,
+      "previous": {
+        "applicable": 314,
+        "pass": 226,
+        "passRate": 0.7197452229299363
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "fail": 153,
+      "passRate": 0.5127388535031847,
+      "previous": {
+        "applicable": 314,
+        "pass": 161,
+        "passRate": 0.5127388535031847
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 70,
+      "fail": 527,
+      "passRate": 0.11725293132328309,
+      "previous": {
+        "applicable": 597,
+        "pass": 70,
+        "passRate": 0.11725293132328309
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    }
+  },
+  "previousBaseline": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "passRate": 1
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "passRate": 0.8312101910828026
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "passRate": 0.7197452229299363
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "passRate": 0.5127388535031847
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "passRate": 0.009554140127388535
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 70,
+      "passRate": 0.11725293132328309
+    }
+  },
+  "conditionTable": {
+    "NO_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 0,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 0,
+      "profilePronunciationAnchorCount": 0,
+      "model3Actionable": 7471,
+      "keep": 5738,
+      "retry": 1733,
+      "stage2Useful": 0,
+      "retryRecovery": 22,
+      "existingDrop": 1835,
+      "profileDomainCandidates": 4042,
+      "profilePronunciationCandidates": 0,
+      "extraCandidates": 4220
+    },
+    "CORRECT_PROFILE": {
+      "finalCorrect": 26,
+      "finalCorrectRate": 0.13,
+      "pActionApprox": 104,
+      "lexiconHit": 3,
+      "lexicalEdge": 3,
+      "anchorCount": 330,
+      "profilePronunciationAnchorCount": 330,
+      "model3Actionable": 14891,
+      "keep": 11537,
+      "retry": 3354,
+      "stage2Useful": 0,
+      "retryRecovery": 26,
+      "existingDrop": 10781,
+      "profileDomainCandidates": 20905,
+      "profilePronunciationCandidates": 284,
+      "extraCandidates": 22092
+    },
+    "WRONG_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 122,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 235,
+      "profilePronunciationAnchorCount": 235,
+      "model3Actionable": 16586,
+      "keep": 12908,
+      "retry": 3678,
+      "stage2Useful": 0,
+      "retryRecovery": 22,
+      "existingDrop": 13045,
+      "profileDomainCandidates": 26598,
+      "profilePronunciationCandidates": 131,
+      "extraCandidates": 26167
+    }
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "finalRepairDelta": 4,
+      "targetActionDelta": 104,
+      "targetLexiconHitDelta": 3,
+      "targetEdgeDelta": 3,
+      "retryDelta": 1621,
+      "stage2UsefulDelta": 0,
+      "candidateDropDelta": 8946,
+      "previousFinalDelta": 4
+    },
+    "wrongVsNoProfile": {
+      "finalRepairDelta": 0,
+      "extraExpansionCount": 26167,
+      "previousExtraExpansionCount": 21947,
+      "retryDelta": 1945,
+      "candidateDropDelta": 11210
+    },
+    "correctVsWrong": {
+      "finalRepairDelta": 4,
+      "retryDelta": -324
+    }
+  },
+  "verdicts": {
+    "BASELINE_IDENTITY": "PASS",
+    "PILOT_DATASET_IDENTITY": "PASS",
+    "TOTAL_CASES": 200,
+    "TOTAL_RUNS": 600,
+    "REMEASURE_VALIDITY": "PASS",
+    "NO_PROFILE_FINAL_CORRECT": "22/200",
+    "CORRECT_PROFILE_FINAL_CORRECT": "26/200",
+    "WRONG_PROFILE_FINAL_CORRECT": "22/200",
+    "CORRECT_VS_NO_PROFILE_FINAL_DELTA": 4,
+    "WRONG_VS_NO_PROFILE_FINAL_DELTA": 0,
+    "CORRECT_VS_WRONG_FINAL_DELTA": 4,
+    "GATE_A": "471/471",
+    "GATE_B": "261/314",
+    "GATE_C": "226/314",
+    "GATE_D": "161/314",
+    "GATE_E": "3/314",
+    "GATE_F": "3/314",
+    "GATE_G": "3/314",
+    "GATE_H": "3/314",
+    "GATE_I": "70/597",
+    "PROFILE_PRONUNCIATION_ANCHOR_COUNT": 565,
+    "PROFILE_DOMAIN_ANCHOR_COUNT": 0,
+    "DOMAIN_ANCHOR_COUNT": 0,
+    "PROFILE_RETRIEVAL_ANCHOR_COUNT": 0,
+    "MODEL3_ACTIONABLE_COUNT": 38948,
+    "MODEL3_KEEP_COUNT": 30183,
+    "MODEL3_RETRY_COUNT": 8765,
+    "RETRY_REGION_COUNT": 6067,
+    "STAGE2_RECALL_INVOCATION_COUNT": 33085,
+    "STAGE2_USEFUL_EVIDENCE_COUNT": 0,
+    "RETRY_DOWNSTREAM_RECOVERY_COUNT": 70,
+    "RETRY_EXISTING_PRESENT_COUNT": 48980,
+    "RETRY_EXISTING_DROPPED_POST_CAP_COUNT": 25661,
+    "RETRY_EXISTING_SURVIVAL_RATE": 0.47609228256431196,
+    "PROFILE_DOMAIN_CANDIDATE_COUNT": 51545,
+    "PROFILE_DOMAIN_ENTERING_RETRY_COUNT": 47101,
+    "PROFILE_DOMAIN_POST_RETRY_SURVIVAL_COUNT": 21440,
+    "PROFILE_DOMAIN_POST_RETRY_DROP_COUNT": 25661,
+    "PROFILE_PRONUNCIATION_CANDIDATE_COUNT": 415,
+    "PROFILE_PRONUNCIATION_ANCHOR_LOSS": 0,
+    "DEFERRED_FINESPAN_BOUNDARY_CASE_COUNT": 3,
+    "MODEL3_RETRAIN_REQUIRED": "NO",
+    "MODEL3_REVALIDATION_RESULT": "PASS",
+    "PERFORMANCE_STATUS": "WARNING",
+    "DOMINANT_FAILURE_OWNER": "LEXICON_RECALL",
+    "MODEL2_HYPOTHESIS": "PARTIALLY_SUPPORTED",
+    "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+    "ACCEPTANCE_STATUS": "PASS",
+    "ONE_NEXT_OWNER": "LEXICON_RECALL_OWNER",
+    "ONE_NEXT_DELTA": "Investigate lexicon recall key/coverage blocking CORRECT_PROFILE P to hit to edge conversion; keep Anchor ACP and MERGE_SHARED_BUDGET frozen."
+  },
+  "controlCases": {
+    "C1": "p2_u004_019_CORRECT anchors=0 retry=4",
+    "C2": "p2_u001_020_CORRECT DomainAnchor=0 PAnchors=4",
+    "C3": "p2_u001_039_CORRECT PAnchors=7",
+    "C4": "p2_u004_001_CORRECT PAnchors=2 final=true",
+    "C5": "PROFILE_RETRIEVAL_ABSENT",
+    "C6": "p2_u001_002_CORRECT drop=60/120",
+    "C7": "p2_u001_003_NO drop=0/10",
+    "C8": "p2_u003_035_WRONG extra=994"
+  }
+}

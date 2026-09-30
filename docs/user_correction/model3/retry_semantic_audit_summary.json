@@ -1,0 +1,61 @@
+{
+  "phase": "RETRY_ONE_BOUNDED_RESEGMENTATION_HISTORICAL_SSOT_AUDIT",
+  "date": "2026-08-29",
+  "mainVerdict": "SEMANTIC_IMPLEMENTATION_DRIFT",
+  "primarySemanticVerdict": "SEMANTIC_A_ONE_RETRY_OPERATION",
+  "rejectedAsPrimarySSOT": "SEMANTIC_B_ONE_SEGMENTATION_PATH",
+  "fineSpanVerdict": "FINESPAN_MULTI_WINDOW_CONTRACT",
+  "retryConsumerVerdict": "RETRY_CONSUMER_DRIFT",
+  "phraseOrigin": {
+    "earliestSource": "MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+    "earliestDate": "2026-08-23",
+    "resegmentPhraseAdded": "model3_retry_contract_v1.md (2026-08-28, after region correction)",
+    "authorityLevel": "LEVEL_1",
+    "oneModifies": "ONE_RETRY_ATTEMPT / ONE_RESEGMENTATION_PASS (utterance-level bounded retry operation)",
+    "originalProblemPrevented": "recursive retry; repeated Model3; second Domain Vote; unbounded latency; candidate explosion; second ASR / second Recall pipeline"
+  },
+  "fineSpanContract": {
+    "purpose": "Expose contiguous 1-5 syllable windows and bounded complete segmentation paths for Recall-derived lexical edges",
+    "tokenizerOrWindowGenerator": "CANDIDATE_WINDOW_GENERATOR",
+    "overlappingLocalSpansIntended": "YES",
+    "multipleLocalHypotheses": "YES",
+    "preRecallSinglePathRequirement": "NOT_FOUND"
+  },
+  "retryContract": {
+    "retryRegionMeaning": "Bounded text/acoustic/syllable region requiring local reinterpretation after Model3 RETRY flags",
+    "oneRetryAttempt": "YES",
+    "oneSegmentationPath": "NOT_FOUND_IN_PRE_IMPL_DESIGN",
+    "explicitRegionEqualsPath": "NO",
+    "recursiveRetryForbidden": "YES",
+    "secondModel3Forbidden": "YES",
+    "secondDomainVoteForbidden": "YES"
+  },
+  "implementationDrift": {
+    "architectureSemanticDrift": "YES",
+    "originalFrozenContract": "One bounded local retry operation (re-segment + re-recall) within derived region; reuse lattice/window generation; preserve retry-once and Vote-once; first-pass lattice retains multiple SegmentationPaths",
+    "currentImplementation": "Retry runs regional lattice then preferredPathFineSpanView selects exactly ONE SegmentationPath before per-span recall; other retained regional paths discarded",
+    "firstDriftPoint": "Initial model3-retry-region-resegment.ts (2026-08-28 region correction): pathFineSpanViews[0] then compareSegmentationPathBestFirst[0]",
+    "explicitBusinessRequirement": "NOT_FOUND",
+    "singlePathLogicOrigin": "TECHNICAL_SIMPLIFICATION_IN_INITIAL_REGION_CORRECTION",
+    "affectedFiles": [
+      "electron_node/electron-node/main/src/model3-runtime/model3-retry-region-resegment.ts"
+    ],
+    "explicitArchitectureChangeFound": false
+  },
+  "d160Trace": {
+    "region": "顺便向木李",
+    "currentSelectedPath": "顺|便|向|木|李",
+    "pathClassification": "STRUCTURALLY_VALID_COMPLETE_SEGMENTATION_PATH; FALLBACK_HEAVY (all length-1 edges)",
+    "generatedPathCount": 4,
+    "alternativeLocalHypothesesExist": true,
+    "originalContractWouldAllowAlternativesToReachRecall": "AMBIGUOUS_FOR_PER_SPAN_RETRY_RECALL; YES_FOR_REGION_LATTICE_WINDOW_RECALL"
+  },
+  "statisticsNote": {
+    "priorCoverageSumError": "29 vs 26 due to WINDOW_BOUNDARY miscount (13 vs 11) in summary table; CSV invariant PASS"
+  },
+  "architectureTrainingGate": "OPEN",
+  "developmentSequenceGate": "HOLD",
+  "developmentSequenceReason": "Retry consumer semantic drift unresolved; requires user decision before treating single-path Retry as authorized",
+  "recommendedNextPhase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_AUDIT",
+  "explicitArchitectureChangeFound": false
+}

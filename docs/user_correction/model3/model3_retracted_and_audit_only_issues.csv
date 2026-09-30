@@ -1,0 +1,16 @@
+issueId,priorLabel,correctClass,productionIssue,status,note
+CLAIM_KEEP_ON_LOCUS_IS_ARCHITECTURE_DRIFT,often bundled with Query Geometry,MODEL_QUALITY_FAILURE,NO,RETRACTED_AS_ARCHITECTURE_DRIFT,Packer/mapping/Anchor mask OK; locus spans correctly KEEP → deriveRetryRegions correctly excludes. Not Retry SSOT violation.
+CLAIM_KEEP_BARRIER_IS_BUG,REGION_TOO_NARROW framed as deriveRetryRegions defect,EXPECTED_MODEL_ERROR_OR_QUALITY,NO,RETRACTED,KEEP flush is frozen SSOT. Do not expand into unrelated KEEP by default.
+CLAIM_UTTERANCE_SINGLETON_DOMAIN_VOTE_REQUIRED,assumed utterance singleton,DOCUMENT_SSOT_DRIFT,NO,RETRACTED,Lattice FROZEN voteScope=per_path. Path-local is MATCH.
+CLAIM_PREFERRED_PATH_ACTIVE,single preferred regional path,ALREADY_FIXED,NO,RETRACTED_ACTIVE,collectLocalSpansFromRetainedPathViews unions all views.
+CLAIM_SECOND_DOMAIN_VOTE_RETRY,second Domain Vote,ABSENT,NO,RETRACTED,trace secondDomainVote=false; completeFromVote same vote
+CLAIM_SECOND_MODEL3_STAGE,recursive Model3,ABSENT,NO,RETRACTED,routeModel3Retry does not re-infer
+CLAIM_RECURSIVE_RETRY_OR_ASR_RERUN,recursive Retry / ASR,ABSENT,NO,RETRACTED,attemptedSpanIds guard; no ASR rerun
+CLAIM_LEXICON_PREVALENCE_ZERO,post-minimality share 0.0,AUDIT_SEMANTIC_DRIFT,NO,RETRACTED_AS_PRODUCTION_CONCLUSION,Out-of-lexicon identity unresolved; existence may remain PROVEN_GENERAL from prior evidence; prevalence UNRESOLVED
+CLAIM_SURFACE_STRUCTURAL_FAMILIES_89_56_52,mechanism:norm(target) families,AUDIT_SEMANTIC_DRIFT,NO,SUPERSEDED,Surface diversity ≠ structural independence
+CLAIM_RECALL_PROVEN_GENERAL_FROM_SURFACES,freeze wrote PROVEN_GENERAL,DOCUMENT_SSOT_DRIFT,NO,CORRECTED_TO_PROVEN_LOCAL,Authoritative RECALL_MISS_EXISTENCE=PROVEN_LOCAL after minimality
+CLAIM_NO_PRIMARY_TARGET_MAP_AS_RUNTIME,NO_REPAIRABLE_TARGET from map miss,AUDIT_SEMANTIC_DRIFT,NO,FIXED_IN_AUDIT,TARGET_SCOPE_NOT_EVALUATED correction
+CLAIM_REFERENCE_DIFF_EQUALS_LEXICAL_TARGET,Lexicon148 invalid prevalence,AUDIT_SEMANTIC_DRIFT,NO,FIXED_IN_AUDIT,REFERENCE_DIFF_REGION ≠ LEXICAL_TARGET frozen
+CLAIM_70PCT_SYSTEM_ERROR_PREVALENCE,166/237 as overall error share,TEST_METRIC_DRIFT,NO,RETRACTED_AS_SYSTEM_PREVALENCE,Share is among lexically-evaluable repair events only
+CLAIM_ASSEMBLY_KENLM_PRIMARY_OWNERS,downstream primary,AUDIT_ONLY,NO,NOT_SUPPORTED_AS_PRIMARY,POST_RECALL/ASSEMBLY not supported; KenLM LIMITED
+CLAIM_CONTINUE_CAUSAL_LOCALIZATION_AS_NEXT_BASELINE,next=CAUSAL_LOCALIZATION_COMPLETION,AUDIT_PROCESS_DRIFT,NO,SUPERSEDED_BY_THIS_RECONCILIATION,Stop incremental drift-chasing; restore SSOT baseline first via Stage-2 unit

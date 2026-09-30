@@ -1,0 +1,39 @@
+{
+  "gate0Id": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0",
+  "readyForGate0AcceptanceRun": true,
+  "model2PathStatus": "MODEL2_ANCHOR_PATH_NOT_VALIDATED",
+  "domainPathStatus": "PASS_OWNER_PARITY_COVERAGE_WARNING_NO_HIT",
+  "checks": {
+    "formal_harness_exists": true,
+    "MODEL2_ANCHOR_OWNER_WIRED": true,
+    "DOMAIN_ANCHOR_OWNER_WIRED": true,
+    "MODEL2_ANCHOR_OWNER_EXECUTED": true,
+    "DOMAIN_ANCHOR_OWNER_EXECUTED": true,
+    "MODEL2_ANCHOR_HOST_AVAILABLE_ANY": false,
+    "MODEL2_ANCHOR_HIT_OBSERVED": false,
+    "DOMAIN_ANCHOR_HIT_OBSERVED": false,
+    "cand_0_natural": true,
+    "cand_gt0_natural": false,
+    "retry_cand_gt0_present": false,
+    "multipath_retention": false,
+    "semantic_exclude_distinguished": true,
+    "hard_reject_distinguished": true,
+    "semanticFamily_split_lock": true,
+    "split_leak_errors": []
+  },
+  "semanticFailures": [],
+  "nonblockingWarnings": [
+    "MODEL2_ANCHOR_PATH_NOT_VALIDATED",
+    "PASS_OWNER_PARITY_COVERAGE_WARNING_NO_HIT"
+  ],
+  "batchSummary": {
+    "hardRejected": 1,
+    "semanticExcluded": 1,
+    "supervisedAccepted": 2,
+    "cand0": 3,
+    "candGt0": 0,
+    "retryCandGt0": 0,
+    "multipathUtterances": 0
+  },
+  "note": "Checker only — do not assign MODEL3_V2_TARGETED_DIST_CORRECTED_V1 here"
+}

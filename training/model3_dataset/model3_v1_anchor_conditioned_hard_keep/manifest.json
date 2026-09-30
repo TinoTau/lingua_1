@@ -1,0 +1,27 @@
+{
+  "category": "ANCHOR_CONDITIONED_HARD_KEEP_V1",
+  "version": "1.0.0",
+  "existingCandidates": 58266,
+  "acceptedTotal": 58212,
+  "acceptedTrain": 48424,
+  "uniqueTargetSurfaces": 328,
+  "uniqueAnchorContexts": 6805,
+  "sourceDistribution": {
+    "STRICT_RECONSTRUCTION_KEEP_SIDE": 8000,
+    "FULL100K_EXISTING": 50212
+  },
+  "evidenceDistribution": {
+    "A_same_target_legal_retry_elsewhere": 50544,
+    "D_strict_or_semantic_contrast_family": 16568
+  },
+  "rejectReasons": {
+    "target_not_keep_semantics": 54
+  },
+  "full100kMutated": false,
+  "strictDatasetMutated": false,
+  "humanQa": {
+    "n": 300,
+    "path": "docs/user_correction/model3/model3_v1_anchor_hardkeep_human_qa_300.csv",
+    "pass": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "role": "profile-agnostic base phonetic recall",
+  "UserProfile_affects_generation": false,
+  "evidence": "training/model2/fuzzy/pool.py docstring",
+  "reuse": "Profile Retrieval reuses build_fuzzy_pool as lexicon lookup primitive — GOOD (one engine, multiple query sources)",
+  "duplicate_engine": false,
+  "action": "KEEP"
+}

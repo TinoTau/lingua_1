@@ -1,0 +1,49 @@
+{
+  "before": {
+    "RecallRetained": 0.8717948717948718,
+    "QueryReduction": 0.5151515151515151,
+    "CandidateReduction": 0.4035532994923858,
+    "E2ECostReduction": 0.4788262807303178,
+    "B1": {
+      "n": 80,
+      "TargetIntroductionRate": 0.975,
+      "QueryCount_mean": 2.0625,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.925,
+      "Latency_P50": 103.9349999919068
+    },
+    "V3": {
+      "n": 80,
+      "TargetIntroductionRate": 0.85,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 2.9375,
+      "Latency_P50": 54.94509998243302
+    }
+  },
+  "after": {
+    "RecallRetained": 0.8717948717948718,
+    "QueryReduction": 0.5151515151515151,
+    "CandidateReduction": 0.4035532994923858,
+    "E2ECostReduction": 0.47936299246959474,
+    "B1": {
+      "n": 80,
+      "TargetIntroductionRate": 0.975,
+      "QueryCount_mean": 2.0625,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 4.925,
+      "Latency_P50": 106.27119999844581
+    },
+    "V3": {
+      "n": 80,
+      "TargetIntroductionRate": 0.85,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 2.9375,
+      "Latency_P50": 54.47000000276603
+    }
+  },
+  "delta_RR": 0.0,
+  "PASS": true,
+  "freeze_shared": true
+}

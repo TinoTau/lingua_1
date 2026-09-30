@@ -1,0 +1,25 @@
+{
+  "n_rows": 766,
+  "sample_kinds": {
+    "POSITIVE": 328,
+    "HARD_NEGATIVE": 320,
+    "NEGATIVE": 118
+  },
+  "positive_buckets": {
+    "RULE_POSITIVE": 1,
+    "NON_TERM_POSITIVE": 130,
+    "TERM_POSITIVE": 197,
+    "OTHER": 438
+  },
+  "splits": {
+    "train": 751,
+    "test": 7,
+    "validation": 8
+  },
+  "ignored_non_term_positive_count": 130,
+  "injected_hard_negative_count": 320,
+  "term_positive_trainable": 197,
+  "negative_empty_pool_count": 118,
+  "negative_with_training_distractors": 118,
+  "note": "NON_TERM_POSITIVE excluded from Model2 lexicon recall positive loss."
+}

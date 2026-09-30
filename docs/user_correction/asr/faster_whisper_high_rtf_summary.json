@@ -1,0 +1,89 @@
+{
+  "phase": "FASTER_WHISPER_SINGLE_CALL_HIGH_RTF_ROOT_CAUSE_AUDIT",
+  "generatedAt": "2026-09-07T21:30:00Z",
+  "verdict": "FW_SINGLE_CALL_HIGH_RTF_ROOT_CAUSE_NOT_ISOLATED",
+  "FW_means": "Faster-Whisper (not Lingua FW Repair)",
+  "MODE": "READ_ONLY",
+  "ARCHITECTURE_DRIFT": "NONE",
+  "LIST_SEGMENTS_TIMER_VALID": "YES",
+  "hypotheses": {
+    "H1_cold_warm": {
+      "grade": "STRONGLY_CORRELATED_FOR_FIRST_AFTER_LOAD_ONLY",
+      "proven_for_historical_6_to_12s": false,
+      "evidence": "Controlled replay d031: first list=3899ms vs warm p50=838ms (ratio≈4.66). Historical SLOW ordinal1=2/343; Sept SLOW ordinal 104-126."
+    },
+    "H2_gpu_external_contention": {
+      "grade": "POSSIBLE",
+      "historical": "HISTORICAL_GPU_CONTENTION_NOT_OBSERVABLE",
+      "current": "Wow.exe + Chrome + other python on GPU during replay; warm still ~0.8-1.2s so contention alone does not force 6-12s now"
+    },
+    "H3_gpu_clock_thermal_power": {
+      "grade": "STRONGLY_CORRELATED_WITH_MILD_FIRST_CALL",
+      "proven_for_historical_6_to_12s": false,
+      "evidence": "Pre-load clocks low; after first infer SM=2505 P0. Warm stable P0. Idle 90s did not drop back to 6-12s."
+    },
+    "H4_worker_lifecycle": {
+      "grade": "NOT_SUPPORTED",
+      "evidence": "SLOW reload_recent=2/343; not concentrated after restart"
+    },
+    "H5_decoder_workload": {
+      "grade": "NOT_SUPPORTED",
+      "evidence": "Duration-matched FAST vs SLOW: segmentCount mean delta≈-0.1; textLen nearly equal"
+    },
+    "H6_hidden_queue": {
+      "grade": "NOT_SUPPORTED",
+      "evidence": "Single-call cohort; timer is list(segments) only"
+    },
+    "H7_measurement_artifact": {
+      "grade": "NOT_SUPPORTED",
+      "evidence": "LIST_SEGMENTS_TIMER_VALID=YES"
+    },
+    "H8_other": {
+      "grade": "POSSIBLE",
+      "note": "Unreproduced historical 6-12s may require transient GPU/system state not captured"
+    }
+  },
+  "historical_single_call_3_to_4p5s": {
+    "n": 11857,
+    "FAST_le_1p5": 6848,
+    "NORMAL": 4006,
+    "SLOW_ge_6": 343
+  },
+  "controlled_replay": {
+    "audio": "dialog_d031.wav",
+    "audioMs": 3820,
+    "config": "medium cuda int8_float16 beam=1 temperature=0 word_timestamps=True language=zh vad_filter=False",
+    "immediate": {
+      "n": 15,
+      "first_ms": 3899,
+      "warm_p50_ms": 838,
+      "warm_min_ms": 809,
+      "warm_max_ms_excl_first": 947,
+      "cold_warm_ratio": 4.66,
+      "reproduced_historical_6_to_12s": false
+    },
+    "after_idle_90s_ms": [1082, 1176, 1126, 1047, 938],
+    "second_audio_d183_warm_ms_range": [768, 903]
+  },
+  "final_answers": {
+    "1_reproducible_6_to_12_now": "NO — warm ~0.8s; first-after-load ~3.9s only",
+    "2_same_audio_stable_slow": "NO — Pattern A (stable fast after warm); historical 7s not reproduced",
+    "3_cold_start_main": "NO for historical SLOW; YES mild for first after model load",
+    "4_idle_related": "NO for >=60s idle historically; 90s idle now → ~1.0-1.2s not 7s",
+    "5_restart_reload": "NO",
+    "6_external_gpu_contention": "CURRENT processes present but NOT sufficient to force 6-12s; historical NOT_OBSERVABLE",
+    "7_clock_thermal": "Related to mild first-call only; NOT proven for historical 6-12s",
+    "8_decoder_workload": "NO significant difference in available proxies",
+    "9_cpu_fallback": "NO — cuda int8_float16 confirmed in replay",
+    "10_explained_fraction": "Mild first-after-load variance explained; historical 6-12s band unexplained/not reproduced (~0% of that band explained by H1 in current replay)",
+    "11_unexplained": "Historical single-call list>=6s on ~3-4s audio (343 cases in window) remains unexplained",
+    "12_next_one_control_variable": "EXTERNAL_OR_TRANSIENT_GPU_LOAD_REPRODUCTION — attempt to reproduce 6-12s under controlled GPU load / exclusive-GPU A/B while logging nvidia-smi during live service slow events (still no ASR param changes)"
+  },
+  "artifacts": [
+    "Faster_Whisper_Single_Call_High_RTF_Root_Cause_Audit.md",
+    "faster_whisper_high_rtf_case_comparison.csv",
+    "faster_whisper_same_audio_replay.csv",
+    "faster_whisper_high_rtf_summary.json",
+    "faster_whisper_gpu_runtime_evidence.csv"
+  ]
+}

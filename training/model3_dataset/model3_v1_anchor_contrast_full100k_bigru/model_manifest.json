@@ -1,0 +1,35 @@
+{
+  "modelName": "MODEL3_V1_ANCHOR_CONTRAST_FULL100K_BIGRU_V1",
+  "architecture": "Small BiGRU",
+  "config": {
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "batch_size": 64,
+    "epochs": 6,
+    "lr": 0.001,
+    "class_weight_retry": 2.5,
+    "seed": 2026082420,
+    "init": "random_from_scratch"
+  },
+  "vocabSize": 1377,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

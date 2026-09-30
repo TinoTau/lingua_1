@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "gates": {
+    "tiny_overfit": "PASS",
+    "params_m0_lt_2m": true,
+    "mask_invariance": "PASS",
+    "term_id_stress": "PASS",
+    "m0_beats_random": true,
+    "m0_vs_distance_baseline": {
+      "m0_r1": 0.949238578680203,
+      "baseline_r1": 1.0,
+      "m0_mrr": 0.9690597051003144,
+      "baseline_mrr": 1.0
+    },
+    "wrong_profile_m1": "PASS"
+  },
+  "ignored_non_term_positive_count": 130,
+  "note": "PASS means architecture worth scaling data — NOT formal quality acceptance."
+}

@@ -1,0 +1,19 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "with_row_or_empty_bias": {
+    "n": 400,
+    "NO_CHANGE_ProfileExpansionRate": 0.0375,
+    "AverageFalseNewCandidates": 0.1375
+  },
+  "forced_HIGH_BOUND_stress": {
+    "n": 200,
+    "NO_CHANGE_ProfileExpansionRate": 0.07,
+    "AverageFalseNewCandidates": 0.22,
+    "note": "SPIKE_ONLY stress — forced active profile on NO_CHANGE rows"
+  }
+}

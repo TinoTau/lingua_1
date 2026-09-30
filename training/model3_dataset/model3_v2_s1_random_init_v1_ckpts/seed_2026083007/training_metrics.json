@@ -1,0 +1,233 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_CORE_S1_TRAINING_EXPERIMENT",
+  "mode": "random",
+  "modelId": "MODEL3_V2_S1_RANDOM_INIT_V1",
+  "seed": 2026083007,
+  "checkpointDir": "training/model3_dataset/model3_v2_s1_random_init_v1_ckpts/seed_2026083007",
+  "weightsSha256": "5de52645da92f8db8be224b829a8004029541f64aaa66d05bc1f7b1a7ed01dd7",
+  "bestEpoch": 8,
+  "trainSeconds": 27.135114431381226,
+  "config": {
+    "modelId": "MODEL3_V2_S1_RANDOM_INIT_V1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+    "datasetBuildId": "prod_core_s1_build_20260830_v1",
+    "seed": 2026083007,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 8,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "sampling": "uniform_shuffle_utterance",
+    "pair_loss_enabled": false,
+    "init": "random_from_scratch",
+    "initSourceCheckpoint": null,
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "featureContract": "packModel3SpanInferFields",
+    "decisionThreshold": "argmax"
+  },
+  "initMeta": {},
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.28960462907950085,
+      "dev": {
+        "keep_precision": 0.9214443219404631,
+        "keep_recall": 1.0,
+        "retry_precision": 0.0,
+        "retry_recall": 0.0,
+        "retry_f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 285,
+        "tn": 3343,
+        "pred_keep": 3628,
+        "pred_retry": 0,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.0
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.26086334432616376,
+      "dev": {
+        "keep_precision": 0.9214443219404631,
+        "keep_recall": 1.0,
+        "retry_precision": 0.0,
+        "retry_recall": 0.0,
+        "retry_f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 285,
+        "tn": 3343,
+        "pred_keep": 3628,
+        "pred_retry": 0,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.0
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.25265418489774066,
+      "dev": {
+        "keep_precision": 0.9214443219404631,
+        "keep_recall": 1.0,
+        "retry_precision": 0.0,
+        "retry_recall": 0.0,
+        "retry_f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 285,
+        "tn": 3343,
+        "pred_keep": 3628,
+        "pred_retry": 0,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.0
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.24107155203819275,
+      "dev": {
+        "keep_precision": 0.9219525648097077,
+        "keep_recall": 1.0,
+        "retry_precision": 1.0,
+        "retry_recall": 0.007017543859649123,
+        "retry_f1": 0.013937282229965157,
+        "tp": 2,
+        "fp": 0,
+        "fn": 283,
+        "tn": 3343,
+        "pred_keep": 3626,
+        "pred_retry": 2,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.0005512679162072767
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.22027072897463135,
+      "dev": {
+        "keep_precision": 0.924889135254989,
+        "keep_recall": 0.9982052049057732,
+        "retry_precision": 0.7,
+        "retry_recall": 0.04912280701754386,
+        "retry_f1": 0.09180327868852459,
+        "tp": 14,
+        "fp": 6,
+        "fn": 271,
+        "tn": 3337,
+        "pred_keep": 3608,
+        "pred_retry": 20,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.005512679162072767
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.19184697374249948,
+      "dev": {
+        "keep_precision": 0.9271817676486938,
+        "keep_recall": 0.9979060723900688,
+        "retry_precision": 0.7666666666666667,
+        "retry_recall": 0.08070175438596491,
+        "retry_f1": 0.14603174603174604,
+        "tp": 23,
+        "fp": 7,
+        "fn": 262,
+        "tn": 3336,
+        "pred_keep": 3598,
+        "pred_retry": 30,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.008269018743109152
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.1627524962479418,
+      "dev": {
+        "keep_precision": 0.9380804953560371,
+        "keep_recall": 0.9970086748429554,
+        "retry_precision": 0.8666666666666667,
+        "retry_recall": 0.22807017543859648,
+        "retry_f1": 0.3611111111111111,
+        "tp": 65,
+        "fp": 10,
+        "fn": 220,
+        "tn": 3333,
+        "pred_keep": 3553,
+        "pred_retry": 75,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.020672546857772877
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.1432779970945734,
+      "dev": {
+        "keep_precision": 0.9386779184247539,
+        "keep_recall": 0.9982052049057732,
+        "retry_precision": 0.9178082191780822,
+        "retry_recall": 0.23508771929824562,
+        "retry_f1": 0.3743016759776537,
+        "tp": 67,
+        "fp": 6,
+        "fn": 218,
+        "tn": 3337,
+        "pred_keep": 3555,
+        "pred_retry": 73,
+        "true_retry_rate": 0.07855567805953693,
+        "pred_retry_rate": 0.0201212789415656
+      }
+    }
+  ],
+  "dev": {
+    "keep_precision": 0.9386779184247539,
+    "keep_recall": 0.9982052049057732,
+    "retry_precision": 0.9178082191780822,
+    "retry_recall": 0.23508771929824562,
+    "retry_f1": 0.3743016759776537,
+    "tp": 67,
+    "fp": 6,
+    "fn": 218,
+    "tn": 3337,
+    "pred_keep": 3555,
+    "pred_retry": 73,
+    "true_retry_rate": 0.07855567805953693,
+    "pred_retry_rate": 0.0201212789415656
+  },
+  "test": {
+    "keep_precision": 0.9532506702412868,
+    "keep_recall": 0.9977200982111539,
+    "retry_precision": 0.9139072847682119,
+    "retry_recall": 0.33093525179856115,
+    "retry_f1": 0.48591549295774655,
+    "tp": 138,
+    "fp": 13,
+    "fn": 279,
+    "tn": 5689,
+    "pred_keep": 5968,
+    "pred_retry": 151,
+    "true_retry_rate": 0.06814839025984638,
+    "pred_retry_rate": 0.024677234842294494
+  },
+  "classifierBehavior": {
+    "ALL_KEEP": false,
+    "OVER_RETRY": false,
+    "NEAR_ALL_KEEP": false,
+    "pred_retry_rate": 0.024677234842294494,
+    "true_retry_rate": 0.06814839025984638
+  }
+}

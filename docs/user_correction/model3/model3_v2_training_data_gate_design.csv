@@ -1,0 +1,10 @@
+gateId,name,hardSoft,metric,threshold,rationale,wouldCatchPriorDefect
+G0,dataset_identity_source_integrity,HARD,datasetId==expected AND train path binds production_core_s3 AND checksum/manifest present,exact match MODEL3_V2_PRODUCTION_CORE_S3 lineage,Prior causality measured wrong dataset; bind SSOT path,YES
+G1,semantic_family_split_integrity,HARD,no semanticFamilyId appears in >1 split,0 cross-split families,Preserve frozen split lock; materializationRunId not split key,NO
+G2,feature_contract_parity,HARD,featureContractIdentity==packModel3SpanInferFields; rawFirstPassCandidateCount present,100% spans with explicit cand field,serializer fail-closed already; keep as train gate,PARTIAL
+G3,feature_variance_non_collapse,HARD,for EXPECTED_VARIABLE features: uniqueCount>=2 AND (if applicable) nonzeroRate>min,first_pass_cand_log1p nonzeroRate>=0.05 among eligible spans; span_rel_position unique>=10,Reject labeled-style cand collapse without rejecting legitimate isAnchor=0 on eligible set,YES
+G4,retry_position_distribution_sanity,HARD,max_bin_share(RETRY span_rel_position 10 bins); early/mid/late coverage,"max_single_bin_share<=0.35; each of early[0,.3)/mid[.3,.7)/late[.7,1] has RETRY share>=0.10",Detect shortcut risk without forcing uniform 10%; 64% tail would fail; S3 5.85% passes,YES_ON_LABELED_TAIL_OR_PRIOR_CLAIM
+G5,candidate_feature_coverage,HARD,count(cand==0)>0 AND count(cand>0)>0 AND max(cand)>=1,both zero and nonzero states present; no exact production histogram match required,Populate existing feature via real Recall; forbid synthetic cand,YES
+G6,label_semantic_integrity,HARD,"labels in {KEEP,RETRY,EXCLUDE/MASKED}; REGION_BOUNDED_FULL_COVERAGE",contract version MODEL3_LABEL_CONTRACT_V2_20260829,Do not redefine RETRY to fix distribution,NO
+G7,class_geometry_coverage,SOFT,RETRY present; multi-span utterances; region length diversity,advisory; do not inflate RETRY ratio indiscriminately,Issue not proven as global class imbalance,NO
+G8,heldout_contamination,HARD,dialog_200 case texts / family ids absent from train,0 contamination hits,Keep dialog_200 acceptance held out,NO

@@ -1,0 +1,714 @@
+{
+  "phase": "MODEL3_V1_FULL100K_STRICT_CONTRAST_INTEGRATION",
+  "verdict": "PASS",
+  "ssot": {
+    "training_config_ssot": "PASS",
+    "config_path": "training/model3_dataset/configs/model3_v1_training_config.json",
+    "config_hash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "dataset_manifest_hash": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432",
+    "full100k_manifest_hash": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6",
+    "hardcoded_critical_params": "NONE",
+    "silent_defaults": "NONE"
+  },
+  "data_integration": {
+    "full100k_mutated": false,
+    "full100k_base_rows_train": 61008,
+    "strict_groups": 4667,
+    "strict_members": 9334,
+    "hard_keep_bucket": 43757,
+    "integrated_training_view_rows": 70342,
+    "sources": {
+      "STRICT_CONTRAST_VALIDATED": 9334,
+      "ANCHOR_HARD_KEEP_VALIDATED": 43757,
+      "FULL100K_BASE": 17251
+    },
+    "duplicates": {
+      "sampleId_duplicates": 0,
+      "non_strict_content_duplicate_groups": 622
+    }
+  },
+  "strict_contract": {
+    "validator": "PASS",
+    "model_visible_strong_rate": 1.0,
+    "pair_integrity": "PASS",
+    "cross_split_pair_leakage": 0
+  },
+  "sampler": {
+    "configured": {
+      "STRICT": 0.3,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+      "NATURAL": 0.25,
+      "NO_ANCHOR": 0.15
+    },
+    "actual_shares": {
+      "STRICT": 0.30001990276079726,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.2999914702453726,
+      "NATURAL": 0.24999289187114385,
+      "NO_ANCHOR": 0.1499957351226863
+    },
+    "strict_keep": 10552,
+    "strict_retry": 10552,
+    "keep_retry_ratio": 1.0
+  },
+  "objective": {
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "no_auto_formula": true,
+    "pair_loss_enabled": true,
+    "pair_loss_type": "PURE_MARGIN",
+    "pair_lambda": 0.2,
+    "pair_margin": 0.25,
+    "pair_ce_enabled": false
+  },
+  "stability": {
+    "precision": {
+      "mean": 0.992136856135756,
+      "std": 0.0034975852669751513,
+      "min": 0.9886363636363636,
+      "max": 0.9969135802469136
+    },
+    "recall": {
+      "mean": 0.9456574478408539,
+      "std": 0.00395669733874336,
+      "min": 0.9403202328966521,
+      "max": 0.9497816593886463
+    },
+    "f1": {
+      "mean": 0.9683253563159863,
+      "std": 0.0004212166956338595,
+      "min": 0.9677902621722846,
+      "max": 0.9688195991091315
+    },
+    "false_retry": {
+      "mean": 3.431143046567252e-05,
+      "std": 1.5416223415209394e-05,
+      "min": 1.3281844051228072e-05,
+      "max": 4.980691519210527e-05
+    },
+    "strict_pair": {
+      "mean": 0.8358154740283327,
+      "std": 0.06608774079210884,
+      "min": 0.7442789683981111,
+      "max": 0.8979295314202688
+    },
+    "strict_zero": {
+      "mean": 0.0,
+      "std": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "strict_shuffle": {
+      "mean": 0.16684828671752028,
+      "std": 0.025486124802766328,
+      "min": 0.13112967671630948,
+      "max": 0.1888848528877588
+    },
+    "hard_keep_acc": {
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0
+    },
+    "hard_keep_fp": {
+      "mean": 0.0,
+      "std": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "no_anchor_fp": {
+      "mean": 0.0,
+      "std": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "natural_fp": {
+      "mean": 0.0,
+      "std": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "heldout_family_f1": {
+      "mean": 0.5794067163891904,
+      "std": 0.03754238687912392,
+      "min": 0.5272727272727273,
+      "max": 0.6141732283464567
+    },
+    "unseen_surface_f1": {
+      "mean": 0.9916395515923441,
+      "std": 0.0004208674272032649,
+      "min": 0.9913344887348354,
+      "max": 0.992234685073339
+    },
+    "unseen_context_f1": {
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0
+    },
+    "multi_context_acc": {
+      "mean": 0.8354014598540145,
+      "std": 0.06640129576666996,
+      "min": 0.7434306569343065,
+      "max": 0.8978102189781022
+    }
+  },
+  "winner_mean": {
+    "precision": 0.992136856135756,
+    "recall": 0.9456574478408539,
+    "f1": 0.9683253563159863,
+    "false_retry": 3.431143046567252e-05,
+    "strict_pair": 0.8358154740283327,
+    "strict_zero": 0.0,
+    "strict_shuffle": 0.16684828671752028,
+    "hard_keep_acc": 1.0,
+    "hard_keep_fp": 0.0,
+    "no_anchor_fp": 0.0,
+    "natural_fp": 0.0,
+    "heldout_family_f1": 0.5794067163891904,
+    "unseen_surface_f1": 0.9916395515923441,
+    "unseen_context_f1": 1.0,
+    "multi_context_acc": 0.8354014598540145
+  },
+  "cpu": {
+    "params": 237698,
+    "model_size_mb": 0.9067459106445312,
+    "ram_mb_estimate": 8.906745910644531,
+    "p50_ms": 3.2809500116854906,
+    "p95_ms": 4.547810048097745,
+    "p99_ms": 5.235289931297302,
+    "n": 500
+  },
+  "logits": {
+    "natural_keep": {
+      "n": 7508,
+      "mean": -7.895597970796889,
+      "p90": -6.10389518737793,
+      "max": -2.4990808963775635
+    },
+    "no_anchor": {
+      "n": 8128,
+      "mean": -7.984213472380648,
+      "p90": -6.311458110809326,
+      "max": -2.3726816177368164
+    }
+  },
+  "global_retry_prior_shift": false,
+  "error_analysis": {
+    "false_retry_n": 15,
+    "false_keep_n": 69,
+    "false_retry_categories": {
+      "unseen_target": 3,
+      "unseen_family": 10,
+      "pronunciation_ambiguity_or_anchor_relation": 2
+    },
+    "false_keep_categories": {
+      "unseen_family": 39,
+      "model_error_or_label": 23,
+      "unseen_target": 6,
+      "context_insufficiency": 1
+    },
+    "primary_categories": [
+      "unseen_family",
+      "model_error_or_label",
+      "unseen_target",
+      "pronunciation_ambiguity_or_anchor_relation",
+      "context_insufficiency"
+    ],
+    "data_label_issues_note": "classification only — no rule fixes this phase",
+    "samples_false_retry": [
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000006",
+        "surface": "类",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000066",
+        "surface": "精",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000498",
+        "surface": "制",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000028",
+        "surface": "制",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_001432",
+        "surface": "丰",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "NATURAL",
+        "heldOutAxes": [
+          "held_out_source_sentence"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000240",
+        "surface": "英",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000052",
+        "surface": "粗",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000056",
+        "surface": "星",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000604",
+        "surface": "零",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000442",
+        "surface": "凉",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_001088",
+        "surface": "治",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": []
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000914",
+        "surface": "种",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000602",
+        "surface": "零",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000598",
+        "surface": "零",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000812",
+        "surface": "催",
+        "gold": "KEEP",
+        "pred": "RETRY",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      }
+    ],
+    "samples_false_keep": [
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000243",
+        "surface": "英",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_022217",
+        "surface": "惊",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": []
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000499",
+        "surface": "制",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_066245",
+        "surface": "惊",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": [
+          "held_out_source_sentence"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000005",
+        "surface": "轻",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_001099",
+        "surface": "思",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000905",
+        "surface": "料",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000945",
+        "surface": "累",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": []
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000041",
+        "surface": "星",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000865",
+        "surface": "从",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_066241",
+        "surface": "层",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": [
+          "held_out_source_sentence"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_001003",
+        "surface": "幅",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": []
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_066332",
+        "surface": "惊",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": [
+          "held_out_source_sentence"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000937",
+        "surface": "累",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_022177",
+        "surface": "沉",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": []
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000501",
+        "surface": "人",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000033",
+        "surface": "至",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_nat_2026082420_066260",
+        "surface": "制",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "NATURAL",
+        "heldOutAxes": [
+          "held_out_source_sentence"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000449",
+        "surface": "凉",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_pronunciation_family"
+        ]
+      },
+      {
+        "sampleId": "m3f100k_2026082420_f100k_xcg_2026082420_000045",
+        "surface": "擦",
+        "gold": "RETRY",
+        "pred": "KEEP",
+        "bucket": "CONTRAST",
+        "heldOutAxes": [
+          "held_out_surface_pair"
+        ]
+      }
+    ]
+  },
+  "pretrain_gate": {
+    "pass": true,
+    "fails": [],
+    "mv_rate": 1.0,
+    "mv_sample": 150,
+    "incomplete_strict_groups": 0,
+    "sources": {
+      "STRICT_CONTRAST_VALIDATED": 9334,
+      "ANCHOR_HARD_KEEP_VALIDATED": 43757,
+      "FULL100K_BASE": 17251
+    },
+    "full_manifest_hash": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6",
+    "exposure": {
+      "counts": {
+        "NO_ANCHOR": 10551,
+        "NATURAL": 17585,
+        "STRICT_RETRY": 10552,
+        "STRICT_KEEP": 10552,
+        "ANCHOR_HARD_KEEP": 21102
+      },
+      "shares": {
+        "STRICT": 0.30001990276079726,
+        "ANCHOR_CONDITIONED_HARD_KEEP": 0.2999914702453726,
+        "NATURAL": 0.24999289187114385,
+        "NO_ANCHOR": 0.1499957351226863
+      },
+      "strict_keep": 10552,
+      "strict_retry": 10552,
+      "keep_retry_ratio": 1.0,
+      "unique_samples": 38323,
+      "repeat_factor": 1.8355034835477388,
+      "ok_ratio": true
+    },
+    "leakage": {
+      "cross_split_groups": 0,
+      "leak_groups": [],
+      "ok": true
+    },
+    "pair_index": 4667,
+    "buckets": {
+      "STRICT": 9334,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 43757,
+      "NO_ANCHOR": 11716,
+      "NATURAL": 5535
+    },
+    "strict_keep_tags": 4667,
+    "strict_retry_tags": 4667,
+    "strict_and_hard_tag": 4667
+  },
+  "comparison": [
+    {
+      "model": "Full100K_old_baseline",
+      "precision": 0.9826,
+      "recall": 0.944,
+      "f1": 0.9629,
+      "false_retry": 7.6e-05,
+      "strict_pair": 0.633,
+      "strict_zero": null,
+      "strict_shuffle": null,
+      "hard_keep_acc": null,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.0964,
+      "cpu_p95": null
+    },
+    {
+      "model": "Diet_B",
+      "precision": 0.9609,
+      "recall": 0.9702,
+      "f1": 0.9655,
+      "false_retry": 0.00018,
+      "strict_pair": 0.6657,
+      "strict_zero": 0.668,
+      "strict_shuffle": 0.6453,
+      "hard_keep_acc": null,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": null,
+      "cpu_p95": null
+    },
+    {
+      "model": "Strict_Reconstruction",
+      "precision": 0.32,
+      "recall": 0.9971,
+      "f1": 0.4845,
+      "false_retry": 0.055436,
+      "strict_pair": 0.9975,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.0,
+      "hard_keep_acc": null,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": null,
+      "cpu_p95": null
+    },
+    {
+      "model": "HardKeep_Broken",
+      "precision": 0.0171,
+      "recall": null,
+      "f1": null,
+      "false_retry": 0.2731,
+      "strict_pair": 0.9983,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.0,
+      "hard_keep_acc": null,
+      "no_anchor_fp": null,
+      "heldout_family_f1": null,
+      "cpu_p95": null
+    },
+    {
+      "model": "Objective_Rebalance_O3",
+      "precision": 0.9865,
+      "recall": 0.951,
+      "f1": 0.9684,
+      "false_retry": 6e-05,
+      "strict_pair": 0.875,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.1656,
+      "hard_keep_acc": 0.99995,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.6106,
+      "cpu_p95": null
+    },
+    {
+      "model": "Full100K_Strict_Integration",
+      "precision": 0.992136856135756,
+      "recall": 0.9456574478408539,
+      "f1": 0.9683253563159863,
+      "false_retry": 3.431143046567252e-05,
+      "strict_pair": 0.8358154740283327,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.16684828671752028,
+      "hard_keep_acc": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.5794067163891904,
+      "cpu_p95": 4.547810048097745
+    }
+  ],
+  "decision": {
+    "objective_rebalance_reproduced": true,
+    "full100k_integration_stable": true,
+    "anchor_causality_preserved": true,
+    "precision_recall_healthy": true,
+    "generalization_healthy": "YES",
+    "small_bigru_frozen": true,
+    "synthetic_v1_ready_to_freeze": true,
+    "ready_for_tts_stage": false,
+    "next_phase": "MODEL3_V1_SYNTHETIC_FREEZE_AND_TTS_READINESS_AUDIT"
+  },
+  "artifacts": {
+    "config": "training/model3_dataset/configs/model3_v1_training_config.json",
+    "integration_manifest": "training/model3_dataset/model3_v1_full100k_strict_integration/integration_split_manifest.json",
+    "checkpoints": "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts"
+  }
+}

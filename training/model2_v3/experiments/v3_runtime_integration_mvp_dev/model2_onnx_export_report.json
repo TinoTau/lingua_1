@@ -1,0 +1,12 @@
+{
+  "mechanism": "APPROVED_EXISTING_SIDECAR",
+  "onnx_attempted": true,
+  "onnx_deployed_for_runtime": false,
+  "onnx_export_ok": false,
+  "onnx_error": "Module onnx is not installed!",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\Python\\Python310\\lib\\site-packages\\torch\\onnx\\_internal\\torchscript_exporter\\onnx_proto_utils.py\", line 183, in _add_onnxscript_fn\n    import onnx\nModuleNotFoundError: No module named 'onnx'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n  File \"D:\\Python\\Python310\\lib\\site-packages\\torch\\onnx\\__init__.py\", line 334, in export\n    export(\n  File \"D:\\Python\\Python310\\lib\\site-packages\\torch\\onnx\\_internal\\torchscript_exporter\\utils.py\", line 547, in export\n    _export(\n  File \"D:\\Python\\Python310\\lib\\site-packages\\torch\\onnx\\_internal\\torchscript_exporter\\utils.py\", line 1583, in _export\n    proto = onnx_proto_utils._add_onnxscript_fn(\n  File \"D:\\Python\\Python310\\lib\\site-packages\\torch\\onnx\\_internal\\torchscript_exporter\\onnx_proto_utils.py\", line 185, in _add_onnxscript_fn\n    raise errors.OnnxExporterError(\"Module onnx is not installed!\") from e\ntorch.onnx.OnnxExporterError: Module onnx is not installed!\n",
+  "runtime_inference": "APPROVED_EXISTING_SIDECAR",
+  "reason": "Stage P feature pack uses legacy Python hash; Node cannot rebuild features with MODEL2_FEATURE_HASH_V1 without CHECKPOINT_COMPATIBILITY_BLOCKER. Sidecar runs training pack_batch_inputs + Stage P weights. ONNX net export is optional future after Stage J+V1.",
+  "checkpoint_compatibility_blocker": true,
+  "new_http_service": false
+}

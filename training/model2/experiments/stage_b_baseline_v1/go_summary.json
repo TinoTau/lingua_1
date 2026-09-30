@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "go": {
+    "metric_contract": true,
+    "base_preservation": true,
+    "tiny_listwise": true,
+    "tiny_interaction": true,
+    "tiny_swap": true,
+    "target_rank_delta_pos": true,
+    "condition_gain3_pos": true,
+    "condition_gain3_nonneg": true,
+    "probability_gain_pos": true,
+    "profile_swap": true,
+    "wrong_direction": true,
+    "interaction_ablation": true,
+    "selectivity": true,
+    "nochange_safe": true,
+    "params_ok": true,
+    "phase6c_pass": true
+  },
+  "ConditionGain@3": 0.24593301435406698,
+  "TargetRankDelta_mean": 4.533014354066986,
+  "TargetProbabilityGain_mean": 0.0519877062720563,
+  "MRRSwapDamage": 0.010774114774114718,
+  "failure_classes": [],
+  "next": "10k–20k Baseline",
+  "b1w": "ran"
+}

@@ -1,0 +1,45 @@
+{
+  "phase": "MODEL2_V3_PHASE3_STAGE_P_AND_D",
+  "date": "2026-08-16",
+  "architecture": "FINESPAN_USERPROFILE_TRAINABLE_RETRIEVAL_POLICY",
+  "Stage_P": {
+    "Verdict": "FROZEN",
+    "RecallRetained": 1.0,
+    "QueryReduction": 0.5171568627450981,
+    "CandidateReduction": 0.36655948553054657,
+    "E2ECostReduction": 0.4697014180699866,
+    "Top1_Ranking_Objective": "bce_pairwise_top1",
+    "Applicability_Bonus": "REMOVED_OVERRIDE",
+    "Architecture_Conformance": "PASS"
+  },
+  "Stage_D": {
+    "Verdict": "PASS",
+    "Training_Data": "SYNTHETIC",
+    "SameSpanDifferentLexicalUser": "PASS",
+    "DomainConditionalRecallGain": 0.1125,
+    "LexicalProfileConditionalRecallGain": 0.1125,
+    "Correct": 0.3125,
+    "Empty": 0.2,
+    "Wrong": 0.25,
+    "Swapped": 0.3,
+    "CrossDomainTerms": "FAIL",
+    "UNSEEN_USER": "PASS",
+    "UNSEEN_TERM": "PASS",
+    "Stage_P_Regression": "PASS",
+    "Separate_Runtime_Model": "NO",
+    "params": {
+      "stage_p": 45533,
+      "added": 1548,
+      "combined": 47081
+    }
+  },
+  "Stage_H": "DEFERRED_BY_DATA",
+  "Stage_J": "READY",
+  "Recommended_Next_Phase": "MODEL2_V3_STAGE_J",
+  "notes": [
+    "Applicability bonus classified HARDCODED_POLICY_OVERRIDE and removed from authoritative path.",
+    "Stage D Correct/Empty/Wrong/Swapped are DomainActionHit rates; surface TIR saturates on exact FineSpan.",
+    "SYNTHETIC_USER_PROFILE only — not real-user validation.",
+    "CrossDomainTerms FAIL remains an open item for Stage J / data improvement."
+  ]
+}

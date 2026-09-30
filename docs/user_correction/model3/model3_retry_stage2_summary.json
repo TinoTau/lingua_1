@@ -1,0 +1,114 @@
+{
+  "phase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DESIGN",
+  "generatedAt": "2026-09-03T20:11:49Z",
+  "verdict": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DESIGN_PASS_IMPLEMENTATION_READY",
+  "nextPhase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DEVELOPMENT",
+  "controlVariable": "RETRY_STAGE2_QUERY_ENUMERATION_SOURCE",
+  "historicalContractAnswer": {
+    "A_pathFineSpanOnly": "REJECTED_BY_SSOT",
+    "B_reenumerateWindowsInRegion": "REQUIRED_CAPABLE",
+    "C_consumeLatticeWindows": "ALSO_CAPABLE_BUT_NOT_UNIT1",
+    "selectedForUnit1": "B",
+    "evidence": [
+      "model3_retry_contract: NOT frozen FineSpan boundaries",
+      "reuse FineSpan/window generation",
+      "recallSpanTopKV2 and/or recallTopKForWindows(subset)",
+      "Lattice Window Generator owns 1..5"
+    ]
+  },
+  "semanticOwner": {
+    "classification": "SHARED_LEXICAL_WINDOW_OWNER",
+    "codeMapping": "window-construction-core / buildLexicalWindowQueries (Lattice Window Generator)",
+    "stage2Role": "CONSUMER — must invoke shared owner inside RetryRegion on success path",
+    "notOwner": "function name buildLexicalWindowQueries is implementation choice; behavior is frozen"
+  },
+  "semanticLossBoundary": "collectLocalSpansFromRetainedPathViews → Stage-2 localSpan loop: overlapping lattice window space + lattice Stage-1 hits discarded; only non-overlapping path FineSpan geometry survives as query set",
+  "buildLexicalWindowQueriesAssessment": {
+    "implementsRequiredSemantics": "YES for contiguous 1..5 window enumeration",
+    "stage1SpecificAssumptions": "NONE that block region-slice use; already used on region slice in resegment",
+    "fullUtteranceRequired": "NO — accepts provided text/syllables",
+    "boundedRegionOk": "YES via slice or clipped ranges",
+    "globalOffsets": "NEED_ADAPTER if slice-local; OR use buildWindowDescriptorForRange on full utterance with region-clipped starts",
+    "respectsRegionIfCallerClips": "YES",
+    "crossesAnchorKeep": "NO if only called inside RetryRegion",
+    "windowN": "1..5; owner = Lattice LATTICE_WINDOW_MIN/MAX",
+    "includesSingleChar": "YES; Recall enforces single-char contract",
+    "doesRecall": "NO",
+    "doesDomain": "NO",
+    "directReuseSafe": "YES_WITH_MINIMAL_COORDINATE_ADAPTER"
+  },
+  "preferredDesign": "OPT_A_REENUMERATE_WINDOWS_ON_SUCCESS",
+  "beforeAfter": {
+    "BEFORE": {
+      "precondition": "legal RetryRegion exists; regional resegmentation succeeds (resegmentOk=true)",
+      "stage2QuerySet": "RetryRegionLocalSpan[] only (union of retained path FineSpan geometries)",
+      "limitation": "Cannot express legal overlapping lexical windows that cross adjacent retained localSpan boundaries; Lattice window space discarded after path materialization"
+    },
+    "AFTER": {
+      "sameRetryRegion": true,
+      "sameBarriers": true,
+      "sameRegionalResegmentation": true,
+      "stage2QuerySet": "All contiguous syllable windows length 1..min(5,R) inside RetryRegion syllable range (via SHARED_LEXICAL_WINDOW_OWNER)",
+      "newCapability": "Cross-localSpan lexical windows expressible to recallSpanTopKV2; existing localSpan-length windows remain as subset"
+    },
+    "UNCHANGED": [
+      "Model3",
+      "RetryRegion derivation",
+      "Anchor",
+      "KEEP barriers",
+      "Domain Vote",
+      "Model2",
+      "Recall algorithm/thresholds/topK",
+      "Lexicon",
+      "Assembly",
+      "KenLM",
+      "candidate cap <=16",
+      "JobResult",
+      "fallbackRegionLocalSpans / Delta 2"
+    ]
+  },
+  "performanceBound": {
+    "formula": "sum_{L=1..min(5,R)} (R-L+1) windows per RetryRegion",
+    "typicalR": "2..4 → 3..14 windows",
+    "worstObservedR": "7 → 25 windows",
+    "recallDeltaBeforeCache": "same as window count per region",
+    "recallDeltaAfterDedup": "≤ window count; duplicate keys absorbed by runtime/utterance cache where enabled",
+    "candidatePoolImpact": "0 on cap (<=16 unchanged); perSpanCap unchanged",
+    "bounded": true
+  },
+  "incidentalSimplification": "Reusing buildWindowDescriptorForRange may remove duplicated inline windowText/pinyin join in Stage-2 success path — INCIDENTAL_SIMPLIFICATION; do not expand into unrelated key-refactor if blocked",
+  "decisionRequiredBeforeDevelopment": [],
+  "implementationReady": true,
+  "acpRequired": false,
+  "driftGatePass": true,
+  "targetList": {
+    "productionFiles": [
+      "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts"
+    ],
+    "optionalReuseOnly": [
+      "electron_node/.../build-lexical-window-queries.ts",
+      "electron_node/.../window-construction-core.ts"
+    ],
+    "functions": [
+      "routeModel3Retry Stage-2 query loop (success path)",
+      "reuse buildLexicalWindowQueries and/or buildWindowDescriptorForRange",
+      "keep recallSpanTopKV2 + materializeLocalSpanHits"
+    ],
+    "tests": [
+      "model3-retry-region*.test.ts / mainline integration — add Stage-2 window enum cases",
+      "TRACE_ON/OFF parity if side-channel fields added"
+    ],
+    "traceHarness": [
+      "existing MODEL3_CANDIDATE_PROVENANCE_TRACE rawRecalls",
+      "optional: querySource=WINDOW|LOCAL_SPAN; windowSyllableStart/End"
+    ],
+    "doNotTouch": [
+      "model3-retry-region.ts",
+      "fallbackRegionLocalSpans behavior",
+      "Model3 infer/packer",
+      "Domain Vote",
+      "recallSpanTopKV2 internals",
+      "JobResult"
+    ]
+  }
+}

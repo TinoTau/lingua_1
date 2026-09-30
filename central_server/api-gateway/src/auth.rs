@@ -4,21 +4,39 @@ use axum::{
     response::Response,
 };
 
+use crate::user_identity::{derive_stable_user_id, AuthContext, User};
+use crate::user_profile_repository::UserProfileRepository;
 use crate::AppState;
+
+fn extract_api_key(req: &Request) -> Option<String> {
+    if let Some(api_key) = req
+        .headers()
+        .get("Authorization")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|s| s.strip_prefix("Bearer "))
+        .map(|s| s.to_string())
+    {
+        return Some(api_key);
+    }
+    // Browser WebSocket cannot set Authorization headers — allow query token.
+    let q = req.uri().query().unwrap_or("");
+    for pair in q.split('&') {
+        let mut it = pair.splitn(2, '=');
+        let k = it.next().unwrap_or("");
+        let v = it.next().unwrap_or("");
+        if (k == "access_token" || k == "api_key") && !v.is_empty() {
+            return Some(v.replace("%2D", "-").replace("%2d", "-"));
+        }
+    }
+    None
+}
 
 pub async fn auth_middleware(
     State(state): State<AppState>,
     mut req: Request,
     next: Next,
 ) -> Result<Response, axum::http::StatusCode> {
-    // 从 Header 中提取 API Key
-    let api_key = req.headers()
-        .get("Authorization")
-        .and_then(|h| h.to_str().ok())
-        .and_then(|s| s.strip_prefix("Bearer "))
-        .map(|s| s.to_string());
-
-    let api_key = api_key.ok_or(axum::http::StatusCode::UNAUTHORIZED)?;
+    let api_key = extract_api_key(&req).ok_or(axum::http::StatusCode::UNAUTHORIZED)?;
 
     let tenant_id = state
         .tenant_manager
@@ -26,7 +44,6 @@ pub async fn auth_middleware(
         .await
         .ok_or(axum::http::StatusCode::UNAUTHORIZED)?;
 
-    // 限流（按租户）
     let max_rps = state
         .tenant_manager
         .get_tenant(&tenant_id)
@@ -39,8 +56,21 @@ pub async fn auth_middleware(
         .check_rate_limit(&tenant_id, max_rps)
         .map_err(|_| axum::http::StatusCode::TOO_MANY_REQUESTS)?;
 
-    // 将 tenant_id 放入请求扩展中，供 handler 使用
+    let user_id = derive_stable_user_id(&tenant_id, &api_key);
+    let user = User {
+        user_id: user_id.clone(),
+        tenant_id: tenant_id.clone(),
+        display_name: format!("user:{}", user_id),
+        created_at: chrono::Utc::now(),
+    };
+    let _ = state.profile_repo.get_or_create_default(&user);
+
+    let auth = AuthContext {
+        tenant_id: tenant_id.clone(),
+        user_id,
+    };
+
     req.extensions_mut().insert(tenant_id);
+    req.extensions_mut().insert(auth);
     Ok(next.run(req).await)
 }
-

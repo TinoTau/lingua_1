@@ -1,0 +1,127 @@
+{
+  "schema": "LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST",
+  "run_id": "dialog200_capture_v2_20260925100532",
+  "created_at": "2026-09-25T10:05:33.409Z",
+  "CAPTURE_SCHEMA": "DIALOG200_FROZEN_EVIDENCE_CAPTURE_V2",
+  "CAPTURE_SCHEMA_VERSION": "2.0.0",
+  "ARTIFACT_ROLE": "CANDIDATE_CAPTURE_V2",
+  "contract_id": "LINGUA_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2",
+  "git_commit": "63b253769cab6f4b11d1ded4f9c89c4a610555b3",
+  "git_commit_short": "63b25376",
+  "git_dirty": true,
+  "GIT_ROLE": "STABLE_VERSION_REFERENCE_ONLY",
+  "GIT_DIRTY_IS_HARD_GATE": false,
+  "evaluation_ssot": "EVALUATION_SSOT_V1",
+  "corpus": {
+    "path": "test wav/dialog_200",
+    "manifest": "test wav/dialog_200/cases.manifest.json",
+    "case_count": 200,
+    "inventory_sha256": "13337cb0b53d404a93a995a5f1f1307789e8bf44b5f1c9e51f8e8007a6e8eb37",
+    "wav_identities_complete": true,
+    "note": "expected/reference text stored for corpus identity only; must not influence Production"
+  },
+  "asr": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "endpoint": "http://127.0.0.1:6007",
+    "service": "faster-whisper-vad",
+    "note": "cryptographic model file SHA may be available from ASR health after start"
+  },
+  "tone": {
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "env_override": null
+  },
+  "model2": {
+    "path": "D:\\Programs\\github\\lingua_1\\training\\model2_v3\\experiments\\v3_stage_j_p_preservation\\training\\expA_frozen_trunk.pt",
+    "relative": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+    "exists": true,
+    "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+    "bytes": 195677,
+    "identity_class": "IDENTITY_RECONSTRUCTABLE"
+  },
+  "kenlm": {
+    "path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin",
+    "relative": "electron_node/services/asr_sherpa_lm/models/kenLM/zh_char_3gram.trie.bin",
+    "exists": true,
+    "sha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "bytes": 34995949,
+    "identity_class": "IDENTITY_RECONSTRUCTABLE"
+  },
+  "lexicon": {
+    "path": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+    "relative": "node_runtime/lexicon/v3/lexicon.sqlite",
+    "exists": true,
+    "sha256": "59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19",
+    "bytes": 10510336,
+    "identity_class": "IDENTITY_RECONSTRUCTABLE"
+  },
+  "model3": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "checkpoint_dir": "training/model3_dataset/model3_v2_s3_random_init_v1_ckpts/seed_2026083013",
+    "expected_weights_sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "expected_config_hash": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "checkpoint_dir_exists": true
+  },
+  "profile": {
+    "PROFILE_MODE": "NO_PROFILE",
+    "evidence": "VALID_EMPTY"
+  },
+  "runtime": {
+    "runner": "dialog200-frozen-evidence-capture-v2",
+    "node_version": "v24.15.0",
+    "os": "win32",
+    "test_server_port": 5300,
+    "capture_gate_default": "OFF",
+    "node_entrypoint": "tests/repro/start-node-detached.mjs",
+    "health_at_capture_start": {
+      "node": {
+        "ok": true,
+        "body": null
+      },
+      "asr": {
+        "ok": true,
+        "body": {
+          "status": "ok",
+          "device": "cuda",
+          "compute_type": "int8_float16",
+          "asr_model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+          "asr_model_loaded": true,
+          "vad_model_loaded": true,
+          "asr_worker": {
+            "is_running": true,
+            "worker_state": "running",
+            "worker_pid": 35832,
+            "queue_depth": 0,
+            "total_tasks": 2,
+            "completed_tasks": 2,
+            "failed_tasks": 0,
+            "worker_restarts": 0,
+            "avg_wait_ms": 8906.66,
+            "pending_results": 0
+          },
+          "readiness": {
+            "process_alive": true,
+            "worker_running": true,
+            "worker_accepting_tasks": true,
+            "queue_depth": 0,
+            "queue_max": 1,
+            "queue_full": false,
+            "utterance_ready": true,
+            "worker_restarting": false,
+            "last_error": null
+          }
+        }
+      }
+    },
+    "capture_gate": "ON",
+    "FROZEN_EVIDENCE_CAPTURE_V2": "1",
+    "finished_at": "2026-09-25T10:33:59.781Z"
+  },
+  "identity_guards_valid": true,
+  "production_algorithm_changed": false,
+  "current_baseline_replaced": false,
+  "replay_v2_executed": false,
+  "cases_executed": 200,
+  "cases_failed": 0,
+  "identity_manifest_sha256": "8aedfb4480d877a54735404d797dc8e85d3cf6e563c5c7aee4336f430d22fded"
+}

@@ -1,0 +1,111 @@
+{
+  "phase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_ACCEPTANCE",
+  "generatedAt": "2026-09-03T21:18:09Z",
+  "verdict": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_ACCEPTANCE_PASS_WITH_NONBLOCKING_FINDINGS",
+  "note": "INTERNAL_POST_RETRY_WORKING_PRESSURE max=30 (cross-path cap still <=16);CROSS_RUN_FINAL_TEXT_NEUTRAL_CHANGES=87 (ASR raw drift between BEFORE freeze and AFTER; not attributed to Delta1)",
+  "staleArtifacts": {
+    "model3_v1_retry_region_controlled_validation.json": {
+      "classification": "STALE_INVALID_FOR_CURRENT_ACCEPTANCE",
+      "lexiconOk": false,
+      "reason": "better-sqlite3 NODE_MODULE_VERSION mismatch / lexiconOk=false"
+    }
+  },
+  "identities": {
+    "beforeArtifact": "model3_v2_s3_candidate_provenance_raw.jsonl",
+    "afterArtifact": "model3_retry_stage2_acceptance_after_raw.jsonl",
+    "baselineModel": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "a1Model": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1_RERUN1",
+    "dataset": "dialog_200/cases.manifest.json"
+  },
+  "denominators": {
+    "ALL_VALID_UTTERANCES": 200,
+    "RETRY_REGION_CREATED": 196,
+    "RESEGMENT_OK": 164,
+    "RESEGMENT_FALLBACK": 400
+  },
+  "afterCaseCount": 200,
+  "windowGate": {
+    "successfulRetryRegionCount": 164,
+    "expectedWindowCount": 877,
+    "actualWindowCount": 877,
+    "missingWindowCount": 0,
+    "extraWindowCount": 0,
+    "outOfRegionWindowCount": 0,
+    "COORDINATE_MISMATCH_COUNT": 0,
+    "previousValidQueryCount": 425,
+    "previousValidQueriesMissingAfter": 0
+  },
+  "crossFineSpan": {
+    "crossFineSpanRegionCount": 118,
+    "crossFineSpanWindowCount": 400,
+    "crossFineSpanWindowsActuallyQueried": 400,
+    "crossFineSpanWindowsWithRecallHits": 0,
+    "queriedCoversExpected": true
+  },
+  "delta2": {
+    "DELTA2_REAL_REPLAY_BEHAVIOR_CHANGE_COUNT": 0,
+    "observedFallbackRegions": 400,
+    "status": "PARITY_PASS"
+  },
+  "multipath": {
+    "multipathRetryCount": 101,
+    "preferredPathCollapseCount": 0
+  },
+  "barriers": {
+    "anchorCrossingCount": 0,
+    "unrelatedKeepCrossingCount": 0
+  },
+  "singleChar": {
+    "singleCharQueryCount": 425,
+    "singleCharContractViolationCount": 0
+  },
+  "invariants": {
+    "secondDomainVoteCount": 0,
+    "secondModel3StageCount": 0,
+    "recursiveRetryCount": 0,
+    "asrRerunCount": 0
+  },
+  "finalReplay": {
+    "finalImproved": 0,
+    "finalRegressed": 0,
+    "finalChangedNeutral": 87,
+    "finalUnchanged": 113,
+    "baselineCorrectRegressed": 0
+  },
+  "beforeEvidence": {
+    "resegmentOkRegionsChecked": 168,
+    "regionsNotMatchingFullWindowSet": 127,
+    "interpretation": "BEFORE localSpan-only (mismatch expected)"
+  },
+  "candidateBudget": {
+    "maxCrossPathCandidateSentenceCount": 8,
+    "maxPostRetryWorking": 30,
+    "crossPathOver16Cases": 0,
+    "capRequired": 16
+  },
+  "nonblockingFindings": [
+    "INTERNAL_POST_RETRY_WORKING_PRESSURE max=30 (cross-path cap still <=16)",
+    "CROSS_RUN_FINAL_TEXT_NEUTRAL_CHANGES=87 (ASR raw drift between BEFORE freeze and AFTER; not attributed to Delta1)"
+  ],
+  "performance": {
+    "classification": "NONBLOCKING_INCREASE",
+    "note": "Stage-2 query count increased as designed; cross-path sentence cap held"
+  },
+  "FIRST_UNEXPECTED_CHANGE_COUNT": 0,
+  "firstSemanticChange": "STAGE2_QUERY_ENUMERATION",
+  "asciiAdapterClassification": "SAFE_GENERIC_ADAPTER",
+  "newFileOwnership": "CONSUMER_ADAPTER",
+  "antiOverfit": {
+    "OVERFITTING_DETECTED": "NO",
+    "REFERENCE_LEAKAGE": "NO",
+    "TEST_GAMING": "NO",
+    "CASE_SPECIFIC_RUNTIME_PATCH": "NO"
+  },
+  "freezeState": {
+    "DELTA_RQ_STAGE2_NO_SLIDING": "RESOLVED_ACCEPTED",
+    "RETRY_STAGE2_SUCCESS_PATH_QUERY_ENUMERATION": "LEGAL_BOUNDED_WINDOW_SPACE_1_TO_5",
+    "DELTA_RQ_FALLBACK_BOUNDARY_LOCK": "ACTIVE_UNRESOLVED"
+  },
+  "DECISION_REQUIRED_BEFORE_FREEZE": "EMPTY",
+  "nextPhase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DESIGN"
+}

@@ -1,0 +1,7 @@
+{
+  "legacy_field": "correct_leq_opposite_rate",
+  "legacy_bug": "non_strict rank <= counted ties as PASS; name suggested correct_score <= opposite",
+  "fix": "CorrectProfileBetterThanOppositeRate / CorrectProfileBetterThanIrrelevantRate",
+  "semantics": "rank_correct < rank_other OR (tie rank AND score_correct > score_other); ties != pass",
+  "tests": "training/model2/tests/test_phase6c_listwise.py::TestMetricSemantics"
+}

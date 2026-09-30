@@ -1,0 +1,332 @@
+{
+  "modes": {
+    "bce": {
+      "train": {
+        "param_count": 45533,
+        "epochs": 5,
+        "ranking_mode": "bce",
+        "epoch_metrics": [
+          {
+            "epoch": 1,
+            "loss": 0.3877545057431511
+          },
+          {
+            "epoch": 2,
+            "loss": 0.2860641830965229
+          },
+          {
+            "epoch": 3,
+            "loss": 0.25115080679888313
+          },
+          {
+            "epoch": 4,
+            "loss": 0.2307721068677695
+          },
+          {
+            "epoch": 5,
+            "loss": 0.20590221169202225
+          }
+        ]
+      },
+      "HARD_MULTI_qb1": {
+        "RecallRetained": 0.6923076923076924,
+        "QueryReduction": 0.52,
+        "CandidateReduction": 0.4023972602739726,
+        "E2ECostReduction": 0.482011190654109,
+        "B1": {
+          "n": 120,
+          "TargetIntroductionRate": 0.975,
+          "QueryCount_mean": 2.0833333333333335,
+          "QueryCount_P50": 2.0,
+          "CandidateCount_mean": 4.866666666666666,
+          "Latency_P50": 101.63760001887567
+        },
+        "V3": {
+          "n": 120,
+          "TargetIntroductionRate": 0.675,
+          "QueryCount_mean": 1.0,
+          "QueryCount_P50": 1.0,
+          "CandidateCount_mean": 2.908333333333333,
+          "Latency_P50": 54.2995999858249
+        }
+      }
+    },
+    "bce_pairwise": {
+      "train": {
+        "param_count": 45533,
+        "epochs": 5,
+        "ranking_mode": "bce_pairwise",
+        "epoch_metrics": [
+          {
+            "epoch": 1,
+            "loss": 0.5039184730014076
+          },
+          {
+            "epoch": 2,
+            "loss": 0.3685765404092229
+          },
+          {
+            "epoch": 3,
+            "loss": 0.31145142553293187
+          },
+          {
+            "epoch": 4,
+            "loss": 0.28044605498080666
+          },
+          {
+            "epoch": 5,
+            "loss": 0.25706793043924414
+          }
+        ]
+      },
+      "HARD_MULTI_qb1": {
+        "RecallRetained": 0.717948717948718,
+        "QueryReduction": 0.52,
+        "CandidateReduction": 0.4246575342465753,
+        "E2ECostReduction": 0.4892781691632167,
+        "B1": {
+          "n": 120,
+          "TargetIntroductionRate": 0.975,
+          "QueryCount_mean": 2.0833333333333335,
+          "QueryCount_P50": 2.0,
+          "CandidateCount_mean": 4.866666666666666,
+          "Latency_P50": 103.02380000939593
+        },
+        "V3": {
+          "n": 120,
+          "TargetIntroductionRate": 0.7,
+          "QueryCount_mean": 1.0,
+          "QueryCount_P50": 1.0,
+          "CandidateCount_mean": 2.8,
+          "Latency_P50": 53.7229000183288
+        }
+      }
+    },
+    "listwise": {
+      "train": {
+        "param_count": 45533,
+        "epochs": 5,
+        "ranking_mode": "listwise",
+        "epoch_metrics": [
+          {
+            "epoch": 1,
+            "loss": 1.2256826751905938
+          },
+          {
+            "epoch": 2,
+            "loss": 0.9354119696046995
+          },
+          {
+            "epoch": 3,
+            "loss": 0.8255667168161144
+          },
+          {
+            "epoch": 4,
+            "loss": 0.7905601450930471
+          },
+          {
+            "epoch": 5,
+            "loss": 0.7686822877629943
+          }
+        ]
+      },
+      "HARD_MULTI_qb1": {
+        "RecallRetained": 0.7008547008547009,
+        "QueryReduction": 0.52,
+        "CandidateReduction": 0.4246575342465753,
+        "E2ECostReduction": 0.48926745751143247,
+        "B1": {
+          "n": 120,
+          "TargetIntroductionRate": 0.975,
+          "QueryCount_mean": 2.0833333333333335,
+          "QueryCount_P50": 2.0,
+          "CandidateCount_mean": 4.866666666666666,
+          "Latency_P50": 101.9992999790702
+        },
+        "V3": {
+          "n": 120,
+          "TargetIntroductionRate": 0.6833333333333333,
+          "QueryCount_mean": 1.0,
+          "QueryCount_P50": 1.0,
+          "CandidateCount_mean": 2.8,
+          "Latency_P50": 53.233500017086044
+        }
+      }
+    },
+    "bce_listwise": {
+      "train": {
+        "param_count": 45533,
+        "epochs": 5,
+        "ranking_mode": "bce_listwise",
+        "epoch_metrics": [
+          {
+            "epoch": 1,
+            "loss": 1.6729980972797975
+          },
+          {
+            "epoch": 2,
+            "loss": 1.264052690371223
+          },
+          {
+            "epoch": 3,
+            "loss": 1.1359401163847551
+          },
+          {
+            "epoch": 4,
+            "loss": 1.0974988781887551
+          },
+          {
+            "epoch": 5,
+            "loss": 1.0698735461286877
+          }
+        ]
+      },
+      "HARD_MULTI_qb1": {
+        "RecallRetained": 0.7008547008547009,
+        "QueryReduction": 0.52,
+        "CandidateReduction": 0.4246575342465753,
+        "E2ECostReduction": 0.48850428716917604,
+        "B1": {
+          "n": 120,
+          "TargetIntroductionRate": 0.975,
+          "QueryCount_mean": 2.0833333333333335,
+          "QueryCount_P50": 2.0,
+          "CandidateCount_mean": 4.866666666666666,
+          "Latency_P50": 100.27689998969436
+        },
+        "V3": {
+          "n": 120,
+          "TargetIntroductionRate": 0.6833333333333333,
+          "QueryCount_mean": 1.0,
+          "QueryCount_P50": 1.0,
+          "CandidateCount_mean": 2.8,
+          "Latency_P50": 54.76309999357909
+        }
+      }
+    }
+  },
+  "eval_slice": "HARD_MULTI recoverable",
+  "qb": 1,
+  "bonus": false,
+  "selected_mode": "bce_pairwise_top1",
+  "objective_mismatch_note": "Independent BCE optimizes multi-label presence, not Top-1 order; pairwise/listwise target retrieval-ACTION ranking for qb=1.",
+  "top1_refine": {
+    "mode": "bce_pairwise_top1",
+    "before_phase2_no_bonus": {
+      "RecallRetained": 0.7760416666666667,
+      "QueryReduction": 0.5220588235294118,
+      "CandidateReduction": 0.39442658092175775,
+      "E2ECostReduction": 0.48137099421062723,
+      "B1": {
+        "n": 197,
+        "TargetIntroductionRate": 0.9746192893401016,
+        "QueryCount_mean": 2.0710659898477157,
+        "QueryCount_P50": 2.0,
+        "CandidateCount_mean": 4.7360406091370555,
+        "Latency_P50": 102.78460002155043
+      },
+      "V3": {
+        "n": 197,
+        "TargetIntroductionRate": 0.7563451776649747,
+        "QueryCount_mean": 0.9898477157360406,
+        "QueryCount_P50": 1.0,
+        "CandidateCount_mean": 2.8680203045685277,
+        "Latency_P50": 55.21980000776239
+      }
+    },
+    "after": {
+      "RecallRetained": 1.0052083333333333,
+      "QueryReduction": 0.5171568627450981,
+      "CandidateReduction": 0.36655948553054657,
+      "E2ECostReduction": 0.4697014180699866,
+      "B1": {
+        "n": 197,
+        "TargetIntroductionRate": 0.9746192893401016,
+        "QueryCount_mean": 2.0710659898477157,
+        "QueryCount_P50": 2.0,
+        "CandidateCount_mean": 4.7360406091370555,
+        "Latency_P50": 99.68350001145154
+      },
+      "V3": {
+        "n": 197,
+        "TargetIntroductionRate": 0.9796954314720813,
+        "QueryCount_mean": 1.0,
+        "QueryCount_P50": 1.0,
+        "CandidateCount_mean": 3.0,
+        "Latency_P50": 53.44849999528378
+      }
+    },
+    "after_qb2": {
+      "RecallRetained": 1.0260416666666667,
+      "QueryReduction": 0.06617647058823534,
+      "CandidateReduction": 0.037513397642015,
+      "E2ECostReduction": 0.05593063682220966,
+      "B1": {
+        "n": 197,
+        "TargetIntroductionRate": 0.9746192893401016,
+        "QueryCount_mean": 2.0710659898477157,
+        "QueryCount_P50": 2.0,
+        "CandidateCount_mean": 4.7360406091370555,
+        "Latency_P50": 110.56980001740158
+      },
+      "V3": {
+        "n": 197,
+        "TargetIntroductionRate": 1.0,
+        "QueryCount_mean": 1.9340101522842639,
+        "QueryCount_P50": 2.0,
+        "CandidateCount_mean": 4.558375634517766,
+        "Latency_P50": 108.16040000645444
+      }
+    },
+    "epoch_metrics": [
+      {
+        "epoch": 1,
+        "loss": 0.5965390858968885
+      },
+      {
+        "epoch": 2,
+        "loss": 0.157161281250491
+      },
+      {
+        "epoch": 3,
+        "loss": 0.11383987177569087
+      },
+      {
+        "epoch": 4,
+        "loss": 0.0973689257360921
+      },
+      {
+        "epoch": 5,
+        "loss": 0.08949169612461978
+      },
+      {
+        "epoch": 6,
+        "loss": 0.08152934090040698
+      },
+      {
+        "epoch": 7,
+        "loss": 0.07611318773562366
+      },
+      {
+        "epoch": 8,
+        "loss": 0.06861630384579744
+      },
+      {
+        "epoch": 9,
+        "loss": 0.0650472252970875
+      },
+      {
+        "epoch": 10,
+        "loss": 0.06063336692750454
+      },
+      {
+        "epoch": 11,
+        "loss": 0.054614054334193175
+      },
+      {
+        "epoch": 12,
+        "loss": 0.052810306596283864
+      }
+    ]
+  }
+}

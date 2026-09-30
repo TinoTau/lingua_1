@@ -1,0 +1,17 @@
+gate0_signal,raw_evidence_source,calculation_owner,injectable,independence_verdict
+formal_harness_exists,filesystem HARNESS path,gate0.py,low,OK
+MODEL2_ANCHOR_OWNER_WIRED,harness source text substrings,gate0._harness_wires_model2,medium_tautology_flag_string,SELF_FULFILLING_RISK
+DOMAIN_ANCHOR_OWNER_WIRED,harness source text substrings,gate0._harness_wires_domain,medium,WEAK_OK
+MODEL2_ANCHOR_OWNER_EXECUTED,utt.ownerExecution flags,gate0 evaluate loop,HIGH_via_lattice_inject,INJECTABLE
+DOMAIN_ANCHOR_OWNER_EXECUTED,utt.ownerExecution flags,gate0 evaluate loop,HIGH,INJECTABLE
+MODEL2_ANCHOR_HOST_AVAILABLE_ANY,utt.ownerExecution flags,gate0,HIGH,INJECTABLE
+MODEL2_ANCHOR_HIT_OBSERVED,utt.ownerExecution flags,gate0,HIGH,INJECTABLE
+DOMAIN_ANCHOR_HIT_OBSERVED,utt.ownerExecution flags,gate0,HIGH,INJECTABLE
+cand_0_natural,labeledPaths cand counts,gate0,HIGH_if_fixture_batch,OK_IF_BATCH_REAL
+cand_gt0_natural,labeledPaths cand counts,gate0,HIGH_if_fixture_batch,OK_IF_BATCH_REAL
+retry_cand_gt0_present,labeledPaths,gate0,HIGH_if_fixture_batch,OK_IF_BATCH_REAL
+multipath_retention,pathCount>1 OR empty batch True,gate0,empty_auto_pass,SELF_FULFILLING_RISK
+semanticFamily_split_lock,family/split rows,assert_split_locked,medium,OK
+semantic_exclude_distinguished,NONE,hardcoded True,n/a,SELF_FULFILLING
+hard_reject_distinguished,NONE,hardcoded True,n/a,SELF_FULFILLING
+empty_batch_EXECUTED_soft,WIRED and no ok/sem,gate0 lines87-89,empty_pass,SELF_FULFILLING_RISK

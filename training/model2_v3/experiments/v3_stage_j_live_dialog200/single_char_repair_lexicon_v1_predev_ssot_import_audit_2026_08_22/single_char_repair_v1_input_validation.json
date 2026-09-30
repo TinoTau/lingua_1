@@ -1,0 +1,52 @@
+{
+  "file": "docs/user_correction/single_char/Lingua_single_char_repair_lexicon_strict_v1.csv",
+  "sha256": "3bbc1c65cc5073828ca4891d1ab11155b6d0d430fc2acca5d83959b7798b8b38",
+  "expected_rows": 1125,
+  "rows": 1125,
+  "unique_characters": 1125,
+  "duplicate_surfaces": 0,
+  "duplicate_sample": [],
+  "non_han_rows": 0,
+  "multi_character_rows": 0,
+  "missing_pinyin": 0,
+  "missing_tone": 0,
+  "invalid_tone": 0,
+  "invalid_pinyin": 0,
+  "encoding": "utf-8-sig",
+  "delimiter": "comma_csv",
+  "headers": [
+    "word",
+    "pinyin",
+    "tone",
+    "frequency_subtl_per_million",
+    "frequency_weibo_per_million",
+    "combined_frequency",
+    "tier",
+    "recommended_initial_repair_lexicon",
+    "source"
+  ],
+  "case_specific_overrides": 0,
+  "sorting": "as_in_file_combined_frequency_desc_observed",
+  "loader_compat_today": {
+    "loadSingleCharRows_expects": [
+      "surface|canonical",
+      "pinyin",
+      "tone_pinyin",
+      "weight?",
+      "source?"
+    ],
+    "strict_has": [
+      "word",
+      "pinyin",
+      "tone",
+      "frequency_*",
+      "tier",
+      "source"
+    ],
+    "delimiter_match": false,
+    "column_name_match": false,
+    "direct_path_swap_works": false,
+    "note": "Need build SSOT in loader shape OR minimal loader field-map; not a second pipeline"
+  },
+  "content_valid": true
+}

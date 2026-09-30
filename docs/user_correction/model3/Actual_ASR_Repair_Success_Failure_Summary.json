@@ -1,0 +1,54 @@
+{
+  "phase": "ACTUAL_ASR_REPAIR_SUCCESS_FAILURE_TARGETED_AUDIT",
+  "RUN_ID": "dialog200_full_pipeline_20260909_001141",
+  "REPAIR_NEEDED": 169,
+  "SUCCESS_COUNT": 2,
+  "UNCHANGED_COUNT": 167,
+  "failure_sample_method": "sort ASR_REPAIR_UNCHANGED with raw_normalized!=reference_normalized by caseId; equal-interval pick 15 (midpoint of each bin)",
+  "failure_sample_count": 15,
+  "failure_sample_ids": [
+    "d006",
+    "d020",
+    "d032",
+    "d046",
+    "d060",
+    "d074",
+    "d089",
+    "d101",
+    "d114",
+    "d130",
+    "d141",
+    "d155",
+    "d168",
+    "d182",
+    "d194"
+  ],
+  "success_case_count": 2,
+  "success_case_ids": [
+    "d084",
+    "d184"
+  ],
+  "first_pass": {
+    "all_failures_raw_error_exists": "YES",
+    "final_content_change_NONE": 15,
+    "final_content_change_other": 0
+  },
+  "breakpoint_counts": {
+    "NO_USEFUL_RECALL_CANDIDATE": 14,
+    "TRACE_INSUFFICIENT": 1
+  },
+  "dominant_breakpoint": "NO_USEFUL_RECALL_CANDIDATE",
+  "dominant_breakpoint_count": 14,
+  "dominant_threshold": ">=8/15",
+  "DOMINANT_BREAKPOINT_FOUND": true,
+  "trace_insufficient_count": 1,
+  "TRACE_DOMINANT_GAP": false,
+  "measurement_gap": "RUN_ID compact dump: fine_span_surfaces always []; windowText/spanSurface/query/window/start/end null. FineSpan YES uses model3.decisions[].surface as OBSERVATIONAL proxy only.",
+  "success_vs_failure_contrast": "Both successes had a useful lexical candidate already in Recall base_candidates (扫码 / 客户) that reached KenLM and was SELECTED. Sampled failures almost never show a useful candidate for the local probe error in base/model2/retry hits.",
+  "MODEL3_REOPEN_REQUIRED": "NO",
+  "RETRY_ARCHITECTURE_REOPEN_REQUIRED": "NO",
+  "ARCHITECTURE_CHANGE_REQUIRED": "NO",
+  "PRODUCTION_CODE_CHANGE": "NONE",
+  "ONE_NEXT_AUDIT": "RECALL_USEFUL_CANDIDATE_TARGETED_AUDIT",
+  "verdict": "ACTUAL_ASR_REPAIR_AUDIT_PASS_DOMINANT_BREAKPOINT_FOUND"
+}

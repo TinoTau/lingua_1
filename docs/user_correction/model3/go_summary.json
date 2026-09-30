@@ -1,0 +1,11 @@
+{
+  "phase": "MODEL3_V1_SYNTHETIC_SHORTCUT_GENERALIZATION_AUDIT",
+  "verdict": "DATA_LEAKAGE",
+  "baseline_reproduced": true,
+  "baseline_retry_f1": 1.0,
+  "anchor_conclusion": "NOT_USED",
+  "primary_cause": "DIRECT_LABEL_LEAKAGE",
+  "classification": "H",
+  "tts_go": false,
+  "recommended_next_phase": "FIX_MODEL3_V1_FEATURE_PACKING_AND_RETRAIN"
+}

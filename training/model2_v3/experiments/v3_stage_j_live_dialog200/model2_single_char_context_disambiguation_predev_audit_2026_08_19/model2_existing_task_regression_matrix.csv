@@ -1,0 +1,12 @@
+surface,owner,metric_or_gate,pre_change_baseline,must_not_regress_via,notes
+Stage_P_RR_vs_P1,Model2_P,RR 0.954 vs 0.955 (gate ≥0.945),Stage J freeze 2026-08-18,unfrozen trunk joint,expA frozen trunk is the production recipe
+Stage_P_heldout_RR,Model2_P,0.939 (P1 ref 0.941),same,new head leaking into trunk,keep freeze_shared during SC head train
+Stage_D_val_Top1,Model2_D,0.304,same,domain_none over-suppression,empty-profile still infers
+Stage_D_correct_vs_empty,Model2_D,0.304 vs 0.000,same,if empty disable domain gate,FORBIDDEN gate
+Stage_D_TIR_V3,Model2_D,0.222 modest,known limitation,do not add SC task as D booster,do not raise D gates
+dialog_200_NO_PROFILE,runtime,199 INVOKED + d192 infra 504,collector live 2026-08-18,turning Model2 into general corrector,POST_TRACE_FREEZE
+length1_collector_uniqueness,Recall,unique-only / no Top1,CR 1.0.2,frequency Top1,ACP may emit set but not Top1
+minPrior_0.5,binder,2331/2331 drop,bind audit 2026-08-19,silent minPrior drop,HOLD separate ACP
+sentence_budget_16,Assembly/KenLM,16,fw-config freeze,dumping N-way 1-char into lattice,select 0 or 1 only
+IME_2510,IME,KEEP,lexical validity audit,replace with CLD,DO NOT
+CLD_STRICT_import,Repair lexicon,HOLD not production,grouping audit 2026-08-19,sqlite import,LICENSE_REVIEW_REQUIRED

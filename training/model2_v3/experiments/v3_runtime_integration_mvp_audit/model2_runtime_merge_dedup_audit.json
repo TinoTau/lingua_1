@@ -1,0 +1,11 @@
+{
+  "preferred_merge_key": "termId",
+  "functions": [
+    "buildLexicalEdges candidateMergeKey term:",
+    "scoreHotword bestById",
+    "mergeCrossPathSentenceCandidates by text"
+  ],
+  "model2_should_merge_into": "activeCandidates before runDomainAwareAssembly",
+  "owner": "span-assembly orchestrator insertion (ADD) then existing assembly ownership continues",
+  "risk": "SameDomain hard filter may drop cross-domain PROFILE domain_term — interaction risk with soft prior"
+}

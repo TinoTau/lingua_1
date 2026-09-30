@@ -1,0 +1,2919 @@
+{
+  "phase": "LINGUA_MODEL3_COMPOUND_RESIDUAL_TRACE_AUDIT",
+  "totalCases": 14,
+  "cases": [
+    {
+      "caseId": "p2_u001_020",
+      "rawAsrText": "行程里关于理事员的部分请再确认一遍",
+      "targetSurface": "礼宾员",
+      "targetRegionText": "理事员",
+      "targetPronunciation": "li|bin|yuan",
+      "Model2InputWindowId": "5:8",
+      "Model2InputWindowText": "理事员",
+      "Model2RelationFamily": "n_l",
+      "Model2TransformedPronunciation": "ni|shi|yuan",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "none_profile_match",
+      "remainingUnexplainedSurface": "理事员",
+      "remainingUnexplainedPronunciation": "li|shi|yuan vs li|bin|yuan (shi!=bin)",
+      "segmentationPathId": "77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab",
+      "pathFineSpanCount": 11,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:3",
+          "surface": "理事",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "phonetic": "li|shi",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.144567847251892,
+          "retryLogit": 1.2851874828338623,
+          "margin": 2.4297553300857544,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:4",
+          "surface": "员的",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "phonetic": "yuan|de",
+          "windowSource": "in_span_window",
+          "candidateCount": 6,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.7083016633987427,
+          "retryLogit": 1.83560049533844,
+          "margin": 3.5439021587371826,
+          "firstPassCand": 6,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 1
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:0",
+          "surface": "行程",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 0,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:1",
+          "surface": "里",
+          "source": "MODEL2",
+          "rawStart": 2,
+          "rawEnd": 3
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:2",
+          "surface": "关于",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:3",
+          "surface": "理事",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:4",
+          "surface": "员的",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 7,
+          "rawEnd": 9
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:6",
+          "surface": "分请",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:10",
+          "surface": "一遍",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 15,
+          "rawEnd": 17
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "理事",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        },
+        {
+          "surface": "员的",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "理事",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "员的",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "理事",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.144567847251892,
+          "retryLogit": 1.2851874828338623,
+          "margin": 2.4297553300857544
+        },
+        {
+          "surface": "员的",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.7083016633987427,
+          "retryLogit": 1.83560049533844,
+          "margin": 3.5439021587371826
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "行程里关于理事员的部分请再确认一遍",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「事」(shi≠bin) 被锁在 DOMAIN_AND_MODEL2 Anchor「理事」内；Model3 无权 RETRY。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u001_039",
+      "rawAsrText": "顾客,想了解,刘若川的保修与推换政策",
+      "targetSurface": "牛肉串",
+      "targetRegionText": "刘若川",
+      "targetPronunciation": "niu|rou|chuan",
+      "Model2InputWindowId": "5:8",
+      "Model2InputWindowText": "刘若川",
+      "Model2RelationFamily": "n_l",
+      "Model2TransformedPronunciation": "niu|ruo|chuan",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "liu→niu via n_l",
+      "remainingUnexplainedSurface": "若",
+      "remainingUnexplainedPronunciation": "ruo vs rou",
+      "segmentationPathId": "e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5",
+      "pathFineSpanCount": 10,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:3",
+          "surface": "刘",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "phonetic": "liu",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.356520652770996,
+          "retryLogit": 1.502358317375183,
+          "margin": 2.858878970146179,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 1
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:4",
+          "surface": "若",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "phonetic": "ruo",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true,
+          "keepLogit": -0.2878462076187134,
+          "retryLogit": 0.2759205400943756,
+          "margin": 0.563766747713089,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:5",
+          "surface": "川",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "phonetic": "chuan",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.5319220423698425,
+          "retryLogit": -0.653652012348175,
+          "margin": -1.1855740547180176,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:0",
+          "surface": "顾客",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 0,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:2",
+          "surface": "了解",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 4,
+          "rawEnd": 6
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:3",
+          "surface": "刘",
+          "source": "MODEL2",
+          "rawStart": 7,
+          "rawEnd": 8
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:6",
+          "surface": "的保",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:7",
+          "surface": "修与",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:8",
+          "surface": "推换",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 14,
+          "rawEnd": 16
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:9",
+          "surface": "政策",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 16,
+          "rawEnd": 18
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:4",
+          "surface": "若",
+          "rawStart": 8,
+          "rawEnd": 9
+        },
+        {
+          "spanId": "fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:5",
+          "surface": "川",
+          "rawStart": 9,
+          "rawEnd": 10
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "刘",
+          "anchorSource": "MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "若",
+          "decision": "RETRY",
+          "isAnchor": false
+        },
+        {
+          "surface": "川",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "刘",
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "若",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true
+        },
+        {
+          "surface": "川",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "RETRY",
+      "model3DecisionEvidence": [
+        {
+          "surface": "刘",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "keepLogit": -1.356520652770996,
+          "retryLogit": 1.502358317375183,
+          "margin": 2.858878970146179
+        },
+        {
+          "surface": "若",
+          "decision": "RETRY",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": -0.2878462076187134,
+          "retryLogit": 0.2759205400943756,
+          "margin": 0.563766747713089
+        },
+        {
+          "surface": "川",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.5319220423698425,
+          "retryLogit": -0.653652012348175,
+          "margin": -1.1855740547180176
+        }
+      ],
+      "retryRegions": [
+        {
+          "retryRegionId": "m3rr:fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:4:fine:e3fed68a458c9df8b83e84c51fc7873b7d377fd05ce711d9aa6360f451b629e5:4",
+          "rawStart": 8,
+          "rawEnd": 9,
+          "oldLocalSpanSurfaces": [
+            "若"
+          ],
+          "newLocalSpanSurfaces": [
+            "若"
+          ],
+          "recallCandidatesReturned": 1,
+          "resegmentOk": true,
+          "model3Reinvoked": false
+        }
+      ],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": 8,
+      "retryRegionEnd": 9,
+      "retryResegmentationExecuted": true,
+      "retryStage2RecallExecuted": true,
+      "retryStage2CandidateCount": 1,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "顾客,想了解,刘若川的保修与推换政策",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-I",
+      "bugVsCapability": "EXPECTED_CAPABILITY_LIMIT",
+      "adjudicationNote": "未解释 residual「若」(ruo≠rou) 以 non-anchor 保留；Model3 RETRY「若」且 reseg/Stage-2 执行；Stage-2 对单字「若」无 useful multi-char evidence。刘 mono 的 MODEL2 Anchor 对该字 n_l 全解释，不记 M3-B。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u002_012",
+      "rawAsrText": "我们先确认出注册再决定是否该签 如果改迁请同步通,知思寄予前台",
+      "targetSurface": "出租车",
+      "targetRegionText": "出注册",
+      "targetPronunciation": "chu|zu|che",
+      "Model2InputWindowId": "5:8",
+      "Model2InputWindowText": "出注册",
+      "Model2RelationFamily": "z_zh",
+      "Model2TransformedPronunciation": "chu|zu|ce",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "zhu→zu via z_zh on 注",
+      "remainingUnexplainedSurface": "册",
+      "remainingUnexplainedPronunciation": "ce vs che",
+      "segmentationPathId": "6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449",
+      "pathFineSpanCount": 18,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:3",
+          "surface": "出",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "phonetic": "chu",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true,
+          "keepLogit": -0.08947916328907013,
+          "retryLogit": 0.05913814529776573,
+          "margin": 0.14861730858683586,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:4",
+          "surface": "注册",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "phonetic": "zhu|ce",
+          "windowSource": "boundary_window",
+          "candidateCount": 9,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.4651089906692505,
+          "retryLogit": 1.3535680770874023,
+          "margin": 2.818677067756653,
+          "firstPassCand": 9,
+          "model2CandCount": 7,
+          "model2ProvCandCount": 6
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:0",
+          "surface": "我们",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 0,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:2",
+          "surface": "确认",
+          "source": "MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:4",
+          "surface": "注册",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 6,
+          "rawEnd": 8
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:5",
+          "surface": "再决",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:6",
+          "surface": "定是",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:7",
+          "surface": "否该",
+          "source": "MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:9",
+          "surface": "如果",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 16,
+          "rawEnd": 18
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:11",
+          "surface": "迁请",
+          "source": "MODEL2",
+          "rawStart": 19,
+          "rawEnd": 21
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:15",
+          "surface": "知思",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 25,
+          "rawEnd": 27
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:16",
+          "surface": "寄予",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 27,
+          "rawEnd": 29
+        },
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:17",
+          "surface": "前台",
+          "source": "MODEL2",
+          "rawStart": 29,
+          "rawEnd": 31
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:3",
+          "surface": "出",
+          "rawStart": 5,
+          "rawEnd": 6
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "注册",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "出",
+          "decision": "RETRY",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "出",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true
+        },
+        {
+          "surface": "注册",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "RETRY",
+      "model3DecisionEvidence": [
+        {
+          "surface": "出",
+          "decision": "RETRY",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": -0.08947916328907013,
+          "retryLogit": 0.05913814529776573,
+          "margin": 0.14861730858683586
+        },
+        {
+          "surface": "注册",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.4651089906692505,
+          "retryLogit": 1.3535680770874023,
+          "margin": 2.818677067756653
+        }
+      ],
+      "retryRegions": [
+        {
+          "retryRegionId": "m3rr:fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:3:fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:3",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "oldLocalSpanSurfaces": [
+            "出"
+          ],
+          "newLocalSpanSurfaces": [
+            "出"
+          ],
+          "recallCandidatesReturned": 1,
+          "resegmentOk": true,
+          "model3Reinvoked": false
+        }
+      ],
+      "targetResidualCoveredByRetry": true,
+      "retryRegionStart": 5,
+      "retryRegionEnd": 6,
+      "retryResegmentationExecuted": true,
+      "retryStage2RecallExecuted": true,
+      "retryStage2CandidateCount": 1,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "我们先确认出注册再决定是否该签 如果改迁请同步通,知思寄予前台",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「册」(ce≠che) 锁在 DOMAIN_AND_MODEL2 Anchor「注册」内；RETRY 仅打到「出」，未覆盖真实 residual。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_016",
+      "rawAsrText": "今天,想试试和翻成大配的套餐",
+      "targetSurface": "换乘",
+      "targetRegionText": "翻成",
+      "targetPronunciation": "huan|cheng",
+      "Model2InputWindowId": "6:8",
+      "Model2InputWindowText": "翻成",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "han|cheng",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "fan→han via h_f",
+      "remainingUnexplainedSurface": "翻/han",
+      "remainingUnexplainedPronunciation": "han vs huan",
+      "segmentationPathId": "83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378",
+      "pathFineSpanCount": 8,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:4",
+          "surface": "翻",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "phonetic": "fan",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.8342923521995544,
+          "retryLogit": -0.9780145883560181,
+          "margin": -1.8123069405555725,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:5",
+          "surface": "成大",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "phonetic": "cheng|da",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -0.6821902990341187,
+          "retryLogit": 0.5211907625198364,
+          "margin": 1.203381061553955,
+          "firstPassCand": 8,
+          "model2CandCount": 5,
+          "model2ProvCandCount": 5
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:2",
+          "surface": "想试",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:3",
+          "surface": "试和",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:5",
+          "surface": "成大",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:6",
+          "surface": "配的",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:7",
+          "surface": "套餐",
+          "source": "MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:83f23f2396e3798f94e3554ae0593b111164c8cfeed580d56531985727cef378:4",
+          "surface": "翻",
+          "rawStart": 7,
+          "rawEnd": 8
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "成大",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "翻",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "翻",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "成大",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "KEEP",
+      "model3DecisionEvidence": [
+        {
+          "surface": "翻",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.8342923521995544,
+          "retryLogit": -0.9780145883560181,
+          "margin": -1.8123069405555725
+        },
+        {
+          "surface": "成大",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -0.6821902990341187,
+          "retryLogit": 0.5211907625198364,
+          "margin": 1.203381061553955
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "今天,想试试和翻成大配的套餐",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-D",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "residual「翻」(fan/han≠huan) non-anchor、firstPassCand=1、lexically thin，Model3 仍 KEEP。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_017",
+      "rawAsrText": "如果厨房还来得急请,把副市场和主菜一起商并被注清单少盐。",
+      "targetSurface": "护士长",
+      "targetRegionText": "副市场",
+      "targetPronunciation": "hu|shi|zhang",
+      "Model2InputWindowId": "10:13",
+      "Model2InputWindowText": "副市场",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "hu|shi|chang",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "fu→hu via h_f",
+      "remainingUnexplainedSurface": "场",
+      "remainingUnexplainedPronunciation": "chang vs zhang",
+      "segmentationPathId": "508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a",
+      "pathFineSpanCount": 21,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:9",
+          "surface": "把副",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "phonetic": "ba|fu",
+          "windowSource": "in_span_window",
+          "candidateCount": 7,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.9569083452224731,
+          "retryLogit": 1.6648074388504028,
+          "margin": 3.621715784072876,
+          "firstPassCand": 7,
+          "model2CandCount": 7,
+          "model2ProvCandCount": 7
+        },
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:10",
+          "surface": "市场",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "phonetic": "shi|chang",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.4819486141204834,
+          "retryLogit": 1.2950011491775513,
+          "margin": 2.7769497632980347,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:9",
+          "surface": "把副",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:10",
+          "surface": "市场",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        },
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:14",
+          "surface": "一起",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 17,
+          "rawEnd": 19
+        },
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:15",
+          "surface": "商并",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 19,
+          "rawEnd": 21
+        },
+        {
+          "spanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:17",
+          "surface": "注清",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 22,
+          "rawEnd": 24
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "把副",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        },
+        {
+          "surface": "市场",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "把副",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "市场",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "把副",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.9569083452224731,
+          "retryLogit": 1.6648074388504028,
+          "margin": 3.621715784072876
+        },
+        {
+          "surface": "市场",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.4819486141204834,
+          "retryLogit": 1.2950011491775513,
+          "margin": 2.7769497632980347
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "如果厨房还来得急请,把副市场和主菜一起商并被注清单少盐。",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「场」(chang≠zhang) 锁在 DOMAIN_AND_MODEL2 Anchor「市场」内。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_022",
+      "rawAsrText": "麻烦你帮我核对这份关于集佛趣的说明",
+      "targetSurface": "集合区",
+      "targetRegionText": "集佛趣",
+      "targetPronunciation": "ji|he|qu",
+      "Model2InputWindowId": "11:14",
+      "Model2InputWindowText": "集佛趣",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "ji|ho|qu",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "fo→ho via h_f",
+      "remainingUnexplainedSurface": "佛/ho",
+      "remainingUnexplainedPronunciation": "ho vs he",
+      "segmentationPathId": "7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26",
+      "pathFineSpanCount": 13,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:8",
+          "surface": "集",
+          "rawStart": 11,
+          "rawEnd": 12,
+          "phonetic": "ji",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 1.8592033386230469,
+          "retryLogit": -1.9927316904067993,
+          "margin": -3.851935029029846,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:9",
+          "surface": "佛",
+          "rawStart": 12,
+          "rawEnd": 13,
+          "phonetic": "fo",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 1.0670346021652222,
+          "retryLogit": -1.2724218368530273,
+          "margin": -2.3394564390182495,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:10",
+          "surface": "趣",
+          "rawStart": 13,
+          "rawEnd": 14,
+          "phonetic": "qu",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 1.1392143964767456,
+          "retryLogit": -1.4121465682983398,
+          "margin": -2.5513609647750854,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:1",
+          "surface": "烦",
+          "source": "MODEL2",
+          "rawStart": 1,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:2",
+          "surface": "你帮",
+          "source": "MODEL2",
+          "rawStart": 2,
+          "rawEnd": 4
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:4",
+          "surface": "核对",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:6",
+          "surface": "份关",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:11",
+          "surface": "的说",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 14,
+          "rawEnd": 16
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:8",
+          "surface": "集",
+          "rawStart": 11,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:9",
+          "surface": "佛",
+          "rawStart": 12,
+          "rawEnd": 13
+        },
+        {
+          "spanId": "fine:7eef3455f7d025817f8e26776c3a3455f6d7b1e55c062e8119c76ea0f66aab26:10",
+          "surface": "趣",
+          "rawStart": 13,
+          "rawEnd": 14
+        }
+      ],
+      "targetRegionAnchorCoverage": [],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "集",
+          "decision": "KEEP",
+          "isAnchor": false
+        },
+        {
+          "surface": "佛",
+          "decision": "KEEP",
+          "isAnchor": false
+        },
+        {
+          "surface": "趣",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "集",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "佛",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "趣",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "KEEP",
+      "model3DecisionEvidence": [
+        {
+          "surface": "集",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 1.8592033386230469,
+          "retryLogit": -1.9927316904067993,
+          "margin": -3.851935029029846
+        },
+        {
+          "surface": "佛",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 1.0670346021652222,
+          "retryLogit": -1.2724218368530273,
+          "margin": -2.3394564390182495
+        },
+        {
+          "surface": "趣",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 1.1392143964767456,
+          "retryLogit": -1.4121465682983398,
+          "margin": -2.5513609647750854
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "麻烦你帮我核对这份关于集佛趣的说明",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-D",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "「集/佛/趣」全部 non-anchor、各 cand=1，结构可疑，Model3 全部 KEEP。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_023",
+      "rawAsrText": "如果方便的话请你把佛国佛教教授提醒 再说明一遍我好做最终确认",
+      "targetSurface": "河谷区",
+      "targetRegionText": "佛国佛",
+      "targetPronunciation": "he|gu|qu",
+      "Model2InputWindowId": "9:11",
+      "Model2InputWindowText": "佛国",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "ho|guo",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "fo→ho via h_f",
+      "remainingUnexplainedSurface": "佛国...",
+      "remainingUnexplainedPronunciation": "severe compound",
+      "segmentationPathId": "8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b",
+      "pathFineSpanCount": 17,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:6",
+          "surface": "佛",
+          "rawStart": 9,
+          "rawEnd": 10,
+          "phonetic": "fo",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.5191898941993713,
+          "retryLogit": -0.7748206257820129,
+          "margin": -1.2940105199813843,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:7",
+          "surface": "国",
+          "rawStart": 10,
+          "rawEnd": 11,
+          "phonetic": "guo",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 1.1082051992416382,
+          "retryLogit": -1.480763554573059,
+          "margin": -2.5889687538146973,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:8",
+          "surface": "佛教",
+          "rawStart": 11,
+          "rawEnd": 13,
+          "phonetic": "fo|jiao",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.7820318937301636,
+          "retryLogit": 1.4125900268554688,
+          "margin": 3.1946219205856323,
+          "firstPassCand": 8,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:2",
+          "surface": "方便",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 2,
+          "rawEnd": 4
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:3",
+          "surface": "的话",
+          "source": "MODEL2",
+          "rawStart": 4,
+          "rawEnd": 6
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:5",
+          "surface": "你把",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 7,
+          "rawEnd": 9
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:8",
+          "surface": "佛教",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 11,
+          "rawEnd": 13
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:9",
+          "surface": "教授",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 13,
+          "rawEnd": 15
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:10",
+          "surface": "提醒",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 15,
+          "rawEnd": 17
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:11",
+          "surface": "再说",
+          "source": "MODEL2",
+          "rawStart": 18,
+          "rawEnd": 20
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:12",
+          "surface": "明一",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 20,
+          "rawEnd": 22
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:13",
+          "surface": "遍我",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 22,
+          "rawEnd": 24
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:14",
+          "surface": "好做",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 24,
+          "rawEnd": 26
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:15",
+          "surface": "最终",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 26,
+          "rawEnd": 28
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:16",
+          "surface": "确认",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 28,
+          "rawEnd": 30
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:6",
+          "surface": "佛",
+          "rawStart": 9,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:8f7606b7aa37249b5cce62f87e98a452f4899a35cd4eee59f9fd4b707fe5c00b:7",
+          "surface": "国",
+          "rawStart": 10,
+          "rawEnd": 11
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "佛教",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "佛",
+          "decision": "KEEP",
+          "isAnchor": false
+        },
+        {
+          "surface": "国",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "佛",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "国",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "佛教",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "KEEP",
+      "model3DecisionEvidence": [
+        {
+          "surface": "佛",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.5191898941993713,
+          "retryLogit": -0.7748206257820129,
+          "margin": -1.2940105199813843
+        },
+        {
+          "surface": "国",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 1.1082051992416382,
+          "retryLogit": -1.480763554573059,
+          "margin": -2.5889687538146973
+        },
+        {
+          "surface": "佛教",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.7820318937301636,
+          "retryLogit": 1.4125900268554688,
+          "margin": 3.1946219205856323
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "如果方便的话请你把佛国佛教教授提醒 再说明一遍我好做最终确认",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-D",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "「佛/国」non-anchor cand=1，Model3 KEEP；复合 residual 未触发 RETRY。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_024",
+      "rawAsrText": "我先和对方击听全任无误后,再把结果分开。 如果发给你这样两遍都省事",
+      "targetSurface": "候机厅",
+      "targetRegionText": "方击听",
+      "targetPronunciation": "hou|ji|ting",
+      "Model2InputWindowId": "4:7",
+      "Model2InputWindowText": "方击听",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "hang|ji|ting",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "fang→hang via h_f",
+      "remainingUnexplainedSurface": "方/hang",
+      "remainingUnexplainedPronunciation": "hang vs hou",
+      "segmentationPathId": "4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5",
+      "pathFineSpanCount": 20,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:2",
+          "surface": "对方",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "phonetic": "dui|fang",
+          "windowSource": "in_span_window",
+          "candidateCount": 7,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -5.756882190704346,
+          "retryLogit": 5.733469486236572,
+          "margin": 11.490351676940918,
+          "firstPassCand": 7,
+          "model2CandCount": 7,
+          "model2ProvCandCount": 7
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:3",
+          "surface": "击听",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "phonetic": "ji|ting",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.5692960023880005,
+          "retryLogit": 1.5859816074371338,
+          "margin": 3.1552776098251343,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:0",
+          "surface": "我先",
+          "source": "MODEL2",
+          "rawStart": 0,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:2",
+          "surface": "对方",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:3",
+          "surface": "击听",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:7",
+          "surface": "误后",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:8",
+          "surface": "再把",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 13,
+          "rawEnd": 15
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:9",
+          "surface": "结果",
+          "source": "MODEL2",
+          "rawStart": 15,
+          "rawEnd": 17
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:10",
+          "surface": "分开",
+          "source": "MODEL2",
+          "rawStart": 17,
+          "rawEnd": 19
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:14",
+          "surface": "给你",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 24,
+          "rawEnd": 26
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:17",
+          "surface": "两遍",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 28,
+          "rawEnd": 30
+        },
+        {
+          "spanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:19",
+          "surface": "省事",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 31,
+          "rawEnd": 33
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "对方",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        },
+        {
+          "surface": "击听",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "对方",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "击听",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "对方",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -5.756882190704346,
+          "retryLogit": 5.733469486236572,
+          "margin": 11.490351676940918
+        },
+        {
+          "surface": "击听",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.5692960023880005,
+          "retryLogit": 1.5859816074371338,
+          "margin": 3.1552776098251343
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "我先和对方击听全任无误后,再把结果分开。 如果发给你这样两遍都省事",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「方」(hang≠hou) 锁在 DOMAIN_AND_MODEL2 Anchor「对方」内。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u003_034",
+      "rawAsrText": "请把订单里和签陈素相关的被注写清楚",
+      "targetSurface": "千层酥",
+      "targetRegionText": "签陈素",
+      "targetPronunciation": "qian|ceng|su",
+      "Model2InputWindowId": "6:9",
+      "Model2InputWindowText": "签陈素",
+      "Model2RelationFamily": "eng_en",
+      "Model2TransformedPronunciation": "qian|cheng|su",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "chen→cheng via eng_en",
+      "remainingUnexplainedSurface": "陈→层 residual after transform",
+      "remainingUnexplainedPronunciation": "cheng vs ceng",
+      "segmentationPathId": "b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1",
+      "pathFineSpanCount": 12,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:4",
+          "surface": "签",
+          "rawStart": 6,
+          "rawEnd": 7,
+          "phonetic": "qian",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.4939328730106354,
+          "retryLogit": -0.5217697024345398,
+          "margin": -1.0157025754451752,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:5",
+          "surface": "陈",
+          "rawStart": 7,
+          "rawEnd": 8,
+          "phonetic": "chen",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.6931632161140442,
+          "retryLogit": -0.8291805386543274,
+          "margin": -1.5223437547683716,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:6",
+          "surface": "素相",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "phonetic": "su|xiang",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.9279288053512573,
+          "retryLogit": 1.7530832290649414,
+          "margin": 3.6810120344161987,
+          "firstPassCand": 8,
+          "model2CandCount": 4,
+          "model2ProvCandCount": 4
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:1",
+          "surface": "把订",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 1,
+          "rawEnd": 3
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:2",
+          "surface": "单里",
+          "source": "MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:6",
+          "surface": "素相",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:8",
+          "surface": "的被",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 11,
+          "rawEnd": 13
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:9",
+          "surface": "注写",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 13,
+          "rawEnd": 15
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:4",
+          "surface": "签",
+          "rawStart": 6,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:b389e9af25c6c754bca0d69a628bb8afc2b9b1c62e49701ac5b6d7b4a2773ee1:5",
+          "surface": "陈",
+          "rawStart": 7,
+          "rawEnd": 8
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "素相",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "签",
+          "decision": "KEEP",
+          "isAnchor": false
+        },
+        {
+          "surface": "陈",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "签",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "陈",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        },
+        {
+          "surface": "素相",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "KEEP",
+      "model3DecisionEvidence": [
+        {
+          "surface": "签",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.4939328730106354,
+          "retryLogit": -0.5217697024345398,
+          "margin": -1.0157025754451752
+        },
+        {
+          "surface": "陈",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.6931632161140442,
+          "retryLogit": -0.8291805386543274,
+          "margin": -1.5223437547683716
+        },
+        {
+          "surface": "素相",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.9279288053512573,
+          "retryLogit": 1.7530832290649414,
+          "margin": 3.6810120344161987
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "请把订单里和签陈素相关的被注写清楚",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-D",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "「签/陈」non-anchor cand=1，Model3 KEEP；eng_en 部分变换后 residual 仍暴露但未 RETRY。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u004_005",
+      "rawAsrText": "如果方便的话请你把剪裁器 在说明一遍我好做最终确认",
+      "targetSurface": "检查法",
+      "targetRegionText": "剪裁器",
+      "targetPronunciation": "jian|cha|fa",
+      "Model2InputWindowId": "9:12",
+      "Model2InputWindowText": "剪裁器",
+      "Model2RelationFamily": "ch_c",
+      "Model2TransformedPronunciation": "jian|chai|qi",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "cai→chai via ch_c",
+      "remainingUnexplainedSurface": "剪裁器",
+      "remainingUnexplainedPronunciation": "chai!=cha, qi!=fa",
+      "segmentationPathId": "a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347",
+      "pathFineSpanCount": 12,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:4",
+          "surface": "把剪",
+          "rawStart": 8,
+          "rawEnd": 10,
+          "phonetic": "ba|jian",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.064009666442871,
+          "retryLogit": 1.0076677799224854,
+          "margin": 2.0716774463653564,
+          "firstPassCand": 8,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:5",
+          "surface": "裁器",
+          "rawStart": 10,
+          "rawEnd": 12,
+          "phonetic": "cai|qi",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.3668978214263916,
+          "retryLogit": 1.2680697441101074,
+          "margin": 2.634967565536499,
+          "firstPassCand": 8,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:0",
+          "surface": "如果",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 0,
+          "rawEnd": 2
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:1",
+          "surface": "方便",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 2,
+          "rawEnd": 4
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:2",
+          "surface": "的话",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 4,
+          "rawEnd": 6
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:3",
+          "surface": "请你",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 6,
+          "rawEnd": 8
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:4",
+          "surface": "把剪",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:5",
+          "surface": "裁器",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:6",
+          "surface": "在说",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 13,
+          "rawEnd": 15
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:7",
+          "surface": "明一",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 15,
+          "rawEnd": 17
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:8",
+          "surface": "遍我",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 17,
+          "rawEnd": 19
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:9",
+          "surface": "好做",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 19,
+          "rawEnd": 21
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:10",
+          "surface": "最终",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 21,
+          "rawEnd": 23
+        },
+        {
+          "spanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:11",
+          "surface": "确认",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 23,
+          "rawEnd": 25
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "把剪",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        },
+        {
+          "surface": "裁器",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "把剪",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "裁器",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "把剪",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.064009666442871,
+          "retryLogit": 1.0076677799224854,
+          "margin": 2.0716774463653564
+        },
+        {
+          "surface": "裁器",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.3668978214263916,
+          "retryLogit": 1.2680697441101074,
+          "margin": 2.634967565536499
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "如果方便的话请你把剪裁器 在说明一遍我好做最终确认",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "目标错误区「剪裁器」被「把剪」「裁器」DOMAIN_AND_MODEL2 Anchor 完全吞并。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u004_009",
+      "rawAsrText": "请把藏头灯的库存数量同步到系统",
+      "targetSurface": "床头灯",
+      "targetRegionText": "藏头灯",
+      "targetPronunciation": "chuang|tou|deng",
+      "Model2InputWindowId": "2:5",
+      "Model2InputWindowText": "藏头灯",
+      "Model2RelationFamily": "ch_c",
+      "Model2TransformedPronunciation": "chang|tou|deng",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "cang→chang via ch_c",
+      "remainingUnexplainedSurface": "藏/chang",
+      "remainingUnexplainedPronunciation": "chang vs chuang",
+      "segmentationPathId": "f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d",
+      "pathFineSpanCount": 11,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:2",
+          "surface": "藏",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "phonetic": "cang",
+          "windowSource": "boundary_window",
+          "candidateCount": 2,
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.362792730331421,
+          "retryLogit": 1.4535953998565674,
+          "margin": 2.8163881301879883,
+          "firstPassCand": 2,
+          "model2CandCount": 2,
+          "model2ProvCandCount": 1
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:3",
+          "surface": "头",
+          "rawStart": 3,
+          "rawEnd": 4,
+          "phonetic": "tou",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true,
+          "keepLogit": -0.15172262489795685,
+          "retryLogit": 0.13319940865039825,
+          "margin": 0.2849220335483551,
+          "firstPassCand": 1,
+          "model2CandCount": 0,
+          "model2ProvCandCount": 0
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:4",
+          "surface": "灯",
+          "rawStart": 4,
+          "rawEnd": 5,
+          "phonetic": "deng",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true,
+          "keepLogit": 0.6690630912780762,
+          "retryLogit": -0.7849093079566956,
+          "margin": -1.4539723992347717,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:2",
+          "surface": "藏",
+          "source": "MODEL2",
+          "rawStart": 2,
+          "rawEnd": 3
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:5",
+          "surface": "的库",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:6",
+          "surface": "存",
+          "source": "MODEL2",
+          "rawStart": 7,
+          "rawEnd": 8
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:7",
+          "surface": "数量",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 8,
+          "rawEnd": 10
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:8",
+          "surface": "同步",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 10,
+          "rawEnd": 12
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:9",
+          "surface": "到系",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:3",
+          "surface": "头",
+          "rawStart": 3,
+          "rawEnd": 4
+        },
+        {
+          "spanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:4",
+          "surface": "灯",
+          "rawStart": 4,
+          "rawEnd": 5
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "藏",
+          "anchorSource": "MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "头",
+          "decision": "RETRY",
+          "isAnchor": false
+        },
+        {
+          "surface": "灯",
+          "decision": "KEEP",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "藏",
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "头",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true
+        },
+        {
+          "surface": "灯",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "KEEP",
+          "eligible": true
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "RETRY",
+      "model3DecisionEvidence": [
+        {
+          "surface": "藏",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "MODEL2",
+          "keepLogit": -1.362792730331421,
+          "retryLogit": 1.4535953998565674,
+          "margin": 2.8163881301879883
+        },
+        {
+          "surface": "头",
+          "decision": "RETRY",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": -0.15172262489795685,
+          "retryLogit": 0.13319940865039825,
+          "margin": 0.2849220335483551
+        },
+        {
+          "surface": "灯",
+          "decision": "KEEP",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": 0.6690630912780762,
+          "retryLogit": -0.7849093079566956,
+          "margin": -1.4539723992347717
+        }
+      ],
+      "retryRegions": [
+        {
+          "retryRegionId": "m3rr:fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:3:fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:3",
+          "rawStart": 3,
+          "rawEnd": 4,
+          "oldLocalSpanSurfaces": [
+            "头"
+          ],
+          "newLocalSpanSurfaces": [
+            "头"
+          ],
+          "recallCandidatesReturned": 1,
+          "resegmentOk": true,
+          "model3Reinvoked": false
+        }
+      ],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": 3,
+      "retryRegionEnd": 4,
+      "retryResegmentationExecuted": true,
+      "retryStage2RecallExecuted": true,
+      "retryStage2CandidateCount": 1,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "请把藏头灯的库存数量同步到系统",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「藏」(cang→chang 仍缺介音 u≠chuang) 被 MODEL2 Anchor 整字锁定；PARTIAL Model2 evidence → FALSE_ANCHOR。RETRY 误打「头」。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u004_019",
+      "rawAsrText": "请说明德鸾",
+      "targetSurface": "地暖",
+      "targetRegionText": "德鸾",
+      "targetPronunciation": "di|nuan",
+      "Model2InputWindowId": "3:5",
+      "Model2InputWindowText": "德鸾",
+      "Model2RelationFamily": "n_l",
+      "Model2TransformedPronunciation": "de|nuan",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "luan→nuan via n_l",
+      "remainingUnexplainedSurface": "德",
+      "remainingUnexplainedPronunciation": "de vs di",
+      "segmentationPathId": "ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b",
+      "pathFineSpanCount": 3,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b:2",
+          "surface": "德鸾",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "phonetic": "de|luan",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.3951727151870728,
+          "retryLogit": 1.67271089553833,
+          "margin": 3.067883610725403,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b:1",
+          "surface": "说明",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 1,
+          "rawEnd": 3
+        },
+        {
+          "spanId": "fine:ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b:2",
+          "surface": "德鸾",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "德鸾",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "德鸾",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "德鸾",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.3951727151870728,
+          "retryLogit": 1.67271089553833,
+          "margin": 3.067883610725403
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "请说明德鸾",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「德」(de≠di) 与 n_l 已解释的「鸾→暖」同处 DOMAIN_AND_MODEL2 Anchor「德鸾」；PARTIAL Model2 → whole-span Anchor。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u005_019",
+      "rawAsrText": "或家有归病似",
+      "targetSurface": "贵宾室",
+      "targetRegionText": "归病似",
+      "targetPronunciation": "gui|bin|shi",
+      "Model2InputWindowId": "3:6",
+      "Model2InputWindowText": "归病似",
+      "Model2RelationFamily": "sh_s",
+      "Model2TransformedPronunciation": "gui|bing|shi",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "si→shi via sh_s",
+      "remainingUnexplainedSurface": "病",
+      "remainingUnexplainedPronunciation": "bing vs bin",
+      "segmentationPathId": "44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302",
+      "pathFineSpanCount": 5,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:3",
+          "surface": "归病",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "phonetic": "gui|bing",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -1.359923243522644,
+          "retryLogit": 1.341925859451294,
+          "margin": 2.701849102973938,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        },
+        {
+          "spanId": "fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:4",
+          "surface": "似",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "phonetic": "si",
+          "windowSource": "in_span_window",
+          "candidateCount": 1,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true,
+          "keepLogit": -0.33602622151374817,
+          "retryLogit": 0.3374244272708893,
+          "margin": 0.6734506487846375,
+          "firstPassCand": 1,
+          "model2CandCount": 1,
+          "model2ProvCandCount": 0
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:3",
+          "surface": "归病",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:4",
+          "surface": "似",
+          "rawStart": 5,
+          "rawEnd": 6
+        }
+      ],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "归病",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [
+        {
+          "surface": "似",
+          "decision": "RETRY",
+          "isAnchor": false
+        }
+      ],
+      "residualPreserved": true,
+      "residualFullySwallowed": false,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "归病",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "似",
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "decision": "RETRY",
+          "eligible": true
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "RETRY",
+      "model3DecisionEvidence": [
+        {
+          "surface": "归病",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -1.359923243522644,
+          "retryLogit": 1.341925859451294,
+          "margin": 2.701849102973938
+        },
+        {
+          "surface": "似",
+          "decision": "RETRY",
+          "eligible": true,
+          "isAnchor": false,
+          "anchorSource": "NONE",
+          "keepLogit": -0.33602622151374817,
+          "retryLogit": 0.3374244272708893,
+          "margin": 0.6734506487846375
+        }
+      ],
+      "retryRegions": [
+        {
+          "retryRegionId": "m3rr:fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:4:fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:4",
+          "rawStart": 5,
+          "rawEnd": 6,
+          "oldLocalSpanSurfaces": [
+            "似"
+          ],
+          "newLocalSpanSurfaces": [
+            "似"
+          ],
+          "recallCandidatesReturned": 1,
+          "resegmentOk": true,
+          "model3Reinvoked": false
+        }
+      ],
+      "targetResidualCoveredByRetry": true,
+      "retryRegionStart": 5,
+      "retryRegionEnd": 6,
+      "retryResegmentationExecuted": true,
+      "retryStage2RecallExecuted": true,
+      "retryStage2CandidateCount": 1,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "或家有归病似",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「病」(bing≠bin) 锁在 DOMAIN_AND_MODEL2 Anchor「归病」内；RETRY 仅打到「似」(可被 sh_s 解释侧)，未覆盖真实 residual。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    },
+    {
+      "caseId": "p2_u005_034",
+      "rawAsrText": "顾客,想了解锁条的保修与推换政策",
+      "targetSurface": "薯条",
+      "targetRegionText": "锁条",
+      "targetPronunciation": "shu|tiao",
+      "Model2InputWindowId": "5:7",
+      "Model2InputWindowText": "锁条",
+      "Model2RelationFamily": "sh_s",
+      "Model2TransformedPronunciation": "shuo|tiao",
+      "Model2TargetHit": false,
+      "Model2PartialExplanation": "suo→shuo via sh_s",
+      "remainingUnexplainedSurface": "锁/shuo",
+      "remainingUnexplainedPronunciation": "shuo vs shu",
+      "segmentationPathId": "842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953",
+      "pathFineSpanCount": 9,
+      "targetRegionSpans": [
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:3",
+          "surface": "解锁",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "phonetic": "jie|suo",
+          "windowSource": "in_span_window",
+          "candidateCount": 4,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -0.9898558259010315,
+          "retryLogit": 1.0256708860397339,
+          "margin": 2.0155267119407654,
+          "firstPassCand": 4,
+          "model2CandCount": 4,
+          "model2ProvCandCount": 4
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:4",
+          "surface": "条的",
+          "rawStart": 7,
+          "rawEnd": 9,
+          "phonetic": "tiao|de",
+          "windowSource": "in_span_window",
+          "candidateCount": 8,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false,
+          "keepLogit": -0.8902565836906433,
+          "retryLogit": 0.9527463316917419,
+          "margin": 1.8430029153823853,
+          "firstPassCand": 8,
+          "model2CandCount": 8,
+          "model2ProvCandCount": 8
+        }
+      ],
+      "anchorSpansBeforeModel3": [
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:2",
+          "surface": "想了",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 3,
+          "rawEnd": 5
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:3",
+          "surface": "解锁",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 5,
+          "rawEnd": 7
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:4",
+          "surface": "条的",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 7,
+          "rawEnd": 9
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:5",
+          "surface": "保修",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 9,
+          "rawEnd": 11
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:7",
+          "surface": "推换",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 12,
+          "rawEnd": 14
+        },
+        {
+          "spanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:8",
+          "surface": "政策",
+          "source": "DOMAIN_AND_MODEL2",
+          "rawStart": 14,
+          "rawEnd": 16
+        }
+      ],
+      "nonAnchorSpansBeforeModel3": [],
+      "targetRegionAnchorCoverage": [
+        {
+          "surface": "解锁",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        },
+        {
+          "surface": "条的",
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "isAnchor": true
+        }
+      ],
+      "targetRegionResidualCoverage": [],
+      "residualPreserved": false,
+      "residualFullySwallowed": true,
+      "model3TargetSpanPresent": true,
+      "model3InputSpans": [
+        {
+          "surface": "解锁",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        },
+        {
+          "surface": "条的",
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "decision": "KEEP",
+          "eligible": false
+        }
+      ],
+      "model3TargetSpanPresent_detail": true,
+      "model3DecisionForTargetRegion": "NONE",
+      "model3DecisionEvidence": [
+        {
+          "surface": "解锁",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -0.9898558259010315,
+          "retryLogit": 1.0256708860397339,
+          "margin": 2.0155267119407654
+        },
+        {
+          "surface": "条的",
+          "decision": "KEEP",
+          "eligible": false,
+          "isAnchor": true,
+          "anchorSource": "DOMAIN_AND_MODEL2",
+          "keepLogit": -0.8902565836906433,
+          "retryLogit": 0.9527463316917419,
+          "margin": 1.8430029153823853
+        }
+      ],
+      "retryRegions": [],
+      "targetResidualCoveredByRetry": false,
+      "retryRegionStart": null,
+      "retryRegionEnd": null,
+      "retryResegmentationExecuted": false,
+      "retryStage2RecallExecuted": false,
+      "retryStage2CandidateCount": 0,
+      "retryProducedBetterEvidence": false,
+      "finalAssemblyCandidateContainsTarget": false,
+      "finalKenLMCandidateContainsTarget": false,
+      "finalRepairCorrect": false,
+      "finalTextAsr": "顾客,想了解锁条的保修与推换政策",
+      "model2ReinvokedOnRetry": false,
+      "firstFailureOwner": "M3-B",
+      "bugVsCapability": "IMPLEMENTATION_BUG",
+      "adjudicationNote": "未解释 residual「锁」(shuo≠shu) 锁在 DOMAIN_AND_MODEL2 Anchor「解锁」内。",
+      "checkpointIdentity": {
+        "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+        "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+        "role": "PRODUCTION"
+      },
+      "inferenceOk": true
+    }
+  ]
+}

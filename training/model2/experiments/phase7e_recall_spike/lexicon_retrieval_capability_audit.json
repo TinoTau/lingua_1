@@ -1,0 +1,19 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "candidate_count": 9914,
+  "indexes": [
+    "by_term_id",
+    "by_surface",
+    "by_syllable_count"
+  ],
+  "retrieval_strategy": "R1_PROFILE_REVERSE_MAP_PLUS_FUZZYPOOL_QUERY",
+  "sqlite_runtime": "lexicon SSOT exists; spike uses CandidateIndex jsonl derived from it",
+  "can_query_full_lexicon": true,
+  "profile_affects_fuzzy_base": false,
+  "profile_affects_r1_queries": true
+}

@@ -1,0 +1,58 @@
+{
+  "phase": "MODEL3_V2_RUNTIME_DUAL_PATH_ARCHITECTURE_AUDIT",
+  "timestamp": "2026-09-01T08:30:00.000Z",
+  "verdict": "DUAL_PATH_AUDIT_PASS_SINGLE_PRODUCTION_CHAIN_WITH_TEST_DUPLICATION",
+  "nextPhase": "MODEL3_V2_LOCAL_RESEGMENTATION_CAUSAL_EVIDENCE_AUDIT",
+  "secondaryFollowUp": "MODEL3_V2_SIGNAL_LOSS_AUDIT_PARITY_CORRECTION",
+  "productionChainCount": 1,
+  "testAuditBranchCount": 2,
+  "businessDuplication": false,
+  "implementationDuplication": false,
+  "semanticDivergence": {
+    "production": false,
+    "auditLexiconLookup": true,
+    "auditResegmentation": false
+  },
+  "signalLossAuditValidity": {
+    "localResegmentation84": "PRODUCTION_TRACE_BASED_VALID",
+    "lexiconCoverage39": "AUDIT_SEMANTIC_MISMATCH_NOT_PRODUCTION_EQUIVALENT",
+    "overallInvalidated": false,
+    "partialInvalidation": ["LEXICON_COVERAGE first-fail counts"]
+  },
+  "acceptanceValidity": {
+    "frozenHarness": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+    "frozenFinalCausalAcceptance": "AUTHORITATIVE_FOR_PROMOTION_METRICS",
+    "signalLossDiagnosticRun": "NON_AUTHORITATIVE_DIAGNOSTIC_ONLY"
+  },
+  "architectureStatus": "SINGLE_PRODUCTION_CHAIN_CONFIRMED",
+  "s3Identity": {
+    "unchanged": true,
+    "sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1"
+  },
+  "keyAnswers": {
+    "D2_singleCanonicalChain": true,
+    "D7_causalForkProductionReachable": false,
+    "D45_productionDualChain": false,
+    "D46_testAuditSemanticDualPath": true,
+    "D47_invalidatesSignalLoss": "PARTIAL_LEXICON_ONLY",
+    "D48_invalidatesFrozenAcceptance": false,
+    "D49_architectureChangeRequired": false
+  },
+  "severityCounts": {
+    "P0": 0,
+    "P1": 2,
+    "P2": 3,
+    "P3": 3
+  },
+  "governance": {
+    "model3Changed": false,
+    "retryChanged": false,
+    "recallChanged": false,
+    "lexiconChanged": false,
+    "assemblyChanged": false,
+    "kenlmChanged": false,
+    "jobResultChanged": false,
+    "asrChanged": false,
+    "training": false
+  }
+}

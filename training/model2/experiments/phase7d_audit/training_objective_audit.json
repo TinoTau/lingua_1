@@ -1,0 +1,19 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "Stage_A": {
+    "positive": "slot at positive_pool_index inside FuzzyPool (target already present)",
+    "negative": "NO_MATCH for NEGATIVE rows; hard-negative margin vs distractors",
+    "target_already_inside_pool_for_term_positive": true,
+    "can_loss_reward_introducing_missing_target": false,
+    "loss_refs": ["training/model2/training/losses.py positive CE on positive_pool_index", "trainer filters require positive_pool_index"]
+  },
+  "Stage_B": {
+    "positive": "Correct profile increases probability / rank of same positive_pool_index",
+    "counterfactuals": "Empty / Wrong / Swapped profiles (listwise CF)",
+    "assumes_target_already_exists": true,
+    "can_stage_b_learn_recall_expansion": false,
+    "loss_refs": ["listwise_cf_losses.py", "listwise_binding_trainer.py target_in_pool filter"]
+  },
+  "gradient_path_if_target_absent": "NONE — no output dimension for a missing term_id; CE/listwise only over existing pool slots + NO_MATCH",
+  "verdict": "TRAINING_OBJECTIVE_CANNOT_LEARN_RECALL_EXPANSION"
+}

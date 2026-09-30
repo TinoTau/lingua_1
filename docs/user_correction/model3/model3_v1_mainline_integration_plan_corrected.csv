@@ -1,0 +1,52 @@
+﻿section,item,detail,status
+AUTHORITY,Previous plan insertion,before runDomainAwareAssembly,SUPERSEDED
+AUTHORITY,Supersede reason,DOMAIN_ANCHOR_PRE_VOTE_SEMANTICS_INCORRECT,ACTIVE
+AUTHORITY,Corrected plan,this CSV,AUTHORITATIVE
+SSOT,Domain candidate == Domain Anchor,NO,FROZEN
+SSOT,Domain Anchor requires final retainedDomains,YES,FROZEN
+SSOT,Model2 accepted hit may be MODEL2 Anchor,YES,FROZEN
+SSOT,Model3 discovers Anchor,NO,FROZEN
+TARGET,Integration ID,MODEL3_V1_MAINLINE_INTEGRATION,REQUIRED
+TARGET,Mainline policy,Direct integration - no shadow / dual pipeline / permanent feature flag,REQUIRED
+TARGET,Preferred boundary,OPTION A - vote then Model3 then completeDomainAwareAssemblyFromVote,REQUIRED
+TARGET,Insertion point,after voteUtteranceDomainFromPool; before filter/budget/assemble,REQUIRED
+TARGET,Domain Vote,ONE authoritative voteUtteranceDomainFromPool per path stage,REQUIRED
+TARGET,Second Domain Vote,FORBIDDEN (default); report DOMAIN_REEVALUATION_GAP if forced,REQUIRED
+TARGET,Anchor adapter,materializeModel3Anchors(pathFineSpans vote activeCandidates) read-only,IMPLEMENTED
+TARGET,Domain Anchor rule,domain_term/passive in vote.retainedDomains bound to FineSpan,IMPLEMENTED
+TARGET,Reject pre-vote anchor,losing-domain domain_term is NOT Anchor,REQUIRED
+TARGET,Model3 inference,ONE call per path-local PathFineSpan sequence,IMPLEMENTED
+TARGET,Retry domain context,domainIds = vote.retainedDomains via recallSpanTopKV2,IMPLEMENTED
+TARGET,Assembly,completeDomainAwareAssemblyFromVote using SAME vote object,IMPLEMENTED
+CHECK,KEEP no extra recall,YES,REQUIRED
+CHECK,RETRY max 1 per span,YES,REQUIRED
+CHECK,No recursive Model3,YES,REQUIRED
+CHECK,No Anchor RETRY,target + router layers,REQUIRED
+CHECK,Per-span budget,8/6/4 unchanged,REQUIRED
+CHECK,Utterance KenLM cap,<=16 unchanged,REQUIRED
+CHECK,JobResult change,NO,REQUIRED
+CHECK,Parallel domain state,NO,REQUIRED
+FILE_MODIFY,assemble-domain-aware-span-sets.ts,Extract completeDomainAwareAssemblyFromVote; keep runDomainAwareAssembly as thin wrapper,IMPLEMENTED
+FILE_MODIFY,span-assembly-v4-orchestrator.ts,Model2 then pool then vote then anchors then Model3 then retry then completeFromVote,IMPLEMENTED
+FILE_ADD,model3-runtime/model3-anchor-adapter.ts,Final-vote Domain + Model2 to Model3AnchorMark[],IMPLEMENTED
+FILE_ADD,model3-runtime/model3-inference-client.ts,Frozen POINTER + sidecar infer,IMPLEMENTED
+FILE_ADD,model3-runtime/model3-retry-router.ts,recallSpanTopKV2 + once guard + merge within caps,IMPLEMENTED
+FILE_ADD,model3-runtime/model3-types.ts,Model3AnchorMark Model3SpanDecision Model3RetryAttemptTrace,IMPLEMENTED
+FILE_ADD,electron_node/services/model3_runtime/model3_inference_host.py,BiGRU host mirror Model2,IMPLEMENTED
+FILE_ADD,model3-runtime/model3-path-diagnostics.ts,Diagnostic trace only,IMPLEMENTED
+ROLLBACK,assemble-domain-aware-span-sets.ts,MODIFY,Restore monolith runDomainAwareAssembly; remove FromVote extract,ACTION
+ROLLBACK,span-assembly-v4-orchestrator.ts,MODIFY,Restore Model2 to runDomainAwareAssembly direct chain,ACTION
+ROLLBACK,model3-runtime/*,ADD,Delete,ACTION
+ROLLBACK,model3_inference_host.py,ADD,Delete,ACTION
+ROLLBACK,model3-path-diagnostics.ts,ADD,Delete,ACTION
+ROLLBACK,Boundary refactor,INCLUDED,No half-integrated vote/assembly split after rollback,REQUIRED
+TEST,Losing-domain candidate not Anchor,IMPLEMENTED,HARD_REGRESSION
+TEST,Retained-domain candidate Domain Anchor,IMPLEMENTED,REQUIRED
+TEST,Model2-only Anchor,IMPLEMENTED,REQUIRED
+TEST,DOMAIN_AND_MODEL2,IMPLEMENTED,REQUIRED
+TEST,Anchor never RETRY,IMPLEMENTED,REQUIRED
+TEST,Retry once + budget,IMPLEMENTED,REQUIRED
+TEST,KEEP candidate set unchanged,IMPLEMENTED,REQUIRED
+ACCEPTANCE,Primary,FINAL_TEXT_IMPROVEMENT,PENDING_DIALOG200_SERVER
+ACCEPTANCE,New metrics,domain_anchor_count model2_anchor_count dual_source rejected_prevote anchor_mutation_violations,IMPLEMENTED
+ACCEPTANCE,Development verdict,PASS_WITH_QUALITY_GAPS,ACTIVE

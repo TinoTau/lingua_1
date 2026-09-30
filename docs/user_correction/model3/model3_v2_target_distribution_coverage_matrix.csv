@@ -1,0 +1,25 @@
+cell_id,label,cand_state,position,path_mode,sequence_family,same_surface_contrast,status,rationale,min_support_spans,estimated_new_utterances,notes
+C01,KEEP,0,HEAD,SINGLE,COMMON,YES,VALID_NEEDED,Production KEEP≈half cand=0; prevent KEEP-channel collapse,800,120,Reuse prod FineSpan+cand
+C02,KEEP,0,MID,SINGLE,COMMON,YES,VALID_NEEDED,Same,800,120,
+C03,KEEP,0,TAIL,SINGLE,COMMON,YES,VALID_NEEDED,Same,800,120,
+C04,KEEP,GT0,HEAD,SINGLE,COMMON,YES,VALID_NEEDED,Live KEEP often cand>0; train currently missing,1000,150,P0 cand contrast
+C05,KEEP,GT0,MID,SINGLE,COMMON,YES,VALID_NEEDED,Same,1000,150,
+C06,KEEP,GT0,TAIL,SINGLE,COMMON,YES,VALID_NEEDED,Same,1000,150,
+C07,RETRY,0,HEAD,SINGLE,COMMON,YES,VALID_NEEDED,Live RETRY has cand=0 subset; train only this today,600,100,Keep existing RealDist RETRY but with real cand when 0
+C08,RETRY,0,MID,SINGLE,COMMON,YES,VALID_NEEDED,Position breadth preserve,700,120,
+C09,RETRY,0,TAIL,SINGLE,COMMON,YES,VALID_OPTIONAL,Do not re-overweight TAIL; already historically heavy,400,60,Cap TAIL growth
+C10,RETRY,GT0,HEAD,SINGLE,LIVE-LIKE_TARGET,YES,VALID_NEEDED,Live TARGET_RETRY often cand>0 — currently missing in train,800,150,P0 critical
+C11,RETRY,GT0,MID,SINGLE,LIVE-LIKE_TARGET,YES,VALID_NEEDED,Same,900,160,P0 critical
+C12,RETRY,GT0,TAIL,SINGLE,LIVE-LIKE_TARGET,YES,VALID_NEEDED,Same,500,90,P0 critical
+C13,KEEP,0,MID,MULTI,COMMON,YES,VALID_NEEDED,Multipath KEEP shells,400,80,P1 multipath
+C14,KEEP,GT0,MID,MULTI,COMMON,YES,VALID_NEEDED,Multipath + cand>0 KEEP,400,80,P1
+C15,RETRY,0,MID,MULTI,LIVE-LIKE_TARGET,YES,VALID_NEEDED,Path-conditioned RETRY with cand=0,350,70,P1
+C16,RETRY,GT0,MID,MULTI,LIVE-LIKE_TARGET,YES,VALID_NEEDED,Path-conditioned RETRY with cand>0,450,90,P1 critical
+C17,KEEP,GT0,HEAD,MULTI,THIN,YES,VALID_OPTIONAL,Anchor-adjacent KEEP hard negatives,200,40,
+C18,RETRY,GT0,HEAD,MULTI,THIN,YES,VALID_OPTIONAL,Anchor-adjacent suspicious regions,200,40,
+C19,KEEP,*,*,*,*,NO,VALID_OPTIONAL,Surfaces without natural KEEP usage may remain RETRY-skewed if KEEP unnatural,0,0,Mark NOT_NATURAL per surface in leakage report
+C20,RETRY,*,*,*,*,NO,NOT_NATURAL,Do not invent RETRY for surfaces that never appear in malformed regions,0,0,
+C21,*,*,*,*,*,*,NOT_APPLICABLE,pinyin=0 synthetic cells — only if prod preprocessing naturally yields 0,0,0,Do not synthesize
+C22,KEEP/RETRY,*,*,*,*,*,NOT_APPLICABLE,Artificial multi-char FineSpans outside prod FineSpan logic,0,0,FineSpan frozen
+C23,PROTECTED,n/a,n/a,n/a,n/a,n/a,VALID_OPTIONAL,d131/d176 unexplained strong KEEP — validation only no direct patch,0,0,UNEXPLAINED_STRONG_KEEP
+C24,STALE,n/a,n/a,n/a,n/a,n/a,NOT_APPLICABLE,d160 current 顺/便 — no RETRY training from historical 向木李,0,0,STALE_TARGET_NOT_COMPARABLE

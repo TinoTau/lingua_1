@@ -1,0 +1,35 @@
+{
+  "phase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DEVELOPMENT",
+  "generatedAt": "2026-09-04T08:33:15Z",
+  "verdict": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DEVELOPMENT_PASS",
+  "controlVariable": "RETRY_FALLBACK_GEOMETRY_SOURCE",
+  "preferredDesign": "OPT_A_REGION_DIRECT_WINDOW_ENUM",
+  "firstSemanticChange": "FALLBACK_STAGE2_QUERY_GEOMETRY",
+  "productionFilesModified": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-types.ts"
+  ],
+  "productionFilesModifiedCount": 2,
+  "DELTA1_SUCCESS_PATH_BEHAVIOR_CHANGE_COUNT": 0,
+  "resegmentOkRemainsFalseOnFallback": true,
+  "fallbackGeometrySource": "RETRY_REGION_LEGAL_WINDOW_SPACE",
+  "fallbackRegionLocalSpans": "RETAINED_FOR_NON_GEOMETRY_TRACE",
+  "NEW_CANDIDATE_OWNER_TYPE_COUNT": 0,
+  "windowAssertion": {
+    "missing": 0,
+    "extra": 0,
+    "outOfRegion": 0
+  },
+  "antiOverfit": {
+    "OVERFITTING_DETECTED": "NO",
+    "REFERENCE_LEAKAGE": "NO",
+    "TEST_GAMING": "NO",
+    "CASE_SPECIFIC_RUNTIME_PATCH": "NO"
+  },
+  "DECISION_REQUIRED_FOR_USER": "EMPTY",
+  "DEVELOPMENT_EVIDENCE_STATE": "Fallback Stage-2 query geometry authority restored to RetryRegion legal window space; Delta1 success path unchanged; resegmentOk semantics unchanged",
+  "nextPhase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_ACCEPTANCE",
+  "tests": {
+    "jest_retry_related": "37/37 PASS"
+  }
+}

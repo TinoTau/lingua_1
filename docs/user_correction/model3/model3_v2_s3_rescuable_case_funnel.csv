@@ -1,0 +1,15 @@
+stage,unit,count,notes
+utterances,CASE,200,parity-pass denominator
+CASE_WITH_ANY_RETRY,CASE_WITH_ANY_RETRY,188,
+LOGICAL_UNIQUE_RETRY_SPANS,LOGICAL_UNIQUE_RETRY_SPAN,851,
+RETRY_REGIONS,RETRY_REGION,1154,
+regions_with_candidate_return,RETRY_REGION,773,
+CANDIDATE_RETURN_EVENTS,CANDIDATE_RETURN_EVENT,924,
+MODEL3_RESCUABLE_CASES,CASE,170,baseline wrong + packed spans
+rescuable_triggered,CASE,160,
+rescuable_any_candidate_return,CASE,148,
+rescuable_viable_in_assembly,CASE,17,sentence closer to ref than baseline
+rescuable_pool_changed,CASE,1,
+rescuable_kenlm_selected_repair,CASE,0,approx IMPROVED
+final_IMPROVED,CASE,0,
+final_REGRESSED,CASE,0,

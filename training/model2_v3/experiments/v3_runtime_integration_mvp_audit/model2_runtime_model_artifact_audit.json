@@ -1,0 +1,26 @@
+{
+  "stage_p_checkpoint": "training/model2_v3/experiments/v3_phase3_stage_p/training/stage_p_checkpoint.pt",
+  "stage_d_checkpoint": "training/model2_v3/experiments/v3_phase3_stage_d/training/stage_d_checkpoint.pt",
+  "stage_d2_checkpoint": "training/model2_v3/experiments/v3_phase3_stage_d2/training/stage_d2_checkpoint.pt",
+  "artifact_type": "TRAINING_ARTIFACT_ONLY",
+  "format": "PyTorch state_dict wrapper",
+  "node_direct_load": false,
+  "existing_inference_patterns": [
+    "Piper ONNX",
+    "LID Sherpa ONNX",
+    "Python microservices (whisper/piper/phonetic)",
+    "In-process Lexicon SQLite"
+  ],
+  "recommended_mechanism": "Prefer in-process after ONNX export OR reuse existing Python sidecar pattern IF already approved for Node; do NOT invent second Model2 microservice without architecture approval",
+  "onnx_export_feasibility": {
+    "fixed_shapes_ok": true,
+    "MAX_PROFILE_ITEMS": 64,
+    "blockers": [
+      "python hash() in hash_span",
+      "no export script yet",
+      "policy net only — FuzzyPool primitives stay outside ONNX"
+    ]
+  },
+  "unified_checkpoint_exists": false,
+  "stage_j_required_for_final_runtime": true
+}

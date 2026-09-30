@@ -1,0 +1,25 @@
+{
+  "outDir": "/mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train",
+  "corpusRaw": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/zh_sentences.raw.txt",
+  "corpusChar": "/mnt/d/Programs/github/lingua_1/kenLM/corpus/corpus.char.txt",
+  "corpusLines": 439490,
+  "tokenCount": 19712111,
+  "vocabularySize": 9964,
+  "ngramCountsByOrder": [
+    9964,
+    833530,
+    4318158
+  ],
+  "ngramCountSum": 5161652,
+  "arpaPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train/zh_char_3gram.arpa",
+  "arpaSizeBytes": 123776221,
+  "arpaSha256": "066f525b9144da06c5002a3cbf5c44d06c0ba2cafc9c5f7052a817dad40eb009",
+  "binaryPath": "/mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train/zh_char_3gram.trie.bin",
+  "binarySizeBytes": 34995949,
+  "binarySha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+  "ngramOrder": 3,
+  "pruning": "none (lmplz default, no --prune)",
+  "discount": "Modified Kneser-Ney (lmplz default)",
+  "memoryFlag": "-S 50%",
+  "buildCommand": "/mnt/d/Programs/github/lingua_1/kenLM/kenlm/build/bin/lmplz -o 3 -S 50% -T /tmp --text /mnt/d/Programs/github/lingua_1/kenLM/corpus/corpus.char.txt --arpa /mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train/zh_char_3gram.arpa && /mnt/d/Programs/github/lingua_1/kenLM/kenlm/build/bin/build_binary trie /mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train/zh_char_3gram.arpa /mnt/d/Programs/github/lingua_1/kenLM/model/phase03_first_train/zh_char_3gram.trie.bin"
+}

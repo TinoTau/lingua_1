@@ -1,0 +1,22 @@
+{
+  "n": 206,
+  "definition": "true-recall length-1 AND sqlite in_base (previous raw_hit)",
+  "funnel": {
+    "S0_in_lexicon": 206,
+    "S1_routing": 164,
+    "S2_lookup": 164,
+    "S3_prod_hit": 0,
+    "S4_accepted": 0,
+    "S5_constructed": 0,
+    "S9_active": 0,
+    "S11_union": 0,
+    "S12_budget": 0,
+    "S13_path": 8,
+    "S14_assembly": 11,
+    "has_exact_1char_cover": 164,
+    "fallback_1char": 164,
+    "lexical_1char": 0,
+    "probe_raw_hit": 206
+  },
+  "note": "previous raw_hit == existence.in_base offline probe, not production recall"
+}

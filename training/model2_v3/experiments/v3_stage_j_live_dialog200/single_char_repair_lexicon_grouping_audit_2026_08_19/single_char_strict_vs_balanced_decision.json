@@ -1,0 +1,73 @@
+{
+  "STRICT": {
+    "n_words": 1125,
+    "n_groups": 752,
+    "unique_groups": 515,
+    "ambiguous_groups": 237,
+    "words_in_unique_groups": 515,
+    "words_in_ambiguous_groups": 610,
+    "unique_group_word_rate": 0.4577777777777778,
+    "ambiguous_word_rate": 0.5422222222222223,
+    "mean_group_size": 1.4960106382978724,
+    "p50_group_size": 1.0,
+    "p95_group_size": 3.0,
+    "max_group_size": 7,
+    "size_histogram": {
+      "1": 515,
+      "2": 145,
+      "3": 66,
+      "4": 14,
+      "5+": 12,
+      "10+": 0
+    },
+    "EXPECTED_UNIQUE_CANDIDATE": 2,
+    "NON_EXPECTED_UNIQUE_CANDIDATE": 43,
+    "AMBIGUOUS_FALLBACK": 92,
+    "NO_CANDIDATE": 64,
+    "IDENTITY_ONLY": 12,
+    "precision_proxy": 0.044444444444444446,
+    "recall_proxy": 0.009389671361502348,
+    "n_targets": 213,
+    "coverage": {
+      "n": 183,
+      "rate": 0.8591549295774648
+    }
+  },
+  "BALANCED": {
+    "n_words": 1420,
+    "n_groups": 849,
+    "unique_groups": 523,
+    "ambiguous_groups": 326,
+    "words_in_unique_groups": 523,
+    "words_in_ambiguous_groups": 897,
+    "unique_group_word_rate": 0.3683098591549296,
+    "ambiguous_word_rate": 0.6316901408450705,
+    "mean_group_size": 1.6725559481743226,
+    "p50_group_size": 1.0,
+    "p95_group_size": 4.0,
+    "max_group_size": 10,
+    "size_histogram": {
+      "1": 523,
+      "2": 184,
+      "3": 85,
+      "4": 36,
+      "5+": 21,
+      "10+": 1
+    },
+    "EXPECTED_UNIQUE_CANDIDATE": 1,
+    "NON_EXPECTED_UNIQUE_CANDIDATE": 26,
+    "AMBIGUOUS_FALLBACK": 114,
+    "NO_CANDIDATE": 59,
+    "IDENTITY_ONLY": 13,
+    "precision_proxy": 0.037037037037037035,
+    "recall_proxy": 0.004694835680751174,
+    "n_targets": 213,
+    "coverage": {
+      "n": 197,
+      "rate": 0.9248826291079812
+    }
+  },
+  "recommended": "NONE",
+  "audit_verdict": "HOLD",
+  "reason": "Non-expected unique substitutions remain high on both STRICT and BALANCED."
+}

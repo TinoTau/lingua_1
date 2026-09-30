@@ -1,0 +1,11 @@
+source,kind,authority,production_lexicon_allowed,wordhood,standalone_token_freq,pos,notes
+docs/pinyin-v2/import/single_char_dictionary.tsv,IME common-character inventory,AUTHORITATIVE_FOR_IME,YES_FOR_IME; NOT_A_WORD_DICTIONARY,NO,NO,NO,General Standard level-1 + pinyin-data; IME role/weight policy
+docs/pinyin-v1/archive/import/pinyin-ime-v1_single_char_dictionary_v2_2500.*,historical IME spike copy,LEGACY,NO (archive),NO,NO,NO,same 2510; generated 2026-06-02 for pinyin-ime-v1
+jieba dict.txt (fxsjy/jieba MIT) via rejected.jsonl,segmentation dictionary seed,DERIVED,NO for length-1 (banSingleChar / reject one_char),"PARTIAL (jieba token weights, not linguistic wordhood proof)","DERIVED dict weight, not corpus token count",YES (jieba POS tags on rejected 1-char rows),lexicon_sources/jieba_dict.txt missing from repo; snapshot is rejected.jsonl
+p1_3 base_zh_v2 entries.jsonl,generic 2–3 char lexicon seed,AUTHORITATIVE for 2–3 char base seed,YES (2–3 only),N/A length>=2,NO length-1,filtered out,lengthDistribution 2/3 only
+electron_node/docs/lexicon-assets/full_rebuild_v1/*.csv,Lexicon V3 SSOT multi-char,AUTHORITATIVE,YES,multi-char terms,NO,NO,v2-classify-row rejects one_char
+kenLM/corpus/v1/corpus_v1.char.txt + zh_char_3gram.arpa,character language model corpus,AUTHORITATIVE for KenLM char scoring,NO as word list,NO (character-separated),NO — character frequency only,NO,TOKENIZED_CORPUS_REQUIRED for length=1 word frequency
+kenLM/corpus/v1/corpus_v1.raw.txt / wikipedia_sentences.txt,raw Chinese text,AUTHORITATIVE as KenLM source text,NO without new NLP pipeline,NO (untokenized),NO,NO,this round forbids introducing a new segmenter
+post_trace_governance_audit.py FUNCTION_WORDS,audit heuristic set,TEST_ONLY,NO,heuristic,NO,NO,unit classification only
+node_runtime/lexicon/v3/lexicon.sqlite length-1 rows,runtime copy of TSV import,CIRCULAR,YES as current FW recall inventory,NO additional,NO,NO,cannot prove wordhood; it IS the 2510 import
+dialog_200 expectedText,evaluation set,EVALUATION_ONLY,NO,NO,NO,NO,forbidden as vocabulary source this round

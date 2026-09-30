@@ -1,0 +1,15 @@
+test_id,title,setup,expected_query_source,expected_mapping_reason,expected_recalls_per_window,notes
+T1,EXACT_positive,E geometry == W geometry; valid pinyinKey,RECALL_QUERY_EVIDENCE,EXACT,1,replaces ASR
+T2,SUBSPAN_positive,E CONTAINS W; aligned pinyin; raw CONTAINS agrees,RECALL_QUERY_EVIDENCE,SUBSPAN,1,deterministic syllable slice
+T3,no_evidence,empty store,ASR,NONE,1,behavior unchanged
+T4,raw_conflict,syl CONTAINS/EXACT but raw disagrees,ASR,RAW_CONFLICT_REJECT,1,fail-closed
+T5,SUPERSPAN_unsupported,W CONTAINS E,ASR,UNSUPPORTED_GEOMETRY,1,V1 NO
+T6,partial_overlap_unsupported,intervals overlap neither contains,ASR,UNSUPPORTED_GEOMETRY,1,V1 NO
+T7,DISJOINT,no intersection (incl. p2_u005_011 class),ASR,UNSUPPORTED_GEOMETRY,1,deferred RESEGMENT
+T8,multiple_evidence,EXACT + larger CONTAINS + tie keys,RECALL_QUERY_EVIDENCE,EXACT_or_smallest_SUBSPAN,1,explicit sort; one query
+T9,candidate_dropped,evidence emitted then candidate budget-dropped,RECALL_QUERY_EVIDENCE,EXACT_or_SUBSPAN,1,store independent of WindowCandidate
+T10,path_domain,two paths share utterance store; different retainedDomains,RECALL_QUERY_EVIDENCE_or_ASR,any_legal,1,pinyin from store; domainIds path-local
+T11,WRONG_PROFILE,legal wrong-profile transformed query in store,RECALL_QUERY_EVIDENCE,EXACT_or_SUBSPAN,1,no special gate; no Anchor privilege
+T12,compound_residual_no_fabricate,no target-reachable evidence (Q2-class),ASR,NONE,1,must not invent target pinyin
+T13,pinyin_alignment_invalid,split(pinyinKey).length != syl span,ASR,INVALID_EVIDENCE,1,reject evidence
+T14,invocation_cardinality,any mapped or ASR case,n/a,n/a,1,hard assert one recallSpanTopKV2 per Stage2 window

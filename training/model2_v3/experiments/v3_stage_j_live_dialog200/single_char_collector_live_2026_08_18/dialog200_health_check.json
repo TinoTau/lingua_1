@@ -1,0 +1,45 @@
+{
+  "arm": "stagej",
+  "node": {
+    "ok": true,
+    "status": 200,
+    "body": null
+  },
+  "asr": {
+    "ok": true,
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "device": "cuda",
+      "compute_type": "int8_float16",
+      "asr_model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+      "asr_model_loaded": true,
+      "vad_model_loaded": true,
+      "asr_worker": {
+        "is_running": true,
+        "worker_state": "running",
+        "worker_pid": 5088,
+        "queue_depth": 0,
+        "total_tasks": 1,
+        "completed_tasks": 1,
+        "failed_tasks": 0,
+        "worker_restarts": 0,
+        "avg_wait_ms": 26765.06,
+        "pending_results": 0
+      },
+      "readiness": {
+        "process_alive": true,
+        "worker_running": true,
+        "worker_accepting_tasks": true,
+        "queue_depth": 0,
+        "queue_max": 1,
+        "queue_full": false,
+        "utterance_ready": true,
+        "worker_restarting": false,
+        "last_error": null
+      }
+    }
+  },
+  "lexicon_sqlite_exists": true,
+  "kenlm_available": true
+}

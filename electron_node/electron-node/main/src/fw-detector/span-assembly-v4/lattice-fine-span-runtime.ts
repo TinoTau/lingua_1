@@ -1,11 +1,12 @@
 /**
  * Lattice Fine Span Production Runtime Entry.
  *
- * Owns: Window → Recall → LexicalEdge → Fallback coverage → SegmentationPath[] → PathFineSpanView[].
- * Does NOT own Vote / Assembly / KenLM / Tone Mapping / LTR.
+ * Owns: Window → Base Recall → (optional Model2 pre-edge) → LexicalEdge → Fallback →
+ *       SegmentationPath[] → PathFineSpanView[].
+ * Does NOT own Vote / Assembly / KenLM / LTR.
+ * Model2 (Aug-12 SSOT): after recallTopKForWindows, before buildLexicalEdges — ONE stage.
+ * Model3 Retry must call sync path WITHOUT Model2 (MODEL2_ON_MODEL3_RETRY = NO).
  *
- * Production Lattice Fine Span entry.
- * Owned by SegmentationPath / Lattice; callable from production orchestrator (Step 3+).
  * Must NOT import harness modules, LTR generator, or audit fixtures.
  */
 
@@ -45,6 +46,21 @@ import type { PathCapEvent, SegmentationPath } from './lattice-path-types';
 import { V4_LIMITS } from './v4-limits';
 import type { WindowCandidate } from './v4-types';
 import type { V4TraceCollector } from './v4-diagnostics-trace';
+import {
+  captureV2Boundary,
+  canonicalizeUnorderedIdentities,
+  canonicalHash,
+  isFrozenEvidenceCaptureV2Enabled,
+} from '../../capture-v2';
+import {
+  makeBlockedLength1WindowTrace,
+  type Length1WindowTrace,
+} from '../../lexicon-v2/single-char-collector-trace';
+import { expandWindowsWithModel2 } from '../../model2-runtime/expand-windows-with-model2';
+import type { Model2ExpandDiagnostics } from '../../model2-runtime/types';
+import type { RecallQueryEvidence } from '../../lexicon-v2/recall-query-evidence';
+import type { UserProfileV1 } from '@shared/protocols/messages';
+import logger from '../../logger';
 
 export type LatticePathLimits = {
   maxActivePathsPerPosition: number;
@@ -93,6 +109,13 @@ export type LatticeFineSpanGenerationInput = {
   limits?: LatticePathLimits;
 };
 
+/** Pre-edge Model2 context — production orchestrator only; omit on Model3 Retry. */
+export type LatticeModel2PreEdgeArgs = {
+  userProfile: UserProfileV1 | null | undefined;
+  sessionId?: string;
+  forceInferenceFail?: boolean;
+};
+
 export type LatticeFineSpanFromEdgesInput = {
   rawText: string;
   coordinate: UtteranceSyllableCoordinate;
@@ -129,9 +152,21 @@ export type LatticeFineSpanSuccess = {
   /** JOBRESULT_ADAPTER_DEBT — parent-fragment recall retired (Phase 2/3); always 0. */
   parentFragmentHitCount: number;
   utteranceRecallStats: UtteranceRecallCacheStats;
+  /** Observation-only 1-char collector traces (recallable + hard-blocked). */
+  length1CollectorWindows?: readonly Length1WindowTrace[];
+  /** Present when generated via WithPreEdgeModel2. */
+  model2Diagnostics?: Model2ExpandDiagnostics;
+  /**
+   * Utterance-local RecallQueryEvidence store (ACP V1).
+   * Candidate/path independent; visible to all paths of this utterance.
+   */
+  recallQueryEvidence?: readonly RecallQueryEvidence[];
 };
 
 export type LatticeFineSpanGenerationResult = LatticeFineSpanSuccess | LatticeFineSpanFailure;
+
+/** @deprecated Alias — success type already includes optional model2Diagnostics. */
+export type LatticeFineSpanGenerationSuccessWithModel2 = LatticeFineSpanSuccess;
 
 function emptyUtteranceRecallStats(): UtteranceRecallCacheStats {
   return {
@@ -151,12 +186,25 @@ function emptyUtteranceRecallStats(): UtteranceRecallCacheStats {
 }
 
 function defaultLimits(limits?: LatticePathLimits): LatticePathLimits {
-  return (
-    limits ?? {
-      maxActivePathsPerPosition: V4_LIMITS.maxActivePathsPerPosition,
-      maxCompleteSegmentationPaths: V4_LIMITS.maxCompleteSegmentationPaths,
-    }
-  );
+  if (limits) return limits;
+  // Experiment-only override (unset ⇒ production PROBE 8/8). Not a freeze of new defaults.
+  const expActive = Number(process.env.LINGUA_EXPERIMENT_MAX_ACTIVE_PATHS);
+  const expComplete = Number(process.env.LINGUA_EXPERIMENT_MAX_COMPLETE_PATHS);
+  if (
+    Number.isFinite(expActive) &&
+    expActive > 0 &&
+    Number.isFinite(expComplete) &&
+    expComplete > 0
+  ) {
+    return {
+      maxActivePathsPerPosition: Math.floor(expActive),
+      maxCompleteSegmentationPaths: Math.floor(expComplete),
+    };
+  }
+  return {
+    maxActivePathsPerPosition: V4_LIMITS.maxActivePathsPerPosition,
+    maxCompleteSegmentationPaths: V4_LIMITS.maxCompleteSegmentationPaths,
+  };
 }
 
 function groupCandidatesByWindow(
@@ -243,6 +291,35 @@ export function runLatticeFineSpanGenerationFromLexicalEdges(
     limits,
   });
 
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    const pathIdentities = enumerated.paths.map((p) => ({
+      pathId: p.pathId,
+      boundaryKey: p.boundaryKey,
+    }));
+    const sortedForHash = canonicalizeUnorderedIdentities(pathIdentities, (x) =>
+      String((x as { pathId?: string }).pathId ?? '')
+    );
+    captureV2Boundary('B13', {
+      completePathCountBeforePrune: enumerated.completePathCountBeforePrune,
+      sortedPathIdentityHash: canonicalHash(sortedForHash),
+      summary_or_full_path_identities_for_diagnose: pathIdentities,
+    });
+    captureV2Boundary('B14', {
+      retained_path_ids: enumerated.paths.map((p) => p.pathId),
+      boundary_keys: enumerated.paths.map((p) => p.boundaryKey),
+      pathCapEvents: enumerated.capEvents ?? [],
+      pruning_evidence: {
+        completePathCountBeforePrune: enumerated.completePathCountBeforePrune,
+        retainedCompletePathCount: enumerated.retainedCompletePathCount,
+        prunedPathCount: (enumerated.prunedPaths ?? []).length,
+      },
+      limits: {
+        maxCompleteSegmentationPaths: limits.maxCompleteSegmentationPaths,
+        maxActivePathsPerPosition: limits.maxActivePathsPerPosition,
+      },
+    });
+  }
+
   if (enumerated.paths.length === 0) {
     return {
       ok: false,
@@ -310,13 +387,38 @@ export function runLatticeFineSpanGenerationFromLexicalEdges(
 }
 
 /**
- * Production Lattice Fine Span entry:
+ * Production Lattice Fine Span entry (Base Recall only — no Model2).
+ * Used by Model3 Retry resegment and tests.
  * Coordinate → Windows → hard-block → recallTopKForWindows → LexicalEdge
  * → fallback coverage → SegmentationPath[] → PathFineSpanView[].
  */
 export function runLatticeFineSpanGeneration(
   input: LatticeFineSpanGenerationInput
 ): LatticeFineSpanGenerationResult {
+  const result = runLatticeFineSpanGenerationInner(input, null);
+  if (result instanceof Promise) {
+    throw new Error(
+      '[LATTICE_FINE_SPAN] sync path unexpectedly returned Promise — Model2 must be omitted'
+    );
+  }
+  return result;
+}
+
+/**
+ * Production Lattice Fine Span with Aug-12 Model2 pre-LexicalEdge expansion.
+ * ONE Model2 stage: after Base Recall, before buildLexicalEdges.
+ * Orchestrator must use this; Retry must NOT.
+ */
+export async function runLatticeFineSpanGenerationWithPreEdgeModel2(
+  input: LatticeFineSpanGenerationInput & { model2: LatticeModel2PreEdgeArgs }
+): Promise<LatticeFineSpanGenerationResult | LatticeFineSpanGenerationSuccessWithModel2> {
+  return runLatticeFineSpanGenerationInner(input, input.model2);
+}
+
+function runLatticeFineSpanGenerationInner(
+  input: LatticeFineSpanGenerationInput,
+  model2: LatticeModel2PreEdgeArgs | null
+): LatticeFineSpanGenerationResult | Promise<LatticeFineSpanGenerationResult | LatticeFineSpanGenerationSuccessWithModel2> {
   if (!input.rawText) {
     return {
       ok: false,
@@ -367,22 +469,168 @@ export function runLatticeFineSpanGeneration(
   const recallableWindows = filteredWindows.filter((w) => !w.blocked);
   const blockedWindowCount = filteredWindows.filter((w) => w.blocked).length;
 
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    captureV2Boundary('B6', {
+      globalWindowGeneratedCount: windows.length,
+      logicalWindowRecallCount: recallableWindows.length,
+      blockedWindowCount,
+      uniqueRecallKeyCount: new Set(recallableWindows.map((w) => w.windowId)).size,
+      logicalRecallWindows: recallableWindows.map((w) => ({
+        windowId: w.windowId,
+        windowText: w.windowText,
+        rawStart: w.rawStart,
+        rawEnd: w.rawEnd,
+        syllableStart: w.syllableStart,
+        syllableEnd: w.syllableEnd,
+        windowPinyinKey: w.windowPinyinKey,
+        spanIds: w.spanIds ? [...w.spanIds] : [],
+        blocked: w.blocked === true,
+        windowSource: w.windowSource,
+      })),
+    });
+  }
+
   const utteranceRecall =
     input.enableUtteranceRecallCache === false
       ? null
       : createUtteranceRecallContext(input.runtime.getManifestVersion() ?? 'unknown');
 
-  let lexicalEdges: LexicalEdge[] | null = null;
-  let physicalSqlStatementCount = 0;
-  let logicalWindowRecallCount = 0;
-  let parentFragmentHitCount = 0;
-  let tone: CoarseAssemblyToneDiagnostics = createEmptyToneDiagnostics(
-    input.acousticSlices,
-    input.wordTimeSpans ?? [],
-    input.toneTimestampOnlyEnabled === true
-  );
-  let utteranceRecallStats = emptyUtteranceRecallStats();
-  let recallFailure: LatticeFineSpanFailure | null = null;
+  const finishFromByWindow = (
+    byWindow: Map<string, WindowCandidate[]>,
+    recallMeta: {
+      tone: CoarseAssemblyToneDiagnostics;
+      parentFragmentHitCount: number;
+      logicalWindowRecallCount: number;
+      length1Windows: Length1WindowTrace[];
+      physicalSqlStatementCount: number;
+      utteranceRecallStats: UtteranceRecallCacheStats;
+    },
+    model2Diagnostics?: Model2ExpandDiagnostics,
+    recallQueryEvidence?: readonly RecallQueryEvidence[]
+  ): LatticeFineSpanGenerationResult | LatticeFineSpanGenerationSuccessWithModel2 => {
+    const edgeBundles: Array<{
+      windowId: string;
+      syllableStart: number;
+      syllableEnd: number;
+      candidates: WindowCandidate[];
+    }> = [];
+
+    for (const w of recallableWindows) {
+      const candidates = byWindow.get(w.windowId) ?? [];
+      if (candidates.length > 0) {
+        edgeBundles.push({
+          windowId: w.windowId,
+          syllableStart: w.syllableStart,
+          syllableEnd: w.syllableEnd,
+          candidates,
+        });
+      }
+    }
+
+    const lexicalEdges = buildLexicalEdges({ recalledWindows: edgeBundles });
+    if (isFrozenEvidenceCaptureV2Enabled()) {
+      if (model2Diagnostics) {
+        const windowsEv = (model2Diagnostics.path_trace as { windows?: unknown[] } | undefined)?.windows;
+        captureV2Boundary('B10', {
+          windows: windowsEv ?? null,
+          inputHash: canonicalHash(windowsEv ?? model2Diagnostics),
+          model2_summary: {
+            invoked: model2Diagnostics.model2_invoked,
+            load_failed: model2Diagnostics.load_failed,
+            inference_failed: model2Diagnostics.inference_failed,
+          },
+        });
+        const afterItems =
+          (model2Diagnostics.path_trace as { union?: { union_before_budget?: { items?: unknown[] } } } | undefined)
+            ?.union?.union_before_budget?.items ?? null;
+        captureV2Boundary('B11', {
+          selected_actions: model2Diagnostics.selected_actions ?? [],
+          introduced_candidate_identities: model2Diagnostics.introduced_term_ids ?? [],
+          after_model2_candidate_set: afterItems,
+          decision_evidence: {
+            domain_action: model2Diagnostics.domain_action ?? null,
+            pronunciation_candidates_added: model2Diagnostics.pronunciation_candidates_added ?? 0,
+            domain_candidates_added: model2Diagnostics.domain_candidates_added ?? 0,
+          },
+        });
+      } else {
+        captureV2Boundary('B10', {
+          windows: null,
+          inputHash: canonicalHash(null),
+          model2_summary: { invoked: false, note: 'model2_not_run_or_unavailable' },
+        });
+        captureV2Boundary('B11', {
+          selected_actions: [],
+          introduced_candidate_identities: [],
+          after_model2_candidate_set: [],
+          decision_evidence: { note: 'model2_not_run_or_unavailable' },
+        });
+      }
+      const edgeIdentities = lexicalEdges.map((e) => ({
+        syllableStart: e.syllableStart,
+        syllableEnd: e.syllableEnd,
+        edgeKind: e.edgeKind,
+        hasExact: e.recallEvidence?.hasExact ?? false,
+        hasToneRelaxed: e.recallEvidence?.hasToneRelaxed ?? false,
+        hasFuzzy: e.recallEvidence?.hasFuzzy ?? false,
+      }));
+      captureV2Boundary('B12', {
+        edges: edgeIdentities,
+        edgeSetHash: canonicalHash(
+          canonicalizeUnorderedIdentities(edgeIdentities, (x) =>
+            JSON.stringify(x)
+          )
+        ),
+      });
+    }
+    const length1WindowsAcc = [...recallMeta.length1Windows];
+    for (const w of filteredWindows) {
+      if (!w.blocked) continue;
+      if (w.syllableEnd - w.syllableStart !== 1) continue;
+      length1WindowsAcc.push(makeBlockedLength1WindowTrace(w));
+    }
+
+    const fromEdges = runLatticeFineSpanGenerationFromLexicalEdges({
+      rawText: input.rawText,
+      coordinate,
+      syllableCount: globalSyllables.length,
+      lexicalEdges,
+      limits: input.limits,
+    });
+
+    if (!fromEdges.ok) {
+      return fromEdges;
+    }
+
+    const success: LatticeFineSpanGenerationSuccessWithModel2 = {
+      ...fromEdges,
+      windows,
+      tone: recallMeta.tone,
+      parentFragmentHitCount: recallMeta.parentFragmentHitCount,
+      utteranceRecallStats: recallMeta.utteranceRecallStats,
+      length1CollectorWindows: length1WindowsAcc,
+      trace: {
+        ...fromEdges.trace,
+        windowCount: windows.length,
+        blockedWindowCount,
+        recallableWindowCount: recallableWindows.length,
+        logicalWindowRecallCount: recallMeta.logicalWindowRecallCount,
+        sqlQueryCount: recallMeta.physicalSqlStatementCount,
+      },
+      ...(model2Diagnostics ? { model2Diagnostics } : {}),
+      ...(recallQueryEvidence !== undefined
+        ? { recallQueryEvidence: Object.freeze([...recallQueryEvidence]) }
+        : {}),
+    };
+    return success;
+  };
+
+  const releaseRecall = (): void => {
+    if (utteranceRecall) {
+      releaseUtteranceRecallContext(utteranceRecall);
+    }
+  };
+
   try {
     const recall = recallTopKForWindows({
       rawText: input.rawText,
@@ -402,92 +650,101 @@ export function runLatticeFineSpanGeneration(
     });
 
     if (recall.logicalWindowRecallCount !== recallableWindows.length) {
-      recallFailure = {
+      releaseRecall();
+      return {
         ok: false,
         code: 'COVERAGE_INVARIANT',
         message: `[LATTICE_FINE_SPAN] Recall incompleteness: logicalWindowRecallCount=${recall.logicalWindowRecallCount} !== recallableWindowCount=${recallableWindows.length}`,
       };
-    } else {
-      const byWindow = groupCandidatesByWindow(recallableWindows, recall.candidates);
-      const edgeBundles: Array<{
-        windowId: string;
-        syllableStart: number;
-        syllableEnd: number;
-        candidates: WindowCandidate[];
-      }> = [];
-
-      for (const w of recallableWindows) {
-        const candidates = byWindow.get(w.windowId) ?? [];
-        if (candidates.length > 0) {
-          edgeBundles.push({
-            windowId: w.windowId,
-            syllableStart: w.syllableStart,
-            syllableEnd: w.syllableEnd,
-            candidates,
-          });
-        }
-      }
-
-      lexicalEdges = buildLexicalEdges({ recalledWindows: edgeBundles });
-      tone = recall.tone;
-      parentFragmentHitCount = recall.parentFragmentHitCount;
-      logicalWindowRecallCount = recall.logicalWindowRecallCount;
-      if (utteranceRecall) {
-        utteranceRecallStats = { ...utteranceRecall.stats };
-        physicalSqlStatementCount =
-          utteranceRecall.stats.physicalSqlStatementCount || recall.physicalSqlStatementCount;
-        utteranceRecallStats.physicalSqlStatementCount = physicalSqlStatementCount;
-      } else {
-        physicalSqlStatementCount = recall.physicalSqlStatementCount;
-        utteranceRecallStats = {
-          ...emptyUtteranceRecallStats(),
-          physicalSqlStatementCount,
-          requestCount: logicalWindowRecallCount,
-        };
-      }
     }
-  } finally {
+
+    const byWindow = groupCandidatesByWindow(recallableWindows, recall.candidates);
+    let physicalSqlStatementCount = 0;
+    let utteranceRecallStats = emptyUtteranceRecallStats();
     if (utteranceRecall) {
-      releaseUtteranceRecallContext(utteranceRecall);
+      utteranceRecallStats = { ...utteranceRecall.stats };
+      physicalSqlStatementCount =
+        utteranceRecall.stats.physicalSqlStatementCount || recall.physicalSqlStatementCount;
+      utteranceRecallStats.physicalSqlStatementCount = physicalSqlStatementCount;
+    } else {
+      physicalSqlStatementCount = recall.physicalSqlStatementCount;
+      utteranceRecallStats = {
+        ...emptyUtteranceRecallStats(),
+        physicalSqlStatementCount,
+        requestCount: recall.logicalWindowRecallCount,
+      };
     }
-  }
 
-  if (recallFailure) {
-    return recallFailure;
-  }
-  if (!lexicalEdges) {
-    return {
-      ok: false,
-      code: 'COVERAGE_INVARIANT',
-      message: '[LATTICE_FINE_SPAN] LexicalEdge build did not complete',
+    const recallMeta = {
+      tone: recall.tone,
+      parentFragmentHitCount: recall.parentFragmentHitCount,
+      logicalWindowRecallCount: recall.logicalWindowRecallCount,
+      length1Windows: [...recall.length1Windows],
+      physicalSqlStatementCount,
+      utteranceRecallStats,
     };
+
+    if (!model2) {
+      try {
+        return finishFromByWindow(byWindow, recallMeta);
+      } finally {
+        releaseRecall();
+      }
+    }
+
+    return (async () => {
+      let model2Diagnostics: Model2ExpandDiagnostics | undefined;
+      let recallQueryEvidence: readonly RecallQueryEvidence[] | undefined;
+      try {
+        const expanded = await expandWindowsWithModel2({
+          windows: recallableWindows,
+          candidatesByWindow: byWindow,
+          rawText: input.rawText,
+          globalSyllables,
+          userProfile: model2.userProfile,
+          sessionId: model2.sessionId,
+          runtime: input.runtime,
+          lexiconProfile: input.profile,
+          domainIds: input.domainIds,
+          acousticSlices: input.acousticSlices,
+          wordTimeSpans: input.wordTimeSpans,
+          toneTimestampOnlyEnabled: input.toneTimestampOnlyEnabled === true,
+          forceInferenceFail: model2.forceInferenceFail,
+        });
+        model2Diagnostics = expanded.diagnostics;
+        recallQueryEvidence = expanded.recallQueryEvidence;
+        if (
+          model2Diagnostics.model2_invoked ||
+          model2Diagnostics.load_failed ||
+          model2Diagnostics.inference_failed
+        ) {
+          logger.info(
+            {
+              model2_invoked: model2Diagnostics.model2_invoked,
+              selected_actions: model2Diagnostics.selected_actions,
+              introduced: model2Diagnostics.introduced_term_ids.length,
+              profile_queries: model2Diagnostics.profile_queries,
+              load_failed: model2Diagnostics.load_failed,
+              inference_failed: model2Diagnostics.inference_failed,
+              label: model2Diagnostics.label,
+              insertion: 'PRE_LEXICAL_EDGE',
+            },
+            '[Model2] pre-edge window expansion'
+          );
+        }
+        return finishFromByWindow(byWindow, recallMeta, model2Diagnostics, recallQueryEvidence);
+      } catch (err) {
+        logger.warn(
+          { err: err instanceof Error ? err.message : String(err) },
+          '[Model2] unexpected error — continue base recall'
+        );
+        return finishFromByWindow(byWindow, recallMeta, model2Diagnostics, recallQueryEvidence);
+      } finally {
+        releaseRecall();
+      }
+    })();
+  } catch (err) {
+    releaseRecall();
+    throw err;
   }
-
-  const fromEdges = runLatticeFineSpanGenerationFromLexicalEdges({
-    rawText: input.rawText,
-    coordinate,
-    syllableCount: globalSyllables.length,
-    lexicalEdges,
-    limits: input.limits,
-  });
-
-  if (!fromEdges.ok) {
-    return fromEdges;
-  }
-
-  return {
-    ...fromEdges,
-    windows,
-    tone,
-    parentFragmentHitCount,
-    utteranceRecallStats,
-    trace: {
-      ...fromEdges.trace,
-      windowCount: windows.length,
-      blockedWindowCount,
-      recallableWindowCount: recallableWindows.length,
-      logicalWindowRecallCount,
-      sqlQueryCount: physicalSqlStatementCount,
-    },
-  };
 }

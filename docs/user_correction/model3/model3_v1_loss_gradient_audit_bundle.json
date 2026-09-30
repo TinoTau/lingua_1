@@ -1,0 +1,426 @@
+{
+  "phase": "MODEL3_V1_LOSS_WEIGHT_AND_EFFECTIVE_GRADIENT_AUDIT",
+  "verdict": "PASS_FINDING",
+  "parameter_drift": {
+    "strict_recon_weight": 2.6160994112052585,
+    "hardkeep_balance_weight": 3.0,
+    "computed_on_hardkeep_train": 3.0,
+    "computed_on_strict_train_alone": 2.6160994112052585,
+    "source": "min(3.0, max(1.5, sqrt(n_keep/n_retry)*0.35))",
+    "source_location": "training/model3_dataset/train/train_strict_hardkeep_balance.py:554",
+    "cli_override": false,
+    "env_override": false,
+    "config_file_override": false,
+    "hardcoded_cap": 3.0,
+    "classification": "IMPLEMENTATION_DRIFT",
+    "intent_subclass": "ACCIDENTAL_DEFAULT_via_auto_formula_cap",
+    "intentional_user_decision": false,
+    "unauthorized_training_parameter_drift": true,
+    "explanation": "Same Pilot/Strict formula min(3.0,max(1.5,sqrt(n_keep/n_retry)*0.35)). Adding ~48k Hard KEEP raised n_keep so raw weight hit the hardcoded 3.0 cap. Not an explicit frozen decision to raise weight; phase-N said keep current weight first."
+  },
+  "loss_equation": {
+    "main_step": "L_ce = mean_{eligible}[ CrossEntropy(logits,y; weight=[1.0,w_retry]) ]",
+    "reduction": "sum(lv*sel)/sum(sel) over target_mask & valid",
+    "keep_weight": 1.0,
+    "retry_weight": "w_retry (3.0 in HardKeep Balance)",
+    "ignore_index": -100,
+    "pair_step_per_epoch": "for up to 800 pairs (ablation audit uses 200): L_pair = CE(lk, KEEP)*1.0 + CE(lr, RETRY)*w_retry + 0.35*relu(P_r(k)-P_r(r)+0.25); separate opt.step() per pair",
+    "pair_lambda_explicit": "none (pair CE weight=1; margin coef=0.35)",
+    "pair_ce_duplicates_main_ce": true,
+    "total": "L_epoch ≈ Σ_batches L_ce + Σ_pairs L_pair (sequential Adam steps, not single summed loss)"
+  },
+  "formula_weight_hardkeep_train": {
+    "formula": "min(3.0, max(1.5, sqrt(n_keep/n_retry)*0.35))",
+    "n_keep": 1158983,
+    "n_retry": 8858,
+    "raw_before_cap": 4.003489918910699,
+    "final": 3.0,
+    "hit_cap_3": true,
+    "hit_floor_1_5": false,
+    "source_file": "training/model3_dataset/train/train_strict_hardkeep_balance.py:554",
+    "same_formula_as_strict_recon": true,
+    "same_formula_as_pilot": true
+  },
+  "formula_weight_strict_train_alone": {
+    "formula": "min(3.0, max(1.5, sqrt(n_keep/n_retry)*0.35))",
+    "n_keep": 260965,
+    "n_retry": 4671,
+    "raw_before_cap": 2.6160994112052585,
+    "final": 2.6160994112052585,
+    "hit_cap_3": false,
+    "hit_floor_1_5": false,
+    "source_file": "training/model3_dataset/train/train_strict_hardkeep_balance.py:554",
+    "same_formula_as_strict_recon": true,
+    "same_formula_as_pilot": true
+  },
+  "effective_sample_weight_w3": {
+    "ordinary_KEEP": 1.0,
+    "strict_KEEP": 1.1714163274051854,
+    "strict_RETRY": 3.5142489822155563,
+    "anchor_hard_KEEP": 1.0,
+    "natural_KEEP": 1.0,
+    "no_anchor_KEEP": 1.0,
+    "notes": {
+      "pair_visit_fraction_per_epoch": 0.17141632740518534,
+      "pair_ce_duplicates_main_ce": true,
+      "pair_margin_coef": 0.35,
+      "pair_margin_formula": "0.35 * relu(P_retry(keep) - P_retry(retry) + 0.25)",
+      "class_weight_applies_inside_pair_ce": true
+    }
+  },
+  "effective_sample_weight_w2616": {
+    "ordinary_KEEP": 1.0,
+    "strict_KEEP": 1.1714163274051854,
+    "strict_RETRY": 3.0645415644009315,
+    "anchor_hard_KEEP": 1.0,
+    "natural_KEEP": 1.0,
+    "no_anchor_KEEP": 1.0,
+    "notes": {
+      "pair_visit_fraction_per_epoch": 0.17141632740518534,
+      "pair_ce_duplicates_main_ce": true,
+      "pair_margin_coef": 0.35,
+      "pair_margin_formula": "0.35 * relu(P_retry(keep) - P_retry(retry) + 0.25)",
+      "class_weight_applies_inside_pair_ce": true
+    }
+  },
+  "sampler": {
+    "audit": {
+      "n_draws": 60423,
+      "row_type_counts": {
+        "STRICT_RETRY": 18184,
+        "ANCHOR_HARD_KEEP": 18079,
+        "NO_ANCHOR": 9031,
+        "NATURAL": 15129
+      },
+      "row_type_share": {
+        "STRICT_RETRY": 0.3009450043857472,
+        "ANCHOR_HARD_KEEP": 0.29920725551528393,
+        "NO_ANCHOR": 0.14946295284908065,
+        "NATURAL": 0.2503847872498883
+      },
+      "unique_per_type": {
+        "STRICT_RETRY": 4667,
+        "ANCHOR_HARD_KEEP": 14993,
+        "NO_ANCHOR": 2423,
+        "NATURAL": 4607
+      },
+      "repeat_ratio": 2.2638816035968525,
+      "keep_spans": 1057545,
+      "retry_spans": 19823,
+      "sampled_retry_ratio": 0.018399469819040476
+    },
+    "notes": {
+      "configured_mix": {
+        "STRICT": 0.3,
+        "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+        "NATURAL": 0.25,
+        "NO_ANCHOR": 0.15
+      },
+      "actual_row_share": {
+        "STRICT_RETRY": 0.3009450043857472,
+        "ANCHOR_HARD_KEEP": 0.29920725551528393,
+        "NO_ANCHOR": 0.14946295284908065,
+        "NATURAL": 0.2503847872498883
+      },
+      "strict_group_emit_both_members": true,
+      "effect": "STRICT KEEP sides also listed in hard_keep_sidecar; build_index prefers HARD_KEEP → STRICT bucket is RETRY-only (~30% STRICT RETRY). Pair index still includes KEEP.",
+      "strict_keep_swallowed_by_hard_keep_index": true,
+      "configured_vs_actual_delta": {
+        "STRICT_RETRY": 0.0009450043857471835,
+        "ANCHOR_HARD_KEEP": -0.000792744484716057,
+        "NO_ANCHOR": -0.0005370471509193453,
+        "NATURAL": 0.0003847872498882743
+      }
+    }
+  },
+  "prior_chain": {
+    "raw_retry_ratio": 0.007584936648053973,
+    "sampled_retry_ratio": 0.018399469819040476,
+    "class_weighted_retry_mass_share": 0.05323926110147231,
+    "pair_adjusted_retry_mass_share": 0.05526909615209387,
+    "n_keep": 1158983,
+    "n_retry": 8858
+  },
+  "gradients_random_init": {
+    "keep_ce": {
+      "embed": 0.001837788033299148,
+      "feat_proj": 0.26416865429279784,
+      "bigru": 1.5415062610244592,
+      "head": 2.105387513256466,
+      "total": 2.6227250311707433
+    },
+    "retry_ce": {
+      "embed": 0.01605752669274807,
+      "feat_proj": 0.713333219506008,
+      "bigru": 4.243872536531357,
+      "head": 5.892539507138886,
+      "total": 7.296682676102337
+    },
+    "pair_ce": {
+      "total": 4.648967298804092
+    },
+    "pair_margin": {
+      "total": 0.1699669171768372
+    },
+    "dominant": "RETRY_CE"
+  },
+  "logit_shift": {
+    "diagnosis": "GLOBAL_RETRY_PRIOR_SHIFT",
+    "diagnosis_note": "STRICT RETRY mean 2.85→5.92; natural KEEP p90/max and NO_ANCHOR max RETRY logits explode",
+    "strict_recon": {
+      "strict_keep": {
+        "n": 3703,
+        "mean": -0.8300035194371347,
+        "p50": -0.6623579859733582,
+        "p90": 1.2037718296051025,
+        "min": -4.3416032791137695,
+        "max": 2.4299938678741455
+      },
+      "strict_retry": {
+        "n": 300,
+        "mean": 2.8540690116087597,
+        "p50": 2.893224000930786,
+        "p90": 3.318655252456665,
+        "min": 1.9811807870864868,
+        "max": 3.509622097015381
+      },
+      "natural_keep": {
+        "n": 7508,
+        "mean": -0.7929922891964319,
+        "p50": -0.9166733026504517,
+        "p90": 0.6393982172012329,
+        "min": -3.8327395915985107,
+        "max": 2.7616772651672363
+      },
+      "no_anchor": {
+        "n": 8128,
+        "mean": -0.8415212454118465,
+        "p50": -0.8056362271308899,
+        "p90": -0.4639130234718323,
+        "min": -1.8412588834762573,
+        "max": 0.04556500166654587
+      },
+      "hard_keep": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null
+      }
+    },
+    "hardkeep_winner": {
+      "strict_keep": {
+        "n": 3703,
+        "mean": -1.308113945947365,
+        "p50": -1.5792639255523682,
+        "p90": 2.1699485778808594,
+        "min": -5.663426399230957,
+        "max": 3.712759494781494
+      },
+      "strict_retry": {
+        "n": 300,
+        "mean": 5.920018676122029,
+        "p50": 5.901826858520508,
+        "p90": 6.246348857879639,
+        "min": 5.129095077514648,
+        "max": 6.540306091308594
+      },
+      "natural_keep": {
+        "n": 7508,
+        "mean": -1.4076159213742536,
+        "p50": -2.0482823848724365,
+        "p90": 1.5992650985717773,
+        "min": -6.138032913208008,
+        "max": 5.651007652282715
+      },
+      "no_anchor": {
+        "n": 8128,
+        "mean": -0.8655838244933797,
+        "p50": -1.004517912864685,
+        "p90": 0.660478949546814,
+        "min": -4.160658836364746,
+        "max": 2.5772740840911865
+      },
+      "hard_keep": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null
+      }
+    }
+  },
+  "double_counting": {
+    "main_ce_multiplier": 3.0,
+    "pair_ce_multiplier": 0.514248982215556,
+    "approx_total_vs_ordinary_keep": 3.5142489822155563,
+    "yes_double_counted": true,
+    "explanation": "STRICT RETRY receives weighted CE in main batch, then again weighted CE in pair fine-tune, plus margin pushing P(RETRY|keep) down / P(RETRY|retry) up. Hard KEEP only gets CE*1.0 once."
+  },
+  "ablations": {
+    "current_3.0_pair_on": {
+      "w_retry": 3.0,
+      "pair_on": true,
+      "metrics": {
+        "precision": 0.011033099297893681,
+        "recall": 0.07971014492753623,
+        "f1": 0.019383259911894272,
+        "false_retry": 0.03617286668134126,
+        "strict_pair": 0.995,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.205,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.01890359168241966
+      },
+      "stability": {
+        "max_grad_norm": 48.279845517501215,
+        "nan_or_inf": false
+      }
+    },
+    "w2.616_pair_on": {
+      "w_retry": 2.6160994112052585,
+      "pair_on": true,
+      "metrics": {
+        "precision": 0.00951188986232791,
+        "recall": 0.09178743961352658,
+        "f1": 0.017237468813789975,
+        "false_retry": 0.04838946364370093,
+        "strict_pair": 0.0,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.035,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.04878346240624428
+      },
+      "stability": {
+        "max_grad_norm": 22.579803557643103,
+        "nan_or_inf": false
+      }
+    },
+    "w1.0_pair_on": {
+      "w_retry": 1.0,
+      "pair_on": true,
+      "metrics": {
+        "precision": 0.013753853450320134,
+        "recall": 0.14009661835748793,
+        "f1": 0.02504858561865688,
+        "false_retry": 0.05085968645290679,
+        "strict_pair": 0.995,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.19,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.015305811329959144
+      },
+      "stability": {
+        "max_grad_norm": 10.66234264692331,
+        "nan_or_inf": false
+      }
+    },
+    "w2.616_pair_off": {
+      "w_retry": 2.6160994112052585,
+      "pair_on": false,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false_retry": 0.0,
+        "strict_pair": 0.0,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.0,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.0
+      },
+      "stability": {
+        "max_grad_norm": 2.4196115654592787,
+        "nan_or_inf": false
+      }
+    },
+    "w1.0_pair_off": {
+      "w_retry": 1.0,
+      "pair_on": false,
+      "metrics": {
+        "precision": 0.5869565217391305,
+        "recall": 0.06521739130434782,
+        "f1": 0.1173913043478261,
+        "false_retry": 0.00023234768997480861,
+        "strict_pair": 0.205,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.135,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.0
+      },
+      "stability": {
+        "max_grad_norm": 2.122810881581249,
+        "nan_or_inf": false
+      }
+    },
+    "w2.616_pair_margin_0.1": {
+      "w_retry": 2.6160994112052585,
+      "pair_on": true,
+      "metrics": {
+        "precision": 0.006648936170212766,
+        "recall": 0.32608695652173914,
+        "f1": 0.013032145960034753,
+        "false_retry": 0.24664318732115342,
+        "strict_pair": 0.8675,
+        "strict_zero": 0.0,
+        "strict_shuffle": 0.1925,
+        "hard_keep_acc": 0.0,
+        "hard_keep_fp": 0.0,
+        "no_anchor_fp": 0.23361180559790232
+      },
+      "stability": {
+        "max_grad_norm": null,
+        "nan_or_inf": false,
+        "margin_coef": 0.1
+      }
+    }
+  },
+  "ablation_gains_vs_current": {
+    "lower_weight_to_2.616": -0.0015212094355657717,
+    "weight_1.0_pair_on": 0.0027207541524264522,
+    "pair_off_2.616": -0.011033099297893681,
+    "pair_off_1.0": 0.5759234224412368
+  },
+  "root_cause": {
+    "primary": "CONFIG_DRIFT_PLUS_DOUBLE_COUNTING",
+    "secondary": [
+      "UNAUTHORIZED_TRAINING_PARAMETER_DRIFT (3.0 via formula cap)",
+      "PAIR_CE_DOUBLE_COUNTS_MAIN_CE",
+      "STRICT_KEEP_SWALLOWED_INTO_HARD_KEEP_BUCKET",
+      "Hard KEEP CE under-powered vs STRICT RETRY (1.0 vs ~3.5x effective)"
+    ],
+    "classification": "CONFIG_DRIFT_PLUS_DOUBLE_COUNTING"
+  },
+  "best_diagnostic": {
+    "name": "w1.0_pair_off",
+    "metrics": {
+      "precision": 0.5869565217391305,
+      "recall": 0.06521739130434782,
+      "f1": 0.1173913043478261,
+      "false_retry": 0.00023234768997480861,
+      "strict_pair": 0.205,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.135,
+      "hard_keep_acc": 0.0,
+      "hard_keep_fp": 0.0,
+      "no_anchor_fp": 0.0
+    }
+  },
+  "architecture": {
+    "small_bigru_problem": false,
+    "data_volume_problem": false,
+    "hard_keep_quality_problem": false,
+    "loss_weight_problem": true,
+    "sampler_problem": true,
+    "strict_keep_bucket_bug": true
+  },
+  "decision": {
+    "balance_failure_explained": true,
+    "safe_to_fix_without_architecture_change": true,
+    "recommended_next_phase": "MODEL3_V1_OBJECTIVE_REBALANCE"
+  },
+  "elapsed_sec": 460.2261712551117
+}

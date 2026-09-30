@@ -1,0 +1,7 @@
+{
+  "streaming_finespan": "PathFineSpan from lattice path; assertPathFineSpansNonOverlapping at assembly entry",
+  "eligibility": "isCandidateEligibleForSpanAssembly requires exact raw+syllable alignment with FineSpan",
+  "assembly_assumes_non_overlap": true,
+  "finespan_assembly_contract_drift": false,
+  "note": "Union-level candidates may exist without full-span alignment — attrition at filterDomainCandidatesPerSpan eligibility gate, before DFS"
+}

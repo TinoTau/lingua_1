@@ -1,0 +1,397 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_REPLAY_V2_READINESS_MATRIX",
+  "version": "V1",
+  "RESULT_ENUM": "D — CAPTURE_V2_EVIDENCE_GAP_FOUND",
+  "NEXT_OWNER": "CAPTURE_V2_CONTRACT_EVIDENCE_AUDIT",
+  "CANDIDATE_CAPTURE_V2_SUFFICIENT": "NO",
+  "CAPTURE_RECORDS_PARSEABLE": "200/200",
+  "blocking_evidence_gap": {
+    "concept": "acousticToneSlices",
+    "frozen_role": "INJECTION_STATE",
+    "authority": [
+      "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_REPLAY_ROLE_MATRIX.json injection_state_minimum",
+      "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_BOUNDARY_CONTRACT.json B4.replay_role.acousticToneSlices"
+    ],
+    "candidate_capture_v2_mentions": 0,
+    "completeness_pass_note": "Prior completeness validator required B2 alignment triples + B4 mapped windows only; did not require raw acousticToneSlices. Completeness PASS does not imply Replay injection readiness.",
+    "v1_contrast": "DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_V1.jsonl contains acousticToneSlices (e.g. d149 n=15). Using V1 to fill V2 Replay is forbidden baseline fallback."
+  },
+  "readiness_dimensions": {
+    "A_INJECTION_READINESS": {
+      "status": "NO",
+      "detail": "Alignment triples + rawAsr/segments present; acousticToneSlices ABSENT; profile NO_PROFILE/VALID_EMPTY present at harness level."
+    },
+    "B_PRODUCTION_RECOMPUTATION_READINESS": {
+      "status": "PARTIAL",
+      "detail": "Production functions exist (normalizeForFwRepairInput, buildWordTimeSpans, mapToneEvidenceForRecall, buildLexicalWindowQueries, serializeCanonicalRecallQueryKey, buildLexicalEdges, KenLM, Model3). Cannot be faithfully driven without slice injection."
+    },
+    "C_COMPARATOR_READINESS": {
+      "status": "INSUFFICIENT",
+      "detail": "Only capture-v2/float-policy.ts + completeness validator exist. No B1–B18 Replay V2 comparator / first-divergence reporter."
+    },
+    "D_IDENTITY_GUARD_READINESS": {
+      "status": "PARTIAL",
+      "detail": "Identity Manifest declares IDENTITY_RECONSTRUCTABLE for ASR/Tone/Model2/KenLM/Lexicon/Model3. Per-case capture_artifact.identity currently only schema_gate. Manifest SHA pins usable for Replay guards."
+    },
+    "E_MISSING_EVIDENCE_SEMANTICS": {
+      "status": "PARTIAL",
+      "detail": "Capture completeness uses COMPLETE/CAPTURE_INCOMPLETE. Replay statuses PASS/FAIL/UNKNOWN/NOT_APPLICABLE/NOT_EVALUABLE not implemented for V2 path. Float helpers exist."
+    },
+    "F_V1_LEGACY_CONTAMINATION": {
+      "status": "NO_ACTIVE_ON_V2_PATH",
+      "ACTIVE_V1_CONTAMINATION": "NO",
+      "detail": "V1 Replay harness exists but no V2 path wired yet."
+    },
+    "G_EXECUTION_HARNESS_READINESS": {
+      "status": "NO",
+      "detail": "No Replay V2 runner. Production injection surface POST /run-lexicon-mock + runPipelineWithMockAsr can accept authorized inject fields once Capture supplies them."
+    }
+  },
+  "asr_tone_execution_boundary": {
+    "rerun_ASR": "NO — rawAsrText + segments.words are INJECTION_STATE",
+    "rerun_Tone_model": "NO — acousticToneSlices are INJECTION_STATE (when present)",
+    "recompute_Tone_mapping": "YES — B4 mapped Tone / toneNorm is COMPARISON_ONLY via mapToneEvidenceForRecall",
+    "blocker": "Cannot inject slices: missing from Candidate Capture V2"
+  },
+  "proposed_entrypoint": {
+    "flow": [
+      "Parse CANDIDATE_CAPTURE_V2 case",
+      "Identity guard vs LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json",
+      "Inject: rawAsrText, segments, acousticToneSlices, segmentTimeOffsetsSec, asrSegmentNodeBatchIndices, segmentCharOffsets, profile=NO_PROFILE",
+      "Production: POST /run-lexicon-mock → runPipelineWithMockAsr → runJobPipeline (skip ASR/Tone inference)",
+      "Enable FROZEN_EVIDENCE_CAPTURE_V2=1 OR Replay-side boundary snapshots for B1–B18 recompute evidence",
+      "Compare Capture vs Replay B1–B18 by Replay Role Matrix",
+      "First divergence in B1→B18 order; cascade downstream"
+    ],
+    "exists_today": "PARTIAL — Production inject API yes; Capture slices no; Replay V2 harness/comparator no"
+  },
+  "boundaries": [
+    {
+      "boundary": "B1",
+      "frozen_replay_role": "INJECTION_STATE(rawAsrText+segments.words) + COMPARISON_ONLY(repairText+scriptNormalized)",
+      "capture_fields": ["B1.rawAsrText", "B1.segments", "B1.repairText", "B1.scriptNormalized"],
+      "replay_source": "inject ASR; recompute normalizeForFwRepairInput",
+      "injection_allowed": "PARTIAL (ASR yes; repairText NO)",
+      "production_recompute_required": "YES (repairText)",
+      "comparator_required": "YES",
+      "repo_support": "Production normalizeForFwRepairInput exists; Capture fields present; V2 comparator absent",
+      "gap": "Replay V2 comparator + harness",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B2",
+      "frozen_replay_role": "INJECTION_STATE(alignment triples) + VALIDATION_CROSS_CHECK(reconstruction) + INJECTION_STATE(acousticToneSlices per role matrix part)",
+      "capture_fields": ["B2.segmentTimeOffsetsSec", "B2.asrSegmentNodeBatchIndices", "B2.segmentCharOffsets", "B2.alignmentHash"],
+      "replay_source": "inject Capture alignment; do not reconstruct as authority",
+      "injection_allowed": "YES for triples; slices MISSING",
+      "production_recompute_required": "NO for triples",
+      "comparator_required": "YES (inject parity)",
+      "repo_support": "Triples present + injectable via runPipelineWithMockAsr; V1 reconstruct helper must stay non-authoritative",
+      "gap": "acousticToneSlices not in Capture B2/elsewhere",
+      "status": "BLOCKED_EVIDENCE_GAP"
+    },
+    {
+      "boundary": "B3",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B3.spans", "B3.count", "B3.canonicalHash"],
+      "replay_source": "buildWordTimeSpans(repairText + segments + alignment)",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES FLOAT_TIME 0.001",
+      "repo_support": "Producer + Capture present; floatTimeEqual exists; V2 comparator absent",
+      "gap": "Replay snapshot/comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B4",
+      "frozen_replay_role": "INJECTION_STATE(acousticToneSlices) + COMPARISON_ONLY(mapped tone/toneNorm)",
+      "capture_fields": ["B4.windows[].acousticTonePattern", "B4.windows[].toneNorm", "pattern", "missReason", "windowTimeRange"],
+      "replay_source": "inject slices; recompute mapToneEvidenceForRecall using Replay WTS",
+      "injection_allowed": "slices REQUIRED but ABSENT; mapped tone must NOT inject",
+      "production_recompute_required": "YES for mapped",
+      "comparator_required": "YES",
+      "repo_support": "Mapped windows captured; raw slices not captured (0 mentions in jsonl)",
+      "gap": "CAPTURE_V2_EVIDENCE_GAP: acousticToneSlices",
+      "status": "BLOCKED_EVIDENCE_GAP"
+    },
+    {
+      "boundary": "B5",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B5.field_name=finespans", "B5.paths[].finespans"],
+      "replay_source": "Production finespans",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES",
+      "repo_support": "field_name finespans verified; V1 fine_spans defect absent on V2 capture path",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B6",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B6.logicalRecallWindows", "counts"],
+      "replay_source": "buildLexicalWindowQueries + latticeHardBlockFilter",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES",
+      "repo_support": "Production + Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B7",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B7.queries[].canonical", "serializedKey"],
+      "replay_source": "serializeCanonicalRecallQueryKey",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES",
+      "repo_support": "Production + Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B8",
+      "frozen_replay_role": "COMPARISON_ONLY + lexicon IDENTITY_GUARD",
+      "capture_fields": ["B8.executions[] bound params + orderedSemanticRowIdentities + rowIdentityHash"],
+      "replay_source": "Production lexicon SQL path",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES HASH_PLUS_SUMMARY / ORDERED_IDENTITY",
+      "repo_support": "Capture FULL; comparator absent",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B9",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B9.occurrence_list", "unique_identity_set", "multiset_multiplicities"],
+      "replay_source": "Base materialization untruncated",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES EXACT_SET primary",
+      "repo_support": "Untruncated Capture present",
+      "gap": "V2 comparator (forbid DIALOG200_CANDIDATE_CAP)",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B10",
+      "frozen_replay_role": "COMPARISON_ONLY + Model2 IDENTITY_GUARD",
+      "capture_fields": ["B10.windows", "inputHash", "model2_summary"],
+      "replay_source": "WindowEvidence rebuild under NO_PROFILE",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES discrete; numeric without tolerance NOT_EVALUABLE",
+      "repo_support": "Capture present; PROFILE_MODE=NO_PROFILE",
+      "gap": "V2 comparator + numeric policy",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B11",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B11.selected_actions", "after_model2_candidate_set"],
+      "replay_source": "Model2 Production output",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B12",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B12.edges", "edgeSetHash"],
+      "replay_source": "buildLexicalEdges",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES EXACT_SET on copy",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B13",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B13.completePathCountBeforePrune", "sortedPathIdentityHash"],
+      "replay_source": "Production path enumeration pre-cap",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES; no EXPECTED_NONDETERMINISM",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B14",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B14.retained_path_ids", "boundary_keys", "pathCapEvents"],
+      "replay_source": "Production post-cap",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B15",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B15.paths[] domain/sameDomain/assembly"],
+      "replay_source": "path-specific Domain Vote + SameDomain + Assembly",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES path-owned",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B16",
+      "frozen_replay_role": "COMPARISON_ONLY + KenLM IDENTITY_GUARD",
+      "capture_fields": ["B16.pool", "scores", "picked", "explicit_gate_decision"],
+      "replay_source": "Production KenLM scorer/gate",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES pool SET + kenlmScoreEqual 1e-6 + explicit gate; no invented tie-break",
+      "repo_support": "Capture + kenlmScoreEqual exist",
+      "gap": "V2 comparator assembly",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B17",
+      "frozen_replay_role": "COMPARISON_ONLY + Model3 IDENTITY_GUARD",
+      "capture_fields": ["B17.by_path anchors/inference_input_trace/decisions/retry_regions/checkpoint_identity"],
+      "replay_source": "Production Model3",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES; missing input → NOT_EVALUABLE not PASS",
+      "repo_support": "Capture B17 present (unlike V1 gap)",
+      "gap": "V2 comparator + dependency gating",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "B18",
+      "frozen_replay_role": "COMPARISON_ONLY",
+      "capture_fields": ["B18.finalPostprocessText", "finalHash"],
+      "replay_source": "Production final",
+      "injection_allowed": "NO",
+      "production_recompute_required": "YES",
+      "comparator_required": "YES EXACT_STRING; must not override B1–B17",
+      "repo_support": "Capture present",
+      "gap": "V2 comparator + anti-override rule",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "PROFILE",
+      "frozen_replay_role": "INJECTION_STATE",
+      "capture_fields": ["profile_mode=NO_PROFILE", "profile_evidence VALID_EMPTY"],
+      "replay_source": "inject empty/absent profile; no synthesized P/D",
+      "injection_allowed": "YES",
+      "production_recompute_required": "NO",
+      "comparator_required": "YES preserve VALID_EMPTY",
+      "repo_support": "Harness records NO_PROFILE",
+      "gap": "Replay must refuse synthesized profile",
+      "status": "PARTIAL"
+    },
+    {
+      "boundary": "IDENTITY_GUARDS",
+      "frozen_replay_role": "IDENTITY_GUARD",
+      "capture_fields": ["LINGUA_DIALOG200_CAPTURE_V2_IDENTITY_MANIFEST.json"],
+      "replay_source": "verify IDENTITY_RECONSTRUCTABLE classes; do not relabel PINNED",
+      "injection_allowed": "N/A",
+      "production_recompute_required": "NO",
+      "comparator_required": "YES identity match/guard",
+      "repo_support": "Manifest present with SHA for lexicon/model2/kenlm/model3",
+      "gap": "Replay V2 identity guard module",
+      "status": "PARTIAL"
+    }
+  ],
+  "state_ownership": [
+    {
+      "field": "rawAsrText",
+      "owner": "ASR",
+      "capture_source": "B1.rawAsrText",
+      "replay_destination": "ctx.rawAsrText / runPipelineWithMockAsr(asrText)",
+      "production_consumer": "fw-detector-orchestrator",
+      "injectable_today": true,
+      "v1_reconstructed": false,
+      "v2_required": "INJECT exact"
+    },
+    {
+      "field": "asrSegments",
+      "owner": "ASR",
+      "capture_source": "B1.segments",
+      "replay_destination": "ctx.asrSegments via options.asrSegments",
+      "production_consumer": "buildWordTimeSpans / alignment",
+      "injectable_today": true,
+      "v1_reconstructed": false,
+      "v2_required": "INJECT exact"
+    },
+    {
+      "field": "acousticToneSlices",
+      "owner": "Tone model (Capture-time)",
+      "capture_source": "MISSING in Candidate Capture V2",
+      "replay_destination": "ctx.acousticToneSlices",
+      "production_consumer": "mapToneEvidenceForRecall / Model2 tone readiness",
+      "injectable_today": true,
+      "v1_reconstructed": false,
+      "v2_required": "INJECT exact — BLOCKED: not in Capture V2"
+    },
+    {
+      "field": "segmentTimeOffsetsSec",
+      "owner": "asr-step multi-batch",
+      "capture_source": "B2.segmentTimeOffsetsSec",
+      "replay_destination": "ctx.segmentTimeOffsetsSec",
+      "production_consumer": "buildWordTimeSpans",
+      "injectable_today": true,
+      "v1_reconstructed": true,
+      "v2_required": "INJECT Capture values; reconstruction VALIDATION_CROSS_CHECK only"
+    },
+    {
+      "field": "asrSegmentNodeBatchIndices",
+      "owner": "asr-step",
+      "capture_source": "B2.asrSegmentNodeBatchIndices",
+      "replay_destination": "ctx.asrSegmentNodeBatchIndices",
+      "production_consumer": "buildWordTimeSpans",
+      "injectable_today": true,
+      "v1_reconstructed": true,
+      "v2_required": "INJECT Capture values"
+    },
+    {
+      "field": "segmentCharOffsets",
+      "owner": "asr-step",
+      "capture_source": "B2.segmentCharOffsets",
+      "replay_destination": "ctx.segmentCharOffsets",
+      "production_consumer": "buildWordTimeSpans",
+      "injectable_today": true,
+      "v1_reconstructed": true,
+      "v2_required": "INJECT Capture values"
+    },
+    {
+      "field": "profile",
+      "owner": "session profile",
+      "capture_source": "profile_mode NO_PROFILE / VALID_EMPTY",
+      "replay_destination": "ctx.userProfileV1=null",
+      "production_consumer": "Model2 P/D retrieval",
+      "injectable_today": true,
+      "v1_reconstructed": false,
+      "v2_required": "INJECT absent/empty; no synthesize"
+    }
+  ],
+  "first_divergence": {
+    "order": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11", "B12", "B13", "B14", "B15", "B16", "B17", "B18"],
+    "semantics_ready": false,
+    "note": "No V2 first-divergence reporter. V1 E-stage order must not be reused without B-mapping."
+  },
+  "header": {
+    "REPLAY_ROLE_MATRIX_HONORED": "PARTIAL",
+    "AUTHORIZED_INJECTION_SUPPORTED": "PARTIAL",
+    "DOWNSTREAM_PRODUCTION_RECOMPUTATION_SUPPORTED": "PARTIAL",
+    "B1_B18_COMPARATOR_COVERAGE": "INSUFFICIENT",
+    "IDENTITY_GUARDS_READY": "PARTIAL",
+    "ACTIVE_V1_CONTAMINATION": "NO",
+    "FIRST_DIVERGENCE_SEMANTICS_READY": "NO",
+    "IMPLEMENTATION_REQUIRED_BEFORE_REPLAY": "YES"
+  }
+}

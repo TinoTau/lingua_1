@@ -1,0 +1,30 @@
+{
+  "phase": "LINGUA_MODEL3_RETRY_STAGE2_TONE_RELAXATION_SINGLE_DELTA_IMPLEMENTATION",
+  "date": "2026-09-14",
+  "productFiles": [
+    "electron_node/electron-node/main/src/lexicon-v2/recall-semantic-mode.ts",
+    "electron_node/electron-node/main/src/lexicon-v2/tone-first-tier-collector.ts",
+    "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+    "electron_node/electron-node/main/src/lexicon/tone-recall-sort.ts",
+    "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts"
+  ],
+  "observabilityFiles": [
+    "electron_node/electron-node/tests/run-pilot200-post-anchor-acp-remeasure.mjs"
+  ],
+  "testFiles": [
+    "electron_node/electron-node/main/src/lexicon-v2/stage2-tone-relax-domain.sqlite.integration.test.ts",
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-region.controlled-validation.test.ts",
+    "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/length1-real-sqlite.test.helpers.ts"
+  ],
+  "docsFiles": [
+    "docs/user_correction/model3/LINGUA_ACP_MODEL3_RETRY_STAGE2_TONE_RELAXATION_V1.md"
+  ],
+  "deletedObsoleteLogic": [],
+  "newTypes": [
+    "RecallSemanticMode",
+    "ToneLookupStage += pinyin_domain_recovery"
+  ],
+  "newConfig": false,
+  "dbSchemaChange": false,
+  "lexiconDataChange": false
+}

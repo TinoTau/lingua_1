@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MODEL3_TRAINING_SAMPLE_V1_SCHEMA",
+  "title": "MODEL3_TRAINING_SAMPLE_V1",
+  "description": "Final offline training sample for Model3 KEEP/RETRY. Distinct from ERROR_TEXT_SAMPLE_V1. Supersedes draft model3_training_sample_schema_v1.json.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "sampleId",
+    "sourceSampleId",
+    "sourceCorpus",
+    "evidenceLevel",
+    "referenceText",
+    "currentText",
+    "domainEvidence",
+    "model2AnchorStatus",
+    "spans",
+    "split",
+    "groupKeys",
+    "featureAvailability",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "MODEL3_TRAINING_SAMPLE_V1" },
+    "sampleId": { "type": "string" },
+    "sourceSampleId": {
+      "type": "string",
+      "description": "Upstream ERROR_TEXT_SAMPLE_V1.sampleId or TTS/HUMAN source id"
+    },
+    "sourceCorpus": { "type": "string" },
+    "evidenceLevel": {
+      "enum": ["SYNTHETIC_TEXT", "TTS_ASR", "HUMAN_ASR"]
+    },
+    "referenceText": { "type": "string" },
+    "currentText": {
+      "type": "string",
+      "description": "First-pass / error / ASR surface text consumed as Model3 context"
+    },
+    "audioRef": {
+      "type": ["string", "null"],
+      "description": "Required non-null for TTS_ASR / HUMAN_ASR when audio exists; null for SYNTHETIC_TEXT"
+    },
+    "domainEvidence": {
+      "type": "object",
+      "required": ["retainedDomains", "anchorMaterialization"],
+      "properties": {
+        "retainedDomains": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "anchorMaterialization": {
+          "enum": [
+            "OFFLINE_DOMAIN_VOTE_EQUIVALENT",
+            "RUNTIME_CONFIRMED",
+            "UNAVAILABLE"
+          ]
+        },
+        "materializationNote": { "type": ["string", "null"] }
+      }
+    },
+    "model2AnchorStatus": {
+      "enum": [
+        "UNAVAILABLE",
+        "OFFLINE_EVIDENCE",
+        "RUNTIME_CONFIRMED"
+      ],
+      "description": "Fabricating MODEL2 anchors is FORBIDDEN"
+    },
+    "spans": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Model3TrainingSpanV1" }
+    },
+    "split": { "enum": ["train", "dev", "test"] },
+    "groupKeys": {
+      "type": "object",
+      "required": ["sourceSentenceId", "contrastGroupId"],
+      "properties": {
+        "sourceSentenceId": { "type": "string" },
+        "contrastGroupId": { "type": ["string", "null"] },
+        "splitGroupKey": { "type": "string" },
+        "surfacePairKey": { "type": ["string", "null"] }
+      }
+    },
+    "heldOutAxes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "held_out_source_sentence",
+          "held_out_surface_pair",
+          "held_out_corruption_variant",
+          "held_out_domain",
+          "held_out_anchor_combination",
+          "held_out_pronunciation_family"
+        ]
+      }
+    },
+    "featureAvailability": {
+      "type": "object",
+      "required": [
+        "textContext",
+        "pinyinTextDerived",
+        "toneAcoustic",
+        "asrConfidence",
+        "model2Pronunciation",
+        "recallFirstPass"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "textContext": { "const": true },
+        "pinyinTextDerived": { "type": "boolean" },
+        "toneAcoustic": { "type": "boolean" },
+        "asrConfidence": { "type": "boolean" },
+        "model2Pronunciation": { "type": "boolean" },
+        "recallFirstPass": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "generatorVersion",
+        "labelMaterializerVersion",
+        "datasetVersion"
+      ],
+      "properties": {
+        "generatorVersion": { "type": "string" },
+        "labelMaterializerVersion": { "type": "string" },
+        "datasetVersion": { "type": "string" },
+        "errorTextSampleId": { "type": ["string", "null"] },
+        "auditSidecarRef": { "type": ["string", "null"] }
+      }
+    },
+    "labelStats": {
+      "type": "object",
+      "description": "Optional summary; not required for loader",
+      "properties": {
+        "nKeep": { "type": "integer" },
+        "nRetry": { "type": "integer" },
+        "nMaskedAnchor": { "type": "integer" },
+        "nExclude": { "type": "integer" }
+      }
+    }
+  },
+  "$defs": {
+    "Model3TrainingSpanV1": {
+      "type": "object",
+      "required": [
+        "spanId",
+        "surface",
+        "rawStart",
+        "rawEnd",
+        "isAnchor",
+        "anchorSource",
+        "targetMask",
+        "label",
+        "pinyinEvidence",
+        "toneEvidence",
+        "acousticEvidence",
+        "pronunciationEvidence",
+        "recallEvidence",
+        "repairability"
+      ],
+      "properties": {
+        "spanId": { "type": "string" },
+        "surface": { "type": "string" },
+        "rawStart": { "type": "integer", "minimum": 0 },
+        "rawEnd": { "type": "integer", "minimum": 0 },
+        "syllableStart": { "type": ["integer", "null"] },
+        "syllableEnd": { "type": ["integer", "null"] },
+        "isAnchor": { "type": "boolean" },
+        "anchorSource": {
+          "enum": ["NONE", "DOMAIN", "MODEL2", "DOMAIN_AND_MODEL2"]
+        },
+        "targetMask": {
+          "enum": [0, 1],
+          "description": "0 = Anchor or ineligible / EXCLUDE; 1 = supervised KEEP|RETRY"
+        },
+        "label": {
+          "enum": ["KEEP", "RETRY", "MASKED", "EXCLUDE_FROM_SUPERVISED"],
+          "description": "MASKED for anchors; EXCLUDE when label unknown/unreliable"
+        },
+        "labelClass": {
+          "type": ["string", "null"],
+          "description": "KEEP A–E or RETRY criteria id for QA; not runtime"
+        },
+        "referenceSurface": {
+          "type": ["string", "null"],
+          "description": "Aligned reference span surface when known"
+        },
+        "pinyinEvidence": {
+          "type": "object",
+          "required": ["provenance"],
+          "properties": {
+            "windowPinyinKey": { "type": ["string", "null"] },
+            "provenance": {
+              "enum": ["TEXT_DERIVED_SYLLABLE_KEY", "ABSENT"]
+            }
+          }
+        },
+        "toneEvidence": {
+          "type": "object",
+          "required": ["provenance"],
+          "properties": {
+            "readiness": { "type": ["string", "null"] },
+            "acousticTonePattern": {
+              "type": ["array", "null"],
+              "items": { "type": "number" }
+            },
+            "toneCompatible": { "type": ["boolean", "null"] },
+            "tonePenalty": { "type": ["number", "null"] },
+            "provenance": {
+              "enum": ["ACOUSTIC_REBIND", "RECALL_CANDIDATE", "ABSENT"]
+            }
+          }
+        },
+        "acousticEvidence": {
+          "type": "object",
+          "required": ["status", "wordTimeAligned"],
+          "properties": {
+            "asrSegmentConfidence": { "type": ["number", "null"] },
+            "wordTimeAligned": { "type": "boolean" },
+            "status": { "enum": ["AVAILABLE", "PARTIAL", "ABSENT"] }
+          }
+        },
+        "pronunciationEvidence": {
+          "type": "object",
+          "properties": {
+            "selectedActions": {
+              "type": ["array", "null"],
+              "items": { "type": "string" }
+            },
+            "retrievalProvenance": {
+              "type": ["string", "null"],
+              "enum": ["PROFILE_PRONUNCIATION", "PROFILE_DOMAIN", null]
+            },
+            "model2ActionId": { "type": ["string", "null"] },
+            "status": {
+              "enum": ["AVAILABLE", "ABSENT", "UNAVAILABLE"]
+            }
+          }
+        },
+        "recallEvidence": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "firstPassCandidateCount": { "type": ["integer", "null"] },
+            "length1TerminalReason": { "type": ["string", "null"] },
+            "status": { "enum": ["AVAILABLE", "ABSENT", "SYNTHETIC_PROXY"] }
+          }
+        },
+        "repairability": {
+          "type": "object",
+          "required": ["referenceReachable", "probe"],
+          "properties": {
+            "referenceReachable": {
+              "enum": ["YES", "NO", "UNKNOWN"]
+            },
+            "probe": {
+              "enum": [
+                "OFFLINE_RECALL_EQUIVALENT",
+                "RUNTIME_RECALL",
+                "NOT_RUN"
+              ]
+            },
+            "probeNote": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  }
+}

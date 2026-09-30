@@ -1,0 +1,28 @@
+{
+  "source": "model3_retry_performance_summary.json",
+  "pipelineMs": {
+    "p50": 7400,
+    "p95": 18003,
+    "max": 30911,
+    "mean": 8468.9
+  },
+  "shares_percent": {
+    "utterance_pipeline_ms_production": 100.0,
+    "A_ASR_plus_nonFW_estimated": 57.43,
+    "B_FW_detector_step_ms": 42.57,
+    "B_FW_residual_ex_M3_Retry_KenLM": 31.28,
+    "D_Model3_infer_sum_paths": 0.35,
+    "H_Retry_path_latency_sum_paths": 0.98,
+    "K_KenLM_subprocess_ms": 9.96
+  },
+  "retry": {
+    "p50": 44,
+    "p95": 285,
+    "max": 656,
+    "ms_per_query_p50": 2.5,
+    "pearson_queries_vs_retryMs": 0.9088,
+    "pearson_queries_vs_pipelineMs": 0.5207
+  },
+  "PRIMARY_LATENCY_OWNER": "A_ASR_upstream",
+  "note": "Reused existing timing dump; ASR high-RTF not reopened"
+}

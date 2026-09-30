@@ -1,0 +1,105 @@
+{
+  "phase": "MODEL3_V2_TARGETED_DISTRIBUTION_CORRECTION_DESIGN",
+  "datasetIdProposed": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "gates": [
+    {
+      "id": "feature_state_gate",
+      "severity": "FAIL_CLOSED",
+      "checks": [
+        "TRAIN_KEEP has rawFirstPassCandidateCount==0 AND >0 each with span_count >= 800",
+        "TRAIN_RETRY has rawFirstPassCandidateCount==0 AND >0 each with span_count >= 500",
+        "No label may have 100% cand collapsed to a single value unless production_equivalent_audit proves unavoidable",
+        "first_pass_cand_log1p packed via shared pack semantics (log1p(rawCand)) — no silent default 0 when field absent",
+        "pinyin_channel_avail variance reported honestly; artificial pinyin=0 synthesis FORBIDDEN"
+      ]
+    },
+    {
+      "id": "surface_leakage_gate",
+      "severity": "FAIL_CLOSED",
+      "params": {
+        "S_min_support": 50,
+        "LEAKAGE_RISK_HIGH": "support>=S AND (KEEP==0 OR RETRY==0) AND opposite_label_natural=true",
+        "LEAKAGE_RISK_MODERATE": "support>=S AND retry_ratio>=0.85 AND KEEP>=1 AND KEEP/support<0.15",
+        "LEAKAGE_RISK_LOW": "otherwise among supported surfaces",
+        "max_HIGH_surfaces_allowed": 0,
+        "max_MODERATE_fraction_of_supported": 0.15
+      },
+      "checks": [
+        "Emit token leakage report for all surfaces with support>=S_min_support",
+        "HIGH count must be 0 for surfaces marked opposite_label_natural",
+        "No generation rule may hardcode token allow/deny lists"
+      ]
+    },
+    {
+      "id": "multipath_gate",
+      "severity": "FAIL_CLOSED",
+      "params": {
+        "min_multipath_utterance_pct": 0.15,
+        "min_utterances_with_ge2_paths": 200,
+        "min_path_contrast_families": 50
+      },
+      "checks": [
+        "Paths sourced from production-equivalent SegmentationPath / PathFineSpan logic only",
+        "Report paths-per-utterance histogram vs live SSOT (directional match, not equality)",
+        "Include path-contrast pairs: same utteranceId, >=2 paths, region labels projected by offsets not by index"
+      ]
+    },
+    {
+      "id": "sequence_support_gate",
+      "severity": "FAIL_CLOSED",
+      "checks": [
+        "Before train: compare structural sequence neighborhoods of protected live families vs new TRAIN_RETRY/KEEP",
+        "SEQUENCE_OOD rate for protected live target families must decrease vs RealDist baseline audit",
+        "Coverage families HEAD/MID/TAIL + cand pattern + anchor-adjacent represented without case patching"
+      ]
+    },
+    {
+      "id": "split_leakage_gate",
+      "severity": "FAIL_CLOSED",
+      "checks": [
+        "All paths/variants of same utteranceId or corruptionFamilyId stay in one split",
+        "Near-duplicate surface-contrast variants grouped by family key",
+        "dialog_200 inventory case texts and near-duplicates excluded from train/dev/test supervised sets"
+      ]
+    },
+    {
+      "id": "stale_target_gate",
+      "severity": "FAIL_CLOSED",
+      "checks": [
+        "Acceptance inventory binds caseId+sourceText snapshot+target region",
+        "d160 current snapshot = STALE_TARGET_NOT_COMPARABLE (向木李 absent; 顺便看看项目里 not RETRY target)",
+        "No RETRY training generated for 顺/便 solely from historical d160"
+      ]
+    },
+    {
+      "id": "governance_gate",
+      "severity": "FAIL_DATA_DESIGN_GOVERNANCE",
+      "checks": [
+        "No if token == … / if case == d0xx / equivalent case-specific exceptions in generators",
+        "No FineSpan/Model3/feature/threshold/architecture changes",
+        "d131/d176 remain protected validation (UNEXPLAINED_STRONG_KEEP) — no direct patch examples keyed to those caseIds"
+      ]
+    },
+    {
+      "id": "position_breadth_gate",
+      "severity": "WARN_THEN_REVIEW",
+      "checks": [
+        "TRAIN_RETRY span_rel_position p10<=0.25 and p90>=0.75 (or documented production constraint)",
+        "Do not optimize position alone at expense of cand/surface/multipath gates"
+      ]
+    }
+  ],
+  "leakageMetricDefinition": {
+    "perSurface": {
+      "support": "KEEP_count + RETRY_count (non-anchor supervised only)",
+      "retry_ratio": "RETRY_count / support",
+      "opposite_label_natural": "true if clean-corpus or production KEEP usage exists for surface OR malformed-region RETRY usage exists"
+    },
+    "datasetPass": "zero LEAKAGE_RISK_HIGH among natural-opposite surfaces; MODERATE fraction <= 0.15 of supported surfaces"
+  },
+  "holdout": {
+    "caseIds": ["d002","d003","d019","d049","d099","d131","d139","d142","d160","d176","d179","d181","d195"],
+    "protectedUnexplainedStrongKeep": ["d131","d176"],
+    "staleNotComparable": ["d160"]
+  }
+}

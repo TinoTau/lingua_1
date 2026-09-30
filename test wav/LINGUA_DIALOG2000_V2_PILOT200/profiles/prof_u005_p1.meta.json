@@ -1,0 +1,35 @@
+{
+  "profileRef": "prof_u005_p1",
+  "userId": "U005",
+  "profileStage": "P1",
+  "constructionMethod": "CORRECTION_HISTORY_PROFILE_DELTA",
+  "dominantRelations": [
+    "sh_s"
+  ],
+  "profileBuildSetId": "pbs_u005_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73"
+  ],
+  "profileBuildSurfaces": [
+    "手机",
+    "事情"
+  ],
+  "historyEvents": [
+    {
+      "source_event_id": "U005_P1_sh_s_手机_0",
+      "feature_key": "sh_s",
+      "term": "手机",
+      "evidence": 1.0,
+      "weight": 0.4
+    },
+    {
+      "source_event_id": "U005_P1_sh_s_事情_0",
+      "feature_key": "sh_s",
+      "term": "事情",
+      "evidence": 1.0,
+      "weight": 0.4
+    }
+  ],
+  "userProfileV1Ref": "profiles/prof_u005_p1.userprofile.json"
+}

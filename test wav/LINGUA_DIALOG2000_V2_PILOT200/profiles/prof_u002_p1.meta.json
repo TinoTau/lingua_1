@@ -1,0 +1,54 @@
+{
+  "profileRef": "prof_u002_p1",
+  "userId": "U002",
+  "profileStage": "P1",
+  "constructionMethod": "CORRECTION_HISTORY_PROFILE_DELTA",
+  "dominantRelations": [
+    "z_zh",
+    "sh_s"
+  ],
+  "profileBuildSetId": "pbs_u002_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e887aae5b7b17c7a",
+    "base-rebuild-term-e697a9e4b88a7c7a",
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73"
+  ],
+  "profileBuildSurfaces": [
+    "自己",
+    "早上",
+    "手机",
+    "事情"
+  ],
+  "historyEvents": [
+    {
+      "source_event_id": "U002_P1_z_zh_自己_0",
+      "feature_key": "z_zh",
+      "term": "自己",
+      "evidence": 1.0,
+      "weight": 1.0
+    },
+    {
+      "source_event_id": "U002_P1_z_zh_早上_0",
+      "feature_key": "z_zh",
+      "term": "早上",
+      "evidence": 1.0,
+      "weight": 1.0
+    },
+    {
+      "source_event_id": "U002_P1_sh_s_手机_0",
+      "feature_key": "sh_s",
+      "term": "手机",
+      "evidence": 1.0,
+      "weight": 0.7
+    },
+    {
+      "source_event_id": "U002_P1_sh_s_事情_0",
+      "feature_key": "sh_s",
+      "term": "事情",
+      "evidence": 1.0,
+      "weight": 0.7
+    }
+  ],
+  "userProfileV1Ref": "profiles/prof_u002_p1.userprofile.json"
+}

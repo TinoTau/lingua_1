@@ -1,0 +1,86 @@
+{
+  "REAL_ASR_AUDIO_SMOKE": "PASS",
+  "SMOKE_CASE_COUNT": 8,
+  "SMOKE_OK_COUNT": 8,
+  "backends": {
+    "PIPER_TTS_SURFACE": 3,
+    "CORRUPTOR_SURFACE_PIPER": 3,
+    "PHONEME_REALIZER": 2
+  },
+  "note": "SMOKE_ONLY_NOT_BASELINE",
+  "cases": [
+    {
+      "caseId": "p2_u001_025",
+      "ttsBackend": "PIPER_TTS_SURFACE",
+      "relationFamily": null,
+      "expectedBehaviorClass": "CLEAN_PRESERVE",
+      "ok": true,
+      "rawAsrLen": 14,
+      "rawAsrPreview": "今天天氣不錯 我們晚點見面吧"
+    },
+    {
+      "caseId": "p2_u001_026",
+      "ttsBackend": "PIPER_TTS_SURFACE",
+      "relationFamily": null,
+      "expectedBehaviorClass": "CLEAN_PRESERVE",
+      "ok": true,
+      "rawAsrLen": 12,
+      "rawAsrPreview": "请把钥匙放在悬罐的托盘里"
+    },
+    {
+      "caseId": "p2_u001_027",
+      "ttsBackend": "PIPER_TTS_SURFACE",
+      "relationFamily": null,
+      "expectedBehaviorClass": "CLEAN_PRESERVE",
+      "ok": true,
+      "rawAsrLen": 13,
+      "rawAsrPreview": "周末我想去公園散步放送一下"
+    },
+    {
+      "caseId": "p2_u001_001",
+      "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+      "relationFamily": "n_l",
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "ok": true,
+      "rawAsrLen": 0,
+      "rawAsrPreview": ""
+    },
+    {
+      "caseId": "p2_u001_003",
+      "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+      "relationFamily": "n_l",
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "ok": true,
+      "rawAsrLen": 17,
+      "rawAsrPreview": "麻烦你帮我核对这份关于过历和的说明"
+    },
+    {
+      "caseId": "p2_u001_004",
+      "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+      "relationFamily": "n_l",
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "ok": true,
+      "rawAsrLen": 20,
+      "rawAsrPreview": "今天,我想再确认一下类处理的安排是否合适"
+    },
+    {
+      "caseId": "p2_u001_002",
+      "ttsBackend": "PHONEME_REALIZER",
+      "relationFamily": "n_l",
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "ok": true,
+      "rawAsrLen": 19,
+      "rawAsrPreview": "今天,我想再确认一下来精的安排是否合适"
+    },
+    {
+      "caseId": "p2_u001_013",
+      "ttsBackend": "PHONEME_REALIZER",
+      "relationFamily": "n_l",
+      "expectedBehaviorClass": "PROFILE_TARGET",
+      "ok": true,
+      "rawAsrLen": 7,
+      "rawAsrPreview": "菜蛋上有蛋奶油"
+    }
+  ],
+  "vad_mode": "TONE_P10_VAD_CPU=1"
+}

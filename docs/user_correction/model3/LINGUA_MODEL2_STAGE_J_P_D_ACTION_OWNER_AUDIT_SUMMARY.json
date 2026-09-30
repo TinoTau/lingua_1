@@ -1,0 +1,41 @@
+{
+  "PHASE": "LINGUA_MODEL2_STAGE_J_P_D_ACTION_OWNER_AUDIT",
+  "MODEL2_STAGE_J_OWNER": "expand-active-candidates.ts::expandActiveCandidatesWithModel2",
+  "STAGE_J_CHECKPOINT_HOST": "electron_node/services/model2_runtime/model2_inference_host.py",
+  "MODEL2_INVOCATION_STATUS": "OBSERVED_INVOKED_ON_REPLAY_COMPACT_TRACE",
+  "STAGE_J_INVOCATION_STATUS": "CONNECTED_COUNT_NOT_OBSERVABLE",
+  "PROFILE_RUNTIME_STATUS": "PRESENT_CORRECT_PROFILE_BIAS_KEYS_AND_ARTIFACT_VALUES",
+  "ACTIVE_SET_MAPPING_STATUS": "MATCH",
+  "P_PERMISSION_GATE_STATUS": {
+    "file": "model2_inference_host.py::infer",
+    "expression": "phonetic_bias[relation] > 0 for all action.relations",
+    "CORRECT_PROFILE": "CAN_PASS_NOT_PROVEN_OUTCOME",
+    "NO_PROFILE": "BLOCKS_ALL_P_ACTIONS"
+  },
+  "P_ZERO_OWNER": "NOT_CONFIRMED",
+  "D_ZERO_OWNER": "NOT_CONFIRMED",
+  "COMMON_ZERO_OWNER": "NONE_CONFIRMED",
+  "COMMON_PRE_P_D_GATE": "LOAD_OR_INFER_FAIL_OR_NO_SPAN_SYLLABLES_ONLY",
+  "P_D_TRACE_RELIABILITY": "PARTIAL",
+  "TRACE_NOTES": {
+    "replay_p_added_lineage": "RELIABLE_VIA_model2_summary.p_added",
+    "block_b_p_action_compact": "UNRELIABLE_EXTRACTOR_PREFERRED_path_trace_OVER_model2_summary",
+    "base_union_counts": "UNRELIABLE_SCHEMA_MISMATCH",
+    "selected_actions": "NOT_IN_COMPACT_TRACE",
+    "domain_none": "NOT_IN_COMPACT_TRACE"
+  },
+  "FIRST_CONFIRMED_ZERO_ACTION_OWNER": "NOT_CONFIRMED",
+  "OWNER_CONFIDENCE": "LOW",
+  "SUSPECTED_BUT_UNCONFIRMED": [
+    "I_MODEL_DECISION_NO_ACTION",
+    "J_P_GENERATOR_EMPTY_MANDATORY_TONE_NO_PATTERN",
+    "D_DOMAIN_NONE_OR_EMPTY_HITS"
+  ],
+  "MODEL2_STAGE_J_CONTRACT": "CONNECTED_AS_FROZEN",
+  "ARCHITECTURE_CHANGE_REQUIRED": false,
+  "ONE_DELTA_READY": false,
+  "ONE_NEXT_EVIDENCE_GAP": "MINIMAL_OBSERVABILITY_DELTA_REQUIRED: persist selected_actions, domain_none/domain_action, p_retrieval status, acousticTonePattern_present/toneRecallReadiness into compact traces",
+  "PRODUCTION_CODE_CHANGED": false,
+  "DATASET_CHANGED": false,
+  "REPLAY_RERUN": false
+}

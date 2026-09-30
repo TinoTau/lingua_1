@@ -1,0 +1,23 @@
+{
+  "action_logits": {
+    "semantics": "pronunciation retrieval action scores",
+    "consumer": "select_actions",
+    "runtime_action": "choose SINGLE relation transforms"
+  },
+  "query_budget_logits": {
+    "semantics": "query budget class",
+    "consumer": "select_actions",
+    "runtime_action": "cap profile queries"
+  },
+  "cand_budget_logits": {
+    "semantics": "candidate budget class",
+    "consumer": "optional",
+    "runtime_action": "cap profile candidates"
+  },
+  "domain_action_logits": {
+    "semantics": "domain soft branch / domain_none",
+    "consumer": "select_domain_actions",
+    "runtime_action": "DEFER until Stage J or single D-head checkpoint — not dual runtime"
+  },
+  "forbidden": "Do not invent new model outputs for convenience"
+}

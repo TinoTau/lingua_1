@@ -1,0 +1,24 @@
+{
+  "embed_dim": 64,
+  "hidden_dim": 128,
+  "feat_dim": 6,
+  "feat_names": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "class_weight_retry": 2.5,
+  "diet": {
+    "NATURAL": 0.45,
+    "CONTRAST": 0.3,
+    "NO_ANCHOR": 0.15,
+    "HARD_KEEP": 0.1
+  },
+  "diet_name": "C",
+  "seed": 2026083488,
+  "epochs": 6,
+  "init": "random_from_scratch"
+}

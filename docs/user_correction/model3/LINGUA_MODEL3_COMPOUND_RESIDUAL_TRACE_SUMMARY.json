@@ -1,0 +1,48 @@
+{
+  "phase": "LINGUA_MODEL3_COMPOUND_RESIDUAL_TRACE_AUDIT",
+  "expectedCases": 14,
+  "observedCases": 14,
+  "baselineIdentity": {
+    "sourcePhase": "LINGUA_MODEL2_WINDOW_ACTION_BINDING_BUG_AUDIT",
+    "B1_TARGET_ALIGNED_COMPOUND_ASR_ERROR": 14,
+    "model2WindowActionBinding": "PASS_CLOSED"
+  },
+  "residualPreservedCount": 8,
+  "falseAnchorCount": 9,
+  "model3TargetSpanPresentCount": 14,
+  "model3KeepCount": 4,
+  "model3RetryCount": 4,
+  "retryRegionCorrectCount": 2,
+  "retryExecutedCount": 4,
+  "stage2RecallExecutedCount": 4,
+  "stage2UsefulEvidenceCount": 0,
+  "downstreamRecoveryCount": 0,
+  "finalCorrectCount": 0,
+  "firstFailureOwnerCounts": {
+    "M3-B": 9,
+    "M3-I": 1,
+    "M3-D": 4
+  },
+  "partialModel2EvidenceCausesFalseAnchor": true,
+  "partialModel2EvidenceFalseAnchorCode": {
+    "file": "electron_node/electron-node/main/src/model3-runtime/model3-anchor-adapter.ts",
+    "functions": [
+      "hasModel2Evidence",
+      "materializeModel3Anchors"
+    ],
+    "mechanism": "ANY span-bound PROFILE_RETRIEVAL|PROFILE_PRONUNCIATION|PROFILE_DOMAIN candidate => whole PathFineSpan Anchor; no check that Model2 evidence fully explains span pronunciation residual"
+  },
+  "model2ReinvokedOnRetry": false,
+  "implementationBugCount": 13,
+  "capabilityLimitCount": 1,
+  "architectureDecisionRequiredCount": 0,
+  "dominantFirstFailureOwner": "M3-B",
+  "outcome": "FALSE_ANCHOR_PRIMARY_BLOCKER",
+  "oneNextOwner": "ANCHOR_OWNER",
+  "deferred": {
+    "B4_TARGET_REGION_NOT_REPRESENTABLE": 3,
+    "status": "DEFERRED_FINESPAN_BOUNDARY_SSOT_CHECK",
+    "PILOT_WINDOW_DIAGNOSTIC_SELECTOR_BUG": "CONFIRMED_DEFERRED_HARNESS_FIX"
+  },
+  "productCodeChange": false
+}

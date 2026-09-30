@@ -1,0 +1,12 @@
+{
+  "primary_question": "ONE RetrievalPolicyV3 keep P while retaining useful D?",
+  "max_experiments": 3,
+  "order": [
+    "A_frozen_shared_trunk",
+    "B_low_lr_trunk_if_A_limits_D",
+    "C_sampling_or_weight_if_P_still_regresses"
+  ],
+  "stop_early_if_A_works": true,
+  "blind_not_used_for_selection": true,
+  "fixed_38": "REGRESSION_ONLY"
+}

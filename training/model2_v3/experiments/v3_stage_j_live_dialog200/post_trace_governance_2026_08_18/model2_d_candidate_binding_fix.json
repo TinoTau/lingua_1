@@ -1,0 +1,14 @@
+{
+  "defect": "IMPLEMENTATION_DRIFT",
+  "not": "FineSpan architecture defect",
+  "mechanism": [
+    "FUZZY_LEN_DELTA_MAX=1 allows 2-char domain hits from 1-char FineSpan queries",
+    "materializeDomainHits stamped policyInput (current iterator) ranges onto every hit",
+    "windowPinyinKey overwritten with origin FineSpan pinyin (bang/yi/da/hong)",
+    "merge-by-termId kept the first FineSpan that introduced the term"
+  ],
+  "fix": "materialize only when hit pinyin syllable count == origin FineSpan syllable count; no rebind",
+  "eligibility_relaxed": false,
+  "path_finespan_changed": false,
+  "expected_contract_rejection_kept": true
+}

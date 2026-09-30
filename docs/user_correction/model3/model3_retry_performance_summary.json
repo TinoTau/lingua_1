@@ -1,0 +1,242 @@
+{
+  "phase": "MODEL3_RETRY_PERFORMANCE_CAUSAL_BREAKDOWN_AUDIT",
+  "generatedAt": "2026-09-04T19:29:59Z",
+  "verdict": "MODEL3_RETRY_PERFORMANCE_CAUSAL_AUDIT_PASS_MULTIPLE_OWNERS",
+  "performanceRisk": "PERFORMANCE_CONCERN_NONBLOCKING",
+  "performanceTarget": "PERFORMANCE_TARGET_NOT_FORMALLY_ENFORCED",
+  "freezePreserved": {
+    "DELTA1": "RESOLVED_ACCEPTED_CLOSED",
+    "DELTA2": "RESOLVED_ACCEPTED",
+    "RETRY_FALLBACK_QUERY_GEOMETRY": "LEGAL_BOUNDED_RETRY_REGION_WINDOW_SPACE_1_TO_5"
+  },
+  "PRIMARY_LATENCY_OWNER": "A_ASR_upstream",
+  "SECONDARY_LATENCY_OWNER": "B_FW_first_pass_residual_FineSpan_Recall_Vote_Assembly",
+  "DELTA2_INCREMENTAL_LATENCY_OWNER": "H_Retry_Stage2_Recall_SQLite_path",
+  "owners": {
+    "A_ASR": "DOMINANT",
+    "B_FW_residual": "SIGNIFICANT",
+    "K_KenLM": "SIGNIFICANT",
+    "H_Retry": "MINOR",
+    "D_Model3": "NEGLIGIBLE",
+    "L_acceptance_dual_fork_harness": "SIGNIFICANT_ON_ACCEPTANCE_METRIC_ONLY"
+  },
+  "productionTiming": {
+    "n_clean": 198,
+    "outliers_excluded": [
+      [
+        "d094",
+        916722
+      ]
+    ],
+    "pipelineMs": {
+      "p50": 7400,
+      "p95": 18003,
+      "max": 30911,
+      "mean": 8468.9
+    },
+    "shares_percent": {
+      "utterance_pipeline_ms_production": 100.0,
+      "A_ASR_plus_nonFW_estimated": 57.43,
+      "B_FW_detector_step_ms": 42.57,
+      "B_FW_residual_ex_M3_Retry_KenLM": 31.28,
+      "D_Model3_infer_sum_paths": 0.35,
+      "H_Retry_path_latency_sum_paths": 0.98,
+      "K_KenLM_subprocess_ms": 9.96
+    },
+    "retry": {
+      "p50": 44,
+      "p95": 285,
+      "max": 656,
+      "ms_per_query_p50": 2.5,
+      "pearson_queries_vs_retryMs": 0.9088,
+      "pearson_queries_vs_pipelineMs": 0.5207
+    },
+    "warm": {
+      "first10_p50": 11745,
+      "mid50_p50": 5971,
+      "last50_p50": 4870
+    },
+    "vsAcceptanceHarness": {
+      "acceptance_dual_fork_p50": 9958,
+      "production_p50": 7400,
+      "delta_p50": 2558
+    }
+  },
+  "acceptanceReplay": {
+    "pipelineMs_p50": 9958,
+    "pipelineMs_p95": 22853,
+    "pearson_queryCount_vs_pipelineMs": 0.802,
+    "clockPureRuntimeInference": false,
+    "includesDualWeightCausalFork": true
+  },
+  "delta2Incremental": {
+    "additionalQueries_global": 1389,
+    "CAUSALLY_COMPARABLE": 109,
+    "ASR_CONTAMINATED": 91,
+    "comparable_deltaPipelineMs_p50": 3535,
+    "comparable_deltaFallbackQueries_mean": 5.67,
+    "estimated_additional_retry_ms_per_utt_from_query_cost": 14.2,
+    "interpretation": "Delta2 adds ~1.4k fallback queries; at ~2.5ms/query Retry cost remains <1% of E2E. Acceptance +3.5s p50 on comparable cases is NOT explained by Delta2 query cost alone (ASR/harness variance dominates)."
+  },
+  "duplicateWork": {
+    "crossPathDuplicateInvocationCount": 1574,
+    "totalRetryInvocations": 3351,
+    "duplicateRate": 0.4697,
+    "classification": "EXPECTED_MULTIPATH"
+  },
+  "stageBreakdown": [
+    {
+      "stage": "utterance_pipeline_ms_production",
+      "count": 198,
+      "totalMs": 1676848,
+      "p50Ms": 7400,
+      "p95Ms": 18003,
+      "maxMs": 30911,
+      "meanMs": 8468.9,
+      "shareOfPipelinePercent": 100.0
+    },
+    {
+      "stage": "A_ASR_plus_nonFW_estimated",
+      "count": 198,
+      "totalMs": 962978,
+      "p50Ms": 3489,
+      "p95Ms": 9916,
+      "maxMs": 24623,
+      "meanMs": 4863.5,
+      "shareOfPipelinePercent": 57.43
+    },
+    {
+      "stage": "B_FW_detector_step_ms",
+      "count": 198,
+      "totalMs": 713870,
+      "p50Ms": 2661,
+      "p95Ms": 7512,
+      "maxMs": 19493,
+      "meanMs": 3605.4,
+      "shareOfPipelinePercent": 42.57
+    },
+    {
+      "stage": "B_FW_residual_ex_M3_Retry_KenLM",
+      "count": 198,
+      "totalMs": 524466,
+      "p50Ms": 1915,
+      "p95Ms": 6452,
+      "maxMs": 14020,
+      "meanMs": 2648.8,
+      "shareOfPipelinePercent": 31.28
+    },
+    {
+      "stage": "D_Model3_infer_sum_paths",
+      "count": 198,
+      "totalMs": 5878,
+      "p50Ms": 20,
+      "p95Ms": 85,
+      "maxMs": 171,
+      "meanMs": 29.7,
+      "shareOfPipelinePercent": 0.35
+    },
+    {
+      "stage": "H_Retry_path_latency_sum_paths",
+      "count": 198,
+      "totalMs": 16433,
+      "p50Ms": 44,
+      "p95Ms": 285,
+      "maxMs": 656,
+      "meanMs": 83.0,
+      "shareOfPipelinePercent": 0.98
+    },
+    {
+      "stage": "K_KenLM_subprocess_ms",
+      "count": 198,
+      "totalMs": 167093,
+      "p50Ms": 633,
+      "p95Ms": 3658,
+      "maxMs": 4999,
+      "meanMs": 843.9,
+      "shareOfPipelinePercent": 9.96
+    }
+  ],
+  "queryScaling": [
+    {
+      "bucket": "0-5",
+      "n": 20,
+      "acceptance_pipeline_p50": 8019,
+      "acceptance_pipeline_p95": 13145,
+      "mean_queryCount": 2.55,
+      "mean_fallbackQueryCount": 2.2,
+      "mean_pathsWithRetry": 0.95,
+      "production_retry_p50": 9,
+      "production_retry_p95": 12,
+      "production_retry_n": 7
+    },
+    {
+      "bucket": "6-10",
+      "n": 93,
+      "acceptance_pipeline_p50": 8847,
+      "acceptance_pipeline_p95": 12900,
+      "mean_queryCount": 7.66,
+      "mean_fallbackQueryCount": 7.02,
+      "mean_pathsWithRetry": 1.19,
+      "production_retry_p50": 21,
+      "production_retry_p95": 35,
+      "production_retry_n": 44
+    },
+    {
+      "bucket": "11-20",
+      "n": 49,
+      "acceptance_pipeline_p50": 10855,
+      "acceptance_pipeline_p95": 13730,
+      "mean_queryCount": 15.29,
+      "mean_fallbackQueryCount": 10.71,
+      "mean_pathsWithRetry": 2.0,
+      "production_retry_p50": 37,
+      "production_retry_p95": 75,
+      "production_retry_n": 65
+    },
+    {
+      "bucket": "21-40",
+      "n": 24,
+      "acceptance_pipeline_p50": 12851,
+      "acceptance_pipeline_p95": 23482,
+      "mean_queryCount": 32.12,
+      "mean_fallbackQueryCount": 25.25,
+      "mean_pathsWithRetry": 3.12,
+      "production_retry_p50": 85,
+      "production_retry_p95": 160,
+      "production_retry_n": 46
+    },
+    {
+      "bucket": ">40",
+      "n": 14,
+      "acceptance_pipeline_p50": 22923,
+      "acceptance_pipeline_p95": 29454,
+      "mean_queryCount": 76.29,
+      "mean_fallbackQueryCount": 45.36,
+      "mean_pathsWithRetry": 6.86,
+      "production_retry_p50": 205,
+      "production_retry_p95": 418,
+      "production_retry_n": 36
+    }
+  ],
+  "multipath": [
+    {
+      "cohort": "single_path_retry_or_none",
+      "n": 100,
+      "acceptance_pipeline_p50": 8646,
+      "acceptance_pipeline_p95": 13188,
+      "mean_queries": 7.34,
+      "mean_paths": 0.96
+    },
+    {
+      "cohort": "multipath_retry",
+      "n": 100,
+      "acceptance_pipeline_p50": 10961,
+      "acceptance_pipeline_p95": 26852,
+      "mean_queries": 26.17,
+      "mean_paths": 3.03
+    }
+  ],
+  "DECISION_REQUIRED_BEFORE_OPTIMIZATION": "EMPTY",
+  "nextControlVariable": "ASR_UPSTREAM_AND_FIRST_PASS_FW_COST_ISOLATION",
+  "nextPhase": "MODEL3_RETRY_PERFORMANCE_ASR_FW_OWNER_ISOLATION_OR_POST_DELTA_RECONCILIATION"
+}

@@ -1,0 +1,71 @@
+{
+  "phase": "MODEL3_V1_SYNTHETIC_FREEZE_SEED_SELECTION",
+  "selection_rule": "multi-metric: Precision/Recall/F1 + Strict Pair + (Strict-Shuffle gap) + Heldout Family; reject Strict Pair < 0.80",
+  "per_seed": [
+    {
+      "seed": 2026082520,
+      "precision": 0.9886363636363636,
+      "recall": 0.9497816593886463,
+      "f1": 0.9688195991091315,
+      "false_retry": 4.980691519210527e-05,
+      "strict_pair": 0.8979295314202688,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.1888848528877588,
+      "hard_keep": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.6141732283464567,
+      "unseen_surface_f1": 0.992234685073339,
+      "unseen_context_f1": 1.0,
+      "selection_score": 0.9084949335384936
+    },
+    {
+      "seed": 2026082521,
+      "precision": 0.9969135802469136,
+      "recall": 0.9403202328966521,
+      "f1": 0.9677902621722846,
+      "false_retry": 1.3281844051228072e-05,
+      "strict_pair": 0.7442789683981111,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.13112967671630948,
+      "hard_keep": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.5272727272727273,
+      "unseen_surface_f1": 0.9913344887348354,
+      "unseen_context_f1": 1.0,
+      "selection_score": -1000000000.0
+    },
+    {
+      "seed": 2026082522,
+      "precision": 0.9908606245239908,
+      "recall": 0.9468704512372634,
+      "f1": 0.9683662076665426,
+      "false_retry": 3.984553215368422e-05,
+      "strict_pair": 0.8652379222666182,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.18053033054849255,
+      "hard_keep": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.596774193548387,
+      "unseen_surface_f1": 0.991349480968858,
+      "unseen_context_f1": 1.0,
+      "selection_score": 0.8969131939229098
+    }
+  ],
+  "authoritative_seed": 2026082520,
+  "authoritative": {
+    "seed": 2026082520,
+    "precision": 0.9886363636363636,
+    "recall": 0.9497816593886463,
+    "f1": 0.9688195991091315,
+    "false_retry": 4.980691519210527e-05,
+    "strict_pair": 0.8979295314202688,
+    "strict_zero": 0.0,
+    "strict_shuffle": 0.1888848528877588,
+    "hard_keep": 1.0,
+    "no_anchor_fp": 0.0,
+    "heldout_family_f1": 0.6141732283464567,
+    "unseen_surface_f1": 0.992234685073339,
+    "unseen_context_f1": 1.0,
+    "selection_score": 0.9084949335384936
+  }
+}

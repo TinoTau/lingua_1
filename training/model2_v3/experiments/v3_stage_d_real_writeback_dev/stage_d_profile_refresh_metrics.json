@@ -1,0 +1,6 @@
+{
+  "mechanism": "POST /api/v1/sessions/profile-refresh → SessionUpdate::RefreshUserProfile → force SessionBootstrap",
+  "node_handler": "session_bootstrap Map.set overwrite",
+  "status": "IMPLEMENTED",
+  "requires": "live session with paired node"
+}

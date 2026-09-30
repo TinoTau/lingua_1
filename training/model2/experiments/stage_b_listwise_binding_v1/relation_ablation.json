@@ -1,0 +1,28 @@
+{
+  "A_user_relation": {
+    "mean_rank": 2.665,
+    "Recall@3": 0.59,
+    "n": 200
+  },
+  "B_user_only": {
+    "mean_rank": 8.33,
+    "Recall@3": 0.17,
+    "n": 200
+  },
+  "C_relation_only": {
+    "mean_rank": 8.33,
+    "Recall@3": 0.17,
+    "n": 200
+  },
+  "D_neither": {
+    "mean_rank": 8.33,
+    "Recall@3": 0.17,
+    "n": 200
+  },
+  "n": 200,
+  "interaction_gap_vs_user_only": 5.665,
+  "interaction_better_than_user_only": true,
+  "interaction_better_than_relation_only": true,
+  "interaction_better_than_neither": true,
+  "interaction_pass": true
+}

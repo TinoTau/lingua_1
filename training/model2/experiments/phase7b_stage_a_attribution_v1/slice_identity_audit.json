@@ -1,0 +1,122 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "slices": {
+    "SEEN_TERM": {
+      "n_rows": 5295,
+      "utterance_id_hash": "078963862fa3623c",
+      "user_id_hash": "4436a9c4ead618cc",
+      "term_id_hash": "e72f0801739d8e46",
+      "row_id_hash": "08b661c8ff9248d4",
+      "availability": "AVAILABLE"
+    },
+    "UNSEEN_TERM": {
+      "n_rows": 1011,
+      "utterance_id_hash": "803b7e4bf1933f80",
+      "user_id_hash": "03680eb12b1681fa",
+      "term_id_hash": "28fe5c4553514e60",
+      "row_id_hash": "7bcd5f7ac8497013",
+      "availability": "AVAILABLE"
+    },
+    "SEEN_USER": {
+      "n_rows": 0,
+      "utterance_id_hash": "e3b0c44298fc1c14",
+      "user_id_hash": "e3b0c44298fc1c14",
+      "term_id_hash": "e3b0c44298fc1c14",
+      "row_id_hash": "e3b0c44298fc1c14",
+      "availability": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+    },
+    "UNSEEN_USER": {
+      "n_rows": 1011,
+      "utterance_id_hash": "803b7e4bf1933f80",
+      "user_id_hash": "03680eb12b1681fa",
+      "term_id_hash": "28fe5c4553514e60",
+      "row_id_hash": "7bcd5f7ac8497013",
+      "availability": "AVAILABLE"
+    },
+    "UNSEEN_TERM_SEEN_USER": {
+      "n_rows": 0,
+      "utterance_id_hash": "e3b0c44298fc1c14",
+      "user_id_hash": "e3b0c44298fc1c14",
+      "term_id_hash": "e3b0c44298fc1c14",
+      "row_id_hash": "e3b0c44298fc1c14",
+      "availability": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+    },
+    "SEEN_TERM_UNSEEN_USER": {
+      "n_rows": 0,
+      "utterance_id_hash": "e3b0c44298fc1c14",
+      "user_id_hash": "e3b0c44298fc1c14",
+      "term_id_hash": "e3b0c44298fc1c14",
+      "row_id_hash": "e3b0c44298fc1c14",
+      "availability": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+    },
+    "UNSEEN_TERM_UNSEEN_USER": {
+      "n_rows": 1011,
+      "utterance_id_hash": "803b7e4bf1933f80",
+      "user_id_hash": "03680eb12b1681fa",
+      "term_id_hash": "28fe5c4553514e60",
+      "row_id_hash": "7bcd5f7ac8497013",
+      "availability": "AVAILABLE"
+    },
+    "STAGE_B_UNSEEN_TERM_DEF": {
+      "n_rows": 1011,
+      "utterance_id_hash": "803b7e4bf1933f80",
+      "user_id_hash": "03680eb12b1681fa",
+      "term_id_hash": "28fe5c4553514e60",
+      "row_id_hash": "7bcd5f7ac8497013",
+      "availability": "AVAILABLE"
+    },
+    "STAGE_B_UNSEEN_USER_DEF": {
+      "n_rows": 1011,
+      "utterance_id_hash": "803b7e4bf1933f80",
+      "user_id_hash": "03680eb12b1681fa",
+      "term_id_hash": "28fe5c4553514e60",
+      "row_id_hash": "7bcd5f7ac8497013",
+      "availability": "AVAILABLE"
+    }
+  },
+  "comparisons": {
+    "STAGE_B_UNSEEN_USER_DEF__vs__STAGE_B_UNSEEN_TERM_DEF": {
+      "intersection_count": 1011,
+      "union_count": 1011,
+      "jaccard": 1.0,
+      "exact_same_rows": true,
+      "a_n": 1011,
+      "b_n": 1011
+    },
+    "SEEN_USER__vs__UNSEEN_USER": {
+      "intersection_count": 0,
+      "union_count": 1011,
+      "jaccard": 0.0,
+      "exact_same_rows": false,
+      "a_n": 0,
+      "b_n": 1011
+    },
+    "SEEN_TERM__vs__UNSEEN_TERM": {
+      "intersection_count": 0,
+      "union_count": 6306,
+      "jaccard": 0.0,
+      "exact_same_rows": false,
+      "a_n": 5295,
+      "b_n": 1011
+    },
+    "UNSEEN_TERM_SEEN_USER__vs__SEEN_TERM_UNSEEN_USER": {
+      "intersection_count": 0,
+      "union_count": 0,
+      "jaccard": null,
+      "exact_same_rows": false,
+      "a_n": 0,
+      "b_n": 0
+    }
+  },
+  "explanation": {
+    "phase7a_unseen_user_eq_unseen_term": true,
+    "reason": "User-disjoint split ⇒ all validation/test users are unseen. Term-prefer holdout ⇒ train∩eval target_term_id overlap is 0. Therefore Stage B unseen_user filter and unseen_term filter select the same eval rows. Not an exporter bug; split construction makes the two masks identical.",
+    "SEEN_USER_on_eval": "NOT_AVAILABLE_BY_CURRENT_SPLIT",
+    "SEEN_TERM_UNSEEN_USER": "NOT_AVAILABLE_BY_CURRENT_SPLIT",
+    "UNSEEN_TERM_SEEN_USER": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+  }
+}

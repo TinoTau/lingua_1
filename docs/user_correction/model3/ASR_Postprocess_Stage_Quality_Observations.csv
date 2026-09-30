@@ -1,0 +1,7 @@
+﻿stage,observation_type,cases_observed,positive,unchanged,negative,not_measurable,notes
+Postprocess_bundle_raw_to_final,DIRECT_TEXT_CHANGE,200,66,134,0,0,text_changed=66; CER-distance vs reference; baseline NET_GAIN=+6 exact
+Model3,CANDIDATE_QUALITY_SIGNAL,200,,,,200,KEEP_sum=7582 RETRY_sum=2045 cases_with_RETRY=200; FROZEN; no responsibility rescoring
+Retry,CANDIDATE_QUALITY_SIGNAL,200,,,,200,regions/case p50=3 recall_inv/case p50=18; association only; FROZEN
+KenLM,DIRECT_TEXT_CHANGE,71,,,20,129,KENLM_SELECTION_GAP=20/71 multi-candidate cases where better-CER complete sentence existed in inputs
+Recall_Model2_Domain_Assembly,NO_DIRECT_QUALITY_OBSERVATION,200,,,,200,CORRECT_CANDIDATE_NOT_MEASURED; no per-stage text; candidate counts only via pool/kinc
+Candidate_cap_16,CANDIDATE_QUALITY_SIGNAL,200,200,,0,0,pool max=8 p50=1 p95=4 over16=0; CAP16=NO CURRENT ISSUE

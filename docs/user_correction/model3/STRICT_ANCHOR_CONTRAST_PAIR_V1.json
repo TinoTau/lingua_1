@@ -1,0 +1,19 @@
+{
+  "contractId": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+  "version": "1.0.0",
+  "scope": "TRAINING_DATA_CONSTRUCTION_ONLY",
+  "invariants": [
+    "same currentText",
+    "same targetSurface",
+    "same target offsets",
+    "same non-anchor span geometry",
+    "different Anchor placement",
+    "KEEP vs RETRY labels",
+    "anchor-removed model-visible tensors identical",
+    "RETRY referenceReachable=YES",
+    "Anchor RETRY=0"
+  ],
+  "notStrict": [
+    "SEMANTIC_CONTRAST same-target different-sentence"
+  ]
+}

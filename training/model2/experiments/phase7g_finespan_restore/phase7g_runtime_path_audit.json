@@ -1,0 +1,40 @@
+{
+  "markers": [
+    "PHASE7G",
+    "AUTHORITATIVE_PATH",
+    "NO_WHOLE_UTTERANCE",
+    "NOT_FROZEN"
+  ],
+  "authoritative_path": "FineSpan → normalize → base FuzzyPool + profile expansion → same FuzzyPool → merge",
+  "module": "training/model2/retrieval/finespan_retrieval.py",
+  "whole_utterance_in_authoritative_path": false,
+  "relation_policy": {
+    "active_set": "BOUND_FEATURES_V1",
+    "active_relations": [
+      "n_l",
+      "z_zh",
+      "ch_c",
+      "sh_s",
+      "eng_en",
+      "in_ing",
+      "h_f"
+    ],
+    "deferred": {
+      "WEAK_FEATURES_V1": [
+        "s_sh",
+        "en_eng"
+      ],
+      "REVERSED_FEATURES_V1": [
+        "l_n",
+        "zh_z",
+        "c_ch",
+        "an_ang",
+        "ang_an",
+        "ing_in",
+        "f_h"
+      ]
+    },
+    "note": "BOUND-only is PHASE7G staged active set (SPIKE_ONLY_LIMIT inherited). WEAK/REVERSED remain schema-eligible; not deleted."
+  },
+  "shadow_path": "Phase7F whole-utt kept diagnostic-only in comparison"
+}

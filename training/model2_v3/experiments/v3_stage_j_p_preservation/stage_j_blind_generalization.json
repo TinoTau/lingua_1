@@ -1,0 +1,183 @@
+{
+  "P_hard": {
+    "n": 699,
+    "support": "OK",
+    "TIR_B1": 0.9599427753934192,
+    "TIR_V3": 0.9155937052932761,
+    "RecallRetained": 0.9538002980625931,
+    "TIR_CI95": [
+      0.892644427166345,
+      0.933999869357936
+    ],
+    "Teacher_Top1": 0.9124820659971306,
+    "Teacher_Top2": 1.0,
+    "hits_v3": 640,
+    "Latency_P50": 52.02370000188239,
+    "Latency_P95": 71.47399999666959,
+    "P1_baseline_RR": 0.955
+  },
+  "P_heldout": {
+    "n": 439,
+    "support": "OK",
+    "TIR_B1": 0.9635535307517085,
+    "TIR_V3": 0.9043280182232346,
+    "RecallRetained": 0.9385342789598108,
+    "TIR_CI95": [
+      0.8732008944829269,
+      0.9284401437573828
+    ],
+    "Teacher_Top1": 0.9018264840182648,
+    "Teacher_Top2": 1.0,
+    "hits_v3": 397,
+    "Latency_P50": 51.76150001352653,
+    "Latency_P95": 71.77629999932833,
+    "P1_baseline_RR": 0.955
+  },
+  "V2_P": {
+    "n": 699,
+    "support": "OK",
+    "TIR_B1": 0.9599427753934192,
+    "TIR_V3": 0.9155937052932761,
+    "RecallRetained": 0.9538002980625931,
+    "TIR_CI95": [
+      0.892644427166345,
+      0.933999869357936
+    ],
+    "Teacher_Top1": 0.9124820659971306,
+    "Teacher_Top2": 1.0,
+    "hits_v3": 640,
+    "Latency_P50": 52.098199987085536,
+    "Latency_P95": 69.78459999663755,
+    "P1_baseline_RR": 0.955
+  },
+  "V3_D": {
+    "n": 72,
+    "support": "LOW_SUPPORT",
+    "TIR": 0.2222222222222222,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.2222222222222222,
+    "TIR_CI95": [
+      0.1416732392052012,
+      0.3309117273566856
+    ],
+    "hits": 16,
+    "UnnecessaryExpansion": 1.0,
+    "Latency_P50": 2.859800006262958
+  },
+  "V3_CF": {
+    "CORRECT": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.2222222222222222,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.2222222222222222,
+      "TIR_CI95": [
+        0.1416732392052012,
+        0.3309117273566856
+      ],
+      "hits": 16,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.2226000039372593
+    },
+    "EMPTY": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.0,
+      "Oracle_TIR": 0.0,
+      "RecallRetained": 0.0,
+      "TIR_CI95": [
+        0.0,
+        0.05065293981139638
+      ],
+      "hits": 0,
+      "UnnecessaryExpansion": 0.05555555555555555,
+      "Latency_P50": 1.4100999978836626
+    },
+    "WRONG": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.18055555555555555,
+      "Oracle_TIR": 0.0,
+      "RecallRetained": 0.0,
+      "TIR_CI95": [
+        0.10866714144495851,
+        0.2848055701012114
+      ],
+      "hits": 13,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.233400009572506
+    },
+    "SWAPPED": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.19444444444444445,
+      "Oracle_TIR": 0.0,
+      "RecallRetained": 0.0,
+      "TIR_CI95": [
+        0.11951371043417634,
+        0.3003297527838992
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 0.9722222222222222,
+      "Latency_P50": 2.1840000117663294
+    },
+    "GENERIC": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.19444444444444445,
+      "Oracle_TIR": 0.0,
+      "RecallRetained": 0.0,
+      "TIR_CI95": [
+        0.11951371043417634,
+        0.3003297527838992
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.593399985926226
+    }
+  },
+  "val_heldout": {
+    "heldout_term": {
+      "n": 46,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.30434782608695654,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.30434782608695654,
+      "TIR_CI95": [
+        0.190796708074489,
+        0.44805918740238165
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.8805000183638185
+    },
+    "heldout_span": {
+      "n": 46,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.30434782608695654,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.30434782608695654,
+      "TIR_CI95": [
+        0.190796708074489,
+        0.44805918740238165
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.117200016276911
+    },
+    "heldout_profile": {
+      "n": 46,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.30434782608695654,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.30434782608695654,
+      "TIR_CI95": [
+        0.190796708074489,
+        0.44805918740238165
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 2.9591999773401767
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "phase": "MODEL3_V1_RETRY_REGION_AND_POSTPROCESS_OWNERSHIP_AUDIT",
+  "date": "2026-08-28",
+  "mode": "READ_ONLY",
+  "phaseResult": "MULTIPLE_GAPS",
+  "primaryFinding": "Model3 KEEP/RETRY ownership is intact, but current ASR postprocess interprets RETRY as boundary-locked recallSpanTopKV2(current FineSpan) — insufficient for malformed multi-span ASR regions. Training also too narrow (length-1 bias + FineSpan-as-lexical-unit phoneticCompatible).",
+  "model3OriginalContract": {
+    "target": "NON-ANCHOR FineSpan (not single-character FineSpan)",
+    "singleCharacterRestriction": false,
+    "requiresValidLexicalWord": false,
+    "requiresCorrectSegmentation": false,
+    "decision": "KEEP | RETRY",
+    "role": "Anchor-conditioned span plausibility / repair-trigger — not word rewriter",
+    "lengthRestrictionClassification": "TRAINING_DATA_BIAS + MATERIALIZER_BIAS (NONE as business contract)",
+    "roleDriftFound": false,
+    "evidence": [
+      "MODEL3_ARCHITECTURE_CONTRACT_V1.md §1: non-anchor spans → one bounded local Lexicon Recall retry",
+      "model3_input_contract_v1.md: span_len_log1p present (length variable); forbid inventing segmentation",
+      "model3_output_contract_v1.md: KEEP|RETRY only"
+    ]
+  },
+  "finespanContract": {
+    "guaranteesLexicalValidity": false,
+    "malformedAsrSurfaceAllowed": true,
+    "zeroCandidateFineSpanAllowed": true,
+    "wronglySegmentedSurfacePossible": true,
+    "meaninglessSurfaceIs": "VALID_REPRESENTATION_OF_INVALID_ASR",
+    "evidence": [
+      "inject-fallback-edges.ts: fallback edges with EMPTY candidates",
+      "materialize-path-fine-spans.ts: allows candidates.length===0",
+      "surface always rawText.slice(rawStart,rawEnd) regardless of lexicon membership"
+    ]
+  },
+  "currentRetryPath": {
+    "model3Retry": "spanId → KEEP|RETRY",
+    "retryFunction": "routeModel3Retry → recallSpanTopKV2",
+    "retryInput": "windowText=rawText.slice(span.rawStart,span.rawEnd); syllables=globalSyllables.slice(sylStart,sylEnd)",
+    "usesCurrentSpanBoundary": true,
+    "canReinterpretSegmentation": false,
+    "adjacentRetryHandling": "INDEPENDENT_PER_SPAN (no merge / no shared window)",
+    "pathFineSpansAfterRetry": "UNCHANGED"
+  },
+  "realCaseEvidence": {
+    "casesAudited": 17,
+    "SUFFICIENT": 4,
+    "PARTIALLY_SUFFICIENT": 4,
+    "SEGMENTATION_LOCKED": 6,
+    "NO_REPAIRABLE_TARGET": 3,
+    "example": "d179: proxy multi-char region 限計劃意境… maps to consecutive 1-char FineSpans 限|计|划|意|境|…; current RETRY would recall only one char boundary"
+  },
+  "regionRetryFeasibility": {
+    "deriveRegionFromExistingOffsets": true,
+    "mergeAdjacentRetryWithoutModel3Change": true,
+    "existingFineSpanLogicReusable": true,
+    "existingRecallReusable": true,
+    "existingModel2Reusable": true,
+    "candidateBudgetPreservable": true,
+    "retryOncePreservable": true,
+    "feasibility": "FEASIBLE_WITH_EXISTING_COMPONENTS",
+    "note": "Feasibility audit only — NOT an implementation design. Must preserve: one retry, bounded local, no ASR rerun, Anchor protected, budgets, Domain Vote once, no recursion."
+  },
+  "phoneticCompatible": {
+    "currentFineSpanLevelCheck": "Training label requires phoneticCompatible on CURRENT FineSpan as if it were a repairable lexical unit + referenceReachable=YES",
+    "ownership": "MIXED (business phonetic-class intent + training materialization guard)",
+    "compatibleWithRegionRetry": "PARTIAL",
+    "classification": "TOO_NARROW_FOR_REGION_RETRY",
+    "doNotRemove": true
+  },
+  "trainingImplication": {
+    "lengthIsBusinessBoundary": false,
+    "malformedNonLexicalMayBeRetryTarget": "CONDITIONAL",
+    "multiSpanMalformedRegionRelevant": true,
+    "modelArchitectureChangeNeeded": false,
+    "modelFeatureChangeNeeded": false,
+    "trainingCoverageChangeNeeded": true,
+    "strictHardKeepNaturalNoAnchorSufficientInPrinciple": "PARTIALLY — preserve contrast; still need malformed-region coverage without unknown→RETRY shortcut"
+  },
+  "ownershipMatrix": [
+    {"responsibility": "create FineSpan", "owner": "Lattice FineSpan runtime", "current": "runLatticeFineSpanGeneration", "status": "CORRECT"},
+    {"responsibility": "determine FineSpan boundary", "owner": "Lattice / SegmentationPath", "current": "lexical edges + fallback 1-syl", "status": "CORRECT"},
+    {"responsibility": "judge current span plausibility", "owner": "Model3", "current": "KEEP/RETRY logits", "status": "CORRECT"},
+    {"responsibility": "mark RETRY", "owner": "Model3", "current": "Model3SpanDecision", "status": "CORRECT"},
+    {"responsibility": "derive retry region", "owner": "ASR postprocess", "current": "implicit = current FineSpan only", "status": "DRIFT_TOO_NARROW"},
+    {"responsibility": "merge adjacent RETRY regions", "owner": "ASR postprocess", "current": "NOT implemented (independent)", "status": "GAP"},
+    {"responsibility": "local re-segmentation", "owner": "ASR postprocess / FineSpan regen", "current": "NOT on RETRY path", "status": "GAP"},
+    {"responsibility": "pinyin/tone Recall", "owner": "Recall", "current": "recallSpanTopKV2 on frozen bounds", "status": "CORRECT_API_WRONG_WINDOW"},
+    {"responsibility": "Model2 Recall", "owner": "Model2", "current": "first-pass; not re-driven by Model3 RETRY region", "status": "AS_DESIGNED_FIRST_PASS"},
+    {"responsibility": "candidate generation", "owner": "Recall / lexicon", "current": "hits → WindowCandidate", "status": "CORRECT"},
+    {"responsibility": "candidate budget", "owner": "ASR postprocess", "current": "getPerSpanCandidateLimit", "status": "CORRECT"},
+    {"responsibility": "final sentence assembly", "owner": "Assembly + KenLM", "current": "completeDomainAwareAssemblyFromVote", "status": "CORRECT"}
+  ],
+  "rootCause": {
+    "MODEL3_CONTRACT_DRIFT": false,
+    "FINESPAN_CONTRACT_DRIFT": false,
+    "RETRY_POSTPROCESS_TOO_NARROW": true,
+    "TRAINING_DATA_TOO_NARROW": true,
+    "TRAINING_LABEL_TOO_NARROW": true
+  },
+  "pilotDataset": {
+    "id": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT",
+    "trainingReadiness": "HOLD_MULTIPLE_GAPS"
+  },
+  "nextStep": {
+    "model3Architecture": "KEEP_FROZEN",
+    "model3Features": "KEEP_FROZEN",
+    "fineSpanArchitecture": "KEEP_FROZEN",
+    "asrPostprocessCorrectionNeeded": true,
+    "trainingDatasetCorrectionNeeded": true,
+    "trainingLabelCorrectionNeeded": true,
+    "smallestNextCorrection": "ASR postprocess: interpret RETRY via existing offsets/order as bounded local region (optionally merge adjacent RETRY) then reuse FineSpan/window + Recall — without Model3 output changes.",
+    "recommendedNextPhase": "MODEL3_V1_ASR_POSTPROCESS_RETRY_REGION_CORRECTION",
+    "separateLaterPhase": "MODEL3_V1_TRAINING_COVERAGE_FOR_PRODUCTION_FINESPAN_FORMS"
+  }
+}

@@ -26,6 +26,8 @@ It is not a parallel freeze contract.
 
 ## 2. High-Level Pipeline（冻结目标主链）
 
+**CODE_REALITY (2026-08-23 — includes Model2 Stage-J):**
+
 ```text
 FW 整句结果
 → UtteranceSyllableCoordinate
@@ -33,12 +35,16 @@ FW 整句结果
 → SQLite Lexicon Recall
 → LexicalEdge[]
 → SegmentationPath[]
+→ Path-local: Tone Rebind → Compatibility → Model2 P/D
 → Path-specific Domain Vote
 → Path-specific SameDomain Assembly
 → Global Candidate Allocation <=16
 → KenLM Cross-Path Scoring
 → Top-K / Final Result
 ```
+
+> Model2 Stage-J expands activeCandidates **before** Domain Vote.
+> Planned Model3: after SameDomain / before Assembly+KenLM; see `docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md`.
 
 系统外围：
 

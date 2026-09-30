@@ -1,0 +1,580 @@
+{
+  "phase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "gate": "GATE_0",
+  "utteranceCount": 6,
+  "responseCount": 6,
+  "runner": {
+    "exitCode": 0,
+    "elapsedSec": 1.34,
+    "runner": "ELECTRON_RUN_AS_NODE",
+    "harness": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\offline_harness\\targeted_dist_materialize.cjs"
+  },
+  "utterances": [
+    {
+      "id": "g0_clean_001",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+          "pathIndex": 0,
+          "spanCount": 19,
+          "candHist": {
+            "0": 19
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    },
+    {
+      "id": "g0_clean_002",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "8adac4d952d58676b901c237853111c683c97b9bc0351730e5272e765bffa09b",
+          "pathIndex": 0,
+          "spanCount": 14,
+          "candHist": {
+            "0": 14
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    },
+    {
+      "id": "g0_corr_001",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "8adac4d952d58676b901c237853111c683c97b9bc0351730e5272e765bffa09b",
+          "pathIndex": 0,
+          "spanCount": 14,
+          "candHist": {
+            "0": 14
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    },
+    {
+      "id": "g0_corr_002",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899",
+          "pathIndex": 0,
+          "spanCount": 17,
+          "candHist": {
+            "0": 17
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    },
+    {
+      "id": "g0_corr_003",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "3f2aa57232bd150c3c834a8775b95acdd4d7b078343ad69e8edc8e6cfbf4fbf6",
+          "pathIndex": 0,
+          "spanCount": 11,
+          "candHist": {
+            "0": 11
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    },
+    {
+      "id": "g0_clean_003",
+      "ok": true,
+      "error": null,
+      "message": null,
+      "pathCount": 1,
+      "anchorClassification": "PRODUCTION_EQUIVALENT_ANCHOR",
+      "featureAvailability": {
+        "textContext": true,
+        "pinyinTextDerived": true,
+        "toneAcoustic": false,
+        "asrConfidence": false,
+        "model2Pronunciation": false,
+        "recallFirstPass": true
+      },
+      "reused": {
+        "fineSpan": "runLatticeFineSpanGeneration",
+        "candidateCount": "model3FirstPassCandidateCount",
+        "compatibility": "buildCandidateCompatibilityGraph+resolveCompatibilityRelations",
+        "domainVote": "voteUtteranceDomainFromPool",
+        "anchor": "materializeModel3Anchors",
+        "packInfer": "packModel3SpanInferFields"
+      },
+      "paths": [
+        {
+          "pathId": "bc81ae8b47a4f84f7b1f04019dcf0a6be33eb5b5f86b744c972292726dd5d68a",
+          "pathIndex": 0,
+          "spanCount": 15,
+          "candHist": {
+            "0": 15
+          },
+          "compatibility": {
+            "pathCandidateCount": 0,
+            "coveredFlags": 0,
+            "activeCandidateCount": 0,
+            "coverageCount": 0
+          },
+          "retainedDomains": []
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "okUtterances": 6,
+    "candExactHistogram": {
+      "0": 90
+    },
+    "cand0Spans": 90,
+    "candGt0Spans": 0,
+    "pathCountHistogram": {
+      "1": 6
+    },
+    "multipathUtterances": 0,
+    "pinyinTextDerivedByUtterance": {
+      "1": 6
+    },
+    "featureExamples": [
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "可",
+        "rawStart": 0,
+        "rawEnd": 1,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "可",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "能",
+        "rawStart": 1,
+        "rawEnd": 2,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "能",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.05555555555555555,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "问",
+        "rawStart": 2,
+        "rawEnd": 3,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "问",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.1111111111111111,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "一",
+        "rawStart": 3,
+        "rawEnd": 4,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "一",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.16666666666666666,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "下",
+        "rawStart": 4,
+        "rawEnd": 5,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "下",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.2222222222222222,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "早",
+        "rawStart": 5,
+        "rawEnd": 6,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "早",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.2777777777777778,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "餐",
+        "rawStart": 6,
+        "rawEnd": 7,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "餐",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.3333333333333333,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      },
+      {
+        "id": "g0_clean_001",
+        "pathId": "8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238",
+        "surface": "几",
+        "rawStart": 7,
+        "rawEnd": 8,
+        "isAnchor": false,
+        "anchorSource": "NONE",
+        "rawFirstPassCandidateCount": 0,
+        "candRawTotal": 0,
+        "candCovered": 0,
+        "packedInfer": {
+          "surface": "几",
+          "firstPassCandidateCount": 0,
+          "pinyinChannelAvail": true,
+          "recallFirstPassAvail": true
+        },
+        "features": {
+          "isAnchor": 0,
+          "span_len_log1p": 0.6931471805599453,
+          "span_rel_position": 0.3888888888888889,
+          "first_pass_cand_log1p": 0,
+          "current_cjk_len_log1p": 0.6931471805599453,
+          "pinyin_channel_avail": 1
+        },
+        "owners": {
+          "cand": "model3FirstPassCandidateCount",
+          "packInfer": "packModel3SpanInferFields",
+          "anchor": "materializeModel3Anchors",
+          "fineSpan": "runLatticeFineSpanGeneration",
+          "compat": "resolveCompatibilityRelations+writeback"
+        }
+      }
+    ],
+    "allFallbackEmptyCandidates": true
+  },
+  "rootCause": {
+    "code": "MANDATORY_TONE_RECALL_BLOCKS_TEXT_ONLY_CANDIDATE_STATE",
+    "summary": "Production Batch 1.1C Mandatory Tone Recall is fail-closed without acousticTonePattern. Text-only offline lattice therefore emits lexicalEdgeCount=0 and fallback FineSpans with empty candidates → model3FirstPassCandidateCount collapses to constant 0. Live traces show cand 0/1 variation because ASR tone evidence unlocks recall.",
+    "evidence": {
+      "probeCandExactHistogram": {
+        "0": 90
+      },
+      "diagnosticScripts": [
+        "training/model3_dataset/offline_harness/_probe_cands.js",
+        "training/model3_dataset/offline_harness/_probe_tone.js"
+      ],
+      "forbiddenWorkarounds": [
+        "fake acousticTonePattern without frozen training contract",
+        "Python approximate cand heuristic",
+        "hardcode random 0/1",
+        "treat legacy RealDist defaulted cand0 as honest"
+      ]
+    },
+    "escalation": "MODEL3_V2_TRAINING_FEATURE_STATE_PIPELINE_AUDIT"
+  },
+  "checks": {
+    "FineSpan_production_equivalent": true,
+    "candidate_state_production_equivalent": false,
+    "candidate_owner_wired": true,
+    "naturally_has_cand0": true,
+    "naturally_has_cand_gt0": false,
+    "anchor_PRODUCTION_EQUIVALENT_ANCHOR": true,
+    "feature_packing_shared": true,
+    "multipath_production_source": true,
+    "no_protected_holdout_leakage": true,
+    "no_business_architecture_change": true,
+    "duplicated_business_logic": false,
+    "gateClass_candidate_two_sided_support": "SEMANTIC_FAIL_CLOSED"
+  },
+  "verdict": "FAIL",
+  "stopBeforeBulk": true,
+  "datasetBuildAuthorized": false,
+  "acceptanceVerdictIfStopped": "TRAINING_FEATURE_STATE_PIPELINE_BLOCKED"
+}

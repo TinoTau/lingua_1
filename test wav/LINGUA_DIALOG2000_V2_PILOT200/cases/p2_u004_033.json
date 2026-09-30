@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u004_033",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U004",
+  "profileStage": "P1",
+  "domain": "medical",
+  "difficulty": "medium",
+  "referenceText": "复查时请重点关注与城门相关的指标变化。",
+  "audioId": "aud_p2_u004_033",
+  "audioPath": "audio/p2_u004_033.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "ch_c",
+  "relationDirection": "ch_c",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MODERATE",
+  "profileRef": "prof_u004_p1",
+  "profileBuildSetId": "pbs_u004_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e4baa7e593817c63",
+    "base-rebuild-term-e59083e9a5ad7c63",
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e59f8ee997a87c63"
+  ],
+  "evaluationTargetSurface": "城门",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 715740695,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "ASR_RESILIENCE_CONTROL",
+  "wrongProfileUserId": null,
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u004_033",
+    "byte_size": 119302,
+    "sha256": "1ec7308dd969f31c92839ed3788ccf6fba2eda7935a692e7c27165f76dd52969",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 3.727
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "复查时请重点关注与曾门相关的指标变化。"
+}

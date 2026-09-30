@@ -1,0 +1,12 @@
+evidence_id,source_path,metric,value,n,applies_to,model3_usable_retry_yield,notes
+M2_P4_TTS_PROBE,docs/user_correction/Lingua_Model2_Phase4_Synthetic_TTS_Probe_Development_Report_2026_08_12.md,ASR_exact_match_rate,0.216,320,TTS_ASR_mismatch,INSUFFICIENT,Model2 not Model3 label funnel
+M2_P4_TTS_PROBE,docs/user_correction/Lingua_Model2_Phase4_Synthetic_TTS_Probe_Development_Report_2026_08_12.md,ASR_error_rate,0.784,320,TTS_ASR_mismatch,INSUFFICIENT,Contradicts TTS-too-clean assumption
+M2_P5C,docs/user_correction/Lingua_Model2_Phase5C_Ambiguity_Training_Scale_Probe_Report_2026_08_12.md,ASR_error_rate,0.833,3000,TTS_ASR_mismatch,INSUFFICIENT,Scale evidence only
+M2_P5F,docs/user_correction/Lingua_Model2_Phase5F_PseudoUser_Accent_Scale_Probe_Report_2026_08_13.md,ASREffectRate,0.906,2999,accent_perturbation,INSUFFICIENT,Model2 phoneme pipeline; tone_corruption DEFERRED
+DIALOG200_TONE_P1,docs/acceptance/Test/Tone_V2_Phase1_Runtime_Test_Report_2026_06_29.md,ASR_exact_match,0.19,200,dialog_200_raw_ASR,INSUFFICIENT,CER 0.248; Piper eval audio
+DIALOG200_TONE_P15,docs/archive/HISTORICAL/Tone_V2_Phase1_5_Production_Baseline_Business_Validation_Report_2026_07_12.md,final_exact_match,0.14,200,pipeline_final_not_raw,INSUFFICIENT,Final text after repair path
+M3_REAL_ERROR_AUDIT,docs/user_correction/model3/Lingua_Model3_V1_Real_ASR_Error_Dataset_Audit_2026_08_28.md,eligible_error_utt,46,anchored_subset,error_shape,PARTIAL_PROXY,153 spans; MULTI_CHAR 68 PHONETIC 64 INS 5 DEL 3
+M3_COVERAGE_AUDIT,docs/user_correction/model3/Lingua_Model3_V1_Training_Coverage_Audit_2026_08_29.md,mismatch_cases,47,53,retry_eligible_proxy,PARTIAL_PROXY,HIGH RETRY-eligible cases >=13; not acoustic cand funnel
+M3_TTS_READINESS,docs/user_correction/model3/MODEL3_TTS_READINESS_AUDIT_2026_08_26.md,LOW_ERROR_YIELD,RISK_LABEL_ONLY,n/a,historical,INSUFFICIENT,SUPERSEDED_FOR_MODEL3 TEXT_ONLY; no measured Model3 RETRY yield
+GATE0_TEXT_ONLY,docs/user_correction/model3/model3_v2_targeted_dist_gate0_probe.json,cand_gt0,0,90_spans,cand_state,FAIL_WITHOUT_ACOUSTIC,Confirms acoustic path required
+LIVE_TRACE_CAND,docs/user_correction/model3/model3_v2_live_input_trace.jsonl,rawCand_0_vs_1,466_vs_541,1007,live_cand_support,N/A_SUPERVISED,Holdout-heavy; no GT labels

@@ -1,0 +1,301 @@
+{
+  "phase": "MODEL3_V1_CONTRAST_CONSTRUCTION_REVIEW",
+  "verdict": "PASS_FINDING",
+  "audit_seed": 2026082501,
+  "model_used_for_ablation": "training/model3_dataset/model3_v1_diet_rebalance_ckpts/winner_seed_2026084421",
+  "pilot_strong_pair_invariants": {
+    "definition": [
+      "same targetSurface",
+      "same currentText",
+      "same non-anchor context after stripping both candidate anchors",
+      "different Anchor / isAnchor placement",
+      "KEEP vs RETRY labels on target",
+      "pair_consistency_loss=true in training"
+    ],
+    "audited_sample": {
+      "same_target": 1.0,
+      "same_currentText": 1.0,
+      "same_non_anchor_context": 1.0,
+      "same_pinyin": 1.0,
+      "same_offsets": 1.0,
+      "same_span_len": 1.0,
+      "different_anchor": 1.0,
+      "labels_ok": 1.0,
+      "anchor_only_difference": 1.0,
+      "n": 50,
+      "causal": {
+        "ANCHOR_CAUSAL": 50
+      }
+    },
+    "audited_extended": {
+      "same_target": 1.0,
+      "same_currentText": 1.0,
+      "same_non_anchor_context": 1.0,
+      "same_pinyin": 1.0,
+      "same_offsets": 1.0,
+      "same_span_len": 1.0,
+      "different_anchor": 1.0,
+      "labels_ok": 1.0,
+      "anchor_only_difference": 1.0,
+      "n": 200,
+      "causal": {
+        "ANCHOR_CAUSAL": 200
+      }
+    },
+    "test_pair_count": 2114
+  },
+  "full100k_strong_pair_invariants": {
+    "audited_sample": {
+      "same_target": 1.0,
+      "same_currentText": 0.07,
+      "same_non_anchor_context": 0.07,
+      "same_pinyin": 0.73,
+      "same_offsets": 0.0,
+      "same_span_len": 0.73,
+      "different_anchor": 1.0,
+      "labels_ok": 0.73,
+      "anchor_only_difference": 0.07,
+      "n": 100,
+      "causal": {
+        "LOCAL_TEXT_CAUSAL": 66,
+        "INVALID_CONTRAST": 27,
+        "ANCHOR_CAUSAL": 7
+      }
+    },
+    "audited_extended": {
+      "same_target": 1.0,
+      "same_currentText": 0.07,
+      "same_non_anchor_context": 0.07,
+      "same_pinyin": 0.665,
+      "same_offsets": 0.0,
+      "same_span_len": 0.665,
+      "different_anchor": 1.0,
+      "labels_ok": 0.665,
+      "anchor_only_difference": 0.07,
+      "n": 200,
+      "causal": {
+        "LOCAL_TEXT_CAUSAL": 119,
+        "INVALID_CONTRAST": 67,
+        "ANCHOR_CAUSAL": 14
+      }
+    },
+    "test_pair_count": 1030,
+    "corpus_pair_count": 3925,
+    "corpus_strongness": {
+      "WEAK": 2453,
+      "INVALID": 1269,
+      "STRICT_STRONG": 203
+    },
+    "corpus_anchor_only_rate": 0.051719745222929936,
+    "source_kinds": {
+      "SEED_V1": 3536,
+      "REACHABLE_PAIR_EXTRA": 389
+    },
+    "effective_model_visible_strong_pairs_test": 1,
+    "tensor_audit_n": 100,
+    "mean_non_anchor_visible_difference_count": 272.45,
+    "model_visible_strong_in_tensor_sample": 0,
+    "tensor_causal": {
+      "LOCAL_TEXT_CAUSAL": 66,
+      "null": 27,
+      "ANCHOR_CAUSAL": 7
+    },
+    "non_anchor_diff_hist": {
+      "4": 60,
+      "999": 27,
+      "2": 7,
+      "3": 6
+    }
+  },
+  "invariant_comparison_matrix": {
+    "same_target": {
+      "pilot": 1.0,
+      "full100k": 1.0,
+      "delta": 0.0
+    },
+    "same_currentText": {
+      "pilot": 1.0,
+      "full100k": 0.07,
+      "delta": -0.9299999999999999
+    },
+    "same_non_anchor_context": {
+      "pilot": 1.0,
+      "full100k": 0.07,
+      "delta": -0.9299999999999999
+    },
+    "same_pinyin": {
+      "pilot": 1.0,
+      "full100k": 0.665,
+      "delta": -0.33499999999999996
+    },
+    "same_offsets": {
+      "pilot": 1.0,
+      "full100k": 0.0,
+      "delta": -1.0
+    },
+    "different_anchor": {
+      "pilot": 1.0,
+      "full100k": 1.0,
+      "delta": 0.0
+    },
+    "anchor_only_difference": {
+      "pilot": 1.0,
+      "full100k": 0.07,
+      "delta": -0.9299999999999999
+    },
+    "labels_ok": {
+      "pilot": 1.0,
+      "full100k": 0.665,
+      "delta": -0.33499999999999996
+    }
+  },
+  "seed_corpus_audit": {
+    "n_seeds": 16000,
+    "strong_groups": 5585,
+    "both_roles": 5138,
+    "same_currentText": 0,
+    "same_targetSurface": 5138,
+    "same_referenceText": 0,
+    "same_surrounding_after_anchor_strip": 0,
+    "same_pinyin_only_proxy": 0
+  },
+  "pipeline_trace": {
+    "n": 30,
+    "mutation_counts": {
+      "seed_generation (KEEP/RETRY different currentText by design)": 27,
+      "none_preserved_same_text_dual_anchor": 2,
+      "stage2_or_materialization_broke_same_text": 1
+    },
+    "examples": [
+      {
+        "gid": "contrast_0003753",
+        "sourceKind": "SEED_V1",
+        "causal": "LOCAL_TEXT_CAUSAL",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0003763",
+        "sourceKind": "SEED_V1",
+        "causal": "LOCAL_TEXT_CAUSAL",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0003268",
+        "sourceKind": "SEED_V1",
+        "causal": "INVALID_CONTRAST",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0000592",
+        "sourceKind": "SEED_V1",
+        "causal": "INVALID_CONTRAST",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0000444",
+        "sourceKind": "SEED_V1",
+        "causal": "INVALID_CONTRAST",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0002442",
+        "sourceKind": "SEED_V1",
+        "causal": "LOCAL_TEXT_CAUSAL",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0001208",
+        "sourceKind": "SEED_V1",
+        "causal": "LOCAL_TEXT_CAUSAL",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "xcg:精|金:r1",
+        "sourceKind": "REACHABLE_PAIR_EXTRA",
+        "causal": "ANCHOR_CAUSAL",
+        "same_currentText": true,
+        "anchor_only": true,
+        "mutation_point": "none_preserved_same_text_dual_anchor"
+      },
+      {
+        "gid": "contrast_0001644",
+        "sourceKind": "SEED_V1",
+        "causal": "LOCAL_TEXT_CAUSAL",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      },
+      {
+        "gid": "contrast_0003936",
+        "sourceKind": "SEED_V1",
+        "causal": "INVALID_CONTRAST",
+        "same_currentText": false,
+        "anchor_only": false,
+        "mutation_point": "seed_generation (KEEP/RETRY different currentText by design)"
+      }
+    ]
+  },
+  "training_difference": {
+    "pilot_config_pair_consistency_loss": true,
+    "full100k_config_pair_consistency_loss": false,
+    "pilot_code_has_pair_consistency_step": true,
+    "full100k_code_has_pair_consistency_step": false,
+    "diet_code_has_pair_consistency_step": false,
+    "diet_code_has_group_sampling": true,
+    "full100k_uses_shuffle_dataloader": true,
+    "pilot_uses_shuffle_dataloader": true,
+    "pilot_class_weight_retry": 1.6014772797676338,
+    "full100k_class_weight_retry": 2.5
+  },
+  "anchor_ablation_failure": {
+    "n": 65,
+    "classes": {
+      "both_correct_without_anchor": 59,
+      "collapse_keep": 6
+    },
+    "rates": {
+      "both_correct_without_anchor": 0.9076923076923077,
+      "collapse_keep": 0.09230769230769231
+    }
+  },
+  "root_cause": {
+    "primary": "STRONG_PAIR_INVARIANT_LOST",
+    "secondary": [
+      "PAIR_CONSISTENCY_LOSS_LOST",
+      "CONTRAST_DEFINITION_TOO_LOOSE",
+      "PAIR_SAMPLING_WEAKER_THAN_PILOT",
+      "STAGE2_MATERIALIZATION_BREAKS_PAIR"
+    ],
+    "classification": "G",
+    "classification_name": "MULTIPLE",
+    "codes": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "F"
+    ]
+  },
+  "recommendation": {
+    "next_phase": "MODEL3_V1_CONTRAST_PAIR_RECONSTRUCTION",
+    "safe_without_architecture_change": true,
+    "contrast_construction_bug": true,
+    "sampling_loss_bug": true,
+    "stage2_bug": true,
+    "small_bigru_problem": false
+  }
+}

@@ -1,0 +1,15 @@
+item,before,after
+authoritative_model_artifact,MODEL3_V2_S3_RANDOM_INIT_V1,MODEL3_V2_S3_RANDOM_INIT_V1
+Electron_default_no_env,MODEL3_SYNTHETIC_V1,MODEL3_V2_S3_RANDOM_INIT_V1
+S3_registry_role,CANDIDATE,PRODUCTION
+explicit_rollback,MODEL3_SYNTHETIC_V1 (was also default),MODEL3_SYNTHETIC_V1 via MODEL3_CHECKPOINT_IDENTITY only
+Model3_inference,ON,ON
+Production_Retry,ON,ON
+Retry_semantics,frozen,frozen (unchanged)
+weights_guard,ON,ON
+config_guard,ON,ON
+failure_policy,FAIL_CLOSED,FAIL_CLOSED
+candidate_cap,16,16
+MODEL3_EXPECTED_weights_seal,Synthetic SHA,S3 SHA f1e419…bbb1
+Python_host_DEFAULT_LABEL,MODEL3_SYNTHETIC_V1,MODEL3_V2_S3_RANDOM_INIT_V1
+ACTIVE_SSOT_Production_RETRY_OFF,YES (conflict),NO (SUPERSEDED removed from active)

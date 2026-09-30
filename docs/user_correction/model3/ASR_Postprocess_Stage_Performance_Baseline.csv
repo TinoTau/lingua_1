@@ -1,0 +1,11 @@
+﻿stage,calls,calls_per_case,total_ms,mean_ms,p50_ms,p95_ms,max_ms,inclusive_or_exclusive,postprocess_share,notes
+ASR_reference_pipeline_minus_fw,200,1,1008477,5042.4,4600,9059,13047,exclusive_approx,UPSTREAM_REFERENCE_not_in_postprocess,pipeline_ms - fw_detector_step_ms; not reopened
+FW_postprocess_bundle_INCLUSIVE,200,1,667393,3337.0,2414,7561,17915,inclusive,100.0,fw_detector_step_ms includes FineSpan/Recall/Model2/Domain/Model3/Retry/Assembly/KenLM
+FW_rest_FineSpan_Recall_Model2_Domain_Assembly_approx_EXCLUSIVE,200,UNKNOWN_merged,513560,2567.8,1823,6539,12953,exclusive_approx,75.5,fw - kenlm - model3_sum - retry_sum; MEASUREMENT_GAP for per-substage
+Model3_sum_per_utterance,200,2.13,5767,28.8,19,86,193,exclusive_path_sum_nested_in_fw,0.8,FROZEN; path-local model3_latency_ms summed
+Retry_path_sum_per_utterance,200,4.07,15272,76.4,42,257,588,inclusive_retry_path_nested_in_fw,1.7,FROZEN; includes Retry Recall; do not add again
+KenLM,200,1,132794,664.0,512,655,4605,exclusive_nested_in_fw,21.2,kenlm_ms from dump
+Total_pipeline_wall_INCLUSIVE,200,1,1675870,8379.4,7146,15530,25112,inclusive,N/A_includes_ASR,pipeline_ms
+Recall_standalone,MEASUREMENT_GAP,26.66,,,,,,UNKNOWN,UNKNOWN,only invocation counts in dump; no exclusive Recall ms
+Model2_standalone,MEASUREMENT_GAP,UNKNOWN,,,,,,UNKNOWN,UNKNOWN,no exclusive Model2 ms in this dump
+DomainVote_SameDomain_Anchor_Assembly_CrossPath_standalone,MEASUREMENT_GAP,2.13,,,,,,UNKNOWN,UNKNOWN,merged into FW_rest approx; path_count available

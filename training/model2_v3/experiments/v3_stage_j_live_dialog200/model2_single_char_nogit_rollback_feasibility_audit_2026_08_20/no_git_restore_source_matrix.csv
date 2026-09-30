@@ -1,0 +1,12 @@
+path,action,restore_source_class,restore_source,confidence,change_type
+training/model2_v3/policy/model.py,RESTORE,E,current file + reverse optional head kwargs documented in Candidate-Set / V2 inventories and Stage J KEEP inventory,HIGH,ADDITIVE
+electron_node/services/model2_runtime/model2_inference_host.py,RESTORE,E,current file + reverse disambiguate method/cmd and additive contract keys; infer/load proven by Stage J runtime-swap inventory,HIGH,ADDITIVE
+electron_node/electron-node/main/src/model2-runtime/inference-host.ts,RESTORE,E,current file + reverse disambiguate(); infer remains Stage J,HIGH,ADDITIVE
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,RESTORE,E,current file + reverse Model2 set imports/fields/call; KEEP collector from length1 tests + Candidate-Set report hits 0|1,HIGH,ADDITIVE
+electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts,RESTORE,E,delete materializeSelectedSingleCharCandidate; remainder is Stage J D binding,HIGH,ADDITIVE
+electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.ts,DELETE,A_n/a,new file in Candidate-Set inventory,HIGH,ADDITIVE
+electron_node/electron-node/main/src/lexicon-v2/single-char-candidate-set-v1.ts,DELETE,A_n/a,new file,HIGH,ADDITIVE
+training/model2_v3/policy/ambiguity_head_v1.py,DELETE,A_n/a,new file,HIGH,ADDITIVE
+training/model2_v3/policy/ambiguity_head_v2.py,DELETE,A_n/a,new file,HIGH,ADDITIVE
+training/model2_v3/policy/minimal_context_encoder_v1.py,DELETE,A_n/a,new file,HIGH,ADDITIVE
+training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt,KEEP,A,on-disk frozen copy sha256 match,HIGH,NONE

@@ -1,0 +1,39 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "dataset_tag": "PHASE7E_RECALL_SPIKE_DATASET",
+  "source": "D:\\Programs\\github\\lingua_1\\training\\model2\\dataset\\baseline_v1\\stage_b_trainrows\\model2_train_rows.jsonl",
+  "n_natural_base_miss": 500,
+  "n_natural_all_before_applicable_filter": 1116,
+  "n_natural_query_applicable": 563,
+  "n_artificial_miss": 500,
+  "n_artificial_query_applicable_pool": 3228,
+  "n_control_already_present": 8255,
+  "n_no_change_candidates": 2616,
+  "NATURAL_BASE_MISS_INSUFFICIENT": false,
+  "primary_requires": "target in lexicon AND target NOT IN base pool (eval)",
+  "artificial_requires": "query-applicable reverse map (observed contains profile Y)",
+  "family_counts_natural": {
+    "n_l": 52,
+    "z_zh": 101,
+    "in_ing": 79,
+    "ch_c": 55,
+    "h_f": 40,
+    "sh_s": 110,
+    "eng_en": 63
+  },
+  "family_counts_artificial": {
+    "z_zh": 78,
+    "eng_en": 66,
+    "sh_s": 79,
+    "h_f": 85,
+    "n_l": 68,
+    "ch_c": 75,
+    "in_ing": 49
+  },
+  "data_quality_note": "Many baseline trainrows have observed_syllables≡canonical; those cannot exercise observed→intended reverse retrieval and are excluded from artificial primary."
+}

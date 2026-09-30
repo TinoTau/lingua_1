@@ -1,0 +1,37 @@
+{
+  "train_pair_count": 170,
+  "seen_samples": 7641,
+  "unseen_samples": 3,
+  "seen": {
+    "tp": 673,
+    "fp": 0,
+    "fn": 0,
+    "tn": 39191,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 1.0,
+    "eligible": 39864,
+    "pred_vs_gold_mismatch": 0,
+    "pred_vs_gold_mismatch_rate": 0.0
+  },
+  "held_out": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 21,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 0.0,
+    "retry_recall": 0.0,
+    "retry_f1": 0.0,
+    "false_retry_rate": 0.0,
+    "macro_f1": 0.5,
+    "eligible": 21,
+    "pred_vs_gold_mismatch": 0,
+    "pred_vs_gold_mismatch_rate": 0.0
+  }
+}

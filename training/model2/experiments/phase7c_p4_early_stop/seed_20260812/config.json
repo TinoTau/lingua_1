@@ -1,0 +1,18 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "probe": "phase7c_p4_early_stop",
+  "seed": 20260812,
+  "epochs": 20,
+  "train_kwargs": {
+    "loss_mode": "ce",
+    "cand_char_dropout": 0.0,
+    "eval_every_epoch": true,
+    "save_every_epoch": true
+  },
+  "params_policy": "match_7A_M0"
+}

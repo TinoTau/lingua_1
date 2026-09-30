@@ -1,0 +1,9 @@
+action,path,why,must_not
+CREATE,docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv,ONE authoritative Repair build SSOT; loader-native TAB; 1125 rows from STRICT mapping,Include audit-only frequency columns; dual patch files
+MODIFY,electron_node/electron-node/scripts/lexicon/lib/full-rebuild-from-csv.mjs,DEFAULT_SINGLE_CHAR_TSV → V1 path; update manifest.rebuild.sources metadata,New loader pipeline; change multi-char load; change schema
+MODIFY,electron_node/electron-node/scripts/pinyin-ime-v2/lib/dict-export-core.mjs,Optional: filter base_lexicon export to length>=2; avoid leaking Repair length-1,Keep 2510 mirror for export compatibility
+KEEP,electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,collectBaseOnlySingleCharCandidate unchanged,
+KEEP,electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,lookupBaseByPinyinAndToneKey unchanged,
+KEEP,docs/pinyin-v2/import/single_char_dictionary.tsv,IME SSOT only,Delete or shrink for Repair
+DO_NOT_TOUCH,electron_node/electron-node/main/src/model2-runtime/**,Model2 P/D only,Any Model2 single-char change
+DO_NOT_TOUCH,electron_node/electron-node/main/src/fw-detector/span-assembly-v4/** (except optional export unrelated),Recall/Assembly/KenLM architecture frozen,minPrior change in same PR unless separate approved

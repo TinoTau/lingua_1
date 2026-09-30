@@ -1,0 +1,18 @@
+caseId,regionText,generatedPathCount,retrySelectedPath,normalMainlineWouldConsumeAllPaths,retryConsumesPathCount,semanticDifference,referenceReachable,notes
+d179,限计划意境全任,2,限|计|划|意|境|全|任,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,YES,orchestrator L294 iterates all pathFineSpanViews; Retry preferredPathFineSpanView selects one
+d142,药师堵车您提,2,药师|堵|车|您|提,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,YES,segmentation changed under Retry; still single-path consumption
+d099,苏和步,2,苏|和|步,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,NO,multipath does not help SOHO transliteration gap
+d131,意识规则要是,2,意识|规|则|要是,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,NO,Lexicon missing 更衣室/柜子/衣室 dominates
+d160,顺便向木李,4,顺|便|向|木|李,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,NO,4 regional paths; 2-char edges exist; best-first selects all-single-char; 项目 needs 2-char window
+d176,意识规则要是,2,意识|规|则|要是,ALL_RETAINED_PATHS,1_BEST_PATH_ONLY,YES,NO,same as d131
+
+d160_path_rank_simulation,boundaryKey,surfaces,lex2Edges,rankAfterBestFirst,consumedByRetry
+d160,0|1|2|3|4|5,顺|便|向|木|李,0,rank=1,YES
+d160,0|2|3|4|5,顺便|向|木|李,1,rank=2,NO
+d160,0|1|2|4|5,顺|便|向木|李,1,rank=3,NO
+d160,0|2|4|5,顺便|向木|李,2,rank=4,NO
+
+first_pass_consumption,semantic,ALL_RETAINED_PATHS via span-assembly-v4-orchestrator.ts L294 loop
+first_pass_cross_path_merge,semantic,mergeCrossPathSentenceCandidates dedup-before-cap global<=16
+retry_consumption,semantic,ONE_PATH via preferredPathFineSpanView compareSegmentationPathBestFirst
+recall_timing,semantic,utterance-level recall before path enum; retry adds per-span recall on selected path only

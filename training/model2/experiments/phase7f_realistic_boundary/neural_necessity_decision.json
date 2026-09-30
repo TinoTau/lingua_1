@@ -1,0 +1,26 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "outcome": "OBSERVABILITY_LIMIT",
+  "Trainable_Retrieval_Component_Needed": "NO",
+  "Exact_Intended_Role": null,
+  "evidence": {
+    "correct_tir_mixed_primary": 0.466,
+    "empty_tir": 0.0,
+    "family_synth_tir": 0.932,
+    "real_asr_tir": 0.0,
+    "s1_tir": 0.42,
+    "multi_tir": 0.71,
+    "deletion_tir": 0.0,
+    "top_failures": [
+      "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "QUERY_NOT_GENERATED",
+      "OTHER",
+      "CANDIDATE_BUDGET_PRUNED",
+      "NO_PROFILE_RELATION_MATCH"
+    ]
+  }
+}

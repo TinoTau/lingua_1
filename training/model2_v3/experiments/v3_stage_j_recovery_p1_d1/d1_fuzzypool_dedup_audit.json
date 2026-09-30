@@ -1,0 +1,327 @@
+{
+  "mechanism": "sort (distance, -prior, term_id) then first-wins per surface",
+  "is_frozen_design": true,
+  "is_bug": false,
+  "business_semantics_broken": false,
+  "production_change": "NO",
+  "reason": "One surface slot in FuzzyPool is intentional. Domain soft prior reorders within pool; it does not require domain: term_id when base: sibling shares identity.",
+  "prefer_base_count": 80,
+  "prefer_domain_count": 0,
+  "cases": [
+    {
+      "target_term_id": "domain:coffee:中杯:zhong|bei",
+      "surface": "中杯",
+      "siblings": [
+        {
+          "term_id": "domain:coffee:中杯:zhong|bei",
+          "term_type": "domain",
+          "prior": 0.9
+        },
+        {
+          "term_id": "domain:food_order:中杯:zhong|bei",
+          "term_type": "domain",
+          "prior": 0.9
+        },
+        {
+          "term_id": "domain:milk_tea:中杯:zhong|bei",
+          "term_type": "domain",
+          "prior": 0.9
+        },
+        {
+          "term_id": "base:_:中杯:zhong|bei",
+          "term_type": "base",
+          "prior": 0.9
+        }
+      ],
+      "pool_kept_term_id": "base:_:中杯:zhong|bei",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:bakery:餐包:can|bao",
+      "surface": "餐包",
+      "siblings": [
+        {
+          "term_id": "domain:bakery:餐包:can|bao",
+          "term_type": "domain",
+          "prior": 0.9
+        },
+        {
+          "term_id": "base:_:餐包:can|bao",
+          "term_type": "base",
+          "prior": 0.9
+        }
+      ],
+      "pool_kept_term_id": "base:_:餐包:can|bao",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:meeting:会务包:hui|wu|bao",
+      "surface": "会务包",
+      "siblings": [
+        {
+          "term_id": "domain:meeting:会务包:hui|wu|bao",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:会务包:hui|wu|bao",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:会务包:hui|wu|bao",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:tourism_route:出租车:chu|zu|che",
+      "surface": "出租车",
+      "siblings": [
+        {
+          "term_id": "domain:tourism_route:出租车:chu|zu|che",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "domain:tourism_transport:出租车:chu|zu|che",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:出租车:chu|zu|che",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:出租车:chu|zu|che",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:medical:住院费:zhu|yuan|fei",
+      "surface": "住院费",
+      "siblings": [
+        {
+          "term_id": "domain:medical:住院费:zhu|yuan|fei",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:住院费:zhu|yuan|fei",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:住院费:zhu|yuan|fei",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:food_order:勺子:shao|zi",
+      "surface": "勺子",
+      "siblings": [
+        {
+          "term_id": "domain:food_order:勺子:shao|zi",
+          "term_type": "domain",
+          "prior": 0.9
+        },
+        {
+          "term_id": "base:_:勺子:shao|zi",
+          "term_type": "base",
+          "prior": 0.9
+        }
+      ],
+      "pool_kept_term_id": "base:_:勺子:shao|zi",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:food_order:加冰:jia|bing",
+      "surface": "加冰",
+      "siblings": [
+        {
+          "term_id": "domain:coffee:加冰:jia|bing",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:food_order:加冰:jia|bing",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:milk_tea:加冰:jia|bing",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "base:_:加冰:jia|bing",
+          "term_type": "base",
+          "prior": 0.85
+        }
+      ],
+      "pool_kept_term_id": "base:_:加冰:jia|bing",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:tourism_transport:导航台:dao|hang|tai",
+      "surface": "导航台",
+      "siblings": [
+        {
+          "term_id": "domain:tourism_transport:导航台:dao|hang|tai",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "base:_:导航台:dao|hang|tai",
+          "term_type": "base",
+          "prior": 0.85
+        }
+      ],
+      "pool_kept_term_id": "base:_:导航台:dao|hang|tai",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:tourism_hotel:双床房:shuang|chuang|fang",
+      "surface": "双床房",
+      "siblings": [
+        {
+          "term_id": "domain:tourism_hotel:双床房:shuang|chuang|fang",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:双床房:shuang|chuang|fang",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:双床房:shuang|chuang|fang",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:milk_tea:加料:jia|liao",
+      "surface": "加料",
+      "siblings": [
+        {
+          "term_id": "domain:food_order:加料:jia|liao",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:milk_tea:加料:jia|liao",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "base:_:加料:jia|liao",
+          "term_type": "base",
+          "prior": 0.85
+        }
+      ],
+      "pool_kept_term_id": "base:_:加料:jia|liao",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:tourism_hotel:预约:yu|yue",
+      "surface": "预约",
+      "siblings": [
+        {
+          "term_id": "domain:tourism_hotel:预约:yu|yue",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:tourism_route:预约:yu|yue",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "base:_:预约:yu|yue",
+          "term_type": "base",
+          "prior": 0.85
+        }
+      ],
+      "pool_kept_term_id": "base:_:预约:yu|yue",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:tourism_hotel:客房部:ke|fang|bu",
+      "surface": "客房部",
+      "siblings": [
+        {
+          "term_id": "domain:tourism_hotel:客房部:ke|fang|bu",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:客房部:ke|fang|bu",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:客房部:ke|fang|bu",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:coffee:半糖:ban|tang",
+      "surface": "半糖",
+      "siblings": [
+        {
+          "term_id": "domain:coffee:半糖:ban|tang",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:food_order:半糖:ban|tang",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "domain:milk_tea:半糖:ban|tang",
+          "term_type": "domain",
+          "prior": 0.85
+        },
+        {
+          "term_id": "base:_:半糖:ban|tang",
+          "term_type": "base",
+          "prior": 0.85
+        }
+      ],
+      "pool_kept_term_id": "base:_:半糖:ban|tang",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:medical:病历:bing|li",
+      "surface": "病历",
+      "siblings": [
+        {
+          "term_id": "domain:medical:病历:bing|li",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:病历:bing|li",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:病历:bing|li",
+      "pool_kept_type": "base"
+    },
+    {
+      "target_term_id": "domain:meeting:参展商:can|zhan|shang",
+      "surface": "参展商",
+      "siblings": [
+        {
+          "term_id": "domain:meeting:参展商:can|zhan|shang",
+          "term_type": "domain",
+          "prior": 0.86
+        },
+        {
+          "term_id": "base:_:参展商:can|zhan|shang",
+          "term_type": "base",
+          "prior": 0.86
+        }
+      ],
+      "pool_kept_term_id": "base:_:参展商:can|zhan|shang",
+      "pool_kept_type": "base"
+    }
+  ]
+}

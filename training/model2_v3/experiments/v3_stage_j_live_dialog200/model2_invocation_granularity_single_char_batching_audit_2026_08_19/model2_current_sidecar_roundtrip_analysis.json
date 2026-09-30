@@ -1,0 +1,30 @@
+{
+  "sidecars": 1,
+  "transport": "JSONL stdin/stdout singleton",
+  "in_flight": 1,
+  "queue": "FIFO _request queue in inference-host.ts",
+  "cmds": [
+    "load",
+    "load_index",
+    "infer",
+    "disambiguate",
+    "stats",
+    "ping",
+    "shutdown"
+  ],
+  "disambiguate_batch": false,
+  "infer_batch": false,
+  "round_trips_per_utterance": {
+    "load": "once per process, not per utterance",
+    "infer": {
+      "p50": 20,
+      "p95": 31,
+      "max": 37,
+      "mean": 20.91,
+      "n_dialog": 200
+    },
+    "disambiguate": 0
+  },
+  "serialization": "JSON.stringify per infer; profile fields copied every span",
+  "scheduling": "await host.infer sequentially in for-loop; no overlap"
+}

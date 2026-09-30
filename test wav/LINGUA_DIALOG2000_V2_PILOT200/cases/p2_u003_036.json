@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u003_036",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U003",
+  "profileStage": "P1",
+  "domain": "travel_hotel",
+  "difficulty": "multi_clause",
+  "referenceText": "我们先确认候车室，再决定是否改签；如果改签，请同步通知司机与前台。",
+  "audioId": "aud_p2_u003_036",
+  "audioPath": "audio/p2_u003_036.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "h_f",
+  "relationDirection": "h_f",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MILD",
+  "profileRef": "prof_u003_p1",
+  "profileBuildSetId": "pbs_u003_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e68890e58a9f7c63",
+    "base-rebuild-term-e69c8be58f8b7c70",
+    "base-rebuild-term-e68aa4e5a3ab7c68",
+    "base-rebuild-term-e5908ee69e9c7c68"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e58099e8bda6e5ae"
+  ],
+  "evaluationTargetSurface": "候车室",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 560515429,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "WRONG_PROFILE_CONTROL",
+  "wrongProfileUserId": "U001",
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u003_036",
+    "byte_size": 185804,
+    "sha256": "22c7b61e4507c459aac1a9dc18a30b355d8974fb158289cb6f702014940a5e74",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 5.805
+  },
+  "ttsBackend": "PHONEME_REALIZER",
+  "ttsInputText": "我们先确认候车室，再决定是否改签；如果改签，请同步通知司机与前台。"
+}

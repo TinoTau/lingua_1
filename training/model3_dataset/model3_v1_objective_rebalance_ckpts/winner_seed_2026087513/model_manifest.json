@@ -1,0 +1,43 @@
+{
+  "modelName": "MODEL3_V1_OBJECTIVE_REBALANCE_WINNER_V1",
+  "architecture": "Small BiGRU",
+  "config": {
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "no_auto_formula": true,
+    "explicit_source": "MODEL3_V1_OBJECTIVE_REBALANCE_HARDCODED_BASELINE",
+    "pair_loss_enabled": true,
+    "pair_loss_type": "PURE_MARGIN",
+    "pair_ce_enabled": false,
+    "pair_lambda": 0.2,
+    "pair_margin": 0.25,
+    "sampling_view_id": "BALANCE_D_30_30_25_15",
+    "sampling_view": {
+      "STRICT": 0.3,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+      "NATURAL": 0.25,
+      "NO_ANCHOR": 0.15
+    },
+    "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+    "init": "random_from_scratch",
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "batch_size": 64,
+    "config_hash": "6b1c9fe07bd86803b965402e6a4eac988e03d9032066f7d4680c28cfe61f6afb",
+    "objective_id": "O3",
+    "seed": 2026087513,
+    "epochs": 8
+  },
+  "vocabSize": 1314,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

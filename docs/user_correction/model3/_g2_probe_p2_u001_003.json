@@ -1,0 +1,3768 @@
+{
+  "caseId": "p2_u001_003",
+  "pathCount": 8,
+  "latticeTrace": null,
+  "spanV4Keys": [
+    "enabled",
+    "stub",
+    "coarseSpanCount",
+    "globalWindowGeneratedCount",
+    "blockedWindowCount",
+    "truncatedWindowCount",
+    "logicalWindowRecallCount",
+    "windowCandidatePoolCount",
+    "activeCandidateCount",
+    "compatibilityEdgeCount",
+    "droppedCandidateCount",
+    "coverageCount",
+    "conflictCount",
+    "conflictRelationCount",
+    "hardDropCount",
+    "compatibleCount",
+    "utteranceDomain",
+    "domainVoteMs",
+    "winnerScore",
+    "runnerUpDomain",
+    "runnerUpScore",
+    "voteMargin",
+    "assemblyMs",
+    "parentFragmentHitCount",
+    "parentTermVoteCount",
+    "inSpanWindowCount",
+    "boundaryWindowCount",
+    "domainCandidateCount",
+    "baseCandidateCount",
+    "sameDomainCandidateCount",
+    "domainFilteredSpanCount",
+    "selectedCandidatesPerSpanAvg",
+    "domainAssemblyMs",
+    "mainDomainAwareSpanSetsTotal",
+    "retainedBucketCount",
+    "intervalAssemblyCandidateCount",
+    "intervalRejectedOverlapCount",
+    "fallbackCandidateCount",
+    "kenlmPoolCandidateCount",
+    "preFilterCombinationCount",
+    "domainScores",
+    "retainedDomains",
+    "winningFineDomain",
+    "insufficientEvidence",
+    "domainLookupExecuted",
+    "domainLookupDomainCount",
+    "domainRecallHitCount",
+    "voteEligibleDomainCandidateCount",
+    "resolvedRecallDomainScope",
+    "architectureCompliance",
+    "crossPathInputCandidateCount",
+    "crossPathDuplicateCount",
+    "crossPathUniqueCandidateCount",
+    "crossPathOutputCandidateCount",
+    "crossPathTruncatedCount",
+    "globalCandidateCap",
+    "kenlmInputSource",
+    "recallRequestCount",
+    "uniqueRecallKeyCount",
+    "duplicateRecallKeyCount",
+    "utteranceCacheHitCount",
+    "utteranceCacheMissCount",
+    "cacheHitRatio",
+    "logicalQueryCount",
+    "physicalSqlStatementCount",
+    "exactQueryCount",
+    "lexiconRecallTotalMs",
+    "recallRequestBuildMs",
+    "utteranceCacheLookupMs",
+    "lexiconFactLookupMs",
+    "windowBindingMs",
+    "boundaryImport",
+    "tone",
+    "traceLevel",
+    "coarseSpans",
+    "recallHitsPreFilter",
+    "recallHits",
+    "poolBeforeDrop",
+    "compatibilityEdges",
+    "poolAfterDrop",
+    "emittedEdges",
+    "boundaryWindows",
+    "sentenceCandidates",
+    "traceTargetMatched",
+    "traceTruncated",
+    "traceTruncatedReason",
+    "candidateLifecycle",
+    "candidateCapProbe",
+    "voteLifecycleProbe",
+    "model2PathTrace"
+  ],
+  "fwKeys": [
+    "enabled",
+    "triggered",
+    "pipelinePath",
+    "configSnapshot",
+    "summary",
+    "runtime",
+    "replacements",
+    "spans",
+    "spanAssemblyV4",
+    "kenlmVetoMs",
+    "kenlmVetoQueryCount",
+    "kenlmTiming",
+    "repairNormalization",
+    "recallV2Diagnostics",
+    "sentenceRerank"
+  ],
+  "candidateGeoms": [
+    {
+      "geom": "0:1",
+      "n": 8,
+      "surfaces": [
+        "麻"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "1:2",
+      "n": 8,
+      "surfaces": [
+        "烦"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "4:5",
+      "n": 6,
+      "surfaces": [
+        "我"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "5:7",
+      "n": 48,
+      "surfaces": [
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览",
+        "徒步"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "9:10",
+      "n": 8,
+      "surfaces": [
+        "管"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "10:11",
+      "n": 8,
+      "surfaces": [
+        "于"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "11:12",
+      "n": 7,
+      "surfaces": [
+        "过"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "12:13",
+      "n": 5,
+      "surfaces": [
+        "你"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "13:14",
+      "n": 3,
+      "surfaces": [
+        "和"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "14:16",
+      "n": 18,
+      "surfaces": [
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览",
+        "徒步"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "13:15",
+      "n": 17,
+      "surfaces": [
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览",
+        "徒步"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "15:16",
+      "n": 3,
+      "surfaces": [
+        "说"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "7:9",
+      "n": 19,
+      "surfaces": [
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览",
+        "徒步",
+        "这",
+        "份"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "12:14",
+      "n": 2,
+      "surfaces": [
+        "拟合",
+        "预订"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "12:15",
+      "n": 1,
+      "surfaces": [
+        "集合点"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "16:17",
+      "n": 3,
+      "surfaces": [
+        "明"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "2:4",
+      "n": 12,
+      "surfaces": [
+        "你",
+        "帮",
+        "预订",
+        "入园"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "11:13",
+      "n": 8,
+      "surfaces": [
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览",
+        "徒步"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId",
+        "model2ActionId"
+      ]
+    },
+    {
+      "geom": "6:7",
+      "n": 2,
+      "surfaces": [
+        "对"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    },
+    {
+      "geom": "4:6",
+      "n": 6,
+      "surfaces": [
+        "我",
+        "预订",
+        "入园"
+      ],
+      "sampleKeys": [
+        "termId",
+        "surface",
+        "pinyin",
+        "domains",
+        "score",
+        "source",
+        "provenance",
+        "alsoProfile",
+        "rank",
+        "candidateId",
+        "originSpanId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "hitKind",
+        "repairTarget",
+        "retrievalId"
+      ]
+    }
+  ],
+  "windowsAround": [
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "6:11",
+      "syl": "6:11",
+      "raw": "6:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:11",
+      "syl": "7:11",
+      "raw": "7:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "7:12",
+      "syl": "7:12",
+      "raw": "7:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:11",
+      "syl": "8:11",
+      "raw": "8:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:12",
+      "syl": "8:12",
+      "raw": "8:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "8:13",
+      "syl": "8:13",
+      "raw": "8:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "fen|guan|yu|guo|ni",
+          "syl": "8:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:11",
+      "syl": "9:11",
+      "raw": "9:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:12",
+      "syl": "9:12",
+      "raw": "9:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "9:13",
+      "syl": "9:13",
+      "raw": "9:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni",
+          "syl": "9:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "9:14",
+      "syl": "9:14",
+      "raw": "9:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guan|yu|guo|ni|he",
+          "syl": "9:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:11",
+      "syl": "10:11",
+      "raw": "10:11",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:12",
+      "syl": "10:12",
+      "raw": "10:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "10:13",
+      "syl": "10:13",
+      "raw": "10:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni",
+          "syl": "10:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:14",
+      "syl": "10:14",
+      "raw": "10:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he",
+          "syl": "10:14",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "10:15",
+      "syl": "10:15",
+      "raw": "10:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "yu|guo|ni|he|de",
+          "syl": "10:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:12",
+      "syl": "11:12",
+      "raw": "11:12",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "11:13",
+      "syl": "11:13",
+      "raw": "11:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni",
+          "syl": "11:13",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:14",
+      "syl": "11:14",
+      "raw": "11:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he",
+          "syl": "11:14",
+          "hits": [
+            "过拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "11:15",
+      "syl": "11:15",
+      "raw": "11:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de",
+          "syl": "11:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "11:16",
+      "syl": "11:16",
+      "raw": "11:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "guo|ni|he|de|shuo",
+          "syl": "11:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:13",
+      "syl": "12:13",
+      "raw": "12:13",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni",
+          "syl": "12:13",
+          "hits": [
+            "你"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:14",
+      "syl": "12:14",
+      "raw": "12:14",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he",
+          "syl": "12:14",
+          "hits": [
+            "拟合"
+          ],
+          "hitCount": 1
+        }
+      ]
+    },
+    {
+      "id": "12:15",
+      "syl": "12:15",
+      "raw": "12:15",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de",
+          "syl": "12:15",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:16",
+      "syl": "12:16",
+      "raw": "12:16",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "ni|he|de|shuo",
+          "syl": "12:16",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "12:17",
+      "syl": "12:17",
+      "raw": "12:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "li|he|de|shuo|min",
+          "syl": "12:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "13:14",
+      "syl": "13:14",
+      "raw": "13:14",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:15",
+      "syl": "13:15",
+      "raw": "13:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:16",
+      "syl": "13:16",
+      "raw": "13:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "13:17",
+      "syl": "13:17",
+      "raw": "13:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "he|de|shuo|min",
+          "syl": "13:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    },
+    {
+      "id": "14:15",
+      "syl": "14:15",
+      "raw": "14:15",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:16",
+      "syl": "14:16",
+      "raw": "14:16",
+      "status": "NOT_EXECUTED",
+      "queries": []
+    },
+    {
+      "id": "14:17",
+      "syl": "14:17",
+      "raw": "14:17",
+      "status": "EXECUTED",
+      "queries": [
+        {
+          "pinyin": "de|shuo|min",
+          "syl": "14:17",
+          "hits": [],
+          "hitCount": 0
+        }
+      ]
+    }
+  ],
+  "finesNear": [
+    {
+      "path": "f4be20ade02a45d7f4fc347071362e6517520cea6a5286c9e87967398c7128d3",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "f4be20ade02a45d7f4fc347071362e6517520cea6a5286c9e87967398c7128d3",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "f4be20ade02a45d7f4fc347071362e6517520cea6a5286c9e87967398c7128d3",
+      "geom": "12:13",
+      "text": "历",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "f4be20ade02a45d7f4fc347071362e6517520cea6a5286c9e87967398c7128d3",
+      "geom": "13:14",
+      "text": "和",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "f4be20ade02a45d7f4fc347071362e6517520cea6a5286c9e87967398c7128d3",
+      "geom": "14:16",
+      "text": "的说",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "23f366fb0dad978485882656422630b24f46ad7617b6b1aceaea12ac9cc46014",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "23f366fb0dad978485882656422630b24f46ad7617b6b1aceaea12ac9cc46014",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "23f366fb0dad978485882656422630b24f46ad7617b6b1aceaea12ac9cc46014",
+      "geom": "12:13",
+      "text": "历",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "23f366fb0dad978485882656422630b24f46ad7617b6b1aceaea12ac9cc46014",
+      "geom": "13:15",
+      "text": "和的",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "180e555f2f368883c3901987376c30705191d6e91e9d3551b0104284c008e1e7",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "180e555f2f368883c3901987376c30705191d6e91e9d3551b0104284c008e1e7",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "180e555f2f368883c3901987376c30705191d6e91e9d3551b0104284c008e1e7",
+      "geom": "12:13",
+      "text": "历",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "180e555f2f368883c3901987376c30705191d6e91e9d3551b0104284c008e1e7",
+      "geom": "13:15",
+      "text": "和的",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cc7b62513e07630a02127d785da4c478bc3e6e4a49c61ed6101f6a1d565726bc",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cc7b62513e07630a02127d785da4c478bc3e6e4a49c61ed6101f6a1d565726bc",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cc7b62513e07630a02127d785da4c478bc3e6e4a49c61ed6101f6a1d565726bc",
+      "geom": "12:14",
+      "text": "历和",
+      "cands": 9,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cc7b62513e07630a02127d785da4c478bc3e6e4a49c61ed6101f6a1d565726bc",
+      "geom": "14:16",
+      "text": "的说",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "a83304c3499df04205a758a7ef8bf7c5b8436e142cf7f90f69ddb1bc8200de83",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "a83304c3499df04205a758a7ef8bf7c5b8436e142cf7f90f69ddb1bc8200de83",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "a83304c3499df04205a758a7ef8bf7c5b8436e142cf7f90f69ddb1bc8200de83",
+      "geom": "12:15",
+      "text": "历和的",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "24fff727a32a3280e6a51f146bc129942702dfb8d8535593dc375087ac9f68f4",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "24fff727a32a3280e6a51f146bc129942702dfb8d8535593dc375087ac9f68f4",
+      "geom": "11:13",
+      "text": "过历",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "24fff727a32a3280e6a51f146bc129942702dfb8d8535593dc375087ac9f68f4",
+      "geom": "13:14",
+      "text": "和",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "24fff727a32a3280e6a51f146bc129942702dfb8d8535593dc375087ac9f68f4",
+      "geom": "14:16",
+      "text": "的说",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "fb6c14de0f24e6fecaf176ba6e897f71c5a1efedd782fe449dfc361ec28bf76b",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "fb6c14de0f24e6fecaf176ba6e897f71c5a1efedd782fe449dfc361ec28bf76b",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "fb6c14de0f24e6fecaf176ba6e897f71c5a1efedd782fe449dfc361ec28bf76b",
+      "geom": "12:13",
+      "text": "历",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "fb6c14de0f24e6fecaf176ba6e897f71c5a1efedd782fe449dfc361ec28bf76b",
+      "geom": "13:14",
+      "text": "和",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "fb6c14de0f24e6fecaf176ba6e897f71c5a1efedd782fe449dfc361ec28bf76b",
+      "geom": "14:16",
+      "text": "的说",
+      "cands": 8,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cd48e2e3028f18032aa459f83d40fdf9993f49db7b71c765449253b8851a0f1e",
+      "geom": "10:11",
+      "text": "于",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cd48e2e3028f18032aa459f83d40fdf9993f49db7b71c765449253b8851a0f1e",
+      "geom": "11:12",
+      "text": "过",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cd48e2e3028f18032aa459f83d40fdf9993f49db7b71c765449253b8851a0f1e",
+      "geom": "12:13",
+      "text": "历",
+      "cands": 1,
+      "src": "in_span_window"
+    },
+    {
+      "path": "cd48e2e3028f18032aa459f83d40fdf9993f49db7b71c765449253b8851a0f1e",
+      "geom": "13:15",
+      "text": "和的",
+      "cands": 8,
+      "src": "in_span_window"
+    }
+  ],
+  "firstPathKeys": [
+    "path_id",
+    "boundary_key",
+    "tone",
+    "tone_evidence_available_count",
+    "finespans",
+    "base_candidates",
+    "after_model2_candidates",
+    "model2",
+    "model2_summary",
+    "domain_vote",
+    "model3",
+    "assembly"
+  ],
+  "afterModel2Sample": {
+    "termId": "base-single-char-term-e9babb7c6d61",
+    "surface": "麻",
+    "pinyin": "ma",
+    "domains": [],
+    "score": 2.4,
+    "source": "base_term",
+    "provenance": "BASE_FUZZY",
+    "alsoProfile": false,
+    "rank": 1,
+    "candidateId": "0:1:1",
+    "originSpanId": null,
+    "rawStart": 0,
+    "rawEnd": 1,
+    "syllableStart": 0,
+    "syllableEnd": 1,
+    "hitKind": "exact_term",
+    "repairTarget": false,
+    "retrievalId": null
+  }
+}

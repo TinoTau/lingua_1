@@ -17,6 +17,14 @@ pub struct Session {
     pub dialect: Option<String>,
     pub default_features: Option<FeatureFlags>,
     pub tenant_id: Option<String>, // 租户 ID（用于多租户支持）
+    /// Stable user identity (from Gateway); distinct from tenant_id
+    pub user_id: Option<String>,
+    /// Session-scoped UserProfile snapshot (forward to Node via SessionBootstrap)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub user_profile: Option<crate::messages::user_profile::UserProfileV1>,
+    pub profile_version: Option<u64>,
+    /// Node id that already received SessionBootstrap for this session
+    pub bootstrapped_node_id: Option<String>,
     pub paired_node_id: Option<String>,
     pub utterance_index: u64,
     pub created_at: chrono::DateTime<chrono::Utc>,
@@ -91,6 +99,9 @@ impl SessionManager {
         trace_id: Option<String>,
         audio_format: Option<String>,
         sample_rate: Option<u32>,
+        user_id: Option<String>,
+        user_profile: Option<crate::messages::user_profile::UserProfileV1>,
+        profile_version: Option<u64>,
     ) -> Session {
         let session_id = format!("s-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         // 如果没有提供 trace_id，则生成一个新的 UUID v4
@@ -104,6 +115,10 @@ impl SessionManager {
             dialect,
             default_features,
             tenant_id,
+            user_id,
+            user_profile,
+            profile_version,
+            bootstrapped_node_id: None,
             paired_node_id: None,
             utterance_index: 0,
             created_at: chrono::Utc::now(),
@@ -136,6 +151,21 @@ impl SessionManager {
                 SessionUpdate::IncrementUtteranceIndex => {
                     session.utterance_index += 1;
                 }
+                SessionUpdate::SetBootstrappedNode(node_id) => {
+                    session.bootstrapped_node_id = Some(node_id);
+                }
+                SessionUpdate::RefreshUserProfile {
+                    user_profile,
+                    profile_version,
+                } => {
+                    session.user_profile = Some(user_profile);
+                    session.profile_version = Some(profile_version);
+                    // Allow SessionBootstrap re-send for version-aware refresh
+                    session.bootstrapped_node_id = None;
+                }
+                SessionUpdate::ClearBootstrappedNode => {
+                    session.bootstrapped_node_id = None;
+                }
             }
             true
         } else {
@@ -159,5 +189,11 @@ impl SessionManager {
 pub enum SessionUpdate {
     PairNode(String),
     IncrementUtteranceIndex,
+    SetBootstrappedNode(String),
+    ClearBootstrappedNode,
+    RefreshUserProfile {
+        user_profile: crate::messages::user_profile::UserProfileV1,
+        profile_version: u64,
+    },
 }
 

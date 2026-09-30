@@ -1,0 +1,29 @@
+{
+  "ts": "2026-08-23",
+  "primary_clean_base": {
+    "path": "training/model2/dataset/baseline_v1/generation_plan.jsonl",
+    "usable_sentences_est": 10000,
+    "unique_gt_est": 9775,
+    "style": "synthetic_spoken_carrier_filled",
+    "domains": "general + coffee/medical/meeting/tourism/bakery/tech_ai/..."
+  },
+  "dialogue_like_quality": {
+    "has_oral_particles": "PARTIAL",
+    "has_subjects_connectors": "YES_via_carriers",
+    "has_function_words": "YES",
+    "has_domain_terms": "YES",
+    "avg_sentence_length": "short_to_medium_carrier_style"
+  },
+  "dialog_200": {
+    "unique_clean_est": 65,
+    "role": "EVAL_MEASUREMENT_ONLY",
+    "exclude_from_train_default": true,
+    "planted_homophone_cases": "exclude_as_clean_reference"
+  },
+  "wiki_news": {
+    "scale": "17M+",
+    "dialogue_fit": "POOR",
+    "use": "OPTIONAL_SCALE_LATER_NOT_V1_PILOT"
+  },
+  "verdict": "SUFFICIENT_CLEAN_BASE_FOR_PILOT_AND_100K"
+}

@@ -1,0 +1,46 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_ARCHITECTURE_PROPOSAL",
+  "date": "2026-08-30",
+  "mode": "ARCHITECTURE_PROPOSAL_ONLY",
+  "recommendation": "MORE_EVIDENCE_REQUIRED",
+  "preferredArchitectureIfEvidencePasses": "APPROVE_ROUTE_A_PLUS_B2_HYBRID",
+  "reject": ["APPROVE_ROUTE_B1_PREDEFINED_CORRUPTION_ACOUSTIC"],
+  "routeC": "NOT_CURRENTLY_AUTHORIZED",
+  "confidence": "MEDIUM",
+  "confidenceDetail": {
+    "architecturePreference": "HIGH",
+    "asrMismatchAbundance": "MEDIUM_HIGH",
+    "usableModel3RetryPlusCandYield": "LOW_INSUFFICIENT"
+  },
+  "userArchitectureDecisionRequired": true,
+  "model3RuntimeChanged": false,
+  "datasetBuildCanResume": false,
+  "trainingExecuted": false,
+  "implementationExecuted": false,
+  "b1VsB2": {
+    "b1ValidAsPrimary": false,
+    "b1Reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH unless ASR==planned; override forbidden",
+    "b2Preferred": true,
+    "b2Blocker": "USABLE_MODEL3_RETRY_YIELD not measured end-to-end"
+  },
+  "alignmentReuse": "REUSABLE",
+  "ttsRole": "TRAINING_UPSTREAM_STATE_MATERIALIZATION_ONLY_IF_APPROVED",
+  "ttsAuthorizationStatus": "NEW_TRAINING_DATA_GENERATION_DECISION_REQUIRED",
+  "pronunciationPerturbation": {
+    "model2Implemented": ["n/l", "zh/z", "ch/c", "sh/s", "nasal", "f/h"],
+    "deferred": ["tone_corruption"],
+    "notImplemented": ["d/t"],
+    "model3Authorized": false,
+    "status": "NOT_CURRENTLY_AVAILABLE_FOR_MODEL3"
+  },
+  "nextPhase": "MODEL3_V2_ACOUSTIC_MATERIALIZATION_YIELD_PROBE",
+  "nextPhaseExecuted": false,
+  "acpScope": "TRAINING_DATA_GENERATION_ONLY",
+  "artifacts": [
+    "docs/user_correction/model3/Lingua_Model3_V2_Acoustic_Training_State_Architecture_Proposal_2026_08_30.md",
+    "docs/user_correction/model3/model3_v2_acoustic_training_route_comparison.csv",
+    "docs/user_correction/model3/model3_v2_acoustic_asset_yield_evidence.csv",
+    "docs/user_correction/model3/model3_v2_training_provenance_contract.json",
+    "docs/user_correction/model3/model3_v2_acoustic_training_architecture_summary.json"
+  ]
+}

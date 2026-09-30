@@ -1,0 +1,72 @@
+{
+  "phase": "MODEL3_V1_TRAINING_COVERAGE_AUDIT",
+  "date": "2026-08-29",
+  "mode": "STRICT_READ_ONLY",
+  "mainVerdict": {
+    "primaryRootCause": "MULTI_FACTOR",
+    "dominantFactors": [
+      "MODEL_KEEP_BIAS",
+      "TRAINING_DATA_COVERAGE_GAP",
+      "TRAINING_LABEL_SEMANTIC_DRIFT"
+    ],
+    "architectureVerdict": "FROZEN_ARCHITECTURE_STILL_VALID",
+    "trainingReadiness": "TRAINING_DATA_REDESIGN_REQUIRED",
+    "recommendedNextPhase": "MODEL3_V1_TARGETED_TRAINING_DATA_REDESIGN"
+  },
+  "dialog200": {
+    "casesExecuted": 53,
+    "mismatch": 47,
+    "exactMatch": 6,
+    "realRetryEligibleCasesHigh": 13,
+    "realRetryEligibleSpansHigh": 14,
+    "unknownMismatch": 31,
+    "deletionNoTarget": 3,
+    "decisionsRetryTotal": 0,
+    "model3PathsApprox": 158,
+    "nonAnchorMargins": 3733
+  },
+  "margins": {
+    "definition": "retry_logit - keep_logit",
+    "min": -23.52340316772461,
+    "p50": -17.60810613632202,
+    "p95": -14.884401798248291,
+    "max": -5.193963050842285,
+    "positiveCount": 0,
+    "nearThresholdAbsLt1": 0,
+    "keepStrongAll": true
+  },
+  "modelKeepBiasEvidence": "STRONG",
+  "anchorExclusionRate": 0,
+  "spanLength": {
+    "trainingFineSpanSurface": { "1": 1.0, "2plus": 0.0 },
+    "runtimeNonAnchor": { "1": 3620, "2": 113, "3plus": 0 },
+    "coverage": "PARTIAL"
+  },
+  "labelSemantics": {
+    "parity": "PARTIAL_DRIFT",
+    "phoneticCompatible": "TRAINING_ONLY_LABEL_GUARD",
+    "constriction": true,
+    "file": "training/model3_dataset/scripts/stage2_common.py",
+    "function": "label_spans"
+  },
+  "decisionContractParity": "PASS",
+  "model3RequestParity": "PASS",
+  "runtimeFeatureDistribution": "MATCH_ENOUGH",
+  "controlledRetrySource": "FORCED",
+  "harnessStatePersistence": "PERSISTENT",
+  "malformedRegionCoverage": "INADEQUATE",
+  "syntheticToRealGap": true,
+  "trainingBalance": {
+    "keepHeavy": true,
+    "approxRetryRatioEligible": 0.0145,
+    "classWeightRetry": 1.0
+  },
+  "gates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "OPEN",
+    "TRAINING_EXECUTION_GATE": "HOLD"
+  },
+  "productionModified": false,
+  "trainingModified": false,
+  "modelModified": false
+}

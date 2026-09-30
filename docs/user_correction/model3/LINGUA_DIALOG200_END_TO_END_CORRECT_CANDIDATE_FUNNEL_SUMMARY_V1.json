@@ -1,0 +1,223 @@
+{
+  "phase": "LINGUA_DIALOG200_END_TO_END_CORRECT_CANDIDATE_FUNNEL_AUDIT_V1",
+  "run_id": "dialog200_e2e_funnel_20260920104058",
+  "primary_path_cap": "8/8",
+  "path_cap_note": "PRIMARY FUNNEL = production default 8/8; higher-cap is DIAGNOSTIC ONLY",
+  "dataset": {
+    "TOTAL_CASES": 200,
+    "ASR_ALREADY_CORRECT": 25,
+    "ASR_NEEDS_REPAIR": 175,
+    "REPAIR_REQUIRED_EVALUABLE": 175,
+    "FINAL_CORRECT": 31,
+    "FINAL_INCORRECT": 169,
+    "UNEVALUABLE": 0,
+    "pct_asr_correct": 12.5,
+    "pct_repair_required": 87.5,
+    "pct_final_correct": 15.5
+  },
+  "funnel": {
+    "N0_REPAIR_REQUIRED": {
+      "count": 175,
+      "pct_of_n0": 100
+    },
+    "N1_TARGET_RECALL": {
+      "count": 57,
+      "pct_of_n0": 32.57,
+      "loss_from_prev": 118,
+      "conversion_from_prev_pct": 32.57
+    },
+    "N2_TARGET_EDGE": {
+      "count": 56,
+      "pct_of_n0": 32,
+      "loss_from_prev": 1,
+      "conversion_from_prev_pct": 98.25
+    },
+    "N3_PATH_PRE_CAP": {
+      "count": 56,
+      "pct_of_n0": 32,
+      "loss_from_prev": 0,
+      "conversion_from_prev_pct": 100
+    },
+    "N4_PATH_POST_CAP": {
+      "count": 56,
+      "pct_of_n0": 32,
+      "loss_from_prev": 0,
+      "conversion_from_prev_pct": 100
+    },
+    "N5_DOMAIN": {
+      "count": 175,
+      "pct_of_n0": 100,
+      "loss_from_prev": -119,
+      "conversion_from_prev_pct": 312.5
+    },
+    "N6_SAMEDOMAIN": {
+      "count": 57,
+      "pct_of_n0": 32.57,
+      "loss_from_prev": 118,
+      "conversion_from_prev_pct": 32.57
+    },
+    "N7_ASSEMBLED_FULL": {
+      "count": 6,
+      "pct_of_n0": 3.43,
+      "loss_from_prev": 51,
+      "conversion_from_prev_pct": 10.53
+    },
+    "N8_PRE_GLOBAL_CAP": {
+      "count": 6,
+      "pct_of_n0": 3.43,
+      "loss_from_prev": 0,
+      "conversion_from_prev_pct": 100
+    },
+    "N9_KENLM_INPUT": {
+      "count": 6,
+      "pct_of_n0": 3.43,
+      "loss_from_prev": 0,
+      "conversion_from_prev_pct": 100
+    },
+    "N10_KENLM_RANK1": {
+      "count": 6,
+      "pct_of_n0": 3.43,
+      "loss_from_prev": 0,
+      "conversion_from_prev_pct": 100
+    },
+    "N11_GATE_PASSED": {
+      "count": 0,
+      "pct_of_n0": 0,
+      "loss_from_prev": 6,
+      "conversion_from_prev_pct": 0
+    },
+    "N13_FINAL_CORRECT": {
+      "count": 6,
+      "pct_of_n0": 3.43,
+      "loss_from_prev": -6,
+      "conversion_from_prev_pct": null
+    }
+  },
+  "first_loss_table": [
+    {
+      "first_loss": "BASE_RECALL_OR_MODEL2",
+      "count": 116,
+      "pct_failed": 68.64,
+      "root_classes": {
+        "DATA_TRAINING_FAILURE": 116
+      }
+    },
+    {
+      "first_loss": "ASSEMBLY",
+      "count": 51,
+      "pct_failed": 30.18,
+      "root_classes": {
+        "EXPECTED_FAILURE": 51
+      }
+    },
+    {
+      "first_loss": "OBSERVABILITY_GAP",
+      "count": 1,
+      "pct_failed": 0.59,
+      "root_classes": {
+        "OBSERVABILITY_GAP": 1
+      }
+    },
+    {
+      "first_loss": "PATH_GENERATION",
+      "count": 1,
+      "pct_failed": 0.59,
+      "root_classes": {
+        "EXPECTED_FAILURE": 1
+      }
+    }
+  ],
+  "model2": {
+    "base_target_recall": 54,
+    "model2_target_recall": 8,
+    "model2_only_recovery": 3,
+    "base_and_model2": 5,
+    "no_target_after_model2": 118,
+    "model2_only_to_edge": 2,
+    "model2_only_to_path_post": 2,
+    "model2_only_to_assembly": 0,
+    "model2_only_to_kenlm": 0,
+    "model2_only_to_final": 0,
+    "model2_as_first_loss": 116,
+    "failures_after_model2_present": 52
+  },
+  "kenlm_reachability": {
+    "assembled_full": 6,
+    "pre_global_full": 6,
+    "entered_kenlm": 6,
+    "lost_by_global_16": 0,
+    "kenlm_rank1": 6,
+    "kenlm_non_rank1": 0,
+    "rank1_accepted": 0,
+    "rank1_rejected_gate": 6,
+    "runtime_zero": 0,
+    "rank1_rejected_gate_on_failure": 0,
+    "rank1_keep_raw_but_final_correct_script_or_identity": 6,
+    "note": "6/6 kenlm_top1 cases are FINAL_CORRECT with maxDelta=0 keep-raw; NOT gate blocking repair failures"
+  },
+  "kenlm_gate_delta_distribution": {
+    "n": 6,
+    "min": 0,
+    "p25": 0,
+    "median": 0,
+    "p75": 0,
+    "max": 0,
+    "note": "KENLM_GATE_CALIBRATION_NOT_AUTHORIZED_FROM_THIS_AUDIT"
+  },
+  "diagnostic_path_cap": [
+    {
+      "caseId": "d002",
+      "primary_8_8_path_post": "ABSENT",
+      "diag_32_path_post": "ABSENT",
+      "restored": false,
+      "note": "DIAGNOSTIC ONLY — DOES NOT AUTHORIZE CAP CHANGE"
+    }
+  ],
+  "result_enum": "RESULT A — UPSTREAM RECALL / MODEL2 REMAINS PRIMARY BLOCKER",
+  "answers": {
+    "Q1_repair_required": 175,
+    "Q2_target_recall_present": 57,
+    "Q2_pct": "57 / 175 = 32.57%",
+    "Q3_path_pre_cap": 56,
+    "Q3_path_post_cap": 56,
+    "Q4_assembled_full": 6,
+    "Q4_pct": "6 / 175 = 3.43%",
+    "Q5_kenlm_input": 6,
+    "Q5_pct": "6 / 175 = 3.43%",
+    "Q6_rank1": 6,
+    "Q6_non_rank1": 0,
+    "Q6_runtime_zero": 0,
+    "Q7_gate_accepted": 0,
+    "Q7_gate_rejected": 6,
+    "Q8_largest_first_loss": "BASE_RECALL_OR_MODEL2",
+    "Q9_model2_first_loss_pct": 68.64,
+    "Q10_failures_after_model2_present": 52,
+    "Q11_kenlm_is_primary_blocker": "NO",
+    "Q12_next_owner": {
+      "owner": "BASE_RECALL_OR_MODEL2",
+      "count": 116,
+      "secondary_owner": "ASSEMBLY",
+      "secondary_count": 51,
+      "rationale": "116/169 failed repair cases lose required lexical target before Edge/Path; second mass loss is ASSEMBLY (51) where target terms exist but full correct sentence never materializes"
+    },
+    "Q6_note": "All 6 KenLM-input correct full sentences are FINAL_CORRECT keep-raw (delta=0); zero KenLM-ranking failures among entered pool",
+    "Q7_note": "Gate rejected 0 repair-failure cases; 6 keep-raw are successes"
+  },
+  "methodology": {
+    "corpus": "test wav/dialog_200 (200)",
+    "primary_path_cap": "8/8 production default (no LINGUA_EXPERIMENT_MAX_*)",
+    "input_mode": "LEXICON_MOCK_REPLAY of frozen ASR from fresh_dialog200_raw_cases_dialog200_full_pipeline_20260909_001141.jsonl",
+    "live_asr": "NOT USED (ASR service unavailable this session); postprocess funnel measured on frozen ASR",
+    "path_count_observation": "all cases path_count=1 under mock replay without acoustic tone slices — multi-path diversity not exercised; PATH_CAP loss nearly unobservable in PRIMARY",
+    "full_sentence_contract": "norm(text) equality vs expectedText",
+    "target_term_contract": "MATERIALIZABLE_TARGET_V1 correction units (requires_lexical)"
+  },
+  "corrected_first_loss_interpretation": {
+    "primary_blocker": "BASE_RECALL_OR_MODEL2",
+    "secondary_blocker": "ASSEMBLY",
+    "path_cap_primary_loss": 0,
+    "sentence_budget_loss": 0,
+    "kenlm_ranking_loss_on_failures": 0,
+    "kenlm_gate_loss_on_failures": 0
+  }
+}

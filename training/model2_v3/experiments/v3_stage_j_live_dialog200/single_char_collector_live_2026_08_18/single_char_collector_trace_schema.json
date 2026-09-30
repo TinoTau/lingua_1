@@ -1,0 +1,68 @@
+{
+  "$id": "SINGLE_CHAR_COLLECTOR_TRACE_V1",
+  "type": "object",
+  "required": [
+    "contract",
+    "windowId",
+    "rawStart",
+    "rawEnd",
+    "windowText",
+    "windowTextCanonical",
+    "pinyinKey",
+    "toneRecallReadiness",
+    "queryExecuted",
+    "sqlHitCount",
+    "eligibleHitCount",
+    "terminalReason"
+  ],
+  "properties": {
+    "contract": { "const": "SINGLE_CHAR_COLLECTOR_TRACE_V1" },
+    "windowId": { "type": "string" },
+    "rawStart": { "type": "integer" },
+    "rawEnd": { "type": "integer" },
+    "syllableStart": { "type": "integer" },
+    "syllableEnd": { "type": "integer" },
+    "windowText": { "type": "string" },
+    "windowTextCanonical": { "type": "string" },
+    "pinyinKey": { "type": "string" },
+    "queryTonePinyinKey": { "type": ["string", "null"] },
+    "tonePattern": { "type": ["array", "null"], "items": { "type": "integer" } },
+    "toneRecallReadiness": { "type": "string" },
+    "queryExecuted": { "type": "boolean" },
+    "querySource": { "enum": ["live", "utterance_cache"] },
+    "sqlLimit": { "type": "integer" },
+    "sqlHitCount": { "type": "integer" },
+    "preLimitCount": { "type": ["integer", "null"] },
+    "postLimitCount": { "type": "integer" },
+    "truncated": { "type": "boolean" },
+    "eligibleHitCount": { "type": "integer" },
+    "toneExactHitCount": { "type": "integer" },
+    "surfaceExactHitCount": { "type": "integer" },
+    "uniqueToneExact": { "type": "boolean" },
+    "minCandidateScore": { "type": "number" },
+    "candidateScore": { "type": ["number", "null"] },
+    "chosenSource": {
+      "enum": ["unique_tone_exact", "page_surface_exact", "identity_surface_exact", null]
+    },
+    "selectedCandidate": { "type": ["string", "null"] },
+    "blocked": { "type": "boolean" },
+    "boundCandidateCount": { "type": "integer" },
+    "terminalReason": { "type": "string" },
+    "sqlHits": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "termId": { "type": "string" },
+          "surface": { "type": "string" },
+          "pinyin": { "type": "string" },
+          "tone": { "type": ["string", "null"] },
+          "enabled": { "type": "boolean" },
+          "sourceTable": { "const": "base_lexicon" },
+          "priorScore": { "type": "number" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "phase": "MODEL3_V2_REALDIST_ACCEPTANCE_AND_PROMOTION_AUDIT",
+  "timestamp": "2026-08-29T09:20:56.504Z",
+  "model": {
+    "modelId": "MODEL3_V2_REALDIST_V1",
+    "role": "CANDIDATE",
+    "checkpointDir": "training/model3_dataset/model3_v2_realdist_v1_ckpts/seed_2026082903",
+    "weightsSha256": "fbb8d85dc4bec117af510a9d8f0a5021a86187a1e1490ee63f9b66831bad648e",
+    "expectedWeightsSha256": "fbb8d85dc4bec117af510a9d8f0a5021a86187a1e1490ee63f9b66831bad648e",
+    "configHash": "2a235106436b7a5bf23ab19ba8b55587df8a3bf5dfb874ac0df03c56b3eacfe7",
+    "configHashMode": "config_file_sha256",
+    "hashVerified": true,
+    "identityValidation": "PASS"
+  },
+  "environment": {
+    "asr": "READY",
+    "node_5020": "READY",
+    "lexicon": "READY",
+    "model2": "READY",
+    "model3": "READY",
+    "kenlm": "READY",
+    "checkpointIdentity": "MODEL3_V2_REALDIST_V1"
+  },
+  "coverage": {
+    "total": 200,
+    "attempted": 14,
+    "completed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "full_acceptance_dataset": false,
+    "wall_clock_sec": 223,
+    "max_minutes": 90,
+    "anchored_only": true
+  },
+  "invariants": {
+    "unit_tests": "deferred",
+    "second_vote_violations": 0,
+    "anchor_retry_rejections": 0,
+    "anchor_mutation_violations": 0,
+    "global_gt16": 0,
+    "retry_region_count": 24
+  },
+  "anchors": {
+    "utterances_with_anchor": 14,
+    "utterances_without_anchor": 0,
+    "domain_anchor_count": 30,
+    "model2_anchor_count": 29,
+    "dual_source_anchor_count": 7,
+    "rejected_prevote": 0,
+    "anchors_per_utterance": 3.7142857142857144
+  },
+  "model3": {
+    "paths_processed": 40,
+    "non_anchor_spans": 955,
+    "keep": 929,
+    "retry": 26,
+    "cases_with_retry": 8,
+    "retry_rate": 0.027225130890052355,
+    "retry_spans_per_utterance": 1.8571428571428572
+  },
+  "recall": {
+    "retry_attempts": 26,
+    "returned": 15,
+    "zero_attempts": 11,
+    "candidate_yield": 0.5769230769230769,
+    "zero_candidate_rate": 0.4230769230769231
+  },
+  "final_text": {
+    "improved": 7,
+    "unchanged": 7,
+    "regressed": 0,
+    "undetermined": 0,
+    "improvement_rate": 0.5,
+    "unchanged_rate": 0.5,
+    "regression_rate": 0
+  },
+  "failure_ownership": {
+    "DOWNSTREAM_SELECTION_ERROR": 3,
+    "RECALL_NO_RESCUE": 1,
+    "NONE": 10
+  },
+  "latency": {
+    "model3_p50": 15,
+    "model3_p95": 26,
+    "model3_p99": 38,
+    "retry_p50": 1,
+    "retry_p95": 10,
+    "keep_only_delta_p50": 28,
+    "keep_only_delta_p95": 108,
+    "post_asr_delta_p50": 40,
+    "post_asr_delta_p95": 271
+  },
+  "startInfo": {
+    "pid": 41008,
+    "stdout": "STARTED electron pid 41008\nLOG D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\logs\\storm-repro-electron.log\nROOT D:\\Programs\\github\\lingua_1\nELECTRON_RUN_AS_NODE_STRIPPED true"
+  }
+}

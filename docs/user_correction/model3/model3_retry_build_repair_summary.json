@@ -1,0 +1,38 @@
+{
+  "phase": "MODEL3_RETRY_FALLBACK_BUILD_COMPLETENESS_REPAIR",
+  "generatedAt": "2026-09-04T11:15:00Z",
+  "verdict": "MODEL3_RETRY_FALLBACK_BUILD_COMPLETENESS_REPAIR_PASS",
+  "rootCauseReference": "A_DEFAULT_RESEGMENT_RETURN_TYPE_INCOMPLETE",
+  "repairApplied": "OPTION_A_ALIGN_DEFAULT_RESEGMENT_RETURN_TO_ResegmentRetryRegionResult",
+  "productionFilesModified": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts"
+  ],
+  "productionFilesModifiedCount": 1,
+  "typeContractChange": {
+    "symbol": "defaultResegment",
+    "beforeReturn": "{ ok: boolean; localSpans: RetryRegionLocalSpan[] }",
+    "afterReturn": "ResegmentRetryRegionResult",
+    "runtimeObjectUnchanged": true,
+    "fakeCodeAdded": false
+  },
+  "firstRuntimeSemanticChange": "NONE",
+  "runtimeLogicChangeCount": 0,
+  "unrelatedChangeCount": 0,
+  "gates": {
+    "buildMain": "PASS",
+    "retryJestModel3Retry": "26/26 PASS",
+    "retryJestDevEquivalent": "38/38 PASS",
+    "delta1SuccessFixture": "PASS",
+    "delta1SuccessFixtureChangeCount": 0,
+    "delta2FallbackFixture": "PASS"
+  },
+  "traceOnlyBoundary": "TRACE_ONLY_INTERNAL_TYPE",
+  "antiWorkaround": "NONE",
+  "driftDetected": false,
+  "decisionRequiredForUser": "EMPTY",
+  "governanceGateRecorded": "DEVELOPMENT_PASS requires npm run build:main PASS",
+  "delta2ClosedByThisRepair": false,
+  "DELTA_RQ_FALLBACK_BOUNDARY_LOCK": "NOT_ACCEPTED",
+  "nextPhase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_ACCEPTANCE",
+  "dialog200ThisPhase": "NOT_RUN"
+}

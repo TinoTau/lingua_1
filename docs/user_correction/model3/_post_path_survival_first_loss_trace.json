@@ -1,0 +1,2656 @@
+{
+  "audit": "LINGUA_POST_PATH_SURVIVAL_FINAL_CORRECT_FIRST_LOSS_TRACE_AUDIT_V1",
+  "mode": "READ_ONLY_DIAGNOSTIC",
+  "path_cap_note": "DIAGNOSTIC ONLY — THIS DOES NOT AUTHORIZE CAP CHANGE",
+  "cohort_rule": "Target path survives diagnostic budget AND reaches Domain Vote AND FINAL_CORRECT=false",
+  "cases": [
+    {
+      "caseId": "p2_u004_033",
+      "targetSurface": "城门",
+      "diagnostic_cap": "12/12",
+      "diagnostic_cap_note": "DIAGNOSTIC ONLY — THIS DOES NOT AUTHORIZE CAP CHANGE",
+      "asr": "复查时请重点关注与层门相关的指标变化",
+      "expected": "",
+      "final": "复查时请重点关注与层门相关的指标变化",
+      "final_contains_target": false,
+      "expected_contains_target": false,
+      "path_count": 12,
+      "target_path_count": 1,
+      "evidence_states": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "ABSENT",
+        "E7_TARGET_POST_MODEL3": "PRESENT",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss": {
+        "stage": "E6_TARGET_POST_KENLM",
+        "kind": "LOSS",
+        "from": "PRESENT",
+        "to": "ABSENT"
+      },
+      "observability_gap": false,
+      "vote_retained_union": [
+        "tourism_route"
+      ],
+      "vote_insufficient_any": false,
+      "target_has_domain_tag": false,
+      "kenlm": {
+        "global_cap": 16,
+        "truncated_count": 0,
+        "combo_count": 6,
+        "unique_before_cap_count": 6,
+        "target_in_combos": [
+          {
+            "rank": 3,
+            "text": "复查时轻重点关注与城门相关的指标变化",
+            "score": 6.12,
+            "replacements": [
+              "轻重",
+              "关注",
+              "城门",
+              "复查",
+              "时",
+              "点",
+              "与",
+              "相关",
+              "的指",
+              "标变",
+              "化"
+            ]
+          },
+          {
+            "rank": 4,
+            "text": "复查时请重点关注与城门相关的指标变化",
+            "score": 4.24,
+            "replacements": [
+              "关注",
+              "城门",
+              "复查",
+              "时",
+              "请重",
+              "点",
+              "与",
+              "相关",
+              "的指",
+              "标变",
+              "化"
+            ]
+          }
+        ],
+        "target_in_unique_before_cap": [
+          {
+            "rank": 3,
+            "text": "复查时轻重点关注与城门相关的指标变化"
+          },
+          {
+            "rank": 4,
+            "text": "复查时请重点关注与城门相关的指标变化"
+          }
+        ],
+        "target_in_pruned": [],
+        "picked_text": null,
+        "picked_is_raw": true,
+        "top_candidates_sample": [
+          {
+            "text": "复查时请重点关注与层门相关的指标变化"
+          },
+          {
+            "text": "复查时轻重点关注与层门相关的指标变化"
+          },
+          {
+            "text": "复查时请重点关注与层门相关的指标变化"
+          }
+        ]
+      },
+      "spanV4_metrics_snip": {
+        "retainedDomains": [
+          "tourism_route"
+        ],
+        "insufficientEvidence": false,
+        "kenlmPoolCandidateCount": 6,
+        "sameDomainCandidateCount": 432,
+        "baseCandidateCount": 119,
+        "crossPathTruncatedCount": 0,
+        "globalCandidateCap": 16
+      },
+      "pathLedgers": [
+        {
+          "boundary_key": "0-2|2-3|3-5|5-6|6-8|8-9|9-11|11-13|13-15|15-17|17-18",
+          "path_id": "f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4",
+          "vote_retained": [
+            "tourism_route"
+          ],
+          "vote_scores": {
+            "tourism_route": 7
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_route",
+          "vote_winner_score": 7,
+          "vote_runner_up": "general",
+          "vote_margin": 7,
+          "cand_count": 9,
+          "cand_surfaces": [
+            "城门",
+            "预订",
+            "入园",
+            "出园",
+            "包车",
+            "古桥",
+            "古镇",
+            "导览",
+            "徒步"
+          ],
+          "target_surface_in_candidates": true,
+          "target_cand_sample": [
+            {
+              "surface": "城门",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-rebuild-term-e59f8ee997a87c63",
+              "hitKind": "exact_term",
+              "from": "after_model2_candidates"
+            }
+          ],
+          "target_cand_sources": [
+            "base_term"
+          ],
+          "target_cand_domains": [
+            []
+          ],
+          "assembly_sentence_count": 4,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "复查时轻重点关注与城门相关的指标变化",
+              "score": 6.12,
+              "replacements": [
+                "轻重",
+                "关注",
+                "城门",
+                "复查",
+                "时",
+                "点",
+                "与",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            },
+            {
+              "text": "复查时请重点关注与城门相关的指标变化",
+              "score": 4.24,
+              "replacements": [
+                "关注",
+                "城门",
+                "复查",
+                "时",
+                "请重",
+                "点",
+                "与",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "复查时轻重点关注与城门相关的指标变化",
+              "score": 6.12,
+              "replacements": [
+                "轻重",
+                "关注",
+                "城门",
+                "复查",
+                "时",
+                "点",
+                "与",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            },
+            {
+              "text": "复查时请重点关注与城门相关的指标变化",
+              "score": 4.24,
+              "replacements": [
+                "关注",
+                "城门",
+                "复查",
+                "时",
+                "请重",
+                "点",
+                "与",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            },
+            {
+              "text": "复查时轻重点关注与层门相关的指标变化",
+              "score": 3.7600000000000002,
+              "replacements": [
+                "轻重",
+                "关注",
+                "复查",
+                "时",
+                "点",
+                "与",
+                "层门",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            },
+            {
+              "text": "复查时请重点关注与层门相关的指标变化",
+              "score": 1.8800000000000001,
+              "replacements": [
+                "关注",
+                "复查",
+                "时",
+                "请重",
+                "点",
+                "与",
+                "层门",
+                "相关",
+                "的指",
+                "标变",
+                "化"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:2:fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:2",
+              "sourceSpanIds": [
+                "fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:2"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 3,
+              "syllableEnd": 5,
+              "oldLocalSpanSurfaces": [
+                "请重"
+              ],
+              "newLocalSpanSurfaces": [
+                "请",
+                "重"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 3,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            },
+            {
+              "retryRegionId": "m3rr:fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:4:fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:4",
+              "sourceSpanIds": [
+                "fine:f126698624fc631703c58bcab0684a9f0f5d9378e9aa6ae48c994166c5e1dad4:4"
+              ],
+              "rawStart": 6,
+              "rawEnd": 8,
+              "syllableStart": 6,
+              "syllableEnd": 8,
+              "oldLocalSpanSurfaces": [
+                "关注"
+              ],
+              "newLocalSpanSurfaces": [
+                "关",
+                "注"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 2,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        }
+      ],
+      "schema_probe": {
+        "path_keys": [
+          "path_id",
+          "boundary_key",
+          "tone",
+          "tone_evidence_available_count",
+          "finespans",
+          "base_candidates",
+          "after_model2_candidates",
+          "model2",
+          "model2_summary",
+          "domain_vote",
+          "model3",
+          "assembly"
+        ],
+        "raw_top_keys": [
+          "paths",
+          "kenlm_input",
+          "single_char_collector",
+          "kenlm_rerank",
+          "tone_stage"
+        ],
+        "kenlm_input_keys": [
+          "combinations",
+          "unique_before_cap",
+          "truncated_count",
+          "global_cap",
+          "pruned"
+        ],
+        "kenlm_rerank_keys": [
+          "picked_is_raw",
+          "picked_text",
+          "top_candidates",
+          "kenlm_query_count",
+          "kenlm_subprocess_ms",
+          "min_delta_to_replace",
+          "max_delta"
+        ],
+        "after_m2_type": {
+          "type": "object",
+          "isArray": false,
+          "keys": [
+            "count",
+            "items"
+          ],
+          "item0_keys": [
+            "termId",
+            "surface",
+            "pinyin",
+            "domains",
+            "score",
+            "source",
+            "provenance",
+            "alsoProfile",
+            "rank",
+            "candidateId",
+            "originSpanId",
+            "rawStart",
+            "rawEnd",
+            "syllableStart",
+            "syllableEnd",
+            "hitKind",
+            "repairTarget",
+            "retrievalId",
+            "model2ActionId"
+          ]
+        }
+      },
+      "evidence_states_corrected": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "ABSENT",
+        "E7_TARGET_POST_MODEL3": "NOT_APPLICABLE",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss_corrected": {
+        "stage": "E6_KENLM_APPLY_GATE",
+        "kind": "LOSS",
+        "detail": "kenlm_scores_all_zero_fail_open_or_null_scorer; maxDelta=0 < minDelta=3; pickedIsRaw"
+      },
+      "root_cause": {
+        "FIRST_LOSS": "KENLM_APPLY_GATE_OR_FAIL_OPEN",
+        "CLASS": "EXPECTED_FAILURE",
+        "Violation_demonstrated": "NO",
+        "note": "FROZEN fail-open + minDeltaToReplace=3.0"
+      },
+      "kenlm_gate": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "minDeltaToReplace": 3,
+        "picked": null,
+        "scoreMode": "raw_log_delta",
+        "baselineRawScore": 0,
+        "topCandidates": [
+          {
+            "rank": 1,
+            "candidateId": "raw",
+            "text": "复查时请重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:0",
+            "text": "复查时轻重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 3,
+            "candidateId": "candidate:1",
+            "text": "复查时请重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": false,
+            "replacementCount": 11
+          }
+        ]
+      },
+      "kenlm_rerank_full": {
+        "picked_is_raw": true,
+        "picked_text": null,
+        "top_candidates": [
+          {
+            "rank": 1,
+            "candidateId": "raw",
+            "text": "复查时请重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:0",
+            "text": "复查时轻重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 3,
+            "candidateId": "candidate:1",
+            "text": "复查时请重点关注与层门相关的指标变化",
+            "kenlmScore": 0,
+            "deltaVsRaw": 0,
+            "isRaw": false,
+            "replacementCount": 11
+          }
+        ],
+        "kenlm_query_count": 7,
+        "kenlm_subprocess_ms": 0,
+        "min_delta_to_replace": 3,
+        "max_delta": 0
+      },
+      "kenlm_pool_texts": [
+        {
+          "text": "复查时轻重点关注与层门相关的指标变化",
+          "score": 3.7600000000000002
+        },
+        {
+          "text": "复查时请重点关注与层门相关的指标变化",
+          "score": 1.8800000000000001
+        },
+        {
+          "text": "复查时轻重点关注与城门相关的指标变化",
+          "score": 6.12
+        },
+        {
+          "text": "复查时请重点关注与城门相关的指标变化",
+          "score": 4.24
+        },
+        {
+          "text": "复查时轻重点关注层门相关的指标变化",
+          "score": 3.7600000000000002
+        },
+        {
+          "text": "复查时请重点关注层门相关的指标变化",
+          "score": 1.8800000000000001
+        }
+      ],
+      "kenlm_pruned_target": [],
+      "kenlm_truncation": {
+        "truncated": 0,
+        "unique": 6,
+        "cap": 16
+      }
+    },
+    {
+      "caseId": "p2_u005_015",
+      "targetSurface": "提示符",
+      "diagnostic_cap": "12/12",
+      "diagnostic_cap_note": "DIAGNOSTIC ONLY — THIS DOES NOT AUTHORIZE CAP CHANGE",
+      "asr": "今天想试试和提斯福搭配的套餐",
+      "expected": "",
+      "final": "今天想试试和提斯福搭配的套餐",
+      "final_contains_target": false,
+      "expected_contains_target": false,
+      "path_count": 12,
+      "target_path_count": 1,
+      "evidence_states": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "ABSENT",
+        "E6_TARGET_POST_KENLM": "NOT_APPLICABLE",
+        "E7_TARGET_POST_MODEL3": "PRESENT",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss": {
+        "stage": "E5_TARGET_KENLM_INPUT",
+        "kind": "LOSS",
+        "from": "PRESENT",
+        "to": "ABSENT"
+      },
+      "observability_gap": false,
+      "vote_retained_union": [
+        "tourism_pickup"
+      ],
+      "vote_insufficient_any": false,
+      "target_has_domain_tag": false,
+      "kenlm": {
+        "global_cap": 16,
+        "truncated_count": 64,
+        "combo_count": 16,
+        "unique_before_cap_count": 24,
+        "target_in_combos": [],
+        "target_in_unique_before_cap": [],
+        "target_in_pruned": [
+          {
+            "text": "今天像事实提示符搭配的套餐",
+            "rank": 33,
+            "score": 8.94
+          },
+          {
+            "text": "今天像事事提示符搭配的套餐",
+            "rank": 34,
+            "score": 8.94
+          },
+          {
+            "text": "今天像事施提示符搭配的套餐",
+            "rank": 35,
+            "score": 8.94
+          },
+          {
+            "text": "今天像实实提示符搭配的套餐",
+            "rank": 36,
+            "score": 8.94
+          },
+          {
+            "text": "今天像实事提示符搭配的套餐",
+            "rank": 37,
+            "score": 8.94
+          },
+          {
+            "text": "今天像实施提示符搭配的套餐",
+            "rank": 38,
+            "score": 8.94
+          },
+          {
+            "text": "今天像时实提示符搭配的套餐",
+            "rank": 39,
+            "score": 8.94
+          },
+          {
+            "text": "今天像时事提示符搭配的套餐",
+            "rank": 40,
+            "score": 8.94
+          }
+        ],
+        "picked_text": null,
+        "picked_is_raw": true,
+        "top_candidates_sample": [
+          {
+            "text": "今天像实施提斯福搭配的套餐"
+          },
+          {
+            "text": "今天相实施提斯福搭配的套餐"
+          },
+          {
+            "text": "今天想试试和提斯福搭配的套餐"
+          }
+        ]
+      },
+      "spanV4_metrics_snip": {
+        "retainedDomains": [
+          "tourism_pickup"
+        ],
+        "insufficientEvidence": false,
+        "kenlmPoolCandidateCount": 16,
+        "sameDomainCandidateCount": 138,
+        "baseCandidateCount": 209,
+        "crossPathTruncatedCount": 64,
+        "globalCandidateCap": 16
+      },
+      "pathLedgers": [
+        {
+          "boundary_key": "0-1|1-2|2-3|3-4|4-6|6-9|9-10|10-11|11-13|13-14",
+          "path_id": "14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f",
+          "vote_retained": [
+            "tourism_pickup"
+          ],
+          "vote_scores": {
+            "tourism_pickup": 2
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_pickup",
+          "vote_winner_score": 2,
+          "vote_runner_up": "general",
+          "vote_margin": 2,
+          "cand_count": 2,
+          "cand_surfaces": [
+            "提示符"
+          ],
+          "target_surface_in_candidates": true,
+          "target_cand_sample": [
+            {
+              "surface": "提示符",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-rebuild-term-e68f90e7a4bae7ac",
+              "hitKind": "exact_term",
+              "from": "after_model2_candidates"
+            },
+            {
+              "surface": "提示符",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-rebuild-term-e68f90e7a4bae7ac",
+              "from": "base_candidates"
+            }
+          ],
+          "target_cand_sources": [
+            "base_term"
+          ],
+          "target_cand_domains": [
+            [],
+            []
+          ],
+          "assembly_sentence_count": 16,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "今天像事实提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "实",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像事事提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "事",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像事施提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "施",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实实提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "实",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实事提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "事",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实施提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "施",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像时实提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "时",
+                "实",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像时事提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "时",
+                "事",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "今天像事实提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "实",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像事事提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "事",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像事施提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "事",
+                "施",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实实提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "实",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实事提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "事",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            },
+            {
+              "text": "今天像实施提示符搭配的套餐",
+              "score": 8.94,
+              "replacements": [
+                "像",
+                "实",
+                "施",
+                "提示符",
+                "今",
+                "天",
+                "搭",
+                "配",
+                "的套",
+                "餐"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:2:fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:4",
+              "sourceSpanIds": [
+                "fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:2",
+                "fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:3",
+                "fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:4"
+              ],
+              "rawStart": 2,
+              "rawEnd": 6,
+              "syllableStart": 2,
+              "syllableEnd": 6,
+              "oldLocalSpanSurfaces": [
+                "想",
+                "试",
+                "试和"
+              ],
+              "newLocalSpanSurfaces": [
+                "想",
+                "试",
+                "试",
+                "和"
+              ],
+              "regionMergedFromAdjacentRetry": true,
+              "recallCandidatesReturned": 10,
+              "candidateBudgetAfter": 12,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            },
+            {
+              "retryRegionId": "m3rr:fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:9:fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:9",
+              "sourceSpanIds": [
+                "fine:14f854ecc62338122f0bcac8f10900f2441163ee54cfd67c7d5904133c3baa7f:9"
+              ],
+              "rawStart": 13,
+              "rawEnd": 14,
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "oldLocalSpanSurfaces": [
+                "餐"
+              ],
+              "newLocalSpanSurfaces": [
+                "餐"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 1,
+              "candidateBudgetAfter": 1,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        }
+      ],
+      "schema_probe": {
+        "path_keys": [
+          "path_id",
+          "boundary_key",
+          "tone",
+          "tone_evidence_available_count",
+          "finespans",
+          "base_candidates",
+          "after_model2_candidates",
+          "model2",
+          "model2_summary",
+          "domain_vote",
+          "model3",
+          "assembly"
+        ],
+        "raw_top_keys": [
+          "paths",
+          "kenlm_input",
+          "single_char_collector",
+          "kenlm_rerank",
+          "tone_stage"
+        ],
+        "kenlm_input_keys": [
+          "combinations",
+          "unique_before_cap",
+          "truncated_count",
+          "global_cap",
+          "pruned"
+        ],
+        "kenlm_rerank_keys": [
+          "picked_is_raw",
+          "picked_text",
+          "top_candidates",
+          "kenlm_query_count",
+          "kenlm_subprocess_ms",
+          "min_delta_to_replace",
+          "max_delta"
+        ],
+        "after_m2_type": {
+          "type": "object",
+          "isArray": false,
+          "keys": [
+            "count",
+            "items"
+          ],
+          "item0_keys": [
+            "termId",
+            "surface",
+            "pinyin",
+            "domains",
+            "score",
+            "source",
+            "provenance",
+            "alsoProfile",
+            "rank",
+            "candidateId",
+            "originSpanId",
+            "rawStart",
+            "rawEnd",
+            "syllableStart",
+            "syllableEnd",
+            "hitKind",
+            "repairTarget",
+            "retrievalId"
+          ]
+        }
+      },
+      "evidence_states_corrected": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "ABSENT",
+        "E6_TARGET_POST_KENLM": "NOT_APPLICABLE",
+        "E7_TARGET_POST_MODEL3": "PRESENT",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss_corrected": {
+        "stage": "E5_SENTENCE_CANDIDATE_BUDGET",
+        "kind": "LOSS",
+        "detail": "target assembled but pruned by global<=16; truncated=64; target pruned ranks>=33"
+      },
+      "root_cause": {
+        "FIRST_LOSS": "SENTENCE_CANDIDATE_BUDGET",
+        "CLASS": "EXPECTED_FAILURE",
+        "Violation_demonstrated": "NO",
+        "note": "Frozen cross-path merge first_wins + global cap 16"
+      },
+      "kenlm_gate": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.7431640000000002,
+        "minDeltaToReplace": 3,
+        "picked": null,
+        "scoreMode": "raw_log_delta",
+        "baselineRawScore": -36.85545,
+        "topCandidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:5",
+            "text": "今天像实施提斯福搭配的套餐",
+            "kenlmScore": -36.112286,
+            "deltaVsRaw": 0.7431640000000002,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:14",
+            "text": "今天相实施提斯福搭配的套餐",
+            "kenlmScore": -36.838398,
+            "deltaVsRaw": 0.017051999999999623,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "今天想试试和提斯福搭配的套餐",
+            "kenlmScore": -36.85545,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ]
+      },
+      "kenlm_rerank_full": {
+        "picked_is_raw": true,
+        "picked_text": null,
+        "top_candidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:5",
+            "text": "今天像实施提斯福搭配的套餐",
+            "kenlmScore": -36.112286,
+            "deltaVsRaw": 0.7431640000000002,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:14",
+            "text": "今天相实施提斯福搭配的套餐",
+            "kenlmScore": -36.838398,
+            "deltaVsRaw": 0.017051999999999623,
+            "isRaw": false,
+            "replacementCount": 11
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "今天想试试和提斯福搭配的套餐",
+            "kenlmScore": -36.85545,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ],
+        "kenlm_query_count": 17,
+        "kenlm_subprocess_ms": 1644,
+        "min_delta_to_replace": 3,
+        "max_delta": 0.7431640000000002
+      },
+      "kenlm_pool_texts": [
+        {
+          "text": "今天像事实提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像事事提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像事施提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像实实提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像实事提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像实施提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像时实提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像时事提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天像时施提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相事实提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相事事提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相事施提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相实实提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相实事提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相实施提斯福搭配的套餐",
+          "score": 6.58
+        },
+        {
+          "text": "今天相时实提斯福搭配的套餐",
+          "score": 6.58
+        }
+      ],
+      "kenlm_pruned_target": [
+        {
+          "text": "今天像事实提示符搭配的套餐",
+          "rank": 33,
+          "score": 8.94
+        },
+        {
+          "text": "今天像事事提示符搭配的套餐",
+          "rank": 34,
+          "score": 8.94
+        },
+        {
+          "text": "今天像事施提示符搭配的套餐",
+          "rank": 35,
+          "score": 8.94
+        },
+        {
+          "text": "今天像实实提示符搭配的套餐",
+          "rank": 36,
+          "score": 8.94
+        },
+        {
+          "text": "今天像实事提示符搭配的套餐",
+          "rank": 37,
+          "score": 8.94
+        }
+      ],
+      "kenlm_truncation": {
+        "truncated": 64,
+        "unique": 24,
+        "cap": 16
+      }
+    },
+    {
+      "caseId": "p2_u005_004",
+      "targetSurface": "水道",
+      "diagnostic_cap": "16/16",
+      "diagnostic_cap_note": "DIAGNOSTIC ONLY — THIS DOES NOT AUTHORIZE CAP CHANGE",
+      "asr": "今天,我想再确认一下随道的安排是否合适",
+      "expected": "",
+      "final": "今天,我想再确认一下随道的安排是否合适",
+      "final_contains_target": false,
+      "expected_contains_target": false,
+      "path_count": 16,
+      "target_path_count": 3,
+      "evidence_states": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "ABSENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "NOT_APPLICABLE",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "PRESENT",
+        "E7_TARGET_POST_MODEL3": "NOT_APPLICABLE",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss": {
+        "stage": "E3_TARGET_SAMEDOMAIN_POOL",
+        "kind": "LOSS",
+        "from": "PRESENT",
+        "to": "ABSENT"
+      },
+      "observability_gap": false,
+      "vote_retained_union": [
+        "tourism_pickup"
+      ],
+      "vote_insufficient_any": false,
+      "target_has_domain_tag": false,
+      "kenlm": {
+        "global_cap": 16,
+        "truncated_count": 0,
+        "combo_count": 5,
+        "unique_before_cap_count": 5,
+        "target_in_combos": [
+          {
+            "rank": 3,
+            "text": "今天,我想再确认一下水道的安排是否合适",
+            "score": 2.36,
+            "replacements": [
+              "水道",
+              "今天",
+              "我想",
+              "再确",
+              "认",
+              "一下",
+              "的",
+              "安排",
+              "是",
+              "否合适"
+            ]
+          }
+        ],
+        "target_in_unique_before_cap": [
+          {
+            "rank": 3,
+            "text": "今天,我想再确认一下水道的安排是否合适"
+          }
+        ],
+        "target_in_pruned": [],
+        "picked_text": null,
+        "picked_is_raw": true,
+        "top_candidates_sample": [
+          {
+            "text": "今天,我想再确认一下水道的安排是否合适"
+          },
+          {
+            "text": "今天,我想再确认一下水稻的安排是否合适"
+          },
+          {
+            "text": "今天,我想再确认一下随道的安排是否合适"
+          }
+        ]
+      },
+      "spanV4_metrics_snip": {
+        "retainedDomains": [
+          "tourism_pickup"
+        ],
+        "insufficientEvidence": false,
+        "kenlmPoolCandidateCount": 5,
+        "sameDomainCandidateCount": 590,
+        "baseCandidateCount": 123,
+        "crossPathTruncatedCount": 0,
+        "globalCandidateCap": 16
+      },
+      "pathLedgers": [
+        {
+          "boundary_key": "0-2|2-4|4-6|6-7|7-9|9-11|11-12|12-14|14-15|15-18",
+          "path_id": "777c9ebd0f9a05f71ff583692cf65e6989611df9634c75c1bfce40011639e590",
+          "vote_retained": [
+            "tourism_pickup"
+          ],
+          "vote_scores": {
+            "tourism_pickup": 7
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_pickup",
+          "vote_winner_score": 7,
+          "vote_runner_up": "general",
+          "vote_margin": 7,
+          "cand_count": 0,
+          "cand_surfaces": [],
+          "target_surface_in_candidates": false,
+          "target_cand_sample": [],
+          "target_cand_sources": [],
+          "target_cand_domains": [],
+          "assembly_sentence_count": 3,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 2.36,
+              "replacements": [
+                "水道",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "是",
+                "否合适"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 2.36,
+              "replacements": [
+                "水道",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "是",
+                "否合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下水稻的安排是否合适",
+              "score": 2.35,
+              "replacements": [
+                "水稻",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "是",
+                "否合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下随道的安排是否合适",
+              "score": 0,
+              "replacements": [
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "随道",
+                "的",
+                "安排",
+                "是",
+                "否合适"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:777c9ebd0f9a05f71ff583692cf65e6989611df9634c75c1bfce40011639e590:1:fine:777c9ebd0f9a05f71ff583692cf65e6989611df9634c75c1bfce40011639e590:1",
+              "sourceSpanIds": [
+                "fine:777c9ebd0f9a05f71ff583692cf65e6989611df9634c75c1bfce40011639e590:1"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 2,
+              "syllableEnd": 4,
+              "oldLocalSpanSurfaces": [
+                "我想"
+              ],
+              "newLocalSpanSurfaces": [
+                "我",
+                "想"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 2,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        },
+        {
+          "boundary_key": "0-2|2-4|4-6|6-7|7-9|9-11|11-12|12-14|14-16|16-18",
+          "path_id": "3b2affb9c12bf883cfc2e24ac9b529eec77bd08630b69f7bd0a87518749bc68d",
+          "vote_retained": [
+            "tourism_pickup"
+          ],
+          "vote_scores": {
+            "tourism_pickup": 8
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_pickup",
+          "vote_winner_score": 8,
+          "vote_runner_up": "general",
+          "vote_margin": 8,
+          "cand_count": 0,
+          "cand_surfaces": [],
+          "target_surface_in_candidates": false,
+          "target_cand_sample": [],
+          "target_cand_sources": [],
+          "target_cand_domains": [],
+          "assembly_sentence_count": 3,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 4.71,
+              "replacements": [
+                "水道",
+                "是否",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "合适"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 4.71,
+              "replacements": [
+                "水道",
+                "是否",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下水稻的安排是否合适",
+              "score": 4.7,
+              "replacements": [
+                "水稻",
+                "是否",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的",
+                "安排",
+                "合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下随道的安排是否合适",
+              "score": 2.35,
+              "replacements": [
+                "是否",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "随道",
+                "的",
+                "安排",
+                "合适"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:3b2affb9c12bf883cfc2e24ac9b529eec77bd08630b69f7bd0a87518749bc68d:1:fine:3b2affb9c12bf883cfc2e24ac9b529eec77bd08630b69f7bd0a87518749bc68d:1",
+              "sourceSpanIds": [
+                "fine:3b2affb9c12bf883cfc2e24ac9b529eec77bd08630b69f7bd0a87518749bc68d:1"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 2,
+              "syllableEnd": 4,
+              "oldLocalSpanSurfaces": [
+                "我想"
+              ],
+              "newLocalSpanSurfaces": [
+                "我",
+                "想"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 2,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        },
+        {
+          "boundary_key": "0-2|2-4|4-6|6-7|7-9|9-11|11-13|13-14|14-15|15-18",
+          "path_id": "0905b1cabffe8c5d71ea7f7afa1d28ab6c11ee4e6f1cea65e46724bee171a452",
+          "vote_retained": [
+            "tourism_pickup"
+          ],
+          "vote_scores": {
+            "tourism_pickup": 7
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_pickup",
+          "vote_winner_score": 7,
+          "vote_runner_up": "general",
+          "vote_margin": 7,
+          "cand_count": 0,
+          "cand_surfaces": [],
+          "target_surface_in_candidates": false,
+          "target_cand_sample": [],
+          "target_cand_sources": [],
+          "target_cand_domains": [],
+          "assembly_sentence_count": 3,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 2.36,
+              "replacements": [
+                "水道",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的安",
+                "排",
+                "是",
+                "否合适"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "今天,我想再确认一下水道的安排是否合适",
+              "score": 2.36,
+              "replacements": [
+                "水道",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的安",
+                "排",
+                "是",
+                "否合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下水稻的安排是否合适",
+              "score": 2.35,
+              "replacements": [
+                "水稻",
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "的安",
+                "排",
+                "是",
+                "否合适"
+              ]
+            },
+            {
+              "text": "今天,我想再确认一下随道的安排是否合适",
+              "score": 0,
+              "replacements": [
+                "今天",
+                "我想",
+                "再确",
+                "认",
+                "一下",
+                "随道",
+                "的安",
+                "排",
+                "是",
+                "否合适"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:0905b1cabffe8c5d71ea7f7afa1d28ab6c11ee4e6f1cea65e46724bee171a452:1:fine:0905b1cabffe8c5d71ea7f7afa1d28ab6c11ee4e6f1cea65e46724bee171a452:1",
+              "sourceSpanIds": [
+                "fine:0905b1cabffe8c5d71ea7f7afa1d28ab6c11ee4e6f1cea65e46724bee171a452:1"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 2,
+              "syllableEnd": 4,
+              "oldLocalSpanSurfaces": [
+                "我想"
+              ],
+              "newLocalSpanSurfaces": [
+                "我",
+                "想"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 2,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        }
+      ],
+      "schema_probe": {
+        "path_keys": [
+          "path_id",
+          "boundary_key",
+          "tone",
+          "tone_evidence_available_count",
+          "finespans",
+          "base_candidates",
+          "after_model2_candidates",
+          "model2",
+          "model2_summary",
+          "domain_vote",
+          "model3",
+          "assembly"
+        ],
+        "raw_top_keys": [
+          "paths",
+          "kenlm_input",
+          "single_char_collector",
+          "kenlm_rerank",
+          "tone_stage"
+        ],
+        "kenlm_input_keys": [
+          "combinations",
+          "unique_before_cap",
+          "truncated_count",
+          "global_cap",
+          "pruned"
+        ],
+        "kenlm_rerank_keys": [
+          "picked_is_raw",
+          "picked_text",
+          "top_candidates",
+          "kenlm_query_count",
+          "kenlm_subprocess_ms",
+          "min_delta_to_replace",
+          "max_delta"
+        ],
+        "after_m2_type": {
+          "type": "object",
+          "isArray": false,
+          "keys": [
+            "count",
+            "items"
+          ],
+          "item0_keys": [
+            "termId",
+            "surface",
+            "pinyin",
+            "domains",
+            "score",
+            "source",
+            "provenance",
+            "alsoProfile",
+            "rank",
+            "candidateId",
+            "originSpanId",
+            "rawStart",
+            "rawEnd",
+            "syllableStart",
+            "syllableEnd",
+            "hitKind",
+            "repairTarget",
+            "retrievalId",
+            "model2ActionId"
+          ]
+        }
+      },
+      "evidence_states_corrected": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "NOT_APPLICABLE",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "PRESENT",
+        "E7_TARGET_POST_MODEL3": "NOT_APPLICABLE",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss_corrected": {
+        "stage": "E8_KENLM_APPLY_GATE",
+        "kind": "LOSS",
+        "detail": "target KenLM rank1 delta=1.768 < minDelta=3.0 → pickedIsRaw"
+      },
+      "root_cause": {
+        "FIRST_LOSS": "KENLM_APPLY_GATE",
+        "CLASS": "EXPECTED_FAILURE",
+        "Violation_demonstrated": "NO",
+        "secondary": "DATA_MODEL_DELTA_INSUFFICIENT",
+        "note": "Contract gate correctly blocked; LM delta 1.77<3.0"
+      },
+      "kenlm_gate": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.7681809999999984,
+        "minDeltaToReplace": 3,
+        "picked": null,
+        "scoreMode": "raw_log_delta",
+        "baselineRawScore": -37.804096,
+        "topCandidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:2",
+            "text": "今天,我想再确认一下水道的安排是否合适",
+            "kenlmScore": -36.035915,
+            "deltaVsRaw": 1.7681809999999984,
+            "isRaw": false,
+            "replacementCount": 10
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:3",
+            "text": "今天,我想再确认一下水稻的安排是否合适",
+            "kenlmScore": -36.388268,
+            "deltaVsRaw": 1.4158280000000047,
+            "isRaw": false,
+            "replacementCount": 10
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "今天,我想再确认一下随道的安排是否合适",
+            "kenlmScore": -37.804096,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ]
+      },
+      "kenlm_rerank_full": {
+        "picked_is_raw": true,
+        "picked_text": null,
+        "top_candidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:2",
+            "text": "今天,我想再确认一下水道的安排是否合适",
+            "kenlmScore": -36.035915,
+            "deltaVsRaw": 1.7681809999999984,
+            "isRaw": false,
+            "replacementCount": 10
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:3",
+            "text": "今天,我想再确认一下水稻的安排是否合适",
+            "kenlmScore": -36.388268,
+            "deltaVsRaw": 1.4158280000000047,
+            "isRaw": false,
+            "replacementCount": 10
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "今天,我想再确认一下随道的安排是否合适",
+            "kenlmScore": -37.804096,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ],
+        "kenlm_query_count": 6,
+        "kenlm_subprocess_ms": 4091,
+        "min_delta_to_replace": 3,
+        "max_delta": 1.7681809999999984
+      },
+      "kenlm_pool_texts": [
+        {
+          "text": "今天,我想再确认以下随道的安排是否合适",
+          "score": 1.8800000000000001
+        },
+        {
+          "text": "今天,我想再确认一下随道的安排是否合适",
+          "score": 0
+        },
+        {
+          "text": "今天,我想再确认一下水道的安排是否合适",
+          "score": 2.36
+        },
+        {
+          "text": "今天,我想再确认一下水稻的安排是否合适",
+          "score": 2.35
+        },
+        {
+          "text": "今天,我想再确任意下随道的安排是否合适",
+          "score": 1.8800000000000001
+        }
+      ],
+      "kenlm_pruned_target": [],
+      "kenlm_truncation": {
+        "truncated": 0,
+        "unique": 5,
+        "cap": 16
+      }
+    },
+    {
+      "caseId": "p2_u004_010",
+      "targetSurface": "行程图",
+      "diagnostic_cap": "32/32",
+      "diagnostic_cap_note": "DIAGNOSTIC ONLY — THIS DOES NOT AUTHORIZE CAP CHANGE",
+      "asr": "顾客想了解行层图的保修与退换政策",
+      "expected": "",
+      "final": "顾客想了解行层图的保修与退换政策",
+      "final_contains_target": false,
+      "expected_contains_target": false,
+      "path_count": 32,
+      "target_path_count": 2,
+      "evidence_states": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "PRESENT",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "PRESENT",
+        "E7_TARGET_POST_MODEL3": "PRESENT",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss": {
+        "stage": "E8_TARGET_FINAL",
+        "kind": "LOSS",
+        "from": "PRESENT",
+        "to": "ABSENT"
+      },
+      "observability_gap": false,
+      "vote_retained_union": [
+        "tourism_route"
+      ],
+      "vote_insufficient_any": false,
+      "target_has_domain_tag": true,
+      "kenlm": {
+        "global_cap": 16,
+        "truncated_count": 0,
+        "combo_count": 3,
+        "unique_before_cap_count": 3,
+        "target_in_combos": [
+          {
+            "rank": 2,
+            "text": "顾客想了解行程图的保修与退换政策",
+            "score": 2.35,
+            "replacements": [
+              "行程",
+              "顾客想",
+              "了解",
+              "图的保",
+              "修",
+              "与",
+              "退换",
+              "政策"
+            ]
+          }
+        ],
+        "target_in_unique_before_cap": [
+          {
+            "rank": 2,
+            "text": "顾客想了解行程图的保修与退换政策"
+          }
+        ],
+        "target_in_pruned": [],
+        "picked_text": null,
+        "picked_is_raw": true,
+        "top_candidates_sample": [
+          {
+            "text": "顾客想了解行程图的保修与退换政策"
+          },
+          {
+            "text": "顾客想了解形成图的保修与退换政策"
+          },
+          {
+            "text": "顾客想了解行层图的保修与退换政策"
+          }
+        ]
+      },
+      "spanV4_metrics_snip": {
+        "retainedDomains": [
+          "tourism_route"
+        ],
+        "insufficientEvidence": false,
+        "kenlmPoolCandidateCount": 3,
+        "sameDomainCandidateCount": 1057,
+        "baseCandidateCount": 146,
+        "crossPathTruncatedCount": 0,
+        "globalCandidateCap": 16
+      },
+      "pathLedgers": [
+        {
+          "boundary_key": "0-3|3-5|5-8|8-10|10-11|11-12|12-14|14-16",
+          "path_id": "7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098",
+          "vote_retained": [
+            "tourism_route"
+          ],
+          "vote_scores": {
+            "tourism_route": 6
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_route",
+          "vote_winner_score": 6,
+          "vote_runner_up": "general",
+          "vote_margin": 6,
+          "cand_count": 8,
+          "cand_surfaces": [
+            "行程图",
+            "行程单",
+            "行程表",
+            "路线图"
+          ],
+          "target_surface_in_candidates": true,
+          "target_cand_sample": [
+            {
+              "surface": "行程图",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e8a18ce7a88be59b",
+              "hitKind": "exact_term",
+              "from": "after_model2_candidates"
+            },
+            {
+              "surface": "行程图",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e8a18ce7a88be59b",
+              "from": "base_candidates"
+            }
+          ],
+          "target_cand_sources": [
+            "domain_term"
+          ],
+          "target_cand_domains": [
+            [
+              "tourism_route"
+            ],
+            [
+              "tourism_route"
+            ]
+          ],
+          "assembly_sentence_count": 2,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "顾客想了解行程图的保修与退换政策",
+              "score": 2.36,
+              "replacements": [
+                "行程图",
+                "顾客想",
+                "了解",
+                "的保",
+                "修",
+                "与",
+                "退换",
+                "政策"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "顾客想了解行程图的保修与退换政策",
+              "score": 2.36,
+              "replacements": [
+                "行程图",
+                "顾客想",
+                "了解",
+                "的保",
+                "修",
+                "与",
+                "退换",
+                "政策"
+              ]
+            },
+            {
+              "text": "顾客想了解行层图的保修与退换政策",
+              "score": 0,
+              "replacements": [
+                "顾客想",
+                "了解",
+                "行层图",
+                "的保",
+                "修",
+                "与",
+                "退换",
+                "政策"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:1:fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:1",
+              "sourceSpanIds": [
+                "fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:1"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 3,
+              "syllableEnd": 5,
+              "oldLocalSpanSurfaces": [
+                "了解"
+              ],
+              "newLocalSpanSurfaces": [
+                "了",
+                "解"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 1,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            },
+            {
+              "retryRegionId": "m3rr:fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:7:fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:7",
+              "sourceSpanIds": [
+                "fine:7275566e2d63f2730dea9d8d2097ad266adffbf1c052104f028473bf5ac3b098:7"
+              ],
+              "rawStart": 14,
+              "rawEnd": 16,
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "oldLocalSpanSurfaces": [
+                "政策"
+              ],
+              "newLocalSpanSurfaces": [
+                "政",
+                "策"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 0,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        },
+        {
+          "boundary_key": "0-3|3-5|5-8|8-10|10-12|12-14|14-16",
+          "path_id": "b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7",
+          "vote_retained": [
+            "tourism_route"
+          ],
+          "vote_scores": {
+            "tourism_route": 7
+          },
+          "vote_insufficient": false,
+          "vote_utterance_domain": "tourism_route",
+          "vote_winner_score": 7,
+          "vote_runner_up": "general",
+          "vote_margin": 7,
+          "cand_count": 8,
+          "cand_surfaces": [
+            "行程图",
+            "行程单",
+            "行程表",
+            "路线图"
+          ],
+          "target_surface_in_candidates": true,
+          "target_cand_sample": [
+            {
+              "surface": "行程图",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e8a18ce7a88be59b",
+              "hitKind": "exact_term",
+              "from": "after_model2_candidates"
+            },
+            {
+              "surface": "行程图",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e8a18ce7a88be59b",
+              "from": "base_candidates"
+            }
+          ],
+          "target_cand_sources": [
+            "domain_term"
+          ],
+          "target_cand_domains": [
+            [
+              "tourism_route"
+            ],
+            [
+              "tourism_route"
+            ]
+          ],
+          "assembly_sentence_count": 2,
+          "assembly_has_target_surface": true,
+          "assembly_target_sentences": [
+            {
+              "text": "顾客想了解行程图的保修与退换政策",
+              "score": 2.36,
+              "replacements": [
+                "行程图",
+                "顾客想",
+                "了解",
+                "的保",
+                "修与",
+                "退换",
+                "政策"
+              ]
+            }
+          ],
+          "assembly_all_sample": [
+            {
+              "text": "顾客想了解行程图的保修与退换政策",
+              "score": 2.36,
+              "replacements": [
+                "行程图",
+                "顾客想",
+                "了解",
+                "的保",
+                "修与",
+                "退换",
+                "政策"
+              ]
+            },
+            {
+              "text": "顾客想了解行层图的保修与退换政策",
+              "score": 0,
+              "replacements": [
+                "顾客想",
+                "了解",
+                "行层图",
+                "的保",
+                "修与",
+                "退换",
+                "政策"
+              ]
+            }
+          ],
+          "model3_decisions": [],
+          "anchors_overlap_geom": [],
+          "model3_retry_regions_sample": [
+            {
+              "retryRegionId": "m3rr:fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:1:fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:1",
+              "sourceSpanIds": [
+                "fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:1"
+              ],
+              "rawStart": 3,
+              "rawEnd": 5,
+              "syllableStart": 3,
+              "syllableEnd": 5,
+              "oldLocalSpanSurfaces": [
+                "了解"
+              ],
+              "newLocalSpanSurfaces": [
+                "了",
+                "解"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 1,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            },
+            {
+              "retryRegionId": "m3rr:fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:6:fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:6",
+              "sourceSpanIds": [
+                "fine:b068869074710eb921700200355b7adb7e2c45b6d6f99f19dcf7a4c36af869e7:6"
+              ],
+              "rawStart": 14,
+              "rawEnd": 16,
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "oldLocalSpanSurfaces": [
+                "政策"
+              ],
+              "newLocalSpanSurfaces": [
+                "政",
+                "策"
+              ],
+              "regionMergedFromAdjacentRetry": false,
+              "recallCandidatesReturned": 0,
+              "candidateBudgetAfter": 4,
+              "secondDomainVote": false,
+              "model3Reinvoked": false,
+              "resegmentOk": true
+            }
+          ],
+          "finespan_keys": [
+            "span_id",
+            "source_text",
+            "start",
+            "end",
+            "syllable_start",
+            "syllable_end",
+            "source_token_range",
+            "phonetic_representation",
+            "tone_representation",
+            "coarse_span_ids",
+            "window_source",
+            "selection_reason",
+            "boundary_cross_count",
+            "candidate_count"
+          ],
+          "path_top_keys": [
+            "path_id",
+            "boundary_key",
+            "tone",
+            "tone_evidence_available_count",
+            "finespans",
+            "base_candidates",
+            "after_model2_candidates",
+            "model2",
+            "model2_summary",
+            "domain_vote",
+            "model3",
+            "assembly"
+          ]
+        }
+      ],
+      "schema_probe": {
+        "path_keys": [
+          "path_id",
+          "boundary_key",
+          "tone",
+          "tone_evidence_available_count",
+          "finespans",
+          "base_candidates",
+          "after_model2_candidates",
+          "model2",
+          "model2_summary",
+          "domain_vote",
+          "model3",
+          "assembly"
+        ],
+        "raw_top_keys": [
+          "paths",
+          "kenlm_input",
+          "single_char_collector",
+          "kenlm_rerank",
+          "tone_stage"
+        ],
+        "kenlm_input_keys": [
+          "combinations",
+          "unique_before_cap",
+          "truncated_count",
+          "global_cap",
+          "pruned"
+        ],
+        "kenlm_rerank_keys": [
+          "picked_is_raw",
+          "picked_text",
+          "top_candidates",
+          "kenlm_query_count",
+          "kenlm_subprocess_ms",
+          "min_delta_to_replace",
+          "max_delta"
+        ],
+        "after_m2_type": {
+          "type": "object",
+          "isArray": false,
+          "keys": [
+            "count",
+            "items"
+          ],
+          "item0_keys": [
+            "termId",
+            "surface",
+            "pinyin",
+            "domains",
+            "score",
+            "source",
+            "provenance",
+            "alsoProfile",
+            "rank",
+            "candidateId",
+            "originSpanId",
+            "rawStart",
+            "rawEnd",
+            "syllableStart",
+            "syllableEnd",
+            "hitKind",
+            "repairTarget",
+            "retrievalId",
+            "model2ActionId"
+          ]
+        }
+      },
+      "evidence_states_corrected": {
+        "E0_TARGET_EDGE": "PRESENT",
+        "E1_TARGET_PATH": "PRESENT",
+        "E2_TARGET_DOMAIN": "PRESENT",
+        "E3_TARGET_SAMEDOMAIN_POOL": "PRESENT",
+        "E4_TARGET_ASSEMBLED_SENTENCE": "PRESENT",
+        "E5_TARGET_KENLM_INPUT": "PRESENT",
+        "E6_TARGET_POST_KENLM": "PRESENT",
+        "E7_TARGET_POST_MODEL3": "PRESENT",
+        "E8_TARGET_FINAL": "ABSENT"
+      },
+      "first_loss_corrected": {
+        "stage": "E8_KENLM_APPLY_GATE",
+        "kind": "LOSS",
+        "detail": "target KenLM rank1 delta=1.778 < minDelta=3.0 → pickedIsRaw"
+      },
+      "root_cause": {
+        "FIRST_LOSS": "KENLM_APPLY_GATE",
+        "CLASS": "EXPECTED_FAILURE",
+        "Violation_demonstrated": "NO",
+        "secondary": "DATA_MODEL_DELTA_INSUFFICIENT",
+        "note": "Contract gate correctly blocked; LM delta 1.78<3.0"
+      },
+      "kenlm_gate": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.7779620000000023,
+        "minDeltaToReplace": 3,
+        "picked": null,
+        "scoreMode": "raw_log_delta",
+        "baselineRawScore": -44.604702,
+        "topCandidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:1",
+            "text": "顾客想了解行程图的保修与退换政策",
+            "kenlmScore": -42.82674,
+            "deltaVsRaw": 1.7779620000000023,
+            "isRaw": false,
+            "replacementCount": 8
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:2",
+            "text": "顾客想了解形成图的保修与退换政策",
+            "kenlmScore": -42.897823,
+            "deltaVsRaw": 1.7068790000000007,
+            "isRaw": false,
+            "replacementCount": 8
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "顾客想了解行层图的保修与退换政策",
+            "kenlmScore": -44.604702,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ]
+      },
+      "kenlm_rerank_full": {
+        "picked_is_raw": true,
+        "picked_text": null,
+        "top_candidates": [
+          {
+            "rank": 1,
+            "candidateId": "candidate:1",
+            "text": "顾客想了解行程图的保修与退换政策",
+            "kenlmScore": -42.82674,
+            "deltaVsRaw": 1.7779620000000023,
+            "isRaw": false,
+            "replacementCount": 8
+          },
+          {
+            "rank": 2,
+            "candidateId": "candidate:2",
+            "text": "顾客想了解形成图的保修与退换政策",
+            "kenlmScore": -42.897823,
+            "deltaVsRaw": 1.7068790000000007,
+            "isRaw": false,
+            "replacementCount": 8
+          },
+          {
+            "rank": 3,
+            "candidateId": "raw",
+            "text": "顾客想了解行层图的保修与退换政策",
+            "kenlmScore": -44.604702,
+            "deltaVsRaw": 0,
+            "isRaw": true,
+            "replacementCount": 0
+          }
+        ],
+        "kenlm_query_count": 4,
+        "kenlm_subprocess_ms": 4040,
+        "min_delta_to_replace": 3,
+        "max_delta": 1.7779620000000023
+      },
+      "kenlm_pool_texts": [
+        {
+          "text": "顾客想了解行层图的保修与退换政策",
+          "score": 0
+        },
+        {
+          "text": "顾客想了解行程图的保修与退换政策",
+          "score": 2.35
+        },
+        {
+          "text": "顾客想了解形成图的保修与退换政策",
+          "score": 2.35
+        }
+      ],
+      "kenlm_pruned_target": [],
+      "kenlm_truncation": {
+        "truncated": 0,
+        "unique": 3,
+        "cap": 16
+      }
+    }
+  ]
+}

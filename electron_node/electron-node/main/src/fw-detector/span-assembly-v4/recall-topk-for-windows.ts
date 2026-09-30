@@ -1,5 +1,6 @@
 ﻿import type { LexiconRuntimeV2 } from '../../lexicon-v2/lexicon-runtime-v2';
 import { recallSpanTopKV2, type RecallSpanTopKV2Hit } from '../../lexicon-v2/recall-span-topk-v2';
+import type { Length1CollectorDiagnostic, Length1WindowTrace } from '../../lexicon-v2/single-char-collector-trace';
 import type { WeakDomainRecallPlan } from '../../lexicon-v2/weak-domain-recall-resolver';
 import { syllablesKey } from '../../lexicon/pinyin-index';
 import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
@@ -35,6 +36,12 @@ import {
   utteranceCacheSet,
   type UtteranceRecallContext,
 } from './utterance-recall-cache';
+import {
+  captureV2Boundary,
+  canonicalHash,
+  isFrozenEvidenceCaptureV2Enabled,
+  markCaptureV2Incomplete,
+} from '../../capture-v2';
 
 const MAX_EXAMPLE_WINDOWS = 8;
 
@@ -113,6 +120,8 @@ export type RecallTopKResult = {
   tone: CoarseAssemblyToneDiagnostics;
   /** True SQLite statement executions observed via LexiconRuntimeV2 tier counters. */
   physicalSqlStatementCount: number;
+  /** Observation-only 1-char collector traces (one per length-1 input window). */
+  length1Windows: Length1WindowTrace[];
 };
 
 /**
@@ -258,9 +267,16 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
   let logicalWindowRecallCount = 0;
   let candidateSeq = 0;
   let physicalSqlStatementCount = 0;
+  const length1Windows: Length1WindowTrace[] = [];
   const toneActive = toneState.toneEnabled && acousticSlices.length > 0 && wordTimeSpans.length > 0;
   /** Batch 1.1C: explicit caller gate for Mandatory Tone Recall readiness. */
   const toneCallerEnabled = toneState.toneEnabled;
+
+  const captureOn = isFrozenEvidenceCaptureV2Enabled();
+  const b4Windows: unknown[] = [];
+  const b7Queries: unknown[] = [];
+  const b8Executions: unknown[] = [];
+  const b9Occurrence: unknown[] = [];
 
   // Frozen rule: every input recallable window is recalled — no attempt/resource gate.
   for (let wi = 0; wi < input.windows.length; wi += 1) {
@@ -353,12 +369,28 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
       utteranceRecall.stats.exactQueryCount += 1;
     }
 
+    if (captureOn) {
+      b4Windows.push({
+        windowId: window.windowId,
+        rawStart: window.rawStart,
+        rawEnd: window.rawEnd,
+        syllableStart: window.syllableStart,
+        syllableEnd: window.syllableEnd,
+        windowTimeRange: windowTimeRange ?? null,
+        pattern: acousticTonePattern ? [...acousticTonePattern] : null,
+        missReason: mappingMissReason ?? null,
+        acousticTonePattern: acousticTonePattern ? [...acousticTonePattern] : null,
+        toneNorm: canonical.toneNorm,
+      });
+    }
+
     let exactHits: RecallSpanTopKV2Hit[];
     let windowQueryTonePinyinKey: string | undefined;
     let recallToneCompatibleCount = 0;
     let recallToneFallbackCount = 0;
     let toneExactHitCount = 0;
     let plainFallbackHitCount = 0;
+    let length1Collector: Length1CollectorDiagnostic | undefined;
 
     if (utteranceRecall) {
       const lookupStart = Date.now();
@@ -368,6 +400,38 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         const bindStart = Date.now();
         exactHits = exactHitsFromLexiconFacts(cached);
         utteranceRecall.stats.windowBindingMs += Date.now() - bindStart;
+        const cachedDiag = utteranceRecall.length1CollectorByKey.get(canonicalKey);
+        if (cachedDiag) {
+          length1Collector = { ...cachedDiag, querySource: 'utterance_cache' };
+          windowQueryTonePinyinKey = cachedDiag.queryTonePinyinKey ?? undefined;
+        }
+        if (captureOn) {
+          b7Queries.push({
+            canonical,
+            serializedKey: canonicalKey,
+            cacheHit: true,
+            cacheMiss: false,
+          });
+          b8Executions.push({
+            canonicalQueryKey: canonicalKey,
+            queryStageOrMode: 'utterance_cache',
+            boundParameters: { serializedKey: canonicalKey },
+            toneExactOrFuzzyBranch: null,
+            cacheRelationship: 'hit',
+            orderedSemanticRowIdentities: exactHits.map((h) => ({
+              termId: h.hotword.id,
+              surface: h.hotword.word,
+              pinyin: null,
+              tone: h.acousticTonePattern ?? null,
+              domains: h.hotword.domains ? [...h.hotword.domains] : [],
+              hitKind: 'exact_term',
+              sourceSemantics: h.source,
+            })),
+            returnedOccurrenceCount: exactHits.length,
+            uniqueReturnedIdentityCount: new Set(exactHits.map((h) => h.hotword.id)).size,
+            rowIdentityHash: canonicalHash(exactHits.map((h) => h.hotword.id)),
+          });
+        }
       } else {
         const factStart = Date.now();
         const sqlBefore = input.runtime.getPhysicalStatementStats().total;
@@ -403,9 +467,49 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         recallToneFallbackCount = recall.recallToneFallbackCount ?? 0;
         toneExactHitCount = recall.toneExactHitCount ?? 0;
         plainFallbackHitCount = recall.plainFallbackHitCount ?? 0;
+        length1Collector = recall.length1Collector;
+        if (length1Collector) {
+          utteranceRecall.length1CollectorByKey.set(canonicalKey, length1Collector);
+        }
 
         const facts = lexiconFactsFromExactHits(exactHits);
         utteranceCacheSet(utteranceRecall, canonicalKey, facts);
+        if (captureOn) {
+          b7Queries.push({
+            canonical,
+            serializedKey: canonicalKey,
+            cacheHit: false,
+            cacheMiss: true,
+          });
+          const rowIdentities = exactHits.map((h) => ({
+            termId: h.hotword.id,
+            surface: h.hotword.word,
+            pinyin: h.hotword.pinyin ?? null,
+            tone: h.acousticTonePattern ?? null,
+            domains: h.hotword.domains ? [...h.hotword.domains] : [],
+            hitKind: 'exact_term',
+            sourceSemantics: h.source,
+          }));
+          b8Executions.push({
+            canonicalQueryKey: canonicalKey,
+            queryStageOrMode: exactHits[0]?.toneLookupStage ?? 'exact',
+            boundParameters: {
+              syllables,
+              windowText: window.windowText,
+              termLength: syllables.length,
+              topK: windowExactTopK,
+              domainIds: windowDomainIds,
+              acousticTonePattern: acousticTonePattern ?? null,
+              fuzzyRecallEnabled: isSingleChar ? false : input.fuzzyRecallEnabled,
+            },
+            toneExactOrFuzzyBranch: exactHits[0]?.toneLookupStage ?? null,
+            cacheRelationship: 'miss',
+            orderedSemanticRowIdentities: rowIdentities,
+            returnedOccurrenceCount: rowIdentities.length,
+            uniqueReturnedIdentityCount: new Set(rowIdentities.map((r) => r.termId)).size,
+            rowIdentityHash: canonicalHash(rowIdentities),
+          });
+        }
       }
     } else {
       const sqlBefore = input.runtime.getPhysicalStatementStats().total;
@@ -430,6 +534,43 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
       recallToneFallbackCount = recall.recallToneFallbackCount ?? 0;
       toneExactHitCount = recall.toneExactHitCount ?? 0;
       plainFallbackHitCount = recall.plainFallbackHitCount ?? 0;
+      length1Collector = recall.length1Collector;
+      if (captureOn) {
+        b7Queries.push({
+          canonical,
+          serializedKey: canonicalKey,
+          cacheHit: false,
+          cacheMiss: true,
+        });
+        const rowIdentities = exactHits.map((h) => ({
+          termId: h.hotword.id,
+          surface: h.hotword.word,
+          pinyin: h.hotword.pinyin ?? null,
+          tone: h.acousticTonePattern ?? null,
+          domains: h.hotword.domains ? [...h.hotword.domains] : [],
+          hitKind: 'exact_term',
+          sourceSemantics: h.source,
+        }));
+        b8Executions.push({
+          canonicalQueryKey: canonicalKey,
+          queryStageOrMode: exactHits[0]?.toneLookupStage ?? 'exact',
+          boundParameters: {
+            syllables,
+            windowText: window.windowText,
+            termLength: syllables.length,
+            topK: windowExactTopK,
+            domainIds: windowDomainIds,
+            acousticTonePattern: acousticTonePattern ?? null,
+            fuzzyRecallEnabled: isSingleChar ? false : input.fuzzyRecallEnabled,
+          },
+          toneExactOrFuzzyBranch: exactHits[0]?.toneLookupStage ?? null,
+          cacheRelationship: 'no_utterance_cache',
+          orderedSemanticRowIdentities: rowIdentities,
+          returnedOccurrenceCount: rowIdentities.length,
+          uniqueReturnedIdentityCount: new Set(rowIdentities.map((r) => r.termId)).size,
+          rowIdentityHash: canonicalHash(rowIdentities),
+        });
+      }
     }
 
     logicalWindowRecallCount += 1;
@@ -456,6 +597,42 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     }
     candidateSeq = bound.candidateSeq;
     candidates.push(...bound.candidates);
+    if (captureOn) {
+      for (const c of bound.candidates) {
+        b9Occurrence.push({
+          candidateId: c.candidateId,
+          termId: c.termId ?? null,
+          surface: c.replacement,
+          pinyin: c.windowPinyinKey,
+          provenance: c.retrievalProvenance ?? null,
+          source: c.source,
+          syllableStart: c.syllableStart,
+          syllableEnd: c.syllableEnd,
+          rawStart: c.rawStart,
+          rawEnd: c.rawEnd,
+          score: c.score,
+          domains: c.domains ? [...c.domains] : [],
+          hitKind: c.hitKind,
+          provenance_windowId: window.windowId,
+          provenance_canonicalQueryKey: canonicalKey,
+        });
+      }
+    }
+    if (isSingleChar && length1Collector) {
+      length1Windows.push({
+        ...length1Collector,
+        windowId: window.windowId,
+        rawStart: window.rawStart,
+        rawEnd: window.rawEnd,
+        syllableStart: window.syllableStart,
+        syllableEnd: window.syllableEnd,
+        windowSource: window.windowSource,
+        blocked: false,
+        boundCandidateCount: bound.candidates.length,
+        tonePattern: acousticTonePattern ? [...acousticTonePattern] : null,
+        queryTonePinyinKey: windowQueryTonePinyinKey ?? length1Collector.queryTonePinyinKey ?? null,
+      });
+    }
   }
 
   if (utteranceRecall) {
@@ -465,6 +642,55 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
   tone.exampleToneWindows = exampleWindows.length ? exampleWindows : undefined;
   // Legacy alias for experiment/trace consumers (see CoarseAssemblyToneDiagnostics).
   tone.recallToneIncompatibleCount = tone.recallToneFallbackCount;
+
+  if (captureOn) {
+    // Merge windows into B4; collector preserves acousticToneSlices (INJECTION_STATE) from orchestrator.
+    const toneConsumed = b4Windows.some((w) => {
+      const row = w as Record<string, unknown>;
+      return (
+        (Array.isArray(row.acousticTonePattern) && row.acousticTonePattern.length > 0) ||
+        (typeof row.toneNorm === 'string' && row.toneNorm.length > 0) ||
+        (Array.isArray(row.pattern) && row.pattern.length > 0)
+      );
+    });
+    if (toneConsumed && acousticSlices.length === 0) {
+      markCaptureV2Incomplete('TONE_REQUIRED_BUT_SLICES_MISSING', 'B4');
+    }
+    captureV2Boundary('B4', {
+      windows: b4Windows,
+      slice_role: 'INJECTION_STATE',
+      // Do not overwrite slice array here — merge keeps orchestrator snapshot.
+      tone_execution_status:
+        acousticSlices.length > 0
+          ? 'TONE_EXECUTED_AND_SLICES_CAPTURED'
+          : toneConsumed
+            ? 'TONE_REQUIRED_BUT_SLICES_MISSING'
+            : 'TONE_LEGITIMATELY_NOT_APPLICABLE',
+    });
+    captureV2Boundary('B7', { queries: b7Queries });
+    captureV2Boundary('B8', { executions: b8Executions });
+    const uniqueKeys = [
+      ...new Set(
+        b9Occurrence.map((o) => {
+          const r = o as Record<string, unknown>;
+          return `${r.surface}|${r.termId}|${r.syllableStart}|${r.syllableEnd}`;
+        })
+      ),
+    ].sort();
+    const multiset: Record<string, number> = {};
+    for (const o of b9Occurrence) {
+      const r = o as Record<string, unknown>;
+      const k = `${r.surface}|${r.termId}|${r.syllableStart}|${r.syllableEnd}`;
+      multiset[k] = (multiset[k] ?? 0) + 1;
+    }
+    captureV2Boundary('B9', {
+      occurrence_list: b9Occurrence,
+      unique_identity_set: uniqueKeys,
+      multiset_multiplicities: multiset,
+      provenance_note: 'windowId+canonicalQueryKey on each occurrence',
+    });
+  }
+
   return {
     candidates,
     logicalWindowRecallCount,
@@ -472,5 +698,6 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     parentFragmentHitCount: 0,
     tone,
     physicalSqlStatementCount,
+    length1Windows,
   };
 }

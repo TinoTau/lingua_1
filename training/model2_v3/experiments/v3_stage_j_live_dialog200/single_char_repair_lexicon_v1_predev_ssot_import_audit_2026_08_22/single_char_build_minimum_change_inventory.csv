@@ -1,0 +1,9 @@
+change_id,item,required,notes
+M1,Freeze ONE build SSOT file from STRICT 1125,YES,Prefer docs/user_correction/single_char/single_char_repair_lexicon_v1.csv
+M2,Point DEFAULT_SINGLE_CHAR_TSV / singleCharTsvPath to Repair SSOT,YES,Stop reading IME TSV for Repair
+M3,Loader field-map OR SSOT columns match loadSingleCharRows,YES,STRICT raw CSV is comma + word/tone; loader expects tab + surface/tone_pinyin
+M4,Prior mapping (not IME weight),YES,CONTRACT_GAP until value frozen; proposal: constant clearing minPrior
+M5,source label single-char-repair-v1-strict,YES,
+M6,Full Rebuild + promote + bundleVersion bump,YES,OPTION 1; no new patch tool
+M7,IME export length>=2 hygiene,RECOMMENDED,tooling only; do not keep 2510 mirror
+M8,New table / collector / Model2 / second pipeline,NO,forbidden

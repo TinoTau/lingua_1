@@ -1,0 +1,8 @@
+Feature,StageD_TrainingSource,ProductionSource,ProductionWriter,RuntimeAvailable,SemanticMatch,GapClass
+personal_terms,synthetic surfaces,UserProfileV1 after correction,Gateway apply_profile_delta,YES_IF_CORRECTED,PARTIAL — free text vs lexicon surfaces,G1/G2
+personal_term_evidence,rank-decay synthetic,personal_term_evidence HashMap,Gateway,YES_RUST / NO_NODE_TS,PARTIAL,G2/G4
+long_term_domain_evidence,derive_domain_evidence synthetic,NOT IN UserProfile — must derive,MISSING writer,NO,"MISMATCH — train materializes, prod must derive",G1/G2
+session_domain_prior,0.2-0.25*domain_ev synthetic,JobAssign.domainPriors soft quota only,Web/JobAssign,NO_FOR_MODEL2,MISMATCH unused by encoder,G3
+domain_bias,not used in Stage D train,UserProfileV1 schema,PUT profile only,YES_SCHEMA,MISMATCH train≠prod field,G2
+phonetic_bias,empty on Stage D rows,UserProfileV1,correction phonetic,YES,MATCH Stage P,OK
+term_id,index surfaces,NOT STORED,—,NO,MISSING,G1

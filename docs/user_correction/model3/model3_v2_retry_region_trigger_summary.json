@@ -1,0 +1,148 @@
+{
+  "phase": "MODEL3_V2_RETRY_REGION_TRIGGER_ALIGNMENT_AUDIT",
+  "timestamp": "2026-09-01T13:06:14.299Z",
+  "verdict": "RETRY_REGION_TRIGGER_ALIGNMENT_PASS_MIXED",
+  "nextPhase": "MODEL3_V2_TRIGGER_REGION_BOUNDARY_DESIGN_AUDIT",
+  "population34": 34,
+  "ownerDistribution34": {
+    "MODEL3_RETRY_SHIFTED_NEARBY": 8,
+    "MULTI_UNIT_TARGET_ATTRIBUTION_ERROR": 13,
+    "MODEL3_TARGET_PARTIAL_COVERAGE": 4,
+    "NO_REPAIRABLE_TARGET": 5,
+    "MODEL3_TARGET_FALSE_NEGATIVE": 4
+  },
+  "ownerSum34": 34,
+  "largestOwner": "MULTI_UNIT_TARGET_ATTRIBUTION_ERROR",
+  "largestOwnerCount": 13,
+  "secondOwner": "MODEL3_RETRY_SHIFTED_NEARBY",
+  "secondOwnerCount": 8,
+  "deriveRetryRegionsDroppedValidRetry": 0,
+  "multiUnitAttributionErrors": 13,
+  "deriveRetryRegionsStatus": "FROZEN_CONTRACT_EXECUTED_NO_VALID_DROP",
+  "model3LocalizationProductionCount": 16,
+  "model3LocalizationPrimary": true,
+  "model3LocalizationPrimaryBlocker": false,
+  "coverageTable34": {
+    "TARGET_NO_RETRY": 19,
+    "TARGET_PARTIAL_RETRY_COVERAGE": 8,
+    "TARGET_NOT_MODEL3_ELIGIBLE": 7
+  },
+  "coverageTableSum34": 34,
+  "targetFineSpansFound34": {
+    "withSpans": 27,
+    "noSpans": 7
+  },
+  "acpRequired": false,
+  "questions": {
+    "D1": true,
+    "D4": 13,
+    "D5": 27,
+    "D7": 7,
+    "D9": 0,
+    "D10": 8,
+    "D11": 19,
+    "D19": 0,
+    "D24": 0,
+    "D25": 4,
+    "D26": 4,
+    "D29": 13,
+    "D33": "MULTI_UNIT_TARGET_ATTRIBUTION_ERROR",
+    "D35": true,
+    "D36": true,
+    "D37": false,
+    "D45": true,
+    "D46": true,
+    "D50": false,
+    "D51": false,
+    "D52": false
+  },
+  "funnel": [
+    [
+      "TARGET_REGION_MISMATCH",
+      34,
+      34,
+      0,
+      0
+    ],
+    [
+      "repair_unit_valid",
+      34,
+      34,
+      0,
+      0
+    ],
+    [
+      "path_attribution_valid",
+      34,
+      34,
+      0,
+      0
+    ],
+    [
+      "target_finespans_found",
+      34,
+      27,
+      7,
+      0
+    ],
+    [
+      "non_anchor_eligible",
+      27,
+      27,
+      7,
+      0
+    ],
+    [
+      "model3_decision_captured",
+      27,
+      27,
+      0,
+      0
+    ],
+    [
+      "sufficient_target_retry",
+      27,
+      0,
+      27,
+      0
+    ],
+    [
+      "derive_input_target_retry",
+      8,
+      8,
+      19,
+      0
+    ],
+    [
+      "derive_output_preserves",
+      8,
+      7,
+      1,
+      0
+    ]
+  ],
+  "CORRECTED_METADATA": {
+    "correctedByPhase": "MODEL3_V2_TARGET_LOCALIZATION_GENERALIZATION_AUDIT",
+    "correctedAt": "2026-09-01T13:06:14.439Z",
+    "bugs": [
+      {
+        "id": "COVERAGE_TABLE_MISSING_2",
+        "before": "NO_SPANS=5 reported; sum=32/34",
+        "after": "TARGET_NOT_MODEL3_ELIGIBLE=7; sum=34/34",
+        "rootCause": "Report used NO_REPAIRABLE_TARGET(5) instead of TARGET_NOT_MODEL3_ELIGIBLE(7) for d101,d118"
+      },
+      {
+        "id": "FUNNEL_SPAN_COUNT",
+        "before": "report prose 29/5",
+        "after": "27/7",
+        "rootCause": "Manual report typo; funnel JSON was already 27/7"
+      },
+      {
+        "id": "D37_MODEL3_LOCALIZATION_PRIMARY",
+        "before": "model3LocalizationPrimary=true vs D37=false",
+        "after": "model3LocalizationProductionCount=16; model3LocalizationPrimaryBlocker=false (largest bucket is attribution 13)",
+        "rootCause": "model3LocalizationPrimary used count>=largest bucket; D37 used count>=20 threshold"
+      }
+    ]
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "model": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "architecture": "Small BiGRU",
+  "parameters": 231618,
+  "weights_bytes": 930876,
+  "model_path": "training/model3_dataset/model3_v1_synthetic_bigru",
+  "training": {
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.008512279283051314,
+        "dev": {
+          "loss": 1.6617228088227112e-05,
+          "keep_precision": 1.0,
+          "keep_recall": 1.0,
+          "retry_precision": 1.0,
+          "retry_recall": 1.0,
+          "retry_f1": 1.0,
+          "macro_f1": 1.0,
+          "false_retry_rate": 0.0,
+          "tp": 2670,
+          "fp": 0,
+          "fn": 0,
+          "tn": 190892
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 8.93581081847407e-06,
+        "dev": {
+          "loss": 3.92438252259765e-06,
+          "keep_precision": 1.0,
+          "keep_recall": 1.0,
+          "retry_precision": 1.0,
+          "retry_recall": 1.0,
+          "retry_f1": 1.0,
+          "macro_f1": 1.0,
+          "false_retry_rate": 0.0,
+          "tp": 2670,
+          "fp": 0,
+          "fn": 0,
+          "tn": 190892
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 2.7213024904401645e-06,
+        "dev": {
+          "loss": 1.4766486449148509e-06,
+          "keep_precision": 1.0,
+          "keep_recall": 1.0,
+          "retry_precision": 1.0,
+          "retry_recall": 1.0,
+          "retry_f1": 1.0,
+          "macro_f1": 1.0,
+          "false_retry_rate": 0.0,
+          "tp": 2670,
+          "fp": 0,
+          "fn": 0,
+          "tn": 190892
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 1.1139077037141783e-06,
+        "dev": {
+          "loss": 6.501171075260576e-07,
+          "keep_precision": 1.0,
+          "keep_recall": 1.0,
+          "retry_precision": 1.0,
+          "retry_recall": 1.0,
+          "retry_f1": 1.0,
+          "macro_f1": 1.0,
+          "false_retry_rate": 0.0,
+          "tp": 2670,
+          "fp": 0,
+          "fn": 0,
+          "tn": 190892
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 5.157205113019584e-07,
+        "dev": {
+          "loss": 3.007888295890802e-07,
+          "keep_precision": 1.0,
+          "keep_recall": 1.0,
+          "retry_precision": 1.0,
+          "retry_recall": 1.0,
+          "retry_f1": 1.0,
+          "macro_f1": 1.0,
+          "false_retry_rate": 0.0,
+          "tp": 2670,
+          "fp": 0,
+          "fn": 0,
+          "tn": 190892
+        }
+      }
+    ],
+    "train_seconds": 628.8818719387054,
+    "epochs": 5
+  },
+  "dev_metrics": {
+    "loss": 3.007888295890802e-07,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "macro_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "tp": 2670,
+    "fp": 0,
+    "fn": 0,
+    "tn": 190892
+  },
+  "test_metrics": {
+    "loss": 3.4453778030396967e-07,
+    "keep_precision": 1.0,
+    "keep_recall": 1.0,
+    "retry_precision": 1.0,
+    "retry_recall": 1.0,
+    "retry_f1": 1.0,
+    "macro_f1": 1.0,
+    "false_retry_rate": 0.0,
+    "tp": 2802,
+    "fp": 0,
+    "fn": 0,
+    "tn": 190451
+  },
+  "confusion_matrix_test": {
+    "true_KEEP_pred_KEEP": 190451,
+    "true_KEEP_pred_RETRY": 0,
+    "true_RETRY_pred_KEEP": 0,
+    "true_RETRY_pred_RETRY": 2802
+  },
+  "bucket_metrics_test": {
+    "NO_ANCHOR": {
+      "loss": 2.2219967155436778e-07,
+      "keep_precision": 1.0,
+      "keep_recall": 1.0,
+      "retry_precision": 1.0,
+      "retry_recall": 1.0,
+      "retry_f1": 1.0,
+      "macro_f1": 1.0,
+      "false_retry_rate": 0.0,
+      "tp": 622,
+      "fp": 0,
+      "fn": 0,
+      "tn": 41088,
+      "samples": 2077
+    },
+    "SIMULATED_TRAINING": {
+      "loss": 2.2475240399387546e-07,
+      "keep_precision": 1.0,
+      "keep_recall": 1.0,
+      "retry_precision": 1.0,
+      "retry_recall": 1.0,
+      "retry_f1": 1.0,
+      "macro_f1": 1.0,
+      "false_retry_rate": 0.0,
+      "tp": 2180,
+      "fp": 0,
+      "fn": 0,
+      "tn": 149363,
+      "samples": 7969
+    },
+    "REAL_DOMAIN": {
+      "status": "INSUFFICIENT_REAL_DOMAIN_SAMPLE",
+      "samples": 0
+    }
+  }
+}

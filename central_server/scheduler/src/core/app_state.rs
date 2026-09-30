@@ -50,5 +50,9 @@ pub struct AppState {
     pub pool_service: Option<std::sync::Arc<PoolService>>,
     /// Session HTTP migration orchestrator（Redis + NODE_MIGRATION_BASE_URL_*）
     pub session_migration_orchestrator: Option<std::sync::Arc<SessionMigrationOrchestrator>>,
+    /// CorrectionHistory SSOT (durable; not Job Redis TTL)
+    pub correction_service: Option<std::sync::Arc<crate::services::CorrectionService>>,
+    /// Shared secret for Correction API (Phase 1). If None, correction API rejects.
+    pub correction_api_token: Option<String>,
 }
 

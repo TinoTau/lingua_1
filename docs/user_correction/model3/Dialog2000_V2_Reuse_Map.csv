@@ -1,0 +1,12 @@
+﻿future_function,existing_asset,reuse_percent_estimate,reuse_as_is,needs_extension,replacement_needed,reason
+full_audio_asr_acceptance_runner,run-dialog200-*.mjs / run-fresh-dialog200-causal-reconciliation.mjs,HIGH,YES core loop,profile bootstrap + manifest schema,NO,Already real Faster-Whisper + full postprocess
+tts_wav_generation,Piper TTS + restore-dialog200-full.py,HIGH,YES,multi-voice/seed metadata,NO,Proven corpus restore path
+pronunciation_mechanism_audio,PronunciationCorruptor + PhonemeRealizer + ACTIVE_SET transforms,HIGH,NO wrapper,eval-corpus generator composing sentence×relation×severity,NO,Training tools already acoustic-path capable
+userprofile_p0_p3,UserProfileV1 + profile_delta + e2e fixtures,HIGH,contents YES; stages NO name,PROFILE_SCENARIO_GENERATOR,NO,Contract connected; need scenario contents + holdout discipline
+per_case_profile_injection,SessionBootstrap → node-agent,MEDIUM,prod path YES,PER_CASE_PROFILE_INJECTOR in test harness,NO,Dialog HTTP harness never bootstraps profile
+same_asr_profile_abc_compare,Phase7e offline A/B; Model3 frozen fork,LOW,pattern only,PROFILE_A_B_REPLAY_RUNNER,NO new platform,No cached-ASR×profile replay today
+normalized_cer_outcomes,run_asr_repair_normalized_baseline.mjs,HIGH,logic YES,dataset-agnostic IO,NO,Correct quality ruler
+model2_expansion_metrics,MODEL2_DIALOG200_TRACE + union dumps,MEDIUM,trace YES,PROFILE_AWARE_EVALUATOR,NO,Need PROFILE_GAIN / false expansion aggregates
+holdout_splits,training/model2/splits/assign.py user-disjoint,MEDIUM,idea YES,eval manifest holdout classes,NO,Training split utils not eval manifest
+text_only_error_injection_main_chain,training/model3_error_text,NONE,NO for V2 main,N/A,REJECT_FOR_DIALOG2000_V2 main path,Bypasses acoustic ASR behavior
+dialog_200_NO_PROFILE_golden,test wav/dialog_200,MEDIUM,as P0 control / regression,not as Model2 P eval corpus,NO — keep frozen golden,Cannot evaluate PROFILE_REQUIRED P expansion

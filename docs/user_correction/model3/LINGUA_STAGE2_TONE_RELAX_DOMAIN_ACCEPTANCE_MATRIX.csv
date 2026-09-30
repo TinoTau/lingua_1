@@ -1,0 +1,8 @@
+caseId,caseName,expected,result,notes
+CASE_A,BASE_RECOVERY_NO_TONE,target_recalled,PASS,acp|base → 基测
+CASE_B,DOMAIN_ONLY_POSITIVE,target_recalled,PASS,tourism_transport retained → 旅测
+CASE_C,DOMAIN_ONLY_NEGATIVE,target_not_recalled,PASS,medical-only under travel retained → miss 医测
+CASE_D,MULTI_DOMAIN_POSITIVE,target_recalled,PASS,acp|mult in travel+medical; retained medical → 多测
+CASE_E,EMPTY_RETAINED_DOMAIN,no_all_domain_fallback,PASS,domain-only with [] → miss 旅测
+PATH_ISO,CROSS_PATH_DOMAIN_LEAK,NO_LEAK,PASS,travel path ≠ medical terms and vice versa
+NORMAL_GUARD,FIRST_PASS_FAIL_CLOSED,empty_on_missing_wrong_tone,PASS,Batch1.1C preserved

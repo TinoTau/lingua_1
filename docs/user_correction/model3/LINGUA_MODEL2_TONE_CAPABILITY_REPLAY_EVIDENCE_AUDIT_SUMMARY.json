@@ -1,0 +1,46 @@
+{
+  "PHASE": "LINGUA_MODEL2_TONE_CAPABILITY_AND_REPLAY_EVIDENCE_AUDIT",
+  "AUDIT_ONLY": true,
+  "PRODUCTION_CODE_CHANGED": false,
+  "MODEL2_CHANGED": false,
+  "PROFILE_CHANGED": false,
+  "TONE_CHANGED": false,
+  "RECALL_CHANGED": false,
+  "REPLAY_CHANGED": false,
+
+  "BLOCK_B_TONE_EVIDENCE": "PRESENT_BUT_NOT_PERSISTED",
+  "REPLAY_TONE_LOSS_OWNER": "BLOCK_B_NOT_PERSISTED",
+  "REPLAY_TONE_REUSE_FEASIBILITY": "NOT_FEASIBLE_WITH_CURRENT_ARTIFACTS",
+
+  "USER_PROFILE_TONE_STORAGE": "YES",
+  "PROFILE_DELTA_TONE_LEARNING": "NO",
+  "MODEL2_TONE_PROFILE_CONSUMPTION": "NO",
+  "MODEL2_TONE_GENERALIZATION": "DESIGNED_NOT_CONNECTED",
+
+  "ACOUSTIC_TONE_INPUT_PRESENT": "YES",
+  "USER_TONE_PROFILE_PRESENT": "NO",
+  "MODEL2_COMBINES_BOTH": "NO",
+
+  "TONE_DEFERRED_MEANING": "User-specific tone_bias as Model2 profile learn/score target is deferred; acoustic Tone for recall may still exist; tone_bias reconnect out of Pilot scope",
+  "ACTIVE_SET_SCOPE": "BOTH",
+  "ARCHITECTURE_CONFLICT_FOUND": false,
+
+  "REPLAY_TONE_EVIDENCE_VERDICT": "Fixed-RAW Replay lacks acousticTonePattern because Block B dumps omit asrSegments/acousticToneSlices; mock ASR is text-only and skips ASR; Tone gate fail-closes as designed",
+  "PRODUCTION_TONE_GATE_VERDICT": "EXPECTED_DESIGN",
+  "MODEL2_ACTIVE_RELATION_CAPABILITY": "CONFIRMED",
+  "MODEL2_USER_TONE_CAPABILITY": "DESIGNED_NOT_IMPLEMENTED",
+  "MODEL2_TONE_GENERALIZATION_CAPABILITY": "NOT_CONFIRMED",
+
+  "ONE_NEXT_OWNER": "BLOCK_B_TONE_PERSISTENCE",
+  "ONE_RECOMMENDED_NEXT_DELTA": "Persist asrSegments + acousticToneSlices from full-audio runs for later RAW+Tone frozen Replay with profile-only variation; do not bypass Tone; do not reconnect tone_bias; do not change Model2 weights",
+
+  "EVIDENCE_ANCHORS": {
+    "block_b_batch": "blockb_2026-09-11T1021",
+    "replay_batch": "replay_2026-09-11T1347",
+    "utf8_diagnostic": "MODEL2_STAGE_J_UTF8_SURROGATE_SINGLE_DELTA_V1",
+    "tone_readiness_ssot": "electron_node/electron-node/main/src/lexicon-v2/tone-recall-readiness.ts",
+    "profile_delta_tone_empty": "central_server/scheduler/src/services/correction/profile_delta.rs",
+    "finespan_adapter_phonetic_only": "electron_node/electron-node/main/src/model2-runtime/finespan-adapter.ts",
+    "mock_asr": "electron_node/electron-node/main/src/inference/inference-service.ts runPipelineWithMockAsr"
+  }
+}

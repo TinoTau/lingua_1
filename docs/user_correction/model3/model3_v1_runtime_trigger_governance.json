@@ -1,0 +1,38 @@
+{
+  "phase": "MODEL3_V1_RUNTIME_TRIGGER_ERROR_AUDIT",
+  "date": "2026-08-27",
+  "verdict": "MULTIPLE_CAUSES",
+  "verdictNote": "Synthetic replay PASS; dialog RETRY=0 from error-family shift + partial feature parity + low anchor coverage",
+  "mainlineIntegration": "ACCEPTED",
+  "retryEffectiveness": "UNPROVEN",
+  "syntheticReplayPass": true,
+  "runtimeAdapterParity": "PASS",
+  "featureParityOverall": "PARTIAL",
+  "decisionPathPass": true,
+  "actualUnderTriggerProven": false,
+  "retrainRecommended": false,
+  "rollbackRecommended": false,
+  "runtimeFixRecommended": true,
+  "newEvalCorpusRecommended": true,
+  "recommendedNextPhase": "MODEL3_V1_REAL_ASR_ERROR_EVAL_CORPUS",
+  "reportArtifacts": [
+    "Lingua_Model3_V1_Runtime_Trigger_Error_Audit_2026_08_27.md",
+    "model3_v1_runtime_trigger_audit_summary.json",
+    "model3_v1_runtime_trigger_case_analysis.csv",
+    "model3_v1_runtime_feature_parity.csv",
+    "model3_v1_runtime_trigger_governance.json"
+  ],
+  "reportArtifactCount": 5,
+  "governance": {
+    "runtimeBusinessLogicChanged": false,
+    "modelChanged": false,
+    "trainingChanged": false,
+    "thresholdChanged": false,
+    "architectureChanged": false,
+    "anchorContractChanged": false,
+    "domainVoteChanged": false,
+    "recallChanged": false
+  },
+  "hardStop": true,
+  "auditScript": "training/model3_dataset/scripts/model3_runtime_trigger_audit.py"
+}

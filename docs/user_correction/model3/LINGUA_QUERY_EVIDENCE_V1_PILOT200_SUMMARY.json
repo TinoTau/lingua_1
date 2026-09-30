@@ -1,0 +1,452 @@
+{
+  "phase": "LINGUA_STAGE2_QUERY_EVIDENCE_V1_POST_IMPLEMENTATION_PILOT200_REMEASURE",
+  "date": "2026-09-15",
+  "dataset": "LINGUA_DIALOG2000_V2_PILOT200",
+  "baselineComparison": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "remeasureValidity": "PASS",
+  "validityReason": "COMPLETE_AUTHORITATIVE_600_RUNS",
+  "uniqueCases": 200,
+  "totalRuns": 600,
+  "conditionRuns": {
+    "NO_PROFILE": 200,
+    "CORRECT_PROFILE": 200,
+    "WRONG_PROFILE": 200
+  },
+  "finalRepair": {
+    "NO_PROFILE": 22,
+    "CORRECT_PROFILE": 31,
+    "WRONG_PROFILE": 19,
+    "correctVsNoDelta": 9,
+    "wrongVsNoDelta": -3,
+    "correctVsWrongDelta": 12,
+    "previous": {
+      "NO_PROFILE": 22,
+      "CORRECT_PROFILE": 22,
+      "WRONG_PROFILE": 19
+    }
+  },
+  "gateMetrics": {
+    "gateA": {
+      "applicable": 471,
+      "pass": 471,
+      "fail": 0,
+      "passRate": 1,
+      "previous": {
+        "applicable": 471,
+        "pass": 471,
+        "passRate": 1
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateB": {
+      "applicable": 314,
+      "pass": 261,
+      "fail": 53,
+      "passRate": 0.8312101910828026,
+      "previous": {
+        "applicable": 314,
+        "pass": 261,
+        "passRate": 0.8312101910828026
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateC": {
+      "applicable": 314,
+      "pass": 226,
+      "fail": 88,
+      "passRate": 0.7197452229299363,
+      "previous": {
+        "applicable": 314,
+        "pass": 226,
+        "passRate": 0.7197452229299363
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateD": {
+      "applicable": 314,
+      "pass": 161,
+      "fail": 153,
+      "passRate": 0.5127388535031847,
+      "previous": {
+        "applicable": 314,
+        "pass": 161,
+        "passRate": 0.5127388535031847
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateE": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateF": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateG": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateH": {
+      "applicable": 314,
+      "pass": 3,
+      "fail": 311,
+      "passRate": 0.009554140127388535,
+      "previous": {
+        "applicable": 314,
+        "pass": 3,
+        "passRate": 0.009554140127388535
+      },
+      "absoluteDeltaPass": 0,
+      "rateDelta": 0
+    },
+    "gateI": {
+      "applicable": 597,
+      "pass": 72,
+      "fail": 525,
+      "passRate": 0.12060301507537688,
+      "previous": {
+        "applicable": 597,
+        "pass": 63,
+        "passRate": 0.10552763819095477
+      },
+      "absoluteDeltaPass": 9,
+      "rateDelta": 0.015075376884422106
+    }
+  },
+  "firstFailureOwnerCounts": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "QEV7_RECALL_NON_TARGET_HIT": 109,
+    "MODEL2_ACTION": 53,
+    "QEV11_KENLM_NOT_SELECTED": 11,
+    "SUCCESS": 150,
+    "QEV13_SUCCESS": 29,
+    "QEV1_NO_FIRST_PASS_EVIDENCE": 8,
+    "QEV6_MAPPED_QUERY_EXECUTED_RECALL_EMPTY": 2
+  },
+  "conditionTable": {
+    "NO_PROFILE": {
+      "finalCorrect": 22,
+      "finalCorrectRate": 0.11,
+      "pActionApprox": 0,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 0,
+      "profilePronunciationAnchorCount": 0,
+      "model3Actionable": 7471,
+      "keep": 5738,
+      "retry": 1733,
+      "stage2Useful": 2702,
+      "retryRecovery": 22,
+      "existingDrop": 2689,
+      "profileDomainCandidates": 3206,
+      "profilePronunciationCandidates": 0,
+      "extraCandidates": 4220
+    },
+    "CORRECT_PROFILE": {
+      "finalCorrect": 31,
+      "finalCorrectRate": 0.155,
+      "pActionApprox": 104,
+      "lexiconHit": 3,
+      "lexicalEdge": 3,
+      "anchorCount": 330,
+      "profilePronunciationAnchorCount": 330,
+      "model3Actionable": 14891,
+      "keep": 11537,
+      "retry": 3354,
+      "stage2Useful": 6101,
+      "retryRecovery": 31,
+      "existingDrop": 15006,
+      "profileDomainCandidates": 19991,
+      "profilePronunciationCandidates": 286,
+      "extraCandidates": 22092
+    },
+    "WRONG_PROFILE": {
+      "finalCorrect": 19,
+      "finalCorrectRate": 0.095,
+      "pActionApprox": 122,
+      "lexiconHit": 0,
+      "lexicalEdge": 0,
+      "anchorCount": 235,
+      "profilePronunciationAnchorCount": 235,
+      "model3Actionable": 16586,
+      "keep": 12908,
+      "retry": 3678,
+      "stage2Useful": 6946,
+      "retryRecovery": 19,
+      "existingDrop": 18047,
+      "profileDomainCandidates": 25484,
+      "profilePronunciationCandidates": 131,
+      "extraCandidates": 26167
+    }
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "finalRepairDelta": 9,
+      "targetActionDelta": 104,
+      "targetLexiconHitDelta": 3,
+      "targetEdgeDelta": 3,
+      "retryDelta": 1621,
+      "stage2UsefulDelta": 3399,
+      "candidateDropDelta": 12317,
+      "previousFinalDelta": 0
+    },
+    "wrongVsNoProfile": {
+      "finalRepairDelta": -3,
+      "extraExpansionCount": 26167,
+      "previousExtraExpansionCount": 26167,
+      "retryDelta": 1945,
+      "candidateDropDelta": 15358
+    },
+    "correctVsWrong": {
+      "finalRepairDelta": 12,
+      "retryDelta": -324
+    }
+  },
+  "anchorAuthority": {
+    "profilePronunciationAnchorCount": 565,
+    "domainAnchorCount": 0,
+    "profileDomainAnchorCount": 0,
+    "profileRetrievalAnchorCount": 0,
+    "totalAnchorCount": 565
+  },
+  "model3Exposure": {
+    "decisionUnits": 39513,
+    "anchorMasked": 565,
+    "actionable": 38948,
+    "keep": 30183,
+    "retry": 8765,
+    "retryRate": 0.2250436479408442,
+    "retryRegions": 6067,
+    "stage2Invocations": 33085,
+    "stage2Nonempty": 15749,
+    "stage2Useful": 15749,
+    "stage2TotalCandidates": 17651,
+    "stage2TargetHits": 55,
+    "stage2TargetHitInvocationCount": 190,
+    "retryDownstreamRecovery": 72,
+    "outOfBucketDomainRecallCount": 0,
+    "emptyRetainedDomainAllDomainFallbackCount": 0,
+    "crossPathDomainLeakCount": 0,
+    "retryStage2CandidateDropCount": 0,
+    "retryTargetCandidateDropCount": 9,
+    "perSpanCapSaturationRate": 0.7559612093553908,
+    "stage2CandidatesPerInvocation": {
+      "median": 0,
+      "p95": 1,
+      "max": 4
+    },
+    "previousStage2Useful": "NOT_COMPARABLE_OBSERVABILITY_DEFECT"
+  },
+  "retryFunnel": {
+    "R1_retry_entered": 593,
+    "R2_stage2_mode": 593,
+    "R3_stage2_returned": 588,
+    "R3_target": 55,
+    "R5_target_survived_budget": 40,
+    "R8_final_correct_with_retry": 72
+  },
+  "domainSafety": {
+    "DOMAIN_ONLY_STAGE2_HITS": 2,
+    "BASE_STAGE2_HITS": 54,
+    "MULTI_DOMAIN_STAGE2_HITS": 0,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0
+  },
+  "freezeId": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "RETRY_BUDGET_POLICY_CHANGE": "NO",
+  "PRODUCT_CODE_CHANGE_DURING_PILOT": "NO",
+  "retryBudget": {
+    "existingPresent": 48980,
+    "existingDroppedPostCap": 35742,
+    "existingSurvived": 13238,
+    "survivalRate": 0.2702735810534912,
+    "profileDomainPresent": 47101,
+    "profileDomainDropped": 35742,
+    "profilePronunciationPresent": 0,
+    "collisionExistingWins": 1320,
+    "profileDomainEnteringRetry": 47101,
+    "profileDomainPostRetrySurvive": 11359,
+    "profileDomainPostRetryDrop": 35742
+  },
+  "profileCandidates": {
+    "pronunciation": 417,
+    "domain": 48681,
+    "retrieval": 0
+  },
+  "changedCaseCount": 9,
+  "improvedCaseCount": 9,
+  "regressedCaseCount": 0,
+  "performance": {
+    "pipeline_p50": 5017,
+    "pipeline_p95": 13196,
+    "sampleCount": 597,
+    "status": "WARNING"
+  },
+  "deferredFineSpanBoundaryCaseCount": null,
+  "productCodeChangeThisRound": "NO",
+  "dominantFailureOwner": "QEV7_RECALL_NON_TARGET_HIT",
+  "model2Hypothesis": "PARTIALLY_SUPPORTED",
+  "oneNextOwner": "QEV7_RECALL_NON_TARGET_HIT",
+  "oneNextDelta": "Measure-proven dominant first loss after QueryEvidence V1: QEV7_RECALL_NON_TARGET_HIT (n=109). Do not tune; choose ACP only if architecture required.",
+  "e5Cohort": {
+    "E5_CASE_COUNT": 35,
+    "E5_MEASURED_RUNS": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 12,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 11,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 11,
+    "E5_REACHES_KENLM": 11,
+    "E5_FINAL_CORRECT": 6
+  },
+  "queryEvidenceMetrics": {
+    "firstPassModel2ExecutedQueries": 0,
+    "recallQueryEvidenceProducedApprox": 0,
+    "stage2AsrQueryCount": 20618,
+    "stage2EvidenceQueryCount": 12467,
+    "stage2ExactMappingCount": 3953,
+    "stage2SubspanMappingCount": 8514,
+    "stage2RawConflictRejectCount": 0,
+    "stage2UnsupportedGeometryCount": 9724,
+    "stage2InvalidEvidenceCount": 0,
+    "stage2NoneMappingCount": 10894,
+    "stage2TraceOnlyEvidenceCount": 0,
+    "stage2EvidenceNonemptyCount": 5694,
+    "stage2EvidenceEmptyCount": 6773,
+    "stage2EvidenceTargetHitCount": 67,
+    "stage2EvidenceNonTargetOnlyCount": 5627,
+    "utterancesWithEvidence": 270,
+    "byCondition": {
+      "NO_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 0,
+        "stage2ExactMappingCount": 0,
+        "stage2SubspanMappingCount": 0,
+        "stage2EvidenceTargetHitCount": 0,
+        "finalCorrect": 22
+      },
+      "CORRECT_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 6246,
+        "stage2ExactMappingCount": 2058,
+        "stage2SubspanMappingCount": 4188,
+        "stage2EvidenceTargetHitCount": 64,
+        "finalCorrect": 31
+      },
+      "WRONG_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 6221,
+        "stage2ExactMappingCount": 1895,
+        "stage2SubspanMappingCount": 4326,
+        "stage2EvidenceTargetHitCount": 3,
+        "finalCorrect": 19
+      }
+    },
+    "stage2EvidenceMappingRate": 0.3768172888015717
+  },
+  "q1Runtime": {
+    "confirmed": 33,
+    "expectedMappable": 32,
+    "runtimeMapped": 32,
+    "expectedDeferred": 1,
+    "runtimeDeferred": 1
+  },
+  "reclass257": {
+    "baselineCount": 257,
+    "currentOwnerCounts": {
+      "TONE_QUERY": 56,
+      "RELATION_TRANSFORM": 30,
+      "QEV7_RECALL_NON_TARGET_HIT": 108,
+      "MODEL2_ACTION": 40,
+      "QEV11_KENLM_NOT_SELECTED": 9,
+      "QEV1_NO_FIRST_PASS_EVIDENCE": 8,
+      "QEV13_SUCCESS": 4,
+      "QEV6_MAPPED_QUERY_EXECUTED_RECALL_EMPTY": 2
+    }
+  },
+  "traceOnlyEvidenceCount": 0,
+  "QUERY_EVIDENCE_IMPLEMENTATION_RUNTIME_CONTRADICTION": "NO",
+  "verdicts": {
+    "PHASE": "LINGUA_STAGE2_QUERY_EVIDENCE_V1_POST_IMPLEMENTATION_PILOT200_REMEASURE",
+    "PILOT_VALID": "YES",
+    "EXPECTED_RUNS": 600,
+    "ACTUAL_RUNS": 600,
+    "DATASET_IDENTITY": "PASS",
+    "FROZEN_RAW_IDENTITY": "PASS",
+    "PRODUCT_CODE_CHANGED_DURING_RUN": "NO",
+    "LEXICON_RUNTIME_OK": "YES",
+    "GT_USED_BY_RUNTIME": "NO",
+    "QUERY_EVIDENCE_IMPLEMENTATION_RUNTIME_CONTRADICTION": "NO",
+    "NO_PROFILE_CORRECT": "22/200",
+    "CORRECT_PROFILE_CORRECT": "31/200",
+    "WRONG_PROFILE_CORRECT": "19/200",
+    "CORRECT_MINUS_NO": 9,
+    "WRONG_MINUS_NO": -3,
+    "IMPROVED_CASES": 9,
+    "REGRESSED_CASES": 0,
+    "UNCHANGED_CASES": 591,
+    "GATE_E_CURRENT": "3/314",
+    "GATE_I_CURRENT": "72/597",
+    "STAGE2_EVIDENCE_QUERY_COUNT": 12467,
+    "STAGE2_EXACT_MAPPING_COUNT": 3953,
+    "STAGE2_SUBSPAN_MAPPING_COUNT": 8514,
+    "STAGE2_RAW_CONFLICT_REJECT_COUNT": 0,
+    "STAGE2_UNSUPPORTED_GEOMETRY_COUNT": 9724,
+    "STAGE2_INVALID_EVIDENCE_COUNT": 0,
+    "TRACE_ONLY_EVIDENCE_COUNT": 0,
+    "Q1_CONFIRMED": 33,
+    "Q1_EXPECTED_MAPPABLE": 32,
+    "Q1_RUNTIME_MAPPED": 32,
+    "Q1_EXPECTED_DEFERRED": 1,
+    "Q1_RUNTIME_DEFERRED": 1,
+    "Q1_RUNTIME_MAPPING_STATUS": "PASS",
+    "BASELINE_MODEL3_RETRY_STAGE2_QUERY": 257,
+    "CURRENT_MODEL3_RETRY_STAGE2_QUERY": 0,
+    "MODEL3_RETRY_STAGE2_QUERY_DELTA": -257,
+    "QUERY_EVIDENCE_TARGET_HITS": 67,
+    "PRIMARY_NEW_FIRST_FAILURE_OWNER": "QEV7_RECALL_NON_TARGET_HIT",
+    "PRIMARY_NEW_FIRST_FAILURE_COUNT": 109,
+    "QUERY_EVIDENCE_V1_NET_EFFECT": "POSITIVE",
+    "QUERY_EVIDENCE_V1_MECHANICAL_EFFECT": "PROVEN",
+    "QUERY_EVIDENCE_V1_FINAL_ACCURACY_EFFECT": "POSITIVE",
+    "ARCHITECTURE_CHANGE_REQUIRED": "NOT_YET_PROVEN",
+    "ACP_REQUIRED": "NOT_YET_PROVEN",
+    "ONE_NEXT_OWNER": "QEV7_RECALL_NON_TARGET_HIT",
+    "ONE_NEXT_DELTA": "Audit evidence-mapped Stage2 Recall non-target hits under frozen retainedDomains+Tone-relax (eligibility vs lexicon coverage); no budget/KenLM/Model3 tuning."
+  }
+}

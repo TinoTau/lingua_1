@@ -1,0 +1,18 @@
+{
+  "pipeline": [
+    "activeCandidates (post Model2 expand)",
+    "buildFineSpanCandidatePool(pathFineSpans)",
+    "voteUtteranceDomainFromPool → retainedDomains",
+    "filterDomainCandidatesPerSpan per bucket (sameDomain + base + fallback)",
+    "budgetPerSpanCandidates (canonical coexist, surface dedup, per-span cap 8/6/4)",
+    "assembleDomainAwareSpanSets → SpanReplacementPick[][]",
+    "buildSentenceCandidates DFS (repairTarget picks only, non-overlap)",
+    "mergeCrossPathSentenceCandidates → KenLM ≤16"
+  ],
+  "attrition_summary": {
+    "mean_union_count": 18.07,
+    "mean_assembly_sentences": 4.885,
+    "cases_union_has_but_assembly_missing_fixed": 8,
+    "cases_funnel_false_negative": 37
+  }
+}

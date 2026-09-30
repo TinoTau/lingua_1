@@ -1,0 +1,21 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "authoritative_module": "training/model2/retrieval/normalize.py",
+  "function": "normalize_for_lexicon_lookup",
+  "rules": {
+    "tone_stripping": "strip trailing [0-5]",
+    "ue_v": "ü / u: → v",
+    "neutral_tone": "digit 5 stripped with tones",
+    "erhua": "no special expand; keep er final if present",
+    "apostrophe": "removed",
+    "syllable_separator": "handled upstream; per-token normalize",
+    "case": "lower",
+    "whitespace": "removed",
+    "unicode": "NFKC"
+  },
+  "must_use_single_function": true
+}

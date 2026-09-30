@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "sample_id": "ts-parity-fixture-001",
+  "input": {
+    "source_span": "兰宁",
+    "local_context": "我想去兰宁旅游",
+    "source_pinyin": "lan|ning",
+    "available_tone_info": null,
+    "span_operation": "REPLACE",
+    "context_left": "我想去",
+    "context_right": "旅游",
+    "span_start": 3,
+    "span_end": 5
+  },
+  "condition": {
+    "source_profile_version": null,
+    "profile_version_ref": null,
+    "phonetic_profile_not_acoustically_realized": true,
+    "user_condition_ref": "pseudo-g00",
+    "condition_masks": {
+      "phonetic_mask": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "tone_mask": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "domain_mask": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "profile_available": 0,
+      "phonetic_profile_acoustically_realized": 0
+    }
+  },
+  "target": { "target_span": "南宁" },
+  "metadata": {
+    "source_type": "TTS_ASR_SYNTHETIC",
+    "sample_kind": "POSITIVE",
+    "correction_event_id": "synth-event-parity-001",
+    "user_group_key": "ug-parity",
+    "target_term": "南宁",
+    "domain": "tourism_route",
+    "normalizer_version": "corr-normalizer-v1",
+    "extractor_version": "model2-synth-extractor-v1",
+    "pipeline_version": "model2-synth-generator-v1",
+    "created_at": "2026-08-12T00:00:00Z",
+    "superseded_for_profile": false,
+    "exclude_from_default_positive_export": false,
+    "synthetic": {
+      "generator_version": "model2-synth-generator-v1",
+      "source_type": "TTS_ASR_SYNTHETIC",
+      "tone_stage": "NOT_RUN",
+      "phonetic_profile_not_acoustically_realized": true
+    },
+    "training": {
+      "fuzzy_pool_term_ids": ["domain:tourism_route:南宁:nan|ning"],
+      "target_term_id": "domain:tourism_route:南宁:nan|ning",
+      "fuzzy_pool_version": "fuzzy-pool-v1",
+      "candidate_index_version": "cand-index-v1"
+    }
+  }
+}

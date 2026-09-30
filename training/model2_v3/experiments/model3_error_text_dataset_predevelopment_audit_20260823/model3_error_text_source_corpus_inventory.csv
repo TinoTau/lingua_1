@@ -1,0 +1,12 @@
+path,format,approx_count,language,domain,has_reference,has_wrong_text,has_audio,suitable_as_model3_base,notes
+training/model2/dataset/baseline_v1/generation_plan.jsonl,jsonl,10000,zh,multi_domain_carrier,YES_gt_text,NO,NO,YES,Primary clean base; filled carriers
+training/model2/dataset/baseline_v1/results.jsonl,jsonl,10000_~9775_unique_gt,zh,multi_domain,YES_ground_truth,YES_asr_hypothesis,PARTIAL_qa_only,YES_clean_side,Clean gt_text side; also REAL ASR pairs
+training/model2/corpus/carrier_templates_v3.jsonl,jsonl,115,zh,dialog_inspired,YES_template,NO,NO,PARTIAL,Needs lexicon TERM fill
+training/model2/dataset/training_scale_v1/plan.jsonl,jsonl,3000,zh,domain_carrier,YES,NO,PARTIAL,YES,Smaller sibling of baseline
+training/model2/dataset/pseudo_user_accent_scale_v1/generation_plan.jsonl,jsonl,2999,zh,accent_scale,YES,NO,NO,YES,Clean gt side
+test wav/dialog_200/cases.manifest.json,json_manifest,200_~65-68_unique,zh,multi_scenario,YES_expectedText,PARTIAL_planted_homophone,YES,PARTIAL,VAL/MEASUREMENT ONLY; exclude lexicon_homophone planted errors as clean
+electron_node/electron-node/tests/experiments/tone-module-p1-dialog-fw-scan.json,json,200,zh,dialog_200_upstream,YES,NO,NO,PARTIAL,Text upstream of dialog_200
+kenLM/corpus/v1_raw/wikipedia_sentences.txt,txt,~17.5M,zh_mixed,wikipedia,YES,NO,NO,PARTIAL,Scale only; not spoken dialogue
+addons/char-lm/data/zh_sentences_large.txt,txt,439490,zh,news,YES,NO,NO,PARTIAL,News not dialogue
+electron_node/docs/lexicon-assets/**/entries*.jsonl,jsonl,terms,zh,lexicon,YES_terms,NO,NO,NO,Terms not sentences; TERM fill only
+docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv,tsv,1125,zh,single_char,NO,NO,NO,NO,DO_NOT_USE for Model3 membership

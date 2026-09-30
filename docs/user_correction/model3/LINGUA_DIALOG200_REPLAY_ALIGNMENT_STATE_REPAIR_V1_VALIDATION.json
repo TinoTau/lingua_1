@@ -1,0 +1,111 @@
+{
+  "schema": "LINGUA_DIALOG200_REPLAY_ALIGNMENT_STATE_REPAIR_V1_VALIDATION",
+  "phase": "DIALOG200_REPLAY_ALIGNMENT_STATE_REPAIR_V1",
+  "mode": "REPLAY_STATE_REPAIR",
+  "repair_validated": true,
+  "replay_equivalence_certified": false,
+  "note": "REPAIR_VALIDATED only. Evaluator defects remain; do not treat as REPLAY_EQUIVALENCE_CERTIFIED.",
+  "tolerance_sec": 0.001,
+  "segment_char_offsets_required": "YES",
+  "segment_char_offsets_reason": "buildWordTimeSpans resets searchFrom via segmentCharOffsets when asrSegmentNodeBatchIndices changes across segments",
+  "identity": {
+    "ok": true
+  },
+  "reconstruction": {
+    "all_200_reconstructable": true,
+    "not_reconstructable_count": 0,
+    "source": "tone.utterance_tone.evidenceProduction + asr.segments.words + asr.rawMergedAsrText"
+  },
+  "phase1_d157": {
+    "status": "PASS",
+    "segmentTimeOffsetsSec": [0, 1.6],
+    "asrSegmentNodeBatchIndices": [0, 1],
+    "word_但_batch1_absolute": [2.34, 2.78],
+    "e7": "PASS",
+    "e18": "PASS",
+    "final_match": true,
+    "capture_final": "您好我定,但显示 耽误三天没更新能帮我查一下吗?",
+    "replay_final": "您好我定,但显示 耽误三天没更新能帮我查一下吗?"
+  },
+  "phase2_other_six_e18": {
+    "d019": { "status": "PASS", "offset": [0, 1.2], "e18": "PASS" },
+    "d045": { "status": "PASS", "offset": [0, 1.4], "e18": "PASS" },
+    "d061": { "status": "PASS", "offset": [0, 2.9], "e18": "PASS", "indices": [0, 0, 1] },
+    "d110": { "status": "PASS", "offset": [0, 0.9], "e18": "PASS" },
+    "d112": { "status": "PASS", "offset": [0, 3.2], "e18": "PASS" },
+    "d156": { "status": "PASS", "offset": [0, 3.3], "e18": "PASS", "indices": [0, 0, 1] }
+  },
+  "phase3_dialog200": {
+    "caseCount": 200,
+    "readyCount": 200,
+    "e18Pass": 200,
+    "e7Pass": 199,
+    "criticalFailCases": 0,
+    "notReconstructable": 0,
+    "exact_final_match_rate": 1.0,
+    "unsupported_threshold_used_as_authority": false,
+    "promotion_blocked": true,
+    "remaining_soft": [
+      {
+        "caseId": "d149",
+        "firstDivergence": "E7_PATH_COUNT",
+        "pathCount": { "capture": 4, "replay": 2 },
+        "final_match": true,
+        "note": "Final identical; mid-stage path-count diverge remains — not classified as repair failure; evaluator EXPECTED_NONDETERMINISM label remains unsupported"
+      },
+      {
+        "caseId": "d160",
+        "firstDivergence": "E14_KENLM_RANKING",
+        "pathCount": { "capture": 2, "replay": 2 },
+        "final_match": true,
+        "note": "Final identical; KenLM top-list order diverge — evaluator label unsupported"
+      }
+    ]
+  },
+  "gates": {
+    "G1": "PASS",
+    "G2": "PASS_INJECT_BOUNDARY_ONLY",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS",
+    "G7": "PASS",
+    "G8": "PASS",
+    "G9": "PASS",
+    "G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13": "PASS",
+    "G14": "PASS",
+    "G15": "PASS",
+    "G16": "PASS",
+    "G17": "PASS",
+    "G18": "PASS_REPORT_ONLY",
+    "G19": "PASS",
+    "G20": "PASS"
+  },
+  "tests": {
+    "T1": "PASS",
+    "T2": "PASS",
+    "T3": "PASS",
+    "T4": "PASS",
+    "T5": "PASS",
+    "T6": "PASS",
+    "T7": "PASS",
+    "T8": "PASS",
+    "T9": "PASS",
+    "T10": "PASS",
+    "T11": "PASS",
+    "T12": "PASS",
+    "T13": "PASS",
+    "T14": "PASS_INJECT_BOUNDARY",
+    "T15": "PASS",
+    "T16": "PASS",
+    "T17": "PASS",
+    "T18": "PASS",
+    "T19": "PASS",
+    "T20": "PASS"
+  },
+  "final_result": "A",
+  "next_owner": "EVALUATOR_REPAIR"
+}

@@ -1,0 +1,158 @@
+{
+  "phase": "LINGUA_FULL_PILOT_RUN_MATRIX_COMPLETENESS_AUDIT",
+  "auditTimestamp": "2026-09-12T10:15:00Z",
+  "auditNature": "READ-ONLY HARNESS / EXECUTION GOVERNANCE AUDIT",
+  "authoritativeDataset": {
+    "dataset": "LINGUA_DIALOG2000_V2_PILOT200",
+    "caseSourceOwner": "test wav/LINGUA_DIALOG2000_V2_PILOT200/cases/cases.jsonl::loadCases",
+    "declaredCaseCount": 200,
+    "loadedCaseCount": 200,
+    "uniqueCaseCount": 200,
+    "firstThreeCases": [
+      "p2_u001_001",
+      "p2_u001_002",
+      "p2_u001_003"
+    ],
+    "lastThreeCases": [
+      "p2_u005_038",
+      "p2_u005_039",
+      "p2_u005_040"
+    ],
+    "splitDistribution": {
+      "DEV": 120,
+      "VALIDATION": 60,
+      "HOLDOUT": 20
+    },
+    "userDistribution": {
+      "U001": 40,
+      "U002": 40,
+      "U003": 40,
+      "U004": 40,
+      "U005": 40
+    },
+    "domainCount": 6,
+    "domainDistribution": {
+      "general_daily": 43,
+      "software_meeting": 33,
+      "medical": 30,
+      "food_cafe": 36,
+      "travel_hotel": 32,
+      "retail_service": 26
+    },
+    "relationFamilyCount": 7,
+    "relationDistribution": {
+      "n_l": 33,
+      "in_ing": 13,
+      "z_zh": 20,
+      "sh_s": 39,
+      "eng_en": 20,
+      "h_f": 13,
+      "ch_c": 20,
+      "null_control": 42
+    }
+  },
+  "evidenceManifest": {
+    "manifestPath": "docs/user_correction/model3/LINGUA_PILOT200_FROZEN_TONE_EVIDENCE_MANIFEST.json",
+    "evidenceRecords": 200,
+    "joinKey": "caseId",
+    "joinMatchedCases": 200,
+    "joinUnmatchedCases": 0,
+    "joinOwner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::main"
+  },
+  "countTrace": [
+    {
+      "stage": "Pilot dataset (cases.jsonl)",
+      "count": 200,
+      "owner": "test wav/LINGUA_DIALOG2000_V2_PILOT200/cases/cases.jsonl"
+    },
+    {
+      "stage": "case loader (loadCases)",
+      "count": 200,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::loadCases"
+    },
+    {
+      "stage": "case filter (CASE_FILTER / --case-ids)",
+      "count": 200,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main (line 486)"
+    },
+    {
+      "stage": "evidence join (manifestMap)",
+      "count": 200,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main (line 528)"
+    },
+    {
+      "stage": "selected cases (LIMIT / --limit 2)",
+      "count": 2,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main (line 490)",
+      "isFirstDivergence": true
+    },
+    {
+      "stage": "profile expansion x3 (CONDITIONS)",
+      "count": 6,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main (line 541)"
+    },
+    {
+      "stage": "run matrix",
+      "count": 6,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main (line 815)"
+    },
+    {
+      "stage": "attempted",
+      "count": 6,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main"
+    },
+    {
+      "stage": "completed",
+      "count": 6,
+      "owner": "run-pilot200-post-pre-edge-full-remeasure.mjs::main"
+    }
+  ],
+  "firstCountDivergenceStage": "CASE_SELECTION_LIMIT",
+  "firstCountDivergenceOwner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::main",
+  "primaryRootCause": "CLI_CONFIG_LIMIT",
+  "primaryRootCauseOwner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::main",
+  "primaryRootCauseDetail": "A dry-run CLI argument `--limit 2` was passed to run-pilot200-post-pre-edge-full-remeasure.mjs, causing selectedCases.slice(0, LIMIT) to truncate 200 cases to 2 cases. Upon completing the 2 cases (6 runs), the script unconditionally wrote output to the authoritative summary, matrix, and report files.",
+  "secondaryGovernanceFindings": [
+    {
+      "id": "INCOMPLETE_BASELINE_NOT_FAIL_CLOSED",
+      "owner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::aggregateAndOutputReports",
+      "description": "When allResults.length < 600, outcome is marked RUN_INCOMPLETE, but the evaluator does NOT fail-close. It continues to compute research metrics, profile contrasts, first-failure distributions, and hypothesis status on incomplete data."
+    },
+    {
+      "id": "REPORT_TEMPLATE_HARDCODED_PROSE",
+      "owner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::generateReportMarkdown",
+      "description": "The report markdown generator contains hardcoded text asserting 'YES。600/600 runs 完整执行且合法' and hardcoded 200/600 expected/valid columns in tables, creating severe internal contradictions against the actual completedRuns."
+    },
+    {
+      "id": "ONE_NEXT_OWNER_FALLTHROUGH_BUG",
+      "owner": "electron_node/electron-node/tests/run-pilot200-post-pre-edge-full-remeasure.mjs::aggregateAndOutputReports",
+      "description": "The oneNextOwner decision logic cascades down to a default fallback 'PILOT_RESEARCH_CONCLUSION' for any unmatched failure category (such as NO_PROFILE_BASE_REPAIR_FAIL or incomplete executions), erroneously asserting research completion."
+    }
+  ],
+  "authoritativeObservedFacts": {
+    "expectedUniqueCases": 200,
+    "expectedRuns": 600,
+    "actualUniqueCasesExecuted": 2,
+    "actualRuns": 6,
+    "fullPilotExecutionComplete": false,
+    "pilotHypothesisStatus": "NOT_EVALUATED",
+    "profileContrastStatus": "NON_AUTHORITATIVE",
+    "firstFailureDistributionStatus": "NON_AUTHORITATIVE",
+    "partialRunResearchResults": "NON_AUTHORITATIVE"
+  },
+  "governanceCheck": {
+    "failClosedPresent": "NO",
+    "reportGovernanceBug": "YES",
+    "architectureRegression": "NO",
+    "currentOneNextOwnerLogicValid": "NO"
+  },
+  "developmentReadiness": {
+    "harnessCompletenessRepairReady": "YES",
+    "exactFirstDivergenceKnown": true,
+    "exactOwnerKnown": true,
+    "exactErroneousConditionKnown": true,
+    "expected200To600FlowKnown": true,
+    "repairScopeBoundedToHarness": true
+  },
+  "oneNextOwner": "FULL_PILOT_EXECUTION_GOVERNANCE_AND_LIMIT_REPAIR"
+}

@@ -1,0 +1,33 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "Audit_Verdict": "PASS",
+  "Overall_Architecture_Conformance": "MAJOR_DRIFT",
+  "Critical_Drift_Count": 3,
+  "High_Drift_Count": 4,
+  "FineSpan_Is_Authoritative_Retrieval_Unit": "PARTIAL",
+  "Whole_Utterance_Retrieval_Exists": "YES",
+  "Whole_Utterance_Retrieval_Verdict": "TEST_ONLY / DRIFT",
+  "Profile_Conditioned_Candidate_Introduction": "PARTIAL",
+  "Phase7F_OBSERVABILITY_LIMIT": "TEST_PATH_INVALID",
+  "span_reference_vs_phase7f": {
+    "n": 200,
+    "p7f_TIR": 0.0,
+    "span_profile_new_TIR": 0.19,
+    "span_recovers_p7f_fail_rate": 0.775,
+    "family_synth_control_TIR": 1.0
+  },
+  "Separate_Pronunciation_Model_Required": "NO",
+  "Neural_Retrieval_Required": "NO",
+  "Recommended_Architecture_Action": "TARGETED_RESTORE",
+  "Next_Recommended_Phase": "Phase 7G — FineSpan-Conforming Realistic Eval & Contract Restore (not Observability Hardening as previously framed; not pronunciation model)",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD",
+  "governance": [
+    "Product Responsibility Freeze",
+    "Architecture Change Proposal required for whole-utt / new models",
+    "Primary metric must map to introduction on FineSpan",
+    "Test shortcuts cannot become runtime architecture",
+    "Every phase report must include Architecture Conformance Check"
+  ]
+}

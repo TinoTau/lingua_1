@@ -1,0 +1,20 @@
+check,result,notes
+TRACE_MUTATION_DETECTED,false,HARD_STOP_A_if_true
+SAME_UPSTREAM_PARITY_PASS_N,5,baseline_equal_and_final_equal
+UPSTREAM_DIVERGED_N,0,ASR/cross-run; not attributed to trace
+TRACE_ON_OFF_FINAL_EQUAL_WHEN_SAME_UPSTREAM,true,
+TRACE_ON_HAS_PROVENANCE,true,
+TRACE_OFF_NO_PROVENANCE,true,
+caseId_branches_production,NONE,recheck
+surfaceSpecificRuntimeBranches,NONE,recheck
+reference_leakage,NONE,evaluator post-runtime only
+candidate_injection,NONE,
+testConfigOverride,NONE,
+testAwareLexiconMutation,NONE,
+traceBehaviorMutation,NO,
+JobResult_changed,NO,
+parity_case,d001,true,true,SAME_UPSTREAM_PARITY_PASS,false,true
+parity_case,d023,true,true,SAME_UPSTREAM_PARITY_PASS,false,true
+parity_case,d040,true,true,SAME_UPSTREAM_PARITY_PASS,false,true
+parity_case,d129,true,true,SAME_UPSTREAM_PARITY_PASS,false,true
+parity_case,d172,true,true,SAME_UPSTREAM_PARITY_PASS,false,true

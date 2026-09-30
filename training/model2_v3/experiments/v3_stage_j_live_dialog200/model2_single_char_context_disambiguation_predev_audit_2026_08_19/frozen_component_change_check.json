@@ -1,0 +1,25 @@
+{
+  "RetrievalPolicyV3": "UNCHANGED_THIS_ROUND",
+  "StageJ_checkpoint": "UNCHANGED",
+  "MODEL2_FEATURE_HASH_V1": "UNCHANGED_THIS_ROUND",
+  "StageDProfileContractV1": "UNCHANGED",
+  "StageD_executor": "UNCHANGED",
+  "domain_action_ids": "UNCHANGED",
+  "FineSpan": "UNCHANGED",
+  "Assembly": "UNCHANGED",
+  "KenLM": "UNCHANGED",
+  "Candidate_budget_16": "UNCHANGED",
+  "Domain_vote": "UNCHANGED",
+  "IME_2510": "UNCHANGED",
+  "minPrior": "HOLD_UNCHANGED",
+  "collector_unique_only": "UNCHANGED_THIS_ROUND",
+  "sqlite": "UNCHANGED",
+  "Model2_weights": "UNCHANGED",
+  "proposed_future_after_acp_confirm": {
+    "RetrievalPolicyV3": "ADD_OPTIONAL_AMBIGUITY_HEAD_SAME_MODULE",
+    "collector": "EMIT_BOUNDED_SET_WHEN_N_GT_1",
+    "FineSpan": "KEEP",
+    "Assembly": "KEEP",
+    "KenLM": "KEEP"
+  }
+}

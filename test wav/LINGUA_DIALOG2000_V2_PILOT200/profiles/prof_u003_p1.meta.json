@@ -1,0 +1,54 @@
+{
+  "profileRef": "prof_u003_p1",
+  "userId": "U003",
+  "profileStage": "P1",
+  "constructionMethod": "CORRECTION_HISTORY_PROFILE_DELTA",
+  "dominantRelations": [
+    "eng_en",
+    "h_f"
+  ],
+  "profileBuildSetId": "pbs_u003_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e68890e58a9f7c63",
+    "base-rebuild-term-e69c8be58f8b7c70",
+    "base-rebuild-term-e68aa4e5a3ab7c68",
+    "base-rebuild-term-e5908ee69e9c7c68"
+  ],
+  "profileBuildSurfaces": [
+    "成功",
+    "朋友",
+    "护士",
+    "后果"
+  ],
+  "historyEvents": [
+    {
+      "source_event_id": "U003_P1_eng_en_成功_0",
+      "feature_key": "eng_en",
+      "term": "成功",
+      "evidence": 1.0,
+      "weight": 1.0
+    },
+    {
+      "source_event_id": "U003_P1_eng_en_朋友_0",
+      "feature_key": "eng_en",
+      "term": "朋友",
+      "evidence": 1.0,
+      "weight": 1.0
+    },
+    {
+      "source_event_id": "U003_P1_h_f_护士_0",
+      "feature_key": "h_f",
+      "term": "护士",
+      "evidence": 1.0,
+      "weight": 0.4
+    },
+    {
+      "source_event_id": "U003_P1_h_f_后果_0",
+      "feature_key": "h_f",
+      "term": "后果",
+      "evidence": 1.0,
+      "weight": 0.4
+    }
+  ],
+  "userProfileV1Ref": "profiles/prof_u003_p1.userprofile.json"
+}

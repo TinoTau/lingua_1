@@ -1,0 +1,11 @@
+{
+  "v2_counterfactual_groups_sampled": 45,
+  "reason_counts": {
+    "A_multidomain": 45,
+    "D_domain_pool_overlap_shared_fuzzypool": 45,
+    "E_soft_prior_too_wide_035_floor": 45,
+    "B_generic_term": 4
+  },
+  "primary_mechanism": "Shared phonetic FuzzyPool means Wrong/Swapped still query the same universe; 0.35 domain floor + residual priors rerank within pool32. Multi-tag terms can match a 'wrong' domain that is still on the term.",
+  "proportions_note": "Not mutually exclusive; counts are overlapping labels."
+}

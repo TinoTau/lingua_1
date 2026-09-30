@@ -1,0 +1,7 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "core": ["TargetIntroductionRate", "ProfileOnlyTargetRecovery", "ProfileConditionalRecallGain", "FalseExpansionRate", "NewCandidatePrecision"],
+  "secondary": ["ConditionGain", "TargetRankDelta", "MRR", "StageA Recall@K"],
+  "METRIC_NAMING_DRIFT": ["Model2 Recall@K historically = in-pool rank"],
+  "Phase7F_error": "Used whole-utt failure to claim OBSERVABILITY_LIMIT without span-conforming primary metric"
+}

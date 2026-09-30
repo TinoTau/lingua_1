@@ -1,0 +1,23 @@
+{
+  "dataset": "MODEL3_SPOKEN_BASE_SUPPLEMENT_V1",
+  "candidate_rows": 18000,
+  "source_type": "LLM_SYNTHETIC_SPOKEN_BASE",
+  "evidence_level": "SYNTHETIC_TEXT",
+  "spoken_like_class": "ACCEPT_WITH_LIMIT",
+  "previous_certified": 4955,
+  "new_accepted_unique": 17222,
+  "new_rejected": 778,
+  "overlap_removed_counts": {
+    "near_dup_affix": 547,
+    "near_dup_structural": 231
+  },
+  "near_dup_policy": {
+    "max_per_structural_signature": 8,
+    "max_per_pattern_key": 8,
+    "prefix_suffix_window": 200
+  },
+  "total_certified_spoken_base": 22177,
+  "required_minimum": 15000,
+  "BASE_CORPUS_GAP": false,
+  "dialog_200_contamination": 0
+}

@@ -1,0 +1,32 @@
+category,path,function_or_type,why,expected_delta
+MUST_MODIFY,electron_node/electron-node/main/src/lexicon-v2/recall-query-evidence.ts,RecallQueryEvidence + mapEvidenceToStage2Window + dedup,NEW Recall-owned type/mapper (no Model3 import),add file
+MUST_MODIFY,electron_node/electron-node/main/src/model2-runtime/expand-windows-with-model2.ts,expandWindowsWithModel2,emit evidence after executeProfileLexiconQueries using policyInput geometry,collect store on expand result
+MUST_MODIFY,electron_node/electron-node/main/src/model2-runtime/types.ts,ExpandWindowsWithModel2Result / related,expose recallQueryEvidence on expand result,add readonly field
+MUST_MODIFY,electron_node/electron-node/main/src/fw-detector/span-assembly-v4/lattice-fine-span-runtime.ts,LatticeFineSpanSuccess + WithPreEdgeModel2,attach store from expand onto lattice success,add recallQueryEvidence field
+MUST_MODIFY,electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,model3Args construction,thread lattice.recallQueryEvidence into runModel3PathStep,pass-through only
+MUST_MODIFY,electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts,runModel3PathStep args → routeModel3Retry,forward evidenceStore; do not read Model2 internals,pass-through only
+MUST_MODIFY,electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts,routeModel3Retry Stage2 loop,REPLACE syllables/windowPinyinKey via mapper before recall,single-query REPLACE seam
+MUST_MODIFY,electron_node/electron-node/main/src/model3-runtime/model3-types.ts,Model3RetryRecallInvocationTrace,optional observation mappingReason / querySource,trace-only
+MAY_MODIFY,electron_node/electron-node/main/src/model2-runtime/relation-lexicon-adapter.ts,executeProfileLexiconQueries,only if geometry args needed at push site; prefer collect in expand,optional
+MAY_MODIFY,electron_node/electron-node/main/src/model3-runtime/model3-retry-stage2-windows.ts,(none expected),windows enum must stay ASR geometry authority,no semantic change expected
+MAY_MODIFY,electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts tests + stage2-windows tests,unit tests,T1–T14 acceptance,extend tests
+MAY_MODIFY,electron_node/electron-node/main/src/model2-runtime/*.test.ts,producer/store unit tests,emit+dedup+candidate independence,extend tests
+MAY_MODIFY,electron_node/electron-node/main/src/lexicon-v2/*.test.ts,mapper unit tests,EXACT/SUBSPAN/fail-closed,add tests
+MUST_NOT_MODIFY,model2 host / ONNX / checkpoint loading,Model2 inference semantics,frozen MODEL2_ON_MODEL3_RETRY=NO,no change
+MUST_NOT_MODIFY,model2-runtime/relation-direction.ts,relation transform math,internals must not leak to Stage2,no change
+MUST_NOT_MODIFY,model2-runtime/candidate-materialize.ts,materializeProfileHits ASR windowPinyinKey,loss boundary stays; evidence is parallel store,no change required
+MUST_NOT_MODIFY,model3 model weights / feature packing / KEEP/RETRY decision,Model3 contract,frozen,no change
+MUST_NOT_MODIFY,model3-runtime inference input builders (beyond pass-through args),Model3 inputs,frozen,no change
+MUST_NOT_MODIFY,Tone first-pass / FineSpan tone binding,Tone SSOT,frozen,no change
+MUST_NOT_MODIFY,recallSpanTopKV2 tone_exact path,first-pass Tone,frozen,no change
+MUST_NOT_MODIFY,Domain Vote / retainedDomains computation,Domain SSOT,frozen; Stage2 still consumes path domains,no change
+MUST_NOT_MODIFY,Anchor authority,Anchor SSOT,frozen,no change
+MUST_NOT_MODIFY,RetryRegion derive/merge / resegment geometry owners,RetryRegion formation,frozen; DISJOINT deferred,no change
+MUST_NOT_MODIFY,enumerateStage2SuccessPathQueryLocals window set,Stage2 window enumeration,frozen cardinality,no change
+MUST_NOT_MODIFY,MERGE_SHARED_BUDGET / perSpanCap / score normalization,budget SSOT,frozen,no change
+MUST_NOT_MODIFY,SameDomain,SameDomain SSOT,frozen,no change
+MUST_NOT_MODIFY,Assembly / interval assembly,Assembly SSOT,frozen,no change
+MUST_NOT_MODIFY,KenLM,KenLM SSOT,frozen,no change
+MUST_NOT_MODIFY,JobResult schema / adapters,JobResult SSOT,JOBRESULT_CHANGE_REQUIRED=NO,no change
+MUST_NOT_MODIFY,UserProfile schema,long-term state,CROSS_UTTERANCE_REUSE=NO,no change
+MUST_NOT_MODIFY,Lexicon SQLite schema / data,Lexicon data,frozen,no change

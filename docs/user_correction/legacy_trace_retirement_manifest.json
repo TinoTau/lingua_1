@@ -1,0 +1,30 @@
+{
+  "contract": "LEGACY_TARGET_ATTRIBUTION",
+  "status": "HISTORICAL_ONLY",
+  "go_no_go": false,
+  "root_cause_authority": false,
+  "retired_metrics": [
+    {
+      "name": "AfterBudget_hasTarget",
+      "value": 142,
+      "note": "candidate-surface substring"
+    },
+    {
+      "name": "Assembly_hasTarget",
+      "value": 26,
+      "note": "whole-sentence substring"
+    },
+    {
+      "name": "ASSEMBLY_DROP",
+      "value": 126,
+      "note": "invalid cross-layer funnel"
+    }
+  ],
+  "must_not_cite_as": [
+    "Assembly defect",
+    "TRUE_ASSEMBLY_MATERIALIZATION_FAILURE"
+  ],
+  "authoritative_replacement": "MATERIALIZABLE_TARGET_V1",
+  "true_assembly_materialization_failure_v1": 0,
+  "keep_on_disk": true
+}

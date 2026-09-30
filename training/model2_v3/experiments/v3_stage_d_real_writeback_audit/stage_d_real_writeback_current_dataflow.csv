@@ -1,0 +1,14 @@
+Step,Name,Owner,File/Symbol,Input,Output,Persistence,ArchitectureOwner,CurrentStatus
+1,BrowserCorrectionRequest,Web/Browser,rest_api.handle_submit_correction,BrowserCorrectionRequest,proxy to Scheduler,N/A,Gateway auth,ACTIVE
+2,Correction persist,Scheduler,CorrectionService.submit + sqlite_repository,SubmitCorrectionRequest,CorrectionEventV1 SQLite,correction history SSOT,Scheduler,ACTIVE
+3,Normalize,Scheduler,normalizer.normalize_event,CorrectionEvent,NormalizedCorrection spans,derived,Scheduler,ACTIVE
+4,Feature extract,Scheduler,features.extract_features_with_texts,spans+texts,CorrectionFeatures,derived,Scheduler,ACTIVE
+5,ProfileDelta build,Scheduler,profile_delta.build_profile_delta,features,ProfileDeltaV1,derived artifact,Scheduler,ACTIVE
+6,ProfileDelta apply,Gateway,profile_delta.apply_profile_delta + user_profile_repository,ProfileDeltaV1,UserProfileV1 SQLite,UserProfile SSOT,Gateway,ACTIVE
+7,SessionInject,Gateway,session_proxy.inject_identity_into_session_init,UserProfile snapshot at WS connect,session_init.user_profile,session memory copy,Gateway/Scheduler,ACTIVE_STALE_RISK
+8,SessionBootstrap,Scheduler,session_bootstrap.maybe_send_session_bootstrap,session.user_profile,NodeMessage.SessionBootstrap,once per session-node,Scheduler,ACTIVE
+9,Node cache,Node,node-agent-simple sessionUserProfiles,SessionBootstrap,Map sessionId->profile,memory only,Node,ACTIVE
+10,Model2 consume phonetic,Node,finespan-adapter.hasStagePPhoneticProfile,phonetic_bias,Stage P policy input,N/A,Model2 Stage P,ACTIVE
+11,Model2 consume lexical/domain,Node,MISSING,personal_terms/domain_evidence,Stage D input,N/A,Model2 Stage D,NOT_IMPLEMENTED
+12,Lexicon term resolve on writeback,Scheduler/Gateway,MISSING,corrected surface,term_id,N/A,Lexicon,NOT_IMPLEMENTED
+13,Derive domain evidence,MISSING write-time,MISSING,personal_terms + term_domain_tags,long_term_domain_evidence compact,should be write-time,Lexicon SSOT + Profile,NOT_IMPLEMENTED

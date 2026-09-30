@@ -1,0 +1,195 @@
+{
+  "phase": "LINGUA_PILOT200_POST_PRE_EDGE_RESTORE_FULL_REMEASURE",
+  "executionMode": "PARTIAL",
+  "authoritative": false,
+  "completenessValidation": {
+    "isValid": false,
+    "reason": "Result count mismatch: expected 600, got 6"
+  },
+  "selectionReason": "CASE_IDS",
+  "limitValue": 0,
+  "caseIdsFilter": [
+    "p2_u001_001",
+    "p2_u001_002"
+  ],
+  "selectedCaseCount": 2,
+  "expectedAuthoritativeCaseCount": 200,
+  "generatedRunCount": 6,
+  "expectedAuthoritativeRunCount": 600,
+  "authoritativeModel2Ssot": "AUG12_PRE_LEXICAL_EDGE",
+  "dataset": "LINGUA_DIALOG2000_V2_PILOT200",
+  "build": "build_20260911_091806",
+  "uniqueCases": 2,
+  "expectedRuns": 6,
+  "attemptedRuns": 6,
+  "completedRuns": 6,
+  "validRuns": 6,
+  "invalidRuns": 0,
+  "conditionRuns": {
+    "NO_PROFILE": 2,
+    "CORRECT_PROFILE": 2,
+    "WRONG_PROFILE": 2
+  },
+  "runtimeOutcomeDistribution": {
+    "ASR_EMPTY": 3,
+    "EVALUATED": 3
+  },
+  "gateMetrics": {
+    "gateA": {
+      "applicable": 3,
+      "pass": 3,
+      "fail": 0,
+      "passRate": 1
+    },
+    "gateB": {
+      "applicable": 2,
+      "pass": 2,
+      "fail": 0,
+      "passRate": 1
+    },
+    "gateC": {
+      "applicable": 2,
+      "pass": 1,
+      "fail": 1,
+      "passRate": 0.5
+    },
+    "gateD": {
+      "applicable": 2,
+      "pass": 0,
+      "fail": 2,
+      "passRate": 0
+    },
+    "gateE": {
+      "applicable": 2,
+      "pass": 0,
+      "fail": 2,
+      "passRate": 0
+    },
+    "gateF": {
+      "applicable": 2,
+      "pass": 0,
+      "fail": 2,
+      "passRate": 0
+    },
+    "gateG": {
+      "applicable": 2,
+      "pass": 0,
+      "fail": 2,
+      "passRate": 0
+    },
+    "gateH": {
+      "applicable": 2,
+      "pass": 0,
+      "fail": 2,
+      "passRate": 0
+    },
+    "gateI": {
+      "applicable": 3,
+      "pass": 0,
+      "fail": 3,
+      "passRate": 0
+    }
+  },
+  "firstFailureOwnerCounts": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 1,
+    "TONE_QUERY": 1,
+    "RELATION_TRANSFORM": 1
+  },
+  "model2ApplicableFirstFailureOwnerCounts": {
+    "NO_PROFILE_BASE_REPAIR_FAIL": 1,
+    "TONE_QUERY": 1,
+    "RELATION_TRANSFORM": 1
+  },
+  "profileContrast": {
+    "correctVsNoProfile": {
+      "targetActionRateGain": 2,
+      "targetLexiconHitGain": 0,
+      "targetEdgeCreatedGain": 0,
+      "finalRepairDelta": 0,
+      "finalRepairRateCorrect": 0,
+      "finalRepairRateNoProfile": 0
+    },
+    "wrongVsNoProfile": {
+      "extraExpansionCount": 115,
+      "falseTargetHits": 0,
+      "finalRepairDelta": 0,
+      "finalRepairRateWrong": 0
+    }
+  },
+  "profileContrastStatus": "NON_AUTHORITATIVE",
+  "firstFailureDistributionStatus": "NON_AUTHORITATIVE",
+  "partialRunResearchResults": "NON_AUTHORITATIVE",
+  "usefulExpansionMetrics": {
+    "any_expansion": 0,
+    "target_relevant_expansion": 1,
+    "target_lexicon_hit": 0,
+    "target_edge_created": 0,
+    "target_edge_survived": 0,
+    "final_repair_correct": 0
+  },
+  "falseExpansionMetrics": {
+    "wrongProfileExtraExpansions": 115,
+    "wrongProfileFalseTargetHits": 0,
+    "wrongProfileFinalDegradation": 0
+  },
+  "finalRepairMetrics": {
+    "noProfileCorrect": 0,
+    "correctProfileCorrect": 0,
+    "wrongProfileCorrect": 0,
+    "gainOverNoProfile": 0,
+    "wrongDeltaFromNoProfile": 0
+  },
+  "bySplit": {
+    "DEV": {
+      "totalRuns": 6,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    }
+  },
+  "byUser": {
+    "U001": {
+      "totalRuns": 6,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    }
+  },
+  "byDomain": {
+    "general_daily": {
+      "totalRuns": 6,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    }
+  },
+  "byRelation": {
+    "n_l": {
+      "totalRuns": 6,
+      "correctProfileFinalPass": 0,
+      "noProfileFinalPass": 0,
+      "wrongProfileFinalPass": 0,
+      "model2Hits": 0
+    }
+  },
+  "architectureRegressionChecks": {
+    "ONE_MODEL2_PRODUCTION_INSERTION": "PASS",
+    "NO_POST_PATHFINESPAN_MODEL2": "PASS",
+    "NO_DUAL_MODEL2_PATH": "PASS",
+    "WINDOW_LOCAL_TONE": "PASS",
+    "PACTION_CONTRACT_UNCHANGED": "PASS",
+    "LEXICALEDGE_CANDIDATE_GATE_UNCHANGED": "PASS",
+    "MODEL3_RETRY_NO_MODEL2": "PASS",
+    "JOBRESULT_BOUNDARY_UNCHANGED": "PASS"
+  },
+  "pilotHypothesisStatus": "NOT_EVALUATED",
+  "outcome": "RUN_INCOMPLETE",
+  "dominantFailureOwner": "NOT_COMPUTED_FOR_INCOMPLETE_BASELINE",
+  "harnessOnlyChange": true,
+  "productCodeChange": false,
+  "oneNextOwner": "PILOT200_POST_PRE_EDGE_RESTORE_FULL_REMEASURE"
+}

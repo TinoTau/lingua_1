@@ -1,0 +1,14 @@
+symbol_or_pattern,location,status,reachable_from_production,notes
+beamWidth / beamTopK,freeze-contract.test.ts asserts false,DEAD,NO,beamEnabled:false in architectureCompliance
+maxActivePathsPerPosition:8,v4-limits.ts + lattice-fine-span-runtime.ts,ACTIVE,YES,lattice path enumeration cap not Assembly beam
+buildFineSpanCandidatePoolFromCoarseSpansForTests,assemble-domain-aware-span-sets.ts,DEAD,NO,explicit TEST ONLY comment
+windowCandidateToDomainAwarePick (null API),window-candidate-to-pick.ts,@deprecated,REACHABLE,wraps Result API
+exact_term-only gate,removed 2026-07-30 SameDomain restoration,DEAD,NO,replaced by eligibility contract
+mergeCrossBucket (legacy name),superseded by mergeCrossPathSentenceCandidates,DEAD,NO,orchestrator uses CrossPath only
+allocateDomainBucketSentenceBudget,utterance-domain-vote.ts,called but return unused,REACHABLE,YES,non-governing per freeze audit
+globalWindowProductionPath,false in orchestrator,DEAD,NO,
+ltr-fine-span-generator,not in v4 orchestrator production path,LEGACY,UNREACHABLE,lattice replaced for production
+firstValid / first-hit assembly,not found in build-sentence-candidates.ts,DEAD,NO,full subset DFS
+repair_target SQL column,lexicon schema,ACTIVE,YES,feeds repairTarget flag on candidates
+candidateRequireRepairTarget:true,fw-config freeze,ACTIVE,YES,recall filter not Assembly filter
+shadow Assembly path,not found,DEAD,NO,single orchestrator only

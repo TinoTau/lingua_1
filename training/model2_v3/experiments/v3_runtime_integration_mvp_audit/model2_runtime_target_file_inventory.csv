@@ -1,0 +1,11 @@
+path,current_role,planned_change,why,architecture_owner,risk
+span-assembly-v4-orchestrator.ts,Assembly orchestration,ADD Model2 invoke+merge before runDomainAwareAssembly,only insertion point,Assembly,HIGH
+node-agent-simple.ts,Session profile cache,MODIFY pass profile into JobContext/FW input,profile plumbing,Node agent,MED
+fw-detector-v4-path / orchestrator input types,FW input,MODIFY optional userProfile field,carry profile,FW,MED
+NEW model2-runtime-adapter.ts,MISSING,ADD feature pack + policy decode + map to lexicon queries,adapter,Model2,HIGH
+NEW model2-inference-host (ONNX or approved sidecar),MISSING,ADD load singleton weights,inference,Model2,HIGH
+recall-span-topk-v2.ts,Lexicon recall,KEEP/reuse for profile queries,ONE primitive,Lexicon,LOW
+assemble-domain-aware-span-sets.ts,Assembly,KEEP; maybe MODIFY provenance-aware filter later,soft prior interaction,Assembly,MED
+user_profile.rs / SessionBootstrap,Profile SSOT,KEEP,already runtime,Gateway/Scheduler,LOW
+training/model2_v3/*,Train stack,KEEP as train; DEFER dual deploy,not runtime,Train,LOW
+candidates/index.py,Train CandidateIndex,DEFER fix if Node lexicon used; else MODIFY,multi-tag,Train,MED

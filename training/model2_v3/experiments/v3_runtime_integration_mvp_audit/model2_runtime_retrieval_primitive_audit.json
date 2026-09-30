@@ -1,0 +1,28 @@
+{
+  "execute_action": "TRAIN_ONLY",
+  "soft_domain_retrieve": "TRAIN_ONLY",
+  "build_fuzzy_pool_python": "TRAIN_ONLY",
+  "recallSpanTopKV2_node": "RUNTIME_READY (authoritative lexicon recall)",
+  "hypothesize_intended_syllables": "TRAIN_ONLY (Python) — MISSING Node port for relation transforms",
+  "ACTIVE_SET_V1_relations": "TRAIN defined; Node need adapter to generate alternate pinyin queries",
+  "recommendation": "Do NOT permanently duplicate FuzzyPool; port relation->query to call Node recallSpanTopKV2 / SQLite; keep ONE retrieval primitive family",
+  "classification": {
+    "RUNTIME_READY": [
+      "LexiconRuntimeV2.recallSpanTopKV2",
+      "term_domain_tags JOIN",
+      "WindowCandidate"
+    ],
+    "TRAIN_ONLY": [
+      "execute_action",
+      "FuzzyPool Python",
+      "soft_domain_retrieve",
+      "select_actions scripts"
+    ],
+    "MISSING": [
+      "Node phonetic relation transform",
+      "Model2 inference host",
+      "Profile->feature pack",
+      "merge PROFILE candidates into activeCandidates"
+    ]
+  }
+}

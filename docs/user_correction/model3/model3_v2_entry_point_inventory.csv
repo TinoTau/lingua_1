@@ -1,0 +1,20 @@
+responsibility,entry_function,file,scope,callers,authoritative_shared,affects_runtime_text,duplicate_impl,classification
+Model3 path step,runModel3PathStep,run-model3-path-step.ts,production,span-assembly-v4-orchestrator,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Model3 prepare,prepareModel3PathUpstream,run-model3-path-step.ts,production+test,runModel3PathStep+runModel3PathStepCausalFork,yes,yes,no,SAFE_SHARED_HELPER_REUSE
+Model3 complete,completeModel3PathFromUpstream,run-model3-path-step.ts,production+test,runModel3PathStep+runModel3PathStepCausalFork,yes,yes,no,SAFE_SHARED_HELPER_REUSE
+Causal fork,runModel3PathStepCausalFork,run-model3-path-step.ts,test-gated,span-assembly-v4-orchestrator (env=1),yes,no (S3 only),no,SAFE_TEST_HARNESS_BRANCH
+Baseline KEEP override,keepOverrideFromPacked,model3-acceptance-snapshot.ts,test-gated,runModel3PathStepCausalFork,yes,no,no,TEST_OVERRIDE_ONLY
+Model3 pack,packModel3SpanInferFields,model3-feature-pack.ts,production,inferPackedDecisions,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Model3 infer,Model3InferenceHost.inferPath,model3-inference-client.ts,production,inferPackedDecisions,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Retry router,routeModel3Retry,model3-retry-router.ts,production,completeModel3PathFromUpstream,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Retry region,deriveRetryRegions,model3-retry-region.ts,production,routeModel3Retry,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Local resegment,resegmentRetryRegionWithLattice,model3-retry-region-resegment.ts,production,routeModel3Retry callback,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Retry Recall,recallSpanTopKV2,recall-span-topk-v2.ts,production,routeModel3Retry callback,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Assembly materialize,completeDomainAwareAssemblyFromVote+buildSentenceCandidates,assemble-domain-aware-span-sets.ts,production,completeModel3PathFromUpstream+orchestrator,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+KenLM score,runFwSentenceRerankFromPrefilled,run-fw-sentence-rerank-from-prefilled.ts,production,fw-detector-v4-path,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+KenLM baseline trace,runFwSentenceRerankFromPrefilled (baseline pool),fw-detector-v4-path.ts,test-gated,fw-detector-v4-path when acceptanceCausal,yes,no,no,SAFE_TEST_HARNESS_BRANCH
+Domain Vote,voteUtteranceDomainFromPool,utterance-domain-vote.ts,production,prepareModel3PathUpstream,yes,yes,no,SHARED_PRODUCTION_FUNCTION
+Legacy KEEP_ALL,prepareModel3PathUpstream harnessKeepAll branch,run-model3-path-step.ts,obsolete-test,env MODEL3_HARNESS_KEEP_ALL or keepAll arg,yes,only if env set,no,OBSOLETE_TEST_PATH
+Legacy A/B runner,run-dialog200-s3-mainline-ab.mjs,tests/run-dialog200-s3-mainline-ab.mjs,superseded,manual test,yes,no,no,OBSOLETE_TEST_PATH
+Signal-loss collector,analyzeCase,run-retry-reinterpretation-signal-loss-audit.mjs,audit,signal-loss runner,partial,no,partial,SAFE_DIAGNOSTIC_REPLAY
+Lexicon audit lookup,lexiconExists closure,run-retry-reinterpretation-signal-loss-audit.mjs,audit,signal-loss runner,no,no,yes,SEMANTIC_AUDIT_MISMATCH

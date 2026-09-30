@@ -1,0 +1,20 @@
+{
+  "suite": "electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.test.ts",
+  "result": "PASS",
+  "tests": 13,
+  "cases": [
+    "N=0 no invoke",
+    "N=1 no invoke",
+    "N=2/3/8 invoke + production ABSTAIN",
+    "invalid contract fail closed",
+    "truncated empty set",
+    "deterministic order",
+    "permutation SELECT_TERM_ID",
+    "index OOB ABSTAIN",
+    "output subset of input",
+    "duplicate identity",
+    "unknown surface hash aux",
+    "context slice deterministic",
+    "materialize WindowCandidate reuse"
+  ]
+}

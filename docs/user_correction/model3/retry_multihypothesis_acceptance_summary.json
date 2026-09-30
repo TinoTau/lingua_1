@@ -1,0 +1,90 @@
+{
+  "phase": "RETRY_MULTIHYPOTHESIS_CORRECTION_ACCEPTANCE",
+  "date": "2026-08-29",
+  "mainVerdict": "PASS",
+  "previousReportCorrections": {
+    "developmentSequenceGate": {
+      "previous": "OPEN",
+      "correctedStartingStateThisPhase": "HOLD",
+      "finalAfterAcceptance": "OPEN"
+    },
+    "globalLe16Evidence": {
+      "previousClaim": "validated by dialog_200",
+      "corrected": "NOT_VALIDATED_IN_PREVIOUS_RUN (casesExecuted=0)",
+      "nowValidated": true,
+      "maxKenlmPool": 6,
+      "casesGt16": 0
+    }
+  },
+  "environment": {
+    "node5020": "PASS",
+    "asr6007": "PASS",
+    "realSqliteRecall": true,
+    "rootCauses": [
+      {
+        "id": 1,
+        "symptom": "Node :5020 health FAIL",
+        "cause": "ELECTRON_RUN_AS_NODE=1 leaked into Electron app via start-node-detached env copy → app.whenReady crash",
+        "classification": "A_process_exited + J_env_leak",
+        "fix": "HARNESS: start-node-detached.mjs strips ELECTRON_RUN_AS_NODE"
+      },
+      {
+        "id": 2,
+        "symptom": "ASR FAIL No available ASR service after :5020 recovered",
+        "cause": "servicePreferences.faster-whisper-vad=false while serviceLastRuntimeState.true → auto-start skipped",
+        "classification": "H_asr_not_started",
+        "fix": "HARNESS: ensureServicePreferencesForAcceptance in run-dialog200-model3-acceptance.mjs"
+      }
+    ]
+  },
+  "controlledValidation": {
+    "cases": 13,
+    "multipath": 6,
+    "d160AlternativeHypothesisVisible": true,
+    "d160NewlyVisible": "向木|顺便",
+    "crossAnchor": 0,
+    "crossKeep": 0,
+    "outOfRegion": 0,
+    "perSpanBudgetViolations": 0
+  },
+  "dialog200": {
+    "command": "ELECTRON_RUN_AS_NODE=1 electron.exe tests/run-dialog200-model3-acceptance.mjs --anchored-only --max-minutes 60",
+    "casesDiscovered": 53,
+    "casesExecuted": 53,
+    "pipelineCasesExecuted": 53,
+    "failed": 0,
+    "regressed": 0,
+    "improved": 15,
+    "unchanged": 38,
+    "completed": true,
+    "wallClockSec": 647,
+    "asrServiceId": "faster-whisper-vad",
+    "lexiconRuntimeStatus": "ok"
+  },
+  "mainlineInvariants": {
+    "model3RetryDecisions": 0,
+    "secondVoteViolations": 0,
+    "anchorMutationViolations": 0,
+    "anchorRetryRejections": 0,
+    "voteCallNot1": 0,
+    "recursiveRetry": 0,
+    "globalGt16": 0,
+    "maxKenlmPool": 6
+  },
+  "retryIntermediateGrowthDialog200": {
+    "note": "This anchored batch had Model3 decisions_retry=0; Retry region multi-hypothesis growth measured in controlled validation instead",
+    "controlledMaxRetainedPaths": 4,
+    "controlledMaxUniqueLocalSpans": 8,
+    "controlledMaxStage2RecallCalls": 8
+  },
+  "productionBusinessFilesModified": 0,
+  "harnessOnlyChanges": [
+    "tests/repro/start-node-detached.mjs",
+    "tests/run-dialog200-model3-acceptance.mjs"
+  ],
+  "trainingGates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "OPEN"
+  },
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_COVERAGE_AUDIT"
+}

@@ -1,0 +1,29 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "artifact_match": true,
+  "expected": {
+    "SEEN.Recall@1": 0.7283898305084746,
+    "SEEN.Recall@3": 0.9449152542372882,
+    "UNSEEN.Recall@1": 0.043521266073194856,
+    "UNSEEN.Recall@3": 0.09792284866468842
+  },
+  "got_from_artifacts": {
+    "SEEN.Recall@1": 0.7283898305084746,
+    "SEEN.Recall@3": 0.9449152542372882,
+    "UNSEEN.Recall@1": 0.043521266073194856,
+    "UNSEEN.Recall@3": 0.09792284866468842
+  },
+  "live_eval": {
+    "SEEN_R1": 0.7283898305084746,
+    "UNSEEN_R1": 0.043521266073194856,
+    "candidate_only_seen_R1": 0.474609375,
+    "null_query_seen_R1": 0.48046875
+  },
+  "pass": true,
+  "DIAGNOSTIC_ORACLE_CEILING_note": "FuzzyDistance UNSEEN≈0.979 is DIAGNOSTIC_ORACLE_CEILING under canonical span_syllables; not RUNTIME_OBSERVABLE_PERFORMANCE."
+}

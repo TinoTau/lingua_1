@@ -1,0 +1,54 @@
+{
+  "phase": "MODEL3_V1_FULL100K_STRICT_CONTRAST_INTEGRATION",
+  "full100k_immutable": true,
+  "full100k_manifest_hash": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6",
+  "full100k_base_rows_train": 61008,
+  "full100k_base_rows_test": 14810,
+  "strict_groups_train": 4667,
+  "strict_members_train": 9334,
+  "hard_keep_train_bucket": 43757,
+  "integrated_train_rows": 70342,
+  "sources": {
+    "STRICT_CONTRAST_VALIDATED": 9334,
+    "ANCHOR_HARD_KEEP_VALIDATED": 43757,
+    "FULL100K_BASE": 17251
+  },
+  "duplicates": {
+    "sampleId_duplicates": 0,
+    "non_strict_content_duplicate_groups": 622
+  },
+  "leakage": {
+    "cross_split_groups": 0,
+    "leak_groups": [],
+    "ok": true
+  },
+  "sampling_view": {
+    "STRICT": 0.3,
+    "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+    "NATURAL": 0.25,
+    "NO_ANCHOR": 0.15
+  },
+  "exposure_audit": {
+    "counts": {
+      "NO_ANCHOR": 10551,
+      "NATURAL": 17585,
+      "STRICT_RETRY": 10552,
+      "STRICT_KEEP": 10552,
+      "ANCHOR_HARD_KEEP": 21102
+    },
+    "shares": {
+      "STRICT": 0.30001990276079726,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.2999914702453726,
+      "NATURAL": 0.24999289187114385,
+      "NO_ANCHOR": 0.1499957351226863
+    },
+    "strict_keep": 10552,
+    "strict_retry": 10552,
+    "keep_retry_ratio": 1.0,
+    "unique_samples": 38323,
+    "repeat_factor": 1.8355034835477388,
+    "ok_ratio": true
+  },
+  "config_hash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+  "manifest_hash": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432"
+}

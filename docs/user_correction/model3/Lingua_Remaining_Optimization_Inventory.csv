@@ -1,0 +1,14 @@
+Module,Status,Evidence,ArchitectureFrozen,QualityOptimizationCandidate,Rank
+Model3,FROZEN,"S3 default; KEEP/RETRY only; 0 proven Model3-owned first breakpoint on corrected evaluator",YES,NO,NO_EVIDENCE
+Retry_architecture,FROZEN,"ACTIVE+FROZEN; Delta1/2 CLOSED; barriers 0",YES,NO,NO_EVIDENCE
+Retry_local_query_effectiveness,OBSERVE,"Historical query-gap claim unverified; dump lacked windowText; possible future targeted audit only",YES (architecture),MAYBE_LATER,MEDIUM
+FW_FineSpan,FROZEN,"Responsibility = local span identity; no proven bottleneck from absence-of-exposure proof",YES,NO,NO_EVIDENCE
+Lexicon,DEFERRED,"Old Lexicon=143 STALE; corrected valid gaps=0; no expansion without real missing terms",YES (schema),NO,LOW
+Recall,OBSERVE,"No four-condition proven miss on corrected evaluator; observe only",YES,NO,LOW
+Model2,NO_EVIDENCE,"No structured Model2 loss proof in fresh compact dump",YES,NO,NO_EVIDENCE
+Domain,FROZEN,"Path-local Domain Vote + SameDomain contract intact",YES,NO,NO_EVIDENCE
+Assembly,NO_EVIDENCE,"No structured assembly loss proof",YES,NO,NO_EVIDENCE
+Candidate_cap_16,FROZEN,"max pool 8; over16=0; no correctness loss",YES,NO,NO_EVIDENCE
+KenLM,FROZEN,"Scorer/selector only; 7 ref-equal sentences reached pool but no proven wrong-selection owner",YES,NO,LOW
+ASR_raw_quality,OBSERVE,"RAW exact 12.5%; known limit; do not reopen RTF investigation without new evidence",N/A (external),NO (this phase),MEDIUM
+Partial_improvement_gap,AUDIT_NEXT,"60 PARTIAL_IMPROVEMENT vs 6 FULL_RESCUE on BASELINE_V1 — clearest E2E quality phenomenon",N/A,YES,HIGH

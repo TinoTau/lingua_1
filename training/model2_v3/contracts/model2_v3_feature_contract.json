@@ -1,0 +1,40 @@
+{
+  "contract_id": "model2_v3_feature_contract",
+  "groups": {
+    "finespan": [
+      "span_syllable_hash",
+      "span_length",
+      "initial_final_bag",
+      "base_pool_size",
+      "best_base_distance_proxy"
+    ],
+    "user_profile_set": [
+      "item_type",
+      "item_key",
+      "strength",
+      "confidence",
+      "source"
+    ],
+    "retrieval_state": [
+      "query_budget",
+      "candidate_budget",
+      "relation_applicability_mask",
+      "n_active_profile_items"
+    ]
+  },
+  "forbidden_inputs": [
+    "target_term_id",
+    "oracle_target_pinyin",
+    "oracle_gold_family_as_exclusive_feature",
+    "oracle_span_length_from_target",
+    "oracle_target_position"
+  ],
+  "profile_item_types": {
+    "phonetic": "READY",
+    "tone": "DEFERRED_BY_DATA",
+    "domain": "PARTIAL",
+    "personal_term": "PARTIAL",
+    "confusion": "UNUSED",
+    "speaking_habit": "DEFERRED_BY_SCHEMA"
+  }
+}

@@ -1,0 +1,13 @@
+change_id,area,required,notes
+B1,new table,NO,
+B2,base_lexicon schema columns,NO,reuse existing
+B3,collector / runtime query,NO,reuse lookupBaseByPinyinAndToneKey termLength=1
+B4,full-rebuild singleCharSource,YES,point loadSingleCharRows at curated Repair source; do NOT delete IME TSV file
+B5,stop IME mirror into Repair,YES,IME TSV no longer Repair import input
+B6,prior mapping,YES,must not copy IME role weights; define Repair prior at import time (later ACP)
+B7,bundleVersion checksum manifest,YES,full rebuild promote
+B8,IME runtime,NO,TSV preserved
+B9,IME export hygiene,RECOMMENDED,add length>=2 filter to avoid leaking Repair length1 into IME base layer
+B10,length1 tests acceptance,YES,update expected inventory
+B11,Model2,NO,
+B12,scoped patch-only rebuild tool,NO_TODAY,production path is full rebuild; content scope can still be length1-only via source swap

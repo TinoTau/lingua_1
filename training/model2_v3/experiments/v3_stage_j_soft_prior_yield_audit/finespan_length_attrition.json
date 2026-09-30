@@ -1,0 +1,11 @@
+{
+  "phase2_domain_target_rows": 6510,
+  "taxonomy": {
+    "len_delta_1": 6510
+  },
+  "examples": [],
+  "v2_generator_gate": "abs(len(span)-len(term.syllables))>1 skipped (run_v3_stage_j_benchmark_v2_expand.py L439-442)",
+  "classification": "真实 ASR FineSpan 是 lattice 窗口，不必对齐 gold term 全长。benchmark generator 用 term-length 假设过滤。不是 Model2 FineSpan contract 改变。",
+  "FINESPAN_CONTRACT_DRIFT": false,
+  "TEST_CONTRACT_ISSUE": true
+}

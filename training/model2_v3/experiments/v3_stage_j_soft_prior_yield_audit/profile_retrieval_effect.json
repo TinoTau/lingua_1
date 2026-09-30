@@ -1,0 +1,830 @@
+{
+  "n": 38,
+  "query_universe_changed_by_profile": false,
+  "raw_domain_results_changed_by_profile": false,
+  "final_order_may_change": true,
+  "correct_vs_empty_same_final_ids_n": 37,
+  "correct_vs_wrong_same_final_ids_n": 36,
+  "empty_still_identity_hit_n": 4,
+  "wrong_still_identity_hit_n": 4,
+  "correct_identity_hit_n": 4,
+  "causal": "execute_domain_action focuses selected domain to max(0.35, sel) even when evidence is empty. FuzzyPool query is profile-independent.",
+  "sample": [
+    {
+      "term_id": "domain:food_order:香菜:xiang|cai",
+      "surface": "香菜",
+      "span": [
+        "xiang",
+        "chai"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:向量:xiang|liang",
+          "base:_:香草:xiang|cao",
+          "base:_:香锅:xiang|guo",
+          "base:_:乡下:xiang|xia",
+          "base:_:乡村:xiang|cun",
+          "base:_:乡镇:xiang|zhen",
+          "base:_:乡长:xiang|chang",
+          "base:_:享受:xiang|shou"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:向量:xiang|liang",
+          "base:_:香草:xiang|cao",
+          "base:_:香锅:xiang|guo",
+          "base:_:乡下:xiang|xia",
+          "base:_:乡村:xiang|cun",
+          "base:_:乡镇:xiang|zhen",
+          "base:_:乡长:xiang|chang",
+          "base:_:享受:xiang|shou"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:向量:xiang|liang",
+          "base:_:香草:xiang|cao",
+          "base:_:香锅:xiang|guo",
+          "base:_:乡下:xiang|xia",
+          "base:_:乡村:xiang|cun",
+          "base:_:乡镇:xiang|zhen",
+          "base:_:乡长:xiang|chang",
+          "base:_:享受:xiang|shou"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:向量:xiang|liang",
+          "base:_:香草:xiang|cao",
+          "base:_:香锅:xiang|guo",
+          "base:_:乡下:xiang|xia",
+          "base:_:乡村:xiang|cun",
+          "base:_:乡镇:xiang|zhen",
+          "base:_:乡长:xiang|chang",
+          "base:_:享受:xiang|shou"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:coffee:加冰:jia|bing",
+      "surface": "加冰",
+      "span": [
+        "jia",
+        "bin"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 2,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:嘉宾:jia|bin",
+          "base:_:加料:jia|liao",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾证:jia|bin|zheng",
+          "base:_:夹板:jia|ban",
+          "base:_:礼宾:li|bin"
+        ]
+      },
+      "Empty": {
+        "n_new": 1,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:嘉宾:jia|bin",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾证:jia|bin|zheng",
+          "base:_:夹板:jia|ban",
+          "base:_:礼宾:li|bin",
+          "base:_:驾照:jia|zhao"
+        ]
+      },
+      "Wrong": {
+        "n_new": 1,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:嘉宾:jia|bin",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾证:jia|bin|zheng",
+          "base:_:夹板:jia|ban",
+          "base:_:礼宾:li|bin",
+          "base:_:驾照:jia|zhao"
+        ]
+      },
+      "Swapped": {
+        "n_new": 1,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:嘉宾:jia|bin",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾证:jia|bin|zheng",
+          "base:_:夹板:jia|ban",
+          "base:_:礼宾:li|bin",
+          "base:_:驾照:jia|zhao"
+        ]
+      },
+      "correct_vs_empty_same_ids": false,
+      "correct_vs_wrong_same_ids": false
+    },
+    {
+      "term_id": "domain:food_order:加料:jia|liao",
+      "surface": "加料",
+      "span": [
+        "jia",
+        "niao"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 2,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:加料:jia|liao",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾:jia|bin",
+          "base:_:夹板:jia|ban",
+          "base:_:驾照:jia|zhao",
+          "base:_:价值:jia|zhi"
+        ]
+      },
+      "Empty": {
+        "n_new": 2,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:加料:jia|liao",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾:jia|bin",
+          "base:_:夹板:jia|ban",
+          "base:_:驾照:jia|zhao",
+          "base:_:价值:jia|zhi"
+        ]
+      },
+      "Wrong": {
+        "n_new": 2,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:加料:jia|liao",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾:jia|bin",
+          "base:_:夹板:jia|ban",
+          "base:_:驾照:jia|zhao",
+          "base:_:价值:jia|zhi"
+        ]
+      },
+      "Swapped": {
+        "n_new": 2,
+        "identity_hit": true,
+        "term_ids_head": [
+          "base:_:加冰:jia|bing",
+          "base:_:加料:jia|liao",
+          "base:_:加单:jia|dan",
+          "base:_:加床:jia|chuang",
+          "base:_:嘉宾:jia|bin",
+          "base:_:夹板:jia|ban",
+          "base:_:驾照:jia|zhao",
+          "base:_:价值:jia|zhi"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:medical:医师:yi|shi",
+      "surface": "医师",
+      "span": [
+        "yi",
+        "si"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:意思:yi|si",
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:意思:yi|si",
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:意思:yi|si",
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:意思:yi|si",
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:medical:医生:yi|sheng",
+      "surface": "医生",
+      "span": [
+        "yi",
+        "seng"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:medical:医生:yi|sheng",
+      "surface": "医生",
+      "span": [
+        "yi",
+        "shen"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:一爆:yi|bao",
+          "base:_:仪式:yi|shi",
+          "base:_:医保:yi|bao",
+          "base:_:意式:yi|shi",
+          "base:_:意面:yi|mian",
+          "base:_:疫苗:yi|miao",
+          "base:_:衣架:yi|jia",
+          "base:_:衣柜:yi|gui"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:bakery:可颂:ke|song",
+      "surface": "可颂",
+      "span": [
+        "ke",
+        "shong"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:克服:ke|fu",
+          "base:_:刻有:ke|you",
+          "base:_:可不:ke|bu",
+          "base:_:可口:ke|kou",
+          "base:_:可可:ke|ke",
+          "base:_:可怕:ke|pa",
+          "base:_:可怜:ke|lian"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:克服:ke|fu",
+          "base:_:刻有:ke|you",
+          "base:_:可不:ke|bu",
+          "base:_:可口:ke|kou",
+          "base:_:可可:ke|ke",
+          "base:_:可怕:ke|pa",
+          "base:_:可怜:ke|lian"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:克服:ke|fu",
+          "base:_:刻有:ke|you",
+          "base:_:可不:ke|bu",
+          "base:_:可口:ke|kou",
+          "base:_:可可:ke|ke",
+          "base:_:可怕:ke|pa",
+          "base:_:可怜:ke|lian"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:克服:ke|fu",
+          "base:_:刻有:ke|you",
+          "base:_:可不:ke|bu",
+          "base:_:可口:ke|kou",
+          "base:_:可可:ke|ke",
+          "base:_:可怕:ke|pa",
+          "base:_:可怜:ke|lian"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:bakery:司康:si|kang",
+      "surface": "司康",
+      "span": [
+        "shi",
+        "kang"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:石窟:shi|ku",
+          "base:_:石膏:shi|gao",
+          "base:_:世上:shi|shang",
+          "base:_:世人:shi|ren",
+          "base:_:世俗:shi|su",
+          "base:_:世界:shi|jie",
+          "base:_:世纪:shi|ji",
+          "base:_:世袭:shi|xi"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:石窟:shi|ku",
+          "base:_:石膏:shi|gao",
+          "base:_:世上:shi|shang",
+          "base:_:世人:shi|ren",
+          "base:_:世俗:shi|su",
+          "base:_:世界:shi|jie",
+          "base:_:世纪:shi|ji",
+          "base:_:世袭:shi|xi"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:石窟:shi|ku",
+          "base:_:石膏:shi|gao",
+          "base:_:世上:shi|shang",
+          "base:_:世人:shi|ren",
+          "base:_:世俗:shi|su",
+          "base:_:世界:shi|jie",
+          "base:_:世纪:shi|ji",
+          "base:_:世袭:shi|xi"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:石窟:shi|ku",
+          "base:_:石膏:shi|gao",
+          "base:_:世上:shi|shang",
+          "base:_:世人:shi|ren",
+          "base:_:世俗:shi|su",
+          "base:_:世界:shi|jie",
+          "base:_:世纪:shi|ji",
+          "base:_:世袭:shi|xi"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:tourism_transport:司机:si|ji",
+      "surface": "司机",
+      "span": [
+        "shi",
+        "ji"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:世纪:shi|ji",
+          "base:_:事迹:shi|ji",
+          "base:_:史记:shi|ji",
+          "base:_:实际:shi|ji",
+          "base:_:市级:shi|ji",
+          "base:_:时机:shi|ji",
+          "base:_:诗集:shi|ji",
+          "base:_:候机:hou|ji"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:世纪:shi|ji",
+          "base:_:事迹:shi|ji",
+          "base:_:史记:shi|ji",
+          "base:_:实际:shi|ji",
+          "base:_:市级:shi|ji",
+          "base:_:时机:shi|ji",
+          "base:_:诗集:shi|ji",
+          "base:_:候机:hou|ji"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:世纪:shi|ji",
+          "base:_:事迹:shi|ji",
+          "base:_:史记:shi|ji",
+          "base:_:实际:shi|ji",
+          "base:_:市级:shi|ji",
+          "base:_:时机:shi|ji",
+          "base:_:诗集:shi|ji",
+          "base:_:候机:hou|ji"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:世纪:shi|ji",
+          "base:_:事迹:shi|ji",
+          "base:_:史记:shi|ji",
+          "base:_:实际:shi|ji",
+          "base:_:市级:shi|ji",
+          "base:_:时机:shi|ji",
+          "base:_:诗集:shi|ji",
+          "base:_:候机:hou|ji"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:bakery:吐司:tu|si",
+      "surface": "吐司",
+      "span": [
+        "tu",
+        "shi"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:仪式:yi|shi",
+          "base:_:夜市:ye|shi",
+          "base:_:徒步:tu|bu",
+          "base:_:意式:yi|shi",
+          "base:_:护士:hu|shi",
+          "base:_:损失:sun|shi",
+          "base:_:提示:ti|shi",
+          "base:_:芝士:zhi|shi"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:仪式:yi|shi",
+          "base:_:夜市:ye|shi",
+          "base:_:徒步:tu|bu",
+          "base:_:意式:yi|shi",
+          "base:_:护士:hu|shi",
+          "base:_:损失:sun|shi",
+          "base:_:提示:ti|shi",
+          "base:_:芝士:zhi|shi"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:仪式:yi|shi",
+          "base:_:夜市:ye|shi",
+          "base:_:徒步:tu|bu",
+          "base:_:意式:yi|shi",
+          "base:_:护士:hu|shi",
+          "base:_:损失:sun|shi",
+          "base:_:提示:ti|shi",
+          "base:_:芝士:zhi|shi"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:仪式:yi|shi",
+          "base:_:夜市:ye|shi",
+          "base:_:徒步:tu|bu",
+          "base:_:意式:yi|shi",
+          "base:_:护士:hu|shi",
+          "base:_:损失:sun|shi",
+          "base:_:提示:ti|shi",
+          "base:_:芝士:zhi|shi"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:medical:咳嗽:ke|sou",
+      "surface": "咳嗽",
+      "span": [
+        "ke",
+        "shou"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:下手:xia|shou",
+          "base:_:为首:wei|shou",
+          "base:_:享受:xiang|shou",
+          "base:_:亲手:qin|shou",
+          "base:_:传授:chuan|shou",
+          "base:_:伸手:shen|shou",
+          "base:_:保守:bao|shou"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:下手:xia|shou",
+          "base:_:为首:wei|shou",
+          "base:_:享受:xiang|shou",
+          "base:_:亲手:qin|shou",
+          "base:_:传授:chuan|shou",
+          "base:_:伸手:shen|shou",
+          "base:_:保守:bao|shou"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:下手:xia|shou",
+          "base:_:为首:wei|shou",
+          "base:_:享受:xiang|shou",
+          "base:_:亲手:qin|shou",
+          "base:_:传授:chuan|shou",
+          "base:_:伸手:shen|shou",
+          "base:_:保守:bao|shou"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:客房:ke|fang",
+          "base:_:下手:xia|shou",
+          "base:_:为首:wei|shou",
+          "base:_:享受:xiang|shou",
+          "base:_:亲手:qin|shou",
+          "base:_:传授:chuan|shou",
+          "base:_:伸手:shen|shou",
+          "base:_:保守:bao|shou"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    },
+    {
+      "term_id": "domain:tourism_hotel:宾馆:bin|guan",
+      "surface": "宾馆",
+      "span": [
+        "bing",
+        "guan"
+      ],
+      "query_set_identical": true,
+      "raw_pool_identical": true,
+      "Correct": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:冰滴:bing|di",
+          "base:_:冰箱:bing|xiang",
+          "base:_:冰饮:bing|yin",
+          "base:_:吸管:xi|guan",
+          "base:_:并发:bing|fa",
+          "base:_:开馆:kai|guan",
+          "base:_:拔罐:ba|guan",
+          "base:_:病历:bing|li"
+        ]
+      },
+      "Empty": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:冰滴:bing|di",
+          "base:_:冰箱:bing|xiang",
+          "base:_:冰饮:bing|yin",
+          "base:_:吸管:xi|guan",
+          "base:_:并发:bing|fa",
+          "base:_:开馆:kai|guan",
+          "base:_:拔罐:ba|guan",
+          "base:_:病历:bing|li"
+        ]
+      },
+      "Wrong": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:冰滴:bing|di",
+          "base:_:冰箱:bing|xiang",
+          "base:_:冰饮:bing|yin",
+          "base:_:吸管:xi|guan",
+          "base:_:并发:bing|fa",
+          "base:_:开馆:kai|guan",
+          "base:_:拔罐:ba|guan",
+          "base:_:病历:bing|li"
+        ]
+      },
+      "Swapped": {
+        "n_new": 0,
+        "identity_hit": false,
+        "term_ids_head": [
+          "base:_:冰滴:bing|di",
+          "base:_:冰箱:bing|xiang",
+          "base:_:冰饮:bing|yin",
+          "base:_:吸管:xi|guan",
+          "base:_:并发:bing|fa",
+          "base:_:开馆:kai|guan",
+          "base:_:拔罐:ba|guan",
+          "base:_:病历:bing|li"
+        ]
+      },
+      "correct_vs_empty_same_ids": true,
+      "correct_vs_wrong_same_ids": true
+    }
+  ]
+}

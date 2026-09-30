@@ -8,6 +8,14 @@ import { buildFwRuntimeDiag } from './fw-runtime-diag';
 import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2/pinyin-ime-v2-config';
 import { resolveRecallScope } from '../lexicon-v2/resolve-recall-enabled-fine-domains';
 import type { FwDetectorResult, FwDetectorSummary, KenlmGateMode } from './types';
+import { normalizeForFwRepairInput } from './normalize-for-fw-repair';
+import {
+  beginCaptureV2Case,
+  captureV2Boundary,
+  captureV2Identity,
+  canonicalHash,
+  isFrozenEvidenceCaptureV2Enabled,
+} from '../capture-v2';
 
 function emptySummary(): FwDetectorSummary {
   return {
@@ -69,6 +77,13 @@ function buildConfigSnapshot(
 }
 
 export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDetectorResult> {
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    beginCaptureV2Case(ctx.sessionId ?? null);
+    captureV2Identity({
+      schema_gate: 'FROZEN_EVIDENCE_CAPTURE_V2=1',
+      session_id: ctx.sessionId ?? null,
+    });
+  }
   const config = loadFwDetectorRuntimeConfig();
   const imeConfig = loadPinyinImeV2RuntimeConfig();
   const configuredEnabledDomains =
@@ -76,9 +91,9 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
       ? ctx.fwDetectorEnabledDomainsOverride
       : config.enabledDomains;
   const { enableKenLMGate, kenlmGateMode, kenlmVetoThreshold } = resolveKenlmRuntime(ctx, config);
-  const rawText = (ctx.rawAsrText ?? '').trim();
+  const rawAsrText = (ctx.rawAsrText ?? '').trim();
 
-  if (!rawText) {
+  if (!rawAsrText) {
     return {
       enabled: true,
       triggered: false,
@@ -160,9 +175,27 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     };
   }
 
+  const normalized = normalizeForFwRepairInput(rawAsrText);
+  ctx.fwRepairNormalizedText = normalized.repairText;
+  ctx.fwRepairScriptNormalized = normalized.scriptNormalized;
+
+  // Capture V2 B1 — OBSERVABILITY_ONLY (FROZEN_EVIDENCE_CAPTURE_V2=1); no-op when OFF.
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    const segments = ctx.asrSegments ?? [];
+    captureV2Boundary('B1', {
+      rawAsrText: normalized.rawAsrText,
+      repairText: normalized.repairText,
+      scriptNormalized: normalized.scriptNormalized,
+      segments,
+      rawAsrHash: canonicalHash(normalized.rawAsrText),
+      repairTextHash: canonicalHash(normalized.repairText),
+      segmentEvidenceHash: canonicalHash(segments),
+    });
+  }
+
   return runFwDetectorV4Path({
     ctx,
-    rawText,
+    rawText: normalized.repairText,
     config,
     configSnapshot,
     runtimeDiagBase,

@@ -1,0 +1,16 @@
+{
+  "stage": "FW_REPAIR_V4_SINGLE_CHAR_LEXICON_STORAGE_STRATEGY_AUDIT",
+  "verdict": "OPTION_B_RECOMMENDED",
+  "ime_depends_on_sqlite_length1": false,
+  "base_lexicon_allows_length1": true,
+  "schema_reuse_supported": true,
+  "collector_change_required_for_b": false,
+  "new_table_required_for_b": false,
+  "scoped_rebuild": "PARTIAL_via_full_rebuild_source_swap",
+  "license_review_required_if_cld": true,
+  "final_list_selection_required": true,
+  "safe_to_proceed_to_rebuild_planning": true,
+  "sqlite_writes": 0,
+  "imports": 0,
+  "model2_changed": false
+}

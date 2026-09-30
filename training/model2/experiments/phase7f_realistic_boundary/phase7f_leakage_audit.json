@@ -1,0 +1,19 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "flags": {
+    "observed_equals_canonical": 3371,
+    "target_in_base_natural": 9150
+  },
+  "checks": {
+    "oracle_canonical_as_query": false,
+    "target_term_id_in_retrieval_input": false,
+    "oracle_family_forced_as_only_query": false,
+    "note": "Labels may use corruption_family/canonical for slice tagging only"
+  },
+  "observed_equals_canonical_rate_term_pos": 0.324727868220788,
+  "verdict": "PASS_WITH_NOTES"
+}

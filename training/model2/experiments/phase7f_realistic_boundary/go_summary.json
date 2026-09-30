@@ -1,0 +1,141 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "verdict": "PASS",
+  "outcome": "OBSERVABILITY_LIMIT",
+  "Profile_Recall_Concept_Under_Realistic_Conditions": "PARTIAL",
+  "Natural_Base_Miss_TIR": 0.25333333333333335,
+  "FamilySynth_TIR": 0.932,
+  "RealASR_TIR": 0.0,
+  "S1_Clean_TIR": 0.42,
+  "S2_Multi_TIR": 0.71,
+  "ProfileOnlyTargetRecovery": 0.25,
+  "Correct_vs_Empty": {
+    "correct": 0.466,
+    "empty": 0.0,
+    "gain": 0.466
+  },
+  "Correct_vs_Wrong": {
+    "correct": 0.466,
+    "wrong": 0.0
+  },
+  "Correct_vs_Swapped": {
+    "correct": 0.466,
+    "swapped": 0.04
+  },
+  "NO_CHANGE_False_Expansion": 0.023333333333333334,
+  "NewCandidatePrecision_proxy": 0.1784073506891271,
+  "real_asr_metrics": {
+    "markers": [
+      "PHASE7F_AUDIT",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 250,
+    "TargetIntroductionRate": 0.0,
+    "ProfileOnlyTargetRecovery": 0.0,
+    "FalseExpansionRate": 0.0,
+    "NewCandidatePrecision_proxy": 0.0,
+    "TargetPerExpansion": 0.0,
+    "new_candidates_mean": 0,
+    "new_candidates_p95": 0.0,
+    "queries_mean": 0.22,
+    "queries_p95": 1.0,
+    "latency_ms_p50": 0.004899993655271828,
+    "latency_ms_p95": 0.1407999952789396
+  },
+  "family_synth_metrics": {
+    "markers": [
+      "PHASE7F_AUDIT",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 250,
+    "TargetIntroductionRate": 0.932,
+    "ProfileOnlyTargetRecovery": 0.932,
+    "FalseExpansionRate": 0.068,
+    "NewCandidatePrecision_proxy": 0.1784073506891271,
+    "TargetPerExpansion": 0.1784073506891271,
+    "new_candidates_mean": 5.224,
+    "new_candidates_p95": 8.0,
+    "queries_mean": 1.18,
+    "queries_p95": 2.0,
+    "latency_ms_p50": 46.84850000194274,
+    "latency_ms_p95": 110.26109999511391
+  },
+  "Primary_Failure_Classes": [
+    "OBSERVED_EVIDENCE_TOO_DAMAGED",
+    "QUERY_NOT_GENERATED",
+    "OTHER",
+    "CANDIDATE_BUDGET_PRUNED",
+    "NO_PROFILE_RELATION_MATCH"
+  ],
+  "Main_Remaining_Bottleneck": "OBSERVABILITY",
+  "Trainable_Retrieval_Component_Needed": "NO",
+  "Exact_Intended_Role": null,
+  "Stage_A": "KEEP_OPTIONAL",
+  "Stage_B": "KEEP_POST_RECALL",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD",
+  "next_phase": "Phase 7G — Observability & Span Evidence Hardening (no neural retrieval yet)",
+  "candidate_budget_curve": [
+    {
+      "K": 2,
+      "TargetIntroductionRate": 0.865,
+      "new_candidates_mean": 1.655,
+      "NewCandidatePrecision_proxy": 0.5226586102719033,
+      "latency_ms_p95": 127.09200000972487
+    },
+    {
+      "K": 4,
+      "TargetIntroductionRate": 0.895,
+      "new_candidates_mean": 2.845,
+      "NewCandidatePrecision_proxy": 0.3145869947275923,
+      "latency_ms_p95": 136.03670000156853
+    },
+    {
+      "K": 8,
+      "TargetIntroductionRate": 0.92,
+      "new_candidates_mean": 5.19,
+      "NewCandidatePrecision_proxy": 0.17726396917148363,
+      "latency_ms_p95": 127.01799999922514
+    }
+  ],
+  "query_budget_curve": [
+    {
+      "max_queries": 1,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 0.95,
+      "FalseExpansionRate": 0.02,
+      "latency_ms_p95": 63.51220000942703
+    },
+    {
+      "max_queries": 2,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 97.2197000082815
+    },
+    {
+      "max_queries": 4,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 105.37530000146944
+    },
+    {
+      "max_queries": 8,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 106.63880000356585
+    }
+  ],
+  "governance_note": "Do not average REAL_ASR and FAMILY_SYNTH into one vanity overall. Phase 7E mechanism remains valid on applicable synth; realistic ASR G2P residue is the bottleneck."
+}

@@ -1,0 +1,13 @@
+{
+  "formula": "FINAL_INTRODUCED / RAW_DOMAIN_QUERY_HIT among BASE_ABSENT+ACTION_AVAILABLE",
+  "corrupted": {
+    "RAW_DOMAIN_QUERY_HIT": 38,
+    "FINAL_INTRODUCED": 4,
+    "DOMAIN_PIPELINE_RETENTION": 0.105263
+  },
+  "exact": {
+    "RAW_DOMAIN_QUERY_HIT": 588,
+    "FINAL_INTRODUCED": 0,
+    "note": "exact FineSpan almost always BASE_VISIBLE so introduced=0 even if raw hit"
+  }
+}

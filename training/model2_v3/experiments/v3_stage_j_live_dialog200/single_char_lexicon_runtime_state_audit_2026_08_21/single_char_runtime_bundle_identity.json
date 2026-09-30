@@ -1,0 +1,37 @@
+{
+  "path": "D:/Programs/github/lingua_1/node_runtime/lexicon/v3/lexicon.sqlite",
+  "manifest": "D:/Programs/github/lingua_1/node_runtime/lexicon/v3/manifest.json",
+  "schemaVersion": "lexicon-v3-runtime-v3",
+  "bundleVersion": 13,
+  "bundleTag": "v3-runtime",
+  "buildTime": "2026-08-18T03:33:16.808Z",
+  "checksum_manifest": "sha256:eb7f6e32955c559fc2ce9faf8b46be5071bbf226beb7cb8a0713434f7ac725b7",
+  "checksum_computed_sha256": "sha256:eb7f6e32955c559fc2ce9faf8b46be5071bbf226beb7cb8a0713434f7ac725b7",
+  "checksum_match": true,
+  "tables": {
+    "base": 11766,
+    "idiom": 22192,
+    "domain": 655,
+    "routing": 655,
+    "term": 11766,
+    "term_domain_tags": 655,
+    "domain_hierarchy": 12
+  },
+  "singleCharSource": {
+    "path": "docs/pinyin-v2/import/single_char_dictionary.tsv",
+    "sha256": "sha256:551b870598de9a4efe4f7e72fcea4dc9a8355941cabbb4a6eeaf57c41b9bf348",
+    "recordCount": 2510,
+    "skipped": {
+      "empty": 0,
+      "non_cjk": 0,
+      "duplicate": 0,
+      "existing_term": 0
+    }
+  },
+  "rebuild_sources": [
+    "lexicon_full_corrected_review.csv",
+    "term_domain_tags_corrected.csv",
+    "supplemental_terms.csv",
+    "docs/pinyin-v2/import/single_char_dictionary.tsv"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-08-23T03:11:42.225117+00:00",
+  "file": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+  "sha256": "7dfa380e22487238835b3658b34253f61994cb2a220d3a519f268a49fc51a2bb",
+  "rollback_sha256": "de7b0bf0ad009da7fac40a5bd288c02b55f45f31793d361a8ddb1c0fa8845fbd",
+  "unchanged_since_implement_round": true,
+  "note": "Implement round did not modify recall-span-topk-v2.ts; rollback backup predates unrelated edits",
+  "implement_collector_probe": {
+    "hao3_unique": 1,
+    "de5_present": true,
+    "unique_only_contract": "unchanged_in_code"
+  },
+  "model2_single_char_patterns_present": {
+    "model2.*length\\s*[=!]=\\s*1": false,
+    "disambiguate": true,
+    "ambiguityHead": false,
+    "contextEncoder": false
+  },
+  "length1_path_uses": "collectBaseOnlySingleCharCandidate + lookupBaseByPinyinAndToneKey",
+  "verdict": "ABSENT"
+}

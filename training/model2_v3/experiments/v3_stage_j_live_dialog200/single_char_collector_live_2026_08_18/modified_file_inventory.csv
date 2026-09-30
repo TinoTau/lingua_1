@@ -1,0 +1,11 @@
+path,role,behavior_change
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.ts,new taxonomy+classify,no
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.test.ts,unit tests,no
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2-length1-collector-observability.sqlite.integration.test.ts,sqlite contract tests,no
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,observation diagnostic after live decision,no
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts,window traces,no
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/utterance-recall-cache.ts,cache diagnostic clone,no
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/lattice-fine-span-runtime.ts,blocked window traces,no
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,attach single_char_collector when TRACE=1,no
+electron_node/electron-node/tests/lib/wait-asr-ready.mjs,retry FW-not-ready warmup,test harness only
+docs/user_correction/scripts/single_char_collector_live_rejection_audit.py,postprocess,no

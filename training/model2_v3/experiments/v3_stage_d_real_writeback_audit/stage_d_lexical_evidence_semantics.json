@@ -1,0 +1,14 @@
+{
+  "LEXICAL_PROFILE_SEMANTICS_UNDEFINED": true,
+  "current_behavior": "any Replace/Insert target_text with >=2 chars becomes personal_term_candidate",
+  "not": "correction-confirmed lexicon term preference with frequency contract",
+  "candidates_A_to_E": {
+    "A_said_once": "NO auto ASR write found",
+    "B_manual_correction": "YES primary writer",
+    "C_high_frequency": "evidence sum approximates but no rate/decay",
+    "D_correction_confirmed_term": "INTENT PARTIAL — surface not term_id",
+    "E_weighted_long_term_preference": "PARTIAL evidence map only"
+  },
+  "recommended_frozen_semantics_for_dev": "D+E: correction-confirmed lexicon-backed term preference with bounded evidence",
+  "self_reinforcement_from_uncorrected_ASR": false
+}

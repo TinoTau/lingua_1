@@ -1,0 +1,220 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_MATERIALIZATION_YIELD_PROBE_EXTENSION",
+  "date": "2026-08-30",
+  "primaryReport": "docs/user_correction/model3/Lingua_Model3_V2_Acoustic_Materialization_Yield_Probe_Extension_2026_08_30.md",
+  "probeVerdict": "B2_EXTENSION_PASS",
+  "freshB2Exercised": true,
+  "attemptedN": 55,
+  "provenanceAccepted": 55,
+  "provenanceRejected": 0,
+  "architectureSignal": "POSITIVE",
+  "readyForImplementationPlan": true,
+  "datasetBuild": "BLOCKED",
+  "previousAccountingCorrection": {
+    "code": "PREVIOUS_PROBE_PROVENANCE_ACCOUNTING_ERROR",
+    "previousReportSaid": {
+      "coherent": 12,
+      "rejected": 0
+    },
+    "structuredArtifactSaid": {
+      "coherent_ok": 10,
+      "coherent_fail": 2,
+      "ids": [
+        "d055",
+        "d190"
+      ]
+    },
+    "correctInterpretation": "Primary report aggregation ignored provenance rejects; structured artifact is authoritative for previous probe.",
+    "old_66_7_percent": "DIRECTIONAL_ONLY_NOT_ACCEPTED"
+  },
+  "asrEnvironmentRecovery": {
+    "failure_1": "Silero VAD CUDA EP crash: cudnnGetLibConfig (exit 3221226505)",
+    "restoredWith_1": "TONE_P10_VAD_CPU=1 (authorized VAD CPU EP; ASR Whisper remains CUDA)",
+    "failure_2": "Client wav_bytes_pcm16 cast float[-1,1]→int16 without scale → all-zero PCM → ASR empty",
+    "restoredWith_2": "training/model2/corruption/bank.py:_float_audio_to_pcm16 (encode tooling only)",
+    "asrBusinessSemanticsChanged": false,
+    "vadBusinessBehaviorChanged": false
+  },
+  "historicalProvenanceSentinel": {
+    "code": "HISTORICAL_PROVENANCE_SENTINEL",
+    "allWouldReject": true,
+    "cases": [
+      {
+        "id": "d055",
+        "sentCurrentText": "醫生您好我這兩天嗓子疼想開電要並做各些常規",
+        "harnessCurrentText": "医生您好我这两天嗓子疼想开电要并做各些常规",
+        "wouldReject": true,
+        "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+      },
+      {
+        "id": "d190",
+        "sentCurrentText": "醫生您好,我這兩天頭通想開店,要並做個些常規",
+        "harnessCurrentText": "医生您好,我这两天头通想开店,要并做个些常规",
+        "wouldReject": true,
+        "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+      }
+    ]
+  },
+  "funnel": {
+    "N0_ATTEMPTED": 55,
+    "N1_AUDIO_OK": 55,
+    "N2_ASR_OK": 55,
+    "N3_ASR_MISMATCH": 50,
+    "N4_ALIGNMENT_REGION": 47,
+    "N5_REPAIRABLE_NONANCHOR_REGION": 47,
+    "N7_TONE_READY": 55,
+    "N8_CAND_STATE_VALID": 55,
+    "N6_FINESPAN_OVERLAP": 33,
+    "N9_HAS_RETRY": 33,
+    "N10_PROVENANCE_COHERENT_AND_HAS_RETRY": 33,
+    "N11_PROVENANCE_COHERENT_AND_HAS_RETRY_CAND_GT0": 29
+  },
+  "yields": {
+    "RAW_ASR_MISMATCH_YIELD": 0.9090909090909091,
+    "REPAIRABLE_REGION_YIELD": 0.8545454545454545,
+    "COHERENT_RETRY_YIELD": 0.6,
+    "COHERENT_RETRY_CAND_GT0_YIELD": 0.5272727272727272,
+    "COHERENT_RETRY_YIELD_GIVEN_ACCEPTED": 0.6,
+    "COHERENT_RETRY_CAND_GT0_YIELD_GIVEN_ACCEPTED": 0.5272727272727272
+  },
+  "cand_cells_accepted": {
+    "KEEP_cand_gt0": 1675,
+    "KEEP_cand_0": 1059,
+    "RETRY_cand_gt0": 140,
+    "RETRY_cand_0": 69
+  },
+  "cand_hist_accepted": {
+    "0": 1128,
+    "1": 1803,
+    "2": 12
+  },
+  "label_hist_accepted": {
+    "KEEP": 2734,
+    "RETRY": 209
+  },
+  "family_hist_accepted": {
+    "DELETION": 20,
+    "INSERTION": 48,
+    "SUBSTITUTION": 36,
+    "MULTI_CHAR_REPLACEMENT": 13
+  },
+  "readiness_accepted": {
+    "ready": 2909,
+    "no_pattern": 34
+  },
+  "anchor_src_accepted": {
+    "NONE": 2943
+  },
+  "independence": {
+    "retry_utterances": 33,
+    "retry_regions": 94,
+    "retry_span_x_path": 209,
+    "retry_cand_gt0_utterances": 29,
+    "multipath_utterances": 40,
+    "path_hist": {
+      "8": 4,
+      "1": 15,
+      "3": 11,
+      "5": 1,
+      "2": 12,
+      "6": 7,
+      "4": 5
+    }
+  },
+  "same_surface_independent": [
+    {
+      "surface": "的",
+      "keep_utts": 8,
+      "retry_utts": 2
+    },
+    {
+      "surface": "这",
+      "keep_utts": 28,
+      "retry_utts": 1
+    },
+    {
+      "surface": "边",
+      "keep_utts": 15,
+      "retry_utts": 1
+    },
+    {
+      "surface": "不",
+      "keep_utts": 19,
+      "retry_utts": 1
+    },
+    {
+      "surface": "他",
+      "keep_utts": 2,
+      "retry_utts": 2
+    },
+    {
+      "surface": "就",
+      "keep_utts": 8,
+      "retry_utts": 2
+    },
+    {
+      "surface": "以",
+      "keep_utts": 8,
+      "retry_utts": 1
+    },
+    {
+      "surface": "终",
+      "keep_utts": 1,
+      "retry_utts": 1
+    },
+    {
+      "surface": "现",
+      "keep_utts": 2,
+      "retry_utts": 3
+    },
+    {
+      "surface": "下",
+      "keep_utts": 17,
+      "retry_utts": 1
+    },
+    {
+      "surface": "计",
+      "keep_utts": 1,
+      "retry_utts": 1
+    },
+    {
+      "surface": "掉",
+      "keep_utts": 1,
+      "retry_utts": 1
+    },
+    {
+      "surface": "面",
+      "keep_utts": 5,
+      "retry_utts": 1
+    },
+    {
+      "surface": "定",
+      "keep_utts": 3,
+      "retry_utts": 1
+    },
+    {
+      "surface": "对",
+      "keep_utts": 2,
+      "retry_utts": 1
+    },
+    {
+      "surface": "在",
+      "keep_utts": 1,
+      "retry_utts": 1
+    }
+  ],
+  "same_surface_path_only": [],
+  "rejects": [],
+  "nextPhase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_IMPLEMENTATION_PLAN",
+  "nextPhaseExecuted": false,
+  "governance": {
+    "Model3Changed": false,
+    "featureContractChanged": false,
+    "RecallChanged": false,
+    "ToneChanged": false,
+    "pronunciationPerturbation": false,
+    "formalDataset": false,
+    "training": false
+  },
+  "wall_sec": 170.2
+}

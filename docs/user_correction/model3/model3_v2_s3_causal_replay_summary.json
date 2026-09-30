@@ -1,0 +1,222 @@
+{
+  "phase": "MODEL3_V2_S3_MAINLINE_CAUSAL_REPLAY_AUDIT",
+  "timestamp": "2026-08-31T10:58:41.487682+00:00",
+  "verdict": "S3_CAUSAL_REPLAY_BLOCKED_BY_ACCEPTANCE_HARNESS",
+  "nextPhase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION",
+  "promotionReady": false,
+  "s3IdentityVerified": true,
+  "previousAcceptanceStatus": "HISTORICAL_NON_CAUSAL_ACCEPTANCE_EVIDENCE",
+  "previousImprovedRegressed": {
+    "IMPROVED": 28,
+    "REGRESSED": 18
+  },
+  "previousAssemblyKenlmOwnershipValid": false,
+  "harnessDesign": {
+    "mode": "TWO_INDEPENDENT_FULL_PIPELINE_RUNS",
+    "baseline": "MODEL3_HARNESS_KEEP_ALL=1",
+    "s3": "actionable RETRY",
+    "forkPoint": "Model3 path step (NOT frozen in harness)",
+    "frozenUpstreamReplay": false,
+    "decisionOverrideAvailableInUnitTests": true,
+    "keepAllSkipsModel3Inference": true
+  },
+  "upstreamParity": {
+    "totalCases": 200,
+    "parityPass": 0,
+    "parityFail": 200,
+    "parityPassRate": 0.0,
+    "hashedFields": [
+      "caseId",
+      "raw_asr",
+      "model3_paths",
+      "non_anchor_spans",
+      "domain_anchor_count",
+      "model2_anchor_count",
+      "dual_source_anchor_count",
+      "anchors",
+      "vote_calls",
+      "retained_domains",
+      "rejected_prevote",
+      "second_vote",
+      "kenlm_pool_pre_fork",
+      "span_identity",
+      "packed_model3_spans"
+    ],
+    "fieldMismatchCounts": {
+      "model3_paths": 40,
+      "non_anchor_spans": 77,
+      "domain_anchor_count": 30,
+      "anchors": 60,
+      "vote_calls": 40,
+      "retained_domains": 24,
+      "span_identity": 200,
+      "packed_model3_spans": 200,
+      "raw_asr": 91,
+      "kenlm_pool_pre_fork": 30,
+      "model2_anchor_count": 34,
+      "dual_source_anchor_count": 23
+    },
+    "stageMismatchCounts": {
+      "FineSpan_or_Path": 109,
+      "ASR": 91
+    }
+  },
+  "causalQuality": {
+    "denominatorParityCases": 0,
+    "IMPROVED": 0,
+    "REGRESSED": 0,
+    "UNCHANGED": 0,
+    "INDETERMINATE": 0,
+    "EXCLUDED_NON_PARITY": 200
+  },
+  "liveRetryDistribution": {
+    "rawPathRetrySpans": 1701,
+    "nonAnchorSpans": 9416,
+    "rawPathRetryRate": 0.1806499575191164,
+    "logicalUniqueRetrySpans": 790,
+    "logicalUniqueRetryRate": 0.08389974511469839,
+    "caseLevelAnyRetry": 188,
+    "caseLevelAnyRetryRate": 0.94,
+    "retryRegions": 1201,
+    "retryAttempts": 1701,
+    "retryReturned": 1010,
+    "retryZeroAttempts": 715,
+    "zeroCandidateRateRawAttempts": 0.42034097589653147,
+    "logicalRetryPerCaseBuckets": {
+      "0": 12,
+      "1": 18,
+      "2-3": 61,
+      "4-6": 86,
+      "7+": 23
+    },
+    "retryRegionsPerCaseBuckets": {
+      "0": 12,
+      "1": 18,
+      "2-3": 70,
+      "4-6": 47,
+      "7+": 53
+    },
+    "multipathInflationFactorRawOverLogical": 2.1531645569620252,
+    "formalTrainingRetryRate": 0.06283616106389617
+  },
+  "packerParity": {
+    "featureContract": "packModel3SpanInferFields",
+    "traceContractOkRows": 9698,
+    "traceMissingOrErrorRows": 0,
+    "baselinePackedSpansTotal": 0,
+    "s3PackedSpansTotal": 9698,
+    "allZeroScalarRows": 0,
+    "liveFeatureSummary": {
+      "isAnchor": {
+        "n": 9698,
+        "mean": 0.02907816044545267,
+        "p50": 0.0,
+        "p90": 0.0,
+        "min": 0.0,
+        "max": 1.0,
+        "zeroFraction": 0.9709218395545474
+      },
+      "span_len_log1p": {
+        "n": 9698,
+        "mean": 0.7149472680134142,
+        "p50": 0.6931471824645996,
+        "p90": 0.6931471824645996,
+        "min": 0.6931471824645996,
+        "max": 1.3862943649291992,
+        "zeroFraction": 0.0
+      },
+      "span_rel_position": {
+        "n": 9698,
+        "mean": 0.500000002830268,
+        "p50": 0.5,
+        "p90": 0.9230769276618958,
+        "min": 0.0,
+        "max": 1.0,
+        "zeroFraction": 0.04361724066817901
+      },
+      "first_pass_cand_log1p": {
+        "n": 9698,
+        "mean": 0.40604746978438794,
+        "p50": 0.6931471824645996,
+        "p90": 0.6931471824645996,
+        "min": 0.0,
+        "max": 1.0986123085021973,
+        "zeroFraction": 0.41534336976696223
+      },
+      "current_cjk_len_log1p": {
+        "n": 9698,
+        "mean": 0.7149472680134142,
+        "p50": 0.6931471824645996,
+        "p90": 0.6931471824645996,
+        "min": 0.6931471824645996,
+        "max": 1.3862943649291992,
+        "zeroFraction": 0.0
+      },
+      "pinyin_channel_avail": {
+        "n": 9698,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p90": 1.0,
+        "min": 1.0,
+        "max": 1.0,
+        "zeroFraction": 0.0
+      }
+    },
+    "contractParityDefect": false,
+    "harnessPackedCaptureAsymmetry": true
+  },
+  "distributionShiftClassification": [
+    "PATH_ACCOUNTING_DIFFERENCE",
+    "EXPECTED_CORPUS_DISTRIBUTION_SHIFT",
+    "ACCEPTANCE_HARNESS_TRACE_ASYMMETRY"
+  ],
+  "zeroCandidateRetry": {
+    "logicalRegionsZeroCandidate": 388,
+    "ownerClasses": {
+      "VALID_SUSPICIOUS_REGION_BUT_RECALL_MISS": 366,
+      "LIKELY_FALSE_RETRY": 10,
+      "UNKNOWN": 12
+    }
+  },
+  "assemblyKenlmConsistency": {
+    "note": "NON_CAUSAL historical proxy from independent runs",
+    "assemblyPoolChangedCases": 30,
+    "kenlmWinnerChangedProxyCases": 56,
+    "finalTextChangedCases": 63,
+    "proxyInconsistencyReason": "KenLM winner proxy counts final-text change after retry-return; Assembly pool counts kenlm_pool delta — different units and upstream non-parity"
+  },
+  "kenlmDeterminism": {
+    "tested": false,
+    "result": "NOT_EVALUABLE_WITHOUT_FROZEN_CANDIDATE_SET_REPLAY"
+  },
+  "architectureInvariants": {
+    "domainVoteSecondViolations": 0,
+    "effectiveAnchorRetry": 0,
+    "kenlmPoolGt16": 0,
+    "anchorMutation": 0,
+    "passed": true
+  },
+  "governance": {
+    "s3Changed": false,
+    "model3Changed": false,
+    "thresholdChanged": false,
+    "featureChanged": false,
+    "retryChanged": false,
+    "recallChanged": false,
+    "assemblyChanged": false,
+    "kenlmChanged": false,
+    "jobResultChanged": false,
+    "training": false,
+    "dataset": false
+  },
+  "decisions": {
+    "D1_s3IdentityVerified": true,
+    "D2_previousUpstreamParityFalse": true,
+    "D3_canReplayFromFrozenState": false,
+    "D4_parityPassCases": 0,
+    "D37_previousMainlineAcceptance": "INVALID_SUPERSEDED_PENDING_CAUSAL_PARITY",
+    "D38_promotionEvaluable": false,
+    "D39_verdict": "S3_CAUSAL_REPLAY_BLOCKED_BY_ACCEPTANCE_HARNESS",
+    "D40_nextPhase": "MODEL3_V2_ACCEPTANCE_HARNESS_CORRECTION"
+  }
+}

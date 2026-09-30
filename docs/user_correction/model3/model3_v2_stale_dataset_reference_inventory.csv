@@ -1,0 +1,12 @@
+path,kind,status,notes
+training/.../audit_model3_v2_localization_training_causality.py,S3_CAUSALITY_AUDIT,FIXED_G0_BOUND,was STALE_HARDCODED_PATH
+electron_node/.../run-model3-v2-target-localization-generalization-audit.mjs,S3_GENERALIZATION_AUDIT,FIXED_G0_BOUND,TRAIN_LABELED removed
+training/.../acoustic_training/dataset_identity.py,G0_HELPER,NEW,shared SSOT
+training/.../train/bigru_v1.py,TRAINING_LOADER,FAIL_CLOSED_CAND,missing≠0; production unchanged
+training/.../train/train_v2_labeled.py,LEGACY,RETAINED_NOT_S3_SSOT,legitimate labeled trainer
+training/.../scripts/qa_v2_dataset.py,LEGACY,RETAINED_NOT_S3_SSOT,
+training/.../scripts/run_v2_dataset_build.py,LEGACY,RETAINED_NOT_S3_SSOT,
+training/.../scripts/build_v2_realdist_expanded.py,LEGACY,RETAINED_QUARANTINE_CANDIDATE,hardcode cand=0 historical
+training/.../scripts/audit_v2_real_feature_gap.py,LEGACY_AUDIT,RETAINED_NOT_S3_CAUSALITY,uses labeled as V2 source
+docs/.../Lingua_Model3_V2_Localization_Training_Causality_Audit_2026_09_02.md,HISTORICAL_REPORT,SUPERSEDED_BY_DATASET_IDENTITY_CORRECTION,S3 causal conclusions invalidated
+docs/.../model3_v2_localization_causality_summary.json,HISTORICAL_REPORT,SUPERSEDED_BY_DATASET_IDENTITY_CORRECTION,wrong TRAIN_DIR

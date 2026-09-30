@@ -1,0 +1,575 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_BOUNDARY_CONTRACT",
+  "contract_id": "DIALOG200_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2",
+  "version": "V2_FROZEN",
+  "status": "FROZEN",
+  "authority": "LINGUA_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2.md",
+  "env_gate": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+  "env_gate_default": "OFF",
+  "float_policy": {
+    "FLOAT_EXACT_DISCRETE": {
+      "compare": "exact",
+      "applies_to": [
+        "tone_class_digits",
+        "indices",
+        "counts",
+        "IDs",
+        "syllable_positions",
+        "integer_geometry",
+        "scriptNormalized",
+        "cache_hit_miss",
+        "blocked_flags",
+        "path_ids",
+        "canonical_query_keys"
+      ]
+    },
+    "FLOAT_TIME": {
+      "compare": "abs_tolerance_sec",
+      "abs_tolerance_sec": 0.001,
+      "authority": "dialog200-frozen-replay-alignment-state.mjs ALIGNMENT_TIME_TOLERANCE_SEC — float timestamp serialization noise on JSON/IEEE path; NOT derived from Capture↔Replay divergence observations",
+      "applies_to": [
+        "word.start/end",
+        "WordTimeSpan.start/end",
+        "segmentTimeOffsetsSec",
+        "acousticToneSlice.start/end",
+        "windowTimeRange.start/end",
+        "segment.words local timestamps"
+      ],
+      "canonical_serialization": "persist original IEEE values; compare with abs_tolerance_sec; hash may use original JSON number form"
+    },
+    "FLOAT_MODEL_SCORE": {
+      "kenlm": {
+        "persist": "original produced value",
+        "compare": "abs_tolerance",
+        "abs_tolerance": 1e-6,
+        "authority": "dialog200-frozen-evidence-replay-contract.mjs SCORE_ABS_TOLERANCE — fixed; must not widen ad hoc",
+        "if_scores_absent": "score_submetric = NOT_EVALUABLE"
+      },
+      "model2_model3_numeric_outputs": {
+        "persist": "original when present",
+        "compare": "NOT_EVALUABLE unless a future SSOT revision defines producer-specific tolerance",
+        "note": "identity of decisions/actions/anchors remains exact discrete"
+      },
+      "tone_posterior_tensors": {
+        "compare_primary": "argmax → FLOAT_EXACT_DISCRETE tone class via mapped pattern",
+        "raw_posterior_numeric": "NOT_EVALUABLE for certification unless separately authorized"
+      }
+    }
+  },
+  "missing_evidence": {
+    "statuses": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE", "NOT_EVALUABLE"],
+    "fail_requires": [
+      "production_concept_defined",
+      "measurement_defined",
+      "capture_evidence_exists",
+      "replay_evidence_exists",
+      "environment_capability_satisfied",
+      "comparator_contract_valid",
+      "values_violate_comparator"
+    ],
+    "never_infer_pass_or_fail_from_absence": true,
+    "capture_incomplete_label": "CAPTURE_INCOMPLETE"
+  },
+  "boundaries": [
+    {
+      "boundary_id": "B1",
+      "concept": "ASR_Representation_and_repairText",
+      "producer": "asr-step + normalizeForFwRepairInput",
+      "consumer": "runFwDetectorV4Path(rawText=repairText); buildWordTimeSpans via repairText",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "rawAsrText",
+        "repairText",
+        "scriptNormalized",
+        "segments",
+        "segments[].words[].word",
+        "segments[].words[].start",
+        "segments[].words[].end",
+        "segments[].words[].probability?",
+        "rawAsrHash",
+        "repairTextHash",
+        "segmentEvidenceHash"
+      ],
+      "canonicalization": "exact strings; segment order preserved; strip job/session ids only",
+      "comparator": {
+        "rawAsrText": "exact",
+        "repairText": "exact",
+        "scriptNormalized": "exact",
+        "word_tokens": "exact",
+        "segment_structure": "exact",
+        "word_timestamps": "FLOAT_TIME"
+      },
+      "float_policy": "FLOAT_TIME for timestamps; FLOAT_EXACT_DISCRETE otherwise",
+      "replay_role": {
+        "rawAsrText_segments": "INJECTION_STATE",
+        "repairText": "COMPARISON_ONLY"
+      },
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1 during Capture",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B2",
+      "concept": "MultiBatch_Alignment_State",
+      "producer": "asr-step multi-batch merge",
+      "consumer": "buildWordTimeSpans",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "segmentTimeOffsetsSec",
+        "asrSegmentNodeBatchIndices",
+        "segmentCharOffsets",
+        "alignmentHash"
+      ],
+      "canonicalization": "array order = Production order; no reconstruction-as-authority",
+      "comparator": {
+        "indices_charOffsets": "exact",
+        "segmentTimeOffsetsSec": "FLOAT_TIME"
+      },
+      "float_policy": "FLOAT_TIME for offsets",
+      "replay_role": "INJECTION_STATE",
+      "validation_cross_check": "reconstruction helper allowed only as VALIDATION_CROSS_CHECK",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B3",
+      "concept": "WordTimeSpan_consumer_visible",
+      "producer": "buildWordTimeSpans",
+      "consumer": "mapToneEvidenceForRecall; rebindToneForFineSpan; Model3 regionLocalWordTimeSpans",
+      "evidence_mode": "FULL",
+      "capture_point": "immediately after buildWordTimeSpans in span-assembly-v4-orchestrator; before Tone/Recall consumers",
+      "required_fields": [
+        "spans[].word",
+        "spans[].rawStart",
+        "spans[].rawEnd",
+        "spans[].start",
+        "spans[].end",
+        "spans[].segmentIndex",
+        "spans[].probability?",
+        "count",
+        "canonicalHash"
+      ],
+      "canonicalization": "ordered list as produced; no offline rebuild as Capture authority",
+      "comparator": "ordered semantic identity; start/end FLOAT_TIME; rawStart/rawEnd exact integer; word/segmentIndex exact",
+      "float_policy": "FLOAT_TIME for start/end",
+      "replay_role": "COMPARISON_ONLY",
+      "forbidden": ["inject_Capture_WTS_into_Replay", "infer_from_segments_alone"],
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B4",
+      "concept": "Mapped_Tone",
+      "producer": "mapToneEvidenceForRecall / extractAcousticTonePatternForRecall",
+      "consumer": "normalizeToneNorm → CanonicalRecallQuery; FineSpan tone rebind",
+      "evidence_mode": "FULL",
+      "layers": [
+        "acousticToneSlices",
+        "MapToneEvidenceResult",
+        "acousticTonePattern",
+        "window_tone_representation",
+        "toneNorm"
+      ],
+      "required_fields_per_window": [
+        "windowId",
+        "rawStart",
+        "rawEnd",
+        "syllableStart",
+        "syllableEnd",
+        "windowTimeRange",
+        "pattern",
+        "missReason?",
+        "failedWordSpan?",
+        "acousticTonePattern",
+        "toneNorm"
+      ],
+      "canonicalization": "pattern digits exact; toneNorm exact string; windowTimeRange FLOAT_TIME",
+      "comparator": "exact discrete toneNorm/pattern/missReason; FLOAT_TIME for windowTimeRange",
+      "float_policy": "FLOAT_EXACT_DISCRETE for pattern/toneNorm; FLOAT_TIME for ranges; slice inject separate",
+      "replay_role": {
+        "acousticToneSlices": "INJECTION_STATE",
+        "mapped_tone_toneNorm": "COMPARISON_ONLY"
+      },
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "note": "Identical slices do NOT prove identical mapped Tone"
+    },
+    {
+      "boundary_id": "B5",
+      "concept": "FineSpan_finespans",
+      "producer": "materializePathFineSpans; compactFineSpan for snapshot shape",
+      "consumer": "domain assembly; Model3",
+      "evidence_mode": "FULL",
+      "authoritative_field_name": "finespans",
+      "forbidden_field_names": ["fine_spans", "path_fine_spans", "spans_as_finespan_alias"],
+      "required_fields": [
+        "path_id",
+        "span_id",
+        "source_text",
+        "start",
+        "end",
+        "syllable_start",
+        "syllable_end",
+        "phonetic_representation",
+        "tone_representation",
+        "coarse_span_ids",
+        "window_source",
+        "selection_reason",
+        "boundary_cross_count",
+        "candidate_count"
+      ],
+      "canonicalization": "untruncated per path; no display cap",
+      "comparator": "SET of semantic FineSpan identities (span_id+geometry+phonetic+tone_representation+coarse)",
+      "float_policy": "FLOAT_EXACT_DISCRETE for integer geometry",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "empty_array_not_pass_when_field_missing": true
+    },
+    {
+      "boundary_id": "B6",
+      "concept": "WindowQuery",
+      "producer": "buildLexicalWindowQueries + latticeHardBlockFilter",
+      "consumer": "recallTopKForWindows",
+      "not_authority": "generate-global-windows.ts (harness-only)",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "globalWindowGeneratedCount",
+        "logicalWindowRecallCount",
+        "blockedWindowCount",
+        "uniqueRecallKeyCount",
+        "windows[].windowId",
+        "windows[].windowText",
+        "windows[].rawStart",
+        "windows[].rawEnd",
+        "windows[].syllableStart",
+        "windows[].syllableEnd",
+        "windows[].windowPinyinKey",
+        "windows[].spanIds",
+        "windows[].blocked",
+        "windows[].windowSource?"
+      ],
+      "canonicalization": "counts separate forever; logical recall list AFTER hard-block BEFORE SQL",
+      "comparator": "SET/multiset of window identity keys; counts exact",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B7",
+      "concept": "CanonicalRecallQuery",
+      "producer": "buildSpanV3CanonicalQuery + serializeCanonicalRecallQueryKey",
+      "consumer": "UtteranceRecallCache / lexicon lookup",
+      "evidence_mode": "FULL",
+      "serializer_authority": "electron_node/.../utterance-recall-cache.ts serializeCanonicalRecallQueryKey",
+      "identity_formula": "v2|kind|pinyinKey|toneNorm|domainsSorted|exactTopK|lexiconVersion|surfaceText",
+      "required_fields": [
+        "canonical.kind",
+        "canonical.pinyinKey",
+        "canonical.toneNorm",
+        "canonical.domainScope",
+        "canonical.exactTopK",
+        "canonical.lexiconVersion",
+        "canonical.surfaceText",
+        "serializedKey",
+        "cacheHit",
+        "cacheMiss"
+      ],
+      "canonicalization": "must call Production serializer or byte-identical replica for evidence only — evaluator must not invent alternate key logic",
+      "comparator": "serialized canonical key exact SET equality",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "forbidden": ["inject_Capture_queries_into_Replay"],
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B8",
+      "concept": "Base_SQL_Lexicon_Recall",
+      "producer": "lexicon-v2 recallSpanTopKV2 / SQLite",
+      "consumer": "LexiconFactHit → WindowCandidate binding",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "required_fields_per_execution": [
+        "canonicalQueryKey",
+        "queryStageOrMode",
+        "boundParameters",
+        "toneExactOrFuzzyBranch",
+        "cacheRelationship",
+        "orderedSemanticRowIdentities",
+        "returnedOccurrenceCount",
+        "uniqueReturnedIdentityCount",
+        "rowIdentityHash"
+      ],
+      "semantic_row_identity_fields": [
+        "termId",
+        "surface",
+        "pinyin",
+        "tone",
+        "domains",
+        "hitKind",
+        "sourceSemantics"
+      ],
+      "exclude_from_evidence": ["sqlite_internal_rowids", "irrelevant_driver_metadata"],
+      "canonicalization": "ordered row identities as returned under identical query; hash of ordered identity list",
+      "comparator": "bound params exact + ordered semantic row identity exact under identical lexicon IDENTITY_GUARD",
+      "float_policy": "FLOAT_EXACT_DISCRETE for identities; score fields if present FLOAT_MODEL_SCORE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1; lexicon IDENTITY_GUARD",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "no_sql_nondeterminism_tolerance": true
+    },
+    {
+      "boundary_id": "B9",
+      "concept": "Base_Materialization",
+      "producer": "bindLexiconHitsToWindow / WindowCandidate materialization",
+      "consumer": "Model2 expand; LexicalEdge",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "occurrence_list",
+        "unique_identity_set",
+        "multiset_multiplicities",
+        "provenance.windowId",
+        "provenance.canonicalQueryKey",
+        "candidateId",
+        "termId",
+        "surface",
+        "pinyin",
+        "provenance",
+        "source",
+        "syllableStart",
+        "syllableEnd",
+        "rawStart",
+        "rawEnd",
+        "score",
+        "domains",
+        "hitKind"
+      ],
+      "canonicalization": "NO display truncation (.slice/cap) in authoritative payload",
+      "comparator": {
+        "primary": "semantic SET equality",
+        "secondary_diagnostic": "MULTISET occurrence equality",
+        "ordered_equality": "NOT_DEFAULT"
+      },
+      "float_policy": "score FLOAT_MODEL_SCORE if compared; identity fields exact",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B10",
+      "concept": "Model2_Input_WindowEvidence",
+      "producer": "window-evidence / expandWindowsWithModel2 input build",
+      "consumer": "Model2 inference",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "required_fields": [
+        "windowId",
+        "geometry",
+        "windowText",
+        "pinyin",
+        "acousticTonePattern",
+        "baseCandidateIdentitySet",
+        "profile_P_D_inputs_when_applicable",
+        "inputHash"
+      ],
+      "canonicalization": "identity fields + hash; FULL allowed if payload practical",
+      "comparator": "hash + identity field equality",
+      "float_policy": "FLOAT_EXACT_DISCRETE for pattern; FLOAT_TIME N/A unless times present",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1; Model2 IDENTITY_GUARD",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B11",
+      "concept": "Model2_Output",
+      "producer": "expandWindowsWithModel2",
+      "consumer": "buildLexicalEdges",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "selected_actions",
+        "introduced_candidate_identities",
+        "after_model2_candidate_set",
+        "decision_evidence"
+      ],
+      "canonicalization": "untruncated sets",
+      "comparator": "SET equality of actions and candidate identities",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B12",
+      "concept": "LexicalEdge_Graph",
+      "producer": "buildLexicalEdges",
+      "consumer": "enumerateCompleteSegmentationPaths",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "syllableStart",
+        "syllableEnd",
+        "edgeIdentity",
+        "edgeKind",
+        "recallEvidenceFlags",
+        "fields_consumed_by_path_enum"
+      ],
+      "canonicalization": "SET of edge identity keys; Production enum may re-sort outgoing — capture pre-enum edge set as produced by buildLexicalEdges",
+      "comparator": "SET equality of edge identities",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B13",
+      "concept": "SegmentationPath_PreCap",
+      "producer": "enumerateCompleteSegmentationPaths (before prune)",
+      "consumer": "path cap / prune",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "required_fields": [
+        "completePathCountBeforePrune",
+        "sortedPathIdentityHash",
+        "summary_or_full_path_identities_for_diagnose"
+      ],
+      "canonicalization": "sorted path identities for hash only because pre-cap list is unordered for certification hash; count exact",
+      "comparator": "count exact + identity hash exact",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B14",
+      "concept": "SegmentationPath_PostCap",
+      "producer": "enumerateCompleteSegmentationPaths retained + pathCapEvents",
+      "consumer": "pathFineSpanViews",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "retained_path_ids",
+        "boundary_keys",
+        "pathCapEvents",
+        "pruning_evidence",
+        "limits.maxCompleteSegmentationPaths",
+        "limits.maxActivePathsPerPosition"
+      ],
+      "canonicalization": "retained path_id order as Production-emitted (deterministic enum)",
+      "comparator": "ordered retained path_id list exact under identical LexicalEdge + limits; pathCapEvents exact",
+      "float_policy": "FLOAT_EXACT_DISCRETE",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "forbidden_label": "EXPECTED_NONDETERMINISM"
+    },
+    {
+      "boundary_id": "B15",
+      "concept": "DomainVote_SameDomain_Assembly",
+      "producer": "vote + assemble-domain-aware-span-sets + buildSentenceCandidates",
+      "consumer": "cross-path merge / Model3 voteFrozen",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "domainScores",
+        "retainedDomains",
+        "utteranceDomain",
+        "insufficientEvidence",
+        "sameDomainResult",
+        "assembled_sentence_identities_or_texts"
+      ],
+      "canonicalization": "path-specific; no cross-path domain bucket merge",
+      "comparator": "vote fields exact; sentence text SET equality",
+      "float_policy": "FLOAT_EXACT_DISCRETE for scores if integer counts; FLOAT_MODEL_SCORE if float scores present",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "architecture_constraints": [
+        "Domain_Vote_path_specific",
+        "no_domain_to_segmentation_feedback"
+      ]
+    },
+    {
+      "boundary_id": "B16",
+      "concept": "Global_Sentence_Pool_KenLM_ApplyGate",
+      "producer": "mergeCrossPathSentenceCandidates + runFwSentenceRerankFromPrefilled",
+      "consumer": "applyFwSpanReplacements",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "complete_pool_texts_or_identities",
+        "raw_candidate_identity",
+        "kenlm_scores_when_produced",
+        "deltaVsRaw_when_produced",
+        "picked",
+        "pickedIsRaw",
+        "gate_inputs",
+        "gate_threshold",
+        "explicit_gate_decision",
+        "scorer_model_identity"
+      ],
+      "canonicalization": "NO pool/top truncation in authoritative evidence",
+      "comparator": {
+        "pool_text_set": "exact SET",
+        "picked_text": "exact",
+        "pickedIsRaw": "exact",
+        "gate_decision": "exact",
+        "scores": "FLOAT_MODEL_SCORE.kenlm when present else score_submetric NOT_EVALUABLE",
+        "equal_score_order": "do NOT invent Production tie-break; if no total-order contract, order submetric NOT_EVALUABLE"
+      },
+      "float_policy": "FLOAT_MODEL_SCORE.kenlm",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1; KenLM IDENTITY_GUARD",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE"
+    },
+    {
+      "boundary_id": "B17",
+      "concept": "Model3_Input_Anchors_Decisions",
+      "producer": "runModel3PathStep / materializeModel3Anchors",
+      "consumer": "retry router; path keep/retry",
+      "evidence_mode": "FULL",
+      "required_fields": [
+        "anchors",
+        "inference_input_trace",
+        "packed_feature_identity_or_hash",
+        "decisions",
+        "retry_regions",
+        "checkpoint_identity"
+      ],
+      "canonicalization": "untruncated; packed tensors HASH if large; anchors/decisions/inference_input_trace FULL",
+      "comparator": "anchor SET + decision map exact; inference_input_trace identity/hash exact; checkpoint sha exact",
+      "float_policy": "FLOAT_EXACT_DISCRETE for decisions; numeric tensors NOT_EVALUABLE unless hashed identity",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "FROZEN_EVIDENCE_CAPTURE_V2=1; Model3 IDENTITY_GUARD",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "dependent_metrics_if_input_missing": "NOT_EVALUABLE",
+      "eliminates_v1_gap": "E16 missing while E17 scored"
+    },
+    {
+      "boundary_id": "B18",
+      "concept": "Final_Selection",
+      "producer": "applyFwSpanReplacements / postprocess",
+      "consumer": "JobResult text",
+      "evidence_mode": "FULL",
+      "required_fields": ["finalPostprocessText", "finalHash"],
+      "canonicalization": "exact UTF-8 string",
+      "comparator": "exact string identity",
+      "float_policy": "n/a",
+      "replay_role": "COMPARISON_ONLY",
+      "environment_requirement": "none beyond Capture completeness",
+      "fail_eligible": true,
+      "missing_evidence_status": "NOT_EVALUABLE",
+      "note": "E18 does NOT certify upstream equivalence"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "phase": "RETRY_REGION_RECALL_LEXICON_COVERAGE_AUDIT",
+  "mode": "READ_ONLY",
+  "date": "2026-08-28",
+  "verdict": "PASS_EXPECTED_COVERAGE_GAPS",
+  "productionCodeModified": false,
+  "model3Modified": false,
+  "retryRegionModified": false,
+  "fineSpanModified": false,
+  "latticeModified": false,
+  "recallModified": false,
+  "lexiconModified": false,
+  "domainVoteModified": false,
+  "assemblyModified": false,
+  "kenlmModified": false,
+  "trainingModified": false,
+  "datasetModified": false,
+  "configModified": false,
+  "architectureModified": false,
+  "reportArtifactCount": 5,
+  "artifactLimitOk": true,
+  "artifacts": [
+    "Lingua_Retry_Region_Recall_Lexicon_Coverage_Audit_2026_08_28.md",
+    "retry_region_recall_coverage_cases.csv",
+    "retry_region_recall_coverage_units.csv",
+    "retry_region_recall_coverage_summary.json",
+    "retry_region_recall_coverage_governance.json"
+  ],
+  "validationScriptsUsed": [
+    "electron_node/electron-node/tests/_run-recall-audit-sync.mjs",
+    "electron_node/electron-node/tests/_probe-lexicon-terms.mjs"
+  ],
+  "trainingGate": "OPEN"
+}

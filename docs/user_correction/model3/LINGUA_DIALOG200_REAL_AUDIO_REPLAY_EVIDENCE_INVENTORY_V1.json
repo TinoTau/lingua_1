@@ -1,0 +1,173 @@
+{
+  "artifact": "LINGUA_DIALOG200_REAL_AUDIO_REPLAY_EVIDENCE_INVENTORY_V1",
+  "mode": "READ_ONLY",
+  "generated_for": "Dialog200_Real_Audio_Replay_Feasibility_Audit_V1",
+  "corpus": {
+    "root": "test wav/dialog_200",
+    "manifest": "test wav/dialog_200/cases.manifest.json",
+    "readme_status": "restored_full_v1",
+    "wav": {
+      "state": "AVAILABLE",
+      "count_present": 200,
+      "count_missing": 0,
+      "filename_pattern": "dialog_d{NNN}.wav",
+      "case_id_range": "d001-d200",
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "encoding": "PCM_S16LE_RIFF",
+      "bit_depth": 16,
+      "sourceAudio": "generated_piper_restored_full_v1",
+      "is_live_human_speech": false,
+      "trim_resample_normalization_documented": "TTS_16kHz_mono_as_generated",
+      "sample_d001_sha256": "002acced5ba26165012cc966ce64f2d0a42e33740dcb25aa6638f9967cdbe512",
+      "manifest_fields_present": [
+        "id",
+        "file",
+        "audio",
+        "utterance",
+        "text",
+        "expectedText",
+        "language",
+        "scenario",
+        "sourceAudio",
+        "wavBytes",
+        "durationSec"
+      ],
+      "manifest_fields_absent": [
+        "word_timestamps",
+        "tone_labels",
+        "refTones"
+      ]
+    },
+    "reference": {
+      "expectedText_state": "AVAILABLE",
+      "authoritative_for_final_correctness": true,
+      "is_acoustic_evidence": false
+    }
+  },
+  "frozen_asr_dump": {
+    "path": "docs/user_correction/model3/fresh_dialog200_raw_cases_dialog200_full_pipeline_20260909_001141.jsonl",
+    "provenance_path": "docs/user_correction/model3/fresh_dialog200_runtime_provenance_dialog200_full_pipeline_20260909_001141.json",
+    "runner": "electron_node/electron-node/tests/run-fresh-dialog200-causal-reconciliation.mjs",
+    "run_id": "dialog200_full_pipeline_20260909_001141",
+    "git_commit": "63b25376",
+    "case_count": 200,
+    "fields_present": {
+      "caseId": "AVAILABLE",
+      "rawMergedAsrText": "AVAILABLE",
+      "reference": "AVAILABLE",
+      "finalPostprocessText": "AVAILABLE",
+      "path_count": "AVAILABLE",
+      "paths": "AVAILABLE_COMPACT",
+      "kenlm_top_texts": "AVAILABLE",
+      "kenlm_input_texts": "AVAILABLE",
+      "asr_service_id": "AVAILABLE",
+      "model3_identity_expected": "AVAILABLE",
+      "lexicon_runtime_status": "AVAILABLE",
+      "fw_detector_step_ms": "AVAILABLE",
+      "git_commit": "AVAILABLE",
+      "run_id": "AVAILABLE",
+      "scenario": "AVAILABLE",
+      "phase": "AVAILABLE"
+    },
+    "fields_absent": {
+      "segments": "ABSENT",
+      "asrSegments": "ABSENT",
+      "words": "ABSENT",
+      "word_timestamps": "ABSENT",
+      "token_timestamps": "ABSENT",
+      "segment_timestamps": "ABSENT",
+      "syllable_timestamps": "ABSENT",
+      "utterance_tone": "ABSENT",
+      "acousticToneSlices": "ABSENT",
+      "audioPath": "ABSENT",
+      "wav_sha256": "ABSENT",
+      "confidence": "ABSENT",
+      "nbest": "ABSENT",
+      "hotword_state": "ABSENT",
+      "preprocessing_identity": "ABSENT",
+      "processed_audio": "ABSENT",
+      "vad_segment_map": "ABSENT",
+      "user_profile_phonetic_bias": "ABSENT"
+    },
+    "path_count_distribution": {
+      "1": 88,
+      "2": 75,
+      "3": 3,
+      "4": 21,
+      "6": 4,
+      "8": 9
+    },
+    "failure_classification": "OBSERVABILITY_GAP",
+    "note": "Production Tone ran at capture time; compact extractor did not persist segments/slices"
+  },
+  "provenance_identity": {
+    "asr_model_path": "electron_node/services/faster_whisper_vad/models/faster-whisper-medium",
+    "asr_device": "cuda",
+    "asr_compute_type": "int8_float16",
+    "lexicon_db_path": "node_runtime/lexicon/v3/lexicon.sqlite",
+    "kenlm_trie": "electron_node/services/asr_sherpa_lm/models/kenLM/zh_char_3gram.trie.bin",
+    "model3": {
+      "selected_model": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "weights_sha": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+      "config_sha": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+      "identity_class": "IDENTITY_EXACT_FOR_THAT_RUN"
+    },
+    "tone_default_artifact": "tone_module/models/candidate/tone_cnn_production_v2_candidate_20260712.npz",
+    "tone_identity_vs_fresh_run": "IDENTITY_UNKNOWN_NOT_RECORDED_IN_DUMP",
+    "model2_checkpoint_sha_in_dump": "ABSENT",
+    "model2_identity_class": "IDENTITY_UNKNOWN"
+  },
+  "evidence_states_by_stage": {
+    "Frozen_ASR_text": "AVAILABLE",
+    "Timestamp": "MISSING",
+    "Audio_Coordinate": "UNKNOWN",
+    "ToneSlice": "MISSING",
+    "Tone": "MISSING",
+    "Base_Recall_tone_exact": "MISSING",
+    "Model2_P": "MISSING",
+    "Model2_D": "MISSING",
+    "LexicalEdge": "RECONSTRUCTABLE_ONLY_AFTER_UPSTREAM",
+    "SegmentationPath": "RECONSTRUCTABLE_ONLY_AFTER_UPSTREAM",
+    "Path_Cap_historical": "AVAILABLE",
+    "Domain_Vote_historical": "AVAILABLE",
+    "SameDomain_historical": "UNKNOWN",
+    "Assembly_historical": "AVAILABLE",
+    "KenLM_historical": "AVAILABLE",
+    "Model3_historical_compact": "AVAILABLE",
+    "Final": "AVAILABLE",
+    "Lexical_annotation_200": "NOT_REQUIRED_FOR_FINAL_BASELINE"
+  },
+  "harness_reuse": [
+    {
+      "name": "run-fresh-dialog200-causal-reconciliation.mjs",
+      "verdict": "REUSE_WITH_SMALL_ADAPTER"
+    },
+    {
+      "name": "run-pilot200-frozen-tone-evidence-full-capture.mjs",
+      "verdict": "REUSE_WITH_SMALL_ADAPTER"
+    },
+    {
+      "name": "test-server pilot200_replay inject",
+      "verdict": "REUSE_WITH_SMALL_ADAPTER"
+    },
+    {
+      "name": "run-dialog200-stagej-full-path-trace.mjs",
+      "verdict": "REUSE_DIRECTLY_FOR_LIVE_AUDIO_NOT_NO_ASR_REPLAY"
+    },
+    {
+      "name": "LEXICON_MOCK_REPLAY",
+      "verdict": "NOT_SUITABLE_FOR_ACOUSTIC_CLAIMS"
+    }
+  ],
+  "determinism_flags": [
+    { "item": "checkpoint_env_pinning", "class": "CONTROLLED" },
+    { "item": "sqlite_ordering", "class": "CONTROLLED" },
+    { "item": "gpu_asr_tone", "class": "NONDETERMINISTIC_BUT_BOUNDED" },
+    { "item": "lexicon_db_calendar_drift", "class": "UNCONTROLLED" }
+  ],
+  "hard_stop_triggers": {
+    "production_change_required_for_replay": false,
+    "evaluation_ssot_conflict": false
+  }
+}

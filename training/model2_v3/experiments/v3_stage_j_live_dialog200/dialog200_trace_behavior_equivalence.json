@@ -1,0 +1,10 @@
+{
+  "ran": false,
+  "reason": "Stage-J 200 used --skip-start against a live Model2-enabled Electron (pid 4420) after FW :6007 bind failures on fresh boots. Restarting for TRACE_OFF would risk losing the only valid INVOKED 200-run. Same-raw ASR pairing is used instead as the business-result equivalence check between baseline (Model2 off) and Stage-J (Model2 on).",
+  "same_raw_asr_final_equivalence": {
+    "n": 138,
+    "correctness_retention": 1.0,
+    "final_text_changed_but_still_ww": 4,
+    "ids_changed_ww": ["d084", "d090", "d094", "d189"]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "FineSpan": "authoritative retrieval unit",
+  "UserProfile_lexical": [
+    "personal_terms",
+    "personal_term_evidence"
+  ],
+  "domain_evidence": "derived via Lexicon domain_ids / term_domain_tags",
+  "session_domain_prior": "separate from long-term",
+  "domain_actions": [
+    "domain_soft:tourism_pickup",
+    "domain_soft:tourism_hotel",
+    "domain_soft:tourism_route",
+    "domain_soft:tourism_transport",
+    "domain_soft:coffee",
+    "domain_soft:milk_tea",
+    "domain_soft:bakery",
+    "domain_soft:food_order",
+    "domain_soft:tech_ai",
+    "domain_soft:meeting",
+    "domain_soft:medical",
+    "domain_soft:transport"
+  ],
+  "soft_prior": true,
+  "hard_gate": false,
+  "max_lexical_items_encoded": 32,
+  "profile_size_500_handling": "full list → domain evidence; encode only top-32 term hashes"
+}

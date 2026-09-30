@@ -1,0 +1,48 @@
+{
+  "phase": "MODEL3_V2_RETRY_RECALL_QUERY_PARITY_AUDIT",
+  "timestamp": "2026-09-01T11:25:55.275Z",
+  "verdict": "RETRY_RECALL_QUERY_PARITY_PASS_QUERY_MAPPING_PRIMARY",
+  "nextPhase": "MODEL3_V2_RETRY_QUERY_MAPPING_CORRECTION_DESIGN_AUDIT",
+  "historicalCohort": 84,
+  "tracesRecovered": 84,
+  "queryParityPass": 8,
+  "boundaryMismatch": 26,
+  "pinyinMismatch": 0,
+  "confirmedRecallOwner": 8,
+  "reclassifiedUpstream": 62,
+  "remainingUnknown": 1,
+  "provisional71": {
+    "previous": 71,
+    "recallConfirmed": 8,
+    "upstream": 62,
+    "reconcile": 71,
+    "arithmeticNote": "CORRECTED: 8+62+1=71; prior reconcile=70 was REPORT_SUMMARY_ARITHMETIC_ERROR"
+  },
+  "prov65": {
+    "remainRecallTargetMiss": 8,
+    "moveUpstream": 57
+  },
+  "prov6": {
+    "remainRecallZero": 0,
+    "moveUpstream": 6
+  },
+  "oldBoundaryRevalidation": {
+    "flagged": 10,
+    "confirmedCausal": 7,
+    "overturned": 0
+  },
+  "ownerDistribution": {
+    "DOWNSTREAM_TARGET_PRESENT": 13,
+    "LOCAL_RESEGMENTATION_FALLBACK_OLD_BOUNDARY_LOCK": 13,
+    "NO_REPAIRABLE_TARGET": 1,
+    "RETRY_QUERY_BOUNDARY": 48,
+    "RECALL_TARGET_MISS": 8,
+    "INSUFFICIENT_EVIDENCE": 1
+  },
+  "instrumentationAdded": true,
+  "traceGate": "MODEL2_DIALOG200_TRACE=1",
+  "governance": {
+    "productionBusinessLogicChanged": false,
+    "jobResultChanged": false
+  }
+}

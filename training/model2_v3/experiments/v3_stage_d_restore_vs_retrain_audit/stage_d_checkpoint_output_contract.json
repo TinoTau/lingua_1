@@ -1,0 +1,28 @@
+{
+  "checkpoint": "D:/Programs/github/lingua_1/training/model2_v3/experiments/v3_stage_j_j1_prod/training/j1_unified_checkpoint.pt",
+  "architecture": "RetrievalPolicyV3(with_domain_head=True)",
+  "params": 47210,
+  "outputs": {
+    "action_logits": "P-path retrieval actions",
+    "query_budget_logits": "P-path query budget classes (1,2,3,4,6,8)",
+    "cand_budget_logits": "P-path candidate budget 4-way",
+    "domain_action_logits": "N_DOMAIN_ACTIONS = 13 (domain_none + 12 slots)"
+  },
+  "domain_action_ids": [
+    "domain_none",
+    "domain_soft:tourism_pickup",
+    "domain_soft:tourism_hotel",
+    "domain_soft:tourism_route",
+    "domain_soft:tourism_transport",
+    "domain_soft:coffee",
+    "domain_soft:milk_tea",
+    "domain_soft:bakery",
+    "domain_soft:food_order",
+    "domain_soft:tech_ai",
+    "domain_soft:meeting",
+    "domain_soft:medical",
+    "domain_soft:transport"
+  ],
+  "executor_encoded_in_output": false,
+  "note": "domain_action_head is a linear map over shared trunk to slot ids, not pool32/top8 parameters."
+}

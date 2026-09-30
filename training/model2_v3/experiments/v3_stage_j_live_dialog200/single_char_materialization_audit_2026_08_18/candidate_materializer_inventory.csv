@@ -1,0 +1,5 @@
+owner,file,length1,role
+Base lattice window,recall-topk-for-windows.ts / bindLexiconHitsToWindow,YES,only production single-char WindowCandidate path
+Stage P,candidate-materialize.ts materializeProfileHits,YES_IF_P_ACTION,this NO_PROFILE run: p_retrieval NOT_EXECUTED NO_P_ACTION
+Stage D,candidate-materialize.ts materializeDomainHits,NO_DOMAIN_LEN1,domain lookups min length 2; D hits are multi-char
+Dedicated single-char materializer,NONE,NO,reuses base bindLexiconHitsToWindow; not a missing extra type

@@ -1,0 +1,84 @@
+{
+  "phase": "MODEL3_V2_RUNTIME_DEFAULT_PROMOTION_AUDIT",
+  "mode": "READ_ONLY",
+  "date": "2026-09-08",
+  "verdict": "MODEL3_V2_RUNTIME_PROMOTION_AUDIT_PASS_TYPE_B_IDENTITY_GUARD_WORK",
+  "promotionType": "TYPE_B",
+  "recommendedNextPhase": "MODEL3_V2_RUNTIME_DEFAULT_PROMOTION_DELTA",
+  "doNotExecutePromotionInThisPhase": true,
+  "conceptSeparation": {
+    "A_AUTHORITATIVE_V2_ARTIFACT": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "B_RUNTIME_DEFAULT_CHECKPOINT": "MODEL3_SYNTHETIC_V1",
+    "C_RUNTIME_SELECTED_CHECKPOINT": "env MODEL3_CHECKPOINT_IDENTITY else B",
+    "D_MODEL3_INFERENCE_ENABLED": "YES",
+    "E_PRODUCTION_RETRY_ENABLED": "YES"
+  },
+  "answers": {
+    "A_CURRENT_NORMAL_ELECTRON_DEFAULT_MODEL": "MODEL3_SYNTHETIC_V1",
+    "B_CURRENT_S3_REGISTRY_ROLE": "CANDIDATE",
+    "C_S3_ACCEPTANCE_USED_EXPLICIT_IDENTITY": "YES",
+    "D_MODEL3_INFERENCE_ACTIVE_IN_NORMAL_RUNTIME": "YES",
+    "E_PRODUCTION_RETRY_ENABLED": "YES",
+    "F_S3_PROMOTION_AUTO_ENABLES_RETRY": "NO",
+    "G_S3_RUNTIME_COMPATIBILITY": "PASS",
+    "H_RUNTIME_IDENTITY_GUARD_COMPLETE": "NO",
+    "I_SYNTHETIC_V1_RUNTIME_DEPENDENCY": "YES_WIRING_SEAL_ONLY",
+    "J_PROMOTION_IS_SINGLE_SEMANTIC_VARIABLE": "YES",
+    "K_ARCHITECTURE_CHANGE_REQUIRED": "NO"
+  },
+  "blockingFindings": {
+    "CHECKPOINT_PROMOTION_COUPLED_TO_RETRY_ENABLEMENT": false,
+    "SILENT_MODEL_IDENTITY_FALLBACK": false,
+    "PROMOTION_NOT_SINGLE_VARIABLE": false,
+    "S3_RUNTIME_COMPATIBILITY_GAP": false,
+    "RUNTIME_MODEL_IDENTITY_OBSERVABILITY_GAP": false
+  },
+  "nonBlockingFindings": {
+    "DOCUMENTATION_RUNTIME_STATUS_AMBIGUITY": true,
+    "detail": "MODEL3_ARCHITECTURE_CONTRACT_V1 still says Production RETRY remains OFF; code always routeModel3Retry",
+    "staleProductionSealConstants": true,
+    "detailSeal": "MODEL3_EXPECTED_* and Python host DEFAULT_* still Synthetic while freeze AUTHORITATIVE is S3"
+  },
+  "fallbackSemantics": "FAIL_CLOSED",
+  "identityGuard": {
+    "modelId": "runtime_yes",
+    "weightsSha": "runtime_yes",
+    "configSha": "runtime_yes",
+    "datasetId": "acceptance_only",
+    "datasetBuildId": "acceptance_only"
+  },
+  "owners": {
+    "registry": "electron_node/electron-node/main/src/model3-runtime/model3-checkpoint-registry.ts",
+    "loader": "electron_node/electron-node/main/src/model3-runtime/model3-inference-client.ts",
+    "host": "electron_node/services/model3_runtime/model3_inference_host.py",
+    "mainline": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts → runModel3PathStep",
+    "retryApply": "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts → routeModel3Retry"
+  },
+  "userDecisions": [
+    "Promote S3 to Electron runtime default? YES/NO",
+    "Keep FAIL_CLOSED on load failure (no silent Synthetic fallback)? Confirm",
+    "Keep Synthetic loadable via MODEL3_CHECKPOINT_IDENTITY for rollback?",
+    "OPTIONAL separate: fix Architecture Contract RETRY OFF wording",
+    "OPTIONAL separate: add datasetId/buildId runtime verification"
+  ],
+  "doNotTouch": [
+    "Model3 training/retrain",
+    "Retry semantics/geometry",
+    "production Retry enablement",
+    "FineSpan",
+    "Recall",
+    "Lexicon",
+    "Domain Vote",
+    "SameDomain",
+    "Assembly",
+    "KenLM",
+    "ASR",
+    "candidate cap"
+  ],
+  "artifacts": [
+    "Model3_V2_Runtime_Default_Promotion_Audit.md",
+    "model3_v2_runtime_selection_matrix.csv",
+    "model3_v2_runtime_promotion_target_list.csv",
+    "model3_v2_runtime_promotion_summary.json"
+  ]
+}

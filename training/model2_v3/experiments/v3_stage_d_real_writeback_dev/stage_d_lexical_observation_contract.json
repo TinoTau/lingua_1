@@ -1,0 +1,11 @@
+{
+  "name": "USER-CONFIRMED_LEXICAL_OBSERVATION",
+  "source": "Manual Correction Replace/Insert target or macro candidate",
+  "requires": "Lexicon exact resolve before identity",
+  "excludes": [
+    "uncorrected ASR",
+    "delete-only",
+    "unresolved",
+    "ambiguous"
+  ]
+}

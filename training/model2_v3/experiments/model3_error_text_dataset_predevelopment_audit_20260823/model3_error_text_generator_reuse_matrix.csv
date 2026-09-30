@@ -1,0 +1,19 @@
+component,path,classification,notes
+pinyin.ts / tone-pinyin.ts,electron_node/.../lexicon/phonetic/,REUSE,Authoritative G2P
+node_syllables_cli / syllables.py,training/model2/phonetic/,REUSE,Bridge to Node SSOT
+ACTIVE_SET_V1 + applyFamilyToSyllable,model2-runtime/relation-direction.ts,REUSE,Confusion families
+OPPOSITE_DIRECTION contract,stage_b/phonetic_relation_direction_contract_v1.json,REUSE,Direction SSOT
+syllable_substitution.py,training/model2/pronunciation/,REUSE,Keep-tone family apply
+PronunciationCorruptorV1,training/model2/pronunciation/corruptor.py,MODIFY,Reuse plan shape; swap surface authority to sqlite
+tts_surface_resolver pypinyin,tts_surface_resolver.py,DO_NOT_USE,Non-authoritative G2P
+LexiconRuntimeV2 lookupBaseByPinyinAndToneKey,lexicon-runtime-v2.ts,REUSE,Offline replacement
+base_lexicon sqlite,node_runtime/lexicon/v3,REUSE_READONLY,No Model3 lexicon
+FuzzyPool,training/model2/fuzzy/pool.py,DO_NOT_USE,
+WEAK/REVERSED features,active_feature_mask.py,DO_NOT_USE_V1,
+tone_bias TONE_FEATURE_KEYS,contract.py,DO_NOT_USE_AS_ENGINE,HOLD
+Model2 P/D label rows,policy_*.jsonl,DO_NOT_USE_AS_MODEL3_LABEL,Pattern mining only
+dialog_200,test wav/dialog_200,DO_NOT_USE_TRAIN_DEFAULT,Eval only
+single_char_repair_lexicon_v1.tsv,docs/user_correction/single_char/,DO_NOT_USE,
+SuspiciousSpan / random replace,—,DO_NOT_USE,
+model3_error_text generator package,training/model3_error_text/ (future),CREATE,Pilot next phase
+validators + split,future,CREATE,

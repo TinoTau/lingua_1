@@ -1,0 +1,62 @@
+{
+  "modelName": "MODEL3_V1_FULL100K_STRICT_INTEGRATION_V1",
+  "architecture": "Small BiGRU",
+  "config": {
+    "configId": "MODEL3_V1_TRAINING_CONFIG_SSOT",
+    "version": "1.0.0",
+    "explicit_source": "MODEL3_V1_TRAINING_CONFIG_SSOT",
+    "objective": {
+      "class_weight_retry": 1.0,
+      "auto_class_weight_formula": false,
+      "no_auto_formula": true,
+      "pair_loss_enabled": true,
+      "pair_loss_type": "PURE_MARGIN",
+      "pair_lambda": 0.2,
+      "pair_margin": 0.25,
+      "pair_ce_enabled": false
+    },
+    "sampling_view": {
+      "sampling_view_id": "BALANCE_D_30_30_25_15",
+      "STRICT": 0.3,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+      "NATURAL": 0.25,
+      "NO_ANCHOR": 0.15
+    },
+    "optimizer": {
+      "name": "Adam",
+      "lr": 0.001,
+      "batch_size": 64,
+      "epochs": 8
+    },
+    "init": {
+      "mode": "random_from_scratch",
+      "forbid_finetune_from": [
+        "O3_winner",
+        "Strict_Reconstruction",
+        "Diet_B",
+        "Full100K_old",
+        "HardKeep_Broken"
+      ]
+    },
+    "seed": 2026082522,
+    "config_hash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "dataset_manifest_hash": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432",
+    "full100k_manifest_hash": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6"
+  },
+  "vocabSize": 1371,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK",
+  "freeze": {
+    "authoritative": false,
+    "note": "Alternate seed from Full100K Strict Integration 3-seed suite. Authoritative frozen checkpoint is seed_2026082520."
+  }
+}

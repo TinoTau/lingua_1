@@ -1,0 +1,58 @@
+{
+  "markers": [
+    "MODEL2_V3",
+    "FULL_POOL_NOT_VERIFIED_FILTER",
+    "TEACHER_ACTION_LABELS",
+    "SPAN_SEARCH_TEACHER"
+  ],
+  "n_base_pool": 400,
+  "n_rows": 840,
+  "quality": {
+    "anchor_no_recover": 91,
+    "teacher_rows": 840,
+    "anchor_recover": 29,
+    "teacher_recover": 117
+  },
+  "n_same_span_groups": 120,
+  "groups_with_ge2": 120,
+  "active_set": {
+    "name": "ACTIVE_SET_V1",
+    "active_relations": [
+      "n_l",
+      "z_zh",
+      "ch_c",
+      "sh_s",
+      "eng_en",
+      "in_ing",
+      "h_f"
+    ],
+    "deferred": {
+      "WEAK_FEATURES_V1": [
+        "s_sh",
+        "en_eng"
+      ],
+      "REVERSED_FEATURES_V1": [
+        "l_n",
+        "zh_z",
+        "c_ch",
+        "an_ang",
+        "ang_an",
+        "ing_in",
+        "f_h"
+      ]
+    },
+    "strength_contract": "V2_INITIAL_CONTRACT",
+    "note": "BOUND-validated relations only for V2 Core. WEAK/REVERSED deferred — not deleted from UserProfile schema."
+  },
+  "note": "Pool not prefiltered on recover; offline span search may use target length for labeling only",
+  "split": {
+    "counts": {
+      "test": 408,
+      "train": 387,
+      "val": 45
+    },
+    "unseen_users": 20,
+    "unseen_terms": 22,
+    "unseen_combos": 24
+  }
+}

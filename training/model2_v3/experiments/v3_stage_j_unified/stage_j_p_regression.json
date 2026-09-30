@@ -1,0 +1,56 @@
+{
+  "RecallRetained": 0.8132387706855791,
+  "QueryReduction": 0.5354497354497354,
+  "CandidateReduction": 0.4352533564313556,
+  "E2ECostReduction": 0.5025589991470002,
+  "B1": {
+    "n": 439,
+    "TargetIntroductionRate": 0.9635535307517085,
+    "RecallHitRate": 0.9635535307517085,
+    "QueryCount_mean": 2.152619589977221,
+    "CandidateCount_mean": 5.259681093394078,
+    "Latency_P50": 111.92180000944063,
+    "Latency_P95": 245.29290001373738
+  },
+  "V3": {
+    "n": 439,
+    "TargetIntroductionRate": 0.7835990888382688,
+    "RecallHitRate": 0.7835990888382688,
+    "QueryCount_mean": 1.0,
+    "CandidateCount_mean": 2.9703872437357632,
+    "Latency_P50": 59.441299992613494,
+    "Latency_P95": 75.5401000205893
+  },
+  "n_hard": 439,
+  "frozen_baseline": {
+    "RecallRetained": 1.0,
+    "QueryReduction": 0.5172,
+    "CandidateReduction": 0.3666,
+    "E2ECostReduction": 0.4697
+  },
+  "PASS": false,
+  "p_only_v1_prior": {
+    "RecallRetained": 0.8061465721040189,
+    "QueryReduction": 0.5354497354497354,
+    "CandidateReduction": 0.4027717626678216,
+    "E2ECostReduction": 0.4918965027011657,
+    "B1": {
+      "n": 439,
+      "TargetIntroductionRate": 0.9635535307517085,
+      "RecallHitRate": 0.9635535307517085,
+      "QueryCount_mean": 2.152619589977221,
+      "CandidateCount_mean": 5.259681093394078,
+      "Latency_P50": 132.12920000660233,
+      "Latency_P95": 221.93110000807792
+    },
+    "V3": {
+      "n": 439,
+      "TargetIntroductionRate": 0.7767653758542141,
+      "RecallHitRate": 0.7767653758542141,
+      "QueryCount_mean": 1.0,
+      "CandidateCount_mean": 3.14123006833713,
+      "Latency_P50": 59.17990001034923,
+      "Latency_P95": 77.06680000410415
+    }
+  }
+}

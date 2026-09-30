@@ -1,0 +1,18 @@
+order,node,loop,vote,notes
+1,runFwDetectorOrchestrator,utterance,NO,production ASR/FW entry
+2,runFwDetectorV4Path,utterance,NO,calls span assembly
+3,runSpanAssemblyV4Orchestrator,utterance then path,NO_DIRECT,lattice then for-each pathFineSpanViews
+4,runLatticeFineSpanGeneration,utterance,NO,produces retained SegmentationPath views; first-pass Recall uses recallDomainScope not vote
+5,for view of lattice.pathFineSpanViews,PATH_LOOP_START,BOUNDARY,authoritative retained-path loop
+6,expandActiveCandidatesWithModel2,path,NO,BEFORE Domain Vote; path-local Model2 expansion
+7,runModel3PathStep / CausalFork,path,INDIRECT,production: runModel3PathStep; acceptance: CausalFork
+8,prepareModel3PathUpstream,path,YES,buildFineSpanCandidatePool(path) then voteUtteranceDomainFromPool
+9,voteUtteranceDomainFromPool,path,KERNEL,production owner; input = this path pool only
+10,materializeModel3Anchors,path,CONSUMES,uses path-local vote.retainedDomains
+11,completeModel3PathFromUpstream,path; twice if causal fork,REUSE,Retry + completeDomainAwareAssemblyFromVote(SAME vote object)
+12,routeModel3Retry,path,REUSE,secondDomainVote hardcoded false; domainIds from prepared.vote
+13,completeDomainAwareAssemblyFromVote,path,REUSE,SameDomain buckets from path-local vote
+14,buildSentenceCandidates,path x bucket,NO,path-local sentences under that path vote
+15,mergeCrossPathSentenceCandidates,utterance,NO,exact-text first-wins; erases domain provenance
+16,runFwSentenceRerankFromPrefilled,utterance,NO,KenLM on merged pool
+17,runDomainAwareAssembly,legacy/tests,YES,NOT production orchestrator; still votes once per call on its path pool

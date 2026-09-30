@@ -78,6 +78,9 @@ smallvec = "1.11"
 # 快速哈希（用于Pool分片）
 fxhash = "0.2"
 
+# CorrectionHistory / local persistence (V1 SQLite; not Job Redis TTL)
+rusqlite = { version = "0.31", features = ["bundled"] }
+
 [features]
 default = []
 # 测试辅助功能，用于集成测试访问测试辅助方法

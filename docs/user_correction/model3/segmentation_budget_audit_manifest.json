@@ -1,0 +1,237 @@
+{
+  "PHASE": "LINGUA_SEGMENTATION_PATH_BUDGET_SENSITIVITY_AUDIT_V1",
+  "AUDIT_VALID": true,
+  "AUDIT_MIRROR_VALID": true,
+  "PRODUCT_RUNTIME_CODE_CHANGED": false,
+  "PRODUCTION_CONFIG_CHANGED": false,
+  "ARCHITECTURE_CHANGED": false,
+  "GT_USED_BY_RUNTIME": false,
+  "GT_USED_BY_AUDIT": true,
+  "mirrorChecks": [
+    {
+      "caseId": "p2_u001_003",
+      "ok": true,
+      "surviveOk": true,
+      "lossStage": "per_position_cap",
+      "expectedLoss": "per_position_cap",
+      "lossOk": true,
+      "targetBestRank": null,
+      "retainedCount": 8,
+      "prodRetained": 8,
+      "prodExactPfs": 0,
+      "completeBefore": 16,
+      "pathCountAlign": true,
+      "targetEdgeExists": true
+    },
+    {
+      "caseId": "p2_u004_033",
+      "ok": true,
+      "surviveOk": true,
+      "lossStage": "complete_path_cap",
+      "expectedLoss": "complete_path_cap",
+      "lossOk": true,
+      "targetBestRank": 11,
+      "retainedCount": 8,
+      "prodRetained": 8,
+      "prodExactPfs": 0,
+      "completeBefore": 16,
+      "pathCountAlign": true,
+      "targetEdgeExists": true
+    },
+    {
+      "caseId": "p2_u005_004",
+      "ok": true,
+      "surviveOk": true,
+      "lossStage": "complete_path_cap",
+      "expectedLoss": "complete_path_cap",
+      "lossOk": true,
+      "targetBestRank": 14,
+      "retainedCount": 8,
+      "prodRetained": 8,
+      "prodExactPfs": 0,
+      "completeBefore": 24,
+      "pathCountAlign": true,
+      "targetEdgeExists": true
+    },
+    {
+      "caseId": "p2_u005_015",
+      "ok": true,
+      "surviveOk": true,
+      "lossStage": "per_position_cap",
+      "expectedLoss": "per_position_cap",
+      "lossOk": true,
+      "targetBestRank": null,
+      "retainedCount": 8,
+      "prodRetained": 8,
+      "prodExactPfs": 0,
+      "completeBefore": 8,
+      "pathCountAlign": true,
+      "targetEdgeExists": true
+    }
+  ],
+  "UNPRUNED_EXECUTABLE": false,
+  "B6_BUDGET": {
+    "name": "B6_SAFE_256_256",
+    "active": 256,
+    "complete": 256
+  },
+  "EVALUABLE_CASES": 17,
+  "NON_EVALUABLE_CASES": 183,
+  "CACHED_CASES": 158,
+  "ACTIVE_CAP_SENSITIVITY": "LOW",
+  "COMPLETE_CAP_SENSITIVITY": "MEDIUM",
+  "asymmetric_survival": {
+    "8/8": 10,
+    "8/16": 12,
+    "8/32": 12,
+    "16/8": 10,
+    "32/8": 10,
+    "16/16": 13,
+    "32/32": 14,
+    "gain_complete_only_8_to_32": 2,
+    "gain_active_only_8_to_32": 0,
+    "gain_both_8_to_32": 4
+  },
+  "marginal": [
+    {
+      "step": "B0_8_8→B1_12_12",
+      "new_target_surviving_cases": 2,
+      "survival_rate_delta_pp": 11.77,
+      "retained_mean_delta": 4,
+      "peak_active_mean_delta": 8.12,
+      "complete_pre_cap_mean_delta": 7.53,
+      "marginal_survival_gain_per_retained_path_growth": 0.5
+    },
+    {
+      "step": "B1_12_12→B2_16_16",
+      "new_target_surviving_cases": 1,
+      "survival_rate_delta_pp": 5.88,
+      "retained_mean_delta": 4,
+      "peak_active_mean_delta": 7.76,
+      "complete_pre_cap_mean_delta": 6.89,
+      "marginal_survival_gain_per_retained_path_growth": 0.25
+    },
+    {
+      "step": "B2_16_16→B3_24_24",
+      "new_target_surviving_cases": 0,
+      "survival_rate_delta_pp": 0,
+      "retained_mean_delta": 7.76,
+      "peak_active_mean_delta": 15.06,
+      "complete_pre_cap_mean_delta": 12.17,
+      "marginal_survival_gain_per_retained_path_growth": 0
+    },
+    {
+      "step": "B3_24_24→B4_32_32",
+      "new_target_surviving_cases": 1,
+      "survival_rate_delta_pp": 5.88,
+      "retained_mean_delta": 7.53,
+      "peak_active_mean_delta": 15.06,
+      "complete_pre_cap_mean_delta": 11.3,
+      "marginal_survival_gain_per_retained_path_growth": 0.133
+    },
+    {
+      "step": "B4_32_32→B5_64_64",
+      "new_target_surviving_cases": 2,
+      "survival_rate_delta_pp": 11.77,
+      "retained_mean_delta": 23.42,
+      "peak_active_mean_delta": 58.35,
+      "complete_pre_cap_mean_delta": 45.17,
+      "marginal_survival_gain_per_retained_path_growth": 0.085
+    },
+    {
+      "step": "B4_32_32→B5_64_64",
+      "new_target_surviving_cases": 2,
+      "survival_rate_delta_pp": 11.77,
+      "retained_mean_delta": 23.42,
+      "peak_active_mean_delta": 58.35,
+      "complete_pre_cap_mean_delta": 45.17,
+      "marginal_survival_gain_per_retained_path_growth": 0.085
+    }
+  ],
+  "g2Survive": {
+    "B0_8_8": 0,
+    "B1_12_12": 2,
+    "B2_16_16": 3,
+    "B3_24_24": 3,
+    "B4_32_32": 3,
+    "B5_64_64": 4,
+    "B6_SAFE_256_256": 4
+  },
+  "stillFailAt64Count": 1,
+  "stillFailAt64Sample": [
+    "p2_u003_017"
+  ],
+  "PATH_CAP_INCREASE_ALONE_INSUFFICIENT": "NO",
+  "STRUCTURAL_RANKING_POLICY_AUDIT_REQUIRED": "NOT_PROVEN",
+  "RESOURCE_EXPLOSION_RISK": "MEDIUM",
+  "PRIMARY_OWNER": "P1_CURRENT_8_8_BUDGET_TOO_RESTRICTIVE",
+  "SECONDARY_OWNER": "P4_BOTH_PATH_CAPS_MATERIAL",
+  "ONE_NEXT_OWNER": "Path-budget PROBE finalization (architecture/product policy)",
+  "ONE_NEXT_DELTA": "Use sensitivity table to decide whether/how to freeze path budgets — no in-code cap or ranking change yet",
+  "PILOT_TARGET_SURVIVAL": {
+    "8_8": 58.82,
+    "12_12": 70.59,
+    "16_16": 76.47,
+    "24_24": 76.47,
+    "32_32": 82.35,
+    "64_64": 94.12
+  },
+  "G2_SURVIVE": {
+    "8_8": "0/4",
+    "12_12": "2/4",
+    "16_16": "3/4",
+    "24_24": "3/4",
+    "32_32": "3/4",
+    "64_64": "4/4"
+  },
+  "g2ThresholdRows": [
+    {
+      "caseId": "p2_u001_003",
+      "targetTerm": "过拟合",
+      "TARGET_EDGE_GEOMETRY": "11:14",
+      "CURRENT_8_8_SURVIVAL": "NO",
+      "TARGET_PATH_BEST_STRUCTURAL_RANK_AT_8_8": 11,
+      "FIRST_ACTIVE_CAP_REQUIRED": "32",
+      "FIRST_COMPLETE_CAP_REQUIRED": "64",
+      "FIRST_SYMMETRIC_BUDGET_REQUIRED": "64 / 64",
+      "loss_at_8_8": "per_position_cap",
+      "notes": "completeBefore@8=16; peakActive@8=24"
+    },
+    {
+      "caseId": "p2_u004_033",
+      "targetTerm": "城门",
+      "TARGET_EDGE_GEOMETRY": "9:11",
+      "CURRENT_8_8_SURVIVAL": "NO",
+      "TARGET_PATH_BEST_STRUCTURAL_RANK_AT_8_8": 11,
+      "FIRST_ACTIVE_CAP_REQUIRED": "8",
+      "FIRST_COMPLETE_CAP_REQUIRED": "12",
+      "FIRST_SYMMETRIC_BUDGET_REQUIRED": "12 / 12",
+      "loss_at_8_8": "complete_path_cap",
+      "notes": "completeBefore@8=16; peakActive@8=24"
+    },
+    {
+      "caseId": "p2_u005_004",
+      "targetTerm": "水道",
+      "TARGET_EDGE_GEOMETRY": "9:11",
+      "CURRENT_8_8_SURVIVAL": "NO",
+      "TARGET_PATH_BEST_STRUCTURAL_RANK_AT_8_8": 14,
+      "FIRST_ACTIVE_CAP_REQUIRED": "8",
+      "FIRST_COMPLETE_CAP_REQUIRED": "16",
+      "FIRST_SYMMETRIC_BUDGET_REQUIRED": "16 / 16",
+      "loss_at_8_8": "complete_path_cap",
+      "notes": "completeBefore@8=24; peakActive@8=24"
+    },
+    {
+      "caseId": "p2_u005_015",
+      "targetTerm": "提示符",
+      "TARGET_EDGE_GEOMETRY": "6:9",
+      "CURRENT_8_8_SURVIVAL": "NO",
+      "TARGET_PATH_BEST_STRUCTURAL_RANK_AT_8_8": 15,
+      "FIRST_ACTIVE_CAP_REQUIRED": "12",
+      "FIRST_COMPLETE_CAP_REQUIRED": "12",
+      "FIRST_SYMMETRIC_BUDGET_REQUIRED": "12 / 12",
+      "loss_at_8_8": "per_position_cap",
+      "notes": "completeBefore@8=8; peakActive@8=16"
+    }
+  ]
+}

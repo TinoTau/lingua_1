@@ -1,0 +1,7 @@
+component,reused_from,how,copied_redefined
+ACTIVE_SET_V1 / BOUND_FEATURES_V1,training/model2/stage_b/active_feature_mask.py,import BOUND_FEATURES_V1 via families.py,NO
+apply_family_to_syllable,training/model2/pronunciation/syllable_substitution.py,direct call in corrupt.py,NO
+Node pinyin/tone G2P,training/model2/phonetic/syllables.py + node_syllables_cli.mjs → pinyin-pro,syllables_from_text_tone_num; reject non-NODE,NO
+Lexicon surface resolve,node_runtime/lexicon/v3/lexicon.sqlite,readonly LexiconSurfaceResolver,NO Model3 lexicon
+ERROR_TEXT_SAMPLE_V1 schema,docs/user_correction/model3/model3_error_text_sample_v1_schema.json,validator load/check,NO
+corruption taxonomy families,docs + ACTIVE_SET only,pilot uses seven pronunciation + optional ortho,NO new primary families

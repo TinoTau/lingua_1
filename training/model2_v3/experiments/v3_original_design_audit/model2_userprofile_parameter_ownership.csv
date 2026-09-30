@@ -1,0 +1,10 @@
+Parameter,Owner,Generated_by,Stored_in,Consumed_by,Trainable,Runtime_consumed,Status
+pronunciation relation / phonetic_bias,UserProfile SSOT (Gateway),manual correction ProfileDelta phonetic_updates,UserProfileV1.phonetic_bias,Model2 Stage P (train); Node cache unused,YES,NO_CONSUME,PARTIAL
+relation strength,UserProfile,ProfileDelta strength,phonetic_bias values,Stage P encode,YES,NO,PARTIAL
+common / personal terms,UserProfile,correction/personal path + evidence,personal_terms + personal_term_evidence,Stage D train synthetic mostly,YES,NO,PARTIAL
+term frequency / evidence,UserProfile,personal_term_evidence map,personal_term_evidence,train term_evidence,YES,NO,PARTIAL
+long-term domain evidence,DERIVED at use from Lexicon tags,should derive from personal_terms,NOT stored as term->domain copy; domain_bias exists,Stage D derive_domain_evidence,YES_TRAIN,NO,PARTIAL
+session domain prior,UNDEFINED in UserProfileV1,session activity (designed),train field session_domain_prior only,Stage D train,TRAIN_ONLY,NO,NOT_IMPLEMENTED_RUNTIME
+speaking habit,NONE,N/A,N/A,N/A,NO,NO,DEFERRED_BY_DATA
+tone_bias,UserProfile,intended acoustic; currently empty updates,tone_bias,HOLD,SCHEMA_ONLY,NO,HOLD
+domain_bias,UserProfile,domain_updates currently empty from correction,domain_bias,Stage D uses derived evidence more than domain_bias,YES,NO,PARTIAL

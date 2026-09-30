@@ -1,0 +1,13 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "n": 1011,
+  "pos_score_mean": -0.5889479029079868,
+  "best_neg_score_mean": 0.6451955681885975,
+  "margin_mean": -1.2341434710965842,
+  "frac_positive_margin": 0.043521266073194856,
+  "interpretation": "Listwise CE on FuzzyPool can be minimized by memorizing which candidate surfaces co-occur with which query hashes on train terms; nothing in the loss forces phonetic transfer to novel term surfaces. term_id is not an input, but char/syl embeddings can still memorize term-specific patterns."
+}

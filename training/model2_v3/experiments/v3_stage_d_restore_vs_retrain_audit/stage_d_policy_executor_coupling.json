@@ -1,0 +1,7 @@
+{
+  "POLICY_EXECUTOR_COUPLING": "MEDIUM",
+  "why": "Output space is slot ids (LOW). Teacher is execute-validated on current executor (HIGH). Features mostly executor-independent (LOW/SOME).",
+  "policy_selects_domain_action": true,
+  "executor_implements_retrieval": true,
+  "features_encode_pool_rank": false
+}

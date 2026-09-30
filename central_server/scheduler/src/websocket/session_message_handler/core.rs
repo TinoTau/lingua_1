@@ -24,6 +24,9 @@ pub(super) async fn handle_session_init(
     lang_b: Option<String>,
     auto_langs: Option<Vec<String>>,
     trace_id: Option<String>,
+    user_id: Option<String>,
+    user_profile: Option<crate::messages::user_profile::UserProfileV1>,
+    profile_version: Option<u64>,
 ) -> Result<(), anyhow::Error> {
     // Handle pairing code
     let paired_node_id = if let Some(code) = pairing_code {
@@ -31,6 +34,13 @@ pub(super) async fn handle_session_init(
     } else {
         None
     };
+
+    if let Some(ref profile) = user_profile {
+        if let Err(e) = profile.validate_bound() {
+            send_error(tx, ErrorCode::InvalidMessage, &e).await;
+            return Ok(());
+        }
+    }
 
     // Create session (pass trace_id)
     let session = state
@@ -49,9 +59,11 @@ pub(super) async fn handle_session_init(
             auto_langs.clone(),
             trace_id,
             // 默认使用 opus 格式（web 端现在使用 opus 编码）
-            // 如果将来需要从 SessionInit 消息中获取，可以添加 audio_format 字段
             Some("opus".to_string()),
             Some(16000),
+            user_id,
+            user_profile,
+            profile_version,
         )
         .await;
 

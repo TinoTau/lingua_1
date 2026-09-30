@@ -1,0 +1,12 @@
+consumer,depends_on,kind,verdict,evidence
+expand-active-candidates.ts,disambiguate/cmd,none,DEPENDENCY_EXPERIMENT_ONLY,Product path only calls host.infer
+model2-runtime.test.ts / stage-j e2e,disambiguate,none,DEPENDENCY_EXPERIMENT_ONLY,Uses infer/load/ping only
+recall-topk-for-windows.ts,singleCharAmbiguousSet,none,DEPENDENCY_EXPERIMENT_ONLY,Uses length1Collector diagnostics; not ambiguousSet
+recall-span-topk-v2-length1-collector tests,singleCharAmbiguousSet,none,DEPENDENCY_EXPERIMENT_ONLY,Asserts terminalReason unique-only/fail-closed
+P/D host.infer,with_ambiguity_head,none,NO,load() constructs without flag; EXPECTED_PARAMS 47210
+P/D forward,context encoder,none,NO,forward keys exclude ambiguity
+webapp,any single-char Model2 API,none,NO,zero matches
+training/model2 Phase5C tests,AmbiguityHeadV1,unrelated,KEEP,Different Model2 generation; do not delete
+later independent features after 2026-08-19,SingleCharDisambiguationContractV1,none,NO,No callers beyond retired tests and unused Recall field
+disambiguateBatch,runtime,documentation,DEPENDENCY_DOC_ONLY,Never implemented
+judgeSingleChar,Node function,documentation,DEPENDENCY_DOC_ONLY,Name used in reports/training notes only

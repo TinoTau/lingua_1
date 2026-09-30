@@ -1,0 +1,325 @@
+{
+  "phase": "LINGUA_STAGE2_QUERY_PROVENANCE_EVIDENCE_LIFECYCLE_AUDIT",
+  "date": "2026-09-15",
+  "freezeId": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "pilotBaseline": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "PRODUCT_CODE_CHANGED": "NO",
+  "pipeline": [
+    {
+      "STAGE": "lexical_window",
+      "TYPE": "GlobalWindowDescriptor",
+      "GEOMETRY": "raw+syl from ASR text/globalSyllables",
+      "PINYIN_SOURCE": "globalSyllables.slice → windowPinyinKey",
+      "TONE_SOURCE": "window-local extract (later FineSpan toneRebind)",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "Base Recall / Model2 evidence"
+    },
+    {
+      "STAGE": "first_Base_Recall",
+      "TYPE": "WindowCandidate[]",
+      "GEOMETRY": "window syl/raw",
+      "PINYIN_SOURCE": "observed ASR windowPinyinKey",
+      "TONE_SOURCE": "acoustic pattern for tone_exact",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "Model2 merge"
+    },
+    {
+      "STAGE": "Model2_input",
+      "TYPE": "WindowEvidence / Model2PolicyInput",
+      "GEOMETRY": "origin FineSpan/window",
+      "PINYIN_SOURCE": "observed spanSyllables",
+      "TONE_SOURCE": "window acousticTonePattern",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "PAction / relation adapter"
+    },
+    {
+      "STAGE": "PAction",
+      "TYPE": "actionId string",
+      "GEOMETRY": "n/a",
+      "PINYIN_SOURCE": "n/a",
+      "TONE_SOURCE": "n/a",
+      "MODEL2_CONDITIONED": true,
+      "PRESERVED": "partial (model2ActionId on candidate)",
+      "NEXT_CONSUMER": "relation transform"
+    },
+    {
+      "STAGE": "relation_transform",
+      "TYPE": "ProfileQueryResult{querySyllables,pinyinKey,nChanged}",
+      "GEOMETRY": "same window length; positions changed in-syllable",
+      "PINYIN_SOURCE": "hypothesizeIntendedSyllables(observed, relation)",
+      "TONE_SOURCE": "applied after transform by position",
+      "MODEL2_CONDITIONED": true,
+      "PRESERVED": false,
+      "OWNERSHIP": "MODEL2_INTERNAL",
+      "NEXT_CONSUMER": "recallSpanTopKV2 only (call-local)"
+    },
+    {
+      "STAGE": "Model2_Recall_query",
+      "TYPE": "recallSpanTopKV2(syllables=querySyllables)",
+      "GEOMETRY": "origin window",
+      "PINYIN_SOURCE": "transformed pinyinKey",
+      "TONE_SOURCE": "acoustic slice on transformed syllables",
+      "MODEL2_CONDITIONED": true,
+      "PRESERVED": false,
+      "NEXT_CONSUMER": "hits → materializeProfileHits"
+    },
+    {
+      "STAGE": "Lexicon_hit",
+      "TYPE": "RecallSpanTopKV2Hit",
+      "GEOMETRY": "hit length must match origin span",
+      "PINYIN_SOURCE": "hotword.pinyin / pinyin_key",
+      "TONE_SOURCE": "DB tone key",
+      "MODEL2_CONDITIONED": true,
+      "PRESERVED": false,
+      "NEXT_CONSUMER": "materializeProfileHits (pinyin dropped)"
+    },
+    {
+      "STAGE": "materialized_candidate",
+      "TYPE": "WindowCandidate",
+      "GEOMETRY": "policyInput raw/syl (full origin window)",
+      "PINYIN_SOURCE": "policyInput.windowPinyinKey = OBSERVED ASR",
+      "TONE_SOURCE": "none on candidate",
+      "MODEL2_CONDITIONED": "provenance only (PROFILE_PRONUNCIATION / model2ActionId)",
+      "PRESERVED": true,
+      "FIRST_LOSS_BOUNDARY": "materializeProfileHits drops querySyllables/nChanged/hit.pinyin",
+      "NEXT_CONSUMER": "LexicalEdge"
+    },
+    {
+      "STAGE": "LexicalEdge",
+      "TYPE": "LexicalEdge{candidates}",
+      "GEOMETRY": "edge span",
+      "PINYIN_SOURCE": "only via candidates.windowPinyinKey (ASR)",
+      "TONE_SOURCE": "none",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "segmentation → PathFineSpan"
+    },
+    {
+      "STAGE": "PathFineSpan",
+      "TYPE": "PathFineSpan",
+      "GEOMETRY": "path span raw/syl",
+      "PINYIN_SOURCE": "candidates ASR windowPinyinKey only",
+      "TONE_SOURCE": "toneRebindTrace.acousticTonePattern",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "Domain Vote / Anchor / Model3 / Retry"
+    },
+    {
+      "STAGE": "RetryRegion",
+      "TYPE": "RetryRegion",
+      "GEOMETRY": "derived from RETRY PathFineSpans",
+      "PINYIN_SOURCE": "none",
+      "TONE_SOURCE": "none",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "Stage2 window enum"
+    },
+    {
+      "STAGE": "Stage2_window",
+      "TYPE": "RetryRegionLocalSpan / Stage2QueryRange",
+      "GEOMETRY": "SHARED_LEXICAL_WINDOW_OWNER clipped to RetryRegion",
+      "PINYIN_SOURCE": "globalSyllables.slice → ASR",
+      "TONE_SOURCE": "owner PathFineSpan.toneRebindTrace (hard gate OFF in recovery mode)",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": "invocation trace only",
+      "NEXT_CONSUMER": "Stage2 Recall"
+    },
+    {
+      "STAGE": "Stage2_Recall_query",
+      "TYPE": "recallSpanTopKV2(recallMode=model3_retry_pinyin_domain_recovery)",
+      "GEOMETRY": "Stage2 local window",
+      "PINYIN_SOURCE": "ASR globalSyllables slice",
+      "TONE_SOURCE": "pattern passed but hard gate OFF",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": "trace candidates",
+      "NEXT_CONSUMER": "merge shared budget"
+    },
+    {
+      "STAGE": "Stage2_candidate",
+      "TYPE": "WindowCandidate m3r:",
+      "GEOMETRY": "local Stage2 window",
+      "PINYIN_SOURCE": "ASR query used for retrieval",
+      "TONE_SOURCE": "n/a",
+      "MODEL2_CONDITIONED": false,
+      "PRESERVED": true,
+      "NEXT_CONSUMER": "SameDomain / Assembly / KenLM"
+    }
+  ],
+  "queryEvidenceFields": [
+    {
+      "FIELD": "globalSyllables",
+      "PRODUCER": "ASR/pipeline",
+      "CONSUMER": "windows, Stage2",
+      "GEOMETRY": "utterance",
+      "LIFETIME": "utterance",
+      "MODEL_VISIBLE": false,
+      "TRACE_ONLY": false,
+      "BUSINESS_DATA": true,
+      "PRESERVED_AFTER_MATERIALIZATION": true,
+      "AVAILABLE_AT_RETRY": true,
+      "OWNERSHIP": "ASR_OBSERVATION"
+    },
+    {
+      "FIELD": "windowPinyinKey (window/candidate)",
+      "PRODUCER": "buildWindowDescriptorForRange / materialize*",
+      "CONSUMER": "Recall, diagnostics",
+      "GEOMETRY": "window",
+      "LIFETIME": "cand→edge→PFS",
+      "MODEL_VISIBLE": false,
+      "TRACE_ONLY": false,
+      "BUSINESS_DATA": true,
+      "PRESERVED_AFTER_MATERIALIZATION": true,
+      "AVAILABLE_AT_RETRY": true,
+      "NOTE": "After Model2 materialize this is OBSERVED ASR, not transform",
+      "OWNERSHIP": "ASR_OBSERVATION"
+    },
+    {
+      "FIELD": "ProfileQueryResult.querySyllables / pinyinKey",
+      "PRODUCER": "executeProfileLexiconQueries / hypothesizeIntendedSyllables",
+      "CONSUMER": "recallSpanTopKV2 (same call)",
+      "GEOMETRY": "origin window length",
+      "LIFETIME": "call-local",
+      "MODEL_VISIBLE": false,
+      "TRACE_ONLY": "partial (dialog200 may omit)",
+      "BUSINESS_DATA": false,
+      "PRESERVED_AFTER_MATERIALIZATION": false,
+      "AVAILABLE_AT_RETRY": false,
+      "OWNERSHIP": "MODEL2_INTERNAL"
+    },
+    {
+      "FIELD": "nChanged",
+      "PRODUCER": "hypothesizeIntendedSyllables",
+      "CONSUMER": "skip if ≤0",
+      "GEOMETRY": "count only",
+      "LIFETIME": "call-local",
+      "PRESERVED_AFTER_MATERIALIZATION": false,
+      "AVAILABLE_AT_RETRY": false,
+      "OWNERSHIP": "MODEL2_INTERNAL"
+    },
+    {
+      "FIELD": "changedPositions",
+      "PRODUCER": "docs concept; no product field",
+      "CONSUMER": "none",
+      "PRESERVED_AFTER_MATERIALIZATION": false,
+      "AVAILABLE_AT_RETRY": false,
+      "OWNERSHIP": "MODEL2_INTERNAL_UNIMPLEMENTED"
+    },
+    {
+      "FIELD": "hit.hotword.pinyin / pinyin_key",
+      "PRODUCER": "Lexicon",
+      "CONSUMER": "materialize (dropped)",
+      "PRESERVED_AFTER_MATERIALIZATION": false,
+      "AVAILABLE_AT_RETRY": false,
+      "OWNERSHIP": "LEXICON_HIT → LOST"
+    },
+    {
+      "FIELD": "model2ActionId",
+      "PRODUCER": "materializeProfileHits",
+      "CONSUMER": "diagnostics / Anchor provenance",
+      "PRESERVED_AFTER_MATERIALIZATION": true,
+      "AVAILABLE_AT_RETRY": true,
+      "NOTE": "Does not drive Stage2 query pinyin",
+      "OWNERSHIP": "MODEL2_PROVENANCE"
+    },
+    {
+      "FIELD": "toneRebindTrace.acousticTonePattern",
+      "PRODUCER": "rebindToneForFineSpan",
+      "CONSUMER": "Stage2 recall closure (gate OFF in recovery)",
+      "PRESERVED_AFTER_MATERIALIZATION": true,
+      "AVAILABLE_AT_RETRY": true,
+      "OWNERSHIP": "FIRST_PASS_TONE"
+    },
+    {
+      "FIELD": "Stage2 syllables / windowPinyinKey",
+      "PRODUCER": "routeModel3Retry globalSyllables.slice",
+      "CONSUMER": "recallSpanTopKV2 recovery mode",
+      "PRESERVED_AFTER_MATERIALIZATION": "n/a",
+      "AVAILABLE_AT_RETRY": true,
+      "OWNERSHIP": "STAGE2_ASR_QUERY"
+    }
+  ],
+  "lossBoundaries": {
+    "FIRST_TRANSFORMED_PINYIN_LOSS_BOUNDARY": "candidate-materialize.ts::materializeProfileHits (writes observed policyInput.windowPinyinKey; drops querySyllables)",
+    "FIRST_QUERY_KEY_LOSS_BOUNDARY": "same — ProfileQueryResult.pinyinKey never stored on WindowCandidate",
+    "FIRST_CHANGED_POSITION_LOSS_BOUNDARY": "relation-lexicon-adapter.ts — only nChanged call-local; no changedPositions field exists",
+    "FIRST_WINDOW_GEOMETRY_LOSS_BOUNDARY": "NOT_LOST — origin raw/syl retained on candidate; Stage2 REBUILDS new windows from RetryRegion+ASR rather than reusing first-pass Model2 window geometry for query pinyin"
+  },
+  "stage2": {
+    "CURRENT_STAGE2_QUERY_PINYIN_SOURCE": "args.globalSyllables.slice(local.syllableStart, local.syllableEnd).join('|')",
+    "CURRENT_STAGE2_QUERY_GEOMETRY_SOURCE": "enumerateStage2SuccessPathQueryLocals ← SHARED_LEXICAL_WINDOW_OWNER clipped to RetryRegion",
+    "CURRENT_STAGE2_CAN_SEE_MODEL2_TRANSFORMED_QUERY": "NO",
+    "CURRENT_STAGE2_CAN_SEE_FIRST_PASS_RECALL_QUERY": "NO",
+    "MODEL2_ON_MODEL3_RETRY": "NO"
+  },
+  "failureReconciliation": {
+    "AUDITED_QUERY_FAILURE_COUNT": 257,
+    "Q1_MODEL2_QUERY_EVIDENCE_LOST": 33,
+    "Q2_TRANSFORMED_QUERY_STILL_UNREACHABLE": 154,
+    "Q3_STAGE2_GEOMETRY_MAPPING": 0,
+    "Q4_TARGET_REGION_NOT_REPRESENTABLE": 0,
+    "Q5_LEGAL_QUERY_BUT_RECALL_MISS": 0,
+    "Q6_NO_REUSABLE_FIRST_PASS_QUERY": 70,
+    "Q7_EVALUATOR_OR_TRACE_DEFECT": 0,
+    "Q8_OTHER_PROVEN": 0,
+    "TOTAL": 257,
+    "QUERY_FAILURE_RECONCILIATION": "PASS",
+    "byCondition": {
+      "NO_PROFILE": {},
+      "CORRECT_PROFILE": {
+        "Q1_MODEL2_QUERY_EVIDENCE_LOST": 33,
+        "Q2_TRANSFORMED_QUERY_STILL_UNREACHABLE": 53,
+        "Q6_NO_REUSABLE_FIRST_PASS_QUERY": 40
+      },
+      "WRONG_PROFILE": {
+        "Q2_TRANSFORMED_QUERY_STILL_UNREACHABLE": 101,
+        "Q6_NO_REUSABLE_FIRST_PASS_QUERY": 30
+      }
+    }
+  },
+  "geometry": {
+    "DIRECT_QUERY_REUSE_GEOMETRY_SAFE": "PARTIAL",
+    "RESEGMENTED_QUERY_MAPPING_REQUIRED": "YES",
+    "PARTIAL_QUERY_EVIDENCE_REQUIRED": "YES",
+    "note": "First-pass Model2 query is bound to origin window geometry; Stage2 enumerates new ASR windows inside RetryRegion. Exact key reuse needs syllable-span mapping or stored query evidence keyed to region/subspan — not blind string inject."
+  },
+  "ownership": {
+    "QUERY_EVIDENCE_NATURAL_OWNER": "RECALL",
+    "MODEL2_INTERNAL_LEAK_REQUIRED": "NO",
+    "JOBRESULT_CHANGE_REQUIRED": "NO",
+    "MODEL3_CONTRACT_CHANGE_REQUIRED": "NO",
+    "MODEL3_CAN_REMAIN_UNCHANGED": "YES",
+    "MODEL2_SECOND_INFERENCE_REQUIRED": "NO",
+    "FUTURE_TONE_BIAS_CONTRACT_COMPATIBLE": "YES",
+    "rationale": "Downstream should consume semantic Recall query evidence (syllables/pinyinKey + geometry), not relation names / logits / changedPositions internals."
+  },
+  "ssot": {
+    "QUERY_EVIDENCE_LIFETIME_SSOT": "NOT_SPECIFIED",
+    "QUERY_EVIDENCE_RETRY_CONSUMER_SSOT": "NO",
+    "CURRENT_STAGE2_ASR_QUERY_POLICY_AUTHORITY": "DERIVED_FROM_RESEGMENTATION_DESIGN",
+    "note": "MODEL2_ON_MODEL3_RETRY=NO is EXPLICIT. Stage2 ASR-space pinyin reconstruction is implied by shared lexical window + globalSyllables consumer design, not a separate ACTIVE file that forbids preserving Recall query evidence. Tone-relax ACP only changes Tone gate."
+  },
+  "trace": {
+    "TRACE_SUFFICIENT": "NO",
+    "MISSING_TRACE_FIELDS": [
+      "Stage2 invocation windowPinyinKey in Pilot TRACE summary rows",
+      "Model2 ProfileQueryResult.querySyllables on Pilot TRACE",
+      "nChanged / changedPositions",
+      "hit.pinyin after materialize"
+    ],
+    "COMPENSATING_EVIDENCE": [
+      "LINGUA_GATE_E_CASE_MATRIX.csv (first-pass transform / PINYIN_YES_TONE_NO)",
+      "production code path for Stage2 globalSyllables",
+      "LINGUA_STAGE2_TONE_RELAX_E5_TARGETED_RESULT.json (focused pinyin-only 35/35)",
+      "spot live path_trace for p2_u001_007 (ASR tan|lei|ke)"
+    ]
+  },
+  "controls": {
+    "compoundResidualExpectedClass": "Q2_or_Q6",
+    "examples": ["换乘/翻成", "牛肉串/刘若川"],
+    "WRONG_PROFILE_Q2": 101,
+    "note": "Wrong-profile transforms that miss target are expected controls — not justification for product expansion."
+  }
+}

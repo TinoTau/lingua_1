@@ -1,0 +1,264 @@
+{
+  "schema": "LINGUA_DIALOG200_FROZEN_REPLAY_DETERMINISM_AUDIT_V1",
+  "phase": "DIALOG200_FROZEN_REPLAY_DIVERGENCE_ROOT_CAUSE_AUDIT_V1",
+  "mode": "READ_ONLY",
+  "path_enumeration": {
+    "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/enumerate-complete-segmentation-paths.ts",
+    "structural_comparator_verified": [
+      "fallbackEdgeCount ASC",
+      "invalidGapCount ASC (modeled as fallbackEdgeCount V1)",
+      "fuzzyEdgeCount ASC",
+      "toneRelaxedEdgeCount ASC",
+      "exactEdgeCount DESC",
+      "lexicalEdgeCount DESC",
+      "boundaryKey ASC"
+    ],
+    "outgoing_edge_sort": "syllableEnd ASC, lexical-before-fallback, edgeId localeCompare",
+    "complete_path_sort_before_cap": "compareBestFirst then keep top maxCompleteSegmentationPaths",
+    "kept_paths_final_order": "boundaryKey ASC",
+    "deterministic_given_identical_edges": true,
+    "contract_expectation": "Path Count MUST reproduce exactly when lexical edge graph + caps identical",
+    "EXPECTED_BY_CONTRACT": false,
+    "label_EXPECTED_NONDETERMINISM_authorized": false,
+    "NONDETERMINISM_AUTHORITY": "EVALUATOR_ASSUMPTION"
+  },
+  "sources": [
+    {
+      "SOURCE": "Array.sort with total structural comparator + boundaryKey tie-break",
+      "AFFECTED_STAGE": "E6/E7",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": true,
+      "FIX_REQUIRED_LATER": false,
+      "EVIDENCE": "enumerate-complete-segmentation-paths.ts compareSegmentationPathRankingBestFirst; outgoing sorted independently of input array order"
+    },
+    {
+      "SOURCE": "Capture↔Replay entrypoint delta: /run-pipeline-with-audio vs /run-lexicon-mock inject",
+      "AFFECTED_STAGE": "E3→E18",
+      "CAN_CHANGE_SEMANTICS": true,
+      "CAN_CHANGE_FINAL_OUTPUT": true,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "35 E7 pathCount mismatches; 7 E18 final mismatches; identity SHA matched"
+    },
+    {
+      "SOURCE": "compactPath field-name mismatch: production finespans vs harness fine_spans",
+      "AFFECTED_STAGE": "E5/E8",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "719/719 fine_span_surfaces empty; E5 PASS=200 vacuous"
+    },
+    {
+      "SOURCE": "base_candidates / model2_union truncated slice(0,48) before set compare",
+      "AFFECTED_STAGE": "E3/E4",
+      "CAN_CHANGE_SEMANTICS": true,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "order-dependent window; 8 E3-primary FAILs with E7 PASS and E18 PASS"
+    },
+    {
+      "SOURCE": "E16 Model3 input/anchor not captured; E17 still scored",
+      "AFFECTED_STAGE": "E16/E17",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "E16 NOT_CAPTURED_FOR_EQUIVALENCE ×200; EVALUATION_SSOT_V1 forbids missing→FAIL"
+    },
+    {
+      "SOURCE": "classifyDivergence: E6/E7 → EXPECTED_NONDETERMINISM iff E18 PASS",
+      "AFFECTED_STAGE": "firstDivergence hist",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "dialog200-frozen-evidence-replay-contract.mjs classifyDivergence; NONDETERMINISM_AUTHORITY=EVALUATOR_ASSUMPTION"
+    },
+    {
+      "SOURCE": "decidePromotion thresholds e18Rate>=0.95 criticalRate<=0.05 e7Rate>=0.8",
+      "AFFECTED_STAGE": "PROMOTION / RESULT A",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": true,
+      "EVIDENCE": "NEW_REPLAY_IMPLEMENTATION; not in EVALUATION_SSOT_V1; couples SSOT promotion to approximate equivalence"
+    },
+    {
+      "SOURCE": "SQLite recall queries with ORDER BY prior_score / weight (lexicon-runtime-v2)",
+      "AFFECTED_STAGE": "E3",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": true,
+      "FIX_REQUIRED_LATER": false,
+      "EVIDENCE": "ORDER BY present on primary lookups; residual tie behavior not fully audited — INSUFFICIENT for claiming SQL nondeterminism as E3 cause"
+    },
+    {
+      "SOURCE": "UtteranceRecallCache Map (utterance-scoped)",
+      "AFFECTED_STAGE": "E3",
+      "CAN_CHANGE_SEMANTICS": false,
+      "CAN_CHANGE_FINAL_OUTPUT": false,
+      "EXPECTED_BY_CONTRACT": true,
+      "FIX_REQUIRED_LATER": false,
+      "EVIDENCE": "createUtteranceRecallContext per utterance; not process-global"
+    },
+    {
+      "SOURCE": "sessionId / jobId Date.now() on mock path",
+      "AFFECTED_STAGE": "unknown",
+      "CAN_CHANGE_SEMANTICS": "UNKNOWN",
+      "CAN_CHANGE_FINAL_OUTPUT": "UNKNOWN",
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": false,
+      "EVIDENCE": "runLexiconMockReplay sessionId includes Date.now(); unique per case reduces cross-case session residue; not proven causal"
+    },
+    {
+      "SOURCE": "Model2/Model3 GPU float inference",
+      "AFFECTED_STAGE": "E4/E17",
+      "CAN_CHANGE_SEMANTICS": "UNKNOWN",
+      "CAN_CHANGE_FINAL_OUTPUT": "UNKNOWN",
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": "UNKNOWN",
+      "EVIDENCE": "checkpoint SHA guarded; bit-exact determinism not proven; insufficient to attribute E7 alone"
+    },
+    {
+      "SOURCE": "Promise.all / async worker ordering",
+      "AFFECTED_STAGE": "unknown",
+      "CAN_CHANGE_SEMANTICS": "UNKNOWN",
+      "CAN_CHANGE_FINAL_OUTPUT": "UNKNOWN",
+      "EXPECTED_BY_CONTRACT": false,
+      "FIX_REQUIRED_LATER": "UNKNOWN",
+      "EVIDENCE": "no proven causal link in this audit; NOT classified as EXPECTED_NONDETERMINISM"
+    }
+  ],
+  "production_state_dependency_resolution": [
+    {
+      "PRIOR_LABEL": "PRODUCTION_STATE_DEPENDENCY",
+      "CASES": ["d019", "d045", "d061", "d110", "d112", "d156"],
+      "STATE_NAME": "CAPTURE_FULL_AUDIO_PIPELINE_VS_MOCK_INJECT_ENTRYPOINT",
+      "STATE_OWNER": "harness entrypoint (not a single production module singleton)",
+      "STATE_SCOPE": "process-run / entrypoint",
+      "STATE_CAPTURED": false,
+      "STATE_RECONSTRUCTABLE": "PARTIAL (asrText+segments+slices injected; mid-lattice inputs not frozen)",
+      "SHOULD_STATE_AFFECT_OUTPUT": false,
+      "FROZEN_CONTRACT_AUTHORITY": "NONE — replay claims identical downstream from frozen boundary",
+      "RESOLVED_CLASS": "UNEXPLAINED_DIVERGENCE"
+    },
+    {
+      "PRIOR_LABEL": "PRODUCTION_STATE_DEPENDENCY",
+      "CASES": ["d157"],
+      "STATE_NAME": "UPSTREAM_CANDIDATE_OR_EDGE_GRAPH_DELTA (path_id set differs at equal count)",
+      "STATE_OWNER": "unknown upstream of path enum",
+      "STATE_SCOPE": "per-case",
+      "STATE_CAPTURED": false,
+      "STATE_RECONSTRUCTABLE": false,
+      "SHOULD_STATE_AFFECT_OUTPUT": false,
+      "FROZEN_CONTRACT_AUTHORITY": "NONE",
+      "RESOLVED_CLASS": "UNEXPLAINED_DIVERGENCE"
+    },
+    {
+      "PRIOR_LABEL": "PRODUCTION_STATE_DEPENDENCY",
+      "CASES": ["d046", "d059", "d091", "d102", "d135", "d150", "d151", "d188"],
+      "STATE_NAME": "BASE_CANDIDATE_SET_DELTA_AT_EQUAL_PATH_COUNT",
+      "STATE_OWNER": "unknown (recall inputs vs compact truncation)",
+      "STATE_SCOPE": "per-case",
+      "STATE_CAPTURED": "PARTIAL (surfaces truncated to 48)",
+      "STATE_RECONSTRUCTABLE": "UNKNOWN",
+      "SHOULD_STATE_AFFECT_OUTPUT": false,
+      "FROZEN_CONTRACT_AUTHORITY": "NONE",
+      "RESOLVED_CLASS": "UNEXPLAINED_DIVERGENCE",
+      "FINAL_IMPACT": "NO"
+    },
+    {
+      "PRIOR_LABEL": "PRODUCTION_STATE_DEPENDENCY",
+      "CASES": ["E17 first-divergence singleton"],
+      "STATE_NAME": "MODEL3_DECISION_COMPARE_WITHOUT_E16",
+      "STATE_OWNER": "comparator",
+      "STATE_SCOPE": "evaluation",
+      "STATE_CAPTURED": false,
+      "STATE_RECONSTRUCTABLE": "UNKNOWN",
+      "SHOULD_STATE_AFFECT_OUTPUT": "UNKNOWN",
+      "FROZEN_CONTRACT_AUTHORITY": "EVALUATION_SSOT_V1 → should be NOT_EVALUABLE",
+      "RESOLVED_CLASS": "COMPARATOR_DEFECT"
+    }
+  ],
+  "cross_case_leakage": {
+    "CASE_ORDER_DEPENDENCY": "UNKNOWN",
+    "CACHE_RESIDUE": "utterance cache is per-utterance — not proven cross-case",
+    "MODEL_STATE_RESIDUE": "UNKNOWN (shared Model2/Model3 runtime process)",
+    "DOMAIN_STATE_RESIDUE": "UNKNOWN",
+    "MODEL3_STATE_RESIDUE": "UNKNOWN",
+    "GLOBAL_VARIABLE_RESIDUE": "asrStepInvocationCount harness counter only",
+    "note": "No read-only proof of case N→N+1 leakage; not used as root cause for E18 seven"
+  },
+  "capture_completeness": [
+    { "field": "ASR text", "class": "RECONSTRUCTABLE" },
+    { "field": "segments + word timestamps", "class": "RECONSTRUCTABLE" },
+    { "field": "acousticToneSlices", "class": "RECONSTRUCTABLE" },
+    { "field": "model/lexicon/kenlm SHA identity", "class": "RECONSTRUCTABLE" },
+    { "field": "finespans (production field)", "class": "REQUIRED_BUT_MISSING", "note": "harness looks for fine_spans; OBSERVABILITY GAP" },
+    { "field": "E16 Model3 input/anchor", "class": "REQUIRED_BUT_MISSING", "note": "for E17 evaluability" },
+    { "field": "full base candidate lists (untruncated)", "class": "REQUIRED_BUT_MISSING", "note": "slice 0,48" },
+    { "field": "lexical edge graph", "class": "NOT_REQUIRED", "note": "should reconstruct if candidates+config identical — currently diverges" },
+    { "field": "path enumeration inputs beyond edges", "class": "UNKNOWN" }
+  ],
+  "comparators": [
+    {
+      "STAGE": "E3_BASE_RECALL",
+      "CURRENT_COMPARATOR": "SEMANTIC_SET_IDENTITY on truncated flatMap surfaces",
+      "REQUIRED_COMPARATOR": "SEMANTIC_SET_IDENTITY on full untruncated sets OR NOT_EVALUABLE if truncated",
+      "CONTRACT_AUTHORITY": "NEW_REPLAY_IMPLEMENTATION",
+      "VALID": "NO"
+    },
+    {
+      "STAGE": "E5_LEXICAL_EDGE",
+      "CURRENT_COMPARATOR": "SEMANTIC_SET_IDENTITY on fine_span_surfaces",
+      "REQUIRED_COMPARATOR": "SEMANTIC_SET_IDENTITY on finespans surfaces",
+      "CONTRACT_AUTHORITY": "NEW_REPLAY_IMPLEMENTATION",
+      "VALID": "NO"
+    },
+    {
+      "STAGE": "E6_SEGMENTATION_PATH",
+      "CURRENT_COMPARATOR": "SEMANTIC_SET_IDENTITY of path_id",
+      "REQUIRED_COMPARATOR": "SEMANTIC_SET_IDENTITY of path_id / boundaryKey",
+      "CONTRACT_AUTHORITY": "production pathId derivation",
+      "VALID": "YES"
+    },
+    {
+      "STAGE": "E7_PATH_COUNT",
+      "CURRENT_COMPARATOR": "ORDERED_IDENTITY (exact count)",
+      "REQUIRED_COMPARATOR": "EXACT_IDENTITY",
+      "CONTRACT_AUTHORITY": "deterministic enum given edges",
+      "VALID": "YES"
+    },
+    {
+      "STAGE": "E8_PATH_CAP",
+      "CURRENT_COMPARATOR": "SEMANTIC_IDENTITY on empty fine_span signatures",
+      "REQUIRED_COMPARATOR": "SEMANTIC_IDENTITY on real path structure",
+      "CONTRACT_AUTHORITY": "NEW_REPLAY_IMPLEMENTATION",
+      "VALID": "NO"
+    },
+    {
+      "STAGE": "E16_MODEL3_INPUT_ANCHOR",
+      "CURRENT_COMPARATOR": "NOT_CAPTURED_FOR_EQUIVALENCE",
+      "REQUIRED_COMPARATOR": "NOT_EVALUABLE",
+      "CONTRACT_AUTHORITY": "EVALUATION_SSOT_V1",
+      "VALID": "PARTIAL"
+    },
+    {
+      "STAGE": "E17_MODEL3_DECISION",
+      "CURRENT_COMPARATOR": "SEMANTIC_IDENTITY of decision keys",
+      "REQUIRED_COMPARATOR": "NOT_EVALUABLE until E16 captured/reconstructed",
+      "CONTRACT_AUTHORITY": "EVALUATION_SSOT_V1",
+      "VALID": "NO"
+    },
+    {
+      "STAGE": "E18_FINAL",
+      "CURRENT_COMPARATOR": "SEMANTIC_IDENTITY (normText)",
+      "REQUIRED_COMPARATOR": "EXACT_IDENTITY / SEMANTIC_IDENTITY of final text",
+      "CONTRACT_AUTHORITY": "EVALUATION_SSOT_V1 FINAL_OUTPUT EVALUABLE",
+      "VALID": "YES"
+    }
+  ]
+}

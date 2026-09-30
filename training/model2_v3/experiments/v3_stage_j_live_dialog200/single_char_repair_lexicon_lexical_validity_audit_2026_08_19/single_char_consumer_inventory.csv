@@ -1,0 +1,8 @@
+consumer,artifact,use,runtime_active,can_shrink_for_fw_repair
+pinyin-ime-v2-dict-load.ts,docs/pinyin-v2/import/single_char_dictionary.tsv,IME byFirst / byFirstFallback single-char beam,YES,NO
+pinyin-ime-v2-decoder.ts,loaded IME dict from TSV,decoder path-breakage fallback (MAIN_BEAM vs FALLBACK roles),YES,NO
+full-rebuild-from-csv.mjs loadSingleCharRows,same TSV → sqlite term/base_lexicon,Lexicon V3 length-1 import,YES (build),NO without splitting data duties
+collectBaseOnlySingleCharCandidate,sqlite base_lexicon length-1,FW Repair single-char recall,YES,this is the repair consumer; shrinking TSV still breaks IME
+"exportPinyinImeV1Layer (base_lexicon, no length filter)",node_runtime/pinyin-ime-v2/dict/base_dictionary.txt,would copy sqlite length-1 on next export; current export file appears pre-2510,YES (export path),NO
+length-1 sqlite integration tests,production sqlite,contract tests,TEST,N/A
+Model2 prior_score feature,bound WindowCandidates,feature if length-1 ever binds,POTENTIAL (currently 0 lexical 1-char edges),do not remap priors this round

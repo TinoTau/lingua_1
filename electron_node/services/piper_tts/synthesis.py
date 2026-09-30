@@ -420,3 +420,62 @@ def synthesize_with_command_line(
                 os.unlink(input_path)
             except OSError:
                 pass
+
+
+def phonemize_text_espeak(
+    text: str,
+    model_path: str,
+    config_path: Optional[str],
+    use_gpu: bool,
+) -> List[List[str]]:
+    """Training-only helper: return espeak phoneme sequences for text (huayan path)."""
+    if not UTILS_PIPER_AVAILABLE:
+        raise RuntimeError("Piper Python API not available")
+    voice_obj = get_or_load_voice(model_path, config_path, use_gpu)
+    return voice_obj.phonemize(text)
+
+
+def synthesize_from_espeak_phonemes(
+    phonemes: List[str],
+    model_path: str,
+    config_path: Optional[str],
+    use_gpu: bool,
+    voice: str,
+) -> Response:
+    """Training-only: bypass text frontend; synthesize from espeak phoneme tokens.
+
+    Does not alter production /tts behaviour. Used for accent / non-lexical
+    pronunciation realization (e.g. nai3→lai3).
+    """
+    if not UTILS_PIPER_AVAILABLE:
+        raise RuntimeError("Piper Python API not available")
+    if not phonemes:
+        raise HTTPException(status_code=400, detail="phonemes must be non-empty")
+
+    voice_obj = get_or_load_voice(model_path, config_path, use_gpu)
+    syn_config = SynthesisConfig()
+    phoneme_ids = voice_obj.phonemes_to_ids(phonemes)
+    if not phoneme_ids:
+        raise HTTPException(status_code=400, detail="no phoneme IDs generated")
+
+    audio = voice_obj.phoneme_ids_to_audio(phoneme_ids, syn_config)
+    if syn_config.normalize_audio:
+        max_val = np.max(np.abs(audio))
+        if max_val < 1e-8:
+            audio = np.zeros_like(audio)
+        else:
+            audio = audio / max_val
+    if syn_config.volume != 1.0:
+        audio = audio * syn_config.volume
+    audio = np.clip(audio, -1.0, 1.0).astype(np.float32)
+    audio_bytes = (audio * 32767.0).astype(np.int16).tobytes()
+    sample_rate = voice_obj.config.sample_rate if hasattr(voice_obj.config, "sample_rate") else 22050
+    wav_data = create_wav_header(audio_bytes, sample_rate=sample_rate, channels=1)
+    return Response(
+        content=wav_data,
+        media_type="audio/wav",
+        headers={
+            "Content-Disposition": f'attachment; filename="{voice}-pron.wav"',
+            "X-Lingua-TTS-Mode": "TRAINING_ONLY_PHONEME",
+        },
+    )

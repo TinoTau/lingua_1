@@ -1,0 +1,24 @@
+{
+  "checkpoint": "D:/Programs/github/lingua_1/training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+  "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+  "params_no_head": 47210,
+  "architecture": "RetrievalPolicyV3(with_domain_head=True)",
+  "architecture_version": "RetrievalPolicyV3",
+  "p_rr_vs_p1": 0.954,
+  "p_heldout_rr": 0.939,
+  "d_val_top1": 0.304,
+  "runtime_load": "strict with_ambiguity_head=False still 47210; optional head loads strict=False",
+  "shared_trunk_parameter_hashes": {
+    "trunk": "7a3c9a80adfd692b7706a45e0368d8ed09ad61acfe748f0dd93334d834de523b",
+    "item_mlp": "df5332ad519332c5eab156da69808056474e2e6e7b15366f08d4d1d39f0eeac0",
+    "attn": "b61e0fbb31dd472a500a1b82c599606517c70213d42d436d55f494d4e22dc695"
+  },
+  "p_head_parameter_hashes": {
+    "action_head": "b0b97d1a010c1056921edd96f63f34f902643345c8476982de24711054f23a9f",
+    "query_budget_head": "695d0bd20c401a1ef802a41aa8b3f67b6303f79ed3d22a21b47d68fc2f9ad89a",
+    "cand_budget_head": "13071100fba2f08df5b9076b586557f02f933b6f7edad3a1d4506b05d5fd211f"
+  },
+  "d_head_parameter_hashes": {
+    "domain_action_head": "de3429ec736a4fb4cfcf3035980ae5c5385d68dc7fb3971530ee1dec4df07a7c"
+  }
+}

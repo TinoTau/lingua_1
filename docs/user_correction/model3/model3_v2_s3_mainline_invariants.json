@@ -1,0 +1,19 @@
+{
+  "domainVoteSecondViolations": 0,
+  "anchorMutationViolations": 0,
+  "kenlmPoolGt16": 0,
+  "effectiveAnchorRetry": 0,
+  "maxRetryRegionsPerCase": 42,
+  "model3InvocationAssumption": "ONCE_PER_PATH_VIA_ORCHESTRATOR",
+  "retryAtMostOnceAssumption": "RETRY_ROUTER_FROZEN_NO_RECURSION",
+  "jobResultChanged": false,
+  "passed": true,
+  "multipathPreserved": true,
+  "candidateCap": 16,
+  "jobResultUnchanged": true,
+  "featureSeparability": "UNRESOLVED_NONBLOCKING",
+  "modelCapacity": "NOT_PROVEN_LIMITING",
+  "harnessBaselineMode": "MODEL3_HARNESS_KEEP_ALL=1",
+  "s3Mode": "MODEL3_V2_S3_RANDOM_INIT_V1 actionable",
+  "causalControl": "same_dialog200_corpus_same_identity_keepall_vs_actionable"
+}

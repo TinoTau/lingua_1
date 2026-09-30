@@ -1,0 +1,13 @@
+link,artifact,value,status,evidence
+1_CHECKPOINT_HASH,D:\Programs\github\lingua_1\training\model3_dataset\model3_v2_s3_random_init_v1_ckpts\seed_2026083013\weights.pt,f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1,VERIFIED,sha256 match
+2_TRAIN_SCRIPT,training/model3_dataset/train/train_s3_random.py,main() SEED=2026083013,VERIFIED,hardcoded DATA/OUT/MODEL_ID
+3_DATASET_PATH,"model3_v2_production_core_s3/{train,dev,test}",hardcoded DATA L31,VERIFIED_EXPLICIT,no CLI/env override
+4_DATASET_ID,config.json + manifest + samples,MODEL3_V2_PRODUCTION_CORE_S3,PRESENT,samples datasets={'MODEL3_V2_PRODUCTION_CORE_S3': 30354}
+5_DATASET_BUILD_ID,config.json + manifest + samples,prod_core_s3_build_20260830_v1,PRESENT,builds={'prod_core_s3_build_20260830_v1': 30354}
+6_MANIFEST,model3_v2_production_core_s3/dataset_manifest.json,single manifest,PRESENT,SHARD_CONTENT_HASH_MISSING in manifest
+7_TRAIN_SHARD,training/model3_dataset/model3_v2_production_core_s3/train/shard-000.jsonl,157be7a4ba36f693ab620c4b2b31d69c39271da821b4fba8c7d0c42f0511c9f9,DIAGNOSTIC_HASH_ONLY,n=24296
+8_DEV_SHARD,training/model3_dataset/model3_v2_production_core_s3/dev/shard-000.jsonl,47d2dfd57d89926df295bb1f58a1dc55f947071ef0b407331b95422ae3f6065a,DIAGNOSTIC_HASH_ONLY,n=2877
+9_TEST_SHARD,training/model3_dataset/model3_v2_production_core_s3/test/shard-000.jsonl,770a3e4dc332d3c773407d9e14e1aa5df60a1887db71b2d58b74421d4c0cf08f,DIAGNOSTIC_HASH_ONLY,n=3181
+10_FEATURE_CONTRACT,packModel3SpanInferFields,packModel3SpanInferFields,VERIFIED,Node cand/pinyin; Python 6D
+11_LABEL_CONTRACT,MODEL3_LABEL_CONTRACT_V2_20260829,MODEL3_LABEL_CONTRACT_V2_20260829,VERIFIED,"labels={'KEEP': 437146, 'MASKED': 16401, 'RETRY': 30410}"
+12_SPLIT_CONTRACT,semanticFamilyId,"{""train∩dev"": 0, ""train∩test"": 0, ""dev∩test"": 0}",VERIFIED,families=10000

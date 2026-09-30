@@ -1,0 +1,875 @@
+{
+  "phase": "LINGUA_CORRECT_PROFILE_RELATION_APPLICATION_SCOPE_AUDIT",
+  "casesCount": 32,
+  "cases": [
+    {
+      "caseId": "p2_u001_004",
+      "relationFamily": "n_l",
+      "relationDirection": "n_l",
+      "rawAsrText": "今天,我想再确认一下类处理的安排是否合适",
+      "targetSurface": "内处理",
+      "windowText": "类处理",
+      "windowPronunciationSequence": "lei|chu|li",
+      "targetCanonicalPronunciation": "nei|chu|li",
+      "eligibleSyllablePositionsForRelation": [
+        0,
+        2
+      ],
+      "actualTransformedPositions": [
+        0,
+        2
+      ],
+      "actualTransformedPronunciation": "nei|chu|ni",
+      "minimumTargetRequiredChangedPositions": [
+        0
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "YES",
+      "targetReachableBySubsetTransform": "YES",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R1_RELATION_GLOBAL_OVER_APPLICATION",
+      "rootCauseReason": "Target required changing positions [0], but global transform changed all eligible positions [0, 2], producing 'nei|chu|ni' instead of 'nei|chu|li'."
+    },
+    {
+      "caseId": "p2_u001_020",
+      "relationFamily": "in_ing",
+      "relationDirection": "in_ing",
+      "rawAsrText": "行程里关于理事员的部分请再确认一遍",
+      "targetSurface": "礼宾员",
+      "windowText": "理事员",
+      "windowPronunciationSequence": "li|shi|yuan",
+      "targetCanonicalPronunciation": "li|bin|yuan",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "li|shi|yuan",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '理事员' (li|shi|yuan) cannot reach target 'li|bin|yuan' under relation in_ing (rev: ing_in). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u001_021",
+      "relationFamily": "in_ing",
+      "relationDirection": "in_ing",
+      "rawAsrText": "形成里关于信电图的部分请再确认一遍",
+      "targetSurface": "心电图",
+      "windowText": "信电图",
+      "windowPronunciationSequence": "xin|dian|tu",
+      "targetCanonicalPronunciation": "xin|dian|tu",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "xin|dian|tu",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'xin|dian|tu', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u001_024",
+      "relationFamily": "in_ing",
+      "relationDirection": "in_ing",
+      "rawAsrText": "如果影音房缺货,就先登记到货,通知同事 同时推荐同家为替代款给顾客",
+      "targetSurface": "影音房",
+      "windowText": "影音房",
+      "windowPronunciationSequence": "ying|yin|fang",
+      "targetCanonicalPronunciation": "ying|yin|fang",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "yin|yin|fang",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R6_TARGET_ALREADY_CANONICAL_BUT_RELATION_MUTATES_IT",
+      "rootCauseReason": "Target was already canonical in ASR window '影音房' (ying|yin|fang), but relation in_ing (rev: ing_in) forcibly mutated it to 'yin|yin|fang', destroying target."
+    },
+    {
+      "caseId": "p2_u001_037",
+      "relationFamily": "in_ing",
+      "relationDirection": "in_ing",
+      "rawAsrText": "太旦商有新景点",
+      "targetSurface": "新景点",
+      "windowText": "新景点",
+      "windowPronunciationSequence": "xin|jing|dian",
+      "targetCanonicalPronunciation": "xin|jing|dian",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "xin|jin|dian",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R6_TARGET_ALREADY_CANONICAL_BUT_RELATION_MUTATES_IT",
+      "rootCauseReason": "Target was already canonical in ASR window '新景点' (xin|jing|dian), but relation in_ing (rev: ing_in) forcibly mutated it to 'xin|jin|dian', destroying target."
+    },
+    {
+      "caseId": "p2_u001_039",
+      "relationFamily": "n_l",
+      "relationDirection": "n_l",
+      "rawAsrText": "顾客,想了解,刘若川的保修与推换政策",
+      "targetSurface": "牛肉串",
+      "windowText": "刘若川",
+      "windowPronunciationSequence": "liu|ruo|chuan",
+      "targetCanonicalPronunciation": "niu|rou|chuan",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "niu|ruo|chuan",
+      "minimumTargetRequiredChangedPositions": [
+        0
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '刘若川' (liu|ruo|chuan) cannot reach target 'niu|rou|chuan' under relation n_l (rev: l_n). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u002_003",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "麻烦你帮我核对这份关于自由行的说明",
+      "targetSurface": "自由行",
+      "windowText": "自由行",
+      "windowPronunciationSequence": "zi|you|xing",
+      "targetCanonicalPronunciation": "zi|you|xing",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "zi|you|xing",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'zi|you|xing', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u002_004",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "麻烦你帮我核对这份关于赞助的说明",
+      "targetSurface": "赞助",
+      "windowText": "赞助",
+      "windowPronunciationSequence": "zan|zhu",
+      "targetCanonicalPronunciation": "zan|zhu",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "zan|zu",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R6_TARGET_ALREADY_CANONICAL_BUT_RELATION_MUTATES_IT",
+      "rootCauseReason": "Target was already canonical in ASR window '赞助' (zan|zhu), but relation z_zh (rev: zh_z) forcibly mutated it to 'zan|zu', destroying target."
+    },
+    {
+      "caseId": "p2_u002_005",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "再进入下个议题前请,先把知识 要酷的风险依赖和回滚方案讲清楚",
+      "targetSurface": "资料库",
+      "windowText": "先把知",
+      "windowPronunciationSequence": "xian|ba|zhi",
+      "targetCanonicalPronunciation": "zi|liao|ku",
+      "eligibleSyllablePositionsForRelation": [
+        2
+      ],
+      "actualTransformedPositions": [
+        2
+      ],
+      "actualTransformedPronunciation": "xian|ba|zi",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '先把知' (xian|ba|zhi) cannot reach target 'zi|liao|ku' under relation z_zh (rev: zh_z). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u002_010",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "顾客想了解工作制的保修与退换政策",
+      "targetSurface": "工作制",
+      "windowText": "工作制",
+      "windowPronunciationSequence": "gong|zuo|zhi",
+      "targetCanonicalPronunciation": "gong|zuo|zhi",
+      "eligibleSyllablePositionsForRelation": [
+        2
+      ],
+      "actualTransformedPositions": [
+        2
+      ],
+      "actualTransformedPronunciation": "gong|zuo|zi",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R6_TARGET_ALREADY_CANONICAL_BUT_RELATION_MUTATES_IT",
+      "rootCauseReason": "Target was already canonical in ASR window '工作制' (gong|zuo|zhi), but relation z_zh (rev: zh_z) forcibly mutated it to 'gong|zuo|zi', destroying target."
+    },
+    {
+      "caseId": "p2_u002_012",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "我们先确认出注册再决定是否该签 如果改迁请同步通,知思寄予前台",
+      "targetSurface": "出租车",
+      "windowText": "出注册",
+      "windowPronunciationSequence": "chu|zhu|ce",
+      "targetCanonicalPronunciation": "chu|zu|che",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "chu|zu|ce",
+      "minimumTargetRequiredChangedPositions": [
+        1
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        0
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '出注册' (chu|zhu|ce) cannot reach target 'chu|zu|che' under relation z_zh (rev: zh_z). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u002_039",
+      "relationFamily": "z_zh",
+      "relationDirection": "z_zh",
+      "rawAsrText": "请把定 蛋理和工作餐相关的被注写清楚",
+      "targetSurface": "工作餐",
+      "windowText": "工作餐",
+      "windowPronunciationSequence": "gong|zuo|can",
+      "targetCanonicalPronunciation": "gong|zuo|can",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "gong|zuo|can",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'gong|zuo|can', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u003_002",
+      "relationFamily": "eng_en",
+      "relationDirection": "eng_en",
+      "rawAsrText": "我们需要评估横幅对发、不窗口的影像",
+      "targetSurface": "横幅",
+      "windowText": "横幅",
+      "windowPronunciationSequence": "heng|fu",
+      "targetCanonicalPronunciation": "heng|fu",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "heng|fu",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'heng|fu', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u003_003",
+      "relationFamily": "eng_en",
+      "relationDirection": "eng_en",
+      "rawAsrText": "我们需要评估们针对发布窗口的影响",
+      "targetSurface": "闷蒸",
+      "windowText": "们针",
+      "windowPronunciationSequence": "men|zhen",
+      "targetCanonicalPronunciation": "men|zheng",
+      "eligibleSyllablePositionsForRelation": [
+        0,
+        1
+      ],
+      "actualTransformedPositions": [
+        0,
+        1
+      ],
+      "actualTransformedPronunciation": "meng|zheng",
+      "minimumTargetRequiredChangedPositions": [
+        1
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        0
+      ],
+      "targetReachableBySinglePositionTransform": "YES",
+      "targetReachableBySubsetTransform": "YES",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R1_RELATION_GLOBAL_OVER_APPLICATION",
+      "rootCauseReason": "Target required changing positions [1], but global transform changed all eligible positions [0, 1], producing 'meng|zheng' instead of 'men|zheng'."
+    },
+    {
+      "caseId": "p2_u003_010",
+      "relationFamily": "eng_en",
+      "relationDirection": "eng_en",
+      "rawAsrText": "行程里,关于智能计的部分请再确认一遍",
+      "targetSurface": "智能机",
+      "windowText": "智能计",
+      "windowPronunciationSequence": "zhi|neng|ji",
+      "targetCanonicalPronunciation": "zhi|neng|ji",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "zhi|neng|ji",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'zhi|neng|ji', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u003_011",
+      "relationFamily": "eng_en",
+      "relationDirection": "eng_en",
+      "rawAsrText": "为了避免误计请提前核堆本单 在这两个小时钟中的灯塔并确认借博时间是否匹配",
+      "targetSurface": "灯塔",
+      "windowText": "灯塔",
+      "windowPronunciationSequence": "deng|ta",
+      "targetCanonicalPronunciation": "deng|ta",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "deng|ta",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'deng|ta', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u003_016",
+      "relationFamily": "h_f",
+      "relationDirection": "h_f",
+      "rawAsrText": "今天,想试试和翻成大配的套餐",
+      "targetSurface": "换乘",
+      "windowText": "翻成",
+      "windowPronunciationSequence": "fan|cheng",
+      "targetCanonicalPronunciation": "huan|cheng",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "han|cheng",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '翻成' (fan|cheng) cannot reach target 'huan|cheng' under relation h_f (rev: f_h). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u003_017",
+      "relationFamily": "h_f",
+      "relationDirection": "h_f",
+      "rawAsrText": "如果厨房还来得急请,把副市场和主菜一起商并被注清单少盐。",
+      "targetSurface": "护士长",
+      "windowText": "副市场",
+      "windowPronunciationSequence": "fu|shi|chang",
+      "targetCanonicalPronunciation": "hu|shi|zhang",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "hu|shi|chang",
+      "minimumTargetRequiredChangedPositions": [
+        0
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '副市场' (fu|shi|chang) cannot reach target 'hu|shi|zhang' under relation h_f (rev: f_h). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u003_022",
+      "relationFamily": "h_f",
+      "relationDirection": "h_f",
+      "rawAsrText": "麻烦你帮我核对这份关于集佛趣的说明",
+      "targetSurface": "集合区",
+      "windowText": "集佛趣",
+      "windowPronunciationSequence": "ji|fo|qu",
+      "targetCanonicalPronunciation": "ji|he|qu",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "ji|ho|qu",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '集佛趣' (ji|fo|qu) cannot reach target 'ji|he|qu' under relation h_f (rev: f_h). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u003_023",
+      "relationFamily": "h_f",
+      "relationDirection": "h_f",
+      "rawAsrText": "如果方便的话请你把佛国佛教教授提醒 再说明一遍我好做最终确认",
+      "targetSurface": "河谷区",
+      "windowText": "如果方",
+      "windowPronunciationSequence": "ru|guo|fang",
+      "targetCanonicalPronunciation": "he|gu|qu",
+      "eligibleSyllablePositionsForRelation": [
+        2
+      ],
+      "actualTransformedPositions": [
+        2
+      ],
+      "actualTransformedPronunciation": "ru|guo|hang",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '如果方' (ru|guo|fang) cannot reach target 'he|gu|qu' under relation h_f (rev: f_h). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u003_024",
+      "relationFamily": "h_f",
+      "relationDirection": "h_f",
+      "rawAsrText": "我先和对方击听全任无误后,再把结果分开。 如果发给你这样两遍都省事",
+      "targetSurface": "候机厅",
+      "windowText": "方击听",
+      "windowPronunciationSequence": "fang|ji|ting",
+      "targetCanonicalPronunciation": "hou|ji|ting",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "hang|ji|ting",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '方击听' (fang|ji|ting) cannot reach target 'hou|ji|ting' under relation h_f (rev: f_h). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u003_034",
+      "relationFamily": "eng_en",
+      "relationDirection": "eng_en",
+      "rawAsrText": "请把订单里和签陈素相关的被注写清楚",
+      "targetSurface": "千层酥",
+      "windowText": "签陈素",
+      "windowPronunciationSequence": "qian|chen|su",
+      "targetCanonicalPronunciation": "qian|ceng|su",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "qian|cheng|su",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '签陈素' (qian|chen|su) cannot reach target 'qian|ceng|su' under relation eng_en (rev: en_eng). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u004_002",
+      "relationFamily": "ch_c",
+      "relationDirection": "ch_c",
+      "rawAsrText": "麻烦你帮我核对这份关于极层测试的说明",
+      "targetSurface": "集成测试",
+      "windowText": "极层测试",
+      "windowPronunciationSequence": "ji|ceng|ce|shi",
+      "targetCanonicalPronunciation": "ji|cheng|ce|shi",
+      "eligibleSyllablePositionsForRelation": [
+        1,
+        2
+      ],
+      "actualTransformedPositions": [
+        1,
+        2
+      ],
+      "actualTransformedPronunciation": "ji|cheng|che|shi",
+      "minimumTargetRequiredChangedPositions": [
+        1
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        2,
+        3
+      ],
+      "targetReachableBySinglePositionTransform": "YES",
+      "targetReachableBySubsetTransform": "YES",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R1_RELATION_GLOBAL_OVER_APPLICATION",
+      "rootCauseReason": "Target required changing positions [1], but global transform changed all eligible positions [1, 2], producing 'ji|cheng|che|shi' instead of 'ji|cheng|ce|shi'."
+    },
+    {
+      "caseId": "p2_u004_005",
+      "relationFamily": "ch_c",
+      "relationDirection": "ch_c",
+      "rawAsrText": "如果方便的话请你把剪裁器 在说明一遍我好做最终确认",
+      "targetSurface": "检查法",
+      "windowText": "剪裁器",
+      "windowPronunciationSequence": "jian|cai|qi",
+      "targetCanonicalPronunciation": "jian|cha|fa",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "jian|chai|qi",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '剪裁器' (jian|cai|qi) cannot reach target 'jian|cha|fa' under relation ch_c (rev: c_ch). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u004_008",
+      "relationFamily": "ch_c",
+      "relationDirection": "ch_c",
+      "rawAsrText": "今天想试试和检查和搭配的套餐",
+      "targetSurface": "检查和",
+      "windowText": "检查和",
+      "windowPronunciationSequence": "jian|cha|he",
+      "targetCanonicalPronunciation": "jian|cha|he",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "jian|cha|he",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'jian|cha|he', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u004_009",
+      "relationFamily": "ch_c",
+      "relationDirection": "ch_c",
+      "rawAsrText": "请把藏头灯的库存数量同步到系统",
+      "targetSurface": "床头灯",
+      "windowText": "藏头灯",
+      "windowPronunciationSequence": "cang|tou|deng",
+      "targetCanonicalPronunciation": "chuang|tou|deng",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "chang|tou|deng",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '藏头灯' (cang|tou|deng) cannot reach target 'chuang|tou|deng' under relation ch_c (rev: c_ch). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u004_015",
+      "relationFamily": "n_l",
+      "relationDirection": "n_l",
+      "rawAsrText": "我们需要评估来 黄素对发布窗口的影响",
+      "targetSurface": "奶黄酥",
+      "windowText": "评估来",
+      "windowPronunciationSequence": "ping|gu|lai",
+      "targetCanonicalPronunciation": "nai|huang|su",
+      "eligibleSyllablePositionsForRelation": [
+        2
+      ],
+      "actualTransformedPositions": [
+        2
+      ],
+      "actualTransformedPronunciation": "ping|gu|nai",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '评估来' (ping|gu|lai) cannot reach target 'nai|huang|su' under relation n_l (rev: l_n). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u004_019",
+      "relationFamily": "n_l",
+      "relationDirection": "n_l",
+      "rawAsrText": "请说明德鸾",
+      "targetSurface": "地暖",
+      "windowText": "德鸾",
+      "windowPronunciationSequence": "de|luan",
+      "targetCanonicalPronunciation": "di|nuan",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "de|nuan",
+      "minimumTargetRequiredChangedPositions": [
+        1
+      ],
+      "minimumTargetRequiredUnchangedPositions": [],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '德鸾' (de|luan) cannot reach target 'di|nuan' under relation n_l (rev: l_n). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u005_006",
+      "relationFamily": "sh_s",
+      "relationDirection": "sh_s",
+      "rawAsrText": "如果水果塔还没闭环就线标记组色同时安排专人跟精兵在明天 上回复盘",
+      "targetSurface": "水果塔",
+      "windowText": "水果塔",
+      "windowPronunciationSequence": "shui|guo|ta",
+      "targetCanonicalPronunciation": "shui|guo|ta",
+      "eligibleSyllablePositionsForRelation": [],
+      "actualTransformedPositions": [],
+      "actualTransformedPronunciation": "shui|guo|ta",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        0,
+        1,
+        2
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "YES",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R7_DETERMINISTIC_SINGLE_OUTPUT_LIMIT",
+      "rootCauseReason": "Target reachable by global transform 'shui|guo|ta', but adapter single output or window execution did not recall it."
+    },
+    {
+      "caseId": "p2_u005_019",
+      "relationFamily": "sh_s",
+      "relationDirection": "sh_s",
+      "rawAsrText": "或家有归病似",
+      "targetSurface": "贵宾室",
+      "windowText": "归病似",
+      "windowPronunciationSequence": "gui|bing|si",
+      "targetCanonicalPronunciation": "gui|bin|shi",
+      "eligibleSyllablePositionsForRelation": [
+        2
+      ],
+      "actualTransformedPositions": [
+        2
+      ],
+      "actualTransformedPronunciation": "gui|bing|shi",
+      "minimumTargetRequiredChangedPositions": [
+        2
+      ],
+      "minimumTargetRequiredUnchangedPositions": [
+        0
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '归病似' (gui|bing|si) cannot reach target 'gui|bin|shi' under relation sh_s (rev: s_sh). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u005_034",
+      "relationFamily": "sh_s",
+      "relationDirection": "sh_s",
+      "rawAsrText": "顾客,想了解锁条的保修与推换政策",
+      "targetSurface": "薯条",
+      "windowText": "锁条",
+      "windowPronunciationSequence": "suo|tiao",
+      "targetCanonicalPronunciation": "shu|tiao",
+      "eligibleSyllablePositionsForRelation": [
+        0
+      ],
+      "actualTransformedPositions": [
+        0
+      ],
+      "actualTransformedPronunciation": "shuo|tiao",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [
+        1
+      ],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '锁条' (suo|tiao) cannot reach target 'shu|tiao' under relation sh_s (rev: s_sh). ASR error contains non-relation phonetics or window is mislocalized."
+    },
+    {
+      "caseId": "p2_u005_038",
+      "relationFamily": "sh_s",
+      "relationDirection": "sh_s",
+      "rawAsrText": "护士站提醒患者准备好后 科思相关材料",
+      "targetSurface": "候客室",
+      "windowText": "科思相",
+      "windowPronunciationSequence": "ke|si|xiang",
+      "targetCanonicalPronunciation": "hou|ke|shi",
+      "eligibleSyllablePositionsForRelation": [
+        1
+      ],
+      "actualTransformedPositions": [
+        1
+      ],
+      "actualTransformedPronunciation": "ke|shi|xiang",
+      "minimumTargetRequiredChangedPositions": [],
+      "minimumTargetRequiredUnchangedPositions": [],
+      "targetReachableBySinglePositionTransform": "NO",
+      "targetReachableBySubsetTransform": "NO",
+      "targetReachableByGlobalTransform": "NO",
+      "targetReachableByCurrentAdapter": "NO",
+      "firstApplicationScopeCause": "R5_WINDOW_DOES_NOT_CONTAIN_TARGET_ALIGNABLE_SEQUENCE",
+      "rootCauseReason": "Window '科思相' (ke|si|xiang) cannot reach target 'hou|ke|shi' under relation sh_s (rev: s_sh). ASR error contains non-relation phonetics or window is mislocalized."
+    }
+  ]
+}

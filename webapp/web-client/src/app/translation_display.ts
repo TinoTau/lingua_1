@@ -8,6 +8,11 @@ import { logger } from '../logger';
 export interface TranslationResult {
   originalText: string;
   translatedText: string;
+  /** Correction binding (minimal metadata; not full JobResult) */
+  sessionId?: string;
+  utteranceIndex?: number;
+  /** Immutable system ASR text for correction (same as originalText without UI marks) */
+  systemText?: string;
   serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number };
   networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number };
   schedulerSentAtMs?: number;

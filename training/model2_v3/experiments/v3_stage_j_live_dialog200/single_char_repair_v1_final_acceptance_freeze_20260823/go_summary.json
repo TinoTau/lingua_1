@@ -1,0 +1,34 @@
+{
+  "ts": "2026-08-23T03:35:00Z",
+  "stage": "SINGLE_CHAR_REPAIR_V1_FINAL_ACCEPTANCE_FREEZE",
+  "verdict": "PASS",
+  "gates": {
+    "bundle_identity": true,
+    "manifest_single_char": true,
+    "set_equality": true,
+    "collector": true,
+    "query": true,
+    "model2_absent": true,
+    "model3_absent": true,
+    "len2plus": true,
+    "domain": true,
+    "term_domain_tags": true,
+    "ime": true,
+    "dialog200": true,
+    "freeze_docs": true,
+    "membership_case_tuning": 0
+  },
+  "dialog200": {
+    "status": "PASS",
+    "utterances": 200,
+    "changed_outputs": 119,
+    "classification": {
+      "unchanged": 81,
+      "unrelated": 93,
+      "unclear": 26,
+      "pollution_removed_improved": 0,
+      "valid_candidate_lost": 0
+    }
+  },
+  "safe_to_start_model3_audit": true
+}

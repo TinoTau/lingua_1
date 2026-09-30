@@ -1,0 +1,65 @@
+{
+  "kind": "REGRESSION_ONLY",
+  "training": false,
+  "hard_mine": false,
+  "special_case": false,
+  "acceptance": "candidate origin/binding correct; final dialog correctness NOT required",
+  "cases": [
+    {
+      "dialog_id": "d002",
+      "surface": "大杯",
+      "wrong_span_text": "帮",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d047",
+      "surface": "大杯",
+      "wrong_span_text": "帮",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d137",
+      "surface": "大杯",
+      "wrong_span_text": "帮",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d182",
+      "surface": "大杯",
+      "wrong_span_text": "帮",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d031",
+      "surface": "预订",
+      "wrong_span_text": "大",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d121",
+      "surface": "预订",
+      "wrong_span_text": "搭",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d166",
+      "surface": "预订",
+      "wrong_span_text": "搭",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d183",
+      "surface": "少冰",
+      "wrong_span_text": "红",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    },
+    {
+      "dialog_id": "d183",
+      "surface": "小杯",
+      "wrong_span_text": "红",
+      "expected_after_fix": "NOT_MATERIALIZED"
+    }
+  ],
+  "unit_tests": "electron_node/electron-node/main/src/model2-runtime/candidate-materialize.test.ts",
+  "unit_tests_pass": true
+}

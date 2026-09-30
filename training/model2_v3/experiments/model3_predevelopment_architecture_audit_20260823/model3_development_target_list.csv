@@ -1,0 +1,18 @@
+file_or_module,classification,rationale
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,DO_NOT_TOUCH,Single-char V1 frozen; Model3 reuses not modifies
+electron_node/electron-node/main/src/model2-runtime/*,DO_NOT_TOUCH,Model2 P/D frozen ownership
+electron_node/electron-node/main/src/fw-detector/span-assembly-shared/utterance-domain-vote.ts,DO_NOT_TOUCH,Domain Vote SSOT frozen
+docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv,DO_NOT_TOUCH,Frozen data SSOT
+node_runtime/lexicon/v3,DO_NOT_TOUCH,bundle 14 frozen
+fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,MODIFY,Minimum hook: anchor adapter + Model3 gate + retry coordinator call site
+fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,KEEP,may export anchor membership view without changing vote semantics
+model2-runtime/expand-active-candidates.ts,KEEP,source of Model2 anchors
+fw-detector/build-sentence-candidates.ts,KEEP,re-run after retry
+fw-detector/span-assembly-v4/merge-cross-path-sentence-candidates.ts,KEEP,cap 16 unchanged
+fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts,KEEP,single rerank after retry
+model3-runtime/model3-anchor-adapter.ts,CREATE,Derive anchor mask from DomainFilteredSpanSet + Model2 candidates
+model3-runtime/model3-inference-host.ts,CREATE,Utterance-level KEEP/RETRY inference wrapper
+model3-runtime/model3-retry-coordinator.ts,CREATE,One-shot re-recall + re-assembly orchestration
+model3-runtime/model3-types.ts,CREATE,Model3SpanInput / Model3Decision internal types
+model3-runtime/model3-trace.ts,CREATE,MODEL3_RETRY_TRACE_V1
+legacy/archive/fw-detector-span/*,DELETE_LATER,not production; do not revive for Model3

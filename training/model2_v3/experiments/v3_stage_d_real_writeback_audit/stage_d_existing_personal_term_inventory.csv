@@ -1,0 +1,11 @@
+Symbol,Location,Writer,Reader,Persisted,Model2Consumer,Class
+personal_terms,UserProfileV1 Gateway/Scheduler/Node,Gateway apply,Node type only; Model2 unused,YES,NO,ACTIVE_STORE_DEAD_CONSUMER
+personal_term_evidence,Gateway UserProfileV1,Gateway apply,Stage D train needs; Node TS missing,YES,NO,ACTIVE_PARTIAL
+personal_term_updates,ProfileDelta,Scheduler build_profile_delta,Gateway apply,N/A,N/A,ACTIVE
+domain_updates,ProfileDelta,always empty,Gateway apply shell,N/A,N/A,SCHEMA_ONLY
+domain_bias,UserProfileV1,PUT /profile only; not correction,unused by Model2,YES,NO,SCHEMA_ONLY
+common_terms,training model2_v3 only,synthetic,train,NO,TRAIN,TRAINING_ONLY
+long_term_domain_evidence,Stage D JSONL rows,derive_domain_evidence synthetic,pack_batch_inputs domain_evidence,NO,TRAIN,TRAINING_ONLY_SYNTHETIC
+session_domain_prior,Stage D rows / JobAssign.domainPriors,train synthetic; JobAssign soft quota,Model2 unused,PARTIAL,NO,G3_GAP
+lexical_profile,none,—,—,NO,NO,DEAD
+term_frequency,none,—,—,NO,NO,DEAD

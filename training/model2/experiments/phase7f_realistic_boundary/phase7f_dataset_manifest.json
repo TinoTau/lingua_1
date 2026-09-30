@@ -1,0 +1,28 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "dataset_tag": "PHASE7F_REALISTIC_RECALL_DATASET",
+  "per_slice_counts": {
+    "S1_SINGLE_PROFILE_CLEAN": 100,
+    "S2_MULTI_PROFILE_COMPOSITION": 100,
+    "S3_PROFILE_PARTIAL_EXPLANATION": 0,
+    "S4_ASR_SYLLABLE_DELETION": 0,
+    "S5_ASR_SYLLABLE_INSERTION": 100,
+    "S6_ASR_ALIGNMENT_SHIFT": 16,
+    "S7_NON_PROFILE_ERROR": 0,
+    "S8_AMBIGUOUS_PROFILE_MATCH": 45,
+    "S9_MULTI_RELATION_PROFILE_USER": 100,
+    "S10_WEAK_PROFILE": 100,
+    "S11_NATURAL_BASE_MISS": 300,
+    "S12_NO_CHANGE": 300
+  },
+  "primary_n": 500,
+  "real_asr_primary_n": 250,
+  "family_synth_primary_n": 250,
+  "real_asr_built": 500,
+  "multi_synth_built": 100,
+  "provenance_note": "Metrics reported separately for REAL_ASR_OBSERVED vs FAMILY_SYNTH"
+}

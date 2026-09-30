@@ -1,0 +1,33 @@
+{
+  "verdict": "PARTIAL_PASS",
+  "label": "CONDITION_MECHANISM_GO / RANKING_GATE_HOLD",
+  "primary": "B1",
+  "interpretation": "Tiny-overfit and TargetScoreGain show phonetic condition path is trainable; Recall@K ConditionGain remains near-zero and joint S1 degraded base recall vs B0. Do NOT expand to 10k–20k until ranking condition gain improves.",
+  "ConditionGain@3": 0.0013422818791946345,
+  "TargetScoreGain_mean": 0.2476920712914243,
+  "go_core": {
+    "tiny_overfit": true,
+    "mask_invariance": true,
+    "target_score_gain_pos": true,
+    "recall_condition_gain_pos": false,
+    "wrong_not_better_than_correct": true,
+    "wrong_damage_not_catastrophic": true,
+    "params_ok": true
+  },
+  "go_stress": {
+    "profile_swap_interpretable": false,
+    "profile_zeroing_near_b0": false,
+    "opposite_direction": true
+  },
+  "failure_classes_open": [
+    "FUSION",
+    "LOSS",
+    "PROFILE_BINDING"
+  ],
+  "next": "CONDITION_CALIBRATION (stronger ranking-aware L_cond, longer S0 / gentler S1) — not dataset scale-up",
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ]
+}

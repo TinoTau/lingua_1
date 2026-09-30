@@ -1,15 +1,15 @@
 {
   "schemaVersion": "lexicon-v3-runtime-v3",
-  "bundleVersion": 12,
+  "bundleVersion": 14,
   "bundleTag": "v3-runtime",
-  "buildTime": "2026-08-02T14:01:33.634Z",
-  "checksum": "sha256:ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76",
+  "buildTime": "2026-08-23T02:08:53.969Z",
+  "checksum": "sha256:59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19",
   "tables": {
-    "base": 9256,
+    "base": 10381,
     "idiom": 22192,
     "domain": 655,
     "routing": 655,
-    "term": 9256,
+    "term": 10381,
     "term_domain_tags": 655,
     "domain_hierarchy": 12
   },
@@ -49,7 +49,7 @@
       {
         "file": "terms_to_remove_or_rebuild.csv",
         "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/terms_to_remove_or_rebuild.csv",
-        "sha256": "sha256:5911d4ac8a00dba7ecd3a7e319af5a489df2356bd1b38496e29db4583bbc13e1",
+        "sha256": "sha256:205abcaa3a9bd0f264ef8e28de31d41dbd8e9aff76fcd860da068e560ae45384",
         "recordCount": 12,
         "matchesTmpExtract": false
       }
@@ -65,6 +65,17 @@
     },
     "excludedTermCount": 12,
     "supplementalRowCount": 45,
+    "singleCharSource": {
+      "path": "docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv",
+      "sha256": "sha256:5363ada5047b467899e0753534e8d95f7212d85717f12c1d18e58a3bc6f54916",
+      "recordCount": 1125,
+      "skipped": {
+        "empty": 0,
+        "non_cjk": 0,
+        "duplicate": 0,
+        "existing_term": 0
+      }
+    },
     "reviewKeptCount": 9211,
     "domainTagCount": 655
   },
@@ -96,7 +107,8 @@
     "sources": [
       "lexicon_full_corrected_review.csv",
       "term_domain_tags_corrected.csv",
-      "supplemental_terms.csv"
+      "supplemental_terms.csv",
+      "docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv"
     ],
     "excluded": [
       "terms_to_remove_or_rebuild.csv"
@@ -106,7 +118,7 @@
     "idiomSource": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
     "hierarchySource": "electron_node/electron-node/data/lexicon/profile-registry.json"
   },
-  "atomicityNote": "ATOMICITY CONTENT CLEANUP NOT EXECUTED",
+  "atomicityNote": "ATOMICITY CONTENT CLEANUP EXECUTED \u2014 enforce Gate REJECT_COMPOSITE=0 UNRESOLVED=0",
   "atomicity": {
     "mode": "enforce",
     "report": "atomicity_report.json",

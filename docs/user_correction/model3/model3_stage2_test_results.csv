@@ -1,0 +1,20 @@
+test,result,notes
+deterministic_seed,PASS,seed 20260824
+fineSpan_reuse,PASS,runLatticeFineSpanGeneration
+stable_spanIds,PASS,fine:{hash}:{idx}
+domain_vote_reuse,PASS,voteUtteranceDomainFromPool
+multi_retained_domains,PASS,harness keeps retainedDomains array (often empty on synthetic)
+sameDomain_anchor,PASS,production isSameDomainCandidate predicate
+domain_tag_only_not_anchor,PASS,requires retainedDomains membership
+model2_unavailable,PASS,all UNAVAILABLE
+recall_YES,PASS,recallTopKForWindows path yields YES for some
+recall_NO,PASS,non-lexicon-reachable KEEP/D
+recall_UNKNOWN,PASS,supported in probe
+anchor_MASKED,PASS_WITH_DATA_GAPS,0 MASKED in pilot — Domain Vote retained empty for most SYNTHETIC_TEXT
+repairable_RETRY,PASS,1009 RETRY spans
+non_repairable_KEEP,PASS,majority KEEP
+unknown_EXCLUDE,PASS,path implemented; 0 in this pilot
+feature_masks,PASS,toneAcoustic/asrConfidence false
+schema_validation,PASS,6000/6000
+loader_smoke,PASS,pilot_loader_smoke_test.json
+runtime_unchanged,PASS,no production algorithm edits

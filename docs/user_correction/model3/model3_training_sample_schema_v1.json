@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model3_training_sample_schema_v1",
+  "$comment": "SUPERSEDED 2026-08-23 by MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json — do not use for 100k shards.",
+  "title": "Model3TrainingSampleV1_DRAFT_SUPERSEDED",
+  "type": "object",
+  "required": [
+    "sample_id",
+    "utterance_id",
+    "path_id",
+    "spans",
+    "retained_domains",
+    "split_tags"
+  ],
+  "properties": {
+    "sample_id": { "type": "string" },
+    "utterance_id": { "type": "string" },
+    "path_id": { "type": "string" },
+    "audio_ref": { "type": ["string", "null"] },
+    "asr_raw": { "type": "string" },
+    "reference_text": { "type": ["string", "null"] },
+    "retained_domains": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "span_id",
+          "surface",
+          "is_anchor",
+          "anchor_source",
+          "target_mask",
+          "label"
+        ],
+        "properties": {
+          "span_id": { "type": "string" },
+          "surface": { "type": "string" },
+          "raw_start": { "type": "integer" },
+          "raw_end": { "type": "integer" },
+          "is_anchor": { "type": "boolean" },
+          "anchor_source": {
+            "enum": ["NONE", "DOMAIN", "MODEL2", "DOMAIN_AND_MODEL2"]
+          },
+          "target_mask": { "enum": [0, 1] },
+          "label": {
+            "enum": ["KEEP", "RETRY", "MASKED_ANCHOR"]
+          },
+          "label_class": {
+            "type": ["string", "null"],
+            "description": "A–E KEEP classes or RETRY criteria id"
+          },
+          "pinyin_evidence": { "type": "object" },
+          "tone_evidence": { "type": "object" },
+          "acoustic_evidence": { "type": "object" },
+          "pronunciation_evidence": { "type": "object" },
+          "recall_evidence": { "type": "object" },
+          "alignment_artifact_id": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "split_tags": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "held_out_utterance",
+          "held_out_anchor_combo",
+          "held_out_bridge_surface",
+          "held_out_pronunciation_corruption",
+          "held_out_domain",
+          "held_out_user_profile_pattern",
+          "train",
+          "val",
+          "test"
+        ]
+      }
+    },
+    "source": {
+      "enum": ["dialog_200", "real_corpus", "synthetic_tts_asr", "other"]
+    }
+  }
+}

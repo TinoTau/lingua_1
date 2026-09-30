@@ -1,0 +1,51 @@
+{
+  "modelName": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2",
+  "architecture": "Small BiGRU",
+  "config": {
+    "modelId": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2",
+    "parentModelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "parentWeightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "experimentId": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "seed": 2026083013,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 8,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 4.0,
+    "auto_class_weight_formula": false,
+    "sampling": "uniform_shuffle_utterance",
+    "hardNegativeMode": "NONE",
+    "pair_loss_enabled": false,
+    "init": "random_from_scratch",
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "featureContract": "packModel3SpanInferFields",
+    "decisionThreshold": "argmax",
+    "checkpointSelectionCriterion": "best_dev_retry_f1"
+  },
+  "vocabSize": 1489,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

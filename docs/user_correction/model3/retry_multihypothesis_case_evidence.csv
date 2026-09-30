@@ -1,0 +1,7 @@
+caseId,regionalPathCount,selectedPathToday,alternativeHypothesesExist,multiCharEdgesExist,currentRetryWindows,additionalWindowsUnderMinimalCorrection,candidateBudgetImpact,crossAnchorRisk,crossKeepRisk,referenceReachable,notes
+d179,2,限|计|划|意|境|全|任,YES,NO,7 single-char (region 7 syl),Union likely same 7 windows (paths differ only if alt edges exist; audit_lex2=1),NONE — same span set expected,PASS,PASS,YES,Multipath structural; minimal correction may not change recall window set
+d142,2,药师|堵|车|您|提,YES,YES (lex2=2),5 windows from selected path,Alt path may add 2-char windows (e.g. diff boundary splits),LOW — perSpanCap unchanged,PASS,PASS,YES,Segmentation changed under retry; multipath union may expose alt 2-char spans
+d099,2,苏|和|步,YES,NO,3 single-char,Union ~3 (alt path same granularity),NONE,PASS,PASS,NO,Multipath does not repair SOHO transliteration gap
+d131,2,意识|规|则|要是,YES,YES (lex2=3),4 windows,Alt path may add 2-char windows (规|则 vs 规则 etc),LOW,PASS,PASS,NO,Lexicon missing dominates; multipath safety only
+d160,4,顺|便|向|木|李,YES,YES (lex2=2),5 single-char only,+顺便(0:2) +向木(3:5) from alt paths (~2-3 extra),LOW — mergeSpanCandidates caps,PASS,PASS,NO,Primary diagnostic case; 4 paths; ranks 2-4 discarded today
+d176,2,意识|规|则|要是,YES,YES (lex2=3),4 windows,Same as d131 alt windows,LOW,PASS,PASS,NO,Same structure as d131

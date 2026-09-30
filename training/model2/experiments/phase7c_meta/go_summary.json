@@ -1,0 +1,26 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "verdict": "PASS",
+  "pass_definition": "At least one 7B hypothesis causally confirmed/refuted with clear next-step decision",
+  "baseline_reproduction": "PASS",
+  "P1": "NOT_SUPPORTED",
+  "P2": "PARTIALLY_SUPPORTED",
+  "P3": "PARTIALLY_SUPPORTED",
+  "P4": "AMPLIFIER",
+  "primary_root_cause_after_7c": "Stage A dual-encoder fails to learn transferable query↔candidate phonetic matching; SEEN success is largely non-transferable geometry/memorization. Query-channel oracle is a dataset honesty issue but not the single lever that restores UNSEEN.",
+  "best_clean_intervention": "NONE_YET — no probe jointly raises UNSEEN and lowers shortcuts enough for 7D",
+  "new_shortcut_detected": "NO_MAJOR — P3 reduced shortcuts; P2 null-query slightly up",
+  "stage_a": "KEEP_7A",
+  "stage_b": "KEEP",
+  "dataset_contract": "MODIFY_IN_7D — remove oracle span_syllables for runtime-like honesty even if not sufficient alone",
+  "tone": "HOLD",
+  "node": "HOLD",
+  "scale_50k": "HOLD",
+  "recommended_next_phase": "HOLD on 7D consolidation; open Phase 7C.1 / 7D-prep for stronger phonetic-matching representation probes",
+  "go_hold_logic": "PASS on causal attribution; HOLD on clean repair found (no CANDIDATE_FOR_PHASE7D_BASELINE)"
+}

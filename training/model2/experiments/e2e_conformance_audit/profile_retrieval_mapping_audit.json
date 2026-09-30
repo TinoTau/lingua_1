@@ -1,0 +1,12 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "direction_contract": "X_Y = intended X → observed Y; retrieval applies OPPOSITE_DIRECTION",
+  "activation": {
+    "schema_dims": 16,
+    "retrieval_default_allowed": "BOUND_FEATURES_V1 (7)",
+    "reason": "Phase 6C binding quality labels; spike inherited",
+    "flag": "SPIKE_ONLY_LIMIT (not yet formal PROFILE_COVERAGE_DRIFT if kept marked SPIKE)"
+  },
+  "WEAK_REVERSED_excluded_from_retrieval": true,
+  "implication": "Profiles with only s_sh/en_eng/reversed keys generate zero queries even if applicable"
+}

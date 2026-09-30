@@ -1,0 +1,220 @@
+{
+  "authority": "central_server/api-gateway/src/profile_delta.rs::apply_profile_delta(_with_lexicon)",
+  "generator": "dump_pilot_profile_delta_parity_vectors",
+  "histories": [
+    {
+      "events": [],
+      "expected_profile": {
+        "confusion_bias": {},
+        "domain_bias": {},
+        "legacy_free_text_personal_terms": [],
+        "long_term_domain_evidence": {},
+        "personal_term_evidence": {},
+        "personal_terms": [],
+        "phonetic_bias": {},
+        "profile_version": 0,
+        "resolved_lexical_terms": {},
+        "schema_version": 2,
+        "tone_bias": {},
+        "unresolved_lexical_observations": []
+      },
+      "history_id": "H_P0",
+      "stage": "P0"
+    },
+    {
+      "events": [
+        {
+          "evidence": 1.0,
+          "feature_key": "n_l",
+          "weight": 0.4
+        }
+      ],
+      "expected_profile": {
+        "confusion_bias": {},
+        "domain_bias": {},
+        "legacy_free_text_personal_terms": [],
+        "long_term_domain_evidence": {},
+        "personal_term_evidence": {},
+        "personal_terms": [],
+        "phonetic_bias": {
+          "n_l": 0.1
+        },
+        "profile_version": 1,
+        "resolved_lexical_terms": {},
+        "schema_version": 2,
+        "tone_bias": {},
+        "unresolved_lexical_observations": []
+      },
+      "history_id": "H_P1",
+      "stage": "P1"
+    },
+    {
+      "events": [
+        {
+          "evidence": 1.0,
+          "feature_key": "n_l",
+          "weight": 0.7
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "n_l",
+          "weight": 0.7
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "in_ing",
+          "weight": 0.4
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "in_ing",
+          "weight": 0.4
+        }
+      ],
+      "expected_profile": {
+        "confusion_bias": {},
+        "domain_bias": {},
+        "legacy_free_text_personal_terms": [],
+        "long_term_domain_evidence": {},
+        "personal_term_evidence": {},
+        "personal_terms": [],
+        "phonetic_bias": {
+          "in_ing": 0.19,
+          "n_l": 0.31937499999999996
+        },
+        "profile_version": 4,
+        "resolved_lexical_terms": {},
+        "schema_version": 2,
+        "tone_bias": {},
+        "unresolved_lexical_observations": []
+      },
+      "history_id": "H_P2",
+      "stage": "P2"
+    },
+    {
+      "events": [
+        {
+          "evidence": 1.0,
+          "feature_key": "z_zh",
+          "weight": 1.0
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "sh_s",
+          "weight": 0.7
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "z_zh",
+          "weight": 1.0
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "sh_s",
+          "weight": 0.7
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "z_zh",
+          "weight": 1.0
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "sh_s",
+          "weight": 0.7
+        }
+      ],
+      "expected_profile": {
+        "confusion_bias": {},
+        "domain_bias": {},
+        "legacy_free_text_personal_terms": [],
+        "long_term_domain_evidence": {},
+        "personal_term_evidence": {},
+        "personal_terms": [],
+        "phonetic_bias": {
+          "sh_s": 0.4384843749999999,
+          "z_zh": 0.578125
+        },
+        "profile_version": 6,
+        "resolved_lexical_terms": {},
+        "schema_version": 2,
+        "tone_bias": {},
+        "unresolved_lexical_observations": []
+      },
+      "history_id": "H_P3",
+      "stage": "P3"
+    },
+    {
+      "events": [
+        {
+          "term": "接口",
+          "weight": 1.0
+        },
+        {
+          "term": "接口",
+          "weight": 1.0
+        },
+        {
+          "evidence": 1.0,
+          "feature_key": "n_l",
+          "weight": 0.7
+        }
+      ],
+      "expected_profile": {
+        "confusion_bias": {},
+        "domain_bias": {},
+        "legacy_free_text_personal_terms": [],
+        "long_term_domain_evidence": {
+          "bakery": 0.0,
+          "coffee": 0.0,
+          "food_order": 0.0,
+          "medical": 0.0,
+          "meeting": 0.0,
+          "milk_tea": 0.0,
+          "tech_ai": 1.0,
+          "tourism_hotel": 0.0,
+          "tourism_pickup": 0.0,
+          "tourism_route": 0.0,
+          "tourism_transport": 0.0,
+          "transport": 0.0
+        },
+        "personal_term_evidence": {
+          "id-jk": 0.4375
+        },
+        "personal_terms": [
+          "接口"
+        ],
+        "phonetic_bias": {
+          "n_l": 0.175
+        },
+        "profile_version": 3,
+        "resolved_lexical_terms": {
+          "id-jk": {
+            "confirm_count": 2,
+            "evidence": 0.4375,
+            "surface": "接口",
+            "term_id": "id-jk"
+          }
+        },
+        "schema_version": 2,
+        "tone_bias": {},
+        "unresolved_lexical_observations": []
+      },
+      "history_id": "H_LEX",
+      "lexicon_fixture": {
+        "domains": [
+          "tech_ai"
+        ],
+        "接口": "id-jk"
+      },
+      "stage": "P2_LEX"
+    }
+  ],
+  "pilot_fields_compared": [
+    "phonetic_bias",
+    "personal_terms",
+    "personal_term_evidence",
+    "long_term_domain_evidence",
+    "profile_version"
+  ]
+}

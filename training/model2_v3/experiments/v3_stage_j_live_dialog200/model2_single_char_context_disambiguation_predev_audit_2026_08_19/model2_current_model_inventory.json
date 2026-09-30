@@ -1,0 +1,34 @@
+{
+  "production_model2_count": 1,
+  "single_model_confirmed": true,
+  "architecture_drift": false,
+  "models": [
+    {
+      "role": "Model2_production",
+      "architecture": "RetrievalPolicyV3(with_domain_head=True)",
+      "checkpoint": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+      "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+      "parameters": 47210,
+      "feature_hash": "MODEL2_FEATURE_HASH_V1",
+      "loader": "electron_node/services/model2_runtime/model2_inference_host.py",
+      "sessions": 1,
+      "dual_model": false,
+      "stage_p_only_fallback": false,
+      "silent_latest_glob": false
+    }
+  ],
+  "not_model2": [
+    {
+      "role": "Tone_CNN_V2",
+      "note": "Frozen acoustic tone evidence subsystem. Not a second Model2. Must not be used as character generator."
+    },
+    {
+      "role": "KenLM",
+      "note": "Sentence scorer. Not Model2."
+    }
+  ],
+  "shadow_model": false,
+  "legacy_model_runtime": false,
+  "single_char_experimental_model": false,
+  "onnx_parallel_runtime": false
+}

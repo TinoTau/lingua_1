@@ -1,0 +1,102 @@
+{
+  "phase": "MODEL3_V1_TEXT_ONLY_ROLE_FREEZE_CORRECTION",
+  "date": "2026-08-26",
+  "verdict": "PASS",
+  "role": {
+    "authoritativeName": "Anchor-Conditioned Text Repair Trigger",
+    "alias": "Anchor-Conditioned Span Retry Trigger",
+    "inputModality": "TEXT_ONLY",
+    "audioInput": false,
+    "toneDirectInput": false,
+    "fwTimestampDirectInput": false,
+    "ttsRequired": false,
+    "modelDiscoversAnchor": false
+  },
+  "freezeIdentity": {
+    "checkpointChanged": false,
+    "trainingConfigChanged": false,
+    "datasetChanged": false,
+    "acceptanceSealChanged": false,
+    "modelSha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "configSha256": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "datasetManifestSha256": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432"
+  },
+  "modelVisibleInputs": [
+    {"name": "surface_char_tokens", "class": "TEXT_DERIVED"},
+    {"name": "isAnchor", "class": "ANCHOR_DERIVED"},
+    {"name": "span_len_log1p", "class": "TEXT_DERIVED"},
+    {"name": "span_rel_position", "class": "TEXT_DERIVED"},
+    {"name": "first_pass_cand_log1p", "class": "TEXT_DERIVED"},
+    {"name": "current_cjk_len_log1p", "class": "TEXT_DERIVED"},
+    {"name": "pinyin_channel_avail", "class": "TEXT_DERIVED"}
+  ],
+  "acousticModelVisibleCount": 0,
+  "acousticHardGate": "PASS",
+  "activeCodeDrift": {
+    "acousticModel3Path": "NONE",
+    "ttsDependency": "NONE",
+    "toneTensorDependency": "NONE",
+    "findings": [
+      {
+        "path": "training/model3_dataset/train/bigru_v1.py",
+        "class": "AUTHORITATIVE_TEXT_ONLY"
+      },
+      {
+        "path": "docs/user_correction/model3/MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json",
+        "class": "DOCUMENT_ONLY",
+        "note": "audioRef/TTS_ASR/acousticEvidence are provenance/QA — not packed"
+      },
+      {
+        "path": "electron_node/.../recall-topk-for-windows.ts + tone_module",
+        "class": "NOT_MODEL3_RELATED"
+      },
+      {
+        "path": "electron_node/services/piper_tts/",
+        "class": "NOT_MODEL3_RELATED"
+      }
+    ]
+  },
+  "occurrenceClasses": {
+    "REMOVE_FROM_CURRENT_ARCHITECTURE": [
+      "Acoustic-Linguistic Repair Trigger naming",
+      "TTS as default Model3 next phase",
+      "Tone/audio as Model3 inputs",
+      "Require TTS_ASR to complete Model3 V1"
+    ],
+    "SUPERSEDED_FOR_MODEL3": [
+      "MODEL3_TTS_READINESS_AUDIT_2026_08_26.md",
+      "model3_freeze_tts_audit_bundle.json",
+      "model3_freeze_governance.json nextPhase TTS"
+    ],
+    "VALID_UPSTREAM_REFERENCE": [
+      "Tone module for Recall",
+      "Piper TTS for Model2/ASR experiments"
+    ],
+    "HISTORICAL_PLANNING_ONLY": [
+      "model3_error_text_future_tts_bridge.md",
+      "acceptance seal nextStageBoundary TTS wording (left untouched)"
+    ]
+  },
+  "pipeline": {
+    "asrText": "ASR raw text → FineSpan / existing post-ASR processing",
+    "anchorMaterialization": "Domain Vote/SameDomain + Model2 before Model3",
+    "model3Invocation": "text + Anchor mask → KEEP/RETRY on non-anchor spans",
+    "retryMeaning": "one bounded local re-recall request",
+    "reRecallOwnership": "existing Lexicon Recall (reuse; no second ASR / no full reprocess)"
+  },
+  "nextPhase": {
+    "recommended": "MODEL3_V1_RUNTIME_TEXT_PIPELINE_INTEGRATION_AUDIT",
+    "scopeDefined": true,
+    "auditExecuted": false
+  },
+  "docsUpdated": {
+    "frozenDoc": true,
+    "architecture": true,
+    "readme": true,
+    "recovery": true,
+    "inputContract": true,
+    "featureMaskContract": true,
+    "trainingDatasetContract": true,
+    "ttsAuditStatus": "SUPERSEDED_FOR_MODEL3"
+  }
+}

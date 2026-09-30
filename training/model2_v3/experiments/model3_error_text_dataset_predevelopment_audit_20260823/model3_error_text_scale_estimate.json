@@ -1,0 +1,38 @@
+{
+  "ts": "2026-08-23",
+  "base_clean_sentences_available": {
+    "baseline_v1": 10000,
+    "unique_gt_est": 9775,
+    "training_scale_v1": 3000,
+    "accent_scale": 2999,
+    "dialog_200_unique_clean": 65,
+    "wikipedia": 17470000
+  },
+  "variants_per_sentence_v1_design": {
+    "clean_0": 1,
+    "single_corruption": "1-3_seeded",
+    "double_corruption": "0-2_seeded",
+    "contrast_extra": "0-2_optional"
+  },
+  "pilot": {
+    "target_samples": 3000,
+    "base_sentences": 800,
+    "rationale": "Enough to validate phonetic explainability QA + schema + split; not final train size"
+  },
+  "plan_100k": {
+    "target_samples": 100000,
+    "base_sentences_needed_est": "15000-25000",
+    "sources": "baseline+scale+accent (+ limited carrier regen); not dialog_200 train"
+  },
+  "plan_1M": {
+    "target_samples": 1000000,
+    "base_sentences_needed_est": "80000-150000_or_wiki_filtered_spoken_like",
+    "note": "Requires quality filters; wiki alone insufficient for dialogue Model3"
+  },
+  "storage_est_jsonl": {
+    "3k": "~5-15 MB",
+    "100k": "~150-500 MB",
+    "1M": "~1.5-5 GB",
+    "format": "JSONL preferred; Parquet optional later; no new storage service"
+  }
+}

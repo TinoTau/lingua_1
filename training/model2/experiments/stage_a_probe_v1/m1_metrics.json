@@ -1,0 +1,208 @@
+{
+  "variant": "M1",
+  "params": {
+    "trainable_total": 141118,
+    "by_module": {
+      "shared": 107352,
+      "query_encoder": 15712,
+      "candidate_encoder": 11200,
+      "condition_encoder": 6784,
+      "base_scorer": 0,
+      "weak_scorer": 5,
+      "no_match_anchor_and_gates": 65
+    },
+    "root_params": [
+      "no_match_embed",
+      "condition_gate"
+    ]
+  },
+  "train_stats": {
+    "final_train_loss": 1.666722229219252,
+    "final_val_loss": 2.8426342010498047,
+    "epochs": 40,
+    "curve_tail": [
+      {
+        "epoch": 36,
+        "train_loss": 1.6970200900108583,
+        "l_pos": 1.3304311021681754,
+        "l_neg": 0.733177972608997,
+        "l_hn": 0.0,
+        "n": 620,
+        "n_pos": 194,
+        "n_neg": 116,
+        "n_hn": 310,
+        "val_loss": 2.841999053955078
+      },
+      {
+        "epoch": 37,
+        "train_loss": 1.7093596735308247,
+        "l_pos": 1.352641962420556,
+        "l_neg": 0.713435431449644,
+        "l_hn": 0.0,
+        "n": 620,
+        "n_pos": 194,
+        "n_neg": 116,
+        "n_hn": 310,
+        "val_loss": 2.8447773456573486
+      },
+      {
+        "epoch": 38,
+        "train_loss": 1.6933154059994606,
+        "l_pos": 1.3266610645478771,
+        "l_neg": 0.7333086782886136,
+        "l_hn": 0.0,
+        "n": 620,
+        "n_pos": 194,
+        "n_neg": 116,
+        "n_hn": 310,
+        "val_loss": 2.8341915607452393
+      },
+      {
+        "epoch": 39,
+        "train_loss": 1.6943511770617576,
+        "l_pos": 1.3356046238253194,
+        "l_neg": 0.7174930945519478,
+        "l_hn": 0.0,
+        "n": 620,
+        "n_pos": 194,
+        "n_neg": 116,
+        "n_hn": 310,
+        "val_loss": 2.8482284545898438
+      },
+      {
+        "epoch": 40,
+        "train_loss": 1.666722229219252,
+        "l_pos": 1.318008295951351,
+        "l_neg": 0.6974278726885396,
+        "l_hn": 0.0,
+        "n": 620,
+        "n_pos": 194,
+        "n_neg": 116,
+        "n_hn": 310,
+        "val_loss": 2.8426342010498047
+      }
+    ]
+  },
+  "all_term_positive": {
+    "n": 197,
+    "Recall@1": 0.9390862944162437,
+    "Recall@3": 0.9898477157360406,
+    "Recall@4": 0.9949238578680203,
+    "MRR": 0.9618685037466763,
+    "Positive_average_pool_size": 15.66497461928934,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "train": {
+    "n": 194,
+    "Recall@1": 0.9536082474226805,
+    "Recall@3": 0.9948453608247423,
+    "Recall@4": 1.0,
+    "MRR": 0.9720790378006874,
+    "Positive_average_pool_size": 15.65979381443299,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "validation": {
+    "n": 2,
+    "Recall@1": 0.0,
+    "Recall@3": 1.0,
+    "Recall@4": 1.0,
+    "MRR": 0.41666666666666663,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "test": {
+    "n": 1,
+    "Recall@1": 0.0,
+    "Recall@3": 0.0,
+    "Recall@4": 0.0,
+    "MRR": 0.07142857142857142,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "seen_term": {
+    "n": 194,
+    "Recall@1": 0.9536082474226805,
+    "Recall@3": 0.9948453608247423,
+    "Recall@4": 1.0,
+    "MRR": 0.9720790378006874,
+    "Positive_average_pool_size": 15.65979381443299,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "unseen_term": {
+    "n": 3,
+    "Recall@1": 0.0,
+    "Recall@3": 0.6666666666666666,
+    "Recall@4": 0.6666666666666666,
+    "MRR": 0.30158730158730157,
+    "Positive_average_pool_size": 16.0,
+    "FuzzyPool_Recall@16_ceiling": 1.0
+  },
+  "nomatch_fp": {
+    "NO_MATCH_FP_rate": 0.0,
+    "n": 197,
+    "fp": 0
+  },
+  "nomatch_on_negative": {
+    "NO_MATCH_hit_rate_on_negative": 1.0,
+    "n": 118,
+    "hit": 118,
+    "note": "Empty FuzzyPool negatives use training-only random distractors; FuzzyPool V1 unchanged."
+  },
+  "hn_fp": {
+    "HardNegative_FP_rate": 0.0,
+    "n": 320,
+    "fp": 0
+  },
+  "mask_invariance": {
+    "pass": true,
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "n": 32,
+    "gate": "PASS"
+  },
+  "term_id_stress": {
+    "pass": true,
+    "max_abs_diff": 0.0,
+    "note": "Model scores depend on surface/pinyin tensors only; term_id list is identity metadata.",
+    "gate": "PASS"
+  },
+  "wrong_profile_stress": {
+    "correct_profile_recall_at_1": 0.9375,
+    "wrong_profile_recall_at_1": 0.9375,
+    "delta": 0.0,
+    "pass": true,
+    "gate": "PASS",
+    "n": 64,
+    "note": "Stage A does not require Correct>Empty; requires wrong weak prior not dominate base evidence."
+  },
+  "cpu_latency": {
+    "device": "cpu",
+    "note": "Pure Model2 score forward; excludes FuzzyPool generation.",
+    "batches": {
+      "B1": {
+        "P50_ms": 1.469300128519535,
+        "P95_ms": 1.8686996772885323,
+        "mean_ms": 1.5086460020393133,
+        "pool_size": 16
+      },
+      "B5": {
+        "P50_ms": 1.7933999188244343,
+        "P95_ms": 2.642400097101927,
+        "mean_ms": 1.8684679828584194,
+        "pool_size": 16
+      },
+      "B10": {
+        "P50_ms": 2.27930024266243,
+        "P95_ms": 2.4745999835431576,
+        "mean_ms": 2.2492600604891777,
+        "pool_size": 16
+      }
+    }
+  },
+  "markers": [
+    "PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "confidence_note": "val/test n is tiny — learnability/pipeline probe only; NOT formal generalization acceptance."
+}

@@ -19,7 +19,7 @@ export type ToneRecallSortableHit = RecallScoreTieBreakable & {
   };
   /** Per-hit tone pattern override (variant-sliced acoustic pattern). */
   acousticTonePattern?: number[];
-  toneLookupStage?: 'tone_exact';
+  toneLookupStage?: 'tone_exact' | 'pinyin_domain_recovery';
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: ToneReason;
@@ -30,6 +30,7 @@ const TONE_LOOKUP_STAGE_PRIORITY: Record<
   number
 > = {
   tone_exact: 3,
+  pinyin_domain_recovery: 1,
 };
 
 function stagePriority(hit: ToneRecallSortableHit): number {

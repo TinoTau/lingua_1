@@ -1,0 +1,9 @@
+{
+  "training_CandidateIndex_builder": "FAIL — domain_ids=[single] from domain_lexicon flatten",
+  "node_lexicon_runtime": "PASS — HotwordEntry.domains aggregated from term_domain_tags JOIN",
+  "P0_RUNTIME_SSOT_DEFECT_for_Node_lexicon": false,
+  "P0_if_Model2_uses_Python_CandidateIndex": true,
+  "runtime_mvp_must_use": "Node LexiconRuntimeV2 / term_domain_tags — not Python CandidateIndex",
+  "sample_note": "Node mergeDomainTierRowsV2 adds all domain tags to hotword.domains",
+  "verdict_for_runtime_integration": "PASS_IF_NODE_LEXICON_REUSED"
+}

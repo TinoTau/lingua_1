@@ -1,0 +1,15 @@
+{
+  "high": [
+    "training/model2_v3/policy/model.py",
+    "electron_node/services/model2_runtime/model2_inference_host.py",
+    "electron_node/electron-node/main/src/model2-runtime/inference-host.ts",
+    "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+    "electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts",
+    "all DELETE-class new files listed in Candidate-Set / V1 / V2 inventories"
+  ],
+  "medium": [],
+  "low": [],
+  "all_required_restore_sources_available": true,
+  "git_used_as_source": false,
+  "notes": "No frozen byte-copy of pre-delta model.py exists in artifacts. Confidence is HIGH because Stage J freeze marked model.py KEEP and later inventories describe only optional additive flags. Reverse-delete does not require reconstructing P/D math."
+}

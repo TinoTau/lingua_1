@@ -1,0 +1,25 @@
+{
+  "changed_variables": [
+    "feature_hash"
+  ],
+  "feature_hash": {
+    "from": "legacy Python hash()",
+    "to": "MODEL2_FEATURE_HASH_V1",
+    "pack_arg": "v1"
+  },
+  "unchanged": {
+    "model": "RetrievalPolicyV3(with_domain_head=False)",
+    "labels": "top1_labels teacher soft",
+    "loss": "BCE + 1.25*pairwise(margin=0.75) + 0.25*CE(qb)",
+    "train": "train + hard*3, hard_weight=5, sampler<=8000, batch=64",
+    "optim": "Adam lr=3e-4 epochs=12",
+    "decode": "qb=1 no applicability_bonus",
+    "init": "training\\model2_v3\\experiments\\v3_phase2\\training\\model2_v3_phase2_policy.pt",
+    "dataset": "policy_phase2/rows.jsonl + baseline_v1 candidate index"
+  },
+  "necessary_non_silent_notes": [
+    "Historical freeze eval n=197 row_id snapshot NOT preserved; cannot forge exact 197 denominator",
+    "eval pack_batch_inputs must use feature_hash=v1 to match train (documented, required)"
+  ],
+  "P1_CONTROLLED_VARIABLES": "PASS"
+}

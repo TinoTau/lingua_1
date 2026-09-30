@@ -1,0 +1,11 @@
+item,path_or_symbol,change_needed,new_type,new_config,new_stage,notes
+enumerate_prune_active,electron_node/.../enumerate-complete-segmentation-paths.ts :: per_position_cap block (~L225-254),YES_IF_APPROVED,NO,NO,NO,PartialPath.edges already available before slice
+enumerate_prune_complete,same file :: complete_path_cap block (~L297-324),YES_IF_APPROVED,NO,NO,NO,PartialPath.edges / later edgeRefs
+optional_private_helper,same file only (not new module),OPTIONAL,NO,NO,NO,Local deterministic group/cover; must not become AmbiguityClass subsystem
+compareSegmentationPathRankingBestFirst,same file,NO,NO,NO,NO,Reuse after preservation
+V4_LIMITS caps,v4-limits.ts,NO,NO,NO,NO,Keep maxActive/maxComplete only; no diversity params
+LexicalEdge type,build-lexical-edges.ts,NO,NO,NO,NO,syllableStart/End already SSOT geometry
+SegmentationPath type,lattice-path-types.ts,NO,NO,NO,NO,edgeRefs already present
+JobResult / Trace contract,orchestrator / trace,NO,NO,NO,NO,No required JobResult change for V1 principle
+Domain Vote / Model2-3 / QEV / Retry / SameDomain / KenLM,—,NO,NO,NO,NO,Forbidden coupling
+unit_tests,enumerate-complete-segmentation-paths.test.ts (+ targeted cases),YES_IF_APPROVED,NO,NO,NO,Deterministic retention of a second local boundary under cap

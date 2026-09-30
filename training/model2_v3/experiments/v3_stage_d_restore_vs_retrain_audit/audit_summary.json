@@ -1,0 +1,35 @@
+{
+  "NEXT": "RESTORE_THEN_REBUILD_DATA_AND_RETRAIN",
+  "reason": "Domain-filtered FuzzyPool UNION restores expansion (yield up). Teacher is execute-validated on the current pool32/top8 executor, so labels and eligible D distribution change. Action IDs unchanged; do not add a model. Rebuild teacher/data then controlled retrain. Not automatic J2.",
+  "table": {
+    "Action ids unchanged": "YES",
+    "Teacher labels stable": "7/47 rate=0.1489",
+    "Input features stable": "YES (SOME base_pool count only)",
+    "Budget semantics stable (model heads)": "YES unused for D",
+    "J1 actions still useful": "hit_restored=0.829787 intro_restored=0.829787",
+    "Restored executor improves yield": "YES 4 -> 38 (budget16) / 38 (budget8); Node SQL 0",
+    "New dataset distribution changes": "YES",
+    "Retraining required": "YES"
+  },
+  "criteria": {
+    "A_teacher_labels_materially_change": true,
+    "B_action_space_semantics_change": false,
+    "C_input_feature_semantics_change": false,
+    "D_budget_output_semantics_change": false,
+    "E_J1_action_hit_drops": false,
+    "F_opportunity_distribution_changes": true
+  },
+  "elapsed_s": 136.5,
+  "created": "2026-08-17T10:23:06.140727+00:00",
+  "n_absent": 38,
+  "cur_intro": 4,
+  "df16": 38,
+  "df8": 38,
+  "node_raw": 0,
+  "j1_hit_rest": 0.829787,
+  "j1_intro_rest": 0.829787,
+  "j1_intro_cur": 0.978723,
+  "teacher_stability": 0.148936,
+  "teacher_changed": 40,
+  "teacher_n": 47
+}

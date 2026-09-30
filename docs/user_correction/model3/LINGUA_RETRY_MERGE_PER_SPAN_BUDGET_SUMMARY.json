@@ -1,0 +1,79 @@
+{
+  "phase": "LINGUA_RETRY_MERGE_PER_SPAN_BUDGET_OWNERSHIP_AUDIT",
+  "date": "2026-09-14",
+  "mode": "READ_ONLY",
+  "auditQuestionAnswer": "A_UNIFIED_MERGE_SHARED_PER_SPAN_CAP",
+  "auditQuestionClarification": "replace_region_wording_means_region_slot_rewrite_of_merge_result_not_wipe_without_merge_not_second_path",
+  "baselineIdentity": "PASS",
+  "t7ObservationConfirmed": true,
+  "historicalRetryBudgetSsotFound": "YES",
+  "historicalRetryBudgetSsotConflict": "NO",
+  "ownership": {
+    "FIRST_PASS_CANDIDATE_OWNER": "first_pass_Recall_plus_Model2_materialize",
+    "RETRY_CANDIDATE_OWNER": "ASR_postprocess_routeModel3Retry_Stage2_recallSpanTopKV2",
+    "MERGE_OWNER": "model3-retry-router.ts::mergeSpanCandidates",
+    "DEDUP_OWNER": "mergeSpanCandidates::candidateKey",
+    "RANKING_OWNER": "mergeSpanCandidates_score_sort",
+    "PER_SPAN_CAP_OWNER": "getPerSpanCandidateLimit_FW_P4_also_Assembly_budgetPerSpanCandidates",
+    "FINAL_PRE_ASSEMBLY_POOL_OWNER": "path_working_activeCandidates_then_completeDomainAwareAssemblyFromVote",
+    "EXISTING_RETRY_BUDGET_RELATION": "SHARED"
+  },
+  "currentMerge": {
+    "CURRENT_MERGE_POLICY": "EXISTING_FIRST_INSERT_UNION_RETRY_IF_NEW_KEY_THEN_SCORE_DESC_SLICE",
+    "CURRENT_DEDUP_IDENTITY": "termId_or_replacement_plus_raw_range",
+    "CURRENT_DUPLICATE_WINNER": "EXISTING",
+    "CURRENT_RANKING_POLICY": "candidateScore_or_score_desc_tiebreak_candidateId",
+    "CURRENT_CAP_APPLICATION_POINT": "after_dedup_and_sort_inside_mergeSpanCandidates",
+    "CURRENT_EXISTING_SURVIVAL_GUARANTEE": "NO"
+  },
+  "perSpanCap": {
+    "PER_SPAN_CAP_ORIGINAL_PURPOSE": "P1_P2_P4_combined_cost_lexicon_explosion_total_pool_regardless_of_source",
+    "PER_SPAN_CAP_ORIGINAL_SCOPE": "per_FineSpan_slot_8_6_4_by_path_span_count",
+    "PER_SPAN_CAP_APPLIED_TO_RETRY_BY_DESIGN": "YES",
+    "PER_SPAN_CAP_EQUALS_SENTENCE_BUDGET": "NO",
+    "RETRY_BUDGET_AND_SENTENCE_BUDGET_RELATION": "upstream_local_safety_bound_vs_downstream_crosspath_kenlm_le16",
+    "KENLM_OWNS_FINAL_SENTENCE_RANKING": "YES"
+  },
+  "retrySemantic": {
+    "FROZEN_RETRY_CANDIDATE_SEMANTIC": "MERGE_SHARED_BUDGET",
+    "REPLACE_REGION_COMMENT_AUTHORITY": "COMMENT_ONLY_plus_ACCEPTED_IMPLEMENTATION_WORDING",
+    "REPLACE_REGION_COMMENT_MATCHES_CODE": "PARTIAL",
+    "REPLACE_REGION_COMMENT_MATCHES_SSOT": "YES"
+  },
+  "reservedBudgets": {
+    "DOMAIN_CANDIDATE_RESERVED_BUDGET": "NO",
+    "PROFILE_DOMAIN_RESERVED_BUDGET": "NO",
+    "PROFILE_PRONUNCIATION_RESERVED_BUDGET": "NO"
+  },
+  "scores": {
+    "EXISTING_AND_RETRY_SCORE_SCALE_COMPARABLE": "PARTIAL",
+    "SHARED_SCORE_RANKING_HAS_CONTRACT_SUPPORT": "PARTIAL",
+    "scoreNote": "lexicon_to_lexicon_comparable; PROFILE_DOMAIN_prior_score_vs_lexicon_computeCandidateScore_not_explicitly_contracted"
+  },
+  "locality": {
+    "RETRY_CANDIDATE_MERGE_PATH_LOCAL": "YES",
+    "RETRY_CANDIDATE_CAP_SPAN_LOCAL": "YES",
+    "CROSS_PATH_CANDIDATE_DISPLACEMENT_POSSIBLE": "NO",
+    "CROSS_SPAN_CANDIDATE_DISPLACEMENT_POSSIBLE": "NO"
+  },
+  "taxonomy": {
+    "PRIMARY_RETRY_BUDGET_FINDING": "RB1_SHARED_BUDGET_IS_FROZEN_DESIGN",
+    "IMPLEMENTATION_DRIFT": "NO",
+    "ACP_REQUIRED": "NO",
+    "NEW_ACP_REQUIRED": "NO",
+    "USER_DECISION_REQUIRED": "NO",
+    "patchFreeFutureShapeIfUnchanged": "F_NO_CHANGE_REQUIRED",
+    "patchFreeFutureShapeIfPolicyChangeDesired": "C_CANDIDATE_BUDGET_CONTRACT_CHANGE_REQUIRED"
+  },
+  "outOfScope": {
+    "MODEL3_CHANGE_REQUIRED": "NO",
+    "MODEL3_TRAINING_CHANGE_REQUIRED": "NO",
+    "JOBRESULT_CHANGE_REQUIRED": "NO",
+    "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+    "FULL_PILOT200_RUN_THIS_ROUND": "NO",
+    "PILOT200_READY_AFTER_THIS_AUDIT": "YES",
+    "anchorAcpStatus": "CLOSED_PASS_DO_NOT_REOPEN"
+  },
+  "oneNextOwner": "PILOT200_REMEASURE_OWNER",
+  "oneNextDelta": "Run controlled Pilot200 remeasure on accepted Anchor-authority architecture under recovered MERGE_SHARED_BUDGET Retry semantics; do not invent Domain reserved budget."
+}

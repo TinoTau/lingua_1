@@ -1,0 +1,37 @@
+{
+  "go_summary": {
+    "phase": "FIX_MODEL3_V1_FEATURE_PACKING_AND_RETRAIN",
+    "verdict": "PASS_WITH_DATA_GAPS",
+    "feature_packing_fixed": true,
+    "recommended_next_phase": "MODEL3_V1_ANCHOR_DEPENDENT_DATASET_REDESIGN",
+    "safe_to_start_tts_asr": false,
+    "exact_next_fix_if_no": "Construct Anchor-dependent contrast pairs / raise RETRY density without reintroducing label-side features"
+  },
+  "leaked_model_deprecation": {
+    "old_model": "MODEL3_V1_SYNTHETIC_BASELINE",
+    "status": "DEPRECATED_LEAKED_FEATURE_MODEL",
+    "invalid_for_quality_claim": true,
+    "path": "training/model3_dataset/model3_v1_synthetic_bigru",
+    "superseded_by": "MODEL3_V1_SYNTHETIC_BASELINE_NOLEAK_V1"
+  },
+  "runtime_impact": {
+    "architecture_contract_changed": false,
+    "training_schema_changed": false,
+    "domain_vote_changed": false,
+    "recall_changed": false,
+    "model2_changed": false,
+    "production_retry_enabled": false,
+    "tts_generated": false
+  },
+  "modified_file_inventory": [
+    "training/model3_dataset/train/bigru_v1.py",
+    "training/model3_dataset/train/train_v1_noleak.py",
+    "training/model3_dataset/model3_v1_synthetic_bigru_noleak/",
+    "training/model3_dataset/model3_v1_synthetic_bigru/model_manifest.json",
+    "docs/user_correction/model3/model3_v1_model_visible_feature_allowlist.json",
+    "docs/user_correction/model3/Lingua_Model3_V1_NoLeak_Retrain_Report_2026_08_24.md",
+    "docs/user_correction/model3/model3_v1_noleak_acceptance.json",
+    "docs/user_correction/model3/model3_v1_noleak_cpu_and_shadow.json",
+    "docs/user_correction/model3/model3_v1_noleak_governance.json"
+  ]
+}

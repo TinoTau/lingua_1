@@ -1,0 +1,555 @@
+{
+  "Model2_V2_Verdict": "PASS",
+  "Architecture": "FINESPAN_PROFILE_RECALL_V2",
+  "Legacy_Model2_V1": "SUPERSEDED",
+  "Dataset_Contract": "PASS",
+  "Training_Contract": "PASS",
+  "FineSpan_Runtime_Conforming_Evaluation": "PASS",
+  "REAL_ASR_TargetIntroductionRate_B1": 0.175,
+  "REAL_ASR_ProfileOnlyTargetRecovery_B1": 0.175,
+  "Correct_Profile_TIR_B1": 0.175,
+  "Empty_Profile_TIR_B1": 0.0,
+  "Wrong_Profile_TIR_B1": 0.0,
+  "Swapped_Profile_TIR_B1": 0.0,
+  "Correct_Profile_TIR_B2": 0.0,
+  "UNSEEN_TERM": {
+    "n": 32,
+    "TargetIntroductionRate": 0.25,
+    "ProfileOnlyTargetRecovery": 0.25,
+    "base_present_rate": 0.0,
+    "FalseExpansionRate_NO_CHANGE_slice": null,
+    "mean_candidate_count": 6.4375,
+    "mean_query_count": 2.5625,
+    "mean_latency_ms": 555.4707031224098,
+    "by_provenance": {
+      "REAL_ASR": {
+        "n": 32,
+        "TargetIntroductionRate": 0.25,
+        "ProfileOnlyTargetRecovery": 0.25
+      }
+    },
+    "mode": "deterministic",
+    "profile_key": "correct",
+    "k": 8,
+    "failures_head": [
+      {
+        "row_id": "pr-acc-746bf8cbad1573b9fdfd",
+        "target": "麻醉机",
+        "family": "z_zh",
+        "asr": "致歼報告結論顯麻醉雞",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-37c1ce4841e772a09327",
+        "target": "座谈会",
+        "family": "z_zh",
+        "asr": "枯存只生做谈会",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 5,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-eb0586ab8abd2f399eac",
+        "target": "拼配",
+        "family": "in_ing",
+        "asr": "请记录到订单被朱里协拼配",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-6ab9224c09f22cb2a539",
+        "target": "双拼料",
+        "family": "in_ing",
+        "asr": "请求安排一次双拼量",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-ebf7e2c90a72b69e9e5b",
+        "target": "仍旧",
+        "family": "eng_en",
+        "asr": "人力資源政策關於人就",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-7fcf169c515e4fe97b5a",
+        "target": "会议厅",
+        "family": "h_f",
+        "asr": "法务审查关注费一听",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 5,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-8f1c773a23b684e76955",
+        "target": "深烘焙",
+        "family": "h_f",
+        "asr": "发票抬头不要写错成别的 只要深奉辈",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-08d1dfc42d07b2845306",
+        "target": "南岸",
+        "family": "n_l",
+        "asr": "人力资源正策冠于南岸",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-3d0aaec73c8b504ab7bd",
+        "target": "农奴",
+        "family": "n_l",
+        "asr": "任立資原證冊關於龍奴",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-28c5386fbee65bbd7afd",
+        "target": "座谈会",
+        "family": "z_zh",
+        "asr": "中午一起吃座谈会可以吗?",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-ddca06e42e850c3f581f",
+        "target": "侵略",
+        "family": "in_ing",
+        "asr": "旅行途中想去看看青掠",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-deca349374f42c3e846d",
+        "target": "三拼料",
+        "family": "in_ing",
+        "asr": "请求安排一次三拼料",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-9548c51ffc3a64119940",
+        "target": "打包盒",
+        "family": "h_f",
+        "asr": "麻烦安排打报佛借送",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 6,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-00b0092fccb06eeabe21",
+        "target": "少冰量",
+        "family": "sh_s",
+        "asr": "投诉内容写的是扫病量",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 5,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-088e76db90a39b78effe",
+        "target": "麻醉机",
+        "family": "z_zh",
+        "asr": "麻追寄金天祭典开门",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-3c3f3788e17a10c2d385",
+        "target": "三拼料",
+        "family": "in_ing",
+        "asr": "请把三拼料松过来",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-a807427b038ac8c14f5d",
+        "target": "人民币",
+        "family": "in_ing",
+        "asr": "请用中文再说一遍人民币",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-26fc25fc7641630563c7",
+        "target": "拼配",
+        "family": "in_ing",
+        "asr": "请记录到订单被朱李协拼配",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-e1b5e8a18119d3a71181",
+        "target": "僧人",
+        "family": "eng_en",
+        "asr": "客人点的是丧人",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 4,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-e88cc3116f85fa752e7e",
+        "target": "发挥",
+        "family": "h_f",
+        "asr": "把发费驾到购物车",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-9c2f95810562e717de0f",
+        "target": "集成测试",
+        "family": "ch_c",
+        "asr": "财务报销科目式集层测试",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 4,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-775ba9be2630fbf248c9",
+        "target": "纪念地",
+        "family": "n_l",
+        "asr": "人力資源政策關於紀念的",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-6b15e56a3310bc89e4b6",
+        "target": "九年",
+        "family": "n_l",
+        "asr": "人力資源政策關於九年",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-00d4950e9264dd64f9a3",
+        "target": "严谨",
+        "family": "in_ing",
+        "asr": "请不要换成别的,只要严谨",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      }
+    ]
+  },
+  "UNSEEN_USER": {
+    "n": 23,
+    "TargetIntroductionRate": 0.17391304347826086,
+    "ProfileOnlyTargetRecovery": 0.17391304347826086,
+    "base_present_rate": 0.0,
+    "FalseExpansionRate_NO_CHANGE_slice": null,
+    "mean_candidate_count": 6.521739130434782,
+    "mean_query_count": 2.6956521739130435,
+    "mean_latency_ms": 569.5274086914571,
+    "by_provenance": {
+      "REAL_ASR": {
+        "n": 23,
+        "TargetIntroductionRate": 0.17391304347826086,
+        "ProfileOnlyTargetRecovery": 0.17391304347826086
+      }
+    },
+    "mode": "deterministic",
+    "profile_key": "correct",
+    "k": 8,
+    "failures_head": [
+      {
+        "row_id": "pr-acc-746bf8cbad1573b9fdfd",
+        "target": "麻醉机",
+        "family": "z_zh",
+        "asr": "致歼報告結論顯麻醉雞",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-b8a7c96e28f7badd066b",
+        "target": "会议",
+        "family": "h_f",
+        "asr": "开发进度卡在会议",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-24ce1a73c77da6040571",
+        "target": "机场",
+        "family": "ch_c",
+        "asr": "祭藏今天祭典开门",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-85301b06ec538c05fb2e",
+        "target": "农作物",
+        "family": "z_zh",
+        "asr": "请用中文再说一遍能作误",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-dbb2774a114fe28131d1",
+        "target": "事务所",
+        "family": "sh_s",
+        "asr": "4月5所今天,还有吗?",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 5,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-b9e9540bddcca5b7ad90",
+        "target": "保险金",
+        "family": "in_ing",
+        "asr": "请用中文再说一遍保险金",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-28c5386fbee65bbd7afd",
+        "target": "座谈会",
+        "family": "z_zh",
+        "asr": "中午一起吃座谈会可以吗?",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-7ecb723bc4b99171aabd",
+        "target": "匝道口",
+        "family": "z_zh",
+        "asr": "今晚住炸刀口",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 7,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-de145cde618315b17f45",
+        "target": "匝道口",
+        "family": "z_zh",
+        "asr": "太招打卡就在扎道,扣门口",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 5,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-be1f8b522d4b3a1754a6",
+        "target": "今夜",
+        "family": "in_ing",
+        "asr": "请求安排一次经验",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 4,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-3c3f3788e17a10c2d385",
+        "target": "三拼料",
+        "family": "in_ing",
+        "asr": "请把三拼料松过来",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-91951c457d5e8fd23e36",
+        "target": "面包车",
+        "family": "ch_c",
+        "asr": "财务报小科目市面报册",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-7f96bb870bae12a01d87",
+        "target": "超声仪",
+        "family": "ch_c",
+        "asr": "操声仪近天际点开门",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-8787abcf58e63e43d298",
+        "target": "出租",
+        "family": "z_zh",
+        "asr": "致使酷文章奖出座",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 4,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-0fb66aff5ba982a3089b",
+        "target": "检查员",
+        "family": "ch_c",
+        "asr": "倉儲或加編號龐氏檢查員",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 1,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-53ddac791c49aba5c8b8",
+        "target": "公斤",
+        "family": "in_ing",
+        "asr": "请记录到订单被朱李写公经",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-775ba9be2630fbf248c9",
+        "target": "纪念地",
+        "family": "n_l",
+        "asr": "人力資源政策關於紀念的",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-7fd1ff9218706b8a9ae9",
+        "target": "充当",
+        "family": "ch_c",
+        "asr": "测试用力覆盖重挡",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 2,
+          "n_spans_scanned": 8
+        }
+      },
+      {
+        "row_id": "pr-acc-bab71e9ca7d3d07bd761",
+        "target": "进站",
+        "family": "in_ing",
+        "asr": "请记录到订单被助理写金赞",
+        "agg_head": {
+          "target_in_any_base": false,
+          "n_queries_total": 3,
+          "n_spans_scanned": 8
+        }
+      }
+    ]
+  },
+  "NO_CHANGE_FalseExpansion": 0.0,
+  "Deterministic_Baseline_B1": 0.175,
+  "Model2_V2_Neural_B2": 0.0,
+  "Does_Trained_Model_Add_Value_Over_Deterministic": "NO",
+  "Neural_component_verdict": "MODEL2_NEURAL_COMPONENT_NOT_NEEDED",
+  "Stage_A": "ARCHIVED",
+  "Stage_B": "DEFERRED",
+  "Any_Legacy_Checkpoint_Loaded": false,
+  "Any_Compatibility_Fallback": false,
+  "Any_Whole_Utterance_Retrieval": false,
+  "Architecture_Conformance": "PASS",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD",
+  "retrieval_gate": {
+    "Correct_gt_Empty": true,
+    "Correct_gt_Wrong": true,
+    "Correct_gt_Swapped": true,
+    "ProfileOnlyRecovery_gt_0": true
+  },
+  "n_dataset_primary": 132,
+  "n_eval_primary": 120,
+  "Recommended_Next_Phase": "Freeze FineSpan+UserProfile+deterministic lexicon expansion as Model2 V2 core; optional neural only if later multi-relation gating proves value; Stage B V2 only after recall freeze if post-merge binding needed"
+}

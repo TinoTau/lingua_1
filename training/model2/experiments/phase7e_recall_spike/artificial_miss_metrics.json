@@ -1,0 +1,173 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "mode": "correct",
+  "n": 500,
+  "TargetIntroductionRate": 0.988,
+  "n_introduced": 494,
+  "FalseIntroductionRate_non_target_expansion": 0.008,
+  "NewCandidatePrecision_target_over_new": 0.8071895424836601,
+  "new_candidates_mean": 1.224,
+  "new_candidates_p95": 3.0,
+  "queries_generated_mean": 1.02,
+  "queries_generated_p95": 1.0,
+  "latency_ms_p50": 50.76540001027752,
+  "latency_ms_p95": 66.34140000096522,
+  "failures": [
+    {
+      "sample_id": "ts-d6e65a11e1ef11f0f82b4d30",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:发挥:fa|hui",
+      "family": "h_f",
+      "observed": [
+        "fa1",
+        "fui1"
+      ],
+      "bias": {
+        "h_f": 0.8
+      },
+      "queries": [
+        [
+          "ha",
+          "hui"
+        ]
+      ],
+      "new_ids_head": [],
+      "failure_class": "BUDGET_PRUNED"
+    },
+    {
+      "sample_id": "ts-56ca8c0678b22d7e3a54f27c",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:礼宾部:li|bin|bu",
+      "family": "in_ing",
+      "observed": [
+        "li3",
+        "bing1",
+        "bu4"
+      ],
+      "bias": {
+        "n_l": 0.8,
+        "in_ing": 0.5,
+        "h_f": 0.8
+      },
+      "queries": [
+        [
+          "ni",
+          "bing",
+          "bu"
+        ]
+      ],
+      "new_ids_head": [
+        "base:_:少冰:shao|bing",
+        "base:_:冰饮:bing|yin",
+        "base:_:冰箱:bing|xiang",
+        "base:_:兵部:bing|bu",
+        "base:_:冰滴:bing|di"
+      ],
+      "failure_class": "BUDGET_PRUNED"
+    },
+    {
+      "sample_id": "ts-ddf4f69579d00b0453e8e404",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:作者:zuo|zhe",
+      "family": "z_zh",
+      "observed": [
+        "zuo4",
+        "zhe3"
+      ],
+      "bias": {
+        "n_l": 0.5,
+        "z_zh": 0.2,
+        "ing_in": 0.5
+      },
+      "queries": [
+        [
+          "zuo",
+          "ze"
+        ]
+      ],
+      "new_ids_head": [
+        "base:_:正则:zheng|ze"
+      ],
+      "failure_class": "BUDGET_PRUNED"
+    },
+    {
+      "sample_id": "ts-58c18369b37bcdabe728658f",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:化肥:hua|fei",
+      "family": "h_f",
+      "observed": [
+        "fua4",
+        "fei2"
+      ],
+      "bias": {
+        "en_eng": 0.5,
+        "h_f": 0.8
+      },
+      "queries": [
+        [
+          "hua",
+          "hei"
+        ]
+      ],
+      "new_ids_head": [
+        "base:_:长黑:chang|hei"
+      ],
+      "failure_class": "BUDGET_PRUNED"
+    },
+    {
+      "sample_id": "ts-08d8f6dda8b241fb45c6f6c5",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:工作站:gong|zuo|zhan",
+      "family": "z_zh",
+      "observed": [
+        "gong1",
+        "zhuo4",
+        "zhan4"
+      ],
+      "bias": {
+        "z_zh": 0.8,
+        "en_eng": 0.5
+      },
+      "queries": [
+        [
+          "gong",
+          "zuo",
+          "zan"
+        ]
+      ],
+      "new_ids_head": [],
+      "failure_class": "BUDGET_PRUNED"
+    },
+    {
+      "sample_id": "ts-85c4158886404cadc5580f12",
+      "slice": "ARTIFICIAL_MISS",
+      "target": "base:_:作者:zuo|zhe",
+      "family": "z_zh",
+      "observed": [
+        "zhuo4",
+        "zhe3"
+      ],
+      "bias": {
+        "zh_z": 0.2,
+        "z_zh": 0.5,
+        "en_eng": 0.2
+      },
+      "queries": [
+        [
+          "zuo",
+          "ze"
+        ]
+      ],
+      "new_ids_head": [
+        "base:_:正则:zheng|ze"
+      ],
+      "failure_class": "BUDGET_PRUNED"
+    }
+  ],
+  "slice": "ARTIFICIAL_MISS"
+}

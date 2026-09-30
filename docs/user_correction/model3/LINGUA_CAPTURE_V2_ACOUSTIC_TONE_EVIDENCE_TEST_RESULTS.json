@@ -1,0 +1,26 @@
+{
+  "schema": "LINGUA_CAPTURE_V2_ACOUSTIC_TONE_EVIDENCE_TEST_RESULTS",
+  "phase": "PHASE_A_TARGETED_UNIT",
+  "jest_suite": "capture-v2.contract.test.ts",
+  "TARGETED_TESTS": "PASS",
+  "tests_passed": 27,
+  "tests_failed": 0,
+  "mapping": {
+    "T1_gate_OFF_no_slice": "PASS (Tone T1)",
+    "T2_gate_ON_slices": "PASS (Tone T2/T12)",
+    "T3_T5_immutable_snapshot": "PASS (Tone T3–T5)",
+    "T12_B4_active_slices": "PASS (Tone T2/T12 merge)",
+    "T13_T14_missing_empty_incomplete": "PASS",
+    "T15_legitimate_no_tone": "PASS",
+    "T16_B1_B18_unaffected": "PASS (T13–T30 + T40)",
+    "T17_NO_PROFILE": "PASS (T38)",
+    "T18_JobResult_core": "PASS (T33/T34)",
+    "T24_INJECTION_STATE_role": "PASS (Tone T24)",
+    "T25_completeness_checks_slices": "PASS",
+    "T19_T20_live_OFF_ON_parity": "PENDING_PHASE_B_PROBE",
+    "T10_T11_multi_batch_script_probe": "PENDING_PHASE_B_PROBE"
+  },
+  "canonical_path": "capture_artifact.boundaries.B4.payload.acousticToneSlices",
+  "slice_role": "INJECTION_STATE",
+  "production_algorithm_changed": false
+}

@@ -1,0 +1,47 @@
+{
+  "modelName": "MODEL3_V2_S1_RANDOM_INIT_V1",
+  "architecture": "Small BiGRU",
+  "config": {
+    "modelId": "MODEL3_V2_S1_RANDOM_INIT_V1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+    "datasetBuildId": "prod_core_s1_build_20260830_v1",
+    "seed": 2026083007,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 8,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "sampling": "uniform_shuffle_utterance",
+    "pair_loss_enabled": false,
+    "init": "random_from_scratch",
+    "initSourceCheckpoint": null,
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "featureContract": "packModel3SpanInferFields",
+    "decisionThreshold": "argmax"
+  },
+  "vocabSize": 790,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

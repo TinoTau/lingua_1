@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u005_034",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U005",
+  "profileStage": "P2",
+  "domain": "retail_service",
+  "difficulty": "medium",
+  "referenceText": "顾客想了解薯条的保修与退换政策。",
+  "audioId": "aud_p2_u005_034",
+  "audioPath": "audio/p2_u005_034.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "sh_s",
+  "relationDirection": "sh_s",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MILD",
+  "profileRef": "prof_u005_p2",
+  "profileBuildSetId": "pbs_u005_p2",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73",
+    "base-rebuild-term-e4b88ae8afbe7c73",
+    "base-rebuild-term-e5a3b0e99fb37c73"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e896afe69da17c73"
+  ],
+  "evaluationTargetSurface": "薯条",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 3065735043,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "ASR_RESILIENCE_CONTROL",
+  "wrongProfileUserId": null,
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u005_034",
+    "byte_size": 107042,
+    "sha256": "c3a42e6448d69f95f767b0be0d71f30f9ca9b0a93f85c4ee6413b4682b12195c",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 3.344
+  },
+  "ttsBackend": "PHONEME_REALIZER",
+  "ttsInputText": "顾客想了解薯条的保修与退换政策。"
+}

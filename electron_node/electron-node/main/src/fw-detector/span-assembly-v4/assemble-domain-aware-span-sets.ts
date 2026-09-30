@@ -325,8 +325,14 @@ function computeAssemblyMetrics(
   };
 }
 
-export function runDomainAwareAssembly(
-  activeCandidates: WindowCandidate[],
+/**
+ * Post-vote Domain-aware Assembly using a FROZEN UtteranceDomainVoteResult.
+ * Does NOT call Domain Vote. Pool may be refreshed after Model3 RETRY;
+ * vote object must remain the same pre-retry vote.
+ */
+export function completeDomainAwareAssemblyFromVote(
+  pool: FineSpanCandidatePool[],
+  vote: UtteranceDomainVoteResult,
   coarseSpans: CoarseSpan[],
   rawText: string,
   pathFineSpans: readonly PathFineSpan[],
@@ -335,12 +341,10 @@ export function runDomainAwareAssembly(
   const start = Date.now();
   if (!pathFineSpans.length) {
     throw new Error(
-      '[PATH_FINE_SPAN_POOL] runDomainAwareAssembly requires PathFineSpan[]; coarse fallback is forbidden'
+      '[PATH_FINE_SPAN_POOL] completeDomainAwareAssemblyFromVote requires PathFineSpan[]'
     );
   }
   assertPathFineSpansNonOverlapping(pathFineSpans);
-  const pool = buildFineSpanCandidatePool(activeCandidates, coarseSpans, pathFineSpans);
-  const vote = voteUtteranceDomainFromPool(pool);
 
   const bucketDomains: Array<string | null> =
     vote.insufficientEvidence || vote.retainedDomains.length === 0
@@ -392,6 +396,35 @@ export function runDomainAwareAssembly(
       sameDomainCandidateCount: aggregateSameDomain,
     },
   };
+}
+
+/**
+ * Thin wrapper: build pool → ONE Domain Vote → completeFromVote.
+ * Not a dual pipeline; no Model3 feature flag.
+ */
+export function runDomainAwareAssembly(
+  activeCandidates: WindowCandidate[],
+  coarseSpans: CoarseSpan[],
+  rawText: string,
+  pathFineSpans: readonly PathFineSpan[],
+  domainPriors: readonly DomainPrior[] = []
+): DomainAwareAssemblyResult {
+  if (!pathFineSpans.length) {
+    throw new Error(
+      '[PATH_FINE_SPAN_POOL] runDomainAwareAssembly requires PathFineSpan[]; coarse fallback is forbidden'
+    );
+  }
+  assertPathFineSpansNonOverlapping(pathFineSpans);
+  const pool = buildFineSpanCandidatePool(activeCandidates, coarseSpans, pathFineSpans);
+  const vote = voteUtteranceDomainFromPool(pool);
+  return completeDomainAwareAssemblyFromVote(
+    pool,
+    vote,
+    coarseSpans,
+    rawText,
+    pathFineSpans,
+    domainPriors
+  );
 }
 
 /** @internal test helper */

@@ -1,0 +1,15 @@
+{
+  "name": "RESTORED_STAGE_J_JOINT_TRAIN",
+  "architecture": "RetrievalPolicyV3 ONE checkpoint",
+  "curriculum": [
+    "phase1_p_anchor",
+    "phase2_joint"
+  ],
+  "W_P": 1.25,
+  "W_D": 0.55,
+  "W_QB": 0.25,
+  "dataset": "STAGE_J_RESTORED_TRAINSET_V1",
+  "init_from": "restored_stage_d_controlled.pt",
+  "test_split_excluded": true,
+  "query_budget_fake": false
+}

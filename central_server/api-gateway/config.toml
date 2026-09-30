@@ -4,12 +4,17 @@ host = "0.0.0.0"
 
 [scheduler]
 url = "ws://localhost:5010/ws/session"
+http_base_url = "http://localhost:5010"
+# Prefer env LINGUA_CORRECTION_API_TOKEN; optional inline for local only:
+# correction_api_token = "dev-token"
 
 [rate_limit]
 default_max_rps = 100
 default_max_sessions = 10
 
 [tenant]
-# 租户配置可以通过数据库或配置文件管理
-# 这里使用内存存储，生产环境建议使用数据库
 
+[persistence]
+user_profile_db_path = "data/user_profiles.sqlite3"
+# Read-only Lexicon SSOT for Stage D lexical writeback (exact surface → term_id → term_domain_tags).
+lexicon_db_path = "../../node_runtime/lexicon/v3/lexicon.sqlite"

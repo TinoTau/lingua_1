@@ -1,0 +1,35 @@
+{
+  "budgets": [
+    {
+      "name": "exactTopK",
+      "owner": "Lexicon V4_LIMITS",
+      "value": 2,
+      "meaning": "per-window exact recall"
+    },
+    {
+      "name": "per_span_assembly",
+      "owner": "DomainAwareAssembly",
+      "value": "8/6/4",
+      "meaning": "span candidate cap"
+    },
+    {
+      "name": "maxSentenceCandidates",
+      "owner": "FW/KenLM",
+      "value": 16,
+      "meaning": "sentence pool frozen-ish"
+    },
+    {
+      "name": "Model2 query_budget",
+      "owner": "Model2 policy",
+      "value": "1..8 predicted",
+      "meaning": "profile retrieval queries — MUST NOT change sentence cap"
+    },
+    {
+      "name": "Model2 cand_budget",
+      "owner": "Model2 policy",
+      "value": "policy class",
+      "meaning": "profile expansion max"
+    }
+  ],
+  "rule": "Model2 works inside profile retrieval budget; must not secretly change sentence-level frozen cap"
+}

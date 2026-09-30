@@ -1,0 +1,361 @@
+{
+  "schema": "LINGUA_DIALOG200_EVALUATOR_SSOT_COMPLIANCE_REPAIR_V1_STAGE_RESULTS",
+  "replay_run_id": "dialog200_frozen_replay_v1_20260923093703",
+  "stageAgg": {
+    "E1_ASR_INPUT": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E2_TONE_INJECTION": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E3_BASE_RECALL": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E4_MODEL2_UNION": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E5_LEXICAL_EDGE": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E6_SEGMENTATION_PATH": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E7_PATH_COUNT": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E8_PATH_CAP": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E9_DOMAIN_VOTE": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E10_SAME_DOMAIN": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E11_ASSEMBLY": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E12_GLOBAL_BUDGET": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E13_KENLM_INPUT": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E14_KENLM_RANKING": {
+      "PASS": 199,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 1
+    },
+    "E15_KENLM_GATE": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E16_MODEL3_INPUT_ANCHOR": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E17_MODEL3_DECISION": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E18_FINAL": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "PROFILE_NO_PROFILE": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    }
+  },
+  "divergenceHist": {
+    "E3_BASE_RECALL:CONTRACT_FAIL": 1
+  },
+  "fail_cases": [
+    {
+      "caseId": "d149",
+      "status": "DIVERGE",
+      "firstDivergence": {
+        "stage": "E3_BASE_RECALL",
+        "classification": "CONTRACT_FAIL",
+        "kind": "FIRST_OBSERVED_DIVERGENCE"
+      },
+      "firstObservedDivergence": {
+        "stage": "E3_BASE_RECALL",
+        "status": "FAIL"
+      },
+      "firstNotEvaluable": {
+        "stage": "E5_LEXICAL_EDGE",
+        "status": "NOT_EVALUABLE"
+      },
+      "criticalFail": [],
+      "pathCount": {
+        "capture": 4,
+        "replay": 2
+      },
+      "final": {
+        "capture": "请问,这双鞋 不合是三天内可以退换吧",
+        "replay": "请问,这双鞋 不合是三天内可以退换吧"
+      },
+      "alignment": {
+        "status": "OK",
+        "segmentTimeOffsetsSec": [
+          0,
+          1.1999999999999997
+        ],
+        "asrSegmentNodeBatchIndices": [
+          0,
+          1
+        ],
+        "segmentCharOffsets": [
+          0,
+          6
+        ]
+      },
+      "bypass": {
+        "asr_delta": 0,
+        "tone_skipped": true,
+        "injected": true
+      },
+      "stageFails": {
+        "E3_BASE_RECALL": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_SET_IDENTITY",
+          "capture_unique_n": 21,
+          "replay_unique_n": 21,
+          "set_equal": false,
+          "capture_flat_n": 50,
+          "replay_flat_n": 28,
+          "flat_n_authority": "DIAGNOSTIC_ONLY"
+        },
+        "E4_MODEL2_UNION": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_SET_IDENTITY",
+          "capture_unique_n": 21,
+          "replay_unique_n": 22,
+          "set_equal": false,
+          "capture_flat_n": 84,
+          "replay_flat_n": 44,
+          "flat_n_authority": "DIAGNOSTIC_ONLY"
+        },
+        "E6_SEGMENTATION_PATH": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY",
+          "capture_n": 4,
+          "replay_n": 2
+        },
+        "E7_PATH_COUNT": {
+          "status": "FAIL",
+          "semantics": "CARDINALITY_IDENTITY",
+          "capture": 4,
+          "replay": 2
+        },
+        "E9_DOMAIN_VOTE": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY"
+        },
+        "E10_SAME_DOMAIN": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY",
+          "note": "proxy=domain_vote compact (SameDomain not separately persisted in capture)"
+        }
+      },
+      "stageNotEvaluable": {
+        "E5_LEXICAL_EDGE": {
+          "status": "NOT_EVALUABLE",
+          "semantics": "SEMANTIC_SET_IDENTITY",
+          "note": "capture lacks authoritative FineSpan evidence (finespans not persisted); empty fine_span_surfaces ≠ empty FineSpan set",
+          "missing_evidence": "capture.finespans"
+        },
+        "E8_PATH_CAP": {
+          "status": "NOT_EVALUABLE",
+          "semantics": "SEMANTIC_IDENTITY",
+          "note": "depends on FineSpan evidence; E5 NOT_EVALUABLE",
+          "missing_evidence": "capture.finespans"
+        },
+        "E15_KENLM_GATE": {
+          "status": "NOT_EVALUABLE",
+          "semantics": "KENLM_APPLY_GATE",
+          "note": "explicit KenLM gate evidence not captured in Frozen Evidence — not inferred from kenlm_top order or Final",
+          "missing_evidence": "capture.kenlm_gate",
+          "replay_gate_diagnostic": {
+            "pickedIsRaw": true,
+            "maxDelta": 1.089500000000001,
+            "minDeltaToReplace": 3
+          }
+        },
+        "E16_MODEL3_INPUT_ANCHOR": {
+          "status": "NOT_EVALUABLE",
+          "note": "capture compact lacks full Model3 input/anchor geometry",
+          "missing_evidence": "model3_input_anchor",
+          "ssot_rule": "missing required evidence → NOT_EVALUABLE"
+        },
+        "E17_MODEL3_DECISION": {
+          "status": "NOT_EVALUABLE",
+          "semantics": "SEMANTIC_IDENTITY",
+          "note": "E17 depends on E16 Model3 input/anchor evidence; EVALUATION_SSOT_V1 does not authorize independent E17 scoring when E16 evidence absent",
+          "missing_evidence": "model3_input_anchor",
+          "e16_dependency": true,
+          "diagnostic_decision_keys_equal": false
+        }
+      }
+    }
+  ],
+  "not_evaluable_by_stage": {
+    "E5_LEXICAL_EDGE": {
+      "count": 200,
+      "missing_evidence": "capture.finespans"
+    },
+    "E8_PATH_CAP": {
+      "count": 200,
+      "missing_evidence": "capture.finespans"
+    },
+    "E15_KENLM_GATE": {
+      "count": 200,
+      "missing_evidence": "capture.kenlm_gate"
+    },
+    "E16_MODEL3_INPUT_ANCHOR": {
+      "count": 200,
+      "missing_evidence": "model3_input_anchor"
+    },
+    "E17_MODEL3_DECISION": {
+      "count": 200,
+      "missing_evidence": "model3_input_anchor"
+    },
+    "E14_KENLM_RANKING": {
+      "count": 1,
+      "missing_evidence": "kenlm_scores"
+    }
+  },
+  "replay_equivalence_status": "NOT_CERTIFIED",
+  "evidence_ssot_authority": "FROZEN_ACOUSTIC_EVIDENCE_AUTHORITATIVE",
+  "d160_note": {
+    "caseId": "d160",
+    "E14_status": "NOT_EVALUABLE",
+    "E14_reason": "top1 identical; ordered tops differ; capture KenLM scores absent — non-contractual tie order",
+    "E15_status": "NOT_EVALUABLE",
+    "E15_reason": "explicit KenLM gate evidence not captured",
+    "production_defect": false
+  },
+  "remaining_FAIL": [
+    {
+      "caseId": "d149",
+      "firstDivergence": {
+        "stage": "E3_BASE_RECALL",
+        "classification": "CONTRACT_FAIL",
+        "kind": "FIRST_OBSERVED_DIVERGENCE"
+      },
+      "stages": {
+        "E3_BASE_RECALL": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_SET_IDENTITY",
+          "capture_unique_n": 21,
+          "replay_unique_n": 21,
+          "set_equal": false,
+          "capture_flat_n": 50,
+          "replay_flat_n": 28,
+          "flat_n_authority": "DIAGNOSTIC_ONLY"
+        },
+        "E4_MODEL2_UNION": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_SET_IDENTITY",
+          "capture_unique_n": 21,
+          "replay_unique_n": 22,
+          "set_equal": false,
+          "capture_flat_n": 84,
+          "replay_flat_n": 44,
+          "flat_n_authority": "DIAGNOSTIC_ONLY"
+        },
+        "E6_SEGMENTATION_PATH": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY",
+          "capture_n": 4,
+          "replay_n": 2
+        },
+        "E7_PATH_COUNT": {
+          "status": "FAIL",
+          "semantics": "CARDINALITY_IDENTITY",
+          "capture": 4,
+          "replay": 2
+        },
+        "E9_DOMAIN_VOTE": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY"
+        },
+        "E10_SAME_DOMAIN": {
+          "status": "FAIL",
+          "semantics": "SEMANTIC_IDENTITY",
+          "note": "proxy=domain_vote compact (SameDomain not separately persisted in capture)"
+        }
+      }
+    }
+  ]
+}

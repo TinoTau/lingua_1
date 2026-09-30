@@ -1,0 +1,55 @@
+{
+  "Bind MinPrior Length-1 Audit": "CONTRACT_INCOMPATIBILITY",
+  "primary_verdict": "FROZEN_CONTRACT_INCOMPATIBILITY",
+  "current_minPrior": 0.5,
+  "single_char_n": 2510,
+  "single_char_prior_min": 0.08,
+  "single_char_prior_p50": 0.08,
+  "single_char_prior_p95": 0.24,
+  "single_char_prior_max": 0.3,
+  "single_char_ge_0_5": 0,
+  "collector_accepted": 2331,
+  "would_pass_minPrior": 0,
+  "identity": 1819,
+  "substitution": 512,
+  "expected_target_candidate": 2,
+  "cf1_edges": 2331,
+  "path0_lexical_1char": 0,
+  "next_phase": "ARCHITECTURE_CONTRACT_CHANGE_PROPOSAL_BIND_MINPRIOR_LENGTH1",
+  "multichar_bound_prior": {
+    "n": 232,
+    "min": 0.84,
+    "p1": 0.85,
+    "p5": 0.85,
+    "p25": 0.85,
+    "p50": 0.85,
+    "p75": 0.85,
+    "p95": 0.86,
+    "p99": 0.92,
+    "max": 0.92,
+    "unique_values": [
+      0.84,
+      0.85,
+      0.86,
+      0.88,
+      0.92
+    ],
+    "histogram": {
+      "0.84": 1,
+      "0.85": 206,
+      "0.86": 18,
+      "0.88": 1,
+      "0.92": 6
+    },
+    "ge_0_5": 232,
+    "ge_0_5_rate": 1.0
+  },
+  "len2_p50": 0.85,
+  "len3_p50": 0.86,
+  "cf1": {
+    "mean": 11.71356783919598,
+    "p95": 19.0,
+    "max": 24,
+    "wrong_subst": 510
+  }
+}

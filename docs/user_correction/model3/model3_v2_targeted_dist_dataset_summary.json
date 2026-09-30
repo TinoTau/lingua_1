@@ -1,0 +1,53 @@
+{
+  "phase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "datasetVerdict": "TARGETED_DIST_DATASET_BUILD_PASS_WITH_NONBLOCKING_DISTRIBUTION_WARNINGS",
+  "datasetId": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "datasetBuildId": "tdist_build_20260830_v1",
+  "datasetBuildComplete": true,
+  "readyForTraining": true,
+  "nextPhase": "MODEL3_V2_TARGETED_DIST_CORRECTED_TRAINING",
+  "splitCounts": {
+    "train": 607,
+    "dev": 60,
+    "test": 182
+  },
+  "families": 280,
+  "utterances": 280,
+  "pathSamples": 849,
+  "spanPathSamples": 14632,
+  "labels": {
+    "KEEP": 13259,
+    "MASKED": 508,
+    "RETRY": 865
+  },
+  "candHist": {
+    "1": 9590,
+    "0": 4957,
+    "2": 85
+  },
+  "anchors": {
+    "NONE": 14124,
+    "DOMAIN_AND_MODEL2": 134,
+    "MODEL2": 345,
+    "DOMAIN": 29
+  },
+  "multipathUtterances": 189,
+  "retryCandGt0Utterances": 116,
+  "qa": {
+    "provenanceCoherence": "PASS",
+    "holdoutCollision": "PASS",
+    "semanticFamilySplitLeak": "PASS",
+    "candidateMissing": "PASS",
+    "packerMissing": "PASS",
+    "toneRecallInvalid": "PASS",
+    "anchorSourceValidity": "PASS",
+    "model2OwnerAvailability": "PASS",
+    "domainOwnerExecution": "PASS",
+    "multipathRetention": "PASS",
+    "labelCounts": "PASS",
+    "evidenceOrigin": "PASS",
+    "candidateNonCollapsed": "PASS",
+    "retryCandGt0": "PASS"
+  },
+  "gate0ExclusionPolicy": "EXCLUDE_GATE0_ACCEPTANCE_SOURCES_FROM_TRAINING"
+}

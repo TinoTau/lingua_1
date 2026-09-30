@@ -1,0 +1,37 @@
+{
+  "trace_contract": "MATERIALIZABLE_TARGET_V1",
+  "correction_units_total": 601,
+  "dialogs": {
+    "total": 200,
+    "requiring_correction": 175,
+    "lexical_recoverable": 6,
+    "path_recoverable": 1,
+    "sentence_recoverable": 1,
+    "actually_assembled": 1,
+    "kenlm_available": 1,
+    "final_correct": 25
+  },
+  "correction_units": {
+    "total": 601,
+    "lexical_recoverable": 36,
+    "path_recoverable": 33,
+    "sentence_recoverable": 33,
+    "assembled": 28
+  },
+  "dialogs_any_unit": {
+    "note": "At least one required unit recovered (partial). Not a substitute for strict all-units flags.",
+    "lexical_any": 30,
+    "path_any": 25,
+    "assembled_any": 22
+  },
+  "lexical_miss_units": {
+    "total": 552,
+    "length_le_1": 325,
+    "insert": 8,
+    "note": "1-char substitutes include traditional/simplified script diffs; not collapsed by contract."
+  },
+  "eligibility_gap_dialogs": 5,
+  "eligibility_gap_units": 10,
+  "true_assembly_materialization_failure": 0,
+  "legacy_142_26": "RETIRED / INVALID FOR ROOT-CAUSE ATTRIBUTION"
+}

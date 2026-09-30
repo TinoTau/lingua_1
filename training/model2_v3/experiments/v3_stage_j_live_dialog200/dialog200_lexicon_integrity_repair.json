@@ -1,0 +1,9 @@
+{
+  "label": "lexicon_checksum_integrity_repair",
+  "note": "Observation-round infrastructure fix only. Lexicon term content was not modified.",
+  "bundle": "node_runtime/lexicon/v3",
+  "previous_manifest_checksum": "ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76",
+  "actual_sqlite_sha256": "b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58",
+  "action": "Updated checksum.txt and manifest.json checksum to match existing lexicon.sqlite",
+  "also": "Rebuilt better-sqlite3 native module for Electron ABI via @electron/rebuild"
+}

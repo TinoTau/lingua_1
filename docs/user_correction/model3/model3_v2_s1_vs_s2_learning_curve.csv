@@ -1,0 +1,8 @@
+model,group,retry_f1,retry_precision,retry_recall,keep_precision,keep_recall,pred_retry_rate,notes
+MODEL3_V2_S1_RANDOM_INIT_V1,formal_test,0.4859,0.9139,0.3309,0.9533,0.9977,0.0247,S1
+MODEL3_V2_S1_RANDOM_INIT_V1,protected_real,,0,0,0,0,13,target/case/unrelated/keep_fp / eligible
+MODEL3_V2_S1_RANDOM_INIT_V1,latency_ms,0.1839,0.24,3.0475,4.1196,,,span_p50/p95 utt_p50/p95
+MODEL3_V2_S2_RANDOM_INIT_V1,formal_test,0.8565,0.8837,0.8309,0.9864,0.9912,0.0701,S2
+MODEL3_V2_S2_RANDOM_INIT_V1,protected_real,,9,13,4,0,13,target/case/unrelated/keep_fp / eligible
+MODEL3_V2_S2_RANDOM_INIT_V1,latency_ms,0.1797,0.2284,2.9443,4.0723,,,span_p50/p95 utt_p50/p95
+DELTA_S2_minus_S1,learning_curve,0.3706,-0.0302,0.5,9,13,,verdict=S2_BUILD_AND_TRAIN_PASS_CONTINUE_S3

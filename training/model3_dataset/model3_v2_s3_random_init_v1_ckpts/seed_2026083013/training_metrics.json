@@ -1,0 +1,230 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_CORE_S3",
+  "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+  "seed": 2026083013,
+  "checkpointDir": "training/model3_dataset/model3_v2_s3_random_init_v1_ckpts/seed_2026083013",
+  "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+  "bestEpoch": 8,
+  "trainSeconds": 304.86201643943787,
+  "config": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "seed": 2026083013,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "feat_names": [
+      "isAnchor",
+      "span_len_log1p",
+      "span_rel_position",
+      "first_pass_cand_log1p",
+      "current_cjk_len_log1p",
+      "pinyin_channel_avail"
+    ],
+    "max_surface_len": 8,
+    "batch_size": 64,
+    "epochs": 8,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "sampling": "uniform_shuffle_utterance",
+    "pair_loss_enabled": false,
+    "init": "random_from_scratch",
+    "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "featureContract": "packModel3SpanInferFields",
+    "decisionThreshold": "argmax"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.1794607521279862,
+      "dev": {
+        "keep_precision": 0.9619329622172214,
+        "keep_recall": 0.9928120874284876,
+        "retry_precision": 0.8274647887323944,
+        "retry_recall": 0.4673516738481936,
+        "retry_f1": 0.5973310739250158,
+        "tp": 1410,
+        "fp": 294,
+        "fn": 1607,
+        "tn": 40608,
+        "pred_keep": 42215,
+        "pred_retry": 1704,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.038798697602404425
+      }
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.0832113692831052,
+      "dev": {
+        "keep_precision": 0.9747786230232056,
+        "keep_recall": 0.9931054716150799,
+        "retry_precision": 0.8745551601423488,
+        "retry_recall": 0.6516407026847862,
+        "retry_f1": 0.7468186134852802,
+        "tp": 1966,
+        "fp": 282,
+        "fn": 1051,
+        "tn": 40620,
+        "pred_keep": 41671,
+        "pred_retry": 2248,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.05118513627359457
+      }
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.06095670127358876,
+      "dev": {
+        "keep_precision": 0.9790406899708497,
+        "keep_recall": 0.9935699965771845,
+        "retry_precision": 0.8908713692946059,
+        "retry_recall": 0.7116340735830295,
+        "retry_f1": 0.791229039985259,
+        "tp": 2147,
+        "fp": 263,
+        "fn": 870,
+        "tn": 40639,
+        "pred_keep": 41509,
+        "pred_retry": 2410,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.05487374484847105
+      }
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.04915035489064298,
+      "dev": {
+        "keep_precision": 0.9853420988556124,
+        "keep_recall": 0.9893892719182436,
+        "retry_precision": 0.8476658476658476,
+        "retry_recall": 0.8004640371229699,
+        "retry_f1": 0.8233890214797136,
+        "tp": 2415,
+        "fp": 434,
+        "fn": 602,
+        "tn": 40468,
+        "pred_keep": 41070,
+        "pred_retry": 2849,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.06486941870261162
+      }
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.041179468720465115,
+      "dev": {
+        "keep_precision": 0.9864404304007011,
+        "keep_recall": 0.9906850520756931,
+        "retry_precision": 0.8658922914466737,
+        "retry_recall": 0.8153795160755718,
+        "retry_f1": 0.8398770911573915,
+        "tp": 2460,
+        "fp": 381,
+        "fn": 557,
+        "tn": 40521,
+        "pred_keep": 41078,
+        "pred_retry": 2841,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.06468726519274118
+      }
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.03504833688126191,
+      "dev": {
+        "keep_precision": 0.984791242855759,
+        "keep_recall": 0.9941812136325852,
+        "retry_precision": 0.9094023601065855,
+        "retry_recall": 0.7918462048392443,
+        "retry_f1": 0.8465627214741319,
+        "tp": 2389,
+        "fp": 238,
+        "fn": 628,
+        "tn": 40664,
+        "pred_keep": 41292,
+        "pred_retry": 2627,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.05981465880370682
+      }
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.030560588324442507,
+      "dev": {
+        "keep_precision": 0.9823546427538328,
+        "keep_recall": 0.9963326976675957,
+        "retry_precision": 0.9383983572895277,
+        "retry_recall": 0.757374875704342,
+        "retry_f1": 0.8382245047688921,
+        "tp": 2285,
+        "fp": 150,
+        "fn": 732,
+        "tn": 40752,
+        "pred_keep": 41484,
+        "pred_retry": 2435,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.05544297456681618
+      }
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.026588784886131946,
+      "dev": {
+        "keep_precision": 0.984729683945598,
+        "keep_recall": 0.994841328052418,
+        "retry_precision": 0.9187524066230266,
+        "retry_recall": 0.7908518395757375,
+        "retry_f1": 0.8500178126113288,
+        "tp": 2386,
+        "fp": 211,
+        "fn": 631,
+        "tn": 40691,
+        "pred_keep": 41322,
+        "pred_retry": 2597,
+        "true_retry_rate": 0.06869464240989094,
+        "pred_retry_rate": 0.05913158314169266
+      }
+    }
+  ],
+  "dev": {
+    "keep_precision": 0.984729683945598,
+    "keep_recall": 0.994841328052418,
+    "retry_precision": 0.9187524066230266,
+    "retry_recall": 0.7908518395757375,
+    "retry_f1": 0.8500178126113288,
+    "tp": 2386,
+    "fp": 211,
+    "fn": 631,
+    "tn": 40691,
+    "pred_keep": 41322,
+    "pred_retry": 2597,
+    "true_retry_rate": 0.06869464240989094,
+    "pred_retry_rate": 0.05913158314169266
+  },
+  "test": {
+    "keep_precision": 0.9865255462041996,
+    "keep_recall": 0.9969287601211314,
+    "retry_precision": 0.9469584569732937,
+    "retry_recall": 0.8010668340131786,
+    "retry_f1": 0.8679245283018868,
+    "tp": 2553,
+    "fp": 143,
+    "fn": 634,
+    "tn": 46418,
+    "pred_keep": 47052,
+    "pred_retry": 2696,
+    "true_retry_rate": 0.06406287689957385,
+    "pred_retry_rate": 0.05419313339229718
+  },
+  "classifierBehavior": {
+    "ALL_KEEP": false,
+    "OVER_RETRY": false,
+    "NEAR_ALL_KEEP": false,
+    "pred_retry_rate": 0.05419313339229718,
+    "true_retry_rate": 0.06406287689957385
+  }
+}

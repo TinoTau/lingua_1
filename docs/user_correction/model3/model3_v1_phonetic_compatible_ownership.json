@@ -1,0 +1,57 @@
+{
+  "phase": "MODEL3_V1_TRAINING_RUNTIME_FINESPAN_REPRESENTATION_AUDIT",
+  "field": "phoneticCompatible",
+  "date": "2026-08-28",
+  "ownership": "MIXED",
+  "model3RetryRequiresPhoneticCompatibilityByBusinessSSOT": "YES",
+  "booleanFieldIsModel3RuntimeFeature": false,
+  "uses": {
+    "trainingGeneration": {
+      "used": true,
+      "where": [
+        "training/model3_error_text/generator/corrupt.py (isPhonetic on corruptions)",
+        "pilot/full100k plans pass isPhonetic into harness corruptions"
+      ]
+    },
+    "stage2Materialization": {
+      "used": true,
+      "where": "training/model3_dataset/offline_harness/stage2_materialize.cjs — phoneticCompatible = corr.isPhonetic on FineSpan overlap"
+    },
+    "labelAssignment": {
+      "used": true,
+      "where": "training/model3_dataset/scripts/stage2_common.py label_spans — RETRY requires phoneticCompatible && referenceReachable==YES && non-anchor && ref!=surface"
+    },
+    "trainingValidation": {
+      "used": true,
+      "where": [
+        "validate_sample / leakage audits",
+        "model3_v1_model_visible_feature_allowlist.json: model_visible=false label_only"
+      ]
+    },
+    "runtimeModel3": {
+      "used": false,
+      "where": "electron_node/.../model3-runtime/** — zero references; not in feature pack / allowlist tensors"
+    },
+    "recall": {
+      "used": false,
+      "note": "Recall does not read phoneticCompatible. referenceReachable probe uses recallTopK / base lookup independently; isPhonetic is a generator flag that stage2 copies onto spans for labeling."
+    }
+  },
+  "authoritativeBusinessSSOT": {
+    "model3_training_label_contract_v1.md": "Positive RETRY requires error class compatible with pronunciation/accent/tone/phonetic confusion AND reachable under allowed retry Recall.",
+    "model3_retry_contract_v1.md": "Model3 asks whether non-anchor span is a repairable acoustic/pronunciation site under Anchors.",
+    "MODEL3_ARCHITECTURE_CONTRACT_V1.md": "KEEP/RETRY trigger for one bounded local Lexicon Recall — does not name the boolean field phoneticCompatible."
+  },
+  "distinction": {
+    "businessClaim": "Model3 RETRY targets repairable pronunciation/acoustic-class sites (SSOT YES).",
+    "trainingBoolean": "phoneticCompatible is a Synthetic V1 materialization guard: corruption marked isPhonetic + Recall prove referenceReachable.",
+    "notTheSameAs": "Runtime Model3 does not require a phoneticCompatible feature bit to output RETRY.",
+    "classificationComponents": [
+      "BUSINESS_CONTRACT (phonetic-class RETRY intent)",
+      "TRAINING_DATA_CONSTRAINT (boolean gates labels)",
+      "RECALL_REACHABILITY_PROXY (paired with referenceReachable=YES)",
+      "HISTORICAL_GENERATOR_CONSTRAINT (isPhonetic from ACTIVE phonetic families)"
+    ]
+  },
+  "auditAction": "DO NOT remove phoneticCompatible in this phase."
+}

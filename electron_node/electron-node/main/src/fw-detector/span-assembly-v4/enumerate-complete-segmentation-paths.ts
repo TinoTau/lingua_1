@@ -2,6 +2,16 @@ import type { LexicalEdge } from './build-lexical-edges';
 import type { PathCapEvent, PrunedSegmentationPathTrace, SegmentationPath } from './lattice-path-types';
 import { derivePathId } from './build-boundary-key';
 
+/** Fields used by lattice path pruning / best-first ranking (SSOT). */
+export type SegmentationPathRankingFields = {
+  boundaryKey: string;
+  fallbackEdgeCount: number;
+  fuzzyEdgeCount: number;
+  toneRelaxedEdgeCount: number;
+  exactEdgeCount: number;
+  lexicalEdgeCount: number;
+};
+
 export interface EnumeratePathInput {
   syllableCount: number;
   lexicalEdges: readonly LexicalEdge[];
@@ -101,11 +111,13 @@ function lexicalEdgeCount(path: Pick<PartialPath, 'edges' | 'fallbackEdgeCount'>
 }
 
 /**
- * Comparator semantics:
- * - returns negative if a is BETTER than b (best-first)
- * - pruning keeps best entries by sorting best-first and slicing.
+ * Lattice path ranking SSOT — returns negative if a is BETTER than b (best-first).
+ * Used for per-position / complete-path pruning; consumers needing one path must reuse this.
  */
-function compareBestFirst(a: PartialPath, b: PartialPath): number {
+export function compareSegmentationPathRankingBestFirst(
+  a: SegmentationPathRankingFields,
+  b: SegmentationPathRankingFields
+): number {
   // 1 fallbackEdgeCount ASC
   if (a.fallbackEdgeCount !== b.fallbackEdgeCount) return a.fallbackEdgeCount - b.fallbackEdgeCount;
   // 2 invalidGapCount ASC — we model as fallbackEdgeCount for V1.0.0 gap-finalized paths
@@ -120,11 +132,52 @@ function compareBestFirst(a: PartialPath, b: PartialPath): number {
   // 5 exactEdgeCount DESC
   if (a.exactEdgeCount !== b.exactEdgeCount) return b.exactEdgeCount - a.exactEdgeCount;
   // 6 lexicalEdgeCount DESC
-  const lexA = lexicalEdgeCount(a);
-  const lexB = lexicalEdgeCount(b);
-  if (lexA !== lexB) return lexB - lexA;
+  if (a.lexicalEdgeCount !== b.lexicalEdgeCount) return b.lexicalEdgeCount - a.lexicalEdgeCount;
   // 7 boundaryKey ASC
   return a.boundaryKey.localeCompare(b.boundaryKey);
+}
+
+/** Best-first compare for materialized SegmentationPath (same SSOT as pruning). */
+export function compareSegmentationPathBestFirst(a: SegmentationPath, b: SegmentationPath): number {
+  return compareSegmentationPathRankingBestFirst(
+    {
+      boundaryKey: a.boundaryKey,
+      fallbackEdgeCount: a.fallbackEdgeCount,
+      fuzzyEdgeCount: a.structuralEvidence.fuzzyEdgeCount,
+      toneRelaxedEdgeCount: a.structuralEvidence.toneRelaxedEdgeCount,
+      exactEdgeCount: a.structuralEvidence.exactEdgeCount,
+      lexicalEdgeCount: a.lexicalEdgeCount,
+    },
+    {
+      boundaryKey: b.boundaryKey,
+      fallbackEdgeCount: b.fallbackEdgeCount,
+      fuzzyEdgeCount: b.structuralEvidence.fuzzyEdgeCount,
+      toneRelaxedEdgeCount: b.structuralEvidence.toneRelaxedEdgeCount,
+      exactEdgeCount: b.structuralEvidence.exactEdgeCount,
+      lexicalEdgeCount: b.lexicalEdgeCount,
+    }
+  );
+}
+
+function compareBestFirst(a: PartialPath, b: PartialPath): number {
+  return compareSegmentationPathRankingBestFirst(
+    {
+      boundaryKey: a.boundaryKey,
+      fallbackEdgeCount: a.fallbackEdgeCount,
+      fuzzyEdgeCount: a.fuzzyEdgeCount,
+      toneRelaxedEdgeCount: a.toneRelaxedEdgeCount,
+      exactEdgeCount: a.exactEdgeCount,
+      lexicalEdgeCount: lexicalEdgeCount(a),
+    },
+    {
+      boundaryKey: b.boundaryKey,
+      fallbackEdgeCount: b.fallbackEdgeCount,
+      fuzzyEdgeCount: b.fuzzyEdgeCount,
+      toneRelaxedEdgeCount: b.toneRelaxedEdgeCount,
+      exactEdgeCount: b.exactEdgeCount,
+      lexicalEdgeCount: lexicalEdgeCount(b),
+    }
+  );
 }
 
 function partialToSegmentationPath(p: PartialPath): SegmentationPath {

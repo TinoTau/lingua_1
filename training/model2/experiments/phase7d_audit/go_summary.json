@@ -1,0 +1,22 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "phase": "7D",
+  "audit_verdict": "PASS",
+  "architecture_drift": "YES",
+  "drift_class": "MIXED_AMBIGUOUS_SSOT + RECALL_STAGE_PLANNED_BUT_NEVER_IMPLEMENTED (profile-conditioned)",
+  "drift_point": "Architecture Hybrid 2026-08-12 §13 (Model2=rank-in-pool); Phase 6 crystallized binding gates",
+  "can_introduce_absent_target": "NO",
+  "TargetIntroductionRate": 0.0,
+  "n_missing_target_tested": 250,
+  "profile_affects_retrieval": "NO",
+  "profile_affects_ranking": "YES",
+  "training_matches_intent": "NO",
+  "dataset_matches_intent": "NO",
+  "metrics_match_intent": "NO",
+  "recommended_decision": "PARTIAL_REBUILD",
+  "estimated_rework_risk": "HIGH",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD",
+  "next_phase": "Phase 7E — Profile-Conditioned Recall Expansion Contract & Minimal Retrieval Spike (no Stage A ranking optimization)"
+}

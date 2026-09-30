@@ -1,0 +1,2883 @@
+{
+  "ELIGIBLE_D_ONLY_COUNT": 12,
+  "construction": "pronunciation_corrupt_finespan_v1 on D2 CORRECT groups",
+  "rationale": "Exact-syllable D2 spans are always base-visible under identity; eligible introduction requires FineSpan observation noise (ASR-like), not hard domain filter.",
+  "DATASET_OR_ACTION_SPACE_LIMITATION": false,
+  "build_cost_s": 618.2573439000116,
+  "cases": [
+    {
+      "group_key": "same_span_3",
+      "source_row_id": "stage_d2_3_CORRECT",
+      "span": {
+        "span_id": "d2_span_3_d1c33",
+        "syllable_start": 0,
+        "syllable_end": 3,
+        "span_syllables": [
+          "chu",
+          "zhu",
+          "ce"
+        ],
+        "window_text": "出租车",
+        "window_pinyin_key": "chuzuche",
+        "raw_start": 0,
+        "raw_end": 3,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:tourism_route:出租车:chu|zu|che",
+      "target_surface": "出租车",
+      "target_pinyin_key": "chu|zu|che",
+      "target_domains": [
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "base_term_ids": [
+        "base:_:注册:zhu|ce",
+        "base:_:主任:zhu|ren",
+        "base:_:主办:zhu|ban",
+        "base:_:主持:zhu|chi",
+        "base:_:主路:zhu|lu",
+        "base:_:主题:zhu|ti",
+        "base:_:代主任:dai|zhu|ren",
+        "base:_:住院:zhu|yuan",
+        "base:_:储物间:chu|wu|jian",
+        "base:_:入住单:ru|zhu|dan",
+        "base:_:入住率:ru|zhu|l",
+        "base:_:出发:chu|fa",
+        "base:_:出发厅:chu|fa|ting",
+        "base:_:出发地:chu|fa|di",
+        "base:_:出发层:chu|fa|ceng",
+        "base:_:出发点:chu|fa|dian"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_pickup",
+          "domain_id": "tourism_pickup",
+          "term_ids": [
+            "base:_:注册:zhu|ce",
+            "base:_:出租车:chu|zu|che",
+            "base:_:主任:zhu|ren",
+            "base:_:主办:zhu|ban",
+            "base:_:主持:zhu|chi",
+            "base:_:主路:zhu|lu",
+            "base:_:主题:zhu|ti",
+            "base:_:代主任:dai|zhu|ren"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:出租车:chu|zu|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_route",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_hotel",
+          "domain_id": "tourism_hotel",
+          "term_ids": [
+            "base:_:注册:zhu|ce",
+            "base:_:出租车:chu|zu|che",
+            "base:_:主任:zhu|ren",
+            "base:_:主办:zhu|ban",
+            "base:_:主持:zhu|chi",
+            "base:_:主路:zhu|lu",
+            "base:_:主题:zhu|ti",
+            "base:_:代主任:dai|zhu|ren"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:出租车:chu|zu|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_route",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_route",
+          "domain_id": "tourism_route",
+          "term_ids": [
+            "base:_:出租车:chu|zu|che",
+            "base:_:注册:zhu|ce",
+            "base:_:主任:zhu|ren",
+            "base:_:主办:zhu|ban",
+            "base:_:主持:zhu|chi",
+            "base:_:主路:zhu|lu",
+            "base:_:主题:zhu|ti",
+            "base:_:代主任:dai|zhu|ren"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:出租车:chu|zu|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_route",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_transport",
+          "domain_id": "tourism_transport",
+          "term_ids": [
+            "base:_:出租车:chu|zu|che",
+            "base:_:注册:zhu|ce",
+            "base:_:主任:zhu|ren",
+            "base:_:主办:zhu|ban",
+            "base:_:主持:zhu|chi",
+            "base:_:主路:zhu|lu",
+            "base:_:主题:zhu|ti",
+            "base:_:代主任:dai|zhu|ren"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:出租车:chu|zu|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_route",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:注册:zhu|ce",
+            "base:_:出租车:chu|zu|che",
+            "base:_:主任:zhu|ren",
+            "base:_:主办:zhu|ban",
+            "base:_:主持:zhu|chi",
+            "base:_:主路:zhu|lu",
+            "base:_:主题:zhu|ti",
+            "base:_:代主任:dai|zhu|ren"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:出租车:chu|zu|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_route",
+                "tourism_transport"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.011741293532338307,
+        "tourism_hotel": 0.017578772802653398,
+        "tourism_route": 0.954195688225539,
+        "tourism_transport": 0.011044776119402985,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.005439469320066334,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "辅路线",
+        "导游证",
+        "自由行",
+        "预约",
+        "景区图",
+        "总路线",
+        "古城墙",
+        "集合点",
+        "观景点",
+        "索道",
+        "入园",
+        "博物馆",
+        "古镇区",
+        "索道线",
+        "路线",
+        "面包车",
+        "淡旺季",
+        "行程单",
+        "半日游",
+        "路线图",
+        "闭园",
+        "导游员",
+        "风景区",
+        "门票",
+        "黄包车",
+        "旺季票",
+        "古镇",
+        "淡季",
+        "旺季",
+        "景区",
+        "淡季票",
+        "古迹",
+        "导览",
+        "导游",
+        "出园",
+        "铁路线",
+        "风景点",
+        "景点",
+        "徒步",
+        "一日游",
+        "古桥",
+        "打卡点",
+        "行程",
+        "预定",
+        "导览图",
+        "散团",
+        "包车",
+        "攻略",
+        "动物园",
+        "行程图"
+      ],
+      "personal_term_evidence": {
+        "辅路线": 1.0,
+        "导游证": 0.992,
+        "自由行": 0.984,
+        "预约": 0.976,
+        "景区图": 0.968,
+        "总路线": 0.96,
+        "古城墙": 0.952,
+        "集合点": 0.944,
+        "观景点": 0.9359999999999999,
+        "索道": 0.9279999999999999,
+        "入园": 0.92,
+        "博物馆": 0.912,
+        "古镇区": 0.904,
+        "索道线": 0.896,
+        "路线": 0.888,
+        "面包车": 0.88,
+        "淡旺季": 0.872,
+        "行程单": 0.864,
+        "半日游": 0.856,
+        "路线图": 0.848,
+        "闭园": 0.84,
+        "导游员": 0.832,
+        "风景区": 0.8240000000000001,
+        "门票": 0.8160000000000001,
+        "黄包车": 0.808,
+        "旺季票": 0.8,
+        "古镇": 0.792,
+        "淡季": 0.784,
+        "旺季": 0.776,
+        "景区": 0.768,
+        "淡季票": 0.76,
+        "古迹": 0.752,
+        "导览": 0.744,
+        "导游": 0.736,
+        "出园": 0.728,
+        "铁路线": 0.72,
+        "风景点": 0.712,
+        "景点": 0.704,
+        "徒步": 0.696,
+        "一日游": 0.688,
+        "古桥": 0.6799999999999999,
+        "打卡点": 0.6719999999999999,
+        "行程": 0.6639999999999999,
+        "预定": 0.6559999999999999,
+        "导览图": 0.648,
+        "散团": 0.64,
+        "包车": 0.632,
+        "攻略": 0.624,
+        "动物园": 0.616,
+        "行程图": 0.608
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 33
+    },
+    {
+      "group_key": "same_span_6",
+      "source_row_id": "stage_d2_6_CORRECT",
+      "span": {
+        "span_id": "d2_span_6_d1c0",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "jia",
+          "bin"
+        ],
+        "window_text": "加冰",
+        "window_pinyin_key": "jiabing",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:food_order:加冰:jia|bing",
+      "target_surface": "加冰",
+      "target_pinyin_key": "jia|bing",
+      "target_domains": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "base_term_ids": [
+        "base:_:嘉宾:jia|bin",
+        "base:_:加单:jia|dan",
+        "base:_:加床:jia|chuang",
+        "base:_:嘉宾证:jia|bin|zheng",
+        "base:_:夹板:jia|ban",
+        "base:_:礼宾:li|bin",
+        "base:_:驾照:jia|zhao",
+        "base:_:价值:jia|zhi",
+        "base:_:价格:jia|ge",
+        "base:_:佳肴:jia|yao",
+        "base:_:假使:jia|shi",
+        "base:_:假如:jia|ru",
+        "base:_:假定:jia|ding",
+        "base:_:假期:jia|qi",
+        "base:_:假装:jia|zhuang",
+        "base:_:假设:jia|she"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:嘉宾:jia|bin",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾证:jia|bin|zheng",
+            "base:_:夹板:jia|ban",
+            "base:_:礼宾:li|bin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加冰:jia|bing",
+              "term_type": "base",
+              "domain_ids": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:嘉宾:jia|bin",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾证:jia|bin|zheng",
+            "base:_:夹板:jia|ban",
+            "base:_:礼宾:li|bin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加冰:jia|bing",
+              "term_type": "base",
+              "domain_ids": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:嘉宾:jia|bin",
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾证:jia|bin|zheng",
+            "base:_:夹板:jia|ban",
+            "base:_:礼宾:li|bin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加冰:jia|bing",
+              "term_type": "base",
+              "domain_ids": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:嘉宾:jia|bin",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾证:jia|bin|zheng",
+            "base:_:夹板:jia|ban",
+            "base:_:礼宾:li|bin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加冰:jia|bing",
+              "term_type": "base",
+              "domain_ids": [
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.905190713101161,
+        "milk_tea": 0.03643449419568822,
+        "bakery": 0.009701492537313432,
+        "food_order": 0.04867330016583747,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "热咖啡",
+        "去冰",
+        "拿铁",
+        "咖啡厅",
+        "咖啡包",
+        "咖啡色",
+        "咖啡店",
+        "浓缩液",
+        "萃取杯",
+        "磨豆机",
+        "压粉器",
+        "咖啡冻",
+        "冰滴",
+        "燕麦奶",
+        "浓缩铀",
+        "冰美式",
+        "萃取头",
+        "预浸泡",
+        "分享壶",
+        "手冲壶",
+        "打包",
+        "卡布",
+        "咖啡因",
+        "低因豆",
+        "少糖",
+        "玛奇朵",
+        "半糖",
+        "冰滴液",
+        "单品豆",
+        "豆奶",
+        "热拿铁",
+        "拉花",
+        "手冲",
+        "研磨",
+        "拼配豆",
+        "堂食",
+        "咖啡馆",
+        "余韵感",
+        "热美式",
+        "全脂奶",
+        "拉花针",
+        "澳白",
+        "拉花缸",
+        "咖啡",
+        "咖啡渣",
+        "咖啡杯",
+        "正常糖",
+        "咖啡碱",
+        "冰拿铁",
+        "压粉垫"
+      ],
+      "personal_term_evidence": {
+        "热咖啡": 1.0,
+        "去冰": 0.992,
+        "拿铁": 0.984,
+        "咖啡厅": 0.976,
+        "咖啡包": 0.968,
+        "咖啡色": 0.96,
+        "咖啡店": 0.952,
+        "浓缩液": 0.944,
+        "萃取杯": 0.9359999999999999,
+        "磨豆机": 0.9279999999999999,
+        "压粉器": 0.92,
+        "咖啡冻": 0.912,
+        "冰滴": 0.904,
+        "燕麦奶": 0.896,
+        "浓缩铀": 0.888,
+        "冰美式": 0.88,
+        "萃取头": 0.872,
+        "预浸泡": 0.864,
+        "分享壶": 0.856,
+        "手冲壶": 0.848,
+        "打包": 0.84,
+        "卡布": 0.832,
+        "咖啡因": 0.8240000000000001,
+        "低因豆": 0.8160000000000001,
+        "少糖": 0.808,
+        "玛奇朵": 0.8,
+        "半糖": 0.792,
+        "冰滴液": 0.784,
+        "单品豆": 0.776,
+        "豆奶": 0.768,
+        "热拿铁": 0.76,
+        "拉花": 0.752,
+        "手冲": 0.744,
+        "研磨": 0.736,
+        "拼配豆": 0.728,
+        "堂食": 0.72,
+        "咖啡馆": 0.712,
+        "余韵感": 0.704,
+        "热美式": 0.696,
+        "全脂奶": 0.688,
+        "拉花针": 0.6799999999999999,
+        "澳白": 0.6719999999999999,
+        "拉花缸": 0.6639999999999999,
+        "咖啡": 0.6559999999999999,
+        "咖啡渣": 0.648,
+        "咖啡杯": 0.64,
+        "正常糖": 0.632,
+        "咖啡碱": 0.624,
+        "冰拿铁": 0.616,
+        "压粉垫": 0.608
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 0
+    },
+    {
+      "group_key": "same_span_9",
+      "source_row_id": "stage_d2_9_CORRECT",
+      "span": {
+        "span_id": "d2_span_9_d1c0",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "jia",
+          "niao"
+        ],
+        "window_text": "加料",
+        "window_pinyin_key": "jialiao",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:milk_tea:加料:jia|liao",
+      "target_surface": "加料",
+      "target_pinyin_key": "jia|liao",
+      "target_domains": [
+        "food_order",
+        "milk_tea"
+      ],
+      "base_term_ids": [
+        "base:_:加单:jia|dan",
+        "base:_:加床:jia|chuang",
+        "base:_:嘉宾:jia|bin",
+        "base:_:夹板:jia|ban",
+        "base:_:驾照:jia|zhao",
+        "base:_:价值:jia|zhi",
+        "base:_:价格:jia|ge",
+        "base:_:佳肴:jia|yao",
+        "base:_:假使:jia|shi",
+        "base:_:假如:jia|ru",
+        "base:_:假定:jia|ding",
+        "base:_:假期:jia|qi",
+        "base:_:假装:jia|zhuang",
+        "base:_:假设:jia|she",
+        "base:_:加上:jia|shang",
+        "base:_:加之:jia|zhi"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_hotel",
+          "domain_id": "tourism_hotel",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_route",
+          "domain_id": "tourism_route",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:transport",
+          "domain_id": "transport",
+          "term_ids": [
+            "base:_:加冰:jia|bing",
+            "base:_:加料:jia|liao",
+            "base:_:加单:jia|dan",
+            "base:_:加床:jia|chuang",
+            "base:_:嘉宾:jia|bin",
+            "base:_:夹板:jia|ban",
+            "base:_:驾照:jia|zhao",
+            "base:_:价值:jia|zhi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.026169154228855716,
+        "tourism_route": 0.003781094527363183,
+        "tourism_transport": 0.0,
+        "coffee": 0.08373134328358209,
+        "milk_tea": 0.11407960199004971,
+        "bakery": 0.021144278606965165,
+        "food_order": 0.747313432835821,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.003781094527363183
+      },
+      "personal_terms": [
+        "加料",
+        "买单",
+        "忌口",
+        "下单",
+        "加单",
+        "加大杯",
+        "正常糖",
+        "结账",
+        "卤肉饭",
+        "会员价",
+        "发票",
+        "配送",
+        "菜单",
+        "拿铁",
+        "鳗鱼饭",
+        "早餐券",
+        "收银",
+        "寿司卷",
+        "过敏原",
+        "打包",
+        "餐具",
+        "含少冰",
+        "重辣",
+        "套餐",
+        "无糖",
+        "香菜",
+        "打包盒",
+        "少冰量",
+        "刀削面",
+        "超大杯",
+        "勺子",
+        "大杯",
+        "加料区",
+        "口水鸡",
+        "改单",
+        "外卖",
+        "美式",
+        "带走",
+        "中杯",
+        "去冰量",
+        "微辣",
+        "少冰",
+        "中辣",
+        "催单",
+        "叉烧饭",
+        "冒菜",
+        "加冰",
+        "小杯",
+        "退单",
+        "预订"
+      ],
+      "personal_term_evidence": {
+        "加料": 1.0,
+        "买单": 0.992,
+        "忌口": 0.984,
+        "下单": 0.976,
+        "加单": 0.968,
+        "加大杯": 0.96,
+        "正常糖": 0.952,
+        "结账": 0.944,
+        "卤肉饭": 0.9359999999999999,
+        "会员价": 0.9279999999999999,
+        "发票": 0.92,
+        "配送": 0.912,
+        "菜单": 0.904,
+        "拿铁": 0.896,
+        "鳗鱼饭": 0.888,
+        "早餐券": 0.88,
+        "收银": 0.872,
+        "寿司卷": 0.864,
+        "过敏原": 0.856,
+        "打包": 0.848,
+        "餐具": 0.84,
+        "含少冰": 0.832,
+        "重辣": 0.8240000000000001,
+        "套餐": 0.8160000000000001,
+        "无糖": 0.808,
+        "香菜": 0.8,
+        "打包盒": 0.792,
+        "少冰量": 0.784,
+        "刀削面": 0.776,
+        "超大杯": 0.768,
+        "勺子": 0.76,
+        "大杯": 0.752,
+        "加料区": 0.744,
+        "口水鸡": 0.736,
+        "改单": 0.728,
+        "外卖": 0.72,
+        "美式": 0.712,
+        "带走": 0.704,
+        "中杯": 0.696,
+        "去冰量": 0.688,
+        "微辣": 0.6799999999999999,
+        "少冰": 0.6719999999999999,
+        "中辣": 0.6639999999999999,
+        "催单": 0.6559999999999999,
+        "叉烧饭": 0.648,
+        "冒菜": 0.64,
+        "加冰": 0.632,
+        "小杯": 0.624,
+        "退单": 0.616,
+        "预订": 0.608
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 0
+    },
+    {
+      "group_key": "same_span_16",
+      "source_row_id": "stage_d2_16_CORRECT",
+      "span": {
+        "span_id": "d2_span_16_d1c0",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "jian",
+          "liao"
+        ],
+        "window_text": "加料",
+        "window_pinyin_key": "jialiao",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:food_order:加料:jia|liao",
+      "target_surface": "加料",
+      "target_pinyin_key": "jia|liao",
+      "target_domains": [
+        "food_order",
+        "milk_tea"
+      ],
+      "base_term_ids": [
+        "base:_:剪彩:jian|cai",
+        "base:_:剪枝:jian|zhi",
+        "base:_:检查:jian|cha",
+        "base:_:检票:jian|piao",
+        "base:_:煎饺:jian|jiao",
+        "base:_:理疗:li|liao",
+        "base:_:监控:jian|kong",
+        "base:_:诊疗:zhen|liao",
+        "base:_:语料:yu|liao",
+        "base:_:资料:zi|liao",
+        "base:_:不料:bu|liao",
+        "base:_:健全:jian|quan",
+        "base:_:健康:jian|kang",
+        "base:_:健身:jian|shen",
+        "base:_:兼任:jian|ren",
+        "base:_:兼备:jian|bei"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_hotel",
+          "domain_id": "tourism_hotel",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_route",
+          "domain_id": "tourism_route",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:transport",
+          "domain_id": "transport",
+          "term_ids": [
+            "base:_:加料:jia|liao",
+            "base:_:剪彩:jian|cai",
+            "base:_:剪枝:jian|zhi",
+            "base:_:检查:jian|cha",
+            "base:_:检票:jian|piao",
+            "base:_:煎饺:jian|jiao",
+            "base:_:理疗:li|liao",
+            "base:_:监控:jian|kong"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:加料:jia|liao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.03140961857379767,
+        "tourism_route": 0.011708126036484242,
+        "tourism_transport": 0.0,
+        "coffee": 0.10776119402985074,
+        "milk_tea": 0.1243781094527363,
+        "bakery": 0.03582089552238804,
+        "food_order": 0.68424543946932,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.004676616915422885
+      },
+      "personal_terms": [
+        "刀削面",
+        "配送",
+        "少冰",
+        "带走",
+        "勺子",
+        "去冰",
+        "早餐券",
+        "套餐",
+        "结账",
+        "打包",
+        "菜单",
+        "外卖",
+        "乌冬面",
+        "无糖",
+        "重辣",
+        "点单",
+        "香菜",
+        "自取",
+        "过敏原",
+        "预定",
+        "鳗鱼饭",
+        "加冰",
+        "冒菜",
+        "大杯",
+        "拿铁",
+        "少糖",
+        "正常糖",
+        "加单",
+        "加料区",
+        "忌口",
+        "加大杯",
+        "预订",
+        "改单",
+        "打包盒",
+        "会员价",
+        "中杯",
+        "含少冰",
+        "催单",
+        "餐具",
+        "小杯",
+        "蛋糕",
+        "去冰量",
+        "美式",
+        "微辣",
+        "少冰量",
+        "堂食",
+        "早餐",
+        "买单",
+        "辣度",
+        "下单"
+      ],
+      "personal_term_evidence": {
+        "刀削面": 1.0,
+        "配送": 0.992,
+        "少冰": 0.984,
+        "带走": 0.976,
+        "勺子": 0.968,
+        "去冰": 0.96,
+        "早餐券": 0.952,
+        "套餐": 0.944,
+        "结账": 0.9359999999999999,
+        "打包": 0.9279999999999999,
+        "菜单": 0.92,
+        "外卖": 0.912,
+        "乌冬面": 0.904,
+        "无糖": 0.896,
+        "重辣": 0.888,
+        "点单": 0.88,
+        "香菜": 0.872,
+        "自取": 0.864,
+        "过敏原": 0.856,
+        "预定": 0.848,
+        "鳗鱼饭": 0.84,
+        "加冰": 0.832,
+        "冒菜": 0.8240000000000001,
+        "大杯": 0.8160000000000001,
+        "拿铁": 0.808,
+        "少糖": 0.8,
+        "正常糖": 0.792,
+        "加单": 0.784,
+        "加料区": 0.776,
+        "忌口": 0.768,
+        "加大杯": 0.76,
+        "预订": 0.752,
+        "改单": 0.744,
+        "打包盒": 0.736,
+        "会员价": 0.728,
+        "中杯": 0.72,
+        "含少冰": 0.712,
+        "催单": 0.704,
+        "餐具": 0.696,
+        "小杯": 0.688,
+        "蛋糕": 0.6799999999999999,
+        "去冰量": 0.6719999999999999,
+        "美式": 0.6639999999999999,
+        "微辣": 0.6559999999999999,
+        "少冰量": 0.648,
+        "堂食": 0.64,
+        "早餐": 0.632,
+        "买单": 0.624,
+        "辣度": 0.616,
+        "下单": 0.608
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 0
+    },
+    {
+      "group_key": "same_span_21",
+      "source_row_id": "stage_d2_21_CORRECT",
+      "span": {
+        "span_id": "d2_span_21_d1c0",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "fa",
+          "piaon"
+        ],
+        "window_text": "发票",
+        "window_pinyin_key": "fapiao",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:tourism_hotel:发票:fa|piao",
+      "target_surface": "发票",
+      "target_pinyin_key": "fa|piao",
+      "target_domains": [
+        "food_order",
+        "tourism_hotel"
+      ],
+      "base_term_ids": [
+        "base:_:发热:fa|re",
+        "base:_:发言:fa|yan",
+        "base:_:发车:fa|che",
+        "base:_:法棍:fa|gun",
+        "base:_:罚单:fa|dan",
+        "base:_:发作:fa|zuo",
+        "base:_:发信:fa|xin",
+        "base:_:发光:fa|guang",
+        "base:_:发出:fa|chu",
+        "base:_:发动:fa|dong",
+        "base:_:发射:fa|she",
+        "base:_:发展:fa|zhan",
+        "base:_:发扬:fa|yang",
+        "base:_:发抖:fa|dou",
+        "base:_:发挥:fa|hui",
+        "base:_:发掘:fa|jue"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:发票:fa|piao",
+            "base:_:发热:fa|re",
+            "base:_:发言:fa|yan",
+            "base:_:发车:fa|che",
+            "base:_:法棍:fa|gun",
+            "base:_:罚单:fa|dan",
+            "base:_:发作:fa|zuo",
+            "base:_:发信:fa|xin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:发票:fa|piao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:发票:fa|piao",
+            "base:_:发热:fa|re",
+            "base:_:发言:fa|yan",
+            "base:_:发车:fa|che",
+            "base:_:法棍:fa|gun",
+            "base:_:罚单:fa|dan",
+            "base:_:发作:fa|zuo",
+            "base:_:发信:fa|xin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:发票:fa|piao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:发票:fa|piao",
+            "base:_:发热:fa|re",
+            "base:_:发言:fa|yan",
+            "base:_:发车:fa|che",
+            "base:_:法棍:fa|gun",
+            "base:_:罚单:fa|dan",
+            "base:_:发作:fa|zuo",
+            "base:_:发信:fa|xin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:发票:fa|piao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "tourism_hotel"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:发票:fa|piao",
+            "base:_:发热:fa|re",
+            "base:_:发言:fa|yan",
+            "base:_:发车:fa|che",
+            "base:_:法棍:fa|gun",
+            "base:_:罚单:fa|dan",
+            "base:_:发作:fa|zuo",
+            "base:_:发信:fa|xin"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:发票:fa|piao",
+              "term_type": "base",
+              "domain_ids": [
+                "food_order",
+                "tourism_hotel"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.2510840108401084,
+        "milk_tea": 0.2510840108401084,
+        "bakery": 0.05,
+        "food_order": 0.44783197831978316,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "去冰",
+        "少冰",
+        "堂食",
+        "少糖",
+        "寿司卷"
+      ],
+      "personal_term_evidence": {
+        "去冰": 1.0,
+        "少冰": 0.992,
+        "堂食": 0.984,
+        "少糖": 0.976,
+        "寿司卷": 0.968
+      },
+      "multitag": true,
+      "split": "train",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 0
+    },
+    {
+      "group_key": "same_span_23",
+      "source_row_id": "stage_d2_23_CORRECT",
+      "span": {
+        "span_id": "d2_span_23_d1c2",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "dan",
+          "gaon"
+        ],
+        "window_text": "蛋糕",
+        "window_pinyin_key": "dangao",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:bakery:蛋糕:dan|gao",
+      "target_surface": "蛋糕",
+      "target_pinyin_key": "dan|gao",
+      "target_domains": [
+        "bakery",
+        "food_order"
+      ],
+      "base_term_ids": [
+        "base:_:单品:dan|pin",
+        "base:_:单间:dan|jian",
+        "base:_:担架:dan|jia",
+        "base:_:淡季:dan|ji",
+        "base:_:蛋挞:dan|ta",
+        "base:_:但是:dan|shi",
+        "base:_:单一:dan|yi",
+        "base:_:单个:dan|ge",
+        "base:_:单位:dan|wei",
+        "base:_:单元:dan|yuan",
+        "base:_:单刀:dan|dao",
+        "base:_:单板:dan|ban",
+        "base:_:单独:dan|du",
+        "base:_:单纯:dan|chun",
+        "base:_:单行:dan|hang",
+        "base:_:单词:dan|ci"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.04924242424242424,
+        "milk_tea": 0.04924242424242424,
+        "bakery": 0.8522727272727274,
+        "food_order": 0.04924242424242424,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "牛角包",
+        "带走",
+        "曲奇饼",
+        "司康",
+        "法棍",
+        "吐司",
+        "马芬",
+        "泡芙",
+        "佛卡夏",
+        "可可包",
+        "曲奇",
+        "布朗尼",
+        "蛋挞",
+        "堂食",
+        "菜单",
+        "白吐司",
+        "餐包",
+        "结账",
+        "蝴蝶酥",
+        "碱水包"
+      ],
+      "personal_term_evidence": {
+        "牛角包": 1.0,
+        "带走": 0.992,
+        "曲奇饼": 0.984,
+        "司康": 0.976,
+        "法棍": 0.968,
+        "吐司": 0.96,
+        "马芬": 0.952,
+        "泡芙": 0.944,
+        "佛卡夏": 0.9359999999999999,
+        "可可包": 0.9279999999999999,
+        "曲奇": 0.92,
+        "布朗尼": 0.912,
+        "蛋挞": 0.904,
+        "堂食": 0.896,
+        "菜单": 0.888,
+        "白吐司": 0.88,
+        "餐包": 0.872,
+        "结账": 0.864,
+        "蝴蝶酥": 0.856,
+        "碱水包": 0.848
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 2
+    },
+    {
+      "group_key": "same_span_45",
+      "source_row_id": "stage_d2_45_CORRECT",
+      "span": {
+        "span_id": "d2_span_45_d1c1",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "dai",
+          "zhou"
+        ],
+        "window_text": "带走",
+        "window_pinyin_key": "daizou",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:coffee:带走:dai|zou",
+      "target_surface": "带走",
+      "target_pinyin_key": "dai|zou",
+      "target_domains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "base_term_ids": [
+        "base:_:代糖:dai|tang",
+        "base:_:代表:dai|biao",
+        "base:_:上周:shang|zhou",
+        "base:_:代价:dai|jia",
+        "base:_:代替:dai|ti",
+        "base:_:代理:dai|li",
+        "base:_:代码:dai|ma",
+        "base:_:代谢:dai|xie",
+        "base:_:各州:ge|zhou",
+        "base:_:大夫:dai|fu",
+        "base:_:宇宙:yu|zhou",
+        "base:_:带上:dai|shang",
+        "base:_:带到:dai|dao",
+        "base:_:带动:dai|dong",
+        "base:_:带头:dai|tou",
+        "base:_:带有:dai|you"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:带走:dai|zou",
+            "base:_:代糖:dai|tang",
+            "base:_:代表:dai|biao",
+            "base:_:上周:shang|zhou",
+            "base:_:代价:dai|jia",
+            "base:_:代替:dai|ti",
+            "base:_:代理:dai|li",
+            "base:_:代码:dai|ma"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:带走:dai|zou",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:带走:dai|zou",
+            "base:_:代糖:dai|tang",
+            "base:_:代表:dai|biao",
+            "base:_:上周:shang|zhou",
+            "base:_:代价:dai|jia",
+            "base:_:代替:dai|ti",
+            "base:_:代理:dai|li",
+            "base:_:代码:dai|ma"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:带走:dai|zou",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:带走:dai|zou",
+            "base:_:代糖:dai|tang",
+            "base:_:代表:dai|biao",
+            "base:_:上周:shang|zhou",
+            "base:_:代价:dai|jia",
+            "base:_:代替:dai|ti",
+            "base:_:代理:dai|li",
+            "base:_:代码:dai|ma"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:带走:dai|zou",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:带走:dai|zou",
+            "base:_:代糖:dai|tang",
+            "base:_:代表:dai|biao",
+            "base:_:上周:shang|zhou",
+            "base:_:代价:dai|jia",
+            "base:_:代替:dai|ti",
+            "base:_:代理:dai|li",
+            "base:_:代码:dai|ma"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:带走:dai|zou",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.03961038961038961,
+        "milk_tea": 0.03961038961038961,
+        "bakery": 0.8551948051948053,
+        "food_order": 0.06558441558441558,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "带走",
+        "曲奇饼",
+        "餐包",
+        "结账",
+        "碱水包",
+        "蛋糕",
+        "堂食",
+        "可可包",
+        "南瓜派",
+        "牛角包",
+        "可颂",
+        "千层酥",
+        "布朗尼",
+        "白吐司",
+        "蛋挞",
+        "丹麦酥",
+        "法棍",
+        "吐司",
+        "费南雪",
+        "司康"
+      ],
+      "personal_term_evidence": {
+        "带走": 1.0,
+        "曲奇饼": 0.992,
+        "餐包": 0.984,
+        "结账": 0.976,
+        "碱水包": 0.968,
+        "蛋糕": 0.96,
+        "堂食": 0.952,
+        "可可包": 0.944,
+        "南瓜派": 0.9359999999999999,
+        "牛角包": 0.9279999999999999,
+        "可颂": 0.92,
+        "千层酥": 0.912,
+        "布朗尼": 0.904,
+        "白吐司": 0.896,
+        "蛋挞": 0.888,
+        "丹麦酥": 0.88,
+        "法棍": 0.872,
+        "吐司": 0.864,
+        "费南雪": 0.856,
+        "司康": 0.848
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 1
+    },
+    {
+      "group_key": "same_span_57",
+      "source_row_id": "stage_d2_57_CORRECT",
+      "span": {
+        "span_id": "d2_span_57_d1c40",
+        "syllable_start": 0,
+        "syllable_end": 3,
+        "span_syllables": [
+          "jie",
+          "jin",
+          "pain"
+        ],
+        "window_text": "接机牌",
+        "window_pinyin_key": "jiejipai",
+        "raw_start": 0,
+        "raw_end": 3,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:transport:接机牌:jie|ji|pai",
+      "target_surface": "接机牌",
+      "target_pinyin_key": "jie|ji|pai",
+      "target_domains": [
+        "tourism_pickup",
+        "transport"
+      ],
+      "base_term_ids": [
+        "base:_:接近:jie|jin",
+        "base:_:接口:jie|kou",
+        "base:_:接客:jie|ke",
+        "base:_:地巾:di|jin",
+        "base:_:押金单:ya|jin|dan",
+        "base:_:接待:jie|dai",
+        "base:_:接待单:jie|dai|dan",
+        "base:_:接待厅:jie|dai|ting",
+        "base:_:接待员:jie|dai|yuan",
+        "base:_:接待处:jie|dai|chu",
+        "base:_:接待室:jie|dai|shi",
+        "base:_:接待户:jie|dai|hu",
+        "base:_:接待日:jie|dai|ri",
+        "base:_:接待组:jie|dai|zu",
+        "base:_:接待量:jie|dai|liang",
+        "base:_:接机员:jie|ji|yuan"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_pickup",
+          "domain_id": "tourism_pickup",
+          "term_ids": [
+            "base:_:接机牌:jie|ji|pai",
+            "base:_:接近:jie|jin",
+            "base:_:接口:jie|kou",
+            "base:_:接客:jie|ke",
+            "base:_:地巾:di|jin",
+            "base:_:押金单:ya|jin|dan",
+            "base:_:接待:jie|dai",
+            "base:_:接待单:jie|dai|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:接机牌:jie|ji|pai",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_route",
+          "domain_id": "tourism_route",
+          "term_ids": [
+            "base:_:接近:jie|jin",
+            "base:_:接机牌:jie|ji|pai",
+            "base:_:接口:jie|kou",
+            "base:_:接客:jie|ke",
+            "base:_:地巾:di|jin",
+            "base:_:押金单:ya|jin|dan",
+            "base:_:接待:jie|dai",
+            "base:_:接待单:jie|dai|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:接机牌:jie|ji|pai",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_transport",
+          "domain_id": "tourism_transport",
+          "term_ids": [
+            "base:_:接近:jie|jin",
+            "base:_:接机牌:jie|ji|pai",
+            "base:_:接口:jie|kou",
+            "base:_:接客:jie|ke",
+            "base:_:地巾:di|jin",
+            "base:_:押金单:ya|jin|dan",
+            "base:_:接待:jie|dai",
+            "base:_:接待单:jie|dai|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:接机牌:jie|ji|pai",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "transport"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.8,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0991869918699187,
+        "tourism_transport": 0.1008130081300813,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "接站牌",
+        "送机",
+        "临停区",
+        "集合点",
+        "接站"
+      ],
+      "personal_term_evidence": {
+        "接站牌": 1.0,
+        "送机": 0.992,
+        "临停区": 0.984,
+        "集合点": 0.976,
+        "接站": 0.968
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 40
+    },
+    {
+      "group_key": "same_span_69",
+      "source_row_id": "stage_d2_69_CORRECT",
+      "span": {
+        "span_id": "d2_span_69_d1c35",
+        "syllable_start": 0,
+        "syllable_end": 3,
+        "span_syllables": [
+          "mon",
+          "ba",
+          "che"
+        ],
+        "window_text": "末班车",
+        "window_pinyin_key": "mobanche",
+        "raw_start": 0,
+        "raw_end": 3,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:tourism_pickup:末班车:mo|ban|che",
+      "target_surface": "末班车",
+      "target_pinyin_key": "mo|ban|che",
+      "target_domains": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "base_term_ids": [
+        "base:_:中巴车:zhong|ba|che",
+        "base:_:小巴车:xiao|ba|che",
+        "base:_:专车:zhuan|che",
+        "base:_:候车:hou|che",
+        "base:_:停车:ting|che",
+        "base:_:公交车:gong|jiao|che",
+        "base:_:出租车:chu|zu|che",
+        "base:_:包车:bao|che",
+        "base:_:发车:fa|che",
+        "base:_:商务车:shang|wu|che",
+        "base:_:工具车:gong|ju|che",
+        "base:_:布草车:bu|cao|che",
+        "base:_:快车:kuai|che",
+        "base:_:恰巴塔:qia|ba|ta",
+        "base:_:手推车:shou|tui|che",
+        "base:_:抢救车:qiang|jiu|che"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_pickup",
+          "domain_id": "tourism_pickup",
+          "term_ids": [
+            "base:_:末班车:mo|ban|che",
+            "base:_:中巴车:zhong|ba|che",
+            "base:_:小巴车:xiao|ba|che",
+            "base:_:出租车:chu|zu|che",
+            "base:_:网约车:wang|yue|che",
+            "base:_:专车:zhuan|che",
+            "base:_:候车:hou|che",
+            "base:_:停车:ting|che"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:末班车:mo|ban|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_route",
+          "domain_id": "tourism_route",
+          "term_ids": [
+            "base:_:出租车:chu|zu|che",
+            "base:_:中巴车:zhong|ba|che",
+            "base:_:小巴车:xiao|ba|che",
+            "base:_:末班车:mo|ban|che",
+            "base:_:网约车:wang|yue|che",
+            "base:_:专车:zhuan|che",
+            "base:_:候车:hou|che",
+            "base:_:停车:ting|che"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:末班车:mo|ban|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_transport",
+          "domain_id": "tourism_transport",
+          "term_ids": [
+            "base:_:末班车:mo|ban|che",
+            "base:_:出租车:chu|zu|che",
+            "base:_:网约车:wang|yue|che",
+            "base:_:中巴车:zhong|ba|che",
+            "base:_:小巴车:xiao|ba|che",
+            "base:_:专车:zhuan|che",
+            "base:_:候车:hou|che",
+            "base:_:停车:ting|che"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:末班车:mo|ban|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:transport",
+          "domain_id": "transport",
+          "term_ids": [
+            "base:_:网约车:wang|yue|che",
+            "base:_:中巴车:zhong|ba|che",
+            "base:_:小巴车:xiao|ba|che",
+            "base:_:末班车:mo|ban|che",
+            "base:_:出租车:chu|zu|che",
+            "base:_:专车:zhuan|che",
+            "base:_:候车:hou|che",
+            "base:_:停车:ting|che"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:末班车:mo|ban|che",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.8719194312796209,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.014691943127962083,
+        "tourism_transport": 0.10154028436018954,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.011848341232227487
+      },
+      "personal_terms": [
+        "候机楼",
+        "集合点",
+        "接客",
+        "班车",
+        "接送点",
+        "举牌",
+        "夜班车",
+        "出发厅",
+        "临停区",
+        "接站",
+        "早班车",
+        "接送",
+        "举牌器",
+        "出发层",
+        "送站员",
+        "候机厅",
+        "送机员",
+        "举牌区",
+        "送机",
+        "登机口",
+        "上车点",
+        "到达口",
+        "下车点",
+        "接送单",
+        "送客",
+        "接机牌",
+        "送站",
+        "接机",
+        "登机牌",
+        "到达厅",
+        "候客区",
+        "接机员",
+        "输送机",
+        "首班车",
+        "场接送",
+        "航站楼",
+        "接站员",
+        "停车楼",
+        "接送岗",
+        "接站牌"
+      ],
+      "personal_term_evidence": {
+        "候机楼": 1.0,
+        "集合点": 0.992,
+        "接客": 0.984,
+        "班车": 0.976,
+        "接送点": 0.968,
+        "举牌": 0.96,
+        "夜班车": 0.952,
+        "出发厅": 0.944,
+        "临停区": 0.9359999999999999,
+        "接站": 0.9279999999999999,
+        "早班车": 0.92,
+        "接送": 0.912,
+        "举牌器": 0.904,
+        "出发层": 0.896,
+        "送站员": 0.888,
+        "候机厅": 0.88,
+        "送机员": 0.872,
+        "举牌区": 0.864,
+        "送机": 0.856,
+        "登机口": 0.848,
+        "上车点": 0.84,
+        "到达口": 0.832,
+        "下车点": 0.8240000000000001,
+        "接送单": 0.8160000000000001,
+        "送客": 0.808,
+        "接机牌": 0.8,
+        "送站": 0.792,
+        "接机": 0.784,
+        "登机牌": 0.776,
+        "到达厅": 0.768,
+        "候客区": 0.76,
+        "接机员": 0.752,
+        "输送机": 0.744,
+        "首班车": 0.736,
+        "场接送": 0.728,
+        "航站楼": 0.72,
+        "接站员": 0.712,
+        "停车楼": 0.704,
+        "接送岗": 0.696,
+        "接站牌": 0.688
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 35
+    },
+    {
+      "group_key": "same_span_87",
+      "source_row_id": "stage_d2_87_CORRECT",
+      "span": {
+        "span_id": "d2_span_87_d1c33",
+        "syllable_start": 0,
+        "syllable_end": 3,
+        "span_syllables": [
+          "hang",
+          "zan",
+          "nou"
+        ],
+        "window_text": "航站楼",
+        "window_pinyin_key": "hangzhanlou",
+        "raw_start": 0,
+        "raw_end": 3,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:tourism_transport:航站楼:hang|zhan|lou",
+      "target_surface": "航站楼",
+      "target_pinyin_key": "hang|zhan|lou",
+      "target_domains": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "base_term_ids": [
+        "base:_:航班:hang|ban",
+        "base:_:航班号:hang|ban|hao",
+        "base:_:航班屏:hang|ban|ping",
+        "base:_:航站:hang|zhan",
+        "base:_:赞助:zan|zhu",
+        "base:_:参赞:can|zan",
+        "base:_:咱们:zan|men",
+        "base:_:暂停:zan|ting",
+        "base:_:暂时:zan|shi",
+        "base:_:短暂:duan|zan",
+        "base:_:称赞:cheng|zan",
+        "base:_:航天:hang|tian",
+        "base:_:航母:hang|mu",
+        "base:_:航海:hang|hai",
+        "base:_:航程:hang|cheng",
+        "base:_:航空:hang|kong"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:tourism_pickup",
+          "domain_id": "tourism_pickup",
+          "term_ids": [
+            "base:_:航站楼:hang|zhan|lou",
+            "base:_:航班:hang|ban",
+            "base:_:航班号:hang|ban|hao",
+            "base:_:航班屏:hang|ban|ping",
+            "base:_:航站:hang|zhan",
+            "base:_:赞助:zan|zhu",
+            "base:_:参赞:can|zan",
+            "base:_:咱们:zan|men"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:航站楼:hang|zhan|lou",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:tourism_transport",
+          "domain_id": "tourism_transport",
+          "term_ids": [
+            "base:_:航站楼:hang|zhan|lou",
+            "base:_:航班:hang|ban",
+            "base:_:航班号:hang|ban|hao",
+            "base:_:航班屏:hang|ban|ping",
+            "base:_:航站:hang|zhan",
+            "base:_:赞助:zan|zhu",
+            "base:_:参赞:can|zan",
+            "base:_:咱们:zan|men"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:航站楼:hang|zhan|lou",
+              "term_type": "base",
+              "domain_ids": [
+                "tourism_pickup",
+                "tourism_transport"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.8738095238095238,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.1261904761904762,
+        "coffee": 0.0,
+        "milk_tea": 0.0,
+        "bakery": 0.0,
+        "food_order": 0.0,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "接送岗",
+        "输送机",
+        "送站",
+        "末班车",
+        "送客",
+        "首班车",
+        "上车点",
+        "接送单",
+        "接送",
+        "举牌器",
+        "接站牌",
+        "送机",
+        "送站员",
+        "到达口",
+        "临停区",
+        "班车",
+        "下车点",
+        "接送点",
+        "接机员",
+        "举牌区"
+      ],
+      "personal_term_evidence": {
+        "接送岗": 1.0,
+        "输送机": 0.992,
+        "送站": 0.984,
+        "末班车": 0.976,
+        "送客": 0.968,
+        "首班车": 0.96,
+        "上车点": 0.952,
+        "接送单": 0.944,
+        "接送": 0.9359999999999999,
+        "举牌器": 0.9279999999999999,
+        "接站牌": 0.92,
+        "送机": 0.912,
+        "送站员": 0.904,
+        "到达口": 0.896,
+        "临停区": 0.888,
+        "班车": 0.88,
+        "下车点": 0.872,
+        "接送点": 0.864,
+        "接机员": 0.856,
+        "举牌区": 0.848
+      },
+      "multitag": true,
+      "split": "train",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 33
+    },
+    {
+      "group_key": "same_span_90",
+      "source_row_id": "stage_d2_90_CORRECT",
+      "span": {
+        "span_id": "d2_span_90_d1c1",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "chai",
+          "dan"
+        ],
+        "window_text": "菜单",
+        "window_pinyin_key": "caidan",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:food_order:菜单:cai|dan",
+      "target_surface": "菜单",
+      "target_pinyin_key": "cai|dan",
+      "target_domains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "base_term_ids": [
+        "base:_:下单:xia|dan",
+        "base:_:买单:mai|dan",
+        "base:_:催单:cui|dan",
+        "base:_:加单:jia|dan",
+        "base:_:改单:gai|dan",
+        "base:_:点单:dian|dan",
+        "base:_:订单:ding|dan",
+        "base:_:退单:tui|dan",
+        "base:_:床单:chuang|dan",
+        "base:_:水单:shui|dan",
+        "base:_:罚单:fa|dan",
+        "base:_:豆单:dou|dan",
+        "base:_:账单:zhang|dan",
+        "base:_:一旦:yi|dan",
+        "base:_:不但:bu|dan",
+        "base:_:名单:ming|dan"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:菜单:cai|dan",
+            "base:_:下单:xia|dan",
+            "base:_:买单:mai|dan",
+            "base:_:催单:cui|dan",
+            "base:_:加单:jia|dan",
+            "base:_:改单:gai|dan",
+            "base:_:点单:dian|dan",
+            "base:_:订单:ding|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:菜单:cai|dan",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:菜单:cai|dan",
+            "base:_:下单:xia|dan",
+            "base:_:买单:mai|dan",
+            "base:_:催单:cui|dan",
+            "base:_:加单:jia|dan",
+            "base:_:改单:gai|dan",
+            "base:_:点单:dian|dan",
+            "base:_:订单:ding|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:菜单:cai|dan",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:菜单:cai|dan",
+            "base:_:下单:xia|dan",
+            "base:_:买单:mai|dan",
+            "base:_:催单:cui|dan",
+            "base:_:加单:jia|dan",
+            "base:_:改单:gai|dan",
+            "base:_:点单:dian|dan",
+            "base:_:订单:ding|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:菜单:cai|dan",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:菜单:cai|dan",
+            "base:_:下单:xia|dan",
+            "base:_:买单:mai|dan",
+            "base:_:催单:cui|dan",
+            "base:_:加单:jia|dan",
+            "base:_:改单:gai|dan",
+            "base:_:点单:dian|dan",
+            "base:_:订单:ding|dan"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:菜单:cai|dan",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "coffee",
+                "food_order",
+                "milk_tea"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.033973225562010594,
+        "milk_tea": 0.033973225562010594,
+        "bakery": 0.8849456933569083,
+        "food_order": 0.04710785551907045,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "菜单",
+        "吐司",
+        "餐包",
+        "可可卷",
+        "佛卡夏",
+        "蛋挞",
+        "泡芙",
+        "可颂",
+        "堂食",
+        "欧包",
+        "费南雪",
+        "马卡龙",
+        "恰巴塔",
+        "千层酥",
+        "布朗尼",
+        "蛋黄酥",
+        "乳酪包",
+        "蝴蝶酥",
+        "牛角包",
+        "碱水包",
+        "打包",
+        "蛋糕",
+        "马芬",
+        "曲奇",
+        "曲奇饼",
+        "面包",
+        "丹麦酥",
+        "带走",
+        "可可包",
+        "贝果",
+        "法棍",
+        "白吐司",
+        "结账",
+        "司康",
+        "南瓜派",
+        "奶酥包",
+        "磅蛋糕"
+      ],
+      "personal_term_evidence": {
+        "菜单": 1.0,
+        "吐司": 0.992,
+        "餐包": 0.984,
+        "可可卷": 0.976,
+        "佛卡夏": 0.968,
+        "蛋挞": 0.96,
+        "泡芙": 0.952,
+        "可颂": 0.944,
+        "堂食": 0.9359999999999999,
+        "欧包": 0.9279999999999999,
+        "费南雪": 0.92,
+        "马卡龙": 0.912,
+        "恰巴塔": 0.904,
+        "千层酥": 0.896,
+        "布朗尼": 0.888,
+        "蛋黄酥": 0.88,
+        "乳酪包": 0.872,
+        "蝴蝶酥": 0.864,
+        "牛角包": 0.856,
+        "碱水包": 0.848,
+        "打包": 0.84,
+        "蛋糕": 0.832,
+        "马芬": 0.8240000000000001,
+        "曲奇": 0.8160000000000001,
+        "曲奇饼": 0.808,
+        "面包": 0.8,
+        "丹麦酥": 0.792,
+        "带走": 0.784,
+        "可可包": 0.776,
+        "贝果": 0.768,
+        "法棍": 0.76,
+        "白吐司": 0.752,
+        "结账": 0.744,
+        "司康": 0.736,
+        "南瓜派": 0.728,
+        "奶酥包": 0.72,
+        "磅蛋糕": 0.712
+      },
+      "multitag": true,
+      "split": "test",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 1
+    },
+    {
+      "group_key": "same_span_93",
+      "source_row_id": "stage_d2_93_CORRECT",
+      "span": {
+        "span_id": "d2_span_93_d1c0",
+        "syllable_start": 0,
+        "syllable_end": 2,
+        "span_syllables": [
+          "dan",
+          "gaon"
+        ],
+        "window_text": "蛋糕",
+        "window_pinyin_key": "dangao",
+        "raw_start": 0,
+        "raw_end": 2,
+        "source": "stage_d2_synthetic_v1"
+      },
+      "target_term_id": "domain:food_order:蛋糕:dan|gao",
+      "target_surface": "蛋糕",
+      "target_pinyin_key": "dan|gao",
+      "target_domains": [
+        "bakery",
+        "food_order"
+      ],
+      "base_term_ids": [
+        "base:_:单品:dan|pin",
+        "base:_:单间:dan|jian",
+        "base:_:担架:dan|jia",
+        "base:_:淡季:dan|ji",
+        "base:_:蛋挞:dan|ta",
+        "base:_:但是:dan|shi",
+        "base:_:单一:dan|yi",
+        "base:_:单个:dan|ge",
+        "base:_:单位:dan|wei",
+        "base:_:单元:dan|yuan",
+        "base:_:单刀:dan|dao",
+        "base:_:单板:dan|ban",
+        "base:_:单独:dan|du",
+        "base:_:单纯:dan|chun",
+        "base:_:单行:dan|hang",
+        "base:_:单词:dan|ci"
+      ],
+      "base_absent_identity": true,
+      "teacher_recover_actions": [
+        {
+          "action_id": "domain_soft:coffee",
+          "domain_id": "coffee",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:milk_tea",
+          "domain_id": "milk_tea",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:bakery",
+          "domain_id": "bakery",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        },
+        {
+          "action_id": "domain_soft:food_order",
+          "domain_id": "food_order",
+          "term_ids": [
+            "base:_:蛋糕:dan|gao",
+            "base:_:单品:dan|pin",
+            "base:_:单间:dan|jian",
+            "base:_:担架:dan|jia",
+            "base:_:淡季:dan|ji",
+            "base:_:蛋挞:dan|ta",
+            "base:_:但是:dan|shi",
+            "base:_:单一:dan|yi"
+          ],
+          "matched_provenance": [
+            {
+              "term_id": "base:_:蛋糕:dan|gao",
+              "term_type": "base",
+              "domain_ids": [
+                "bakery",
+                "food_order"
+              ]
+            }
+          ]
+        }
+      ],
+      "teacher_any_recover": true,
+      "long_term_domain_evidence": {
+        "tourism_pickup": 0.0,
+        "tourism_hotel": 0.0,
+        "tourism_route": 0.0,
+        "tourism_transport": 0.0,
+        "coffee": 0.036692506459948315,
+        "milk_tea": 0.036692506459948315,
+        "bakery": 0.8899224806201551,
+        "food_order": 0.036692506459948315,
+        "tech_ai": 0.0,
+        "meeting": 0.0,
+        "medical": 0.0,
+        "transport": 0.0
+      },
+      "personal_terms": [
+        "南瓜派",
+        "蛋挞",
+        "结账",
+        "法棍",
+        "费南雪",
+        "贝果",
+        "欧包",
+        "泡芙",
+        "曲奇饼",
+        "堂食",
+        "面包",
+        "曲奇",
+        "打包",
+        "丹麦酥",
+        "白吐司",
+        "吐司",
+        "带走",
+        "马卡龙",
+        "菜单",
+        "餐包",
+        "布朗尼",
+        "千层酥",
+        "马芬",
+        "佛卡夏",
+        "蛋黄酥",
+        "碱水包",
+        "蝴蝶酥",
+        "恰巴塔",
+        "乳酪包",
+        "司康",
+        "可颂",
+        "牛角包",
+        "奶酥包",
+        "可可包",
+        "可可卷",
+        "磅蛋糕"
+      ],
+      "personal_term_evidence": {
+        "南瓜派": 1.0,
+        "蛋挞": 0.992,
+        "结账": 0.984,
+        "法棍": 0.976,
+        "费南雪": 0.968,
+        "贝果": 0.96,
+        "欧包": 0.952,
+        "泡芙": 0.944,
+        "曲奇饼": 0.9359999999999999,
+        "堂食": 0.9279999999999999,
+        "面包": 0.92,
+        "曲奇": 0.912,
+        "打包": 0.904,
+        "丹麦酥": 0.896,
+        "白吐司": 0.888,
+        "吐司": 0.88,
+        "带走": 0.872,
+        "马卡龙": 0.864,
+        "菜单": 0.856,
+        "餐包": 0.848,
+        "布朗尼": 0.84,
+        "千层酥": 0.832,
+        "马芬": 0.8240000000000001,
+        "佛卡夏": 0.8160000000000001,
+        "蛋黄酥": 0.808,
+        "碱水包": 0.8,
+        "蝴蝶酥": 0.792,
+        "恰巴塔": 0.784,
+        "乳酪包": 0.776,
+        "司康": 0.768,
+        "可颂": 0.76,
+        "牛角包": 0.752,
+        "奶酥包": 0.744,
+        "可可包": 0.736,
+        "可可卷": 0.728,
+        "磅蛋糕": 0.72
+      },
+      "multitag": true,
+      "split": "train",
+      "construction": "pronunciation_corrupt_finespan_v1",
+      "attempt": 0
+    }
+  ],
+  "failure_prefilter_counts": {
+    "TARGET_BASE_VISIBLE_EXACT_SPAN": 88
+  }
+}

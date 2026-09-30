@@ -1,0 +1,18 @@
+{
+  "length1_windows": 4477,
+  "collector_source": "docs/user_correction/Lingua_FW_Repair_V4_SingleChar_Collector_Live_Rejection_Audit_2026_08_18.md",
+  "n0_or_reject_non_multiple": 1100,
+  "collector_accept_unique_or_surface": 2331,
+  "n_gt1_MULTIPLE_TONE_EXACT_CANDIDATES": 1046,
+  "n_gt1_rate_among_length1_windows": 0.2336,
+  "true_recall_targets_213": {
+    "MULTIPLE": 49,
+    "UNIQUE_TONE": 39,
+    "SURFACE_EXACT": 83,
+    "SQL_NO_HIT": 20,
+    "NO_TONE": 12,
+    "NO_VALID_SPAN": 10
+  },
+  "current_production_model2_single_char_calls": 0,
+  "note": "N>1 currently fail-closed (0 hits). minPrior bind drops remaining uniques. Do not equate 4477 windows with Model2 calls."
+}

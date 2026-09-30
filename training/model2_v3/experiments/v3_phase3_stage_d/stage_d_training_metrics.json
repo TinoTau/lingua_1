@@ -1,0 +1,47 @@
+{
+  "stage_p_params": 45533,
+  "stage_d_added_params": 1548,
+  "combined_params": 47081,
+  "freeze_shared": true,
+  "missing_keys_on_load": [
+    "domain_action_head.weight",
+    "domain_action_head.bias"
+  ],
+  "unexpected_keys_on_load": [],
+  "epochs": 8,
+  "epoch_metrics": [
+    {
+      "epoch": 1,
+      "loss": 3.265507976214091
+    },
+    {
+      "epoch": 2,
+      "loss": 3.080864191055298
+    },
+    {
+      "epoch": 3,
+      "loss": 3.044537623723348
+    },
+    {
+      "epoch": 4,
+      "loss": 3.0281718969345093
+    },
+    {
+      "epoch": 5,
+      "loss": 2.9778513511021933
+    },
+    {
+      "epoch": 6,
+      "loss": 2.9753812154134116
+    },
+    {
+      "epoch": 7,
+      "loss": 2.9558116594950357
+    },
+    {
+      "epoch": 8,
+      "loss": 2.9460370540618896
+    }
+  ],
+  "artifact_type": "TRAINING_ARTIFACT_ONLY"
+}

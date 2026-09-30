@@ -1,0 +1,13 @@
+metric,count,denominator,notes
+utterances_total,200,200,dialog_200 S3 mainline raw cases
+multipath_utterances,107,200,retainedPathCount>1
+onepath_utterances,93,200,
+total_retained_paths,423,200,equals total Domain Vote function calls
+total_domain_vote_function_calls,423,423,scales 1:1 with retainedPathCount
+utterances_with_gt1_vote_call,107,200,equals multipath count
+proven_path_vote_output_divergence,36,107,uneven retained_domains concat or fewer labels than paths
+multipath_identical_or_all_empty_output,61,107,includes empty-vote majority; even-concat is heuristic only
+multipath_output_fingerprint_unreliable,10,107,even concat cannot prove grouping
+multipath_any_anchor_set_divergence,33,107,includes FineSpan layout; not vote-only
+multipath_DOMAIN_anchor_set_divergence,33,107,may mix vote + path-local FineSpan layout
+secondDomainVote_nonzero,0,200,Retry re-vote only; NOT utterance singleton proof

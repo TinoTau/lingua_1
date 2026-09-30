@@ -1,0 +1,289 @@
+{
+  "Restored_Stage_D_Retrain": "PASS",
+  "Restored_Stage_J_Joint_Retrain": "HOLD",
+  "Architecture": "FROZEN",
+  "Stage_D_Retrieval_Contract": "FROZEN",
+  "Old_Shared_Pool_Rerank": "RETIRED",
+  "D_Train_N": 1430,
+  "D_Val_N": 230,
+  "D_Test_N": 72,
+  "Unique_Terms": 281,
+  "Unique_Spans": 404,
+  "REAL": 7,
+  "DERIVED_REAL": 57,
+  "SYNTHETIC": 340,
+  "Synthetic_Share": 0.8415841584158416,
+  "Leakage": "PASS",
+  "Initialization": "P1_PLUS_FRESH_DOMAIN_HEAD",
+  "Domain_Top1_val": 0.30434782608695654,
+  "Domain_Top2_val": 0.34782608695652173,
+  "D_Recall_Retained_val": 0.30434782608695654,
+  "Correct_TIR_val": 0.30434782608695654,
+  "Empty_TIR_val": 0.0,
+  "Wrong_TIR_val": 0.1956521739130435,
+  "Swapped_TIR_val": 0.17391304347826086,
+  "Correct_Empty": 0.30434782608695654,
+  "Correct_Wrong": 0.10869565217391305,
+  "Correct_Swapped": 0.13043478260869568,
+  "Unnecessary_Expansion_empty": 0.06521739130434782,
+  "Heldout_Term": 0.30434782608695654,
+  "Heldout_Span": 0.30434782608695654,
+  "Heldout_Profile": 0.30434782608695654,
+  "Stage_D_Generalization": "PASS",
+  "Synthetic_Generator_Overfit": "UNCLEAR",
+  "P1_Baseline_RR": 0.955,
+  "Post_D_RR": 0.9538002980625931,
+  "Post_J_RR": 0.9016393442622951,
+  "P_Regression_after_D": "NO",
+  "P_Regression_after_J": "SIGNIFICANT",
+  "ONE_Checkpoint": true,
+  "Model_Parameters": 47210,
+  "V2_Benchmark_Modified": false,
+  "V2_Blind": {
+    "benchmark_modified": false,
+    "P": {
+      "n": 699,
+      "support": "OK",
+      "TIR_B1": 0.9599427753934192,
+      "TIR_V3": 0.35336194563662376,
+      "RecallRetained": 0.368107302533532,
+      "TIR_CI95": [
+        0.3188142470513068,
+        0.3895126362748937
+      ],
+      "Teacher_Top1": 0.35437589670014347,
+      "Teacher_Top2": 0.5107604017216643,
+      "hits_v3": 247,
+      "Latency_P50": 17.243699985556304,
+      "Latency_P95": 68.66329998592846,
+      "P1_baseline_RR": 0.955
+    },
+    "D_CLEAN": {
+      "n": 20,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": 0.65,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.65,
+      "TIR_CI95": [
+        0.43285051021946475,
+        0.8188104521320554
+      ],
+      "hits": 13,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.093000006629154
+    },
+    "heldout_term": {
+      "n": 6,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": 0.5,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.5,
+      "TIR_CI95": [
+        0.1876128068994087,
+        0.8123871931005913
+      ],
+      "hits": 3,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.5577999951783568
+    },
+    "heldout_span": {
+      "n": 26,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": 0.7307692307692307,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.7307692307692307,
+      "TIR_CI95": [
+        0.5391659658023868,
+        0.8629572447493261
+      ],
+      "hits": 19,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.2121000112965703
+    },
+    "generic": {
+      "n": 14,
+      "support": "VERY_LOW_SUPPORT",
+      "TIR": 1.0,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 1.0,
+      "TIR_CI95": [
+        0.7846829880728186,
+        1.0
+      ],
+      "hits": 14,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.156399994622916
+    },
+    "multidomain": {
+      "n": 47,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.7446808510638298,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.7446808510638298,
+      "TIR_CI95": [
+        0.604915508600796,
+        0.8474699395361626
+      ],
+      "hits": 35,
+      "UnnecessaryExpansion": 1.0,
+      "Latency_P50": 3.2451000006403774
+    }
+  },
+  "V3_Frozen_Before_Eval": true,
+  "V3_Blind": {
+    "frozen_before_eval": true,
+    "D": {
+      "n": 72,
+      "support": "LOW_SUPPORT",
+      "TIR": 0.4583333333333333,
+      "Oracle_TIR": 1.0,
+      "RecallRetained": 0.4583333333333333,
+      "TIR_CI95": [
+        0.34828438695135916,
+        0.5726033580329238
+      ],
+      "hits": 33,
+      "UnnecessaryExpansion": 0.9444444444444444,
+      "Latency_P50": 3.16620001103729
+    },
+    "teacher": {
+      "n": 72,
+      "DomainTop1": 0.3333333333333333,
+      "DomainTop2": 0.5,
+      "chose_domain_none": 0.05555555555555555,
+      "support": "LOW_SUPPORT"
+    },
+    "counterfactual": {
+      "CORRECT": {
+        "n": 72,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.4583333333333333,
+        "Oracle_TIR": 1.0,
+        "RecallRetained": 0.4583333333333333,
+        "TIR_CI95": [
+          0.34828438695135916,
+          0.5726033580329238
+        ],
+        "hits": 33,
+        "UnnecessaryExpansion": 0.9444444444444444,
+        "Latency_P50": 3.152999997837469
+      },
+      "EMPTY": {
+        "n": 72,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.0,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.0,
+          0.05065293981139638
+        ],
+        "hits": 0,
+        "UnnecessaryExpansion": 0.0,
+        "Latency_P50": 1.4192999806255102
+      },
+      "WRONG": {
+        "n": 72,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.2361111111111111,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.15296584625945536,
+          0.34598987197433717
+        ],
+        "hits": 17,
+        "UnnecessaryExpansion": 0.9583333333333334,
+        "Latency_P50": 2.2475000005215406
+      },
+      "SWAPPED": {
+        "n": 72,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.1388888888888889,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.077226478114719,
+          0.23713397841573394
+        ],
+        "hits": 10,
+        "UnnecessaryExpansion": 0.8472222222222222,
+        "Latency_P50": 2.2484000073745847
+      },
+      "GENERIC": {
+        "n": 72,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.25,
+        "Oracle_TIR": 0.0,
+        "RecallRetained": 0.0,
+        "TIR_CI95": [
+          0.1643892112532576,
+          0.36093725865244064
+        ],
+        "hits": 18,
+        "UnnecessaryExpansion": 0.9444444444444444,
+        "Latency_P50": 2.7329000004101545
+      }
+    },
+    "source": {
+      "REAL": {
+        "n": 0,
+        "support": "VERY_LOW_SUPPORT",
+        "TIR": null
+      },
+      "DERIVED_REAL": {
+        "n": 9,
+        "support": "VERY_LOW_SUPPORT",
+        "TIR": 0.3333333333333333,
+        "Oracle_TIR": 1.0,
+        "RecallRetained": 0.3333333333333333,
+        "TIR_CI95": [
+          0.12058159868274292,
+          0.6458026525009103
+        ],
+        "hits": 3,
+        "UnnecessaryExpansion": 1.0,
+        "Latency_P50": 3.039599978365004,
+        "source_class": "DERIVED_REAL"
+      },
+      "SYNTHETIC": {
+        "n": 63,
+        "support": "LOW_SUPPORT",
+        "TIR": 0.47619047619047616,
+        "Oracle_TIR": 1.0,
+        "RecallRetained": 0.47619047619047616,
+        "TIR_CI95": [
+          0.35781921387369653,
+          0.5972985570952808
+        ],
+        "hits": 30,
+        "UnnecessaryExpansion": 0.9365079365079365,
+        "Latency_P50": 3.247600019676611,
+        "source_class": "SYNTHETIC"
+      }
+    }
+  },
+  "Fixed_38_Used_For_Training": false,
+  "Fixed_38_Regression": {
+    "raw": 38,
+    "final": 38,
+    "n": 38
+  },
+  "Stage_J_Checkpoint": "HOLD",
+  "Production_Candidate": false,
+  "Runtime_Swap": false,
+  "enter_j": true,
+  "gate": {
+    "CorrectMinusEmpty": 0.30434782608695654,
+    "CorrectMinusWrong": 0.10869565217391305,
+    "CorrectMinusSwapped": 0.13043478260869568,
+    "deltas_ok": true,
+    "heldout_nonzero": true,
+    "overfit": false,
+    "synthetic_generator_overfit": false,
+    "synthetic_overfit_flag": "UNCLEAR",
+    "StageDGeneralization": "PASS",
+    "enter_stage_j": true,
+    "reason": "val-only gate; test/V2/V3/38 unused for this decision"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "phase": "MODEL3_V1_MAINLINE_INTEGRATION_DEVELOPMENT",
+  "date": "2026-08-27",
+  "verdict": "PASS_WITH_QUALITY_GAPS",
+  "authority": {
+    "frozenModel": "MODEL3_SYNTHETIC_V1_FROZEN.md",
+    "seal": "MODEL3_SYNTHETIC_V1_ACCEPTANCE_SEAL.json",
+    "insertionCorrection": "Lingua_Model3_V1_Mainline_Insertion_Point_Correction_Audit_2026_08_26.md",
+    "correctedPlan": "model3_v1_mainline_integration_plan_corrected.csv",
+    "previousPlan": "model3_v1_mainline_integration_plan.csv",
+    "previousPlanStatus": "SUPERSEDED_DOMAIN_ANCHOR_PRE_VOTE_SEMANTICS_INCORRECT"
+  },
+  "ssot": {
+    "domainCandidateEqualsAnchor": false,
+    "finalVoteRequiredForDomainAnchor": true,
+    "model3DiscoversAnchor": false,
+    "voteFrozenPoolRefresh": "PASS",
+    "jobResultChanged": false,
+    "modelRetrained": false,
+    "trainingChanged": false,
+    "architectureRoleChanged": false
+  },
+  "reportArtifactCount": 5,
+  "reportArtifacts": [
+    "Lingua_Model3_V1_Mainline_Integration_Development_Report_2026_08_27.md",
+    "model3_v1_mainline_integration_bundle.json",
+    "model3_v1_mainline_integration_governance.json",
+    "model3_v1_mainline_integration_acceptance.csv",
+    "MODEL3_V1_MAINLINE_INTEGRATION_ROLLBACK_MANIFEST.json"
+  ],
+  "reportArtifactLimitOk": true,
+  "autoRollback": false,
+  "rollbackRecommended": false,
+  "recommendedNextPhase": "MODEL3_V1_DIALOG_200_FULL_PIPELINE_ACCEPTANCE",
+  "hardStop": true
+}

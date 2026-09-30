@@ -1,0 +1,13 @@
+finding_id,severity,classification,path_or_component,description,production_dual_chain,remediation_scope_next_phase
+F01,P0,SAFE_TEST_HARNESS_BRANCH,runModel3PathStepCausalFork,Causal fork runs only when MODEL3_ACCEPTANCE_CAUSAL_FORK=1; normal production uses runModel3PathStep once,false,none
+F02,P1,SAFE_TEST_HARNESS_BRANCH,completeModel3PathFromUpstream x2,Acceptance fork executes baseline KEEP then S3 using same production complete(); doubles Retry/Assembly work for measurement only,false,document only; optional dedup design audit
+F03,P1,SAFE_TEST_HARNESS_BRANCH,baseline KenLM rerank,fw-detector-v4-path runs second runFwSentenceRerankFromPrefilled for baseline pool when acceptanceCausal set; returned text still from S3 rerank,false,optional test-path dedup design
+F04,P3,OBSOLETE_TEST_PATH,MODEL3_HARNESS_KEEP_ALL,Legacy env still in prepareModel3PathUpstream; can skip infer without forcePack; superseded by keepOverrideFromPacked; not set in causal harness,false,retire in dedup design audit
+F05,P3,OBSOLETE_TEST_PATH,run-dialog200-s3-mainline-ab.mjs,Two-run independent A/B superseded; marked deprecated,false,none
+F06,P2,SEMANTIC_AUDIT_MISMATCH,signal-loss lexicon lookup,Audit uses LexiconRuntimeV2 exact surface lookup; not identical to production Recall query/filter path; 39 LEXICON_COVERAGE first-fail counts not production-equivalent,false,MODEL3_V2_SIGNAL_LOSS_AUDIT_PARITY_CORRECTION for lexicon slice
+F07,P2,SAFE_DIAGNOSTIC_REPLAY,materializable-target-v1,evaluateMaterializableTargetV1 reads trace for funnel; does not re-run resegmentation,false,none
+F08,P2,PRODUCTION_TRACE_BASED,LOCAL_RESEGMENTATION=84,resegmentOk read from production retry_regions trace fields; not audit reimplementation,false,valid for LOCAL_RESEGMENTATION causal evidence audit
+F09,P3,SAFE_DIAGNOSTIC_REPLAY,166 vs 170 baseline-wrong,Signal-loss audit re-ran ASR independently; allowed diagnostic variance; frozen Final Causal Acceptance remains promotion authority,false,none
+F10,P3,DOCUMENTATION_ARCHITECTURE_DRIFT,freeze-contract.test.ts,Test expects orchestrator to contain runDomainAwareAssembly string; mainline uses completeDomainAwareAssemblyFromVote via Model3 path,false,doc/test string cleanup later
+F11,P0,SAFE_SHARED_HELPER_REUSE,prepare/complete split,runModel3PathStep composes prepare+complete once; no parallel inline Model3 implementation remains,false,none
+F12,P0,SAFE_TEST_TRACE_ONLY,acceptance_causal in extra/fw_detector,Observation trace under MODEL2_DIALOG200_TRACE; not JobResult schema field; no snapshot in JobResult interface,false,none

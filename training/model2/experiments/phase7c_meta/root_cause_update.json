@@ -1,0 +1,16 @@
+{
+  "markers": [
+    "PHASE7C_CAUSAL_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "DO_NOT_REPLACE_BASELINE"
+  ],
+  "REPRESENTATION": "CONFIRMED",
+  "QUERY_CHANNEL": "NOT_CAUSAL_AS_PRIMARY_FIX — removing oracle syllables (P1) did not improve UNSEEN; may still need repair for runtime honesty",
+  "OVERTRAINING": "AMPLIFIER — epoch1 UNSEEN already ~random; later epochs grow SEEN memorization",
+  "LEXICAL_MEMORIZATION": "CAUSAL/CONTRIBUTORY — P3 char-dropout lowers candidate-only/null-query and can raise SEEN via syl channel, but UNSEEN transfer still missing",
+  "PHONETIC_AUX_LOSS": "WEAK/PARTIAL — slight agreement↑, UNSEEN flat",
+  "primary_after_7c": "Stage A dual-encoder fails to learn transferable query↔candidate phonetic matching; SEEN success is largely non-transferable geometry/memorization. Query-channel oracle is a dataset honesty issue but not the single lever that restores UNSEEN.",
+  "best_clean_intervention": "NONE_YET — no probe jointly raises UNSEEN and lowers shortcuts enough for 7D",
+  "recommended_7d_direction": "New representation/objective designs (explicit phonetic matcher residual, contrastive cross-term syl matching) as fresh causal probes — not consolidating current P1–P4 as baseline."
+}

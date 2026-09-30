@@ -1,0 +1,8 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "queries_full_lexicon": true,
+  "not_limited_to_base_pool_input": true,
+  "evidence": "retrieve_profile_candidates → build_fuzzy_pool on hypothesized syllables over CandidateIndex buckets",
+  "span_path_missing_target_test": "see span_reference_vs_phase7f.json — profile_new TIR≈0.19 on REAL_ASR; family_synth control TIR=1.0",
+  "action": "KEEP mechanism; RESTORE FineSpan as query unit"
+}

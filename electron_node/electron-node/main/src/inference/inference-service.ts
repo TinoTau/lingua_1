@@ -335,7 +335,14 @@ export class InferenceService {
     this.taskRouter.resetCycleMetrics?.();
   }
 
-  async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
+  async processJob(
+    job: JobAssignMessage,
+    partialCallback?: PartialResultCallback,
+    options?: {
+      userProfile?: import('@shared/protocols/messages').UserProfileV1 | null;
+      profileVersion?: number | null;
+    }
+  ): Promise<JobResult> {
     const wasFirstJob = !this.hasProcessedFirstJob;
     this.currentJobs.add(job.job_id);
 
@@ -356,10 +363,16 @@ export class InferenceService {
       // 注意：首次任务已在 waitForServicesReady() 中强制刷新，这里使用缓存即可
       await this.taskRouter.refreshServiceEndpoints();
 
+      const ctx = initJobContext(job);
+      ctx.sessionId = job.session_id;
+      ctx.userProfileV1 = options?.userProfile ?? null;
+      ctx.userProfileVersion = options?.profileVersion ?? null;
+
       // 使用新的 JobPipeline
       const result = await runJobPipeline({
         job,
         partialCallback,
+        ctx,
         asrCompletedCallback: (asrCompleted: boolean) => {
           // ASR 完成回调：从 currentJobs 中移除，释放 ASR 服务容量
           if (asrCompleted) {
@@ -418,6 +431,9 @@ export class InferenceService {
       kenlmVetoThreshold?: number;
       /** Soft session priors (JobAssign.domainPriors) — Node main-chain acceptance. */
       domainPriors?: Array<{ domain: string; weight: number }>;
+      /** Production-compatible profile from SessionBootstrap / session cache. */
+      userProfile?: import('@shared/protocols/messages').UserProfileV1 | null;
+      profileVersion?: number | null;
     }
   ): Promise<JobResult> {
     const tgtLang = options?.tgtLang ?? 'en';
@@ -492,12 +508,19 @@ export class InferenceService {
       },
       'runPipelineWithAudio: running full pipeline'
     );
-    return this.processJob(job);
+    return this.processJob(job, undefined, {
+      userProfile: options?.userProfile ?? null,
+      profileVersion: options?.profileVersion ?? null,
+    });
   }
 
   /**
    * 使用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT），用于联调与测试。
    * 跳过 ASR 步骤，直接以 asrText 作为本段输入。
+   *
+   * Optional frozen post-ASR evidence (harness Replay only):
+   *   asrSegments + acousticToneSlices from a prior full-audio JobResult.
+   * Does not invent Tone; does not re-run Tone inference.
    */
   async runPipelineWithMockAsr(
     asrText: string,
@@ -514,6 +537,28 @@ export class InferenceService {
       enableKenLMGate?: boolean;
       kenlmGateMode?: 'hard_gate' | 'weak_veto';
       kenlmVetoThreshold?: number;
+      /** Production-compatible UserProfileV1 (SessionBootstrap path). */
+      userProfile?: import('@shared/protocols/messages').UserProfileV1 | null;
+      profileVersion?: number | null;
+      /**
+       * Frozen production `JobResult.segments` / `ctx.asrSegments`.
+       * When provided with acousticToneSlices, enables Tone-aligned Replay without ASR.
+       */
+      asrSegments?: import('../task-router/types').SegmentInfo[];
+      /**
+       * Frozen production Tone SSOT slices (`ctx.acousticToneSlices` /
+       * `extra.utterance_tone.acousticToneSlices`). Must not be invented.
+       */
+      acousticToneSlices?: import('../task-router/types').AcousticToneSlice[];
+      /**
+       * Replay-only: restore multi-batch ASR alignment state that asr-step sets
+       * during full-audio Capture. Required so buildWordTimeSpans maps batch-local
+       * word times onto the absolute acousticToneSlices timeline.
+       * Must be reconstructed from Frozen Evidence — never invented.
+       */
+      segmentTimeOffsetsSec?: number[];
+      asrSegmentNodeBatchIndices?: number[];
+      segmentCharOffsets?: number[];
     }
   ): Promise<JobResult> {
     const useLexicon = options?.useLexicon === true;
@@ -540,6 +585,10 @@ export class InferenceService {
     (job as any).is_manual_cut = options?.isManualCut !== false;
 
     const ctx = initJobContext(job);
+    ctx.sessionId = sessionId;
+    // Same profile binding contract as processJob / full-audio path.
+    ctx.userProfileV1 = options?.userProfile ?? null;
+    ctx.userProfileVersion = options?.profileVersion ?? null;
     if (Array.isArray(options?.fwEnabledDomains) && options!.fwEnabledDomains.length > 0) {
       ctx.fwDetectorEnabledDomainsOverride = options!.fwEnabledDomains;
     }
@@ -562,12 +611,38 @@ export class InferenceService {
         effectiveFromTurn: 0,
       });
     }
+    // Exact RAW representation (including empty). Do not invent acoustic metadata.
     ctx.asrText = asrText;
     // FW detector 以 rawAsrText 作为不可变基线；mock pipeline 需显式补齐。
-    ctx.rawAsrText = asrText.trim();
-    const decoded = buildAsrHypotheses(asrText.trim());
+    ctx.rawAsrText = asrText;
+    const decoded = buildAsrHypotheses(asrText);
     ctx.asrHypotheses = decoded.hypotheses;
     ctx.nbestSynthetic = decoded.nbestSynthetic;
+
+    // Frozen post-ASR evidence inject (Replay harness): reuse production JobContext fields only.
+    const frozenSegments = Array.isArray(options?.asrSegments) ? options!.asrSegments : undefined;
+    const frozenSlices = Array.isArray(options?.acousticToneSlices)
+      ? options!.acousticToneSlices
+      : undefined;
+    if (frozenSegments) {
+      ctx.asrSegments = frozenSegments;
+    }
+    if (frozenSlices) {
+      ctx.acousticToneSlices = frozenSlices;
+    }
+    // Replay-only multi-batch alignment restore (asr-step equivalent JobContext fields).
+    if (Array.isArray(options?.segmentTimeOffsetsSec)) {
+      ctx.segmentTimeOffsetsSec = options.segmentTimeOffsetsSec;
+    }
+    if (Array.isArray(options?.asrSegmentNodeBatchIndices)) {
+      ctx.asrSegmentNodeBatchIndices = options.asrSegmentNodeBatchIndices;
+    }
+    if (Array.isArray(options?.segmentCharOffsets)) {
+      ctx.segmentCharOffsets = options.segmentCharOffsets;
+    }
+    (ctx as { frozenPostAsrEvidenceInjected?: boolean }).frozenPostAsrEvidenceInjected = Boolean(
+      frozenSegments || frozenSlices
+    );
 
     await this.taskRouter.refreshServiceEndpoints();
 

@@ -1,0 +1,13 @@
+{
+  "RESTORATION_COMPLEXITY": "LOW",
+  "new_services": 0,
+  "new_model_heads": 0,
+  "new_config": 0,
+  "new_tables": 0,
+  "new_gates": 0,
+  "new_budgets": 0,
+  "new_fallbacks": 0,
+  "new_candidate_types": 0,
+  "allowed": "replace soft_domain_retrieve body with domain-conditioned FuzzyPool UNION using existing pool.py + domain_ids; teacher/eval adapter",
+  "not_node_sql_drop_in": "Node exact pinyin SQL is a different primitive; FineSpan ASR noise needs fuzzy gates already in pool.py"
+}

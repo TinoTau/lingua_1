@@ -1,0 +1,92 @@
+{
+  "phase": "MODEL3_V2_S3_MODEL_GENERALIZATION_CORRECTION_DESIGN_AUDIT",
+  "generator": "training/model3_dataset/scripts/audit_model3_v2_s3_generalization_correction_design.py",
+  "generatedAt": "2026-09-02T11:02:18Z",
+  "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+  "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+  "datasetBuildId": "prod_core_s3_build_20260830_v1",
+  "featureContract": "packModel3SpanInferFields",
+  "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "g0DatasetIdentity": "PASS",
+  "ssotCorrectionStatus": "CORRECTED",
+  "highConfGeneralization": 12,
+  "unresolvedMedium": 4,
+  "unresolvedCases": [
+    "d008",
+    "d022",
+    "d051",
+    "d094"
+  ],
+  "dominantProvenCause": "MODEL_GENERALIZATION_FAILURE",
+  "all16Generalization": false,
+  "verdict": "MODEL3_S3_GENERALIZATION_AUDIT_MIXED",
+  "nextPhase": "MODEL3_V2_S3_MINIMAL_GENERALIZATION_CORRECTION_DESIGN",
+  "firstCausalOwner": "NOT_YET_ISOLATED",
+  "smallestCorrection": "Increase class_weight_retry + utterance/batch RETRY balancing + hard-negative mining in training (no architecture/runtime change)",
+  "trainFit": {
+    "class": "TRAIN_FIT_HEALTHY",
+    "trainRetryRecall": 0.911757,
+    "devRetryRecall": 0.790852,
+    "trainConfusion": {
+      "tp": 22070,
+      "fp": 608,
+      "fn": 2136,
+      "tn": 349075,
+      "retry_precision": 0.97318987565041,
+      "retry_recall": 0.911757415516814,
+      "retry_f1": 0.9414725705997782
+    },
+    "devConfusion": {
+      "tp": 2386,
+      "fp": 211,
+      "fn": 631,
+      "tn": 40691,
+      "retry_precision": 0.9187524066230266,
+      "retry_recall": 0.7908518395757375,
+      "retry_f1": 0.8500178126113288
+    },
+    "trainRetryMarginNegativeFraction": 0.088243
+  },
+  "classBalance": {
+    "keepCount": 349683,
+    "retryCount": 24206,
+    "ratio": 14.446,
+    "classWeightRetry": 1.0,
+    "sampling": "uniform_shuffle_utterance",
+    "autoClassWeightFormula": false,
+    "compensated": false
+  },
+  "checkpointSelection": {
+    "criterion": "best_dev_retry_f1",
+    "bestEpoch": 8,
+    "appropriateForRetryTask": true,
+    "retryRecallPeakedAtSelectedEpoch": false,
+    "bestDevRetryRecallEpoch": 4,
+    "bestDevRetryF1Epoch": 8
+  },
+  "highCaseSupportReplay": {
+    "casesWithSupport": 9,
+    "supportRowsEvaluated": 273,
+    "supportMisclassifiedAsKeep": 45,
+    "outOfSampleGeneralizationCases": 6
+  },
+  "governance": {
+    "productionCodeChanged": "NO",
+    "trainingExecuted": "NO",
+    "datasetRebuilt": "NO",
+    "modelArchitectureChanged": "NO",
+    "thresholdChanged": "NO",
+    "featureContractChanged": "NO"
+  },
+  "firstCausalOwnerCorrectedBy": "MODEL3_V2_S3_MINIMAL_GENERALIZATION_CORRECTION_DESIGN",
+  "hypotheses": {
+    "CLASS_IMBALANCE": "VERIFIED_PRESENT",
+    "CLASS_IMBALANCE_CAUSALITY": "NOT_PROVEN",
+    "RETRY_SAMPLING_IMBALANCE": "VERIFIED_PRESENT",
+    "RETRY_SAMPLING_CAUSALITY": "NOT_PROVEN",
+    "HARD_NEGATIVE_DISTRIBUTION": "STRONG_HYPOTHESIS",
+    "HARD_NEGATIVE_CAUSALITY": "NOT_PROVEN",
+    "SEQUENCE_CONTEXT_GENERALIZATION": "PROVEN_RELEVANT_LIKELY_OWNER"
+  }
+}

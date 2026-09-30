@@ -1,0 +1,845 @@
+{
+  "schema": "LINGUA_DIALOG200_D149_BASE_RECALL_BOUNDARY_TRACE_V1",
+  "caseId": "d149",
+  "mode": "READ_ONLY_AUDIT",
+  "boundaries": {
+    "B1_Frozen_ASR": {
+      "status": "IDENTICAL",
+      "capture_asr": "請問,這雙鞋 不合是三天内可以退换吧",
+      "inject_asr": "請問,這雙鞋 不合是三天内可以退换吧",
+      "segments_n": 2,
+      "words_seg0": [
+        "請",
+        "問,",
+        "這",
+        "雙",
+        "鞋"
+      ],
+      "words_seg1": [
+        "不",
+        "合",
+        "是",
+        "三",
+        "天",
+        "内",
+        "可以",
+        "退",
+        "换",
+        "吧"
+      ],
+      "note": "E1 PASS; traditional ASR text retained in Frozen Evidence"
+    },
+    "B2_Restored_alignment": {
+      "status": "IDENTICAL_RECONSTRUCTED",
+      "reconstruction_ok": true,
+      "segmentTimeOffsetsSec": [
+        0,
+        1.1999999999999997
+      ],
+      "asrSegmentNodeBatchIndices": [
+        0,
+        1
+      ],
+      "segmentCharOffsets": [
+        0,
+        6
+      ],
+      "consumer_note": "Injected into runPipelineWithMockAsr; E2 Tone injection PASS. Exact JobContext field dump not separately exported by Production — verified at inject API boundary only.",
+      "JobContext_consumer_fields_exported": "PARTIAL"
+    },
+    "B3_WordTimeSpan": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "replay_live_wordTimeSpanCount": 11,
+      "offline_rebuild_from_frozen_inject_inputs": {
+        "n": 15,
+        "misses": [],
+        "spans": [
+          {
+            "word": "請",
+            "rawStart": 0,
+            "rawEnd": 1,
+            "start": 0,
+            "end": 0.24,
+            "segmentIndex": 0,
+            "probability": 0.6767578125,
+            "localStart": 0,
+            "localEnd": 0.24
+          },
+          {
+            "word": "問,",
+            "rawStart": 1,
+            "rawEnd": 3,
+            "start": 0.24,
+            "end": 0.58,
+            "segmentIndex": 0,
+            "probability": 0.998046875,
+            "localStart": 0.24,
+            "localEnd": 0.58
+          },
+          {
+            "word": "這",
+            "rawStart": 3,
+            "rawEnd": 4,
+            "start": 0.76,
+            "end": 0.84,
+            "segmentIndex": 0,
+            "probability": 0.98095703125,
+            "localStart": 0.76,
+            "localEnd": 0.84
+          },
+          {
+            "word": "雙",
+            "rawStart": 4,
+            "rawEnd": 5,
+            "start": 0.84,
+            "end": 1,
+            "segmentIndex": 0,
+            "probability": 0.99755859375,
+            "localStart": 0.84,
+            "localEnd": 1
+          },
+          {
+            "word": "鞋",
+            "rawStart": 5,
+            "rawEnd": 6,
+            "start": 1,
+            "end": 1.18,
+            "segmentIndex": 0,
+            "probability": 0.9991861979166666,
+            "localStart": 1,
+            "localEnd": 1.18
+          },
+          {
+            "word": "不",
+            "rawStart": 7,
+            "rawEnd": 8,
+            "start": 2.16,
+            "end": 2.6799999999999997,
+            "segmentIndex": 1,
+            "probability": 0.114013671875,
+            "localStart": 0.9600000000000004,
+            "localEnd": 1.48
+          },
+          {
+            "word": "合",
+            "rawStart": 8,
+            "rawEnd": 9,
+            "start": 2.6799999999999997,
+            "end": 2.9799999999999995,
+            "segmentIndex": 1,
+            "probability": 0.9873046875,
+            "localStart": 1.48,
+            "localEnd": 1.78
+          },
+          {
+            "word": "是",
+            "rawStart": 9,
+            "rawEnd": 10,
+            "start": 2.9799999999999995,
+            "end": 3.1999999999999997,
+            "segmentIndex": 1,
+            "probability": 0.314208984375,
+            "localStart": 1.78,
+            "localEnd": 2
+          },
+          {
+            "word": "三",
+            "rawStart": 10,
+            "rawEnd": 11,
+            "start": 3.1999999999999997,
+            "end": 3.4999999999999996,
+            "segmentIndex": 1,
+            "probability": 0.74560546875,
+            "localStart": 2,
+            "localEnd": 2.3
+          },
+          {
+            "word": "天",
+            "rawStart": 11,
+            "rawEnd": 12,
+            "start": 3.4999999999999996,
+            "end": 3.7199999999999998,
+            "segmentIndex": 1,
+            "probability": 0.9990234375,
+            "localStart": 2.3,
+            "localEnd": 2.52
+          },
+          {
+            "word": "内",
+            "rawStart": 12,
+            "rawEnd": 13,
+            "start": 3.7199999999999998,
+            "end": 3.9799999999999995,
+            "segmentIndex": 1,
+            "probability": 0.82275390625,
+            "localStart": 2.52,
+            "localEnd": 2.78
+          },
+          {
+            "word": "可以",
+            "rawStart": 13,
+            "rawEnd": 15,
+            "start": 3.9799999999999995,
+            "end": 4.279999999999999,
+            "segmentIndex": 1,
+            "probability": 0.9189453125,
+            "localStart": 2.78,
+            "localEnd": 3.08
+          },
+          {
+            "word": "退",
+            "rawStart": 15,
+            "rawEnd": 16,
+            "start": 4.279999999999999,
+            "end": 4.52,
+            "segmentIndex": 1,
+            "probability": 0.83447265625,
+            "localStart": 3.08,
+            "localEnd": 3.32
+          },
+          {
+            "word": "换",
+            "rawStart": 16,
+            "rawEnd": 17,
+            "start": 4.52,
+            "end": 4.699999999999999,
+            "segmentIndex": 1,
+            "probability": 0.987548828125,
+            "localStart": 3.32,
+            "localEnd": 3.5
+          },
+          {
+            "word": "吧",
+            "rawStart": 17,
+            "rawEnd": 18,
+            "start": 4.699999999999999,
+            "end": 4.959999999999999,
+            "segmentIndex": 1,
+            "probability": 0.966796875,
+            "localStart": 3.5,
+            "localEnd": 3.76
+          }
+        ]
+      },
+      "status_capture_vs_replay": "NOT_COMPARABLE",
+      "status_replay_vs_offline_rebuild": "DIVERGENT",
+      "note": "Live diagnostic wordTimeSpanCount=11 but offline buildWordTimeSpans(frozen ASR+segments+alignment)=15. Diff=4 equals traditional-only tokens 請/問,/這/雙 if runtime rawText were simplified — not proven without JobContext rawText export.",
+      "no_word_timespan_for_slot": [
+        {
+          "text": "这双鞋",
+          "pinyinKey": "zhe|shuang|xie",
+          "attribution": "word_timespan_mapping_failure",
+          "likely_cause": "FineSpan/window text simplified 这双鞋 vs WTS tokens Traditional 這/雙/鞋"
+        },
+        {
+          "text": "双鞋",
+          "pinyinKey": "shuang|xie",
+          "attribution": "word_timespan_mapping_failure",
+          "likely_cause": "same script mismatch"
+        }
+      ],
+      "mappingMissReasonCounts": {
+        "no_word_timespan_for_slot": 2
+      },
+      "windowTimeAttemptCount": 54,
+      "windowTimeHitCount": 48
+    },
+    "B4_Tone_mapping": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "frozen_slices_injected_n": 15,
+      "E2_proves": "injected slice identity only, not mapped toneNorm identity",
+      "replay_SC_tones": {
+        "6:7_合": {
+          "tonePattern": [
+            2
+          ],
+          "queryTonePinyinKey": "he2",
+          "selected": "合"
+        },
+        "7:8_是": {
+          "tonePattern": [
+            2
+          ],
+          "queryTonePinyinKey": "shi2",
+          "selected": null,
+          "terminalReason": "MULTIPLE_TONE_EXACT_CANDIDATES",
+          "sqlHits_surfaces": [
+            "十",
+            "石",
+            "时",
+            "食"
+          ],
+          "note": "是 not in shi2 SQL hits"
+        },
+        "8:9_三": {
+          "tonePattern": [
+            4
+          ],
+          "queryTonePinyinKey": "san4",
+          "selected": "散"
+        },
+        "6:8_合是": {
+          "queryTonePinyinKey": "he2|shi2",
+          "replacement": "何时",
+          "toneLookupStage": "tone_exact"
+        }
+      },
+      "acoustic_argmax_on_offline_WTS_aligned_slices": {
+        "合_2.68-2.98": 2,
+        "是_2.98-3.20": 4,
+        "三_3.20-3.50": 1,
+        "note": "SC tonePattern for 是/三 does not match these argmax values — suggests WTS↔slice pairing at runtime differs from offline WTS table, or SC uses another tone path"
+      },
+      "status": "NOT_COMPARABLE"
+    },
+    "B5_FineSpan": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "capture_compact_fine_span_surfaces_empty": true,
+      "replay_field": "finespans",
+      "replay_counts": [
+        {
+          "path_id": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+          "n": 15
+        },
+        {
+          "path_id": "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4",
+          "n": 14
+        }
+      ],
+      "replay_spans": [
+        {
+          "path_id": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+          "n": 15,
+          "spans": [
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:0",
+              "source_text": "请",
+              "start": 0,
+              "end": 1,
+              "syllable_start": 0,
+              "syllable_end": 1,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:1",
+              "source_text": "问",
+              "start": 1,
+              "end": 2,
+              "syllable_start": 1,
+              "syllable_end": 2,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:2",
+              "source_text": "这",
+              "start": 3,
+              "end": 4,
+              "syllable_start": 2,
+              "syllable_end": 3,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:3",
+              "source_text": "双",
+              "start": 4,
+              "end": 5,
+              "syllable_start": 3,
+              "syllable_end": 4,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:4",
+              "source_text": "鞋",
+              "start": 5,
+              "end": 6,
+              "syllable_start": 4,
+              "syllable_end": 5,
+              "phonetic_representation": "xie",
+              "tone_representation": [
+                2
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:5",
+              "source_text": "不",
+              "start": 7,
+              "end": 8,
+              "syllable_start": 5,
+              "syllable_end": 6,
+              "phonetic_representation": null,
+              "tone_representation": [
+                1
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:6",
+              "source_text": "合是",
+              "start": 8,
+              "end": 10,
+              "syllable_start": 6,
+              "syllable_end": 8,
+              "phonetic_representation": "he|shi",
+              "tone_representation": [
+                2,
+                2
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:7",
+              "source_text": "三",
+              "start": 10,
+              "end": 11,
+              "syllable_start": 8,
+              "syllable_end": 9,
+              "phonetic_representation": "san",
+              "tone_representation": [
+                4
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:8",
+              "source_text": "天",
+              "start": 11,
+              "end": 12,
+              "syllable_start": 9,
+              "syllable_end": 10,
+              "phonetic_representation": "tian",
+              "tone_representation": [
+                1
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:9",
+              "source_text": "内",
+              "start": 12,
+              "end": 13,
+              "syllable_start": 10,
+              "syllable_end": 11,
+              "phonetic_representation": "nei",
+              "tone_representation": [
+                4
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:10",
+              "source_text": "可",
+              "start": 13,
+              "end": 14,
+              "syllable_start": 11,
+              "syllable_end": 12,
+              "phonetic_representation": "ke",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:11",
+              "source_text": "以",
+              "start": 14,
+              "end": 15,
+              "syllable_start": 12,
+              "syllable_end": 13,
+              "phonetic_representation": "yi",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 6
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:12",
+              "source_text": "退",
+              "start": 15,
+              "end": 16,
+              "syllable_start": 13,
+              "syllable_end": 14,
+              "phonetic_representation": "tui",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:13",
+              "source_text": "换",
+              "start": 16,
+              "end": 17,
+              "syllable_start": 14,
+              "syllable_end": 15,
+              "phonetic_representation": null,
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b:14",
+              "source_text": "吧",
+              "start": 17,
+              "end": 18,
+              "syllable_start": 15,
+              "syllable_end": 16,
+              "phonetic_representation": "ba",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            }
+          ]
+        },
+        {
+          "path_id": "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4",
+          "n": 14,
+          "spans": [
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:0",
+              "source_text": "请",
+              "start": 0,
+              "end": 1,
+              "syllable_start": 0,
+              "syllable_end": 1,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:1",
+              "source_text": "问",
+              "start": 1,
+              "end": 2,
+              "syllable_start": 1,
+              "syllable_end": 2,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:2",
+              "source_text": "这",
+              "start": 3,
+              "end": 4,
+              "syllable_start": 2,
+              "syllable_end": 3,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:3",
+              "source_text": "双",
+              "start": 4,
+              "end": 5,
+              "syllable_start": 3,
+              "syllable_end": 4,
+              "phonetic_representation": null,
+              "tone_representation": null,
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:4",
+              "source_text": "鞋",
+              "start": 5,
+              "end": 6,
+              "syllable_start": 4,
+              "syllable_end": 5,
+              "phonetic_representation": "xie",
+              "tone_representation": [
+                2
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:5",
+              "source_text": "不",
+              "start": 7,
+              "end": 8,
+              "syllable_start": 5,
+              "syllable_end": 6,
+              "phonetic_representation": null,
+              "tone_representation": [
+                1
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:6",
+              "source_text": "合是",
+              "start": 8,
+              "end": 10,
+              "syllable_start": 6,
+              "syllable_end": 8,
+              "phonetic_representation": "he|shi",
+              "tone_representation": [
+                2,
+                2
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:7",
+              "source_text": "三",
+              "start": 10,
+              "end": 11,
+              "syllable_start": 8,
+              "syllable_end": 9,
+              "phonetic_representation": "san",
+              "tone_representation": [
+                4
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:8",
+              "source_text": "天",
+              "start": 11,
+              "end": 12,
+              "syllable_start": 9,
+              "syllable_end": 10,
+              "phonetic_representation": "tian",
+              "tone_representation": [
+                1
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:9",
+              "source_text": "内",
+              "start": 12,
+              "end": 13,
+              "syllable_start": 10,
+              "syllable_end": 11,
+              "phonetic_representation": "nei",
+              "tone_representation": [
+                4
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:10",
+              "source_text": "可",
+              "start": 13,
+              "end": 14,
+              "syllable_start": 11,
+              "syllable_end": 12,
+              "phonetic_representation": "ke",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:11",
+              "source_text": "以退",
+              "start": 14,
+              "end": 16,
+              "syllable_start": 12,
+              "syllable_end": 14,
+              "phonetic_representation": "yi|tui",
+              "tone_representation": [
+                3,
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 7
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:12",
+              "source_text": "换",
+              "start": 16,
+              "end": 17,
+              "syllable_start": 14,
+              "syllable_end": 15,
+              "phonetic_representation": null,
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 0
+            },
+            {
+              "span_id": "fine:8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4:13",
+              "source_text": "吧",
+              "start": 17,
+              "end": 18,
+              "syllable_start": 15,
+              "syllable_end": 16,
+              "phonetic_representation": "ba",
+              "tone_representation": [
+                3
+              ],
+              "selection_reason": "lattice_path_edge",
+              "candidate_count": 1
+            }
+          ]
+        }
+      ],
+      "status": "NOT_COMPARABLE"
+    },
+    "B6_Window_generation": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "replay": {
+        "globalWindowGeneratedCount": 70,
+        "logicalWindowRecallCount": 54,
+        "uniqueRecallKeyCount": 54,
+        "single_char_windows_n": 16,
+        "poolBeforeDrop_n": 28
+      },
+      "status": "NOT_COMPARABLE"
+    },
+    "B7_CanonicalRecallQuery": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "replay_examples": [
+        {
+          "windowId": "6:7",
+          "surfaceText": "合",
+          "pinyinKey": "he",
+          "toneNorm": "2",
+          "queryTonePinyinKey": "he2",
+          "exactTopK": 1
+        },
+        {
+          "windowId": "7:8",
+          "surfaceText": "是",
+          "pinyinKey": "shi",
+          "toneNorm": "2",
+          "queryTonePinyinKey": "shi2",
+          "exactTopK": 1
+        },
+        {
+          "windowId": "6:8",
+          "surfaceText": "合是",
+          "pinyinKey": "he|shi",
+          "queryTonePinyinKey": "he2|shi2",
+          "toneLookupStage": "tone_exact",
+          "hit": "何时"
+        },
+        {
+          "windowId": "8:9",
+          "surfaceText": "三",
+          "pinyinKey": "san",
+          "queryTonePinyinKey": "san4",
+          "hit": "散"
+        }
+      ],
+      "replay_counts": {
+        "logicalQueryCount": 54,
+        "uniqueRecallKeyCount": 54,
+        "cacheHits": 0,
+        "cacheMisses": 54
+      },
+      "status": "NOT_COMPARABLE"
+    },
+    "B8_Base_SQL": {
+      "capture_status": "CAPTURE_NOT_OBSERVED",
+      "replay": {
+        "physicalSqlStatementCount": 83,
+        "window_6_8": {
+          "executed": true,
+          "stage": "tone_exact",
+          "queryTonePinyinKey": "he2|shi2",
+          "returned_surface": "何时"
+        },
+        "window_6_7_SC": {
+          "executed": true,
+          "sqlHitCount": 5,
+          "surfaces": [
+            "合",
+            "何",
+            "和",
+            "河",
+            "盒"
+          ]
+        },
+        "window_7_8_SC": {
+          "executed": true,
+          "sqlHitCount": 4,
+          "surfaces": [
+            "十",
+            "石",
+            "时",
+            "食"
+          ],
+          "note": "是 absent from shi2 hits"
+        },
+        "window_8_9_SC": {
+          "executed": true,
+          "sqlHitCount": 1,
+          "surfaces": [
+            "散"
+          ]
+        }
+      },
+      "status": "NOT_COMPARABLE"
+    },
+    "B9_Base_materialization": {
+      "status": "DIVERGENT",
+      "first_observable": true,
+      "evidence": "Capture unique set ≠ Replay unique set (same path_id subset still diverges: 合适 vs 何时)"
+    }
+  },
+  "first_observable_divergence": "B9_Base_materialization / E3 unique Base surface set",
+  "true_first_divergence": "NOT_PROVABLE_WITH_CURRENT_FROZEN_EVIDENCE",
+  "true_first_reason": "Capture lacks persisted WordTimeSpan, mapped Tone, FineSpan(finespans), WindowQuery, CanonicalRecallQuery, and SQL rows. E2 only proves slice injection.",
+  "capture_kenlm_input_texts_note": {
+    "texts": [
+      "请问,这双鞋 不合是三天内可以退换吧",
+      "请问,这双鞋 不合适三天内可以退换吧",
+      "请问,这双鞋 不何时三天内可以退换吧"
+    ],
+    "implication": "Capture emitted a 何时 path text, yet Capture path-local base_candidates never list 何时 — observability/compact-pack gap, not proof of Capture CanonicalRecallQuery identity"
+  },
+  "result_enum": "F_CAPTURE_EVIDENCE_GAP_BLOCKS_ROOT_CAUSE",
+  "next_owner": "EVIDENCE_DECISION",
+  "hypotheses": {
+    "H1": "UNPROVEN",
+    "H2": "REPLAY_ANOMALY_CAPTURE_UNKNOWN",
+    "H3": "REPLAY_OBSERVED_CAPTURE_UNKNOWN",
+    "H4": "CAPTURE_UNKNOWN",
+    "H5": "CAPTURE_UNKNOWN",
+    "H6": "CAPTURE_UNKNOWN",
+    "H7": "NOT_PROVABLE",
+    "H8": "SET_DIVERGENCE_OBSERVED_CAUSE_UNKNOWN",
+    "H9": "PROVEN",
+    "H10": "REJECTED"
+  }
+}

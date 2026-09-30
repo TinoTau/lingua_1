@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u002_036",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U002",
+  "profileStage": "P1",
+  "domain": "software_meeting",
+  "difficulty": "multi_clause",
+  "referenceText": "如果指示牌还没闭环，就先标记阻塞，同时安排专人跟进并在明天站会复盘。",
+  "audioId": "aud_p2_u002_036",
+  "audioPath": "audio/p2_u002_036.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "sh_s",
+  "relationDirection": "sh_s",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MODERATE",
+  "profileRef": "prof_u002_p1",
+  "profileBuildSetId": "pbs_u002_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e887aae5b7b17c7a",
+    "base-rebuild-term-e697a9e4b88a7c7a",
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e68c87e7a4bae789"
+  ],
+  "evaluationTargetSurface": "指示牌",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 3893786896,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "WRONG_PROFILE_CONTROL",
+  "wrongProfileUserId": "U001",
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u002_036",
+    "byte_size": 193976,
+    "sha256": "aa9c0da083ed280c2b3ef35dd0b550fd8ee4ad578f7e832dbe740f338e4ae109",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 6.06
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "如果指儩牌还没闭环，就先标记阻塞，同时安排专人跟进并在明天站会复盘。"
+}

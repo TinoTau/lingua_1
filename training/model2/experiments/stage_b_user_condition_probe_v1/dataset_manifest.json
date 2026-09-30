@@ -1,0 +1,108 @@
+{
+  "dataset_id": "model2-stage-b-accent-trainrows-v1",
+  "source_dataset": "D:\\Programs\\github\\lingua_1\\training\\model2\\dataset\\pseudo_user_accent_scale_v1",
+  "n_rows": 5345,
+  "stats": {
+    "ELIGIBLE_NO_CHANGE": 2731,
+    "kind_POSITIVE": 4043,
+    "no_change": 2092,
+    "term_pos_in_pool": 3208,
+    "kind_NEGATIVE": 639,
+    "profile_hn_tagged": 1951,
+    "ELIGIBLE_PRONUNCIATION_POSITIVE": 1951,
+    "pronunciation_positive": 1951,
+    "hard_negative_emitted": 663
+  },
+  "skipped": {
+    "INELIGIBLE_NON_TERM": 7,
+    "INELIGIBLE_ALIGNMENT": 160,
+    "INELIGIBLE_REALIZATION": 135,
+    "context_target_leak": 12
+  },
+  "phonetic_feature_index_v1": {
+    "n_l": 0,
+    "l_n": 1,
+    "zh_z": 2,
+    "z_zh": 3,
+    "ch_c": 4,
+    "c_ch": 5,
+    "sh_s": 6,
+    "s_sh": 7,
+    "an_ang": 8,
+    "ang_an": 9,
+    "en_eng": 10,
+    "eng_en": 11,
+    "in_ing": 12,
+    "ing_in": 13,
+    "f_h": 14,
+    "h_f": 15
+  },
+  "phonetic_feature_keys": [
+    "n_l",
+    "l_n",
+    "zh_z",
+    "z_zh",
+    "ch_c",
+    "c_ch",
+    "sh_s",
+    "s_sh",
+    "an_ang",
+    "ang_an",
+    "en_eng",
+    "eng_en",
+    "in_ing",
+    "ing_in",
+    "f_h",
+    "h_f"
+  ],
+  "trainable_phonetic_mask": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "fidelity_supervision_weights": {
+    "n_l": 1.0,
+    "l_n": 1.0,
+    "zh_z": 1.0,
+    "z_zh": 1.0,
+    "ch_c": 1.0,
+    "c_ch": 1.0,
+    "sh_s": 1.0,
+    "s_sh": 1.0,
+    "an_ang": 1.0,
+    "ang_an": 1.0,
+    "en_eng": 1.0,
+    "eng_en": 1.0,
+    "in_ing": 1.0,
+    "ing_in": 0.55,
+    "f_h": 1.0,
+    "h_f": 1.0
+  },
+  "fuzzy_pool": {
+    "max_candidates": 16,
+    "distance_threshold": 2
+  },
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "profile_contracts": {
+    "PROFILE_UNAVAILABLE": "phonetic_mask=0 (no personalization)",
+    "PROFILE_NEUTRAL": "phonetic_mask=1 + values=0 (known NONE)",
+    "CORRECT_PROFILE": "real PseudoUserProfile.phonetic_bias snapshot"
+  }
+}

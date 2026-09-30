@@ -1,14 +1,24 @@
 ﻿/**
  * FW Repair V4 — Span Assembly Orchestrator (Lattice Fine Span production entry).
  *
- * Fine Span: runLatticeFineSpanGeneration.
- * Path-local: Tone → Vote → SameDomain Bucket → Assembly per PathFineSpanView.
+ * Fine Span: runLatticeFineSpanGenerationWithPreEdgeModel2
+ *   (Window → Base Recall → Model2 pre-LexicalEdge → LexicalEdge → PathFineSpan).
+ * Path-local: Tone Rebind → Compatibility →
+ *   Domain Vote (ONCE) → Model3 Anchors → KEEP/RETRY → optional local re-recall →
+ *   refresh pool → completeDomainAwareAssemblyFromVote (SAME vote).
  * Cross-Path: mergeCrossPathSentenceCandidates → unique KenLM input (≤16, dedup-before-cap).
+ * Authority: MODEL3_V1_MAINLINE_INTEGRATION 2026-08-27;
+ *   Model2 insertion SSOT = AUG12_PRE_LEXICAL_EDGE (2026-09-12 restore).
  */
 
 import type { SegmentInfo } from '../../task-router/types';
 import { loadFwDetectorRuntimeConfig } from '../fw-config';
 import { buildWordTimeSpans, type AcousticToneSlice } from '../tone-time-align';
+import {
+  captureV2Boundary,
+  canonicalHash,
+  isFrozenEvidenceCaptureV2Enabled,
+} from '../../capture-v2';
 import type { ToneEvidenceProductionDiagnostic } from '../../task-router/types';
 import type { LexiconRuntimeV2 } from '../../lexicon-v2/lexicon-runtime-v2';
 import { LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION } from '../../lexicon-v2/lexicon-types-v2';
@@ -22,11 +32,10 @@ import { createEmptyToneDiagnostics } from '../span-assembly-shared/tone-diagnos
 import type { CoarseBoundaryImportDiagnostics } from '../span-assembly-shared/coarse-boundary-import';
 import type { CoarseAssemblyInternalResult, CoarseAssemblyToneDiagnostics } from '../span-assembly-shared/types';
 import { allocateDomainBucketSentenceBudget } from '../span-assembly-shared/utterance-domain-vote';
-import { runDomainAwareAssembly } from './assemble-domain-aware-span-sets';
 import type { DomainAwareAssemblyResult } from './domain-assembly-types';
 import { buildCandidateCompatibilityGraph, resolveCompatibilityRelations } from './candidate-compatibility-graph';
 import {
-  runLatticeFineSpanGeneration,
+  runLatticeFineSpanGenerationWithPreEdgeModel2,
   type LatticeFineSpanTrace,
 } from './lattice-fine-span-runtime';
 import { rebindToneForFineSpan } from './tone-fine-span-rebind';
@@ -48,6 +57,27 @@ import {
 import type { FwSpanDiagnostics } from '../types';
 import { mergeCrossPathSentenceCandidates } from './merge-cross-path-sentence-candidates';
 import type { CrossPathMergeTrace } from './merge-cross-path-sentence-candidates';
+import type { Model2ExpandDiagnostics } from '../../model2-runtime/types';
+import {
+  compactCandidates,
+  compactFineSpan,
+  isDialog200PathTraceEnabled,
+} from '../../model2-runtime/dialog200-path-trace';
+import { SINGLE_CHAR_COLLECTOR_TRACE_V1 } from '../../lexicon-v2/single-char-collector-trace';
+import { runModel3PathStep, runModel3PathStepCausalFork, runModel3PathStepDualWeightCausalFork } from '../../model3-runtime/run-model3-path-step';
+import type { Model3PathDiagnostics, Model3SpanDecision } from '../../model3-runtime/model3-types';
+import { isModel3AcceptanceCausalForkEnabled, isDualWeightClassWeightAuditEnabled } from '../../model3-runtime/model3-acceptance-snapshot';
+import {
+  beginPathProvenance,
+  beginUtteranceProvenance,
+  isCandidateProvenanceTraceEnabled,
+  recordAssemblySentences,
+  recordCrossPathMerge,
+  recordKenlmPool,
+  takePathProvenance,
+  takeUtteranceProvenance,
+} from '../../model3-runtime/model3-candidate-provenance-trace';
+import logger from '../../logger';
 
 export type SpanAssemblyV4OrchestratorInput = {
   rawText: string;
@@ -76,6 +106,26 @@ export type SpanAssemblyV4OrchestratorInput = {
    * Production default is true. Not a long-lived dual recall chain.
    */
   enableUtteranceRecallCache?: boolean;
+  /**
+   * Optional session UserProfile from SessionBootstrap cache.
+   * Missing/empty still runs ONE Stage-J Model2 (no skip gate).
+   */
+  userProfile?: import('@shared/protocols/messages').UserProfileV1 | null;
+  sessionId?: string;
+  /** Test hook: force Model2 inference failure (base continues). */
+  model2ForceInferenceFail?: boolean;
+  /**
+   * Test hook only: inject Model3 KEEP/RETRY decisions (skips sidecar).
+   * Not a permanent enableModel3 business flag / dual pipeline.
+   */
+  model3DecisionOverride?: readonly Model3SpanDecision[];
+  /** Test hook: force Model3 fail-fast. */
+  model3ForceFail?: boolean;
+  /**
+   * Test hook: KEEP-all without sidecar (skips Model3 load).
+   * Not a permanent enableModel3 business flag.
+   */
+  model3KeepAll?: boolean;
 };
 
 /** Path ownership wrapper — does not duplicate Vote/Bucket/Sentence DTOs. */
@@ -87,6 +137,7 @@ export type PathAssemblyResult = {
   fwSpans: FwSpanDiagnostics[];
   perBucketGenerated: SentenceCombination[][];
   sentenceCandidateCount: number;
+  model3Diagnostics?: Model3PathDiagnostics;
 };
 
 export type PathAssemblyTrace = {
@@ -106,8 +157,8 @@ export type PathAssemblyTrace = {
 
 export type SpanAssemblyV4OrchestratorResult = {
   internal: CoarseAssemblyInternalResult;
-  spanSets: ReturnType<typeof runDomainAwareAssembly>['spanSets'];
-  bucketSpanSets: ReturnType<typeof runDomainAwareAssembly>['bucketSpanSets'];
+  spanSets: DomainAwareAssemblyResult['spanSets'];
+  bucketSpanSets: DomainAwareAssemblyResult['bucketSpanSets'];
   fwSpans: ReturnType<typeof buildFwSpansFromPathFineSpans>;
   boundaryImport: CoarseBoundaryImportDiagnostics;
   tone: CoarseAssemblyToneDiagnostics;
@@ -135,6 +186,34 @@ export type SpanAssemblyV4OrchestratorResult = {
     isCovered: boolean;
     hitKind: string;
   }>;
+  /** Observation-only (MODEL2_DIALOG200_TRACE=1). */
+  model2PathTrace?: Record<string, unknown>;
+  /**
+   * Acceptance-harness only (MODEL3_ACCEPTANCE_CAUSAL_FORK=1).
+   * Baseline branch assembly for causal A/B — NOT a JobResult field / dual mainline.
+   */
+  acceptanceCausal?: {
+    enabled: true;
+    harnessVersion: string;
+    baselinePathAssemblyResults: PathAssemblyResult[];
+    baselineKenlmSentenceCandidates: {
+      combinations: SentenceCombination[];
+      uniqueBeforeCap: SentenceCombination[];
+      crossPathMerge: CrossPathMergeTrace;
+    };
+    pathParity: Array<{
+      pathId: string;
+      upstreamHash: string;
+      packedHash: string;
+      mutationIsolated: boolean;
+      baselinePostForkMs: number;
+      s3PostForkMs: number;
+      baselineRetryRegions: number;
+      s3RetryRegions: number;
+      baselineRetryAttempts: number;
+      s3RetryAttempts: number;
+    }>;
+  };
 };
 
 function clonePathFineSpansForTone(spans: readonly PathFineSpan[]): PathFineSpan[] {
@@ -145,9 +224,9 @@ function clonePathFineSpansForTone(spans: readonly PathFineSpan[]): PathFineSpan
   }));
 }
 
-export function runSpanAssemblyV4Orchestrator(
+export async function runSpanAssemblyV4Orchestrator(
   input: SpanAssemblyV4OrchestratorInput
-): SpanAssemblyV4OrchestratorResult {
+): Promise<SpanAssemblyV4OrchestratorResult> {
   if (!input.recallDomainScope.length) {
     throw new Error(
       '[SPAN_ASSEMBLY_V4] recallDomainScope is empty — Domain Recall must not silently degrade to Base-only'
@@ -210,7 +289,45 @@ export function runSpanAssemblyV4Orchestrator(
     input.asrSegmentNodeBatchIndices ?? []
   );
 
-  const lattice = runLatticeFineSpanGeneration({
+  // Capture V2 B2/B3 + B4.acousticToneSlices (INJECTION_STATE) — OBSERVABILITY_ONLY.
+  // Canonical path: boundaries.B4.payload.acousticToneSlices (not B2; not reconstructed from mapped Tone).
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    const alignment = {
+      segmentTimeOffsetsSec: [...(input.segmentTimeOffsetsSec ?? [])],
+      asrSegmentNodeBatchIndices: [...(input.asrSegmentNodeBatchIndices ?? [])],
+      segmentCharOffsets: [...(input.segmentCharOffsets ?? [])],
+    };
+    captureV2Boundary('B2', {
+      ...alignment,
+      alignmentHash: canonicalHash(alignment),
+    });
+    const spansSnap = wordTimeSpans.map((s) => ({ ...s }));
+    captureV2Boundary('B3', {
+      spans: spansSnap,
+      count: spansSnap.length,
+      canonicalHash: canonicalHash(spansSnap),
+    });
+    const slicesSrc = input.acousticSlices ?? [];
+    const toneExecutionStatus =
+      slicesSrc.length > 0
+        ? 'TONE_EXECUTED_AND_SLICES_CAPTURED'
+        : 'TONE_LEGITIMATELY_NOT_APPLICABLE';
+    captureV2Boundary('B4', {
+      acousticToneSlices: slicesSrc.map((s) => ({
+        start: s.start,
+        end: s.end,
+        confidence: s.confidence,
+        tonePosterior: { ...s.tonePosterior },
+      })),
+      slice_role: 'INJECTION_STATE',
+      tone_execution_status: toneExecutionStatus,
+      slice_count: slicesSrc.length,
+      windows: [],
+      authoritative_truncated: false,
+    });
+  }
+
+  const lattice = await runLatticeFineSpanGenerationWithPreEdgeModel2({
     rawText: input.rawText,
     runtime: input.runtime,
     profile: input.profile,
@@ -226,7 +343,19 @@ export function runSpanAssemblyV4Orchestrator(
     toneTimestampOnlyEnabled,
     enableUtteranceRecallCache: input.enableUtteranceRecallCache,
     trace,
+    model2: {
+      userProfile: input.userProfile,
+      sessionId: input.sessionId,
+      forceInferenceFail: input.model2ForceInferenceFail,
+    },
   });
+
+  const utteranceModel2Diag: Model2ExpandDiagnostics | undefined = lattice.ok
+    ? lattice.model2Diagnostics
+    : undefined;
+  const utteranceRecallQueryEvidence = lattice.ok
+    ? lattice.recallQueryEvidence ?? Object.freeze([])
+    : Object.freeze([]);
 
   if (!lattice.ok) {
     // Structured Lattice failure — never fall back to a legacy Fine Span generator.
@@ -253,6 +382,22 @@ export function runSpanAssemblyV4Orchestrator(
   let domainRecallHitCount = 0;
   let voteEligibleDomainCandidateCount = 0;
   const diagActive: WindowCandidate[] = [];
+  const dialog200PathAcc: Record<string, unknown>[] = [];
+  const acceptancePathParity: Array<{
+    pathId: string;
+    upstreamHash: string;
+    packedHash: string;
+    mutationIsolated: boolean;
+    baselinePostForkMs: number;
+    s3PostForkMs: number;
+    baselineRetryRegions: number;
+    s3RetryRegions: number;
+    baselineRetryAttempts: number;
+    s3RetryAttempts: number;
+  }> = [];
+  const baselinePathAssemblyResults: PathAssemblyResult[] = [];
+  let baselineIntervalAssemblyCandidateCount = 0;
+  let baselineIntervalRejectedOverlapCount = 0;
 
   for (const view of lattice.pathFineSpanViews) {
     const pathFineSpans = clonePathFineSpansForTone(view.pathFineSpans);
@@ -297,17 +442,23 @@ export function runSpanAssemblyV4Orchestrator(
     conflictRelationCountTotal += compatibility.metrics.conflictRelationCount;
     compatibleCountTotal += compatibility.metrics.compatibleCount;
 
-    const activeCandidates = compatibility.activeCandidates;
-    domainRecallHitCount += activeCandidates.filter(
+    const activeCandidatesBase = compatibility.activeCandidates;
+    domainRecallHitCount += activeCandidatesBase.filter(
       (c) =>
         !c.isCovered &&
         (c.source === 'domain_term' || c.source === 'passive_domain_weak')
     ).length;
-    voteEligibleDomainCandidateCount += activeCandidates.filter(
+    voteEligibleDomainCandidateCount += activeCandidatesBase.filter(
       (c) =>
         !c.isCovered &&
         Boolean(c.domains?.some((d) => d && d !== 'general' && d !== 'base_term'))
     ).length;
+
+    // Model2 already ran once at pre-LexicalEdge (lattice). PROFILE_* candidates
+    // survive on PathFineSpan → compatibility clone. Do not re-invoke Model2 here.
+    let activeCandidates = activeCandidatesBase;
+    const model2Diag = utteranceModel2Diag;
+
     diagActive.push(...activeCandidates.filter((c) => !c.isCovered));
 
     if (trace) {
@@ -319,14 +470,95 @@ export function runSpanAssemblyV4Orchestrator(
       }
     }
 
-    // Path-local Vote → Bucket → Assembly (never mix Path A/B candidates first).
-    const assemblyResult = runDomainAwareAssembly(
+    // Path-local: Domain Vote (ONCE) → Model3 Anchors → KEEP/RETRY →
+    // optional local re-recall → refresh pool → completeFromVote (SAME vote).
+    const acceptanceCausalFork = isModel3AcceptanceCausalForkEnabled();
+    const model3Args = {
       activeCandidates,
       coarseSpans,
-      input.rawText,
+      rawText: input.rawText,
       pathFineSpans,
-      domainPriors
-    );
+      domainPriors,
+      globalSyllables: syllables,
+      runtime: input.runtime,
+      profile: input.profile,
+      decisionOverride: acceptanceCausalFork ? undefined : input.model3DecisionOverride,
+      forceFail: input.model3ForceFail,
+      keepAll: acceptanceCausalFork ? false : input.model3KeepAll,
+      imeConfig: input.imeConfig,
+      dict: input.dict,
+      minPrior: input.minPrior,
+      acousticSlices: input.acousticSlices,
+      wordTimeSpans,
+      fuzzyRecallEnabled: fuzzyEnabled,
+      toneTimestampOnlyEnabled,
+      pathId: view.pathId,
+      forcePackSymmetry: acceptanceCausalFork,
+      recallQueryEvidence: utteranceRecallQueryEvidence,
+    };
+
+    let model3Step: Awaited<ReturnType<typeof runModel3PathStep>>;
+    let baselineModel3Step: Awaited<ReturnType<typeof runModel3PathStep>> | undefined;
+    let pathParityEntry:
+      | {
+          pathId: string;
+          upstreamHash: string;
+          packedHash: string;
+          mutationIsolated: boolean;
+          baselinePostForkMs: number;
+          s3PostForkMs: number;
+          baselineRetryRegions: number;
+          s3RetryRegions: number;
+          baselineRetryAttempts: number;
+          s3RetryAttempts: number;
+        }
+      | undefined;
+
+    if (acceptanceCausalFork) {
+      const fork = isDualWeightClassWeightAuditEnabled()
+        ? await runModel3PathStepDualWeightCausalFork(
+            model3Args,
+            process.env.MODEL3_BASELINE_CHECKPOINT_IDENTITY?.trim() ||
+              'MODEL3_V2_S3_RANDOM_INIT_V1',
+            process.env.MODEL3_CANDIDATE_CHECKPOINT_IDENTITY?.trim() ||
+              'MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1_RERUN1'
+          )
+        : await runModel3PathStepCausalFork(model3Args);
+      model3Step = fork.s3;
+      baselineModel3Step = fork.baseline;
+      pathParityEntry = {
+        pathId: view.pathId,
+        upstreamHash: fork.upstreamHash,
+        packedHash: fork.packedHash,
+        mutationIsolated: fork.mutationIsolated,
+        baselinePostForkMs: fork.baselinePostForkMs,
+        s3PostForkMs: fork.s3PostForkMs,
+        baselineRetryRegions: fork.baseline.diagnostics.retryRegions?.length ?? 0,
+        s3RetryRegions: fork.s3.diagnostics.retryRegions?.length ?? 0,
+        baselineRetryAttempts: fork.baseline.diagnostics.retryAttempts.filter((r) => r.attempted)
+          .length,
+        s3RetryAttempts: fork.s3.diagnostics.retryAttempts.filter((r) => r.attempted).length,
+      };
+      acceptancePathParity.push(pathParityEntry);
+    } else {
+      model3Step = await runModel3PathStep(model3Args);
+    }
+
+    const assemblyResult = model3Step.assemblyResult;
+    activeCandidates = model3Step.activeCandidates;
+    if (model3Step.diagnostics.inferenceOk || model3Step.diagnostics.error) {
+      logger.info(
+        {
+          pathId: view.pathId,
+          voteCallCount: model3Step.voteCallCount,
+          poolRefreshed: model3Step.diagnostics.poolRefreshed,
+          anchors: model3Step.diagnostics.anchors.length,
+          retryAttempts: model3Step.diagnostics.retryAttempts.filter((r) => r.attempted).length,
+          model3LatencyMs: model3Step.diagnostics.model3LatencyMs,
+        },
+        '[Model3] path step'
+      );
+    }
     const primaryDomain =
       assemblyResult.vote.retainedDomains[0] ?? assemblyResult.vote.utteranceDomain;
     const fwSpans = buildFwSpansFromPathFineSpans(
@@ -349,6 +581,25 @@ export function runSpanAssemblyV4Orchestrator(
       pathSentenceCount += bucketResult.combinations.length;
     }
 
+    let pathCandidateProvenance: unknown = model3Step.diagnostics.candidateProvenance;
+    if (isCandidateProvenanceTraceEnabled()) {
+      const sentenceTexts = perBucketGenerated.flat().map((c) => c.text);
+      beginPathProvenance(view.pathId);
+      recordAssemblySentences(view.pathId, sentenceTexts);
+      const asmProv = takePathProvenance(view.pathId);
+      if (asmProv && pathCandidateProvenance && typeof pathCandidateProvenance === 'object') {
+        const base = pathCandidateProvenance as Record<string, unknown>;
+        const baseStages = Array.isArray(base.stages) ? base.stages : [];
+        pathCandidateProvenance = {
+          ...base,
+          assemblySentences: asmProv.assemblySentences,
+          stages: [...baseStages, ...asmProv.stages],
+        };
+      } else if (asmProv) {
+        pathCandidateProvenance = asmProv;
+      }
+    }
+
     pathAssemblyResults.push({
       pathId: view.pathId,
       boundaryKey: view.boundaryKey,
@@ -357,7 +608,41 @@ export function runSpanAssemblyV4Orchestrator(
       fwSpans,
       perBucketGenerated,
       sentenceCandidateCount: pathSentenceCount,
+      model3Diagnostics: model3Step.diagnostics,
     });
+
+    // Acceptance causal baseline branch — same Assembly builder, KEEP-only decisions.
+    if (baselineModel3Step) {
+      const bAsm = baselineModel3Step.assemblyResult;
+      const bDomain = bAsm.vote.retainedDomains[0] ?? bAsm.vote.utteranceDomain;
+      const bFwSpans = buildFwSpansFromPathFineSpans(
+        input.rawText,
+        pathFineSpans,
+        bAsm.spanSets,
+        bDomain
+      );
+      allocateDomainBucketSentenceBudget(bAsm.bucketSpanSets.length, kenlmCap);
+      const bPerBucket: SentenceCombination[][] = [];
+      let bSentenceCount = 0;
+      for (const bucketSets of bAsm.bucketSpanSets) {
+        const bucketResult = buildSentenceCandidates(input.rawText, bucketSets, kenlmCap);
+        baselineIntervalAssemblyCandidateCount += bucketResult.intervalAssemblyCandidateCount;
+        baselineIntervalRejectedOverlapCount += bucketResult.intervalRejectedOverlapCount;
+        bPerBucket.push(bucketResult.combinations);
+        bSentenceCount += bucketResult.combinations.length;
+      }
+      baselinePathAssemblyResults.push({
+        pathId: view.pathId,
+        boundaryKey: view.boundaryKey,
+        pathFineSpans,
+        assemblyResult: bAsm,
+        fwSpans: bFwSpans,
+        perBucketGenerated: bPerBucket,
+        sentenceCandidateCount: bSentenceCount,
+        model3Diagnostics: baselineModel3Step.diagnostics,
+      });
+    }
+
     pathAssemblyTraces.push({
       pathId: view.pathId,
       boundaryKey: view.boundaryKey,
@@ -372,9 +657,163 @@ export function runSpanAssemblyV4Orchestrator(
       assemblyCandidateCount: pathSentenceCount,
       toneRebindOk,
     });
+    if (isDialog200PathTraceEnabled()) {
+      dialog200PathAcc.push({
+        path_id: view.pathId,
+        boundary_key: view.boundaryKey,
+        tone: toneEvidenceAvailableCount > 0 ? 'INVOKED' : 'NOT_INVOKED',
+        tone_evidence_available_count: toneEvidenceAvailableCount,
+        finespans: pathFineSpans.map((s) => compactFineSpan(s, input.rawText)),
+        base_candidates: compactCandidates(activeCandidatesBase),
+        after_model2_candidates: compactCandidates(activeCandidates),
+        model2: model2Diag?.path_trace ?? {
+          model2_status: model2Diag?.load_failed
+            ? 'LOAD_FAILED'
+            : model2Diag?.inference_failed
+              ? 'INFERENCE_FAILED'
+              : 'NOT_CAPTURED',
+        },
+        model2_summary: model2Diag
+          ? {
+              invoked: model2Diag.model2_invoked,
+              selected_actions: model2Diag.selected_actions,
+              domain_action: model2Diag.observability?.domain_action ?? model2Diag.domain_action ?? null,
+              domain_none:
+                model2Diag.observability?.domain_none ??
+                (model2Diag.model2_invoked ? model2Diag.domain_none !== false : null),
+              p_added: model2Diag.pronunciation_candidates_added ?? 0,
+              d_added: model2Diag.domain_candidates_added ?? 0,
+              introduced_term_ids: model2Diag.introduced_term_ids,
+              latency_ms: model2Diag.model_latency_ms,
+              lexicon_latency_ms: model2Diag.lexicon_latency_ms,
+              // Observation-only Stage-J zeroing fields (no gating).
+              selected_action_count:
+                model2Diag.observability?.selected_action_count ??
+                (model2Diag.selected_actions || []).length,
+              selected_action_ids:
+                model2Diag.observability?.selected_action_ids ??
+                [...new Set(model2Diag.selected_actions || [])],
+              p_retrieval_status: model2Diag.observability?.p_retrieval_status ?? null,
+              p_retrieval_hit_count: model2Diag.observability?.p_retrieval_hit_count ?? null,
+              p_materialized_count: model2Diag.observability?.p_materialized_count ?? null,
+              acousticTonePattern_present:
+                model2Diag.observability?.acousticTonePattern_present ?? null,
+              toneRecallReadiness: model2Diag.observability?.toneRecallReadiness ?? null,
+              d_hit_count: model2Diag.observability?.d_hit_count ?? null,
+              d_materialized_count: model2Diag.observability?.d_materialized_count ?? null,
+              inference_failed:
+                model2Diag.observability?.inference_failed ?? Boolean(model2Diag.inference_failed),
+              load_failed:
+                model2Diag.observability?.load_failed ?? Boolean(model2Diag.load_failed),
+              failure_reason:
+                model2Diag.observability?.failure_reason ?? model2Diag.reason ?? null,
+              profile_unicode_sanitized:
+                model2Diag.observability?.profile_unicode_sanitized ?? false,
+              sanitized_string_count: model2Diag.observability?.sanitized_string_count ?? 0,
+              sanitized_code_unit_count:
+                model2Diag.observability?.sanitized_code_unit_count ?? 0,
+              sanitization_owner: model2Diag.observability?.sanitization_owner ?? null,
+            }
+          : null,
+        domain_vote: {
+          domain_scores: { ...assemblyResult.vote.domainScores },
+          retained_domains: [...assemblyResult.vote.retainedDomains],
+          utterance_domain: assemblyResult.vote.utteranceDomain,
+          insufficient_evidence: assemblyResult.vote.insufficientEvidence === true,
+          winner_score: assemblyResult.vote.maxCount,
+          runner_up_domain: assemblyResult.vote.runnerUpDomain,
+          vote_margin: assemblyResult.vote.voteMargin,
+          vote_call_count: model3Step.voteCallCount,
+        },
+        // Observation-only (MODEL2_DIALOG200_TRACE=1) — not a JobResult schema change.
+        model3: {
+          vote_call_count: model3Step.diagnostics.voteCallCount,
+          vote_frozen: model3Step.diagnostics.voteFrozen,
+          pool_refreshed: model3Step.diagnostics.poolRefreshed,
+          anchors: model3Step.diagnostics.anchors,
+          model2_anchor_count: model3Step.diagnostics.model2_anchor_count,
+          anchor_mutation_violations: model3Step.diagnostics.anchor_mutation_violations,
+          decisions: model3Step.diagnostics.decisions,
+          retry_attempts: model3Step.diagnostics.retryAttempts,
+          // Observation-only (MODEL2_DIALOG200_TRACE=1) — not a JobResult schema change.
+          retry_regions: model3Step.diagnostics.retryRegions,
+          retry_recall_invocations: model3Step.diagnostics.retryRecallInvocations ?? null,
+          inference_input_trace: model3Step.diagnostics.inferenceInputTrace ?? null,
+          checkpoint_identity: model3Step.diagnostics.checkpointIdentity ?? null,
+          model3_latency_ms: model3Step.diagnostics.model3LatencyMs,
+          retry_path_latency_ms: model3Step.diagnostics.retryPathLatencyMs,
+          inference_ok: model3Step.diagnostics.inferenceOk,
+          error: model3Step.diagnostics.error ?? null,
+          ...(pathCandidateProvenance != null
+            ? {
+                // Observation-only (MODEL3_CANDIDATE_PROVENANCE_TRACE=1).
+                candidate_provenance: pathCandidateProvenance,
+              }
+            : {}),
+          acceptance_causal: pathParityEntry
+            ? {
+                upstream_hash: pathParityEntry.upstreamHash,
+                packed_hash: pathParityEntry.packedHash,
+                mutation_isolated: pathParityEntry.mutationIsolated,
+                baseline_post_fork_ms: pathParityEntry.baselinePostForkMs,
+                s3_post_fork_ms: pathParityEntry.s3PostForkMs,
+                baseline_decisions: baselineModel3Step?.diagnostics.decisions ?? null,
+                baseline_retry_regions: baselineModel3Step?.diagnostics.retryRegions ?? null,
+                baseline_retry_recall_invocations:
+                  baselineModel3Step?.diagnostics.retryRecallInvocations ?? null,
+                baseline_inference_input_trace:
+                  baselineModel3Step?.diagnostics.inferenceInputTrace ?? null,
+                ...(baselineModel3Step?.diagnostics.candidateProvenance != null
+                  ? {
+                      baseline_candidate_provenance:
+                        baselineModel3Step.diagnostics.candidateProvenance,
+                    }
+                  : {}),
+              }
+            : null,
+        },
+        assembly: {
+          sentence_count: pathSentenceCount,
+          sentences: perBucketGenerated
+            .flat()
+            .slice(0, 24)
+            .map((c) => ({
+              text: c.text,
+              score: c.candidateScore,
+              replacements: c.replacements?.map((r) => r.word) ?? [],
+            })),
+        },
+      });
+    }
   }
 
   const kenlmCap = loadFwDetectorRuntimeConfig().maxSentenceCandidates;
+  // Capture V2 B5/B15 — OBSERVABILITY_ONLY; uses Production finespans field name.
+  if (isFrozenEvidenceCaptureV2Enabled()) {
+    captureV2Boundary('B5', {
+      field_name: 'finespans',
+      paths: pathAssemblyResults.map((p) => ({
+        path_id: p.pathId,
+        boundary_key: p.boundaryKey,
+        finespans: p.pathFineSpans.map((s) => compactFineSpan(s, input.rawText)),
+      })),
+    });
+    captureV2Boundary('B15', {
+      paths: pathAssemblyResults.map((p) => ({
+        path_id: p.pathId,
+        domainScores: { ...p.assemblyResult.vote.domainScores },
+        retainedDomains: [...p.assemblyResult.vote.retainedDomains],
+        utteranceDomain: p.assemblyResult.vote.utteranceDomain,
+        insufficientEvidence: p.assemblyResult.vote.insufficientEvidence === true,
+        sameDomainResult: {
+          retainedDomains: [...p.assemblyResult.vote.retainedDomains],
+        },
+        assembled_sentence_identities_or_texts: p.perBucketGenerated
+          .flat()
+          .map((c) => c.text),
+      })),
+    });
+  }
   // Formal Cross-Path Merge: collect all Path/Bucket candidates → dedup(text, first-wins) → global ≤16.
   const crossPathMerged = mergeCrossPathSentenceCandidates(pathAssemblyResults, kenlmCap);
   const flatPerBucketGenerated = pathAssemblyResults.flatMap((p) => [...p.perBucketGenerated]);
@@ -386,6 +825,37 @@ export function runSpanAssemblyV4Orchestrator(
     uniqueBeforeCap: crossPathMerged.uniqueBeforeCap,
     crossPathMerge: crossPathMerged.trace,
   };
+
+  let candidateProvenanceUtterance: unknown = null;
+  if (isCandidateProvenanceTraceEnabled()) {
+    beginUtteranceProvenance();
+    const crossPathInputTexts = flatPerBucketGenerated.flat().map((c) => c.text);
+    const crossPathOutputTexts = crossPathMerged.combinations.map((c) => c.text);
+    recordCrossPathMerge(crossPathInputTexts, crossPathOutputTexts, kenlmCap);
+    recordKenlmPool(crossPathOutputTexts);
+    candidateProvenanceUtterance = takeUtteranceProvenance();
+  }
+
+  const acceptanceCausal =
+    acceptancePathParity.length > 0 && baselinePathAssemblyResults.length > 0
+      ? (() => {
+          const baselineMerged = mergeCrossPathSentenceCandidates(
+            baselinePathAssemblyResults,
+            kenlmCap
+          );
+          return {
+            enabled: true as const,
+            harnessVersion: 'MODEL3_ACCEPTANCE_HARNESS_V1_20260831',
+            baselinePathAssemblyResults,
+            baselineKenlmSentenceCandidates: {
+              combinations: baselineMerged.combinations,
+              uniqueBeforeCap: baselineMerged.uniqueBeforeCap,
+              crossPathMerge: baselineMerged.trace,
+            },
+            pathParity: acceptancePathParity,
+          };
+        })()
+      : undefined;
   if (trace) {
     for (const combo of kenlmSentenceCandidates.combinations) {
       trace.pushSentenceCandidate({
@@ -557,6 +1027,53 @@ export function runSpanAssemblyV4Orchestrator(
     },
     trace: trace?.toDiagnostics(),
     kenlmSentenceCandidates,
+    ...(acceptanceCausal ? { acceptanceCausal } : {}),
+    ...(isDialog200PathTraceEnabled()
+      ? {
+          model2PathTrace: {
+            paths: dialog200PathAcc,
+            kenlm_input: {
+              combinations: kenlmSentenceCandidates.combinations.slice(0, 24).map((c) => ({
+                text: c.text,
+                score: c.candidateScore,
+                replacements: c.replacements?.map((r) => r.word) ?? [],
+              })),
+              unique_before_cap: (kenlmSentenceCandidates.uniqueBeforeCap ?? [])
+                .slice(0, 24)
+                .map((c) => c.text),
+              truncated_count: crossPathMerged.trace.crossPathTruncatedCount,
+              global_cap: kenlmCap,
+              pruned: (kenlmSentenceCandidates.uniqueBeforeCap ?? [])
+                .slice(kenlmCap)
+                .slice(0, 24)
+                .map((c, i) => ({
+                  text: c.text,
+                  rank: kenlmCap + i + 1,
+                  score: c.candidateScore,
+                })),
+            },
+            single_char_collector: {
+              contract: SINGLE_CHAR_COLLECTOR_TRACE_V1,
+              windows: lattice.length1CollectorWindows ?? [],
+            },
+            ...(acceptanceCausal
+              ? {
+                  acceptance_causal: {
+                    harness_version: acceptanceCausal.harnessVersion,
+                    path_parity: acceptanceCausal.pathParity,
+                    baseline_kenlm_pool_size:
+                      acceptanceCausal.baselineKenlmSentenceCandidates.combinations.length,
+                    s3_kenlm_pool_size: kenlmSentenceCandidates.combinations.length,
+                  },
+                }
+              : {}),
+            // Observation-only (MODEL3_CANDIDATE_PROVENANCE_TRACE=1) — not JobResult.
+            ...(candidateProvenanceUtterance
+              ? { candidate_provenance_utterance: candidateProvenanceUtterance }
+              : {}),
+          },
+        }
+      : {}),
     ...(diagnosticsConfig.enabled
       ? {
           diagActiveCandidates: diagActive.map((c) => ({

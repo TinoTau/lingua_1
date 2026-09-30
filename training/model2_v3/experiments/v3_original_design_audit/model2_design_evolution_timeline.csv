@@ -1,0 +1,17 @@
+Decision,Date,Original_responsibility,Change,Current_status,Source
+Model2 FineSpan User-Conditioned Fuzzy Recall product intent,2026-08-11,Expand candidates from FineSpan+UserProfile; not final correction,Product baseline established,ACTIVE,docs/user_correction/Lingua_Model2_User_Correction_Design_and_Audit_Prompts_2026_08_11.md
+Gateway UserProfile SSOT; Scheduler CorrectionHistory; Node session cache,2026-08-11,Ownership boundaries,Phase1 foundation,ACTIVE,Lingua_User_Correction_Model2_Phase1_* + Scheduler/Web audits
+Manual correction -> ProfileDelta -> UserProfile,2026-08-11,User adaptation loop write path,Phase2-3 implemented phonetic path,PARTIAL_RUNTIME,Phase2/3 reports; profile_delta.rs
+Hybrid Fuzzy Pre-Pool + Model2 closed-set ranking (Stage A/B),2026-08-12,Model2 as pool ranker,Drift from introduce-missing-target,SUPERSEDED,Final Architecture Input Contract; Phase5-7C
+Stage A MASK dual-encoder closed-set,2026-08-12..15,Score candidates in pool,Failed generalization; archived,ARCHIVED,Phase7B/C; V2/V3 Stage A ARCHIVED
+Stage B user x relation binding,2026-08-14,Condition ranking,Deferred/not product recall owner,ARCHIVED/DEFERRED,Phase6; Stage B DEFERRED
+Phase7D product = profile-conditioned expansion,2026-08-16,Introduce missing target,Partial rebuild toward recall,ACTIVE_PRODUCT,Phase7D
+V2 FineSpan+profile deterministic recall; neural-not-needed,2026-08-16,Deterministic expansion as core,Claimed neural not needed,SUPERSEDED,V2 reports; SUPERSEDED_NEURAL_NOT_NEEDED.md
+User architecture: Trainable Model2 REQUIRED,2026-08-16,Retrieval policy owner,Supersede neural-not-needed,ACTIVE,decision_record_supersede_v2_neural_not_needed.md
+FINESPAN_USERPROFILE_TRAINABLE_RETRIEVAL_POLICY,2026-08-16,FineSpan+UserProfile->actions/budget,V3 contract freeze,ACTIVE,model2_v3_trainable_retrieval_policy_contract.md
+Stage P pronunciation policy freeze,2026-08-16,Pronunciation retrieval actions qb=1,FROZEN training artifact,ACTIVE_FROZEN_TRAIN,Stage P report
+Stage D lexical/domain prior head,2026-08-16,Same Model2 + domain_action_head,Synthetic PASS,ACTIVE_HARDENING,Stage D report
+Stage D2 multi-tag hardening,2026-08-16,Fix multi-tag + discrimination,PASS_WITH_HARDENING_REQUIRED; J NOT_READY,EXPERIMENTAL,Stage D2 report
+Stage J joint fine-tune,pending,Unify P+D policy,Not started,NOT_READY,Stage D2 go_summary
+Tone / Node / 50k integration,ongoing,Hold wiring,Not started,HOLD,All V2/V3 go_summaries
+speaking_habits,2026-08-11..16,Product dimension,No schema field,DEFERRED_BY_DATA/SCHEMA,model2_v3_feature_contract.json

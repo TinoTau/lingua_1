@@ -1,0 +1,188 @@
+{
+  "phase": "MODEL3_V1_MAINLINE_INTEGRATION_PREDEVELOPMENT_AUDIT",
+  "date": "2026-08-26",
+  "verdict": "READY_WITH_GAPS",
+  "mode": "READ_ONLY",
+  "frozenModel": {
+    "modelId": "MODEL3_SYNTHETIC_V1",
+    "role": "Anchor-Conditioned Text Repair Trigger",
+    "inputModality": "TEXT_ONLY",
+    "weightsSha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "configSha256": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "acousticModelVisibleCount": 0
+  },
+  "currentMainline": {
+    "entry": "agent/node-agent-job-processor.ts → inference/inference-service.ts → pipeline/job-pipeline.ts",
+    "asr": "pipeline/steps/asr-step.ts:runAsrStep",
+    "fwStep": "pipeline/steps/fw-detector-step.ts:runFwDetectorStep",
+    "orchestrator": "fw-detector/fw-detector-orchestrator.ts:runFwDetectorOrchestrator",
+    "v4Path": "fw-detector/fw-detector-v4-path.ts:runFwDetectorV4Path",
+    "spanAssembly": "fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts:runSpanAssemblyV4Orchestrator",
+    "firstRecall": "recall-topk-for-windows.ts → lexicon-v2/recall-span-topk-v2.ts",
+    "model2": "model2-runtime/expand-active-candidates.ts:expandActiveCandidatesWithModel2",
+    "domainVoteAssembly": "assemble-domain-aware-span-sets.ts:runDomainAwareAssembly",
+    "sentenceBuild": "build-sentence-candidates.ts:buildSentenceCandidates",
+    "crossPathMerge": "merge-cross-path-sentence-candidates.ts (cap 16)",
+    "kenlm": "kenlm/run-fw-sentence-rerank-from-prefilled.ts",
+    "apply": "apply-span-replacements.ts:applyFwSpanReplacements",
+    "jobResult": "pipeline/result-builder-fw.ts:buildFwJobResult"
+  },
+  "insertionPoint": {
+    "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts",
+    "function": "runSpanAssemblyV4Orchestrator",
+    "lineApprox": 393,
+    "before": "runDomainAwareAssembly(activeCandidates, coarseSpans, rawText, pathFineSpans, domainPriors)",
+    "after": "expandActiveCandidatesWithModel2 → activeCandidates assigned",
+    "why": "PathFineSpans + Model2/domain candidates ready; vote/assembly not committed; single mainline hook"
+  },
+  "anchor": {
+    "domainAnchorAvailable": true,
+    "model2AnchorAvailable": true,
+    "existingSpanIdentityReusable": true,
+    "spanIdFormat": "fine:${pathId}:${idx}",
+    "newAnchorDataStructureRequired": true,
+    "newAnchorDataStructureNote": "internal adapter only — maps to PathFineSpan.spanId, not parallel registry",
+    "jobResultChangeRequired": false,
+    "multiSourceResolution": "DOMAIN_AND_MODEL2 when both signals on same spanId"
+  },
+  "model3Input": {
+    "frozenFeatureContractSatisfied": "PARTIAL",
+    "missingRuntimeFeatures": ["anchor adapter (isAnchor derivation from Domain/Model2 signals)"],
+    "featureMatrix": [
+      {"feature": "surface_char_tokens", "source": "PathFineSpan rawText slice", "available": true, "transform": "vocab encode", "leakageRisk": "LOW"},
+      {"feature": "isAnchor", "source": "anchor adapter", "available": false, "transform": "new", "leakageRisk": "LOW"},
+      {"feature": "span_len_log1p", "source": "len(surface)", "available": true, "transform": "log1p", "leakageRisk": "LOW"},
+      {"feature": "span_rel_position", "source": "index in pathFineSpans", "available": true, "transform": "normalize", "leakageRisk": "LOW"},
+      {"feature": "first_pass_cand_log1p", "source": "candidate pool count per span", "available": true, "transform": "log1p", "leakageRisk": "LOW"},
+      {"feature": "current_cjk_len_log1p", "source": "CJK count surface", "available": true, "transform": "log1p", "leakageRisk": "LOW"},
+      {"feature": "pinyin_channel_avail", "source": "windowPinyinKey present", "available": true, "transform": "0/1 bit", "leakageRisk": "LOW"}
+    ],
+    "trainingOnlyLeakageRisk": "LOW if adapter excludes reference/repairability/labels"
+  },
+  "modelLoad": {
+    "existingLoaderReusable": false,
+    "existingPatternReusable": true,
+    "pattern": "Model2 inference-host.ts JSONL sidecar + SHA256 checkpoint lock",
+    "servicePlacement": "model3-runtime/ + electron_node/services/model3_runtime/",
+    "singleInstance": true,
+    "checkpointPointer": "training/model3_dataset/model3_v1_synthetic_v1_frozen/POINTER.json"
+  },
+  "keepPath": {
+    "existingBehaviorPreserved": true,
+    "extraRecall": false,
+    "riskNotes": ["must not mutate activeCandidates on KEEP", "Model3 inference adds latency only"]
+  },
+  "retryPath": {
+    "existingLocalRecallReusable": true,
+    "proposedEntryPoint": "lexicon-v2/recall-span-topk-v2.ts:recallSpanTopKV2",
+    "bindingHelper": "fw-detector/span-assembly-v4/recall-topk-for-windows.ts (window binding patterns)",
+    "secondAsr": false,
+    "fullUtteranceRetry": false,
+    "retryPerSpanMax": 1,
+    "recursiveModel3": false,
+    "gaps": ["multi-RETRY span policy", "merge retry candidates within per-span budget"]
+  },
+  "anchorProtection": {
+    "protectedDuringRecall": "GAP",
+    "boundaryMechanism": "exclude anchor spanIds from RETRY; reuse originSpanId binding; assembly must not pick replacements on anchor spans",
+    "existingSupport": "domainHitBindingStatus BOUND_TO_ORIGIN_SPAN; PathFineSpan non-overlap invariant"
+  },
+  "budget": {
+    "perSpanLimit": "8/6/4 by span count (per-span-candidate-limit.ts)",
+    "utteranceKenlmCap": 16,
+    "retryFitsExistingBudget": "GAP",
+    "note": "retry merge must respect getPerSpanCandidateLimit and maxSentenceCandidates"
+  },
+  "assembly": {
+    "existingAssemblyReusable": true,
+    "newAssemblyPathRequired": false
+  },
+  "types": {
+    "internalTypesNeeded": [
+      "Model3AnchorMark",
+      "Model3SpanDecision",
+      "Model3RetryAttemptTrace",
+      "Model3PathDiagnostics"
+    ],
+    "jobResultChange": "NO",
+    "consumerAuditRequired": true
+  },
+  "mainline": {
+    "shadow": false,
+    "dualPipeline": false,
+    "compatibilityBranch": false,
+    "directIntegrationFeasible": true
+  },
+  "rollback": {
+    "integrationId": "MODEL3_V1_MAINLINE_INTEGRATION",
+    "manifestName": "MODEL3_V1_MAINLINE_INTEGRATION_ROLLBACK_MANIFEST",
+    "manifestFeasible": true,
+    "runtimeBusinessDataRollbackFlags": "NONE",
+    "expectedModifiedFiles": [
+      "fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts"
+    ],
+    "expectedNewFiles": [
+      "model3-runtime/model3-anchor-adapter.ts",
+      "model3-runtime/model3-inference-client.ts",
+      "model3-runtime/model3-retry-router.ts",
+      "model3-runtime/model3-types.ts",
+      "electron_node/services/model3_runtime/model3_inference_host.py",
+      "fw-detector/span-assembly-v4/model3-path-diagnostics.ts"
+    ],
+    "frozenModelPreservedOnRollback": true
+  },
+  "trace": {
+    "anchorTrace": "GAP",
+    "model3DecisionTrace": "GAP",
+    "retryCandidateTrace": "GAP",
+    "finalTextTrace": "READY",
+    "existingInfrastructure": ["SpanAssemblyV4TraceDiagnostics", "CombinationTrace", "Model2ExpandDiagnostics"]
+  },
+  "acceptance": {
+    "dialog200Usable": "YES",
+    "dialog200Path": "test wav/dialog_200/",
+    "dialog200TrainingContamination": false,
+    "realAsrTracesAvailable": ["ctx.rawAsrText", "JobResult.extra.raw_asr_text", "dialog_200 batch"],
+    "primarySuccessMetric": "FINAL_TEXT_IMPROVEMENT",
+    "requiredMetrics": [
+      "model3_retry_rate",
+      "trigger_precision",
+      "trigger_recall",
+      "retry_spans_per_utterance",
+      "recall_candidate_yield",
+      "reference_reachability",
+      "rescue_rate",
+      "final_text_improvement_rate",
+      "final_text_regression_rate",
+      "unchanged_rate",
+      "candidate_budget_violations",
+      "latency_model3_ms",
+      "latency_retry_path_ms",
+      "post_asr_delta_ms"
+    ]
+  },
+  "performance": {
+    "frozenModel3P95Ms": 4.55,
+    "recallLocalCostNote": "one recallSpanTopKV2 call ≈ partial utterance SQLite recall",
+    "expectedRisk": "retry path dominated by extra Recall SQL; Model3 inference comparatively cheap"
+  },
+  "duplicateConflictLogic": {
+    "conflictingRepairPaths": [],
+    "legacyPathsToRemoveDuringDevelopment": [],
+    "activePaths": ["recallTopKForWindows", "expandActiveCandidatesWithModel2", "KenLM rerank"],
+    "netNewBehavior": "Model3 bounded local re-recall"
+  },
+  "decision": {
+    "safeToDevelop": true,
+    "mainBlockingGaps": [
+      "Model3 node loader/sidecar (no BiGRU loader today)",
+      "Anchor adapter implementation",
+      "Retry router + retry-once guard",
+      "Multi-RETRY span policy + budget merge",
+      "Model3-specific trace fields"
+    ],
+    "architectureChangeRequired": false,
+    "roleDrift": false,
+    "recommendedNextPhase": "MODEL3_V1_MAINLINE_INTEGRATION_DEVELOPMENT"
+  }
+}

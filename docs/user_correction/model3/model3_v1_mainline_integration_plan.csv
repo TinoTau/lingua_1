@@ -1,0 +1,40 @@
+section,item,detail,status
+AUTHORITY,Status,SUPERSEDED by model3_v1_mainline_integration_plan_corrected.csv — DOMAIN_ANCHOR_PRE_VOTE_SEMANTICS_INCORRECT,SUPERSEDED
+TARGET,Integration ID,MODEL3_V1_MAINLINE_INTEGRATION,REQUIRED
+TARGET,Mainline policy,Direct integration — no shadow / no dual pipeline / no permanent feature flag,REQUIRED
+TARGET,Insertion point,SUPERSEDED — was before runDomainAwareAssembly; correct = after voteUtteranceDomainFromPool,SUPERSEDED
+TARGET,Anchor adapter,Derive DOMAIN/MODEL2/DOMAIN_AND_MODEL2 from PathFineSpan + WindowCandidate,PENDING
+TARGET,Model3 inference,One call per path-local PathFineSpan sequence,PENDING
+TARGET,Model3 loader,Sidecar pattern mirroring Model2 inference-host + frozen POINTER.json,PENDING
+TARGET,Retry router,Bounded local recallSpanTopKV2 per RETRY span max once,PENDING
+TARGET,Assembly reuse,Merge retry hits as WindowCandidate into existing runDomainAwareAssembly,PENDING
+CHECK,No second ASR,Retry must not trigger ASR rerun,REQUIRED
+CHECK,No recursive Model3,Max one Model3 inference enabling retry per utterance,REQUIRED
+CHECK,No anchor mutation,Anchors fixed before Model3; protected during re-recall,REQUIRED
+CHECK,KEEP no extra recall,KEEP path preserves activeCandidates,REQUIRED
+CHECK,ACOUSTIC model-visible = 0,Adapter uses allowlist only,REQUIRED
+CHECK,No training-only fields,No reference/repairability/labels in adapter,REQUIRED
+CHECK,Budget cap 16,Retry must not break maxSentenceCandidates,REQUIRED
+CHECK,Per-span cap,Retry merge respects getPerSpanCandidateLimit,REQUIRED
+CHECK,No JobResult rollback flags,Rollback via governance manifest only,REQUIRED
+CHECK,Trace diagnostic only,Trace must not change business output,REQUIRED
+FILE_MODIFY,span-assembly-v4-orchestrator.ts,Insert anchor mark → Model3 → optional retry merge → existing assembly,PLANNED
+FILE_ADD,model3-runtime/model3-anchor-adapter.ts,Map Domain/Model2 signals to anchor mask on PathFineSpan,PLANNED
+FILE_ADD,model3-runtime/model3-inference-client.ts,Load frozen checkpoint; JSONL sidecar infer,PLANNED
+FILE_ADD,model3-runtime/model3-retry-router.ts,recallSpanTopKV2 for RETRY spans; once guard; candidate merge,PLANNED
+FILE_ADD,model3-runtime/model3-types.ts,Internal Model3AnchorMark / Model3SpanDecision / trace types,PLANNED
+FILE_ADD,electron_node/services/model3_runtime/model3_inference_host.py,Python BiGRU infer host (mirror model2),PLANNED
+FILE_ADD,fw-detector/span-assembly-v4/model3-path-diagnostics.ts,Attach Model3 trace to path assembly diagnostics,PLANNED
+FILE_OPTIONAL,fw-detector/types.ts,Extend SpanAssemblyV4 metrics with model3 block if needed,OPTIONAL
+ROLLBACK,span-assembly-v4-orchestrator.ts,MODIFY,Remove Model3 block restore Model2→Assembly direct chain,ACTION
+ROLLBACK,model3-runtime/*,ADD,Delete integration modules,ACTION
+ROLLBACK,electron_node/services/model3_runtime/*,ADD,Delete sidecar service,ACTION
+ROLLBACK,model3-path-diagnostics.ts,ADD,Delete diagnostics hook,ACTION
+ROLLBACK,fw-detector/types.ts,MODIFY,Remove model3 metrics extension if added,ACTION
+ROLLBACK,Pre-integration behavior,RESTORE,No Model3 / no retry recall / existing V4 mainline only,OUTCOME
+ACCEPTANCE,Primary metric,FINAL_TEXT_IMPROVEMENT,REQUIRED
+ACCEPTANCE,dialog_200,200-case EVAL batch via run-dialog200-timed-batch.mjs,READY
+ACCEPTANCE,Training contamination,dialog_200 not in Model3 train (manifest dialog200Contamination=0),CONFIRMED
+ACCEPTANCE,Metrics,RETRY rate P/R rescue regression latency budget violations,REQUIRED
+ACCEPTANCE,Hard failure triggers,Regression retry explosion anchor mutation recursive retry role drift,DEFINE
+ACCEPTANCE,Numeric thresholds,Measure first — no artificial preset without baseline,POLICY

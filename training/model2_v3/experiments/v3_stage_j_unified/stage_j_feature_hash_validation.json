@@ -1,0 +1,15 @@
+{
+  "contract_id": "MODEL2_FEATURE_HASH_V1",
+  "algorithm": "fnv1a64",
+  "seed": 21728859121731633,
+  "encoding": "utf-8",
+  "normalization": "NFC+lower",
+  "span_dim": 64,
+  "phonetic_dim": 16,
+  "domain_dim": 12,
+  "stage_p_uses_v1": false,
+  "stage_p_feature_pack": "legacy_python_hash_via_training_pack_batch_inputs",
+  "checkpoint_compatibility_blocker": "Stage P checkpoint incompatible with MODEL2_FEATURE_HASH_V1 without retrain",
+  "stage_j_uses_v1": true,
+  "PASS": true
+}

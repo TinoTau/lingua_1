@@ -1,0 +1,8 @@
+execution_context,selected_model,selection_mechanism,notes
+normal_Electron_no_env,MODEL3_SYNTHETIC_V1,MODEL3_PRODUCTION_IDENTITY_ID default via resolveModel3CheckpointIdentityId(),.env.example has no MODEL3_*
+explicit_env_MODEL3_CHECKPOINT_IDENTITY,whatever registry key is set,process.env.MODEL3_CHECKPOINT_IDENTITY,invalid key throws unknown_model3_checkpoint_identity
+dialog200_S3_acceptance_harnesses,MODEL3_V2_S3_RANDOM_INIT_V1,explicit MODEL3_CHECKPOINT_IDENTITY=S3 in test spawn env,"run-dialog200-fallback-boundary-lock-acceptance.mjs etc."
+dialog200_causal_replay_S3,MODEL3_V2_S3_RANDOM_INIT_V1,explicit MODEL3_CHECKPOINT_IDENTITY,same pattern across S3 acceptance scripts
+class_weight_downstream_audit,fork: baseline S3 + candidate A1,MODEL3_CHECKPOINT_IDENTITY + MODEL3_ACCEPTANCE_CAUSAL_FORK + dual-weight envs,harness-only; not production default
+targeted_jest_model3_runtime,usually Synthetic default unless test sets env,registry default / test hooks (keepAll override),unit tests often bypass real S3 load via hooks
+acceptance_causal_fork_baseline_branch,KEEP-all decisions (not a different checkpoint by default),decision override after S3 pack when fork enabled,shadow decision path; Retry still applied on actionable branch

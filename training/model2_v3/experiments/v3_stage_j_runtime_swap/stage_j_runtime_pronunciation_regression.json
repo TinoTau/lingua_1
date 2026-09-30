@@ -1,0 +1,90 @@
+{
+  "relations": [
+    {
+      "relation": "n_l",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "z_zh",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "ch_c",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "sh_s",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "eng_en",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "in_ing",
+      "n": 16,
+      "selected_contains_relation": 16,
+      "rate": 1.0
+    },
+    {
+      "relation": "h_f",
+      "n": 16,
+      "selected_contains_relation": 7,
+      "rate": 0.4375
+    }
+  ],
+  "query_budget": 1,
+  "base_continues": true,
+  "PASS": true,
+  "node_e2e_profile_target_absent": {
+    "total_cases": 22,
+    "eligible": 22,
+    "introduced": 22,
+    "introduction_rate": 1,
+    "latencies_ms": [
+      294,
+      68,
+      168,
+      4,
+      3,
+      3,
+      70,
+      174,
+      72,
+      68,
+      71,
+      69,
+      74,
+      65,
+      165,
+      68,
+      71,
+      72,
+      70,
+      66,
+      70,
+      3
+    ],
+    "p50": 70,
+    "p95": 168,
+    "label": "RUNTIME_INTEGRATION_SKELETON_CLOSED"
+  },
+  "node_e2e_pass": true,
+  "runtime_P_gate": "node_e2e_22_of_22",
+  "sidecar_hard_multi_h_f_top1": {
+    "relation": "h_f",
+    "n": 16,
+    "selected_contains_relation": 7,
+    "rate": 0.4375
+  }
+}

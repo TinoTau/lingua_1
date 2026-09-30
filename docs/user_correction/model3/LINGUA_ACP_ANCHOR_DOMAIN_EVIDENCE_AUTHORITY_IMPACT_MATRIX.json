@@ -1,0 +1,188 @@
+{
+  "phase": "LINGUA_ANCHOR_DOMAIN_EVIDENCE_AUTHORITY_ACP_IMPACT_AUDIT",
+  "date": "2026-09-14",
+  "acp_id": "LINGUA-ACP-ANCHOR-DOMAIN-EVIDENCE-AUTHORITY-V1",
+  "authority_matrix": [
+    { "class": "BASE_EXACT", "current": "NONE", "proposed": "NONE" },
+    { "class": "BASE_FUZZY", "current": "NONE", "proposed": "NONE" },
+    { "class": "DOMAIN_TERM", "current": "CONDITIONAL_DOMAIN_ANCHOR", "proposed": "NONE" },
+    { "class": "PASSIVE_DOMAIN_WEAK", "current": "CONDITIONAL_DOMAIN_ANCHOR", "proposed": "NONE" },
+    { "class": "RETAINED_DOMAIN", "current": "SUPPORT_GATE", "proposed": "SUPPORT_ONLY" },
+    { "class": "SAMEDOMAIN", "current": "DOMAIN_ANCHOR_EVIDENCE", "proposed": "DOMAIN_ASSEMBLY_ONLY" },
+    { "class": "PROFILE_DOMAIN", "current": "AUTOMATIC_MODEL2_ANCHOR", "proposed": "NONE" },
+    { "class": "PROFILE_RETRIEVAL", "current_code": "ERRONEOUSLY_INCLUDED", "frozen": "NONE", "proposed": "NONE" },
+    { "class": "PROFILE_PRONUNCIATION", "current": "AUTOMATIC_MODEL2_ANCHOR", "proposed": "AUTOMATIC_KEEP_FROZEN" },
+    { "class": "DOMAIN_AND_MODEL2", "current": "DUAL", "proposed": "OBSOLETE_REDUCES_TO_MODEL2_IFF_P" }
+  ],
+  "anchor_source_inventory": [
+    {
+      "source_class": "DOMAIN_TERM",
+      "producer": "recall_or_Model2_D",
+      "predicate": "hasRetainedDomainEvidence",
+      "current_authority": "CONDITIONAL",
+      "proposed_authority": "NONE",
+      "code_site": "model3-anchor-adapter.ts",
+      "contract_site": "model3_anchor_contract_v1.md::Domain Anchor"
+    },
+    {
+      "source_class": "PASSIVE_DOMAIN_WEAK",
+      "producer": "domain_presence",
+      "predicate": "hasRetainedDomainEvidence",
+      "current_authority": "CONDITIONAL",
+      "proposed_authority": "NONE",
+      "code_site": "model3-anchor-adapter.ts",
+      "contract_site": "model3_anchor_contract_v1.md::Domain Anchor"
+    },
+    {
+      "source_class": "PROFILE_DOMAIN",
+      "producer": "materializeDomainHits",
+      "predicate": "hasModel2Evidence",
+      "current_authority": "AUTOMATIC",
+      "proposed_authority": "NONE",
+      "code_site": "model3-anchor-adapter.ts::isModel2Provenance",
+      "contract_site": "model3_anchor_contract_v1.md::Model2 Anchor"
+    },
+    {
+      "source_class": "PROFILE_RETRIEVAL",
+      "producer": "merge_or_tag",
+      "predicate": "hasModel2Evidence",
+      "current_authority": "CODE_DRIFT_YES",
+      "proposed_authority": "NONE",
+      "code_site": "model3-anchor-adapter.ts::isModel2Provenance",
+      "contract_site": "model3_anchor_contract_v1.md exclude"
+    },
+    {
+      "source_class": "PROFILE_PRONUNCIATION",
+      "producer": "materializeProfileHits",
+      "predicate": "hasModel2Evidence",
+      "current_authority": "AUTOMATIC",
+      "proposed_authority": "AUTOMATIC_KEEP",
+      "code_site": "model3-anchor-adapter.ts",
+      "contract_site": "model3_anchor_contract_v1.md::Model2 Anchor"
+    }
+  ],
+  "contract_impact": [
+    {
+      "document": "model3_anchor_contract_v1.md",
+      "current_frozen_rule": "Domain Anchor 4-rules; Model2=P|PROFILE_DOMAIN",
+      "proposed_rule": "No Domain Anchor; Model2=P only",
+      "change_required": "YES",
+      "semantic_impact": "CORE_ACP",
+      "compatibility_impact": "UNRELEASED_GIT_REVERT",
+      "supersede_or_edit": "EDIT_AFTER_APPROVAL"
+    },
+    {
+      "document": "MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+      "change_required": "YES",
+      "semantic_impact": "DOC_POINTER",
+      "supersede_or_edit": "EDIT"
+    },
+    {
+      "document": "MODEL3_SYNTHETIC_V1_FROZEN.md",
+      "change_required": "YES",
+      "semantic_impact": "ANCHOR_SOURCE_ENUM_NARRATIVE",
+      "supersede_or_edit": "EDIT"
+    },
+    {
+      "document": "model3_input_output_retry_contracts",
+      "change_required": "NO",
+      "semantic_impact": "NONE"
+    },
+    {
+      "document": "Domain_Vote_SameDomain_contracts",
+      "change_required": "NO",
+      "semantic_impact": "NONE"
+    },
+    {
+      "document": "Model2_D_PROFILE_DOMAIN_contracts",
+      "change_required": "NO",
+      "semantic_impact": "ANCHOR_CONSUME_ONLY"
+    }
+  ],
+  "blast_radius": {
+    "must_change": [
+      {
+        "file": "electron_node/electron-node/main/src/model3-runtime/model3-anchor-adapter.ts",
+        "symbol": "hasRetainedDomainEvidence/hasModel2Evidence/materializeModel3Anchors",
+        "change_type": "DELETE_SIMPLIFY_RESTORE"
+      },
+      {
+        "file": "electron_node/electron-node/main/src/model3-runtime/model3-types.ts",
+        "symbol": "Model3AnchorSource",
+        "change_type": "SIMPLIFY"
+      },
+      {
+        "file": "electron_node/electron-node/main/src/model3-runtime/model3-mainline.integration.test.ts",
+        "symbol": "Domain_Anchor_and_PROFILE_RETRIEVAL_tests",
+        "change_type": "TEST_ONLY"
+      },
+      {
+        "file": "docs/user_correction/model3/model3_anchor_contract_v1.md",
+        "symbol": "Domain_and_Model2_Anchor_sections",
+        "change_type": "DOC_ONLY"
+      }
+    ],
+    "must_not_change": [
+      "model2-runtime/expand-windows-with-model2.ts",
+      "model2-runtime/candidate-materialize.ts",
+      "utterance-domain-vote",
+      "assemble-domain-aware-span-sets.ts filterDomainCandidatesPerSpan",
+      "model3-feature-pack / BiGRU",
+      "model3-retry-router mergeSpanCandidates semantics",
+      "Assembly / KenLM / JobResult"
+    ],
+    "possibly_obsolete": [
+      "rejected_prevote_domain_anchor_count diagnostics plumbing"
+    ]
+  },
+  "adapter_symbol_plan": [
+    { "symbol": "hasRetainedDomainEvidence", "proposed": "DELETE" },
+    { "symbol": "countRejectedPreVoteDomainAnchors", "proposed": "DELETE_OR_DEPRECATE" },
+    { "symbol": "isModel2Provenance", "proposed": "PROFILE_PRONUNCIATION_ONLY" },
+    { "symbol": "hasModel2Evidence", "proposed": "KEEP_SIMPLIFIED" },
+    { "symbol": "materializeModel3Anchors", "proposed": "SIMPLIFY_P_ONLY_SOURCE_MODEL2" },
+    { "symbol": "candidateBoundToSpan", "proposed": "KEEP" }
+  ],
+  "counterfactuals": [
+    {
+      "id": "T1",
+      "case": "p2_u004_019_德鸾",
+      "pool_vote_sd_asm_kenlm": "YES",
+      "domain_anchor": "NO",
+      "profile_domain_anchor": "NO",
+      "p_anchor": "NO",
+      "isAnchor": "NO",
+      "model3_visible": "YES"
+    },
+    {
+      "id": "T2",
+      "case": "行程_legitimate_domain",
+      "domain_candidate_survives": "YES",
+      "domain_only_anchor": "NO",
+      "model3_visible_unless_other_authority": "YES"
+    },
+    {
+      "id": "T3",
+      "case": "刘→牛",
+      "profile_pronunciation_anchor": "YES"
+    },
+    {
+      "id": "T4",
+      "case": "升层→生成",
+      "profile_pronunciation_anchor": "YES",
+      "domain_independent_anchor_contrib": "NO"
+    },
+    {
+      "id": "T5",
+      "case": "PROFILE_RETRIEVAL_only",
+      "isAnchor": "NO"
+    },
+    {
+      "id": "T6",
+      "case": "non_retained_domain",
+      "domain_vote_unchanged": "YES",
+      "domain_anchor": "NO"
+    }
+  ],
+  "test_plan": ["T1", "T2", "T3", "T4", "T5", "T6", "mainline_adapter_regression", "Pilot200_after_acceptance_if_needed"]
+}

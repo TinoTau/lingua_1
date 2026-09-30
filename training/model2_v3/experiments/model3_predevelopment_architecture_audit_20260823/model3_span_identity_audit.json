@@ -1,0 +1,24 @@
+{
+  "ts": "2026-08-23",
+  "path_fine_span": {
+    "spanId": "fine:{pathId}:{idx}",
+    "rawStart_rawEnd": true,
+    "syllableStart_syllableEnd": true,
+    "rawText": "derived slice",
+    "pinyin": "via candidates.windowPinyinKey or global syllables",
+    "tone": "toneRebindTrace diagnostic; candidate tone fields",
+    "timestamp": false,
+    "persists_through_recall": true,
+    "persists_through_model2": "originSpanId on Model2 candidates only",
+    "persists_through_domain_vote": "pool keyed by fineSpanId",
+    "persists_through_assembly": "span.start/end only on SpanReplacementPick",
+    "text_match_reconstruction_required_today": "for provenance after assembly — FORBIDDEN for Model3"
+  },
+  "overlapping_spans": {
+    "path_level": "non-overlapping fail-fast assertPathFineSpansNonOverlapping",
+    "candidate_level": "COMPATIBLE/COVERAGE/CONFLICT graph",
+    "sentence_level": "interval overlap rejected in buildSentenceCandidates"
+  },
+  "verdict": "PARTIAL",
+  "gap": "Assembly strips identity; Model3 must consume pre-assembly WindowCandidate + DomainFilteredSpanSet or new adapter view"
+}

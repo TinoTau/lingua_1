@@ -1,0 +1,62 @@
+{
+  "verdict": "FILTER_NOT_IMPLEMENTED",
+  "enabled_length1": 2510,
+  "unique_chars": 2510,
+  "sources": {
+    "common-standard-level-1+pinyin-data": 2500,
+    "common-standard-level-1+pinyin-data-extra-function": 10
+  },
+  "vs_2510": {
+    "overlap": 2510,
+    "runtime_only_count": 0,
+    "ime2510_only_count": 0,
+    "runtime_only_sample": [],
+    "ime2510_only_sample": [],
+    "exact_set_equal": true,
+    "runtime_is_basically_2510": true,
+    "tsv_row_count": 2510,
+    "tsv_unique_chars": 2510
+  },
+  "vs_strict": {
+    "name": "STRICT",
+    "set_size": 1125,
+    "runtime_size": 2510,
+    "overlap": 927,
+    "runtime_only": 1583,
+    "set_only": 198,
+    "jaccard": 0.3423,
+    "exact_set_equal": false,
+    "runtime_subset_of_set": false,
+    "set_subset_of_runtime": false
+  },
+  "vs_balanced": {
+    "name": "BALANCED",
+    "set_size": 1420,
+    "runtime_size": 2510,
+    "overlap": 1149,
+    "runtime_only": 1361,
+    "set_only": 271,
+    "jaccard": 0.4132,
+    "exact_set_equal": false,
+    "runtime_subset_of_set": false,
+    "set_subset_of_runtime": false
+  },
+  "vs_cld": {
+    "name": "FULL_CLD",
+    "set_size": 3913,
+    "runtime_size": 2510,
+    "overlap": 2348,
+    "runtime_only": 162,
+    "set_only": 1565,
+    "jaccard": 0.5762,
+    "exact_set_equal": false,
+    "runtime_subset_of_set": false,
+    "set_subset_of_runtime": false
+  },
+  "bundleVersion": 13,
+  "db_sha256": "eb7f6e32955c559fc2ce9faf8b46be5071bbf226beb7cb8a0713434f7ac725b7",
+  "domain_l1_enabled": 0,
+  "idiom_l1_enabled": 0,
+  "cld_imported": false,
+  "filtering_reached_runtime": false
+}

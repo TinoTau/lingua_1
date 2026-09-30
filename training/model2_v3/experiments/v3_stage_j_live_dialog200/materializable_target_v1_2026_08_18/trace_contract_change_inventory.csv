@@ -1,0 +1,6 @@
+path,change_type,production_behavior,notes
+electron_node/electron-node/tests/lib/materializable-target-v1.mjs,ADD,none,new diagnostics contract
+electron_node/electron-node/tests/lib/materializable-target-v1.test.mjs,ADD,none,contract tests
+electron_node/electron-node/tests/lib/dialog200-path-trace-analyze.mjs,MODIFY,none,flattenFunnel/firstDivergence/attributeFailure use V1
+docs/user_correction/scripts/reanalyze_materializable_target_v1.mjs,ADD,none,offline reanalysis of existing traces
+main/src/**,NONE,unchanged,no production business code

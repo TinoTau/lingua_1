@@ -1,0 +1,268 @@
+{
+  "funnels": {
+    "exact": [
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Domain population",
+        "input_n": 588,
+        "survive_n": 588,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "unique domain lexical identities"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Valid tags",
+        "input_n": 588,
+        "survive_n": 588,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "missing/unregistered domain_ids"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Valid FineSpan",
+        "input_n": 588,
+        "survive_n": 588,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "syllable length outside lattice 1..5"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Base absent",
+        "input_n": 588,
+        "survive_n": 0,
+        "lost_n": 588,
+        "survival_pct": 0.0,
+        "loss_pct": 100.0,
+        "primary_cause": "target identity already in base FuzzyPool@16"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Action available",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "domain not in DOMAIN_SLOT_IDS / catalog"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Raw domain hit",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "phonetic distance>2 or length bucket miss (no domain SQL)"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Fuzzy survive",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "surface-dedup dropped identity or distance gate"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Merge survive",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "not in phonetic pool32 (shared top-k, not union query)"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Dedup survive (lexical identity)",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "identity usually kept; domain: term_id often dropped"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Top-k survive",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "soft rerank rank > 8"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Budget survive",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "domain max_cands=8 already applied as top-k"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Model2 output / FINAL INTRODUCED",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "oracle execute identity in final top-8 and base-absent"
+      },
+      {
+        "funnel": "exact_lexical_finespan",
+        "stage": "Downstream visible",
+        "input_n": 0,
+        "survive_n": 0,
+        "lost_n": 0,
+        "survival_pct": 0.0,
+        "loss_pct": 0.0,
+        "primary_cause": "Python Stage D path does not run Node sameDomain; T8/T9 not in this pipeline"
+      }
+    ],
+    "corrupted": [
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Domain population",
+        "input_n": 698,
+        "survive_n": 698,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "unique domain lexical identities"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Valid tags",
+        "input_n": 698,
+        "survive_n": 698,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "missing/unregistered domain_ids"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Valid FineSpan",
+        "input_n": 698,
+        "survive_n": 698,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "syllable length outside lattice 1..5"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Base absent",
+        "input_n": 698,
+        "survive_n": 38,
+        "lost_n": 660,
+        "survival_pct": 5.4441,
+        "loss_pct": 94.5559,
+        "primary_cause": "target identity already in base FuzzyPool@16"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Action available",
+        "input_n": 38,
+        "survive_n": 38,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "domain not in DOMAIN_SLOT_IDS / catalog"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Raw domain hit",
+        "input_n": 38,
+        "survive_n": 38,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "phonetic distance>2 or length bucket miss (no domain SQL)"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Fuzzy survive",
+        "input_n": 38,
+        "survive_n": 38,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "surface-dedup dropped identity or distance gate"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Merge survive",
+        "input_n": 38,
+        "survive_n": 13,
+        "lost_n": 25,
+        "survival_pct": 34.2105,
+        "loss_pct": 65.7895,
+        "primary_cause": "not in phonetic pool32 (shared top-k, not union query)"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Dedup survive (lexical identity)",
+        "input_n": 13,
+        "survive_n": 13,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "identity usually kept; domain: term_id often dropped"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Top-k survive",
+        "input_n": 13,
+        "survive_n": 4,
+        "lost_n": 9,
+        "survival_pct": 30.7692,
+        "loss_pct": 69.2308,
+        "primary_cause": "soft rerank rank > 8"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Budget survive",
+        "input_n": 4,
+        "survive_n": 4,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "domain max_cands=8 already applied as top-k"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Model2 output / FINAL INTRODUCED",
+        "input_n": 4,
+        "survive_n": 4,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "oracle execute identity in final top-8 and base-absent"
+      },
+      {
+        "funnel": "relation_corrupted_observations",
+        "stage": "Downstream visible",
+        "input_n": 4,
+        "survive_n": 4,
+        "lost_n": 0,
+        "survival_pct": 100.0,
+        "loss_pct": 0.0,
+        "primary_cause": "Python Stage D path does not run Node sameDomain; T8/T9 not in this pipeline"
+      }
+    ]
+  }
+}

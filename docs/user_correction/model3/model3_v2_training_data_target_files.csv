@@ -1,0 +1,12 @@
+path,classification,currentDefect,minimalChange,whyInsideFrozenArch
+training/model3_dataset/scripts/audit_model3_v2_localization_training_causality.py,MUST_MODIFY,TRAIN_DIR bound to model3_v2_labeled,Bind to model3_v2_production_core_s3; assert datasetId,audit-only; restores measurement SSOT
+training/model3_dataset/train/train_s3_random.py,MAY_MODIFY,none for path; add hard datasetId gate recommended,G0–G5 pretrain gates,training entry only
+training/model3_dataset/acoustic_training/gate0.py (or new dataset_gates.py),MUST_MODIFY,no G3/G4/G5 position/cand collapse gates at S3 finalize,implement designed HARD gates before train,training QA only
+training/model3_dataset/scripts/build_v2_realdist_expanded.py,MUST_MODIFY,hardcodes firstPassCandidateCount=0,delete/quarantine from Model3 SSOT; fail if used for S3 lineage,training-only dead path
+training/model3_dataset/scripts/run_v2_dataset_build.py,MAY_MODIFY,produces labeled set without Recall/Model2,mark SUPERSEDED_NOT_MODEL3_SSOT; do not feed audits,training-only
+training/model3_dataset/train/bigru_v1.py span_features,MAY_MODIFY,None→0 silent default,fail-closed when recallFirstPass avail but field missing,loader parity with serializer; not production
+training/model3_dataset/offline_harness/acoustic_b2_formal_materialize.cjs,DO_NOT_MODIFY,none for claimed P0 on S3,none,already production-equivalent B2
+electron_node/.../model3-feature-pack.ts,DO_NOT_MODIFY,none,none — production packer SSOT,runtime frozen
+electron_node/.../run-model3-path-step.ts,DO_NOT_MODIFY,none,none,production runtime
+deriveRetryRegions / FineSpan / Domain Vote / JobResult,DO_NOT_MODIFY,none in this phase,none,frozen business chain
+model3_v2_production_core_s3 shards (in-place feature rewrite),DO_NOT_MODIFY,claimed P0s absent,DO NOT patch; no rebuild required for false P0,HARD STOP C

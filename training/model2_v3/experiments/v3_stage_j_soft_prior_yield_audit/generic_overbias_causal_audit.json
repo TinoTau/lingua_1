@@ -1,0 +1,13 @@
+{
+  "linked_to_shared_pool": true,
+  "linked_to_domain_budget": true,
+  "linked_to_default_035_floor": true,
+  "linked_to_domain_fallback": false,
+  "evidence": [
+    "soft_domain_retrieve always rebuilds phonetic pool32 regardless of evidence magnitude",
+    "execute_domain_action sets focused[selected]=max(0.35, sel) even if sel=0",
+    "empty-profile eval still executes selected domain_soft action and fills 8 candidate slots",
+    "GENERIC_OVERBIAS in V2 blind eval is empty-profile still introducing target"
+  ],
+  "not_a_hard_filter": true
+}

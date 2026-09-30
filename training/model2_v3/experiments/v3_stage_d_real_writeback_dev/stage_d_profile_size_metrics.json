@@ -1,0 +1,34 @@
+{
+  "sizes": [
+    {
+      "n_terms": 10,
+      "est_bytes": 2100,
+      "within_32kib": true,
+      "topk_cap": 100,
+      "effective_stored": 10
+    },
+    {
+      "n_terms": 100,
+      "est_bytes": 10200,
+      "within_32kib": true,
+      "topk_cap": 100,
+      "effective_stored": 100
+    },
+    {
+      "n_terms": 500,
+      "est_bytes": 46200,
+      "within_32kib": false,
+      "topk_cap": 100,
+      "effective_stored": 100
+    },
+    {
+      "n_terms": 1000,
+      "est_bytes": 91200,
+      "within_32kib": false,
+      "topk_cap": 100,
+      "effective_stored": 100
+    }
+  ],
+  "SESSION_PAYLOAD": "full UserProfileV1 bounded by 32KiB + TopK100",
+  "BOUNDED": true
+}

@@ -1,0 +1,9 @@
+cohortId,caseId,R,surfaces,rawStart,rawEnd,queryCount,hitQueries,need
+B_R2PLUS_1CHAR_FINESPANS,d001,4,我|想|点|一,3,7,4,0,original 1-char FineSpans; windows must exceed FineSpan lock
+C_CROSS_FINESPAN_LEGAL_WINDOW,d001,4,我|想|点|一,3,7,4,0,legal window crosses FineSpan boundary
+D_MULTIPATH,d001,4,我|想|点|一,3,7,4,0,no preferred-path collapse
+E_BARRIER_ADJACENT,d001,4,我|想|点|一,3,7,4,0,no Anchor/barrier cross
+F_KEEP_ADJACENT,d001,4,我|想|点|一,3,7,4,0,no unrelated KEEP cross
+G_FALLBACK_WITH_RECALL_HIT,d001,2,蓝没,19,21,1,1,ownership/materialization reaches downstream
+H_LONG_HIGH_QUERY,d005,5,德|湛|会|现|贵,2,7,5,3,query bound SUM(R-L+1) pressure
+A_R1_FALLBACK,d015,1,这,5,6,1,1,R=1; L=1 Recall contract unchanged

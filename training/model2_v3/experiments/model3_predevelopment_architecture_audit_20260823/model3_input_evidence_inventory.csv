@@ -1,0 +1,17 @@
+evidence_type,per_span_availability,source_file,provenance,status,model3_use
+ASR raw surface,YES,JobContext.rawAsrText; PathFineSpan raw slice,ASR output,AVAILABLE,utterance + span slice
+ASR segment confidence,PARTIAL,asr-step SegmentInfo,ASR segments,AVAILABLE,join by time/char offset
+FW confidence,ABSENT,—,not in FineSpan types,ABSENT,do not invent
+acousticToneSlices,YES,asr-step → tone-time-align,acoustic VAD/align,AVAILABLE,per-utterance; map to span via syllable range
+toneRebindTrace.acousticTonePattern,PARTIAL,path-fine-span-rebind.ts,acoustic mapping,AVAILABLE,per FineSpan diagnostic
+WindowCandidate.toneCompatible/tonePenalty/toneReason,YES,v4-types WindowCandidate,recall + tone scoring,AVAILABLE,per candidate at recall
+WindowCandidate.windowPinyinKey,YES,v4-types,recall syllable key,TEXT_DERIVED_PINYIN,label as syllable-key not acoustic
+phonetic_representation on finespan,PARTIAL,dialog200 trace only,often null on length1 spans,PARTIAL,not reliable SSOT for pinyin
+UserProfileV1.phonetic_bias,YES,messages.ts UserProfileV1,user session,AVAILABLE,utterance-level; Model2 already consumes
+UserProfileV1.tone_bias,YES,messages.ts,user session,AVAILABLE,utterance-level bias not per-span acoustic
+Model2 selectedActions,PARTIAL,Model2InferResult,Model2 P head,AVAILABLE,per FineSpan inference
+Model2 domainHits,PARTIAL,Model2InferResult,Model2 D head,AVAILABLE,per FineSpan
+retrievalProvenance,YES,WindowCandidate until assembly strip,recall/Model2,AVAILABLE until assembly
+domain vote scores,YES,UtteranceDomainVoteResult.domainScores,span-presence vote,AVAILABLE,utterance-level
+retainedDomains,YES,UtteranceDomainVoteResult,Domain Vote,AVAILABLE,utterance-level
+length1Collector,SPECIAL,recall-span-topk-v2 SINGLE_CHAR_COLLECTOR_TRACE_V1,recall only length=1,PARTIAL,env trace only; not JobResult

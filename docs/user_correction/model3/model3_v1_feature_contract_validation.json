@@ -1,0 +1,61 @@
+{
+  "phase": "MODEL3_V1_RUNTIME_FEATURE_CONTRACT_CORRECTION_AND_TRACE_VALIDATION",
+  "date": "2026-08-27",
+  "phaseResult": "PASS",
+  "featureContract": {
+    "pinyin_channel_avail": {
+      "trainingDefinition": "featureAvailability.pinyinTextDerived — utterance-level text-derived syllable SSOT succeeded",
+      "runtimeDefinition": "globalSyllables.length > 0 (same for all spans in utterance)",
+      "parity": "PASS"
+    },
+    "first_pass_cand_log1p": {
+      "trainingDefinition": "log1p(recallEvidence.firstPassCandidateCount) from PathFineSpan.candidates (lattice first-pass)",
+      "runtimeDefinition": "log1p(PathFineSpan.candidates.filter(!isCovered).length)",
+      "parity": "PASS"
+    },
+    "overallParity": "PASS"
+  },
+  "syntheticReplay": {
+    "retrySamples": 120,
+    "retryAgreement": 1.0,
+    "keepSamples": 120,
+    "keepAgreement": 1.0,
+    "overall": "PASS",
+    "marginIdentityOk": true
+  },
+  "evalProxy": {
+    "anchoredUtterancesWithAsrError": 46,
+    "eligibleErrorUtterances": 46,
+    "eligibleErrorSpans": 151,
+    "subsetInvariant": "PASS"
+  },
+  "realRuntimeMargins": {
+    "source": "full_pipeline_anchored_dialog200",
+    "anchoredNonAnchor": {
+      "count": 3733,
+      "p50": -17.6081,
+      "p95": -14.8844,
+      "max": -5.194,
+      "min": -23.5234
+    },
+    "keep": 3733,
+    "retry": 0
+  },
+  "observedEffect": {
+    "retryBeforeCorrection": 0,
+    "retryAfterCorrection": 0,
+    "featureCorrectionChangedDecisions": false
+  },
+  "interpretation": {
+    "primaryFinding": "REAL_SYNTHETIC_DISTRIBUTION_SHIFT",
+    "modelUnderTriggerProven": true,
+    "retrainingJustified": false,
+    "harnessReplayNote": "full pipeline dialog_200 anchored-only revalidation (ASR READY)"
+  },
+  "decision": {
+    "mainlineRollbackRecommended": false,
+    "model3RetrainRecommended": false,
+    "newCorpusNeeded": true,
+    "recommendedNextPhase": "MODEL3_V1_REAL_ASR_ERROR_DATASET_AUDIT"
+  }
+}

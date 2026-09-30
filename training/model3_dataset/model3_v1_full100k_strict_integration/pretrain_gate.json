@@ -1,0 +1,49 @@
+{
+  "pass": true,
+  "fails": [],
+  "mv_rate": 1.0,
+  "mv_sample": 150,
+  "incomplete_strict_groups": 0,
+  "sources": {
+    "STRICT_CONTRAST_VALIDATED": 9334,
+    "ANCHOR_HARD_KEEP_VALIDATED": 43757,
+    "FULL100K_BASE": 17251
+  },
+  "full_manifest_hash": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6",
+  "exposure": {
+    "counts": {
+      "NO_ANCHOR": 10551,
+      "NATURAL": 17585,
+      "STRICT_RETRY": 10552,
+      "STRICT_KEEP": 10552,
+      "ANCHOR_HARD_KEEP": 21102
+    },
+    "shares": {
+      "STRICT": 0.30001990276079726,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.2999914702453726,
+      "NATURAL": 0.24999289187114385,
+      "NO_ANCHOR": 0.1499957351226863
+    },
+    "strict_keep": 10552,
+    "strict_retry": 10552,
+    "keep_retry_ratio": 1.0,
+    "unique_samples": 38323,
+    "repeat_factor": 1.8355034835477388,
+    "ok_ratio": true
+  },
+  "leakage": {
+    "cross_split_groups": 0,
+    "leak_groups": [],
+    "ok": true
+  },
+  "pair_index": 4667,
+  "buckets": {
+    "STRICT": 9334,
+    "ANCHOR_CONDITIONED_HARD_KEEP": 43757,
+    "NO_ANCHOR": 11716,
+    "NATURAL": 5535
+  },
+  "strict_keep_tags": 4667,
+  "strict_retry_tags": 4667,
+  "strict_and_hard_tag": 4667
+}

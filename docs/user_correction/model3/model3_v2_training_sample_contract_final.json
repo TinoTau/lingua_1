@@ -1,0 +1,46 @@
+{
+  "contractId": "MODEL3_V2_ACOUSTIC_TRAINING_SAMPLE_CONTRACT_FINAL",
+  "date": "2026-08-30",
+  "status": "IMPLEMENTED_FOR_MATERIALIZATION_NOT_DATASET",
+  "baseSchema": "MODEL3_TRAINING_SAMPLE_V1",
+  "schemaEvolution": "EXTEND_EXISTING_V1_DO_NOT_FORK",
+  "featureSerializationPolicy": {
+    "choice": "B_SERIALIZE_EXACT_PACKER_OUTPUTS",
+    "packerOwner": "packModel3SpanInferFields",
+    "candOwner": "model3FirstPassCandidateCount"
+  },
+  "textIdentity": {
+    "rawActualAsrText": "ASR utterance text (provenance only)",
+    "model3CurrentText": "normalizeForFwRepairInput(rawActualAsrText).repairText",
+    "currentTextFieldInV1": "equals model3CurrentText"
+  },
+  "splitIdentity": {
+    "semanticFamilyId": "train/dev/test lock",
+    "materializationRunId": "concrete acoustic run",
+    "forbiddenFamilyFormula": "hash(referenceId+audioRunId+asrRunId)"
+  },
+  "accounting": {
+    "HARD_REJECT": ["CROSS_SAMPLE_PROVENANCE_MISMATCH", "MODEL3_CURRENT_TEXT_IDENTITY_INVALID", "AUDIO_MATERIALIZATION_FAILED", "ASR_FAILED", "TONE_STATE_MISSING", "RECALL_STATE_INVALID", "FINESPAN_MATERIALIZATION_FAILED", "ANCHOR_MATERIALIZATION_BLOCKED", "ALIGNMENT_FAILED", "PROTECTED_HOLDOUT_COLLISION"],
+    "SEMANTIC_EXCLUDE": ["NO_REPAIRABLE_TARGET"]
+  },
+  "requiredSampleFields": [
+    "schemaVersion",
+    "sampleId",
+    "semanticFamilyId",
+    "materializationRunId",
+    "referenceId",
+    "evidenceLevel",
+    "referenceText",
+    "rawActualAsrText",
+    "currentText",
+    "pathId",
+    "model2AnchorStatus",
+    "domainEvidence",
+    "spans",
+    "split",
+    "groupKeys",
+    "provenance"
+  ],
+  "serializer": "training/model3_dataset/acoustic_training/serializer.py",
+  "jobResult": "UNCHANGED"
+}

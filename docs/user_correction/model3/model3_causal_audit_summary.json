@@ -1,0 +1,80 @@
+{
+  "phase": "MODEL3_V2_END_TO_END_CAUSAL_EFFECTIVENESS_AUDIT",
+  "generatedAt": "2026-09-07T22:00:00Z",
+  "verdict": "MODEL3_CAUSAL_AUDIT_PASS_MODEL3_DOWNSTREAM_BLOCKED",
+  "ARCHITECTURE_DRIFT": "NONE",
+  "modelIdentity": {
+    "expected_modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "expected_sha": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "expected_datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "expected_buildId": "prod_core_s3_build_20260830_v1",
+    "evidence_source": "fallback acceptance harness + prior verified identity docs",
+    "mismatch": false
+  },
+  "deltaFreeze": {
+    "DELTA1": "RESOLVED_ACCEPTED_CLOSED",
+    "DELTA2": "RESOLVED_ACCEPTED"
+  },
+  "population": {
+    "cases": 200,
+    "MODEL3_ELIGIBLE": 16,
+    "FALSE_KEEP": 1,
+    "CORRECT_RETRY": 15,
+    "FINAL_IMPROVED": 0
+  },
+  "funnel": {
+    "MODEL3_ELIGIBLE_cases": 16,
+    "CORRECT_RETRY_cases": 15,
+    "FALSE_KEEP_cases": 1,
+    "RetryRegion_present": 15,
+    "Recall_query_sent": 15,
+    "Recall_any_candidate_returned": 15,
+    "Correct_lexical_hit": 0,
+    "Domain_path_survived_correct": 0,
+    "Assembly_materialized_correct": 0,
+    "KenLM_selected_or_pooled_correct": 0,
+    "FINAL_IMPROVED": 0
+  },
+  "firstBreakpoint_all": {
+    "UPSTREAM_FINE_SPAN": 154,
+    "LEXICON_COVERAGE": 11,
+    "RETRY_RESEGMENTATION": 3,
+    "RECALL_MATCHING": 1,
+    "MODEL3_FALSE_KEEP": 1
+  },
+  "firstBreakpoint_eligibleNotImproved": {
+    "LEXICON_COVERAGE": 11,
+    "RETRY_RESEGMENTATION": 3,
+    "RECALL_MATCHING": 1,
+    "MODEL3_FALSE_KEEP": 1
+  },
+  "topEligibleBreakpoint": "LEXICON_COVERAGE",
+  "topAllBreakpoint": "UPSTREAM_FINE_SPAN",
+  "A_CAN_MODEL3_RESPONSIBILITY_BE_ACCEPTED_NOW": "YES",
+  "B_CAN_RETRY_RESPONSIBILITY_BE_ACCEPTED_NOW": "YES",
+  "C_first_blocking_owner_if_no": null,
+  "D_downstream_owner_if_responsibility_pass": "LEXICON_COVERAGE",
+  "E_need_modify_Model3": "NO",
+  "recommendedNextDelta": "LEXICON_COVERAGE_DELTA",
+  "driftCounters": {
+    "secondDomainVote_total": 0,
+    "model3Reinvoked_total": 0
+  },
+  "outcomes": {
+    "FINAL_NEUTRAL": 170,
+    "FINAL_NEUTRAL_ALREADY_CORRECT": 30
+  },
+  "eligibility": {
+    "MODEL3_INELIGIBLE_NO_REPAIRABLE_TARGET": 154,
+    "MODEL3_ELIGIBLE": 16,
+    "MODEL3_INELIGIBLE_ALREADY_CORRECT": 30
+  },
+  "artifacts": [
+    "Model3_V2_End_to_End_Causal_Effectiveness_Audit.md",
+    "model3_causal_funnel.csv",
+    "model3_first_breakpoint_distribution.csv",
+    "model3_case_level_causal_trace.csv",
+    "model3_causal_audit_summary.json",
+    "model3_component_decision_matrix.csv"
+  ]
+}

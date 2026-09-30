@@ -1,0 +1,13 @@
+component,live_owner,live_source,current_training_source,parity_status,gap,possible_existing_reusable_source,architecture_change_required
+surface_tokenIds,Model3 host encode_surface,PathFineSpan surface from rawText slice,text FineSpan / synthetic spans,PASS_OR_PARTIAL,synthetic 1-char vs live FineSpan mix historically,targeted_dist_materialize FineSpan surfaces,NO
+FineSpan_offsets,materializePathFineSpans,lattice PathFineSpan rawStart/rawEnd,stage2 / lattice offline OR synthetic char spans,PARTIAL,text-only lattice OK; RealDist used synthetic chars,runLatticeFineSpanGeneration,NO
+path_sequence,enumerateCompleteSegmentationPaths,SegmentationPath / PathFineSpanView,often primary-path only in train,PARTIAL,multipath not retained in prior train sets,lattice pathViews + nonholdout multipath case list,NO
+isAnchor,materializeModel3Anchors,DOMAIN and/or MODEL2 evidence,Domain-only offline vote path,PARTIAL,Model2 anchors absent offline,Domain owner reusable; Model2 needs acoustic retrieval,USER_DECISION_IF_MODEL2_REQUIRED
+anchorSource,Model3AnchorMark.source,NONE/DOMAIN/MODEL2/DOMAIN_AND_MODEL2,mostly DOMAIN/NONE offline,PARTIAL,live MODEL2 share not represented,same as isAnchor,USER_DECISION_IF_MODEL2_REQUIRED
+span_len_log1p,host pack / bigru_v1.span_features,surface length,same formula from surface,PASS,none,shared pack formulas,NO
+span_rel_position,host pack / bigru_v1,seqIndex/(seqLen-1),same,PASS,none,shared pack formulas,NO
+rawFirstPassCandidateCount,model3FirstPassCandidateCount,PathFineSpan.candidates !isCovered after Tone Recall,Gate0 all-0; RealDist hardcoded 0 LEGACY_DEFAULTED,FAIL,Mandatory Tone needs AcousticToneSlice+WordTimeSpan,dialog_200 audio re-pipeline OR authorized TTS-ASR OR future simulator,USER_DECISION_REQUIRED
+first_pass_cand_log1p,model3_inference_host log1p,rawFirstPassCandidateCount,collapsed/defaulted,FAIL,same as rawCand,same as rawCand,USER_DECISION_REQUIRED
+pinyin_channel_avail,model3PinyinTextDerived,text syllable coordinate,text syllables,PASS,low information if always 1,buildUtteranceSyllableCoordinate,NO
+current_cjk_len_log1p,host pack / bigru_v1,CJK count of surface,same,PASS,none,shared pack formulas,NO
+label_KEEP_RETRY_MASKED,training label_spans_v2,malformed-region projection,V2 region labels on text pairs,PASS_FOR_LABEL_CONTRACT,independent of cand provenance,stage2_v2_label,NO

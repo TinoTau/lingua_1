@@ -1,0 +1,18 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "question": "For each final candidate, where was it first created?",
+  "formal_runtime_provenance_field": false,
+  "static_trace": {
+    "ASR_candidate": "span_text / exact lexicon hits if any (Exact Recall path; separate from Model2 trainrows)",
+    "FuzzyPool_recalled": "training/model2/fuzzy/pool.py — only stage that can add lexicon term_id from CandidateIndex via phonetic distance",
+    "Model2_newly_recalled": "NONE — Model2StageAV1.forward scores only input pool + NO_MATCH; no lexicon lookup / ANN / generator",
+    "other": "training-only random distractors for empty NEGATIVE pools (Phase 5B); not production Model2 recall"
+  },
+  "diagnostic_instrumentation": {
+    "script": "training/model2/scripts/run_phase7d_missing_target_test.py",
+    "artifact": "missing_target_capability_test.json",
+    "method": "strip target_term_id from fuzzy_pool_term_ids; run Stage A; check whether stripped id reappears in ranked top_ids"
+  },
+  "conclusion": "Final Model2-scored candidates are ALWAYS FuzzyPool (or train distractor) provenance. Model2NewRecall provenance class is empty by architecture.",
+  "can_model2_create_new_lexical_candidate": "NO"
+}

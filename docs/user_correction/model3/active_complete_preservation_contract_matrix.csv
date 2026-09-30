@@ -1,0 +1,13 @@
+contract_axis,active_path,complete_path,shared_notes
+preservation_goal,Avoid extinguishing local lexical-boundary alternatives before any complete path in that class can form,Keep multiple segmentation ambiguity families visible to Domain Vote / Assembly not only structural preferred family,P1 primary; P3/P4 are downstream consequences of retained paths
+preservation_unit_recommended,Local ambiguity choice at prune locus (competing LexicalEdge span / next-boundary alternatives),Segmentation ambiguity class representatives (local resolutions; NOT exact boundaryKey alone as sole unit),Exact boundaryKey insufficient alone per 8/8 diagnostic
+alternative_unit,Outgoing contended LexicalEdge coverage (Option C lite),Bounded covered multi-char LexicalEdge representation (Option C),User may prefer C if locus definition too ambiguous
+when_cap_not_fired,N/A for active (active only when over position width),Retain every legal complete boundaryKey (existing HARD requirement),Unchanged from Lattice Architecture §8
+when_cap_fires_first_duty,Apply representation preservation then structural truncate,Apply representation preservation then structural truncate,Two-tier: representation then structural then hard ceiling
+structural_comparator_role,WITHIN_REPRESENTATION_SELECTION,WITHIN_REPRESENTATION_SELECTION,Comparator keys unchanged in this ACP
+hard_ceiling_policy,Representation itself may be lossy if class count > maxActivePathsPerPosition,Representation itself may be lossy if class count > maxCompleteSegmentationPaths,Deterministic non-linguistic degradation only
+forbidden_signals,domain / GT / KenLM / semantic / Model3 correctness,domain / GT / KenLM / semantic / Model3 correctness,DOMAIN_TO_SEGMENTATION_FEEDBACK=FORBIDDEN
+numeric_cap_role,RESOURCE_SAFETY_CEILING (PROBE values not finalized here),RESOURCE_SAFETY_CEILING (PROBE values not finalized here),Path budget finalization deferred until contract approved
+observed_loss_stage_share,5/7 Pre-DomainVote target losses,2/7 Pre-DomainVote target losses,Both contracts mandatory; cannot define complete-only
+status_quo_today,STRUCTURAL_TOPN_ONLY,STRUCTURAL_TOPN_ONLY,Architecture gap this ACP fills
+draft_contract_id,ACTIVE_PATH_RESOURCE_PRESERVATION_CONTRACT,COMPLETE_PATH_RESOURCE_PRESERVATION_CONTRACT,Subject to USER_ARCHITECTURE_DECISION

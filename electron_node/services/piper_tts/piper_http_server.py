@@ -43,8 +43,13 @@ except ImportError:
     print("WARNING: ChinesePhonemizer not available, Chinese TTS may not work correctly.")
 
 import utils
-from models import TtsRequest
-from synthesis import synthesize_with_python_api, synthesize_with_command_line
+from models import TtsRequest, TtsPhonemizeRequest, TtsPronunciationRequest
+from synthesis import (
+    synthesize_with_python_api,
+    synthesize_with_command_line,
+    phonemize_text_espeak,
+    synthesize_from_espeak_phonemes,
+)
 from utils import find_model_path, find_piper_command, get_or_load_voice
 
 # 确保正确处理 UTF-8 编码
@@ -150,6 +155,57 @@ async def synthesize_tts(request: TtsRequest):
         use_gpu,
         request.voice
     )
+
+
+@app.post("/tts-phonemize")
+async def tts_phonemize(request: TtsPhonemizeRequest):
+    """TRAINING-ONLY: text → espeak phoneme sequences. Production /tts unchanged."""
+    model_dir = str(get_model_dir())
+    model_path, config_path = find_model_path(request.voice, model_dir)
+    if not model_path:
+        raise HTTPException(status_code=404, detail=f"Model not found: {request.voice}")
+    if not PIPER_PYTHON_API_AVAILABLE:
+        raise HTTPException(status_code=501, detail="Piper Python API required for phonemize")
+    use_gpu = os.environ.get("PIPER_USE_GPU", "true").lower() == "true"
+    try:
+        sentences = phonemize_text_espeak(request.text, model_path, config_path, use_gpu)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"phonemize failed: {e}") from e
+    return {
+        "voice": request.voice,
+        "text": request.text,
+        "phoneme_type": "espeak",
+        "sentences": sentences,
+        "training_only": True,
+    }
+
+
+@app.post("/tts-pronunciation")
+async def tts_pronunciation(request: TtsPronunciationRequest):
+    """TRAINING-ONLY: synthesize WAV from espeak phoneme tokens (bypass text frontend).
+
+    Production /tts contract is intentionally untouched.
+    """
+    model_dir = str(get_model_dir())
+    model_path, config_path = find_model_path(request.voice, model_dir)
+    if not model_path:
+        raise HTTPException(status_code=404, detail=f"Model not found: {request.voice}")
+    if not PIPER_PYTHON_API_AVAILABLE:
+        raise HTTPException(status_code=501, detail="Piper Python API required for pronunciation synth")
+    use_gpu = os.environ.get("PIPER_USE_GPU", "true").lower() == "true"
+    try:
+        return synthesize_from_espeak_phonemes(
+            request.phonemes,
+            model_path,
+            config_path,
+            use_gpu,
+            request.voice,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("tts-pronunciation failed: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail=f"pronunciation synth failed: {e}") from e
 
 
 @app.get("/health")
@@ -291,7 +347,9 @@ def main():
         raise RuntimeError("ONNX Runtime is not available. GPU is required for TTS service.")
     
     print(f"\nEndpoints:")
-    print(f"  POST /tts - Synthesize speech")
+    print(f"  POST /tts - Synthesize speech (production)")
+    print(f"  POST /tts-phonemize - TRAINING-ONLY phonemize")
+    print(f"  POST /tts-pronunciation - TRAINING-ONLY phoneme synth")
     print(f"  GET /health - Health check")
     print(f"  GET /voices - List available voices")
     print()

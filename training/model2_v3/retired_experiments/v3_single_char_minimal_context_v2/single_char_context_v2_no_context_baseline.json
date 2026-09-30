@@ -1,0 +1,19 @@
+{
+  "n": 1719,
+  "select_precision": 0.0,
+  "select_recall": 0.0,
+  "wrong_select_rate": 0.0,
+  "wrong_select_given_select": 0.0,
+  "abstain_precision": 0.1652,
+  "abstain_recall": 1.0,
+  "coverage": 0.0,
+  "accepted_decision_accuracy": 0.1652,
+  "out_of_set": 0,
+  "pred_select": 0,
+  "false_select_on_abstain": 0,
+  "false_abstain_on_select": 1435,
+  "always_abstain": true,
+  "split": "no_ctx",
+  "fairness_note": "Candidate tensors were kept; only left/right ids were PAD. Always-ABSTAIN is caused by training empty windows as ABSTAIN (insufficient-context class), not by stripping candidates. This ablation MUST NOT be used to claim a context-contribution win. DEV tau=0 WITH context: accepted_decision_accuracy=0.377 vs identity 0.4084.",
+  "context_contribution": "FAIL"
+}

@@ -1,0 +1,111 @@
+{
+  "allowlist_id": "MODEL3_V1_MODEL_VISIBLE_FEATURE_ALLOWLIST",
+  "feat_names": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "feat_dim": 6,
+  "fields": [
+    {
+      "field": "spans[].surface → char tokens",
+      "source": "currentText FineSpan surface",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "runtime ASR/current surface"
+    },
+    {
+      "field": "isAnchor",
+      "source": "upstream Anchor mask",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "Model3 is Anchor-conditioned; provenance NOT visible"
+    },
+    {
+      "field": "span_len_log1p",
+      "source": "len(current surface)",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "runtime-derivable geometry"
+    },
+    {
+      "field": "span_rel_position",
+      "source": "span index / (N-1)",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "sequence geometry"
+    },
+    {
+      "field": "first_pass_cand_log1p",
+      "source": "recallEvidence.firstPassCandidateCount on CURRENT",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "first-pass lattice cand count; gated by featureAvailability.recallFirstPass"
+    },
+    {
+      "field": "current_cjk_len_log1p",
+      "source": "CJK count in current surface",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "current-only length proxy"
+    },
+    {
+      "field": "pinyin_channel_avail",
+      "source": "featureAvailability.pinyinTextDerived",
+      "runtime_available": true,
+      "model_visible": true,
+      "label_only": false,
+      "reason": "availability bit only — not reference pinyin"
+    },
+    {
+      "field": "referenceSurface / != surface",
+      "source": "label plane",
+      "runtime_available": false,
+      "model_visible": false,
+      "label_only": true,
+      "reason": "REMOVED — DIRECT_LABEL_LEAKAGE"
+    },
+    {
+      "field": "repairability.referenceReachable",
+      "source": "label plane",
+      "runtime_available": false,
+      "model_visible": false,
+      "label_only": true,
+      "reason": "REMOVED — REPAIRABILITY_LABEL_SHORTCUT"
+    },
+    {
+      "field": "phoneticCompatible",
+      "source": "corruption vs reference",
+      "runtime_available": false,
+      "model_visible": false,
+      "label_only": true,
+      "reason": "REMOVED — needs reference pronunciation"
+    },
+    {
+      "field": "targetMask",
+      "source": "eligibility",
+      "runtime_available": true,
+      "model_visible": false,
+      "label_only": false,
+      "reason": "LOSS_ONLY — not packed as predictive feature"
+    },
+    {
+      "field": "label / labelClass / corruptionFamily",
+      "source": "label plane",
+      "runtime_available": false,
+      "model_visible": false,
+      "label_only": true,
+      "reason": "supervision / QA only"
+    }
+  ],
+  "schema_note": "MODEL3_TRAINING_SAMPLE_V1_SCHEMA may store label-side fields; loader ignores them for tensors"
+}

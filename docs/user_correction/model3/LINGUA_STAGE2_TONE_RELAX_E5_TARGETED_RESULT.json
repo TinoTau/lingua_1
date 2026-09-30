@@ -1,0 +1,497 @@
+{
+  "phase": "LINGUA_MODEL3_RETRY_STAGE2_TONE_RELAXATION_SINGLE_DELTA_IMPLEMENTATION",
+  "date": "2026-09-14",
+  "E5_CASE_COUNT": 35,
+  "E5_STAGE2_TARGET_HIT_BEFORE": 0,
+  "E5_STAGE2_TARGET_HIT_AFTER": 35,
+  "E5_WRONG_TONE_EXACT_STILL_HIT": 0,
+  "E5_TARGET_SURVIVES_SHARED_BUDGET": "NOT_MEASURED_REQUIRES_PILOT_REMEASURE",
+  "E5_REACHES_SAMEDOMAIN_ASSEMBLY": "NOT_MEASURED_REQUIRES_PILOT_REMEASURE",
+  "E5_REACHES_KENLM": "NOT_MEASURED_REQUIRES_PILOT_REMEASURE",
+  "E5_FINAL_CORRECT": "NOT_MEASURED_REQUIRES_PILOT_REMEASURE",
+  "CANDIDATE_COUNT_MEDIAN": 1,
+  "CANDIDATE_COUNT_MAX": 2,
+  "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+  "note": "Recall-boundary acceptance only; retainedDomains from case.domain coarse→fine PROXY when TRACE lacks runtime vote.",
+  "cases": [
+    {
+      "caseId": "p2_u001_007",
+      "target": "内科",
+      "pinyin": "nei|ke",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u001_014",
+      "target": "纪念",
+      "pinyin": "ji|nian",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u001_040",
+      "target": "纪念日",
+      "pinyin": "ji|nian|ri",
+      "retainedDomainsProxy": [
+        "retail",
+        "general"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_002",
+      "target": "自取",
+      "pinyin": "zi|qu",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 2,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_007",
+      "target": "坐标点",
+      "pinyin": "zuo|biao|dian",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_008",
+      "target": "摄像组",
+      "pinyin": "she|xiang|zu",
+      "retainedDomainsProxy": [
+        "retail",
+        "general"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_014",
+      "target": "礼仪组",
+      "pinyin": "li|yi|zu",
+      "retainedDomainsProxy": [
+        "tourism_transport",
+        "transport",
+        "hotel",
+        "tourism_route"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_015",
+      "target": "上线",
+      "pinyin": "shang|xian",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_016",
+      "target": "咖啡师",
+      "pinyin": "ka|fei|shi",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 2,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_019",
+      "target": "测试数据",
+      "pinyin": "ce|shi|shu|ju",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_024",
+      "target": "商务室",
+      "pinyin": "shang|wu|shi",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_032",
+      "target": "工作团",
+      "pinyin": "gong|zuo|tuan",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_033",
+      "target": "导播组",
+      "pinyin": "dao|bo|zu",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_034",
+      "target": "走廊",
+      "pinyin": "zou|lang",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_035",
+      "target": "吸烟室",
+      "pinyin": "xi|yan|shi",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_038",
+      "target": "任务组",
+      "pinyin": "ren|wu|zu",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u002_040",
+      "target": "座位数",
+      "pinyin": "zuo|wei|shu",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_004",
+      "target": "排风扇",
+      "pinyin": "pai|feng|shan",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_006",
+      "target": "承办方",
+      "pinyin": "cheng|ban|fang",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_008",
+      "target": "正常化",
+      "pinyin": "zheng|chang|hua",
+      "retainedDomainsProxy": [
+        "tourism_transport",
+        "transport",
+        "hotel",
+        "tourism_route"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_013",
+      "target": "逃生图",
+      "pinyin": "tao|sheng|tu",
+      "retainedDomainsProxy": [
+        "retail",
+        "general"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_014",
+      "target": "糖浆泵",
+      "pinyin": "tang|jiang|beng",
+      "retainedDomainsProxy": [
+        "retail",
+        "general"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_015",
+      "target": "电热壶",
+      "pinyin": "dian|re|hu",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u003_033",
+      "target": "蒸汽棒",
+      "pinyin": "zheng|qi|bang",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u004_003",
+      "target": "机场",
+      "pinyin": "ji|chang",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u004_018",
+      "target": "南瓜派",
+      "pinyin": "nan|gua|pai",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u004_024",
+      "target": "肾内科",
+      "pinyin": "shen|nei|ke",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 2,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u004_034",
+      "target": "网约车",
+      "pinyin": "wang|yue|che",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u004_038",
+      "target": "胶囊",
+      "pinyin": "jiao|nang",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_001",
+      "target": "行驶证",
+      "pinyin": "xing|shi|zheng",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_002",
+      "target": "口水鸡",
+      "pinyin": "kou|shui|ji",
+      "retainedDomainsProxy": [
+        "general",
+        "food_order"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 2,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_008",
+      "target": "意式机",
+      "pinyin": "yi|shi|ji",
+      "retainedDomainsProxy": [
+        "tech_ai",
+        "software"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_011",
+      "target": "提示性",
+      "pinyin": "ti|shi|xing",
+      "retainedDomainsProxy": [
+        "tourism_transport",
+        "transport",
+        "hotel",
+        "tourism_route"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_014",
+      "target": "量勺",
+      "pinyin": "liang|shao",
+      "retainedDomainsProxy": [
+        "coffee",
+        "food_order",
+        "bakery",
+        "milk_tea",
+        "restaurant"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    },
+    {
+      "caseId": "p2_u005_037",
+      "target": "盐水鸭",
+      "pinyin": "yan|shui|ya",
+      "retainedDomainsProxy": [
+        "medical"
+      ],
+      "firstPassExactWrongToneHit": false,
+      "recoveryHit": true,
+      "recoveryHitCount": 1,
+      "recoveryStage": "pinyin_domain_recovery"
+    }
+  ]
+}

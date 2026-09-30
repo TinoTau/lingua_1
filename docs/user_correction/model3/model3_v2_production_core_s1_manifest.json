@@ -1,0 +1,30 @@
+{
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+  "datasetBuildId": "prod_core_s1_build_20260830_v1",
+  "parentDatasets": [
+    "MODEL3_V2_TARGETED_DIST_CORRECTED_V1"
+  ],
+  "lineageStrategy": "V1_280_reuse_plus_720_new_materialization",
+  "ttsVoiceIdentity": "zh_CN-huayan-medium",
+  "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+  "acousticVariationForModel3": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+  "sourceSelectionSeed": 2026083006,
+  "v1ReuseFamilies": 280,
+  "newMaterializedFamilies": 720,
+  "splitCounts": {
+    "train": 2105,
+    "dev": 252,
+    "test": 400
+  },
+  "families": 999,
+  "utterances": 999,
+  "paths": 2757,
+  "spanPathSamples": 41392,
+  "labels": {
+    "KEEP": 36872,
+    "MASKED": 1600,
+    "RETRY": 2920
+  },
+  "verdict": "PRODUCTION_CORE_S1_BUILD_PASS_WITH_NONBLOCKING_WARNINGS",
+  "nextPhase": "MODEL3_V2_PRODUCTION_CORE_S1_TRAINING_EXPERIMENT"
+}

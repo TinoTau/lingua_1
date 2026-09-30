@@ -1,0 +1,55 @@
+{
+  "schema": "LINGUA_D157_OTHER_E18_ROOT_CAUSE_VALIDATION_V1",
+  "phase": "D157_FROZEN_REPLAY_UPSTREAM_BOUNDARY_TRACE_AUDIT_V1",
+  "mode": "READ_ONLY_LIGHTWEIGHT",
+  "mechanism": "multi-batch ASR: segment.words times are batch-local; acousticToneSlices are absolute; Replay omits ctx.segmentTimeOffsetsSec + ctx.asrSegmentNodeBatchIndices",
+  "cases": {
+    "d019": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 1.2],
+      "evidence": "evidenceProduction batch1 offset +1.2s; maxWordEnd 6.66 vs maxSliceEnd 7.86"
+    },
+    "d045": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 1.4],
+      "evidence": "batch1 offset +1.4s"
+    },
+    "d061": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 2.9],
+      "evidence": "batch1 offset +2.9s; 3 segments"
+    },
+    "d110": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 0.9],
+      "evidence": "batch1 offset +0.9s"
+    },
+    "d112": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 3.2],
+      "evidence": "batch1 offset +3.2s"
+    },
+    "d156": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 3.3],
+      "evidence": "batch1 offset +3.3s; 3 segments"
+    },
+    "d157": {
+      "SAME_ROOT_CAUSE_PRESENT": "YES",
+      "batches": [0, 1],
+      "offsetUniques": [0, 1.6],
+      "evidence": "probe case; batch1 offset +1.6s PROVEN"
+    }
+  },
+  "summary": {
+    "all_seven_share_multibatch_offset_gap": true,
+    "deep_trace_other_six": false,
+    "note": "Lightweight validation only; does not prove each case's Final delta is solely caused by this mechanism, but the necessary preconditions are present in all seven."
+  }
+}

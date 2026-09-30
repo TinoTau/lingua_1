@@ -1,0 +1,70 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0_ACCEPTANCE",
+  "gate0Verdict": "GATE0_ACCEPTANCE_PASS",
+  "nextPhase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "formalRunId": "gate0_accept_20260830_v1",
+  "sourceBatchId": "gate0_src_20260830_v1",
+  "sourceCount": 48,
+  "funnel": {
+    "attempted": 48,
+    "hardRejected": 0,
+    "semanticExcluded": 0,
+    "supervisedAccepted": 48,
+    "formalSupervisedAccepted": 48,
+    "rejectReasons": {},
+    "semanticExcludeReasons": {}
+  },
+  "candidate": {
+    "cand0": 943,
+    "candGt0": 1573,
+    "missing": 0,
+    "histogram": {
+      "0": 943,
+      "1": 1625,
+      "2": 14
+    }
+  },
+  "retry": {
+    "RETRY": 112,
+    "RETRY_cand0": 40,
+    "RETRY_candGt0": 72,
+    "RETRY_candGt0_utterances": 17,
+    "KEEP": 2404
+  },
+  "multipath": {
+    "singlePathUtterances": 18,
+    "multipathUtterances": 30,
+    "pathHistogram": {
+      "1": 18,
+      "2": 5,
+      "3": 11,
+      "4": 3,
+      "6": 4,
+      "8": 7
+    }
+  },
+  "model2": {
+    "attempted": 48,
+    "completed": 48,
+    "hostAvailable": 48,
+    "anchors": 64
+  },
+  "domain": {
+    "attempted": 48,
+    "completed": 48,
+    "anchors": 34
+  },
+  "historicalComparison": {
+    "priorCandGt0Present": true,
+    "priorRetryCandGt0Utt": 29,
+    "priorMultipathUtt": 40,
+    "priorN": 55,
+    "freshCandGt0": 1573,
+    "freshRetryCandGt0Utt": 17,
+    "freshMultipathUtt": 30,
+    "freshN": 48,
+    "classification": "CONSISTENT"
+  },
+  "datasetId": "NOT_ASSIGNED",
+  "elapsedSec": 230.91
+}

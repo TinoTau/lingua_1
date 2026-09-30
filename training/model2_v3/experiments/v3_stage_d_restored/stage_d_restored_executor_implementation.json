@@ -1,0 +1,14 @@
+{
+  "contract": "StageDDomainConditionedRetrievalContractV1",
+  "files": [
+    "training/model2/fuzzy/pool.py",
+    "training/model2_v3/policy/domain_actions.py"
+  ],
+  "one_fuzzy_algorithm": true,
+  "allowed_domain_ids_predicate": true,
+  "union_then_single_budget": true,
+  "implementation_safety_cap": 256,
+  "final_candidate_cap": 8,
+  "action_ids_changed": false,
+  "feature_hash_changed": false
+}

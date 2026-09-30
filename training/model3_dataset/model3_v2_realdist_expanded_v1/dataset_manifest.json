@@ -1,0 +1,76 @@
+{
+  "datasetId": "MODEL3_V2_REALDIST_EXPANDED_V1",
+  "datasetVersion": "model3_v2_realdist_expanded_v1_20260829",
+  "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "generatorVersion": "model3-v2-realdist-expansion-1.0.0",
+  "seed": 2026082902,
+  "createdAt": "2026-08-29T01:41:03.091835+00:00",
+  "baseDataset": "MODEL3_V2_LABELED",
+  "baseSampleCounts": {
+    "train": 80034,
+    "dev": 11777,
+    "test": 22607
+  },
+  "newSamples": 4900,
+  "expansionPercent": 4.282542956527819,
+  "splitCounts": {
+    "train": 84203,
+    "dev": 12175,
+    "test": 22940
+  },
+  "labelDistribution": {
+    "KEEP": 2218643,
+    "MASKED": 104651,
+    "RETRY": 28414,
+    "EXCLUDE_FROM_SUPERVISED": 1
+  },
+  "newSampleBuildStats": {
+    "ok_multi_HEAD": 800,
+    "ok_multi_MID": 1200,
+    "ok_phonetic_HEAD": 400,
+    "reject_phonetic_HEAD": 19,
+    "ok_phonetic_MID": 600,
+    "reject_phonetic_MID": 2,
+    "ok_insertion_HEAD": 300,
+    "ok_insertion_MID": 400,
+    "ok_hardkeep_HEAD": 500,
+    "ok_hardkeep_MID": 700
+  },
+  "expansionRetryPosition": {
+    "n": 10112,
+    "p10": 0.07142857142857142,
+    "p50": 0.3157894736842105,
+    "p90": 0.6,
+    "mean": 0.32520747541698836
+  },
+  "allRetryPositionApprox": {
+    "n": 28414,
+    "p10": 0.1724137931034483,
+    "p50": 0.5925925925925926,
+    "p90": 1.0,
+    "mean": 0.654603721600465
+  },
+  "expansionFamilyRetrySpans": {
+    "MULTI_CHAR_HEADMID": 6518,
+    "PHONETIC_HEADMID": 1000,
+    "INSERTION_HEADMID": 2594
+  },
+  "targets": {
+    "multi_HEAD": 800,
+    "multi_MID": 1200,
+    "phonetic_HEAD": 400,
+    "phonetic_MID": 600,
+    "insertion_HEAD": 300,
+    "insertion_MID": 400,
+    "hardkeep_HEAD": 500,
+    "hardkeep_MID": 700
+  },
+  "v2BaselinePreserved": true,
+  "v2CheckpointPreserved": "MODEL3_V2_REGION_LABEL_V1",
+  "dialog200Leakage": 0,
+  "notes": [
+    "Targeted HEAD/MID RETRY position coverage for MULTI_CHAR / INSERTION / PHONETIC",
+    "HARD_KEEP HEAD/MID contrast included",
+    "No dialog_200 utterances"
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "phase": "LINGUA_ANCHOR_PROTECTION_AUTHORITY_PREDEVELOPMENT_AUDIT",
+  "date": "2026-09-14",
+  "authority_matrix": [
+    {
+      "evidence_class": "BASE_EXACT",
+      "business_purpose": "base_lexical_candidate",
+      "current_auto_anchor": false,
+      "historical_auto_anchor": "NONE",
+      "conditional_rule": "forbidden_unless_DOMAIN_or_MODEL2_rules",
+      "current_match": "MATCH",
+      "ssot_source": "model3_anchor_contract_v1.md::Allowed sources / Forbidden"
+    },
+    {
+      "evidence_class": "BASE_FUZZY",
+      "business_purpose": "base_recall_provenance_tag",
+      "current_auto_anchor": false,
+      "historical_auto_anchor": "NONE",
+      "conditional_rule": "alone_not_Model2_Anchor",
+      "current_match": "MATCH",
+      "ssot_source": "model3_anchor_contract_v1.md::Model2 Anchor"
+    },
+    {
+      "evidence_class": "DOMAIN_TERM",
+      "business_purpose": "domain_eligible_graph_source",
+      "current_auto_anchor": true,
+      "historical_auto_anchor": "CONDITIONAL",
+      "conditional_rule": "SameDomain+retainedDomains+active+domain_term|passive",
+      "current_match": "PARTIAL",
+      "ssot_source": "model3_anchor_contract_v1.md::Domain Anchor",
+      "partial_note": "adapter uses domains∩retained without literal sameDomainCandidates membership"
+    },
+    {
+      "evidence_class": "PASSIVE_DOMAIN_WEAK",
+      "business_purpose": "weak_domain_graph_source",
+      "current_auto_anchor": true,
+      "historical_auto_anchor": "CONDITIONAL",
+      "conditional_rule": "same_as_DOMAIN_TERM",
+      "current_match": "PARTIAL",
+      "ssot_source": "model3_anchor_contract_v1.md::Domain Anchor"
+    },
+    {
+      "evidence_class": "RETAINED_DOMAIN",
+      "business_purpose": "Domain_Vote_kept_domain_set",
+      "current_auto_anchor": false,
+      "historical_auto_anchor": "SUPPORT_ONLY",
+      "conditional_rule": "gate_for_Domain_Anchor_not_alone",
+      "current_match": "MATCH",
+      "ssot_source": "model3_anchor_contract_v1.md + MODEL3_SYNTHETIC_V1_FROZEN.md"
+    },
+    {
+      "evidence_class": "PROFILE_DOMAIN",
+      "business_purpose": "Model2_D_domain_guided_soft_expansion",
+      "current_auto_anchor": true,
+      "historical_auto_anchor": "AUTOMATIC",
+      "conditional_rule": "materialized+retained+originSpanId; listed in Model2 materialize Anchor set",
+      "current_match": "MATCH",
+      "ssot_source": "model3_anchor_contract_v1.md::Model2 Anchor",
+      "counts_as_model2_repair_evidence": false,
+      "counts_as_domain_evidence": true
+    },
+    {
+      "evidence_class": "PROFILE_RETRIEVAL",
+      "business_purpose": "profile_retrieval_or_merge_observability",
+      "current_auto_anchor": true,
+      "historical_auto_anchor": "NONE",
+      "conditional_rule": "alone_not_Model2_Anchor",
+      "current_match": "DRIFT",
+      "ssot_source": "model3_anchor_contract_v1.md::Model2 Anchor",
+      "impl_site": "model3-anchor-adapter.ts::isModel2Provenance"
+    },
+    {
+      "evidence_class": "PROFILE_PRONUNCIATION",
+      "business_purpose": "Model2_P_pronunciation_conditioned_lexicon_hit",
+      "current_auto_anchor": true,
+      "historical_auto_anchor": "AUTOMATIC",
+      "conditional_rule": "materialized+retained+originSpanId",
+      "current_match": "MATCH",
+      "ssot_source": "model3_anchor_contract_v1.md::Model2 Anchor"
+    }
+  ],
+  "implementation_mapping": [
+    {
+      "current_condition": "domain_term|passive ∧ domains∩retained ∧ bound",
+      "evidence_class": "DOMAIN_TERM_or_PASSIVE",
+      "current_anchor_authority": "domainOk_automatic",
+      "historical_authority": "CONDITIONAL_Domain_Anchor",
+      "match": "PARTIAL"
+    },
+    {
+      "current_condition": "retrievalProvenance==PROFILE_DOMAIN ∧ bound",
+      "evidence_class": "PROFILE_DOMAIN",
+      "current_anchor_authority": "model2Ok_automatic",
+      "historical_authority": "AUTOMATIC_Model2_Anchor",
+      "match": "MATCH"
+    },
+    {
+      "current_condition": "retrievalProvenance==PROFILE_PRONUNCIATION ∧ bound",
+      "evidence_class": "PROFILE_PRONUNCIATION",
+      "current_anchor_authority": "model2Ok_automatic",
+      "historical_authority": "AUTOMATIC_Model2_Anchor",
+      "match": "MATCH"
+    },
+    {
+      "current_condition": "retrievalProvenance==PROFILE_RETRIEVAL ∧ bound",
+      "evidence_class": "PROFILE_RETRIEVAL",
+      "current_anchor_authority": "model2Ok_automatic",
+      "historical_authority": "NONE_alone",
+      "match": "DRIFT"
+    },
+    {
+      "current_condition": "domainOk||model2Ok",
+      "evidence_class": "OR_of_rule_families",
+      "current_anchor_authority": "whole_PFS_Anchor",
+      "historical_authority": "DERIVED_BUT_SUPPORTED_Dual_source",
+      "match": "MATCH_intent"
+    }
+  ],
+  "sanity_cases": [
+    {
+      "caseId": "p2_u004_019",
+      "role": "A1",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_DOMAIN Model2 Anchor + Domain path domain_term∩retained"
+    },
+    {
+      "caseId": "p2_u002_012",
+      "role": "A2",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_DOMAIN Model2 Anchor + Domain path"
+    },
+    {
+      "caseId": "p2_u001_020",
+      "role": "A3",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_DOMAIN Model2 Anchor + Domain path"
+    },
+    {
+      "caseId": "p2_u004_009",
+      "role": "A4",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_PRONUNCIATION Model2 Anchor"
+    },
+    {
+      "caseId": "p2_u001_039",
+      "role": "C1",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_PRONUNCIATION Model2 Anchor"
+    },
+    {
+      "caseId": "p2_u004_001",
+      "role": "C2",
+      "CURRENT_ANCHOR": "YES",
+      "HISTORICAL_RULE_ANCHOR": "YES",
+      "REASON": "PROFILE_PRONUNCIATION Model2 Anchor (+ possible Domain/PROFILE_DOMAIN Dual)"
+    }
+  ],
+  "document_inventory": [
+    {
+      "document": "model3_anchor_contract_v1.md",
+      "authority": "AUTHORITATIVE",
+      "active": true,
+      "superseded": false
+    },
+    {
+      "document": "MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+      "authority": "AUTHORITATIVE",
+      "active": true,
+      "superseded": false
+    },
+    {
+      "document": "MODEL3_SYNTHETIC_V1_FROZEN.md",
+      "authority": "AUTHORITATIVE",
+      "active": true,
+      "superseded": false
+    },
+    {
+      "document": "LINGUA_MODEL3_ANCHOR_SUFFICIENCY_CONTRACT_PREDEV_*",
+      "authority": "AUDIT_ONLY",
+      "active": true,
+      "superseded": false,
+      "note": "must_not_override_frozen_anchor_contract"
+    }
+  ],
+  "no_user_decision_required": [
+    {
+      "item": "Exclude PROFILE_RETRIEVAL alone from Model2 Anchor predicate",
+      "class": "implementation_drift_vs_SSOT"
+    }
+  ],
+  "user_decision_required": [
+    {
+      "item": "PROFILE_DOMAIN_and_soft_Domain_automatic_RETRY_suppression_breadth",
+      "options": ["O1_KEEP_FROZEN", "O2_DEMOTE_PROFILE_DOMAIN_MODEL2_ANCHOR", "O3_DEMOTE_SOFT_MISMATCH"]
+    }
+  ]
+}

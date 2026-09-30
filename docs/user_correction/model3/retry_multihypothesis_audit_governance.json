@@ -1,0 +1,55 @@
+{
+  "phase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_AUDIT",
+  "date": "2026-08-29",
+  "artifactPolicy": {
+    "filesCreated": 5,
+    "maxAllowed": 10,
+    "artifacts": [
+      "Lingua_Retry_MultiHypothesis_Minimal_Correction_Audit_2026_08_29.md",
+      "retry_multihypothesis_reuse_options.csv",
+      "retry_multihypothesis_case_evidence.csv",
+      "retry_multihypothesis_audit_summary.json",
+      "retry_multihypothesis_audit_governance.json"
+    ]
+  },
+  "governance": {
+    "ProductionCodeModified": false,
+    "TestsModified": false,
+    "SSOTModified": false,
+    "ArchitectureModified": false,
+    "FineSpanModified": false,
+    "LatticeModified": false,
+    "RecallModified": false,
+    "LexiconModified": false,
+    "Model3Modified": false,
+    "DomainVoteModified": false,
+    "AssemblyModified": false,
+    "KenLMModified": false,
+    "TrainingModified": false,
+    "ConfigModified": false,
+    "JobResultModified": false,
+    "NewFallback": false,
+    "NewCompatibilityPath": false,
+    "NewRankingLogic": false,
+    "NewService": false,
+    "NewConfigKeys": 0
+  },
+  "verdicts": {
+    "correctionStrategy": "REUSE_RETAINED_PATHS_MINIMAL",
+    "architecture": "PURE_IMPLEMENTATION_CORRECTION",
+    "canReuseFrozenRetainedDomains": "YES",
+    "model2RequiredForMinimalCorrection": "NO",
+    "newProductionTypeRequired": "NO",
+    "regionalPathBoundarySafety": "PASS",
+    "recallDuplicatedLookup": "PARTIAL",
+    "preferredPathFineSpanView": "RETIRE_CANDIDATE"
+  },
+  "trainingGates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "HOLD",
+    "developmentSequenceReason": "Consumer drift identified; minimal correction not yet implemented or validated"
+  },
+  "recommendedNextPhase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_DEVELOPMENT",
+  "hardStop": true,
+  "implementationExecuted": false
+}

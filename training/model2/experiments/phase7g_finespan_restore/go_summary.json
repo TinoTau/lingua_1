@@ -1,0 +1,44 @@
+{
+  "markers": [
+    "PHASE7G",
+    "AUTHORITATIVE_PATH",
+    "NO_WHOLE_UTTERANCE",
+    "NOT_FROZEN"
+  ],
+  "verdict": "PASS",
+  "FINESPAN_PROFILE_RECALL": "PROVEN",
+  "FineSpan_Authoritative_Retrieval_Path": "RESTORED",
+  "Whole_Utterance_Model2_Retrieval": "REMOVED_FROM_AUTHORITY",
+  "REAL_ASR_FineSpan_TIR": 0.4171779141104294,
+  "REAL_ASR_FineSpan_ProfileOnlyTargetRecovery": 0.4171779141104294,
+  "Correct": 0.4171779141104294,
+  "Empty": 0.0,
+  "Wrong": 0.0,
+  "Swapped": 0.0,
+  "FalseExpansionRate": 0.44171779141104295,
+  "Primary_Remaining_Failure_Class": "OTHER",
+  "Stage_A": "KEEP_OPTIONAL",
+  "Stage_B": "KEEP_FROZEN",
+  "Was_Any_Model_Retrained": false,
+  "Pronunciation_Model_Required": "NO",
+  "Neural_Retrieval_Required": "NO",
+  "Model2_Core_Architecture": "ALIGNED",
+  "Architecture_Conformance_Check": "PASS",
+  "phase7f_vs_7g": {
+    "markers": [
+      "PHASE7G",
+      "AUTHORITATIVE_PATH",
+      "NO_WHOLE_UTTERANCE",
+      "NOT_FROZEN"
+    ],
+    "n": 163,
+    "whole_utt_TIR": 0.0,
+    "fine_span_TIR": 0.4171779141104294,
+    "supersedes_phase7f_observability_limit": true,
+    "note": "Phase7F whole-utt path remains diagnostic-only; not authoritative"
+  },
+  "next_phase": "Freeze Model2 pronunciation-recall core; then schedule domain / speaking-habits / Stage B adaptation",
+  "Tone": "HOLD",
+  "Node": "HOLD",
+  "50k": "HOLD"
+}

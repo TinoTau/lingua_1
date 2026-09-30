@@ -1,0 +1,25 @@
+component,owner,bucket,classification,measurable,p50,p95,max,notes
+production_ASR_owner,faster-whisper-vad:/utterance,C,ARCHITECTURE_REQUIRED,YES,,,,service.json id=faster-whisper-vad port=6007
+MODEL_LOAD_PER_UTTERANCE,asr_worker_process,A,CORRECT_SINGLETON,YES,,,,NO — load once per worker lifetime
+duplicate_WhisperModel_main_process,models.py via vad import,A,LINGUA_SAFE_OPTIMIZATION,PARTIAL,,,,startup/VRAM; unused asr_model in main; not per-utt wall proven
+AudioAggregator_energy_split_multi_ASR,Node audio-aggregator-process-finalize,B,LINGUA_CONFIG_TUNING_WITH_QUALITY_RISK,YES,2_calls_in_34pct,,,recent log 30/87 jobs had 2 HTTP /utterance
+ASR_rerun,faster-whisper-asr-strategy,A,DISABLED_ON_FW,YES,,,,disableAsrRerun=true
+perform_asr_wall_ms,utterance_asr.perform_asr,C/E,MIXED_QUEUE_PLUS_INFERENCE,YES,1590ms,7230ms,21820ms,includes queue+IPC+list(segments); only when >1s logged for ratio warnings sample
+list_segments_inference_ms,asr_worker_process,C,UPSTREAM_MODEL_LIMITATION,YES,916ms,6814ms,9286ms,real inference; transcribe() return timer is misleading (~0ms generator)
+audio_duration_into_ASR_s,worker audio_len,E,INPUT_DISTRIBUTION,YES,4.0s,5.92s,7.72s,from ASR processing warning cohort
+RTF_perform_asr,utterance_asr warning ratio,C/E,MIXED,YES,0.32,3.53,4.11,p95 inflated by queue/contention; steady warnings often ~0.22-0.31
+prior_A_ASR_residual_estimate,pipeline_ms-fw_detector_step_ms,E,NOT_PURE_FW,YES,3489ms,9916ms,24623ms,includes Node+HTTP+VAD+Tone+multi-batch; NOT pure Faster-Whisper
+NODE_TO_ASR_IPC,HTTP JSON base64 pcm16,A,REQUIRED_TRANSPORT,NOT_MEASURABLE,,,,localhost HTTP; no T0/T9 timer
+PYTHON_REQUEST_PARSE,FastAPI/Pydantic,A,NEGLIGIBLE_UNPROVEN,NOT_MEASURABLE,,,,
+AUDIO_DECODE_CONVERT,utterance_audio+audio_decoder,A,REQUIRED_FOR_PCM16,NOT_MEASURABLE,,,,production pcm16 path; Opus deprecated fallback
+VAD_Silero,vad.detect_speech,A/B,REQUIRED_ONCE_PER_HTTP,NOT_MEASURABLE,,,,plus Node energy split upstream = POSSIBLE_DUPLICATE_VAD class
+MODEL_INFERENCE,list(segments),C,DOMINANT_WITHIN_CALL,YES,916ms,6814ms,9286ms,black-box
+WORD_TIMESTAMP_EXTRACTION,word_timestamps=True,A,REQUIRED_BY_FROZEN_ARCHITECTURE,NOT_MEASURABLE_SEPARATELY,,,,consumed by Tone + FW tone-time-align
+POSTPROCESS_dedup,api_routes,A,SKIPPED_ON_FW,YES,,,,skip_text_dedup=true on FW
+SERIALIZATION_response,UtteranceResponse+tone,A,MOSTLY_CONSUMED,NOT_MEASURABLE,,,,tone+segments+words returned; large but consumed
+ASR_TO_NODE_IPC,HTTP response,A,REQUIRED,NOT_MEASURABLE,,,,
+QUEUE_WAIT,QUEUE_MAX=1,A,ORCHESTRATION_COST_IF_MULTI,NOT_MEASURABLE_ALONE,,,,serializes multi-batch and concurrent jobs
+beam_size,1,B,ALREADY_GREEDY,YES,,,,no unused n-best compute
+language_detection,language=zh supplied,A,SAFE_CANDIDATE_IF_AUTO,PARTIAL,,,,dialog supplies zh; auto path would LID inside FW
+hot_path_logging,FileHandler INFO verbose,A,POTENTIAL_IO_REDUNDANCY,NOT_MEASURABLE,,,,330MB+ service log; sync file writes
+test_WAV_Opus_roundtrip,runPipelineWithAudio,A,HARNESS_ONLY,NOT_MEASURABLE,,,,WAV→Opus→Node decode→pcm16; not live client path

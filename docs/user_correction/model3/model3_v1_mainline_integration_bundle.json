@@ -1,0 +1,79 @@
+{
+  "phase": "MODEL3_V1_MAINLINE_INTEGRATION_DEVELOPMENT",
+  "date": "2026-08-27",
+  "verdict": "PASS_WITH_QUALITY_GAPS",
+  "integrationId": "MODEL3_V1_MAINLINE_INTEGRATION",
+  "model": {
+    "modelId": "MODEL3_SYNTHETIC_V1",
+    "checkpoint": "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082520",
+    "pointer": "training/model3_dataset/model3_v1_synthetic_v1_frozen/POINTER.json",
+    "weightsSha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "configHash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "hashVerified": true
+  },
+  "mainline": {
+    "shadow": false,
+    "dualPipeline": false,
+    "compatibilityBranch": false,
+    "directIntegration": true,
+    "permanentEnableFlag": false
+  },
+  "domainVote": {
+    "callsPerPath": 1,
+    "voteFrozenAcrossRetry": true,
+    "secondVote": false
+  },
+  "candidatePool": {
+    "preRetryPool": "buildFineSpanCandidatePool(activeCandidates)",
+    "postRetryRefreshOnMutation": true,
+    "assemblyUsesPostRetryPool": true,
+    "keepReusePreRetryPool": true
+  },
+  "files": {
+    "modified": [
+      "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts",
+      "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts",
+      "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-scope-wiring.test.ts",
+      "docs/user_correction/model3/MODEL3_SYNTHETIC_V1_FROZEN.md",
+      "docs/user_correction/model3/model3_v1_mainline_integration_plan_corrected.csv"
+    ],
+    "added": [
+      "electron_node/electron-node/main/src/model3-runtime/model3-types.ts",
+      "electron_node/electron-node/main/src/model3-runtime/model3-anchor-adapter.ts",
+      "electron_node/electron-node/main/src/model3-runtime/model3-inference-client.ts",
+      "electron_node/electron-node/main/src/model3-runtime/model3-retry-router.ts",
+      "electron_node/electron-node/main/src/model3-runtime/model3-path-diagnostics.ts",
+      "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts",
+      "electron_node/electron-node/main/src/model3-runtime/model3-mainline.integration.test.ts",
+      "electron_node/services/model3_runtime/model3_inference_host.py"
+    ]
+  },
+  "symbols": {
+    "added": [
+      "completeDomainAwareAssemblyFromVote",
+      "materializeModel3Anchors",
+      "routeModel3Retry",
+      "runModel3PathStep",
+      "getModel3InferenceHost"
+    ],
+    "changed": [
+      "runDomainAwareAssembly (thin wrapper)",
+      "runSpanAssemblyV4Orchestrator (Model3 path step)"
+    ]
+  },
+  "unitTests": {
+    "file": "electron_node/electron-node/main/src/model3-runtime/model3-mainline.integration.test.ts",
+    "passed": 12,
+    "failed": 0
+  },
+  "dialog200": {
+    "fullPipeline": "NOT_RUN_SERVER_DOWN",
+    "smokeCases": 40,
+    "model3_p50_ms": 3.63,
+    "model3_p95_ms": 5.0,
+    "singleton_load_count": 1,
+    "finalTextImprovement": null
+  },
+  "rollbackManifest": "docs/user_correction/model3/MODEL3_V1_MAINLINE_INTEGRATION_ROLLBACK_MANIFEST.json",
+  "authoritativePlan": "docs/user_correction/model3/model3_v1_mainline_integration_plan_corrected.csv"
+}

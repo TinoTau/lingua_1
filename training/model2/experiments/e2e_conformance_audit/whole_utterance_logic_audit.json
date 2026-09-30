@@ -1,0 +1,25 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "locations": [
+    {
+      "file": "training/model2/scripts/run_phase7f_realistic_boundary.py",
+      "function": "build_real_asr_samples",
+      "behavior": "asr_hypothesis whole string → G2P → retrieval query; span_text=asr",
+      "class": "TEST_ONLY",
+      "flag": "DRIFT relative to FineSpan contract"
+    },
+    {
+      "file": "training/model2/scripts/run_e2e_span_conformance_audit.py",
+      "function": "phase7f_whole_utt",
+      "behavior": "diagnostic mirror of 7F path",
+      "class": "TEST_ONLY"
+    },
+    {
+      "file": "docs/user_correction/Lingua_Model2_Phase7F_*.md",
+      "behavior": "OBSERVABILITY_LIMIT from whole-utt path",
+      "class": "DOCUMENTATION_DRIFT"
+    }
+  ],
+  "production_Model2_whole_utt": "NONE — Model2 not wired",
+  "verdict": "Whole-utterance Model2 retrieval exists as Phase7F test convenience leak, not as approved architecture"
+}

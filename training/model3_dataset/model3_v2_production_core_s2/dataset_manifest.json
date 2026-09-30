@@ -1,0 +1,43 @@
+{
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S2",
+  "datasetBuildId": "prod_core_s2_build_20260830_v1",
+  "createdAt": "2026-08-30T06:43:54.769798+00:00",
+  "parentDatasets": [
+    "MODEL3_V2_PRODUCTION_CORE_S1"
+  ],
+  "lineageStrategy": "S1_999_reuse_plus_4001_new_materialization",
+  "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+  "featureContractIdentity": "packModel3SpanInferFields",
+  "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "ttsVoiceIdentity": "zh_CN-huayan-medium",
+  "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+  "acousticVariationForModel3": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+  "sourceSelectionSeed": 2026083010,
+  "sourcePoolIdentities": [
+    "model3_certified_base_pool_v2"
+  ],
+  "s1ReuseFamilies": 999,
+  "newMaterializationFamiliesFrozen": 4001,
+  "newMaterializationDispositions": {
+    "SUPERVISED_ACCEPTED": 3995,
+    "HARD_REJECT": 6
+  },
+  "splitCounts": {
+    "train": 11513,
+    "dev": 1351,
+    "test": 1550
+  },
+  "families": 4994,
+  "utterances": 4994,
+  "paths": 14414,
+  "spanPathSamples": 208073,
+  "labels": {
+    "KEEP": 185257,
+    "MASKED": 7267,
+    "RETRY": 15549
+  },
+  "trainingAuthorized": true,
+  "verdict": "S2_BUILD_AND_TRAIN_PASS_CONTINUE_S3",
+  "trainingCompleted": true,
+  "nextPhase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_S3"
+}

@@ -1,0 +1,54 @@
+{
+  "action_space_version": "RetrievalPolicyV3/ACTIVE_SET_V1+DOMAIN_ACTION_CATALOG",
+  "n_actions": 50,
+  "action_head": {
+    "kind_counts": { "identity": 1, "single": 7, "composed_pair": 42 },
+    "runtime_decoded": "SINGLE relations with phonetic_bias>0 only; query_budget_op=1",
+    "identity_runtime": "logits exist; host does not select identity as an explicit abstain for candidate choice",
+    "composed_runtime": "logits exist; host skips composed_pair",
+    "catalog": [
+      "identity",
+      "single:n_l", "single:z_zh", "single:ch_c", "single:sh_s", "single:eng_en", "single:in_ing", "single:h_f"
+    ],
+    "composed_count": 42,
+    "semantics": "retrieval primitive selection (phonetic transform → lexicon query), NOT select-among-lexical-candidates"
+  },
+  "n_domain_actions": 13,
+  "domain_head": {
+    "catalog": [
+      "domain_none",
+      "domain_soft:tourism_pickup",
+      "domain_soft:tourism_hotel",
+      "domain_soft:tourism_route",
+      "domain_soft:tourism_transport",
+      "domain_soft:coffee",
+      "domain_soft:milk_tea",
+      "domain_soft:bakery",
+      "domain_soft:food_order",
+      "domain_soft:tech_ai",
+      "domain_soft:meeting",
+      "domain_soft:medical",
+      "domain_soft:transport"
+    ],
+    "semantics": "open domain-conditioned FuzzyPool or abstain (domain_none)",
+    "abstain_analog": "domain_none"
+  },
+  "budget_heads": {
+    "query_budget_classes": [1, 2, 3, 4, 6, 8],
+    "runtime_query_budget": 1,
+    "cand_budget_classes": 4,
+    "stage_d_executor_max_cands": 8,
+    "sentence_budget": 16
+  },
+  "candidate_set_decision_already_supported": "NO",
+  "reason": "Heads choose retrieval actions / domain slots, not candidate_0..N among a supplied lexical set.",
+  "abstain_supported_for_p_d": {
+    "P": "identity (training teacher); runtime often NO_P_ACTION when no bias",
+    "D": "YES domain_none"
+  },
+  "abstain_supported_for_lexical_candidate_choice": "NO",
+  "action_space_gap": true,
+  "open_vocabulary_text_output": false,
+  "listwise_surface_ranking_head": false,
+  "historical_stage_b_listwise": "NOT_PRODUCTION_AUTHORITY"
+}

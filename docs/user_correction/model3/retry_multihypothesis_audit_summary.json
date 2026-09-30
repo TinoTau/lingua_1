@@ -1,0 +1,65 @@
+{
+  "phase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_AUDIT",
+  "date": "2026-08-29",
+  "mode": "STRICT_READ_ONLY",
+  "mainVerdict": {
+    "correctionStrategy": "REUSE_RETAINED_PATHS_MINIMAL",
+    "architecture": "PURE_IMPLEMENTATION_CORRECTION"
+  },
+  "currentDriftPoint": {
+    "file": "electron_node/electron-node/main/src/model3-runtime/model3-retry-region-resegment.ts",
+    "function": "preferredPathFineSpanView",
+    "lines": "91-106, 186-192",
+    "currentBehavior": "Regional lattice retains up to 8 SegmentationPaths; Retry selects exactly one via compareSegmentationPathBestFirst before mapLocalSpansToGlobal",
+    "originalContract": "One bounded Retry operation; multiple local hypotheses/windows from regional lattice may reach Recall"
+  },
+  "minimalReuseLevel": {
+    "chosen": "RETAINED_PATH",
+    "why": "Mirrors first-pass orchestrator pathFineSpanViews iteration; reuses existing routeModel3Retry per-span Recall and mergeSpanCandidates; no new types or ranking",
+    "rejectedA": "Window-level bypass requires new window-to-retry adapter; changes Recall consumer ownership",
+    "rejectedB": "LexicalEdge projection duplicates materializeLocalSpanHits; high architecture risk"
+  },
+  "recallFlow": {
+    "stage1": "recallTopKForWindows in runLatticeFineSpanGeneration (regional slice)",
+    "stage2": "recallSpanTopKV2 per local span in routeModel3Retry",
+    "duplicatedLookup": "PARTIAL",
+    "afterCorrection": "Stage-2 input expands to deduped union of local spans from all retained pathFineSpanViews; Stage-1 unchanged"
+  },
+  "candidateBudget": {
+    "existingCaps": {
+      "perSpan": "8/6/4 via getPerSpanCandidateLimit",
+      "maxCompleteSegmentationPaths": 8,
+      "globalSentence": 16
+    },
+    "reuse": "mergeSpanCandidates + Assembly pool unchanged",
+    "newConfig": false,
+    "globalLe16Preserved": true
+  },
+  "domainModel3": {
+    "model3Reinvoked": false,
+    "domainVoteRerun": false,
+    "retainedDomainsReused": true,
+    "model2Required": false
+  },
+  "d160": {
+    "currentVisibleLocalHypotheses": "顺|便|向|木|李 (5 single-char windows only)",
+    "afterMinimalCorrection": "Union ~7 deduped windows including 顺便(0:2) and 向木(3:5) from alt paths",
+    "referenceSpecificLogicAdded": false
+  },
+  "regionalPathBoundarySafety": "PASS",
+  "newProductionTypeRequired": false,
+  "preferredPathFineSpanViewRetirement": "RETIRE_CANDIDATE",
+  "trainingGates": {
+    "architectureTrainingGate": "OPEN",
+    "developmentSequenceGate": "HOLD"
+  },
+  "recommendedNextPhase": "RETRY_MULTIHYPOTHESIS_MINIMAL_CORRECTION_DEVELOPMENT",
+  "minimalTargetFiles": [
+    "electron_node/electron-node/main/src/model3-runtime/model3-retry-region-resegment.ts"
+  ],
+  "governance": {
+    "productionCodeModified": false,
+    "testsModified": false,
+    "architectureModified": false
+  }
+}

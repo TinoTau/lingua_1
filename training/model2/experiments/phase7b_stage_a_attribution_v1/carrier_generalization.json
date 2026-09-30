@@ -1,0 +1,52 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "carrier_join_coverage_fraction_on_term_positives": 1.0,
+  "train_carrier_count": 110,
+  "cells": {
+    "seen_carrier_seen_term": {
+      "n": 5295,
+      "metrics": {
+        "n": 5295,
+        "Recall@1": 0.7199244570349386,
+        "Recall@3": 0.9354107648725213,
+        "Recall@4": 0.9592067988668556,
+        "MRR": 0.8295066912418193,
+        "Positive_average_pool_size": 15.942020774315392,
+        "FuzzyPool_Recall@16_ceiling": 1.0
+      },
+      "availability": "AVAILABLE"
+    },
+    "unseen_carrier_seen_term": {
+      "n": 0,
+      "metrics": {
+        "n": 0
+      },
+      "availability": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+    },
+    "seen_carrier_unseen_term": {
+      "n": 2518,
+      "metrics": {
+        "n": 2518,
+        "Recall@1": 0.044876886417791896,
+        "Recall@3": 0.1096108022239873,
+        "Recall@4": 0.15091342335186655,
+        "MRR": 0.16826504016237817,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0
+      },
+      "availability": "AVAILABLE"
+    },
+    "unseen_carrier_unseen_term": {
+      "n": 0,
+      "metrics": {
+        "n": 0
+      },
+      "availability": "NOT_AVAILABLE_BY_CURRENT_SPLIT"
+    }
+  },
+  "limitation": "carrier_id joined via correction_event→sample_plan_id→generation_plan; coverage=1.000. Incomplete join limits causal claims."
+}

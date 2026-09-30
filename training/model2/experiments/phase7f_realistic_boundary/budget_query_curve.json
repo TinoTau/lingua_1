@@ -1,0 +1,37 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "curve": [
+    {
+      "max_queries": 1,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 0.95,
+      "FalseExpansionRate": 0.02,
+      "latency_ms_p95": 63.51220000942703
+    },
+    {
+      "max_queries": 2,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 97.2197000082815
+    },
+    {
+      "max_queries": 4,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 105.37530000146944
+    },
+    {
+      "max_queries": 8,
+      "TargetIntroductionRate": 0.92,
+      "queries_mean": 1.175,
+      "FalseExpansionRate": 0.08,
+      "latency_ms_p95": 106.63880000356585
+    }
+  ]
+}

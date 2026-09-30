@@ -1,0 +1,708 @@
+{
+  "schema": "LINGUA_DIALOG200_D149_BASE_CANDIDATE_SET_DIFF_V1",
+  "caseId": "d149",
+  "note": "Unique identity sets from Capture compact path-local base_candidates vs Replay live path-local base_candidates.items (full, no slice). Path-local packs are NOT utterance-global Base tables.",
+  "counts": {
+    "capture_path_count": 4,
+    "replay_path_count": 2,
+    "capture_flat_occurrence_n": 50,
+    "replay_flat_occurrence_n": 28,
+    "capture_unique_n": 21,
+    "replay_unique_n": 21,
+    "live_sa_baseCandidateCount": 29,
+    "live_logicalQueryCount": 54,
+    "live_uniqueRecallKeyCount": 54,
+    "live_physicalSqlStatementCount": 83
+  },
+  "CAPTURE_UNIQUE_BASE_SET": [
+    "一",
+    "三",
+    "亿",
+    "以",
+    "伊",
+    "依",
+    "入园",
+    "内",
+    "出园",
+    "包车",
+    "古桥",
+    "古镇",
+    "可",
+    "合",
+    "合适",
+    "导览",
+    "尾",
+    "推",
+    "是",
+    "鞋",
+    "预订"
+  ],
+  "REPLAY_UNIQUE_BASE_SET": [
+    "一",
+    "亿",
+    "以",
+    "伊",
+    "何时",
+    "依",
+    "入园",
+    "内",
+    "出园",
+    "包车",
+    "古桥",
+    "古镇",
+    "可",
+    "天",
+    "导览",
+    "尾",
+    "把",
+    "散",
+    "腿",
+    "鞋",
+    "预订"
+  ],
+  "INTERSECTION": [
+    "一",
+    "亿",
+    "以",
+    "伊",
+    "依",
+    "入园",
+    "内",
+    "出园",
+    "包车",
+    "古桥",
+    "古镇",
+    "可",
+    "导览",
+    "尾",
+    "鞋",
+    "预订"
+  ],
+  "CAPTURE_ONLY": [
+    "三",
+    "合",
+    "合适",
+    "推",
+    "是"
+  ],
+  "REPLAY_ONLY": [
+    "何时",
+    "天",
+    "把",
+    "散",
+    "腿"
+  ],
+  "same_path_id_subset": {
+    "path_ids": [
+      "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+      "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4"
+    ],
+    "capture_bases": [
+      {
+        "path_id": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+        "base": [
+          "鞋",
+          "合适",
+          "三",
+          "内",
+          "可",
+          "以",
+          "一",
+          "亿",
+          "伊",
+          "依",
+          "尾",
+          "推"
+        ]
+      },
+      {
+        "path_id": "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4",
+        "base": [
+          "鞋",
+          "合适",
+          "三",
+          "内",
+          "可",
+          "预订",
+          "入园",
+          "出园",
+          "包车",
+          "古桥",
+          "古镇",
+          "导览"
+        ]
+      }
+    ],
+    "replay_bases": [
+      {
+        "path_id": "2913b934f41b6799cf1415142f4c210ceef85a8cc8572ca4ea9a0734a8e0e55b",
+        "boundary_key": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-13|13-14|14-15|15-16",
+        "surfaces": [
+          "鞋",
+          "何时",
+          "散",
+          "天",
+          "内",
+          "可",
+          "以",
+          "一",
+          "亿",
+          "伊",
+          "依",
+          "尾",
+          "腿",
+          "把"
+        ],
+        "items": [
+          {
+            "surface": "鞋",
+            "pinyin": "xie",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 4,
+            "syllableEnd": 5,
+            "candidateId": "4:5:1",
+            "termId": "base-single-char-term-e99e8b7c786965",
+            "score": 2.4,
+            "rawStart": 5,
+            "rawEnd": 6,
+            "domains": []
+          },
+          {
+            "surface": "何时",
+            "pinyin": "he|shi",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 6,
+            "syllableEnd": 8,
+            "candidateId": "6:8:3",
+            "termId": "base-rebuild-term-e4bd95e697b67c68",
+            "score": 2.35,
+            "rawStart": 8,
+            "rawEnd": 10,
+            "domains": []
+          },
+          {
+            "surface": "散",
+            "pinyin": "san",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 8,
+            "syllableEnd": 9,
+            "candidateId": "8:9:4",
+            "termId": "base-single-char-term-e695a37c73616e",
+            "score": 2.4,
+            "rawStart": 10,
+            "rawEnd": 11,
+            "domains": []
+          },
+          {
+            "surface": "天",
+            "pinyin": "tian",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 9,
+            "syllableEnd": 10,
+            "candidateId": "9:10:5",
+            "termId": "base-single-char-term-e5a4a97c7469616e",
+            "score": 2.4,
+            "rawStart": 11,
+            "rawEnd": 12,
+            "domains": []
+          },
+          {
+            "surface": "内",
+            "pinyin": "nei",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 10,
+            "syllableEnd": 11,
+            "candidateId": "10:11:6",
+            "termId": "base-single-char-term-e586857c6e6569",
+            "score": 2.4,
+            "rawStart": 12,
+            "rawEnd": 13,
+            "domains": []
+          },
+          {
+            "surface": "可",
+            "pinyin": "ke",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 11,
+            "syllableEnd": 12,
+            "candidateId": "11:12:7",
+            "termId": "base-single-char-term-e58faf7c6b65",
+            "score": 2.4,
+            "rawStart": 13,
+            "rawEnd": 14,
+            "domains": []
+          },
+          {
+            "surface": "以",
+            "pinyin": "yi",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "12:13:8",
+            "termId": "base-single-char-term-e4bba57c7969",
+            "score": 2.4,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "一",
+            "pinyin": "yi",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "m2d:12:13:1",
+            "termId": "term-e4b8807c7969",
+            "score": 0.9,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "亿",
+            "pinyin": "yi",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "m2d:12:13:2",
+            "termId": "term-e4babf7c7969",
+            "score": 0.9,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "伊",
+            "pinyin": "yi",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "m2d:12:13:3",
+            "termId": "term-e4bc8a7c7969",
+            "score": 0.9,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "依",
+            "pinyin": "yi",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "m2d:12:13:4",
+            "termId": "term-e4be9d7c7969",
+            "score": 0.9,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "尾",
+            "pinyin": "yi",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "base_term",
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "candidateId": "m2d:12:13:5",
+            "termId": "term-e5b0be7c7969",
+            "score": 0.9,
+            "rawStart": 14,
+            "rawEnd": 15,
+            "domains": []
+          },
+          {
+            "surface": "腿",
+            "pinyin": "tui",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 13,
+            "syllableEnd": 14,
+            "candidateId": "13:14:9",
+            "termId": "base-single-char-term-e885bf7c747569",
+            "score": 2.4,
+            "rawStart": 15,
+            "rawEnd": 16,
+            "domains": []
+          },
+          {
+            "surface": "把",
+            "pinyin": "ba",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 15,
+            "syllableEnd": 16,
+            "candidateId": "15:16:10",
+            "termId": "base-single-char-term-e68a8a7c6261",
+            "score": 2.4,
+            "rawStart": 17,
+            "rawEnd": 18,
+            "domains": []
+          }
+        ]
+      },
+      {
+        "path_id": "8c9b3f828b7e54b139272f154654f267aff248bfea2e62aa8704c8ac2779e1c4",
+        "boundary_key": "0-1|1-2|2-3|3-4|4-5|5-6|6-8|8-9|9-10|10-11|11-12|12-14|14-15|15-16",
+        "surfaces": [
+          "鞋",
+          "何时",
+          "散",
+          "天",
+          "内",
+          "可",
+          "预订",
+          "入园",
+          "出园",
+          "包车",
+          "古桥",
+          "古镇",
+          "导览",
+          "把"
+        ],
+        "items": [
+          {
+            "surface": "鞋",
+            "pinyin": "xie",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 4,
+            "syllableEnd": 5,
+            "candidateId": "4:5:1",
+            "termId": "base-single-char-term-e99e8b7c786965",
+            "score": 2.4,
+            "rawStart": 5,
+            "rawEnd": 6,
+            "domains": []
+          },
+          {
+            "surface": "何时",
+            "pinyin": "he|shi",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 6,
+            "syllableEnd": 8,
+            "candidateId": "6:8:3",
+            "termId": "base-rebuild-term-e4bd95e697b67c68",
+            "score": 2.35,
+            "rawStart": 8,
+            "rawEnd": 10,
+            "domains": []
+          },
+          {
+            "surface": "散",
+            "pinyin": "san",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 8,
+            "syllableEnd": 9,
+            "candidateId": "8:9:4",
+            "termId": "base-single-char-term-e695a37c73616e",
+            "score": 2.4,
+            "rawStart": 10,
+            "rawEnd": 11,
+            "domains": []
+          },
+          {
+            "surface": "天",
+            "pinyin": "tian",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 9,
+            "syllableEnd": 10,
+            "candidateId": "9:10:5",
+            "termId": "base-single-char-term-e5a4a97c7469616e",
+            "score": 2.4,
+            "rawStart": 11,
+            "rawEnd": 12,
+            "domains": []
+          },
+          {
+            "surface": "内",
+            "pinyin": "nei",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 10,
+            "syllableEnd": 11,
+            "candidateId": "10:11:6",
+            "termId": "base-single-char-term-e586857c6e6569",
+            "score": 2.4,
+            "rawStart": 12,
+            "rawEnd": 13,
+            "domains": []
+          },
+          {
+            "surface": "可",
+            "pinyin": "ke",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 11,
+            "syllableEnd": 12,
+            "candidateId": "11:12:7",
+            "termId": "base-single-char-term-e58faf7c6b65",
+            "score": 2.4,
+            "rawStart": 13,
+            "rawEnd": 14,
+            "domains": []
+          },
+          {
+            "surface": "预订",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:6",
+            "termId": "term-e9a284e8aea27c79",
+            "score": 0.88,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "入园",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:7",
+            "termId": "term-e585a5e59bad7c72",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "出园",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:8",
+            "termId": "term-e587bae59bad7c63",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "包车",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:9",
+            "termId": "term-e58c85e8bda67c62",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "古桥",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:10",
+            "termId": "term-e58fa4e6a1a57c67",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "古镇",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:11",
+            "termId": "term-e58fa4e995877c67",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "导览",
+            "pinyin": "yi|tui",
+            "provenance": "PROFILE_DOMAIN",
+            "source": "domain_term",
+            "syllableStart": 12,
+            "syllableEnd": 14,
+            "candidateId": "m2d:12:14:12",
+            "termId": "term-e5afbce8a7887c64",
+            "score": 0.86,
+            "rawStart": 14,
+            "rawEnd": 16,
+            "domains": [
+              "tourism_route"
+            ]
+          },
+          {
+            "surface": "把",
+            "pinyin": "ba",
+            "provenance": "BASE_FUZZY",
+            "source": "base_term",
+            "syllableStart": 15,
+            "syllableEnd": 16,
+            "candidateId": "15:16:10",
+            "termId": "base-single-char-term-e68a8a7c6261",
+            "score": 2.4,
+            "rawStart": 17,
+            "rawEnd": 18,
+            "domains": []
+          }
+        ]
+      }
+    ]
+  },
+  "divergent_surface_provenance_replay": {
+    "何时": {
+      "windowId": "6:8",
+      "windowPinyinKey": "he|shi",
+      "queryTonePinyinKey": "he2|shi2",
+      "toneLookupStage": "tone_exact",
+      "hitKind": "exact_term",
+      "syllableStart": 6,
+      "syllableEnd": 8,
+      "note": "Present on both replay paths; Capture same path_ids had 合适 instead"
+    },
+    "散": {
+      "windowId": "8:9",
+      "queryTonePinyinKey": "san4",
+      "SC_selected": "散",
+      "Capture_had": "三",
+      "note": "SC ACCEPT_UNIQUE_TONE_EXACT surface 散 for ASR text 三"
+    },
+    "天": {
+      "windowId": "9:10",
+      "queryTonePinyinKey": "tian1"
+    },
+    "腿": {
+      "windowId": "13:14",
+      "pinyin": "tui",
+      "note": "ASR 退 → fuzzy/tone hit 腿"
+    },
+    "把": {
+      "windowId": "15:16",
+      "pinyin": "ba",
+      "note": "ASR 吧 → fuzzy/tone hit 把"
+    },
+    "Capture_only_合_是_三_合适_推": {
+      "note": "合/是 appear in Capture path packs a11519a0/f49a89c1 (missing in replay path set). 合适 on Capture paths 2913b934/8c9b3f82 replaced by 何时 in Replay. 三 on Capture; Replay SC prefers 散 for san4. 推 Capture-only on some packs."
+    }
+  },
+  "replay_window_6_8": {
+    "queryTonePinyinKey": "he2|shi2",
+    "replacement": "何时",
+    "toneLookupStage": "tone_exact",
+    "capture_same_path_had": "合适"
+  },
+  "capture_kenlm_input_texts": [
+    "请问,这双鞋 不合是三天内可以退换吧",
+    "请问,这双鞋 不合适三天内可以退换吧",
+    "请问,这双鞋 不何时三天内可以退换吧"
+  ],
+  "capture_path_packs_summary": [
+    {
+      "path_prefix": "a11519a0",
+      "base": [
+        "鞋",
+        "合",
+        "是",
+        "三",
+        "内",
+        "可",
+        "以",
+        "一",
+        "亿",
+        "伊",
+        "依",
+        "尾",
+        "推"
+      ]
+    },
+    {
+      "path_prefix": "f49a89c1",
+      "base": [
+        "鞋",
+        "合",
+        "是",
+        "三",
+        "内",
+        "可",
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览"
+      ]
+    },
+    {
+      "path_prefix": "2913b934",
+      "base": [
+        "鞋",
+        "合适",
+        "三",
+        "内",
+        "可",
+        "以",
+        "一",
+        "亿",
+        "伊",
+        "依",
+        "尾",
+        "推"
+      ]
+    },
+    {
+      "path_prefix": "8c9b3f82",
+      "base": [
+        "鞋",
+        "合适",
+        "三",
+        "内",
+        "可",
+        "预订",
+        "入园",
+        "出园",
+        "包车",
+        "古桥",
+        "古镇",
+        "导览"
+      ]
+    }
+  ]
+}

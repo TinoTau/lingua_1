@@ -1,0 +1,11 @@
+{
+  "class_weight_retry": 3.0,
+  "balance": {
+    "STRICT": 0.3,
+    "ANCHOR_CONDITIONED_HARD_KEEP": 0.3,
+    "NATURAL": 0.25,
+    "NO_ANCHOR": 0.15
+  },
+  "pair_consistency_loss": true,
+  "contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1"
+}

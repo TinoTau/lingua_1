@@ -1,0 +1,57 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_ANCHOR_CONTRAST_FULL_100K_DEVELOPMENT",
+    "verdict": "ANCHOR_SIGNAL_DILUTED",
+    "anchor_signal_preserved": false,
+    "precision_improved": "YES",
+    "bigru_suitable": true,
+    "synthetic_v1_ready": false,
+    "ready_tts": false,
+    "recommended_next_phase": "MODEL3_V1_FULL100K_DIET_REBALANCE",
+    "note": "Precision improved strongly, but Anchor zero/shuffle flip~0.02% — Anchor signal diluted under natural diet (contrast only ~12%). Rebalance contrast density without returning to pilot 99%."
+  },
+  "runtime_impact": {
+    "architecture_changed": false,
+    "training_schema_changed": false,
+    "formal_anchor_contract_changed": false,
+    "domain_vote_changed": false,
+    "recall_changed": false,
+    "model2_changed": false,
+    "job_result_changed": false,
+    "production_retry": false,
+    "tts": false
+  },
+  "leakage_check": {
+    "stable": true,
+    "ok": 200,
+    "fail": 0,
+    "gate_pass": true
+  },
+  "hard_zeros": {
+    "anchor_retry": 0,
+    "illegal_retry": 0,
+    "fake_acoustic": 0,
+    "dialog_200_contamination": 0,
+    "pass": true
+  },
+  "report_artifact_count": 4,
+  "report_artifact_count_le_10": true,
+  "artifact_layout": {
+    "report": "Lingua_Model3_V1_Full100K_Development_Report_2026_08_24.md",
+    "bundle": "model3_v1_full100k_bundle.json",
+    "governance": "model3_v1_full100k_governance.json",
+    "human_qa": "model3_v1_full100k_human_qa_500.csv",
+    "dataset": "training/model3_dataset/model3_v1_anchor_contrast_full100k/",
+    "model": "training/model3_dataset/model3_v1_anchor_contrast_full100k_bigru/"
+  },
+  "modified_file_inventory": [
+    "training/model3_dataset/scripts/run_anchor_contrast_full100k.py",
+    "training/model3_dataset/train/train_full100k.py",
+    "training/model3_dataset/model3_v1_anchor_contrast_full100k/",
+    "training/model3_dataset/model3_v1_anchor_contrast_full100k_bigru/",
+    "docs/user_correction/model3/Lingua_Model3_V1_Full100K_Development_Report_2026_08_24.md",
+    "docs/user_correction/model3/model3_v1_full100k_bundle.json",
+    "docs/user_correction/model3/model3_v1_full100k_governance.json",
+    "docs/user_correction/model3/model3_v1_full100k_human_qa_500.csv"
+  ]
+}

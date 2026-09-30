@@ -1,0 +1,23 @@
+{
+  "baseline_id": "PRE_SINGLE_CHAR_MODEL2_BASELINE",
+  "architecture": "RetrievalPolicyV3",
+  "constructor": {"with_domain_head": true},
+  "forbidden_constructor_flags_after_rollback": ["with_ambiguity_head", "ambiguity_version"],
+  "forward_keys_with_domain": [
+    "action_logits",
+    "query_budget_logits",
+    "cand_budget_logits",
+    "domain_action_logits"
+  ],
+  "host_cmds": ["ping", "stats", "load", "load_index", "infer", "shutdown"],
+  "node_product_api": ["infer"],
+  "feature_pack": "MODEL2_FEATURE_HASH_V1",
+  "strict_load": true,
+  "params": 47210,
+  "sidecar": "ONE process-level singleton",
+  "sources": [
+    "Lingua_Model2_V3_StageJ_Model_Freeze_Report_2026_08_18.md",
+    "Lingua_Model2_V3_StageJ_Runtime_Checkpoint_Swap_Development_Report_2026_08_18.md",
+    "v3_stage_j_runtime_swap/modified_file_inventory.csv"
+  ]
+}

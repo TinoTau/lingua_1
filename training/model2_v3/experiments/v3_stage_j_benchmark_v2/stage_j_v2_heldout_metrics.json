@@ -1,0 +1,48 @@
+{
+  "P_heldout": {
+    "n": 439,
+    "support": "OK",
+    "RecallRetained": 1.0094562647754137,
+    "TIR_V3": 0.9726651480637813,
+    "CI95": [
+      0.9528340513406486,
+      0.9842956130811221
+    ]
+  },
+  "D_heldout_term": {
+    "tag": "HELDOUT_TERM",
+    "n": 6,
+    "support": "VERY_LOW_SUPPORT",
+    "Oracle_N": 6,
+    "Oracle_TIR": 1.0,
+    "J1_TIR": 1.0,
+    "RecallRetained": 1.0,
+    "CI95": [
+      0.6096569663469354,
+      1.0
+    ]
+  },
+  "D_heldout_span": {
+    "tag": "HELDOUT_SPAN",
+    "n": 24,
+    "support": "VERY_LOW_SUPPORT",
+    "Oracle_N": 24,
+    "Oracle_TIR": 1.0,
+    "J1_TIR": 1.0,
+    "RecallRetained": 1.0,
+    "CI95": [
+      0.8620194241710247,
+      1.0
+    ]
+  },
+  "D_clean_blind": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "RecallRetained": 1.0,
+    "TIR": 1.0,
+    "CI95": [
+      0.8388698745050667,
+      0.9999999999999998
+    ]
+  }
+}

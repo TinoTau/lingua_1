@@ -1,0 +1,11 @@
+{
+  "content_authority": "Lingua_single_char_repair_lexicon_strict_v1.csv",
+  "selection_rule": "CLD v2.1 one-char lexical entry + FrequencySUBTL>=10 AND FrequencyWeibo>=10",
+  "selection_version": "strict_v1 / Final Selection Audit 2026-08-21",
+  "upstream": "Chinese Lexical Database v2.1",
+  "license": "GPL stated in README — PENDING FOR PRODUCTION; not blocking internal validation",
+  "proposed_build_ssot_name": "docs/user_correction/single_char/single_char_repair_lexicon_v1.csv",
+  "proposed_source_label_in_sqlite": "single-char-repair-v1-strict",
+  "ime_tsv": "docs/pinyin-v2/import/single_char_dictionary.tsv — IME ONLY after cutover",
+  "sha256_strict": "3bbc1c65cc5073828ca4891d1ab11155b6d0d430fc2acca5d83959b7798b8b38"
+}

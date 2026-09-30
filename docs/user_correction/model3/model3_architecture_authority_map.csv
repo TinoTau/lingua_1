@@ -1,0 +1,14 @@
+doc,class,scope
+docs/fw-detector/freeze/FROZEN.md + Lattice Architecture V1.0.0,AUTHORITATIVE,FineSpan multipath lattice; path-local Domain Vote; CrossPath<=16; KenLM
+docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md,AUTHORITATIVE,Model3 role KEEP/RETRY; prohibitions; neighbor ownership
+docs/user_correction/model3/MODEL3_SYNTHETIC_V1_FROZEN.md,AUTHORITATIVE,Text-only role; mainline pipeline order; Anchor sources
+docs/user_correction/model3/model3_retry_contract_v1.md,AUTHORITATIVE,RETRY=bounded re-segmentation+re-recall; hard limits; not same-boundary recall
+docs/user_correction/model3/model3_anchor_contract_v1.md / input / output contracts,AUTHORITATIVE,Anchor/input/output companion contracts
+docs/user_correction/model3/documentation_authority_matrix.csv,AUTHORITATIVE,Document authority matrix (2026-08-26); needs refresh for post-mainline audits
+Lingua_Domain_Vote_Utterance_Singleton_Architecture_Audit_2026_09_01.md,SUPPLEMENTARY,Clarifies path-local vote MATCHES Lattice; corrects false utterance-singleton assumption
+Lingua_Retry_MultiHypothesis_Minimal_Correction_Audit_2026_08_29.md,SUPPLEMENTARY,preferred-path removal; multipath Retry restoration evidence
+All MODEL3_V2_S3_* audit reports 2026-09-02/03,AUDIT_ONLY,Evidence/metrics; MUST NOT redefine architecture SSOT
+model3_v2_s3_*_freeze_state.csv / corrected_freeze_state.csv,EVIDENCE_ONLY,Evidence status freezes; demote architecture-sounding prevalence to evidence-only
+documentation_authority_matrix note: retry_contract 'not enabled',STALE,Retry is mainline-active since MODEL3_V1_MAINLINE_INTEGRATION
+MODEL3_ARCHITECTURE_CONTRACT_V1 'Model3 invocations/utterance ≤1' literal,STALE_WORDING,Superseded by STAGE language: one decision STAGE may evaluate multiple retained paths; no Retry re-infer
+TTS readiness / freeze_tts_audit / early dual-path shadow plans,SUPERSEDED,Role correction / mainline integration superseded

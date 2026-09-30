@@ -1,0 +1,135 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_DATASET_COVERAGE_SCALE_AUDIT",
+  "auditVerdict": "CURRENT_DATASET_VALID_BUT_PRODUCTION_SCALE_EXPANSION_REQUIRED",
+  "currentDatasetValid": true,
+  "sufficientForBoundedExperiment": true,
+  "sufficientForProductionTraining": false,
+  "expansionRequired": true,
+  "architectureChangeRequired": false,
+  "pipelineAccepted": true,
+  "datasetBuildValid": true,
+  "productionModelAccepted": false,
+  "datasetId": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "primaryScaleUnit": "unique_semantic_families",
+  "alignmentOwner": "derive_malformed_regions(stage2_v2_label.py)",
+  "current": {
+    "semanticFamilies": 280,
+    "utterances": 280,
+    "audioRealizations": 280,
+    "paths": 849,
+    "pathSamples": 849,
+    "spanPathSamples": 14632,
+    "keepSpanRows": 13259,
+    "retrySpanRows": 865,
+    "maskedSpanRows": 508,
+    "uniqueMalformedRegions": 422,
+    "utterancesWithMalformedRegions": 237,
+    "retryLinkedRegionPathRows": 570,
+    "multipathUtterances": 189,
+    "retryCandGt0Utterances": 116
+  },
+  "errorFamilyCoverage": {
+    "SUBSTITUTION": {
+      "uniqueFamilies": 116,
+      "uniqueUtterances": 116,
+      "uniqueMalformedRegions": 139,
+      "spanPathRetryRows": 278,
+      "assessment": "well_represented"
+    },
+    "MULTI_CHAR_REPLACEMENT": {
+      "uniqueFamilies": 47,
+      "uniqueUtterances": 47,
+      "uniqueMalformedRegions": 50,
+      "spanPathRetryRows": 307,
+      "assessment": "well_represented"
+    },
+    "INSERTION": {
+      "uniqueFamilies": 27,
+      "uniqueUtterances": 27,
+      "uniqueMalformedRegions": 29,
+      "spanPathRetryRows": 183,
+      "assessment": "partially_represented"
+    },
+    "DELETION": {
+      "uniqueFamilies": 135,
+      "uniqueUtterances": 135,
+      "uniqueMalformedRegions": 204,
+      "spanPathRetryRows": 97,
+      "assessment": "partially_represented"
+    }
+  },
+  "unequalLengthRegions": 237,
+  "positionCoverage": {
+    "malformedRegions": {
+      "HEAD": 114,
+      "MID": 213,
+      "TAIL": 95
+    },
+    "retryUniqueUtterances": {
+      "HEAD": 63,
+      "MID": 94,
+      "TAIL": 33
+    }
+  },
+  "vocabulary": {
+    "uniqueCjkCharsReference": 395,
+    "uniqueBigramsReference": 1183
+  },
+  "sourcePool": {
+    "poolLines": 22177,
+    "usableUniqueFamiliesAfterFilters": 18994,
+    "gate0Excluded": 48,
+    "avgCjkUsable": 20.23
+  },
+  "acousticDiversity": {
+    "materializer": "piper_tts",
+    "speakerVariation": false,
+    "assessment": "adequate_for_pipeline_proof_not_production"
+  },
+  "decisions": {
+    "D1_productionSufficient": false,
+    "D2_boundedExperimentSufficient": true,
+    "D3_realErrorFamiliesRepresented": "yes_structurally_partial_density_for_insertion_deletion",
+    "D4_largestGaps": [
+      "scale_280_vs_19k_pool",
+      "sparse_workplace_travel_cs_tech_family_weather",
+      "question_form_diversity",
+      "acoustic_speaker_diversity",
+      "tail_retry_utterance_coverage"
+    ],
+    "D5_sourcePoolCapacity": 18994,
+    "D6_expandBeforeSeriousTraining": true,
+    "D7_recommendedScaleFamilies": "5000-25000",
+    "D8_scaleJustification": "pool_capacity_vocabulary_sampling_error_density_b2_cost_small_model_ok",
+    "D9_stagedExpansion": true,
+    "D10_oldRealDistReuse": "pretrain_or_ab_init_only_not_formal_merge",
+    "D11_trainingStrategy": "controlled_AB_random_init_vs_RealDist",
+    "D12_acousticDiversityAdequate": false,
+    "D13_pronunciationExpansionLaterPhase": true,
+    "D14_multiPcShardingFeasible": true,
+    "D15_materializationCostSecPerUtterance": 4.4
+  },
+  "recommendedScaleRangeFamilies": "5000-25000",
+  "recommendedTrainingStrategy": "controlled_A_B_random_init_vs_RealDist_on_same_formal_split",
+  "nextPhase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_DESIGN",
+  "multiPcFeasible": true,
+  "governance": {
+    "model3Changed": false,
+    "featureChanged": false,
+    "labelChanged": false,
+    "thresholdChanged": false,
+    "datasetModified": false,
+    "trainingExecuted": false
+  },
+  "artifacts": [
+    "Lingua_Model3_V2_Production_Dataset_Coverage_Scale_Audit_2026_08_30.md",
+    "model3_v2_real_error_family_coverage.csv",
+    "model3_v2_daily_conversation_coverage.csv",
+    "model3_v2_source_pool_capacity.csv",
+    "model3_v2_surface_shortcut_risk.csv",
+    "model3_v2_scale_cost_options.csv",
+    "model3_v2_production_dataset_audit_summary.json",
+    "model3_v2_vocabulary_linguistic_coverage.csv",
+    "model3_v2_old_dataset_reuse_matrix.csv"
+  ]
+}

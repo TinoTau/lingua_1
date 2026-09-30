@@ -1,0 +1,36 @@
+{
+  "UserProfileV1_fields": [
+    "schema_version",
+    "profile_version",
+    "phonetic_bias",
+    "tone_bias",
+    "personal_terms",
+    "personal_term_evidence",
+    "confusion_bias",
+    "domain_bias"
+  ],
+  "runtime_path": "SessionBootstrap -> node-agent-simple.sessionUserProfiles -> getSessionUserProfile(sessionId)",
+  "missing_profile_behavior_required": "Model2 no-op; continue base FineSpan recall; NO shadow pipeline",
+  "pronunciation_profile": {
+    "available": "YES_IF_CORRECTIONS",
+    "source": "phonetic_bias via ProfileDelta phonetic_updates",
+    "status": "READY_PARTIAL_DATA"
+  },
+  "personal_common_terms": {
+    "available": "SCHEMA_YES",
+    "writeback": "PARTIAL",
+    "status": "PARTIAL"
+  },
+  "long_term_domain_evidence": {
+    "available": "NOT_PRECOMPUTED",
+    "derive_from": "personal_terms + term_domain_tags at write-time or load-time",
+    "status": "NOT_AVAILABLE_YET_AS_FIELD"
+  },
+  "session_domain_prior": {
+    "available": "JobAssign.domainPriors soft quota only",
+    "Model2_field": "NOT_IN_UserProfileV1",
+    "status": "NOT_IMPLEMENTED_FOR_MODEL2"
+  },
+  "speaking_habit": "NOT_AVAILABLE_YET",
+  "verdict": "PARTIAL — pronunciation usable; lexical/domain/session incomplete for full Stage D"
+}

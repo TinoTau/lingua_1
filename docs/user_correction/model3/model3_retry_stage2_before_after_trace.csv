@@ -1,0 +1,7 @@
+afterQueries,afterQueryOffsets,afterRecallInvocations,anchorCrossingCount,beforeQueries,beforeQueryOffsets,beforeRecallInvocations,candidatePoolCap,caseId,cohortId,firstSemanticChange,keepCrossingCount,localSpanSource,localSpans,preferredPathCollapse,regionSyllableLen,resegmentOk,retryRegionId,singleCharContract
+顺;便;顺便,0:1|0:1;1:2|1:2;0:2|0:2,3,,顺;便,0:1|0:1;1:2|1:2,2,16,fixture_shun_bian,A_ADEQUATE_LOCALSPAN,STAGE2_QUERY_ENUMERATION,,LATTICE,顺|便,,2,True,m3rr:fine:0:1:fine:1:2,
+顺;便;向;顺便;便向;顺便向,0:1;1:2;2:3;0:2;1:3;0:3,6,,顺;便;向;顺便,0:1;1:2;2:3;0:2,4,16,fixture_shun_bian_xiang,B_CROSS_LOCALSPAN_WINDOW,STAGE2_QUERY_ENUMERATION,,LATTICE,顺|便|向|顺便,,3,True,m3rr:fine:0:1:fine:2:3,
+region_window_space_1to5,all_legal_contiguous,6,,path_union_localSpans,localSpan_bounds,4,16,fixture_merged_R3_paths,C_MULTIPATH,STAGE2_QUERY_ENUMERATION,,LATTICE,顺|便|向|顺便,NO,3,True,m3rr:fine:0:1:fine:2:3,
+A,0:1|0:1,1,,A,0:1|0:1,1,16,fixture_R1_A,D_SINGLE_CHAR,STAGE2_QUERY_ENUMERATION_NO_OP_R1,,LATTICE,A,,1,True,m3rr:fine:0:1:fine:0:1,UNCHANGED_base_only_surface_exact_cap1
+A;C,0:1;2:3,2,0,A;C,0:1;2:3,2,16,fixture_A_ANCHOR_C,E_ANCHOR_ADJACENT,STAGE2_QUERY_ENUMERATION_NO_OP_R1,,LATTICE,A;C,,1,True,m3rr:split_two_regions,
+B,1:2|1:2,1,,B,1:2|1:2,1,16,fixture_KEEP_B_KEEP,F_KEEP_ADJACENT,STAGE2_QUERY_ENUMERATION_NO_OP_R1,0,LATTICE,B,,1,True,m3rr:fine:1:2:fine:1:2,

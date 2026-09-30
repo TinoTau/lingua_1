@@ -1,0 +1,21 @@
+{
+  "before": {
+    "lexical_recoverable_dialogs": 6,
+    "path_recoverable_dialogs": 1,
+    "eligibility_gap_dialogs": 5,
+    "lexical_recoverable_units": 36,
+    "path_recoverable_units": 33,
+    "eligibility_gap_units": 10,
+    "gap_class": {
+      "NO_FINESPAN_COVERAGE": 9,
+      "CANDIDATE_BOUND_TO_WRONG_SPAN": 1
+    }
+  },
+  "after_class_counts": {
+    "NO_FINESPAN_COVERAGE": 9,
+    "CANDIDATE_BOUND_TO_WRONG_SPAN": 1
+  },
+  "eligibility_gap_units_after": 10,
+  "wrong_span_remaining": 1,
+  "note": "Simulated by removing m2d CANDIDATE_BOUND_TO_WRONG_SPAN matches; D hits[] still count as lexical surfaces. d090 BASE 上线 is out of D-fix scope."
+}

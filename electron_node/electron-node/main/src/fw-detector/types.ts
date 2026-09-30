@@ -393,6 +393,11 @@ export type SpanAssemblyV4Diagnostics = {
     }>;
     bucketDomains: Array<string | null>;
   };
+  /**
+   * Observation-only full-path trace (MODEL2_DIALOG200_TRACE=1).
+   * Must not exist when TRACE_OFF.
+   */
+  model2PathTrace?: Record<string, unknown>;
 } & SpanAssemblyV4TraceDiagnostics;
 
 export type FwPipelinePath = 'v4';
@@ -419,6 +424,12 @@ export type FwDetectorResult = {
   recallV2Diagnostics?: RecallJobV2Diagnostics;
   /** P4: sentence-level rerank diagnostics */
   sentenceRerank?: FwSentenceRerankDiagnostics;
+  /** Observation: raw ASR vs canonical FW Repair input (OpenCC t→cn). */
+  repairNormalization?: {
+    rawAsrText: string;
+    repairText: string;
+    scriptNormalized: boolean;
+  };
 };
 
 export type FwApprovedReplacement = {

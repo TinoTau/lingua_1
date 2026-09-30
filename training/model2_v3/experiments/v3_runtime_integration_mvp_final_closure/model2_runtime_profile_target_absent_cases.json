@@ -1,0 +1,716 @@
+{
+  "TEST_FIXTURE_ONLY": true,
+  "count": 22,
+  "cases": [
+    {
+      "case_id": "pta_n_l_01",
+      "relation": "n_l",
+      "observedSyllables": [
+        "lai",
+        "zi"
+      ],
+      "windowText": "来籽",
+      "targetId": "m2fix_t_pta_n_l_01",
+      "targetWord": "奶籽",
+      "targetPinyinKey": "nai|zi",
+      "distractorIds": [
+        "m2fix_d_pta_n_l_01_a",
+        "m2fix_d_pta_n_l_01_b"
+      ],
+      "phoneticBias": {
+        "n_l": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        3,
+        3
+      ],
+      "intendedTonePattern": [
+        3,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_n_l_02",
+      "relation": "n_l",
+      "observedSyllables": [
+        "li",
+        "zi"
+      ],
+      "windowText": "梨籽",
+      "targetId": "m2fix_t_pta_n_l_02",
+      "targetWord": "泥籽",
+      "targetPinyinKey": "ni|zi",
+      "distractorIds": [
+        "m2fix_d_pta_n_l_02_a",
+        "m2fix_d_pta_n_l_02_b"
+      ],
+      "phoneticBias": {
+        "n_l": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_n_l_03",
+      "relation": "n_l",
+      "observedSyllables": [
+        "lan",
+        "hua"
+      ],
+      "windowText": "兰花",
+      "targetId": "m2fix_t_pta_n_l_03",
+      "targetWord": "南花",
+      "targetPinyinKey": "nan|hua",
+      "distractorIds": [
+        "m2fix_d_pta_n_l_03_a",
+        "m2fix_d_pta_n_l_03_b"
+      ],
+      "phoneticBias": {
+        "n_l": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        1
+      ],
+      "intendedTonePattern": [
+        2,
+        1
+      ]
+    },
+    {
+      "case_id": "pta_sh_s_04",
+      "relation": "sh_s",
+      "observedSyllables": [
+        "si",
+        "zi"
+      ],
+      "windowText": "四籽",
+      "targetId": "m2fix_t_pta_sh_s_04",
+      "targetWord": "石籽",
+      "targetPinyinKey": "shi|zi",
+      "distractorIds": [
+        "m2fix_d_pta_sh_s_04_a",
+        "m2fix_d_pta_sh_s_04_b"
+      ],
+      "phoneticBias": {
+        "sh_s": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_sh_s_05",
+      "relation": "sh_s",
+      "observedSyllables": [
+        "su",
+        "cai"
+      ],
+      "windowText": "素菜",
+      "targetId": "m2fix_t_pta_sh_s_05",
+      "targetWord": "蔬菜",
+      "targetPinyinKey": "shu|cai",
+      "distractorIds": [
+        "m2fix_d_pta_sh_s_05_a",
+        "m2fix_d_pta_sh_s_05_b"
+      ],
+      "phoneticBias": {
+        "sh_s": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        4
+      ],
+      "intendedTonePattern": [
+        1,
+        4
+      ]
+    },
+    {
+      "case_id": "pta_sh_s_06",
+      "relation": "sh_s",
+      "observedSyllables": [
+        "san",
+        "zi"
+      ],
+      "windowText": "三籽",
+      "targetId": "m2fix_t_pta_sh_s_06",
+      "targetWord": "山籽",
+      "targetPinyinKey": "shan|zi",
+      "distractorIds": [
+        "m2fix_d_pta_sh_s_06_a",
+        "m2fix_d_pta_sh_s_06_b"
+      ],
+      "phoneticBias": {
+        "sh_s": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_h_f_07",
+      "relation": "h_f",
+      "observedSyllables": [
+        "fei",
+        "ji"
+      ],
+      "windowText": "飞机",
+      "targetId": "m2fix_t_pta_h_f_07",
+      "targetWord": "黑机",
+      "targetPinyinKey": "hei|ji",
+      "distractorIds": [
+        "m2fix_d_pta_h_f_07_a",
+        "m2fix_d_pta_h_f_07_b"
+      ],
+      "phoneticBias": {
+        "h_f": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        1
+      ],
+      "intendedTonePattern": [
+        1,
+        1
+      ]
+    },
+    {
+      "case_id": "pta_h_f_08",
+      "relation": "h_f",
+      "observedSyllables": [
+        "fu",
+        "zi"
+      ],
+      "windowText": "福籽",
+      "targetId": "m2fix_t_pta_h_f_08",
+      "targetWord": "湖籽",
+      "targetPinyinKey": "hu|zi",
+      "distractorIds": [
+        "m2fix_d_pta_h_f_08_a",
+        "m2fix_d_pta_h_f_08_b"
+      ],
+      "phoneticBias": {
+        "h_f": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_h_f_09",
+      "relation": "h_f",
+      "observedSyllables": [
+        "fang",
+        "zi"
+      ],
+      "windowText": "房籽",
+      "targetId": "m2fix_t_pta_h_f_09",
+      "targetWord": "航籽",
+      "targetPinyinKey": "hang|zi",
+      "distractorIds": [
+        "m2fix_d_pta_h_f_09_a",
+        "m2fix_d_pta_h_f_09_b"
+      ],
+      "phoneticBias": {
+        "h_f": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_z_zh_10",
+      "relation": "z_zh",
+      "observedSyllables": [
+        "zhong",
+        "zi"
+      ],
+      "windowText": "中籽",
+      "targetId": "m2fix_t_pta_z_zh_10",
+      "targetWord": "棕籽",
+      "targetPinyinKey": "zong|zi",
+      "distractorIds": [
+        "m2fix_d_pta_z_zh_10_a",
+        "m2fix_d_pta_z_zh_10_b"
+      ],
+      "phoneticBias": {
+        "z_zh": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_z_zh_11",
+      "relation": "z_zh",
+      "observedSyllables": [
+        "zhu",
+        "zi"
+      ],
+      "windowText": "竹籽",
+      "targetId": "m2fix_t_pta_z_zh_11",
+      "targetWord": "祖籽",
+      "targetPinyinKey": "zu|zi",
+      "distractorIds": [
+        "m2fix_d_pta_z_zh_11_a",
+        "m2fix_d_pta_z_zh_11_b"
+      ],
+      "phoneticBias": {
+        "z_zh": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        3,
+        3
+      ],
+      "intendedTonePattern": [
+        3,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_z_zh_12",
+      "relation": "z_zh",
+      "observedSyllables": [
+        "zhang",
+        "zi"
+      ],
+      "windowText": "章籽",
+      "targetId": "m2fix_t_pta_z_zh_12",
+      "targetWord": "脏籽",
+      "targetPinyinKey": "zang|zi",
+      "distractorIds": [
+        "m2fix_d_pta_z_zh_12_a",
+        "m2fix_d_pta_z_zh_12_b"
+      ],
+      "phoneticBias": {
+        "z_zh": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_ch_c_13",
+      "relation": "ch_c",
+      "observedSyllables": [
+        "ci",
+        "zi"
+      ],
+      "windowText": "词籽",
+      "targetId": "m2fix_t_pta_ch_c_13",
+      "targetWord": "池籽",
+      "targetPinyinKey": "chi|zi",
+      "distractorIds": [
+        "m2fix_d_pta_ch_c_13_a",
+        "m2fix_d_pta_ch_c_13_b"
+      ],
+      "phoneticBias": {
+        "ch_c": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_ch_c_14",
+      "relation": "ch_c",
+      "observedSyllables": [
+        "can",
+        "zi"
+      ],
+      "windowText": "残籽",
+      "targetId": "m2fix_t_pta_ch_c_14",
+      "targetWord": "禅籽",
+      "targetPinyinKey": "chan|zi",
+      "distractorIds": [
+        "m2fix_d_pta_ch_c_14_a",
+        "m2fix_d_pta_ch_c_14_b"
+      ],
+      "phoneticBias": {
+        "ch_c": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_ch_c_15",
+      "relation": "ch_c",
+      "observedSyllables": [
+        "cu",
+        "zi"
+      ],
+      "windowText": "粗籽",
+      "targetId": "m2fix_t_pta_ch_c_15",
+      "targetWord": "初籽",
+      "targetPinyinKey": "chu|zi",
+      "distractorIds": [
+        "m2fix_d_pta_ch_c_15_a",
+        "m2fix_d_pta_ch_c_15_b"
+      ],
+      "phoneticBias": {
+        "ch_c": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_eng_en_16",
+      "relation": "eng_en",
+      "observedSyllables": [
+        "chen",
+        "zi"
+      ],
+      "windowText": "尘籽",
+      "targetId": "m2fix_t_pta_eng_en_16",
+      "targetWord": "橙籽",
+      "targetPinyinKey": "cheng|zi",
+      "distractorIds": [
+        "m2fix_d_pta_eng_en_16_a",
+        "m2fix_d_pta_eng_en_16_b"
+      ],
+      "phoneticBias": {
+        "eng_en": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_eng_en_17",
+      "relation": "eng_en",
+      "observedSyllables": [
+        "fen",
+        "zi"
+      ],
+      "windowText": "分子",
+      "targetId": "m2fix_t_pta_eng_en_17",
+      "targetWord": "风籽",
+      "targetPinyinKey": "feng|zi",
+      "distractorIds": [
+        "m2fix_d_pta_eng_en_17_a",
+        "m2fix_d_pta_eng_en_17_b"
+      ],
+      "phoneticBias": {
+        "eng_en": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_in_ing_18",
+      "relation": "in_ing",
+      "observedSyllables": [
+        "xing",
+        "zi"
+      ],
+      "windowText": "星籽",
+      "targetId": "m2fix_t_pta_in_ing_18",
+      "targetWord": "心籽",
+      "targetPinyinKey": "xin|zi",
+      "distractorIds": [
+        "m2fix_d_pta_in_ing_18_a",
+        "m2fix_d_pta_in_ing_18_b"
+      ],
+      "phoneticBias": {
+        "in_ing": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_in_ing_19",
+      "relation": "in_ing",
+      "observedSyllables": [
+        "ping",
+        "zi"
+      ],
+      "windowText": "平籽",
+      "targetId": "m2fix_t_pta_in_ing_19",
+      "targetWord": "拼籽",
+      "targetPinyinKey": "pin|zi",
+      "distractorIds": [
+        "m2fix_d_pta_in_ing_19_a",
+        "m2fix_d_pta_in_ing_19_b"
+      ],
+      "phoneticBias": {
+        "in_ing": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_in_ing_20",
+      "relation": "in_ing",
+      "observedSyllables": [
+        "ying",
+        "zi"
+      ],
+      "windowText": "影子",
+      "targetId": "m2fix_t_pta_in_ing_20",
+      "targetWord": "音籽",
+      "targetPinyinKey": "yin|zi",
+      "distractorIds": [
+        "m2fix_d_pta_in_ing_20_a",
+        "m2fix_d_pta_in_ing_20_b"
+      ],
+      "phoneticBias": {
+        "in_ing": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        1,
+        3
+      ],
+      "intendedTonePattern": [
+        1,
+        3
+      ]
+    },
+    {
+      "case_id": "pta_n_l_21",
+      "relation": "n_l",
+      "observedSyllables": [
+        "lao",
+        "shi"
+      ],
+      "windowText": "老师",
+      "targetId": "m2fix_t_pta_n_l_21",
+      "targetWord": "闹市",
+      "targetPinyinKey": "nao|shi",
+      "distractorIds": [
+        "m2fix_d_pta_n_l_21_a",
+        "m2fix_d_pta_n_l_21_b"
+      ],
+      "phoneticBias": {
+        "n_l": 0.9
+      },
+      "multiTag": true,
+      "domainScope": [
+        "coffee",
+        "milk_tea",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        4,
+        4
+      ],
+      "intendedTonePattern": [
+        4,
+        4
+      ]
+    },
+    {
+      "case_id": "pta_sh_s_22",
+      "relation": "sh_s",
+      "observedSyllables": [
+        "sao",
+        "zi"
+      ],
+      "windowText": "臊籽",
+      "targetId": "m2fix_t_pta_sh_s_22",
+      "targetWord": "勺籽",
+      "targetPinyinKey": "shao|zi",
+      "distractorIds": [
+        "m2fix_d_pta_sh_s_22_a",
+        "m2fix_d_pta_sh_s_22_b"
+      ],
+      "phoneticBias": {
+        "sh_s": 0.9
+      },
+      "multiTag": false,
+      "domainScope": [
+        "coffee",
+        "food_order"
+      ],
+      "observedTonePattern": [
+        2,
+        3
+      ],
+      "intendedTonePattern": [
+        2,
+        3
+      ]
+    }
+  ]
+}

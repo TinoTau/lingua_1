@@ -1,0 +1,15 @@
+path,git_status,production_runtime,this_round_modified,note
+training/model2/fuzzy/pool.py,UNCHANGED,YES,NO,read-only audit
+training/model2/retrieval/finespan_retrieval.py,UNCHANGED,YES,NO,read-only audit
+training/model2/candidates/index.py,UNCHANGED,YES,NO,read-only audit
+training/model2/contract.py,UNCHANGED,YES,NO,read-only audit
+training/model2_v3/policy/domain_actions.py,UNCHANGED,YES,NO,read-only audit
+training/model2_v3/policy/multitag.py,UNCHANGED,YES,NO,read-only audit
+training/model2_v3/policy/stage_d_target_identity_v1.py,UNCHANGED,YES,NO,read-only audit
+training/model2_v3/dataset/policy_stage_d2/candidate_index_stage_d2.jsonl,UNCHANGED,NO,NO,lexicon index not modified
+electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,UNCHANGED,YES,NO,read-only audit
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/apply-domain-prior-quota.ts,UNCHANGED,YES,NO,read-only audit
+training/model2_v3/scripts/run_v3_stage_j_soft_prior_yield_architecture_drift_audit.py,NEW,NO,YES,audit script only
+training/model2_v3/experiments/v3_stage_j_soft_prior_yield_audit/,NEW,NO,YES,audit artifacts only
+docs/user_correction/Lingua_Model2_V3_StageJ_Lexicon_Soft_Prior_Yield_Architecture_Drift_Audit_2026_08_17.md,NEW,NO,YES,audit report only
+(summary),,production_code_modified=0,this_round_production=0,worktree may contain unrelated dirty files; this round did not edit them

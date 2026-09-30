@@ -1,0 +1,25 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "correct_profile": {
+    "p50_ms": 52.262500001234,
+    "p95_ms": 65.82469999557361,
+    "queries_mean": 1.012,
+    "queries_p95": 1.0,
+    "new_candidates_mean": 2.91,
+    "new_candidates_p95": 8.0
+  },
+  "budget": {
+    "max_active_profile_relations_per_span": 2,
+    "max_generated_phonetic_queries": 8,
+    "max_new_candidates_per_query": 8,
+    "max_total_profile_candidates": 8,
+    "distance_threshold": 2,
+    "strength_policy": "SPIKE_ONLY ACTIVE/INACTIVE via strength>0; NOT_FINAL_STRENGTH_CONTRACT"
+  },
+  "principle": "small bounded retrieval; FuzzyPool-style length-bucket scan per query"
+}

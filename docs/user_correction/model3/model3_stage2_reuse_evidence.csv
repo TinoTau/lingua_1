@@ -1,0 +1,9 @@
+capability,production_symbol,harness_usage,copied_reimplemented
+FineSpan,runLatticeFineSpanGeneration,direct require from dist,NO
+Domain Vote,voteUtteranceDomainFromPool,direct require,NO
+SameDomain,isSameDomainCandidate predicate (assemble-domain-aware-span-sets),same predicate offline,NO new algorithm
+Recall,recallTopKForWindows (+ recallSpanTopKV2 fallback),direct require,NO
+Normalization,normalizeForFwRepairInput,direct require,NO
+Lexicon,LexiconRuntimeV2.loadFromBundleDir(v3),readonly,NO
+Pinyin coord,buildUtteranceSyllableCoordinate,direct require,NO
+Model2 Anchor,n/a,UNAVAILABLE constant,NO forge

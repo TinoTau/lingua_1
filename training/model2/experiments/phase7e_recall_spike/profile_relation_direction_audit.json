@@ -1,0 +1,150 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "semantics": {
+    "user_feature_X_Y": "User tends to produce Y when canonical is X (canonical→observed confusion).",
+    "candidate_relation_match": "Observed source has Y and candidate has X → matches user feature X_Y.",
+    "example": {
+      "user_feature": "n_l",
+      "canonical": "nai3",
+      "observed": "lai3",
+      "candidate": "nai3",
+      "boosts_feature": "n_l",
+      "not_feature": "l_n"
+    }
+  },
+  "BOUND_and_related": [
+    {
+      "relation": "n_l",
+      "intended_form": "n",
+      "observed_form": "l",
+      "retrieval_reverse_mapping": "l_n",
+      "match_rule": "source.initial==l AND candidate.initial==n",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "l_n",
+      "intended_form": "l",
+      "observed_form": "n",
+      "retrieval_reverse_mapping": "n_l",
+      "match_rule": "source.initial==n AND candidate.initial==l",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "zh_z",
+      "intended_form": "zh",
+      "observed_form": "z",
+      "retrieval_reverse_mapping": "z_zh",
+      "match_rule": "source.initial==z AND candidate.initial==zh",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "z_zh",
+      "intended_form": "z",
+      "observed_form": "zh",
+      "retrieval_reverse_mapping": "zh_z",
+      "match_rule": "source.initial==zh AND candidate.initial==z",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "ch_c",
+      "intended_form": "ch",
+      "observed_form": "c",
+      "retrieval_reverse_mapping": "c_ch",
+      "match_rule": "source.initial==c AND candidate.initial==ch",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "c_ch",
+      "intended_form": "c",
+      "observed_form": "ch",
+      "retrieval_reverse_mapping": "ch_c",
+      "match_rule": "source.initial==ch AND candidate.initial==c",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "sh_s",
+      "intended_form": "sh",
+      "observed_form": "s",
+      "retrieval_reverse_mapping": "s_sh",
+      "match_rule": "source.initial==s AND candidate.initial==sh",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "an_ang",
+      "intended_form": "an",
+      "observed_form": "ang",
+      "retrieval_reverse_mapping": "ang_an",
+      "match_rule": "source.final==ang AND candidate.final==an",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "ang_an",
+      "intended_form": "ang",
+      "observed_form": "an",
+      "retrieval_reverse_mapping": "an_ang",
+      "match_rule": "source.final==an AND candidate.final==ang",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "eng_en",
+      "intended_form": "eng",
+      "observed_form": "en",
+      "retrieval_reverse_mapping": "en_eng",
+      "match_rule": "source.final==en AND candidate.final==eng",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "in_ing",
+      "intended_form": "in",
+      "observed_form": "ing",
+      "retrieval_reverse_mapping": "ing_in",
+      "match_rule": "source.final==ing AND candidate.final==in",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    },
+    {
+      "relation": "ing_in",
+      "intended_form": "ing",
+      "observed_form": "in",
+      "retrieval_reverse_mapping": "in_ing",
+      "match_rule": "source.final==in AND candidate.final==ing",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "f_h",
+      "intended_form": "f",
+      "observed_form": "h",
+      "retrieval_reverse_mapping": "h_f",
+      "match_rule": "source.initial==h AND candidate.initial==f",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": false
+    },
+    {
+      "relation": "h_f",
+      "intended_form": "h",
+      "observed_form": "f",
+      "retrieval_reverse_mapping": "f_h",
+      "match_rule": "source.initial==f AND candidate.initial==h",
+      "evidence_source": "D:\\Programs\\github\\lingua_1\\training\\model2\\stage_b\\phonetic_relation_direction_contract_v1.json",
+      "in_BOUND_FEATURES_V1": true
+    }
+  ],
+  "verdict": "PASS",
+  "note": "X_Y = intended/canonical X → observed Y; retrieval applies OPPOSITE_DIRECTION[X_Y]"
+}

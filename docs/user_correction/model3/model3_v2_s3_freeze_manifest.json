@@ -1,0 +1,228 @@
+{
+  "freezeId": "MODEL3_V2_S3_EXPERIMENTAL_BASELINE_FREEZE_20260831",
+  "frozenAt": "2026-08-30T22:24:56.806637+00:00",
+  "verdict": "S3_FREEZE_PASS_WITH_DOCUMENTATION_CORRECTIONS",
+  "conflicts": [],
+  "dataset": {
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "families": 10000,
+    "utterances": 10000,
+    "paths": 30354,
+    "spanPathSamples": 483957,
+    "labels": {
+      "KEEP": 437146,
+      "MASKED": 16401,
+      "RETRY": 30410
+    },
+    "lineage": "S2_4994_reuse_plus_5006_new_materialization",
+    "s2Mutation": false
+  },
+  "checkpoint": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "bestEpoch": 8,
+    "init": "RANDOM_FROM_SCRATCH",
+    "seed": 2026083013,
+    "policy": {
+      "arch": "BiGRU",
+      "embed": 64,
+      "hidden": 128,
+      "features": 6,
+      "optimizer": "Adam",
+      "lr": 0.001,
+      "batch": 64,
+      "epochs": 8,
+      "class_weight_retry": 1.0,
+      "decision": "argmax"
+    }
+  },
+  "contracts": {
+    "featureContract": "packModel3SpanInferFields",
+    "labelContract": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "pipeline": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+    "protectionRegistry": "MODEL3_V2_PROTECTION_REGISTRY"
+  },
+  "businessResponsibility": {
+    "role": "ASR_POSTPROCESSING_TEXT_REPAIR_TRIGGER",
+    "actionableDecisions": [
+      "KEEP",
+      "RETRY"
+    ],
+    "eligibleTargets": "non_Anchor_FineSpans_only",
+    "doesNotOwn": [
+      "ASR",
+      "audio",
+      "span_create_split_merge",
+      "Lexicon",
+      "candidates",
+      "DomainVote",
+      "Anchor_create_modify",
+      "text_repair",
+      "assembly",
+      "KenLM",
+      "Retry_reconstruction"
+    ]
+  },
+  "anchorSemantics": {
+    "isAnchor": "ownership flag",
+    "anchorRelation": "audit/context spatial relation only",
+    "mayEncodeInSequence": true,
+    "mayHaveInternalLogits": true,
+    "effectiveDecisionOwned": false,
+    "invariant": "EFFECTIVE_RETRY_ON_ISANCHOR_TRUE = 0",
+    "clarificationType": "SSOT_WORDING_CORRECTION_NOT_ARCHITECTURE_CHANGE",
+    "observedEffectiveAnchorRetry": {
+      "s2": 0,
+      "s3": 0
+    }
+  },
+  "localizationMetricSsot": {
+    "L1": "EXACT_TARGET_OVERLAP_diagnostic",
+    "L2": "LOCAL_ERROR_REGION_RETRY_primary",
+    "L3": "CLEAR_DISTANT_FALSE_RETRY",
+    "L4": "KEEP_CONTROL_FALSE_RETRY",
+    "localClasses": [
+      "SAME_LOCAL_ERROR_REGION",
+      "TARGET_ADJACENT",
+      "TARGET_OVERLAP"
+    ],
+    "l3EvaluatorId": "MODEL3_V2_L3_EVALUATOR_V1",
+    "l3EvaluatorVersion": "20260831_v1",
+    "marginBuckets": {
+      "WEAK": "0 < margin < 1",
+      "MODERATE": "1 <= margin < 3",
+      "STRONG": "margin >= 3",
+      "NONPOSITIVE": "margin <= 0"
+    },
+    "dedup": "logical_(caseId,start,end,surface)_max_margin"
+  },
+  "learningCurveBaseline": {
+    "S1": {
+      "families": 999,
+      "retry_f1": 0.4859
+    },
+    "S2": {
+      "families": 4994,
+      "retry_p": 0.8837,
+      "retry_r": 0.8309,
+      "retry_f1": 0.8565
+    },
+    "S3": {
+      "families": 10000,
+      "retry_p": 0.947,
+      "retry_r": 0.8011,
+      "retry_f1": 0.8679
+    },
+    "interpretation": "DATA_SCALE_DIMINISHING_RETURNS_WEAKLY_PRODUCTIVE"
+  },
+  "protectedBaseline": {
+    "s2": {
+      "L1": 6,
+      "L2": 13,
+      "L3": {
+        "affectedCases": 12,
+        "logicalUniqueSpans": 24,
+        "STRONG": 11,
+        "MODERATE": 9,
+        "WEAK": 4,
+        "NONPOSITIVE": 0,
+        "legacyBucketCounts": {
+          "MODERATE": 9,
+          "WEAK": 4,
+          "STRONG": 11
+        },
+        "meanMargin": 3.337160721886903,
+        "medianMargin": 2.777118444442749,
+        "maxMargin": 7.750890731811523,
+        "minMargin": 0.06182343512773514
+      },
+      "L4": {
+        "falseRetryCases": 0,
+        "controls": 6,
+        "logicalSpans": 0,
+        "maxMargin": null
+      }
+    },
+    "s3": {
+      "L1": 6,
+      "L2": 13,
+      "L3": {
+        "affectedCases": 8,
+        "logicalUniqueSpans": 17,
+        "STRONG": 12,
+        "MODERATE": 3,
+        "WEAK": 2,
+        "NONPOSITIVE": 0,
+        "legacyBucketCounts": {
+          "MODERATE": 3,
+          "STRONG": 12,
+          "WEAK": 2
+        },
+        "meanMargin": 5.837132639744702,
+        "medianMargin": 5.264155864715576,
+        "maxMargin": 13.26422119140625,
+        "minMargin": 0.4164907783269882
+      },
+      "L4": {
+        "falseRetryCases": 0,
+        "controls": 6,
+        "logicalSpans": 0,
+        "maxMargin": null
+      }
+    },
+    "protectedSetRole": "REGRESSION_SENTINEL_NOT_POPULATION_BENCHMARK"
+  },
+  "complexityDecisions": {
+    "runtimeFilter": false,
+    "thresholdTune": false,
+    "classWeightTune": false,
+    "newFeature": false,
+    "largerModel": false,
+    "autoExpand19k": false,
+    "noComplexityIncreaseAuthorized": true
+  },
+  "l3Reconciliation": {
+    "resolved": true,
+    "historicalSource": "model3_v2_s2_retry_margin_analysis.csv + S2 localization report",
+    "historicalLogicalClear": 24,
+    "historicalStrong": 10,
+    "authoritativeLogicalClear": 24,
+    "authoritativeStrong": 11,
+    "authoritativeLegacyBucketStrong": 11,
+    "onlyStrongInAuthoritative": [
+      [
+        "d176",
+        "16",
+        "17",
+        "忙"
+      ]
+    ],
+    "onlyStrongInHistorical": [],
+    "boundaryCrossings": [
+      {
+        "key": [
+          "d176",
+          "16",
+          "17",
+          "忙"
+        ],
+        "histMargin": 2.853264331817627,
+        "authMargin": 3.242930054664612
+      }
+    ],
+    "causeTags": [
+      "HISTORICAL_CSV_VS_AUTHORITATIVE_REPLAY",
+      "ONE_SPAN_MARGIN_CROSSED_OR_REPLAYED_ABOVE_3",
+      "SAME_LOGICAL_CLEAR_COUNT_EXPECTED_24"
+    ],
+    "note": "Discrepancy is evaluation SSOT (historical snapshot margins vs single authoritative replay dedup), not model/registry drift. Freeze uses authoritative recompute."
+  },
+  "documentationAuthority": {
+    "architectureSsot": "AUTHORITATIVE",
+    "s3FreezeManifest": "AUTHORITATIVE",
+    "s3ProductionReport": "HISTORICAL_EVIDENCE",
+    "s2LocalizationAudit": "HISTORICAL_EVIDENCE_SUPERSEDED_FOR_L3_COUNTS",
+    "l3EvaluatorV1": "AUTHORITATIVE"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "phase": "LINGUA_FULL_PILOT_EXECUTION_GOVERNANCE_AND_LIMIT_REPAIR",
+  "auditDate": "2026-09-12",
+  "limitOptionPreserved": "PASS",
+  "caseIdsOptionPreserved": "PASS",
+  "executionModes": {
+    "full": "PASS (selectedCases == 200 && generatedRuns == 600)",
+    "partial": "PASS (--limit or --case-ids or selectedCases != 200)"
+  },
+  "partialRunClassification": "PASS",
+  "partialArtifactIsolation": "PASS",
+  "authoritativeArtifactWriteGuard": "PASS",
+  "runIncompleteFailClosed": "PASS",
+  "partialPilotHypothesisStatus": "NOT_EVALUATED",
+  "partialProfileContrastStatus": "NON_AUTHORITATIVE",
+  "partialDominantFailureOwner": "NOT_COMPUTED_FOR_INCOMPLETE_BASELINE",
+  "oneNextOwnerFailClosed": "PASS (PILOT200_POST_PRE_EDGE_RESTORE_FULL_REMEASURE)",
+  "reportHardcodedCompletenessRemoved": "PASS",
+  "reportUsesRuntimeCounts": "PASS",
+  "uniqueRunCompletenessCheck": "PASS",
+  "conditionCompletenessCheck": "PASS (200 / 200 / 200)",
+  "duplicate600Rejected": "PASS",
+  "imbalanced600Rejected": "PASS",
+  "asrEmptyValidRunRegression": "PASS",
+  "authoritativeArtifactOverwriteByProbe": false,
+  "authoritativeArtifactHashes": {
+    "SUMMARY": "fb096e87b53cdc0482190f001c84910267899e339a486e0bb41e21e358409ac8",
+    "RUN_MATRIX": "66cd140d857a37eb0d6c845d9295aa4d4ee39e18022b369f17ac287e8aa08a3b",
+    "REPORT": "ac82efbc0ced8d647790a86af199ce0cbfcde50882611b842e790da6daff655d"
+  },
+  "tests": {
+    "testA_limit2": "PASS",
+    "testB_caseIds": "PASS",
+    "testC_syntheticCompleteness": "PASS",
+    "testD_duplicateProtection": "PASS",
+    "testE_conditionImbalance": "PASS",
+    "testF_asrEmptyValidity": "PASS",
+    "testG_reportConsistency": "PASS"
+  },
+  "harnessOnlyChange": true,
+  "productCodeChange": false,
+  "model2Change": false,
+  "toneChange": false,
+  "lexiconChange": false,
+  "model3Change": false,
+  "datasetChange": false,
+  "architectureRegression": false,
+  "acceptance": "PASS",
+  "oneNextOwner": "PILOT200_POST_PRE_EDGE_RESTORE_FULL_REMEASURE"
+}

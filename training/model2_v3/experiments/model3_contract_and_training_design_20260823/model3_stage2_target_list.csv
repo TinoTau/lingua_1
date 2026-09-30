@@ -1,0 +1,9 @@
+file_or_module,classification,rationale
+Stage1 artifacts,KEEP,provenance + trace plumbing
+offline label generator package,CREATE,alignment + RETRY/KEEP rules
+MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json,KEEP,authoritative schema frozen (supersedes draft)
+model3_training_sample_schema_v1.json,SUPERSEDED,do not use for shards or Stage2
+dialog_200,KEEP,val/research only — not sole train set
+Model2 rows.jsonl,KEEP,evidence research only
+production runtime inference,DO_NOT_TOUCH,no Model3 enable
+retry coordinator,DO_NOT_TOUCH,Stage6 only

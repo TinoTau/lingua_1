@@ -9,6 +9,8 @@ import {
   NodeRegisterAckMessage,
   JobAssignMessage,
   JobCancelMessage,
+  SessionBootstrapMessage,
+  UserProfileV1,
   InstalledService,
 } from '../../../../shared/protocols/messages';
 import { loadNodeConfig, getSchedulerUrl, type NodeConfig } from '../node-config';
@@ -63,6 +65,11 @@ export class NodeAgent {
   private processedJobIds: Set<string> = new Set();
   /** 同一 (session_id, utterance_index) 只接受一个 job，杜绝同一 ui 双 Job */
   private sessionUtteranceToJobId: Map<string, string> = new Map();
+  /** session-only UserProfile cache (Phase 1). Never persisted to disk. */
+  private sessionUserProfiles: Map<
+    string,
+    { userId?: string | null; profileVersion?: number | null; profile?: UserProfileV1 | null }
+  > = new Map();
 
   // ✅ Day 2: 快照函数替代Manager依赖
   private getServiceSnapshot: () => InstalledService[];
@@ -327,6 +334,24 @@ export class NodeAgent {
           break;
         }
 
+        case 'session_bootstrap': {
+          const boot = message as SessionBootstrapMessage;
+          this.sessionUserProfiles.set(boot.session_id, {
+            userId: boot.user_id,
+            profileVersion: boot.profile_version,
+            profile: boot.user_profile ?? null,
+          });
+          logger.info(
+            {
+              sessionId: boot.session_id,
+              userId: boot.user_id,
+              profileVersion: boot.profile_version,
+            },
+            'SessionBootstrap cached in memory (no disk persistence)'
+          );
+          break;
+        }
+
         default:
           logger.warn({ messageType: message.type }, 'Unknown message type');
       }
@@ -393,10 +418,14 @@ export class NodeAgent {
       'Received job_assign, starting processing'
     );
 
+    const profileBinding = this.getSessionUserProfile(job.session_id);
     try {
       // 使用 JobProcessor 处理 job（包含流式 ASR、TTS 编码等）
       const processStartTime = Date.now();
-      const processResult = await this.jobProcessor.processJob(job, startTime);
+      const processResult = await this.jobProcessor.processJob(job, startTime, {
+        userProfile: profileBinding?.profile ?? null,
+        profileVersion: profileBinding?.profileVersion ?? null,
+      });
       const processDuration = Date.now() - processStartTime;
 
       if (processDuration > 30000) {
@@ -438,5 +467,26 @@ export class NodeAgent {
         this.sessionUtteranceToJobId.delete(key);
       }
     }
+    this.sessionUserProfiles.delete(sessionId);
+  }
+
+  /** Test/inspection helper: session profile cache (memory only). */
+  getSessionUserProfile(sessionId: string) {
+    return this.sessionUserProfiles.get(sessionId);
+  }
+
+  /**
+   * Harness helper: apply production-shaped SessionBootstrap into session cache.
+   * Does not change production WS path semantics — same Map write as `session_bootstrap` message.
+   */
+  applySessionBootstrap(boot: SessionBootstrapMessage): void {
+    if (!boot?.session_id || typeof boot.session_id !== 'string') {
+      throw new Error('applySessionBootstrap: session_id required');
+    }
+    this.sessionUserProfiles.set(boot.session_id, {
+      userId: boot.user_id ?? null,
+      profileVersion: boot.profile_version ?? boot.user_profile?.profile_version ?? null,
+      profile: boot.user_profile ?? null,
+    });
   }
 }

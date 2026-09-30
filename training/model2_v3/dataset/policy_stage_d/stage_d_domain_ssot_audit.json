@@ -1,0 +1,34 @@
+{
+  "ssot": "CandidateRecord.domain_ids derived from Lexicon term_domain_tags",
+  "DOMAIN_SLOT_IDS": [
+    "tourism_pickup",
+    "tourism_hotel",
+    "tourism_route",
+    "tourism_transport",
+    "coffee",
+    "milk_tea",
+    "bakery",
+    "food_order",
+    "tech_ai",
+    "meeting",
+    "medical",
+    "transport"
+  ],
+  "terms_per_domain": {
+    "tourism_pickup": 41,
+    "tourism_hotel": 49,
+    "tourism_route": 61,
+    "tourism_transport": 50,
+    "coffee": 82,
+    "milk_tea": 44,
+    "bakery": 37,
+    "food_order": 63,
+    "tech_ai": 53,
+    "meeting": 41,
+    "medical": 130,
+    "transport": 4
+  },
+  "multi_tag_terms": 0,
+  "no_new_domain_mapping_config": true,
+  "note": "UserProfile stores personal_terms only; domain evidence derived at use time."
+}

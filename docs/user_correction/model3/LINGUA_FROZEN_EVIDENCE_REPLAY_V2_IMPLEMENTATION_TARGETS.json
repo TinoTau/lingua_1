@@ -1,0 +1,71 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_REPLAY_V2_IMPLEMENTATION_TARGETS",
+  "version": "V1",
+  "note": "Blocked by CAPTURE_V2_EVIDENCE_GAP (acousticToneSlices). Targets listed for after Capture evidence repair; do NOT implement in Preexecution round.",
+  "production_algorithm_change_required": false,
+  "capture_v2_change_required_for_gap": true,
+  "capture_change_owner": "CAPTURE_V2_CONTRACT_EVIDENCE_AUDIT — not Replay development until gap closed",
+  "evaluator_ssot_change_required": false,
+  "targets": [
+    {
+      "id": "C1",
+      "file": "main/src/fw-detector/** or asr-step / result path Capture hooks",
+      "function": "capture acousticToneSlices as INJECTION_STATE (B2/B4 layer)",
+      "change_type": "CAPTURE_OBSERVABILITY_GAP_REPAIR",
+      "frozen_requirement": "Replay Role Matrix injection_state_minimum + Boundary Contract B4.acousticToneSlices INJECTION_STATE",
+      "why_necessary": "Candidate Capture V2 has 0 acousticToneSlices; Replay cannot inject Tone evidence without rerunning Tone model or falling back to V1",
+      "production_algorithm_touched": false,
+      "capture_v2_touched": true,
+      "evaluator_ssot_touched": false,
+      "test_required": "Completeness requires slices when Tone executed; Replay inject round-trip"
+    },
+    {
+      "id": "R1",
+      "file": "tests/run-dialog200-frozen-evidence-replay-v2.mjs (NEW)",
+      "function": "Replay V2 harness",
+      "change_type": "NEW_HARNESS",
+      "frozen_requirement": "Consume CANDIDATE_CAPTURE_V2; authorized inject only; no promote",
+      "why_necessary": "No Replay V2 entrypoint exists",
+      "production_algorithm_touched": false,
+      "capture_v2_touched": false,
+      "evaluator_ssot_touched": false,
+      "test_required": "T1–T36"
+    },
+    {
+      "id": "R2",
+      "file": "tests/lib/dialog200-frozen-evidence-replay-v2-*.mjs (NEW)",
+      "function": "parser, identity guard, role enforcement, B1–B18 comparators, first-divergence",
+      "change_type": "NEW_COMPARATOR_STACK",
+      "frozen_requirement": "Replay Role Matrix + float policy FLOAT_TIME 0.001 / KenLM 1e-6; statuses PASS/FAIL/UNKNOWN/NOT_APPLICABLE/NOT_EVALUABLE",
+      "why_necessary": "No V2 comparator; V1 E-stage must not be authority",
+      "production_algorithm_touched": false,
+      "capture_v2_touched": false,
+      "evaluator_ssot_touched": false,
+      "test_required": "T3 T12 T23 T28 T29 T31 T32 T34"
+    },
+    {
+      "id": "R3",
+      "file": "main/src/test-server.ts + inference-service.ts (REUSE, harness-only wiring)",
+      "function": "POST /run-lexicon-mock inject adapter from Capture V2 fields",
+      "change_type": "HARNESS_ADAPTER",
+      "frozen_requirement": "Minimum injection set only; forbid COMPARISON_ONLY injection",
+      "why_necessary": "Map Capture V2 nesting onto existing Production inject API",
+      "production_algorithm_touched": false,
+      "capture_v2_touched": false,
+      "evaluator_ssot_touched": false,
+      "test_required": "T4 T5 T6 T7 T8 T9 T34"
+    },
+    {
+      "id": "R4",
+      "file": "V1 replay modules",
+      "function": "quarantine — do not import reconstruct-as-authority / percentage promotion into V2",
+      "change_type": "CONTAMINATION_GUARD",
+      "frozen_requirement": "No V1 baseline fallback; no dual authority",
+      "why_necessary": "Latent contamination if V1 reused",
+      "production_algorithm_touched": false,
+      "capture_v2_touched": false,
+      "evaluator_ssot_touched": false,
+      "test_required": "T33 T36"
+    }
+  ]
+}

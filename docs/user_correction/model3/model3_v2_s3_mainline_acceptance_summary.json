@@ -1,0 +1,125 @@
+{
+  "phase": "MODEL3_V2_S3_MAINLINE_ACCEPTANCE_AUDIT",
+  "timestamp": "2026-08-31T10:38:03.371981+00:00",
+  "verdict": "S3_MAINLINE_ACCEPTANCE_BLOCKED_BY_ASSEMBLY_OR_KENLM",
+  "nextPhase": "MODEL3_V2_ASSEMBLY_KENLM_BLOCKER_AUDIT",
+  "promotionReady": false,
+  "precheck": {
+    "passed": true,
+    "conflicts": [],
+    "sha": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "freezeVerdict": "S3_FREEZE_PASS_WITH_DOCUMENTATION_CORRECTIONS",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "buildId": "prod_core_s3_build_20260830_v1",
+    "families": 10000,
+    "l3Evaluator": "MODEL3_V2_L3_EVALUATOR_V1",
+    "l3Version": "20260831_v1",
+    "featureSeparabilityStatus": "UNRESOLVED_NONBLOCKING",
+    "modelCapacityStatus": "NOT_PROVEN_LIMITING"
+  },
+  "denominator": {
+    "dialog200Total": 200,
+    "executableIntersection": 200,
+    "onlyBaseline": [],
+    "onlyS3": [],
+    "reportedAsDialog200": true
+  },
+  "outcomes": {
+    "UNCHANGED_RETRY_NO_EFFECT": 127,
+    "INDETERMINATE": 17,
+    "IMPROVED": 28,
+    "REGRESSED": 18,
+    "UNCHANGED_NO_RETRY": 10
+  },
+  "funnel": {
+    "utterances": 200,
+    "actionable_retry_cases": 188,
+    "retry_regions_formed": 188,
+    "retry_region_count": 1201,
+    "regions_new_candidates": 172,
+    "final_text_changed": 63,
+    "kenlm_winner_changed_proxy": 56,
+    "final_improved": 28,
+    "final_regressed": 18,
+    "assembly_pool_changed": 30
+  },
+  "invariants": {
+    "domainVoteSecondViolations": 0,
+    "anchorMutationViolations": 0,
+    "kenlmPoolGt16": 0,
+    "effectiveAnchorRetry": 0,
+    "maxRetryRegionsPerCase": 42,
+    "model3InvocationAssumption": "ONCE_PER_PATH_VIA_ORCHESTRATOR",
+    "retryAtMostOnceAssumption": "RETRY_ROUTER_FROZEN_NO_RECURSION",
+    "jobResultChanged": false,
+    "passed": true,
+    "multipathPreserved": true,
+    "candidateCap": 16,
+    "jobResultUnchanged": true,
+    "featureSeparability": "UNRESOLVED_NONBLOCKING",
+    "modelCapacity": "NOT_PROVEN_LIMITING",
+    "harnessBaselineMode": "MODEL3_HARNESS_KEEP_ALL=1",
+    "s3Mode": "MODEL3_V2_S3_RANDOM_INIT_V1 actionable",
+    "causalControl": "same_dialog200_corpus_same_identity_keepall_vs_actionable"
+  },
+  "latency": {
+    "baseline_p50": 7029.0,
+    "baseline_p90": 12355.0,
+    "baseline_p95": 15090.0,
+    "baseline_max": 24050.0,
+    "s3_p50": 8028.0,
+    "s3_p90": 12851.0,
+    "s3_p95": 15328.0,
+    "s3_max": 25866.0,
+    "delta_p50": 999.0,
+    "delta_p95": 238.0,
+    "unit": "pipeline_ms_end_to_end"
+  },
+  "protectedSentinel": {
+    "L1": 6,
+    "L2": 13,
+    "L3": {
+      "affectedCases": 8,
+      "logicalUniqueSpans": 17,
+      "STRONG": 12,
+      "MODERATE": 3,
+      "WEAK": 2,
+      "NONPOSITIVE": 0,
+      "meanMargin": 5.837132639744702,
+      "medianMargin": 5.264155864715576,
+      "maxMargin": 13.26422119140625,
+      "minMargin": 0.4164907783269882
+    },
+    "L4": {
+      "falseRetryCases": 0,
+      "controls": 6,
+      "logicalSpans": 0,
+      "maxMargin": null
+    },
+    "effectiveAnchorRetry": 0
+  },
+  "falseRetryImpact": {
+    "NO_FINAL_EFFECT": 1022,
+    "INDETERMINATE": 146,
+    "FINAL_IMPROVEMENT_SIDE_EFFECT": 310,
+    "FINAL_REGRESSION": 223
+  },
+  "falseRetryNoEffectFraction": 0.6008230452674898,
+  "falseRetryRegressionFraction": 0.13109935332157555,
+  "regressionOwners": {
+    "ASSEMBLY_OR_KENLM": 17,
+    "EVALUATION": 1
+  },
+  "featureSeparability": "UNRESOLVED_NONBLOCKING",
+  "modelCapacity": "NOT_PROVEN_LIMITING",
+  "governance": {
+    "training": false,
+    "newDataset": false,
+    "featureChange": false,
+    "modelChange": false,
+    "thresholdTune": false,
+    "runtimeFilter": false,
+    "jobResultChanged": false,
+    "autoPromotion": false
+  }
+}

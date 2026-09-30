@@ -1,0 +1,25 @@
+{
+  "direct_label_leakage": true,
+  "repairability_label_shortcut": true,
+  "forbidden_fields_model_visible": [
+    "referenceSurface != surface (packed as binary feat)",
+    "repairability.referenceReachable YES/NO (packed as binary feats)",
+    "phoneticCompatible (corruption marker used by label table)",
+    "targetMask (also packed into feature vector)"
+  ],
+  "evidence": {
+    "code_path": "training/model3_dataset/train/bigru_v1.py:span_features",
+    "decision_table_reconstruction": {
+      "RETRY_match_rule": 8417,
+      "RETRY_total": 8417,
+      "KEEP_match_anti": 570706,
+      "KEEP_total": 570706,
+      "RETRY_rule_coverage": 1.0,
+      "KEEP_anti_rule_coverage": 1.0
+    },
+    "note": "RETRY label ≈ non-anchor ∧ ref≠surface ∧ phoneticCompatible ∧ reachYES — all four signals are model-visible"
+  },
+  "simulated_anchor_as_feature": false,
+  "label_field_direct": false,
+  "sidecar_as_feature": false
+}

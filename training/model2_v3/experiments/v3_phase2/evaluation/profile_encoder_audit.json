@@ -1,0 +1,13 @@
+{
+  "max_items": 64,
+  "pooling": "attention",
+  "sizes_tested": [
+    "1",
+    "2",
+    "5",
+    "10",
+    "20",
+    "50"
+  ],
+  "note": "Attention pooling to reduce dilution at high cardinality"
+}

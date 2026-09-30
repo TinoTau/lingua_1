@@ -1,0 +1,19 @@
+scenario,anchor_status,current_finespan,local_region_state,reference_relationship,phoneticCompatible,referenceReachableCurrentSpan,old_label,new_label,training_class,reason
+clean non-Anchor match,non-Anchor,杯,surface matches reference,clean,irrelevant,YES,KEEP,KEEP,NON_ANCHOR_VALID_KEEP,No reinterpretation needed
+hard KEEP near-homophone,non-Anchor,背,valid rare wording,ref confirms 背 not 杯,true,NO,KEEP,KEEP,HARD_KEEP,Plausible valid surface; Retry would harm
+simple phonetic 1-char,non-Anchor,背,single-char mismatch,ref 杯 at span,true,YES,RETRY,RETRY,NON_ANCHOR_ERROR_RETRY,V1 agrees; V2 keeps region-applicable phonetic
+simple phonetic unreachable span,non-Anchor,顺,inside malformed region,ref region 项目里 not 顺,true,NO,KEEP,RETRY,NON_ANCHOR_ERROR_RETRY,V1 wrongly KEEP; region Retry applicable
+tone substitution,non-Anchor,赛,local mismatch ref 晒,tone-near,true,YES,RETRY,RETRY,NON_ANCHOR_ERROR_RETRY,Tone-family RETRY trigger
+multi-char region 1-char spans,non-Anchor,向|木|李 each,malformed region 顺便向木李→项目里,region ref 项目里,false per char,NO,KEEP,RETRY each,NON_ANCHOR_ERROR_RETRY,Region projection; not per-char Recall
+multi-char region neighbor valid,non-Anchor,便 inside region but aligned ref matches,partial region error,ref 便,true,YES,KEEP,KEEP,NON_ANCHOR_VALID_KEEP,In-region span matching aligned ref stays KEEP
+exact-span unreachable region-retryable,non-Anchor,苏,malformed 苏和步→SOHO,false,NO,KEEP,RETRY,NON_ANCHOR_ERROR_RETRY,Core V1 drift case
+Anchor span,Anchor,挂,Anchor protected,ref matches,irrelevant,YES,MASKED,MASKED,ANCHOR_KEEP,Anchor never RETRY
+deletion no FineSpan gap,non-Anchor,关,deletion 后选生城,missing char no target,false,UNKNOWN,KEEP,UNREPAIRABLE_KEEP,UNREPAIRABLE_KEEP,Bounded Retry cannot target deletion gap
+insertion partial,non-Anchor,工,insertion 理工科→李工,extra char region,MEDIUM,false,UNKNOWN,KEEP or EXCLUDE,AMBIGUOUS_EXCLUDE,Needs evidence; not auto KEEP
+orthographic 的地得,non-Anchor,地,ortho only,ref 的,false,YES,KEEP,KEEP,UNREPAIRABLE_KEEP,Out of Model3 phonetic Retry scope
+reference ambiguous,non-Anchor,城,小城 vs 小陈 ambiguous,unclear ref,unknown,UNKNOWN,KEEP,EXCLUDE,AMBIGUOUS_EXCLUDE,Do not contaminate with silent KEEP
+Anchor-adjacent RETRY,non-Anchor,限,non-Anchor between Anchors,ref 线,false,NO,KEEP,RETRY,NON_ANCHOR_ERROR_RETRY,Anchor adjacency is context not block
+2-char FineSpan runtime,non-Anchor,向木 (if emitted),malformed subregion,ref 项目,false,NO,KEEP,RETRY,NON_ANCHOR_ERROR_RETRY,Train on natural FineSpan length not forced
+clean utterance all KEEP,non-Anchor,all spans,clean,all match,irrelevant,YES,KEEP,KEEP,NON_ANCHOR_VALID_KEEP,Family A control
+valid unusual domain term,non-Anchor,候,valid domain wording,ref matches,false,YES,KEEP,KEEP,HARD_KEEP,Family F negative
+non-phonetic semantic-only mismatch,non-Anchor,龟仔,semantic rewrite needed,ref 更衣室,false,NO,KEEP,EXCLUDE,UNREPAIRABLE_EXCLUDE,Likely out-of-scope unless region Retry structurally applicable

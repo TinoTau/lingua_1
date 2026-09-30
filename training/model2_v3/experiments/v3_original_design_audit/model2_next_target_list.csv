@@ -1,0 +1,10 @@
+Priority,Gap_ID,Requirement_ID,Current_status,Why_blocks_original_design,Required_next_action
+P0,G1-1,R23,NOT_IMPLEMENTED,Blocks original design: no runtime Model2,Design+implement Node/runtime Model2 inference on FineSpan+UserProfile
+P0,G1-3,R2,PARTIAL,Profile never reaches Model2,Wire sessionUserProfiles into Model2 feature pack
+P0,G1-2,R13,NOT_IMPLEMENTED,Cannot introduce candidates in production,Wire policy actions to lexicon retrieve + merge
+P1,G2-1,R17/R18,PARTIAL,ONE MODEL2 unified policy incomplete,Stage J after Stage D2 FROZEN
+P1,G0-2,R8,PARTIAL,Multi-tag loss in default CandidateIndex builder,MODIFY build_candidate_index_from_sqlite (proposal)
+P2,G3-2,R10,NOT_IMPLEMENTED_RUNTIME,Session vs long-term ownership incomplete,Schema/contract for session_domain_prior
+P2,G4-1,R20,PARTIAL,Adaptation loop incomplete for lexical/domain,Strengthen correction->personal_terms/domain evidence
+P3,G5-1,D2,HARDENING,Quality not core absence,Wrong/Swapped budget selectivity
+P3,G4-2,R19,DEFERRED_BY_DATA,Full original design only,Speaking habit when data exists

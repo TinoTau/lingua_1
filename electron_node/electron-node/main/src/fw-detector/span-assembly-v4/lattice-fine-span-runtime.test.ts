@@ -219,7 +219,7 @@ describe('lattice-fine-span-runtime (from LexicalEdges)', () => {
   it('orchestrator uses Lattice production entry (Step 3 cutover)', () => {
     const orch = fs.readFileSync(path.join(__dirname, 'span-assembly-v4-orchestrator.ts'), 'utf8');
     const ban = (...parts: string[]) => parts.join('');
-    expect(orch).toMatch(/runLatticeFineSpanGeneration/);
+    expect(orch).toMatch(/runLatticeFineSpanGenerationWithPreEdgeModel2/);
     expect(orch).not.toContain(ban('runL', 'trFineSpanGeneration'));
   });
 });

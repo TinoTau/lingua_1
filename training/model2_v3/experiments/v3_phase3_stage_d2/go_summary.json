@@ -1,0 +1,114 @@
+{
+  "Model2_V3_Stage_D2_Verdict": "PASS_WITH_HARDENING_REQUIRED",
+  "Architecture": "ONE_MODEL2_SHARED_POLICY",
+  "Training_Data": "SYNTHETIC",
+  "Domain_SSOT": "PASS",
+  "MultiTag_Source_Data": "PASS",
+  "MultiTag_Training_Index": "PASS",
+  "MultiTag_Terms": 155,
+  "MultiTag_Ratio": 0.015634456324389753,
+  "CrossDomainTerms": "PASS",
+  "Previous_Lock_Failures": "13/40",
+  "Current_Lock_Failures": "8/224",
+  "Correct": 0.69,
+  "Empty": 0.0,
+  "Wrong": 0.38,
+  "Swapped": 0.35,
+  "CorrectMinusSwapped": 0.33999999999999997,
+  "Previous_CorrectMinusSwapped": 0.0125,
+  "DomainConditionalRecallGain": 0.69,
+  "FalseExpansion": {
+    "CorrectProfileCandidateCount_mean": 7.92,
+    "EmptyProfileCandidateCount_mean": 0.0,
+    "WrongProfileCandidateCount_mean": 7.84,
+    "SwappedProfileCandidateCount_mean": 7.92
+  },
+  "Budget_Always_Filled": "NO",
+  "NoAction_Capability": "PASS",
+  "Profile_scalability": {
+    "0": {
+      "n": 16,
+      "latency_ms_mean": 61.99807500161114,
+      "domain_evidence_entropy_mean": 0.0,
+      "top_domain_concentration_mean": 0.0,
+      "candidate_count_mean": 0.0,
+      "encoded_lexical_cap": 32
+    },
+    "5": {
+      "n": 16,
+      "latency_ms_mean": 172.22078124905238,
+      "domain_evidence_entropy_mean": 0.3210748904994513,
+      "top_domain_concentration_mean": 0.9010416666666667,
+      "candidate_count_mean": 8.0,
+      "encoded_lexical_cap": 32
+    },
+    "20": {
+      "n": 16,
+      "latency_ms_mean": 181.4838187492569,
+      "domain_evidence_entropy_mean": 0.42770319018136527,
+      "top_domain_concentration_mean": 0.8828125,
+      "candidate_count_mean": 8.0,
+      "encoded_lexical_cap": 32
+    },
+    "50": {
+      "n": 16,
+      "latency_ms_mean": 157.5894874986261,
+      "domain_evidence_entropy_mean": 0.42707170644714765,
+      "top_domain_concentration_mean": 0.8857360756802722,
+      "candidate_count_mean": 8.0,
+      "encoded_lexical_cap": 32
+    },
+    "100": {
+      "n": 16,
+      "latency_ms_mean": 156.1583000002429,
+      "domain_evidence_entropy_mean": 0.43383784273227566,
+      "top_domain_concentration_mean": 0.8832239623124242,
+      "candidate_count_mean": 8.0,
+      "encoded_lexical_cap": 32
+    },
+    "500": {
+      "n": 16,
+      "latency_ms_mean": 167.12255000129517,
+      "domain_evidence_entropy_mean": 0.43383784273227566,
+      "top_domain_concentration_mean": 0.8832239623124242,
+      "candidate_count_mean": 8.0,
+      "encoded_lexical_cap": 32
+    }
+  },
+  "UNSEEN_USER": {
+    "n": 11,
+    "DomainActionHit": 0.6363636363636364,
+    "PASS": true
+  },
+  "UNSEEN_TERM": {
+    "n": 15,
+    "DomainActionHit": 0.6,
+    "PASS": true
+  },
+  "UNSEEN_MULTITAG_TERM": {
+    "n": 14,
+    "DomainActionHit": 0.7142857142857143,
+    "PASS": true
+  },
+  "UNSEEN_DOMAIN_COMBINATION": {
+    "n": 40,
+    "DomainActionHit": 0.8,
+    "PASS": true
+  },
+  "Stage_P_Regression": "PASS",
+  "Separate_Domain_Model": "NO",
+  "Stage_J": "NOT_READY",
+  "Stage_D1_baseline_preserved": {
+    "Correct": 0.3125,
+    "Empty": 0.2,
+    "Wrong": 0.25,
+    "Swapped": 0.3,
+    "CorrectMinusSwapped": 0.0125,
+    "lock_failures": "13/40",
+    "DomainConditionalRecallGain": 0.1125
+  },
+  "hardening_open": [
+    "Wrong/Swapped still near-fill candidate budget when a wrong domain is selected",
+    "SYNTHETIC only"
+  ]
+}

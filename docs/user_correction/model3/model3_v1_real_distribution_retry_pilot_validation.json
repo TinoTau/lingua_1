@@ -1,0 +1,178 @@
+{
+  "phase": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT_DATASET",
+  "phaseResult": "PASS_WITH_LIMITATIONS",
+  "limitations": [
+    "Frozen stage2_materialize FineSpan surfaces are length-1 only (same as Full100K Synthetic V1). MULTI_CHAR coverage is therefore at corruption-region / ERROR_SHAPE level (multi-char referenceSurface↔errorSurface), mapped onto overlapping 1-char FineSpans — not multi-char FineSpan.surface lengths.",
+    "hard_keep_near_in_pilot=0; balance relies on reused Hard KEEP / NATURAL / NO_ANCHOR pointers.",
+    "ERROR_RELATION is 100% PHONETIC by frozen RETRY label contract (phoneticCompatible required)."
+  ],
+  "retryDistribution": {
+    "ERROR_SHAPE": {
+      "SINGLE_CHAR": 1260,
+      "MULTI_CHAR": 1440,
+      "INSERTION": 180,
+      "DELETION": 120
+    },
+    "ERROR_RELATION": {
+      "PHONETIC": 3000
+    },
+    "corruptionRegionLength": {
+      "1": {
+        "count": 1260,
+        "percent": 42.0
+      },
+      "2": {
+        "count": 831,
+        "percent": 27.7
+      },
+      "3": {
+        "count": 568,
+        "percent": 18.93
+      },
+      "4+": {
+        "count": 341,
+        "percent": 11.37
+      }
+    },
+    "fineSpanSurfaceLength": {
+      "1": {
+        "count": 5690,
+        "percent": 100.0
+      },
+      "2": {
+        "count": 0,
+        "percent": 0.0
+      },
+      "3": {
+        "count": 0,
+        "percent": 0.0
+      },
+      "4+": {
+        "count": 0,
+        "percent": 0.0
+      }
+    },
+    "note": "SPAN LENGTH for Model3 input = fineSpanSurfaceLength. Corruption-region length is QA metadata."
+  },
+  "deletionContract": {
+    "generated_attempts": 300,
+    "accepted": 300,
+    "rejected": 0,
+    "gap_detection_semantics_added": false
+  },
+  "quality": {
+    "valid_anchor": "PASS",
+    "target_non_anchor": "PASS",
+    "retryable_finespan": "PASS",
+    "local_corruption": "PASS",
+    "label_leakage": 0,
+    "exact_duplicates_dropped": 278,
+    "dialog200_leakage_dropped": 0,
+    "dialog200_in_dataset": 0,
+    "character_form_retry": 0,
+    "fineSpan_multi_char_surface_count": 0,
+    "corruption_multi_char_retry_samples": 1440
+  },
+  "coverage": {
+    "phonetic_expanded": true,
+    "multi_char_added": true,
+    "multi_char_level": "CORRUPTION_REGION_NOT_FINESPAN_SURFACE",
+    "insertion_added": true,
+    "deletion_added": true,
+    "deletion_status": "ACCEPTED_VIA_EXISTING_FINESPAN_RETRY",
+    "character_form_retry": 0
+  },
+  "controlBalance": {
+    "HARD_KEEP": 2500,
+    "NATURAL_KEEP": 2500,
+    "NO_ANCHOR": 1500,
+    "OTHER": 0,
+    "hard_keep_near_in_pilot": 0,
+    "retry_heavy_collapse_risk": "LOW",
+    "total_training_pool_candidates": 9500
+  },
+  "frozenEval": {
+    "frozenCount": 153,
+    "manifestId": "MODEL3_V1_REAL_EVAL_PROXY_FROZEN_153",
+    "dynamicRecalculationRequired": false
+  },
+  "materialize_stats": {
+    "label_counter": {
+      "MASKED": 7500,
+      "KEEP": 65921,
+      "RETRY": 12644
+    },
+    "deletion_accepted": 300,
+    "deletion_rejected": 0,
+    "shape_retry_samples": {
+      "SINGLE_CHAR": 1786,
+      "MULTI_CHAR": 3563,
+      "INSERTION": 252,
+      "DELETION": 300
+    },
+    "relation_retry_samples": {
+      "PHONETIC": 5901
+    },
+    "length_retry_spans": {
+      "1": 12642
+    },
+    "char_form_retry": 0,
+    "validate_fail": {
+      "surface_mismatch": 1,
+      "bad_offset": 1
+    },
+    "samples": 5901
+  },
+  "plan_info": {
+    "plan_stats": {
+      "SINGLE_CHAR": 3150,
+      "MULTI_CHAR": 3600,
+      "INSERTION": 450,
+      "DELETION": 300
+    },
+    "deletion_attempts": 300,
+    "need": {
+      "SINGLE_CHAR": 3150,
+      "MULTI_CHAR": 3600,
+      "INSERTION": 450,
+      "DELETION": 300
+    },
+    "injected_lexicon": 7500,
+    "fail_guard": {
+      "SINGLE_CHAR": 89,
+      "INSERTION": 19
+    },
+    "lexicon_word_counts": {
+      "2": 7553,
+      "3": 1696,
+      "4": 22199
+    },
+    "len1_entries": 1125
+  },
+  "write_info": {
+    "selected_retry": 3000,
+    "hard_keep_near": 0,
+    "dialog_leak_dropped": 0,
+    "exact_dup_dropped": 278,
+    "shards": [
+      "training\\model3_dataset\\model3_v1_real_distribution_retry_pilot\\train\\shard-00000.jsonl",
+      "training\\model3_dataset\\model3_v1_real_distribution_retry_pilot\\test\\shard-00000.jsonl",
+      "training\\model3_dataset\\model3_v1_real_distribution_retry_pilot\\dev\\shard-00000.jsonl"
+    ],
+    "shape_selected": {
+      "SINGLE_CHAR": 1260,
+      "MULTI_CHAR": 1440,
+      "INSERTION": 180,
+      "DELETION": 120
+    },
+    "relation_selected": {
+      "PHONETIC": 3000
+    },
+    "split_counts": {
+      "train": 2360,
+      "test": 334,
+      "dev": 306
+    }
+  },
+  "finalizedAt": "2026-08-27T14:18:40.323941+00:00"
+}

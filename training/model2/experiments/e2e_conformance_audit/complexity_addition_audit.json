@@ -1,0 +1,10 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "items": [
+    {"name": "separate pronunciation model", "required_by_original": false, "solves": "motivated by whole-utt G2P fail", "valid_after_span_restore": "UNPROVEN / likely unnecessary", "action": "DEFER"},
+    {"name": "neural retrieval", "required_by_original": false, "action": "DEFER until span path exhausted"},
+    {"name": "controller", "required_by_original": false, "action": "DEFER"},
+    {"name": "second ASR", "required_by_original": false, "action": "DELETE_PROPOSAL"},
+    {"name": "ANN", "required_by_original": false, "action": "DEFER — FuzzyPool index may suffice"}
+  ]
+}

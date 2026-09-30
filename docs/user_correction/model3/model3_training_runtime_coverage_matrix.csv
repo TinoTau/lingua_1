@@ -1,0 +1,13 @@
+dimension,training,runtime_dialog200,retry_eligible_targets,coverage_status,notes
+span_length_1,100% FineSpan.surface,97.0% non-Anchor (3620/3733),14/14 HIGH targets are 1-char FineSpans,PARTIAL,"Runtime also has 3% 2-char; training has zero 2-char surfaces"
+span_length_2,0%,3.0% (113),0 as Model3 eligible FineSpan surface,INADEQUATE,Production supports multi-char FineSpan; training generator emits none
+span_length_3plus,0%,0% on Model3 decision rows,0,NOT_CAUSAL,N/A for this batch
+phonetic_substitution_1char,Dominant RETRY family in Synthetic V1,Present (d002/d003/d019/d047-like),HIGH probes KEEP with margin<=-15,PARTIAL,"Coverage of form exists; model never fires RETRY"
+multi_char_malformed_region,"Pilot MULTI_CHAR metadata 48%; FineSpan.surface still 100% 1-char",d160/d142/d179/d099 etc.,Region over 1-char FineSpan sequence,INADEQUATE,Needs region-RETRY labels not exact-span reachability
+insertion,Pilot 6% RETRY samples,d049/d139/d181/d195,Model3 KEEP,PARTIAL,Forced consumer tests only
+deletion,Pilot 4%; often NO_REPAIRABLE_TARGET,d045/d110/d133,Outside or neighbor-only,EXPECTED_LIMIT,Deletion often no FineSpan gap target
+REAL_DOMAIN_bucket,0 samples in training metrics,Production domains on paths,N/A,INADEQUATE,bucket_metrics_test.REAL_DOMAIN insufficient
+KEEP_RETRY_balance,~98.5% KEEP / ~1.45% RETRY eligible; class_weight=1.0,3733/3733 strong KEEP decisions,0 RETRY fired,KEEP_HEAVY,Synthetic F1=1.0 masks real gap
+label_semantics,"RETRY requires phoneticCompatible AND referenceReachable=YES on CURRENT FineSpan",Frozen Retry=bounded region reinterpretation,Exact-span reachability rejects region cases,MAJOR_DRIFT_RISK,stage2_common.py label_spans
+synthetic_validation,retry_f1=1.0 tp=2802 fn=0,decisions_retry=0 margins all<-5,Generalization failure,SYNTHETIC_TO_REAL_GAP,Do not retrain on dialog_200 memorizaton
+feature_allowlist_6dim,FEAT_NAMES pack,Same pack in inference host,MATCH,MATCH_ENOUGH,Not a wiring failure

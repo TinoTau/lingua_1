@@ -51,21 +51,22 @@ if (-not (Test-Path "node_modules")) {
     }
 }
 
-# Check scheduler URL (can be configured via environment variable)
-$schedulerUrl = if ($env:SCHEDULER_URL) { 
-    $env:SCHEDULER_URL 
+# Web Client production path: Browser → API Gateway /v1/session → Scheduler
+$gatewaySessionUrl = if ($env:VITE_GATEWAY_SESSION_URL) {
+    $env:VITE_GATEWAY_SESSION_URL
 }
-else { 
-    "ws://localhost:5010/ws/session"
+else {
+    "ws://127.0.0.1:8081/v1/session"
 }
 
 Write-Host ""
 Write-Host "Configuration:" -ForegroundColor Yellow
-Write-Host "  Scheduler URL: $schedulerUrl" -ForegroundColor Gray
+Write-Host "  Gateway Session URL: $gatewaySessionUrl" -ForegroundColor Gray
 Write-Host "  Dev Server: http://localhost:9001" -ForegroundColor Gray
 Write-Host ""
-Write-Host "Tip: If scheduler URL is different, set environment variable SCHEDULER_URL" -ForegroundColor Cyan
-Write-Host '  Example: $env:SCHEDULER_URL = "ws://192.168.1.100:5010/ws/session"' -ForegroundColor Gray
+Write-Host "Tip: Override with VITE_GATEWAY_SESSION_URL (not direct Scheduler WS)" -ForegroundColor Cyan
+Write-Host '  Example: $env:VITE_GATEWAY_SESSION_URL = "ws://192.168.1.100:8081/v1/session"' -ForegroundColor Gray
+Write-Host '  Auth: $env:VITE_API_KEY = "<gateway api key>"' -ForegroundColor Gray
 Write-Host ""
 
 # Start dev server and redirect output to log file, but keep errors in console
@@ -115,8 +116,8 @@ Write-Host "Logs will be saved to: $logFile" -ForegroundColor Gray
 Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
 Write-Host ""
 
-# Set environment variable
-$env:SCHEDULER_URL = $schedulerUrl
+# Set environment variable for Vite (Gateway-only product path)
+$env:VITE_GATEWAY_SESSION_URL = $gatewaySessionUrl
 
 # Start server and add timestamp to each line
 if ($logFileLocked) {

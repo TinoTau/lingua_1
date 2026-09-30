@@ -1,0 +1,4 @@
+option,reusesExistingSSOT,requiresNewDataStructure,requiresNewRanking,duplicatesRecall,duplicatesLattice,changesFineSpanOwnership,changesRecallOwnership,changesDomainVote,changesModel3,requiresSecondAssembly,candidateExplosionRisk,dedupAlreadyAvailable,budgetReuseAvailable,implementationComplexity,semanticMatchToOriginalDesign,likelyFilesModified,architectureRisk,verdict
+A_WINDOW_QUERY,Partial,YES,NO,HIGH,NO,YES,YES,NO,NO,NO,MEDIUM,Partial,YES,MEDIUM-HIGH,MEDIUM,"model3-retry-region-resegment.ts; new window-to-retry adapter",MEDIUM-HIGH,REJECTED
+B_LEXICAL_EDGE,Partial,YES,NO,HIGH,NO,YES,YES,NO,NO,NO,MEDIUM,Partial,YES,HIGH,MEDIUM,"model3-retry-region-resegment.ts; new edge-to-candidate projector",HIGH,REJECTED
+C_RETAINED_PATH,YES,NO,NO,LOW,NO,NO,NO,NO,NO,NO,LOW,YES,YES,LOW,HIGH,"model3-retry-region-resegment.ts only (primary)",LOW,CHOSEN

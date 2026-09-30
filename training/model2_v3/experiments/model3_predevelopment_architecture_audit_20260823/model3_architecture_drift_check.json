@@ -1,0 +1,23 @@
+{
+  "ts": "2026-08-23",
+  "architecture_drift": true,
+  "drifts": [
+    {
+      "id": "ORCHESTRATOR_COMMENT_ORDER",
+      "documented": "Tone → Vote → Bucket → Assembly (header comment)",
+      "code_reality": "Tone → Compatibility → Model2 → Vote → Bucket → Assembly",
+      "severity": "COMMENT_ONLY",
+      "runtime_impact": false
+    },
+    {
+      "id": "STAGEJ_DOCS_VS_FREEZE_SNAPSHOT",
+      "documented": "FW_V4 freeze snapshot 2026-08-05 ownership (no Model2)",
+      "code_reality": "Model2 Stage-J integrated before Domain Vote",
+      "severity": "DOCUMENT_STALE",
+      "runtime_impact": false,
+      "note": "Model2 freeze reports supersede for Model2 ownership"
+    }
+  ],
+  "single_char_v1": "CLOSED — no drift introduced",
+  "model3_in_code": false
+}

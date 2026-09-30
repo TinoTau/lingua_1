@@ -1,0 +1,12 @@
+symbol,file,classification,notes
+hasTarget,tests/lib/dialog200-path-trace-analyze.mjs,INVALID,legacy predicate; now wrapped as legacyHasTarget; must not drive firstDivergence
+legacyHasTarget,tests/lib/materializable-target-v1.mjs,VALID,comparison-only; unchanged-ngram inflation documented
+flattenFunnel target_in_*,tests/lib/dialog200-path-trace-analyze.mjs,VALID,now aliases V1 lexical/assembled; legacy_* fields preserved
+legacy_target_in_*,tests/lib/dialog200-path-trace-analyze.mjs,VALID,LEGACY_TARGET_ATTRIBUTION snapshot
+firstDivergence ASSEMBLY_DROP,tests/lib/dialog200-path-trace-analyze.mjs,DEAD,replaced by V2 taxonomy
+attributeFailure,tests/lib/dialog200-path-trace-analyze.mjs,VALID,emits V2 class + v1 block
+evaluateMaterializableTargetV1,tests/lib/materializable-target-v1.mjs,VALID,authoritative recoverability
+cjkNgrams,tests/lib/dialog200-path-trace-analyze.mjs,AMBIGUOUS,unused for V1 attribution
+probeLexiconSurfaces,tests/lib/dialog200-path-trace-analyze.mjs,VALID,lexicon presence only; not a correction-unit match
+assembly_materialization_gap_audit.mjs hasTargetLooseCandidate,docs/user_correction/scripts,DEAD,prior-round audit helper; not production
+Stage-J report 142→26,docs/user_correction StageJ report,INVALID,retired for root-cause

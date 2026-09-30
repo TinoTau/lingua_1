@@ -1,0 +1,123 @@
+{
+  "sealId": "MODEL3_SYNTHETIC_V1_ACCEPTANCE_SEAL",
+  "version": "1.0.0",
+  "status": "MODEL3_SYNTHETIC_V1_FROZEN",
+  "documentClass": "HISTORICAL_SUPERSEDED_FOR_RUNTIME_DEFAULT",
+  "supersededNote": "As of MODEL3_V2_RUNTIME_DEFAULT_PROMOTION_DELTA 2026-09-08, RUNTIME_DEFAULT_MODEL is MODEL3_V2_S3_RANDOM_INIT_V1. Synthetic remains EXPLICIT_ROLLBACK_MODEL only. Statement Production RETRY remains OFF is SUPERSEDED; PRODUCTION_RETRY_ENABLED=YES.",
+  "frozenAt": "2026-08-26",
+  "phase": "MODEL3_V1_SYNTHETIC_FREEZE_AND_TTS_READINESS_AUDIT",
+  "model": {
+    "modelId": "MODEL3_SYNTHETIC_V1",
+    "architecture": "Small BiGRU",
+    "parameters": 237698,
+    "modelSizeMb": 0.9067459106445312,
+    "ramMbEstimate": 8.906745910644531,
+    "seed": 2026082520,
+    "checkpoint": "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082520/weights.pt",
+    "selectionRule": "multi-metric (P/R/F1 + Strict Pair + Strict−Shuffle gap + Heldout); reject Strict Pair < 0.80",
+    "rejectedSeeds": {
+      "2026082521": "Strict Pair 0.7443 < 0.80 causality gate despite highest Precision"
+    }
+  },
+  "hashes": {
+    "model_sha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "config_sha256": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "dataset_manifest_sha256": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432",
+    "full100k_manifest_sha256": "2c135f36ac52331e8fc5414c59b5933db72a0a9fb16550d0606c8b7adecb0da6",
+    "feature_allowlist_sha256": "3770815778e8b3e7679fc34f548113b9552e0c746071034142bab1e04075f221",
+    "strict_contract_sha256": "c342d4883949bca35c63e29ae594c019a49d6c00bc442755501f203190407de5",
+    "code_identity_sha256": "63e7c7be86caa3bf70b9123695dd52d06f025e947a57056e8829fb237a735926"
+  },
+  "contracts": {
+    "architecture": "MODEL3_ARCHITECTURE_CONTRACT_V1",
+    "trainingDataset": "MODEL3_TRAINING_DATASET_V1_CONTRACT",
+    "sampleSchema": "MODEL3_TRAINING_SAMPLE_V1",
+    "strictPair": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+    "hardKeep": "ANCHOR_CONDITIONED_HARD_KEEP_V1",
+    "featureAllowlist": "MODEL3_V1_MODEL_VISIBLE_FEATURE_ALLOWLIST",
+    "trainingConfigSsot": "MODEL3_V1_TRAINING_CONFIG_SSOT"
+  },
+  "training": {
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "pair_ce_enabled": false,
+    "pair_loss_type": "PURE_MARGIN",
+    "pair_lambda": 0.2,
+    "pair_margin": 0.25,
+    "sampling": {
+      "STRICT": 0.30,
+      "ANCHOR_CONDITIONED_HARD_KEEP": 0.30,
+      "NATURAL": 0.25,
+      "NO_ANCHOR": 0.15
+    }
+  },
+  "acceptanceBaseline": {
+    "id": "SYNTHETIC_V1_ACCEPTANCE_BASELINE",
+    "threeSeedMean": {
+      "precision": 0.992136856135756,
+      "recall": 0.9456574478408539,
+      "f1": 0.9683253563159863,
+      "false_retry": 3.431143046567252e-05,
+      "strict_pair": 0.8358154740283327,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.16684828671752028,
+      "hard_keep": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.5794067163891904,
+      "unseen_surface_f1": 0.9916395515923441,
+      "unseen_context_f1": 1.0
+    },
+    "threeSeedStd": {
+      "precision": 0.0034975852669751513,
+      "recall": 0.00395669733874336,
+      "f1": 0.0004212166956338595,
+      "false_retry": 1.5416223415209394e-05,
+      "strict_pair": 0.06608774079210884,
+      "heldout_family_f1": 0.03754238687912392
+    },
+    "authoritativeCheckpoint": {
+      "seed": 2026082520,
+      "precision": 0.9886363636363636,
+      "recall": 0.9497816593886463,
+      "f1": 0.9688195991091315,
+      "false_retry": 4.980691519210527e-05,
+      "strict_pair": 0.8979295314202688,
+      "strict_zero": 0.0,
+      "strict_shuffle": 0.1888848528877588,
+      "hard_keep": 1.0,
+      "no_anchor_fp": 0.0,
+      "heldout_family_f1": 0.6141732283464567,
+      "unseen_surface_f1": 0.992234685073339,
+      "unseen_context_f1": 1.0
+    },
+    "cpu": {
+      "p50_ms": 3.2809500116854906,
+      "p95_ms": 4.547810048097745,
+      "p99_ms": 5.235289931297302
+    }
+  },
+  "runtimeImpact": {
+    "production_retry": "OFF_AT_SYNTHETIC_V1_FREEZE_HISTORICAL",
+    "runtime_changed": false,
+    "architecture_changed": false,
+    "model3_wired": false,
+    "note": "SUPERSEDED 2026-09-08: PRODUCTION_RETRY_ENABLED=YES; Synthetic is EXPLICIT_ROLLBACK_ONLY"
+  },
+  "knownLimitations": [
+    "Heldout pronunciation family F1 ≈0.58 (mean); primary residual gap",
+    "Synthetic text / phonetic plane only — no real ASR acoustic evidence",
+    "HISTORICAL: Production RETRY was OFF at Synthetic V1 freeze — SUPERSEDED 2026-09-08 (RETRY ACTIVE)"
+  ],
+  "nextStageBoundary": {
+    "allowed": "HISTORICAL — Synthetic V1 freeze next-stage note; superseded by Model3 V2 freeze + runtime promotion",
+    "forbidden": [
+      "overwrite MODEL3_SYNTHETIC_V1 checkpoint",
+      "retrain Synthetic V1 in place",
+      "retune lambda / class weight / sampling for V1 identity",
+      "HISTORICAL: enable production RETRY (now ACTIVE outside this seal)",
+      "claim human accent solved via TTS"
+    ],
+    "newModelIdentityRequired": true,
+    "suggestedNextModelId": "MODEL3_V1_1_TTS"
+  }
+}

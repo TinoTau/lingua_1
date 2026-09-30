@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u002_012",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U002",
+  "profileStage": "P1",
+  "domain": "travel_hotel",
+  "difficulty": "multi_clause",
+  "referenceText": "我们先确认出租车，再决定是否改签；如果改签，请同步通知司机与前台。",
+  "audioId": "aud_p2_u002_012",
+  "audioPath": "audio/p2_u002_012.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "z_zh",
+  "relationDirection": "z_zh",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MODERATE",
+  "profileRef": "prof_u002_p1",
+  "profileBuildSetId": "pbs_u002_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e887aae5b7b17c7a",
+    "base-rebuild-term-e697a9e4b88a7c7a",
+    "base-rebuild-term-e6898be69cba7c73",
+    "base-rebuild-term-e4ba8be683857c73"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e587bae7a79fe8bd"
+  ],
+  "evaluationTargetSurface": "出租车",
+  "split": "HOLDOUT",
+  "holdoutClass": "UNSEEN_LEXICAL",
+  "seed": 3973097898,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "PROFILE_TARGET",
+  "wrongProfileUserId": null,
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u002_012",
+    "byte_size": 198064,
+    "sha256": "98af68889d39cd8892ff11bde2641354a5950cea95e0a94c674995d39bbfd784",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 6.188
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "我们先确认出槠车，再决定是否改签；如果改签，请同步通知司机与前台。"
+}

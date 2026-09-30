@@ -1,0 +1,189 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_CONFORMANCE",
+  "version": "OBSERVABILITY_IMPLEMENTATION",
+  "RESULT_ENUM": "A_CAPTURE_V2_OBSERVABILITY_IMPLEMENTATION_VALIDATED",
+  "gate": "FROZEN_EVIDENCE_CAPTURE_V2=1",
+  "gate_default": "OFF",
+  "boundaries": [
+    {
+      "id": "B1",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "fw-detector-orchestrator after normalizeForFwRepairInput",
+      "runtime_source": "normalized.rawAsrText/repairText + ctx.asrSegments",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T13-T30"
+    },
+    {
+      "id": "B2",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "span-assembly-v4-orchestrator after buildWordTimeSpans inputs",
+      "runtime_source": "input.segmentTimeOffsetsSec / batchIndices / charOffsets",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T14"
+    },
+    {
+      "id": "B3",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "immediately after buildWordTimeSpans",
+      "runtime_source": "WordTimeSpan[] local variable",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T15"
+    },
+    {
+      "id": "B4",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "recall-topk-for-windows per-window mapping",
+      "runtime_source": "extractAcousticTonePatternForRecall + toneNorm",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T16"
+    },
+    {
+      "id": "B5",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "orchestrator after path assembly",
+      "runtime_source": "pathFineSpans → compactFineSpan; field_name=finespans",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T17"
+    },
+    {
+      "id": "B6",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "lattice after buildLexicalWindowQueries + hardBlockFilter",
+      "runtime_source": "recallableWindows",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T18"
+    },
+    {
+      "id": "B7",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "recall-topk after serializeCanonicalRecallQueryKey",
+      "runtime_source": "Production serializer",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T19"
+    },
+    {
+      "id": "B8",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "recall-topk on SQL miss/hit",
+      "runtime_source": "bound params + ordered semantic row identities",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "gate_protected": true,
+      "test": "T20"
+    },
+    {
+      "id": "B9",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "recall-topk after bindLexiconHitsToWindow",
+      "runtime_source": "WindowCandidate occurrence list untruncated",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T21"
+    },
+    {
+      "id": "B10",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "lattice finishFromByWindow + expand path_trace when Capture ON",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "gate_protected": true,
+      "test": "T22"
+    },
+    {
+      "id": "B11",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "lattice + expand untruncated union when Capture ON",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T23"
+    },
+    {
+      "id": "B12",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "after buildLexicalEdges",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T24"
+    },
+    {
+      "id": "B13",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "enumerateCompleteSegmentationPaths",
+      "evidence_mode": "HASH_PLUS_SUMMARY",
+      "gate_protected": true,
+      "test": "T25"
+    },
+    {
+      "id": "B14",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "enumerate retained paths + capEvents",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T26"
+    },
+    {
+      "id": "B15",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "orchestrator per pathAssemblyResults",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T27"
+    },
+    {
+      "id": "B16",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "fw-detector-v4-path after KenLM rerank",
+      "evidence_mode": "FULL",
+      "authoritative_untruncated": true,
+      "gate_protected": true,
+      "test": "T28"
+    },
+    {
+      "id": "B17",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "run-model3-path-step completeModel3PathFromUpstream; by_path merge",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T29"
+    },
+    {
+      "id": "B18",
+      "implemented": true,
+      "status": "IMPLEMENTED",
+      "capture_point": "fw-detector-v4-path after applyFwSpanReplacements",
+      "evidence_mode": "FULL",
+      "gate_protected": true,
+      "test": "T30"
+    }
+  ],
+  "all_mandatory_implemented": true,
+  "blocked_count": 0
+}

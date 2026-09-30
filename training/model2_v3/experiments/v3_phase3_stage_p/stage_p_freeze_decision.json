@@ -1,0 +1,20 @@
+{
+  "operating_point": "query_budget=1",
+  "gates": {
+    "RecallRetained>=0.90": true,
+    "QueryReduction>=0.40": true,
+    "CandidateReduction>=0.25": true,
+    "E2ECostReduction>=0.35": true
+  },
+  "metrics": {
+    "RecallRetained": 1.0,
+    "QueryReduction": 0.5171568627450981,
+    "CandidateReduction": 0.36655948553054657,
+    "E2ECostReduction": 0.4697014180699866
+  },
+  "STAGE_P": "FROZEN",
+  "Top1_Ranking_Objective": "bce_pairwise_top1",
+  "Applicability_Bonus": "REMOVED_OVERRIDE",
+  "Architecture_Conformance": "PASS",
+  "note": "Bonus classified HARDCODED_POLICY_OVERRIDE and removed; Top-1 refine on HARD_MULTI."
+}

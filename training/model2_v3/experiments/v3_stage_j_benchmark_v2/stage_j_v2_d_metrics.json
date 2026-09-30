@@ -1,0 +1,54 @@
+{
+  "n": 20,
+  "support": "VERY_LOW_SUPPORT",
+  "unique_spans": 14,
+  "unique_terms": 15,
+  "Oracle_N": 20,
+  "Oracle_TIR": 1.0,
+  "J1_TIR": 1.0,
+  "RecallRetained": 1.0,
+  "TIR_CI95": [
+    0.8388698745050667,
+    0.9999999999999998
+  ],
+  "Latency_P50": 73.61009999294765,
+  "all_incl_contaminated": {
+    "tag": "ALL_INCL_CONTAMINATED",
+    "n": 45,
+    "support": "LOW_SUPPORT",
+    "Oracle_N": 45,
+    "Oracle_TIR": 1.0,
+    "J1_TIR": 1.0,
+    "RecallRetained": 1.0,
+    "CI95": [
+      0.9213457380593593,
+      1.0
+    ]
+  },
+  "heldout_term": {
+    "tag": "HELDOUT_TERM",
+    "n": 6,
+    "support": "VERY_LOW_SUPPORT",
+    "Oracle_N": 6,
+    "Oracle_TIR": 1.0,
+    "J1_TIR": 1.0,
+    "RecallRetained": 1.0,
+    "CI95": [
+      0.6096569663469354,
+      1.0
+    ]
+  },
+  "heldout_span": {
+    "tag": "HELDOUT_SPAN",
+    "n": 24,
+    "support": "VERY_LOW_SUPPORT",
+    "Oracle_N": 24,
+    "Oracle_TIR": 1.0,
+    "J1_TIR": 1.0,
+    "RecallRetained": 1.0,
+    "CI95": [
+      0.8620194241710247,
+      1.0
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "PHASE": "LINGUA_PATH_BUDGET_CAPACITY_INCREASE_AND_BOTTLENECK_REMEASURE_V1",
+  "AUDIT_VALID": true,
+  "EXPERIMENT_VALID": true,
+  "SINGLE_VARIABLE_VALID": true,
+  "BASELINE_REPRODUCTION": "PASS",
+  "CAPACITIES_TESTED": ["8/8", "12/12", "16/16", "24/24", "32/32"],
+  "TARGET_DOMAINVOTE_SURVIVAL": {
+    "8/8": "10/17",
+    "12/12": "12/17",
+    "16/16": "13/17",
+    "24/24": "13/17",
+    "32/32": "14/17"
+  },
+  "KNOWN_7_RECOVERED_FROM_SEGMENTATION": {
+    "8/8": "0/7",
+    "12/12": "2/7",
+    "16/16": "3/7",
+    "24/24": "3/7",
+    "32/32": "4/7"
+  },
+  "KNOWN_7_FINAL_CORRECT": {
+    "8/8": "0/7",
+    "12/12": "0/7",
+    "16/16": "0/7",
+    "24/24": "0/7",
+    "32/32": "0/7"
+  },
+  "EXECUTED": {
+    "offline_17_evaluable": true,
+    "pipeline_known7_CORRECT_PROFILE": true,
+    "pipeline_full_17": false,
+    "full_pilot200_x3_x5": false
+  },
+  "DIMINISHING_RETURN_STARTS_AT": "16/16",
+  "SEGMENTATION_BOTTLENECK_REDUCED": true,
+  "BOTTLENECK_MOVED": true,
+  "NEW_DOMINANT_BOTTLENECK": "FINAL_WRONG_DOWNSTREAM_AFTER_DOMAIN_VOTE",
+  "MODEL3_BECAME_BLOCKER": "PARTIAL_YES",
+  "CANDIDATE_BUDGET_BECAME_BLOCKER": "NOT_PROVEN",
+  "MEMORY_MEASUREMENT": "OBSERVABILITY_GAP",
+  "PRODUCTION_DEFAULT_PATH_CAPS": "UNCHANGED",
+  "EXPERIMENT_OVERRIDE": "LINGUA_EXPERIMENT_MAX_ACTIVE_PATHS / LINGUA_EXPERIMENT_MAX_COMPLETE_PATHS",
+  "PRODUCTION_PATH_CAP_CHANGE_AUTHORIZED": false,
+  "ONE_NEXT_OWNER": "USER_PATH_BUDGET_PROBE_FINALIZATION_DECISION",
+  "ONE_NEXT_DELTA": "Decide whether to raise PROBE path caps for hypothesis visibility knowing 16→24 is pure cost on this cohort and known-7 finals are not repaired by capacity alone — do not freeze production yet",
+  "artifacts": [
+    "LINGUA_PATH_BUDGET_CAPACITY_BOTTLENECK_REMEASURE_V1.md",
+    "path_budget_capacity_summary.csv",
+    "path_budget_bottleneck_transition.csv",
+    "known_7_capacity_lifecycle.csv",
+    "path_budget_runtime_resource_summary.csv",
+    "path_budget_capacity_manifest.json"
+  ],
+  "stop": true
+}

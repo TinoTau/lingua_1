@@ -1,0 +1,173 @@
+{
+  "status": "PASS",
+  "hard_gate_failures": [],
+  "gates": [
+    {
+      "gate": "MANIFEST_VALID",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "gate": "CASE_COUNT_STRUCTURE",
+      "status": "PASS",
+      "detail": "{'U001': 40, 'U002': 40, 'U003': 40, 'U004': 40, 'U005': 40}"
+    },
+    {
+      "gate": "SPLIT_COUNTS",
+      "status": "PASS",
+      "detail": "{'DEV': 120, 'VALIDATION': 60, 'HOLDOUT': 20}"
+    },
+    {
+      "gate": "CLEAN_MIN",
+      "status": "PASS",
+      "detail": "clean=42"
+    },
+    {
+      "gate": "ACTIVE_RELATIONS_ONLY",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "gate": "PROFILE_LEXICAL_ISOLATION_PASS",
+      "status": "PASS",
+      "detail": "build=42 eval=158"
+    },
+    {
+      "gate": "HOLDOUT_ISOLATION",
+      "status": "PASS",
+      "detail": "holdout_eval_terms=16"
+    },
+    {
+      "gate": "RELATION_DISTRIBUTION_PASS",
+      "status": "PASS",
+      "detail": "{'n_l': 33, 'in_ing': 13, 'z_zh': 20, 'sh_s': 39, 'eng_en': 20, 'h_f': 13, 'ch_c': 20}"
+    },
+    {
+      "gate": "DOMAIN_DECONFOUND_PASS",
+      "status": "PASS",
+      "detail": {
+        "n_l": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "retail_service",
+          "software_meeting",
+          "travel_hotel"
+        ],
+        "in_ing": [
+          "food_cafe",
+          "general_daily",
+          "retail_service",
+          "travel_hotel"
+        ],
+        "z_zh": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "retail_service",
+          "software_meeting",
+          "travel_hotel"
+        ],
+        "sh_s": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "retail_service",
+          "software_meeting",
+          "travel_hotel"
+        ],
+        "eng_en": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "retail_service",
+          "software_meeting",
+          "travel_hotel"
+        ],
+        "h_f": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "travel_hotel"
+        ],
+        "ch_c": [
+          "food_cafe",
+          "general_daily",
+          "medical",
+          "retail_service",
+          "travel_hotel"
+        ]
+      }
+    },
+    {
+      "gate": "NO_KNOWN_TEST_LEAK",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "gate": "AUDIO_IDENTITY_COMPLETE",
+      "status": "PASS",
+      "detail": "n=200"
+    },
+    {
+      "gate": "REFERENCE_FROZEN",
+      "status": "PASS",
+      "detail": "all references non-empty; frozen at generation"
+    },
+    {
+      "gate": "WRONG_PROFILE_VALID",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "gate": "OLD_DIALOG200_UNCHANGED",
+      "status": "PASS",
+      "detail": "{'unchanged': True, 'manifest_sha256': 'e45f70bb093310399824cff7b2165ae831b3d41bf795f1c1fc2d59fb840fac61', 'manifest_bytes': 111926, 'wav_count': 200, 'first_wav_mtime_ns': 1785731998115863200, 'path': 'D:\\\\Programs\\\\github\\\\lingua_1\\\\test wav\\\\dialog_200\\\\cases.manifest.json'}"
+    },
+    {
+      "gate": "MODEL2_LEXICON_ELIGIBILITY",
+      "status": "PASS",
+      "detail": "{'MODEL2_TARGET_CASE_COUNT': 158, 'MODEL2_LEXICON_ELIGIBLE_TARGET_COUNT': 158, 'MODEL2_LEXICON_INELIGIBLE_TARGET_COUNT': 0, 'MODEL2_LEXICON_ELIGIBILITY_RATE': 1.0}"
+    }
+  ],
+  "counts": {
+    "users": {
+      "U001": 40,
+      "U002": 40,
+      "U003": 40,
+      "U004": 40,
+      "U005": 40
+    },
+    "splits": {
+      "DEV": 120,
+      "VALIDATION": 60,
+      "HOLDOUT": 20
+    },
+    "classes": {
+      "PROFILE_TARGET": 117,
+      "CLEAN_PRESERVE": 42,
+      "ASR_RESILIENCE_CONTROL": 15,
+      "WRONG_PROFILE_CONTROL": 26
+    },
+    "relations": {
+      "n_l": 33,
+      "in_ing": 13,
+      "z_zh": 20,
+      "sh_s": 39,
+      "eng_en": 20,
+      "h_f": 13,
+      "ch_c": 20
+    },
+    "clean": 42
+  },
+  "lexicon_readonly": true,
+  "audio_generated": true,
+  "target_not_in_lexicon_count": 0,
+  "model2_eligibility": {
+    "MODEL2_TARGET_CASE_COUNT": 158,
+    "MODEL2_LEXICON_ELIGIBLE_TARGET_COUNT": 158,
+    "MODEL2_LEXICON_INELIGIBLE_TARGET_COUNT": 0,
+    "MODEL2_LEXICON_ELIGIBILITY_RATE": 1.0
+  },
+  "model2_core_predominantly_lexicon_eligible": true
+}

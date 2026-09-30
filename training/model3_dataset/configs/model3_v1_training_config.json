@@ -1,0 +1,75 @@
+{
+  "configId": "MODEL3_V1_TRAINING_CONFIG_SSOT",
+  "version": "1.0.0",
+  "phase": "MODEL3_V1_FULL100K_STRICT_CONTRAST_INTEGRATION",
+  "explicit_source": "MODEL3_V1_TRAINING_CONFIG_SSOT",
+  "architecture": {
+    "identity": "Small BiGRU",
+    "module": "training.model3_dataset.train.bigru_v1.Model3BiGRUV1",
+    "emb_dim": 64,
+    "hidden_dim": 128,
+    "feat_contract": "MODEL3_V1_FEATURE_ALLOWLIST_NOLEAK"
+  },
+  "objective": {
+    "class_weight_retry": 1.0,
+    "auto_class_weight_formula": false,
+    "no_auto_formula": true,
+    "pair_loss_enabled": true,
+    "pair_loss_type": "PURE_MARGIN",
+    "pair_lambda": 0.2,
+    "pair_margin": 0.25,
+    "pair_ce_enabled": false
+  },
+  "sampling_view": {
+    "sampling_view_id": "BALANCE_D_30_30_25_15",
+    "STRICT": 0.30,
+    "ANCHOR_CONDITIONED_HARD_KEEP": 0.30,
+    "NATURAL": 0.25,
+    "NO_ANCHOR": 0.15
+  },
+  "datasets": {
+    "full100k_root": "training/model3_dataset/model3_v1_anchor_contrast_full100k",
+    "strict_root": "training/model3_dataset/model3_v1_strict_contrast_reconstruction",
+    "hard_keep_root": "training/model3_dataset/model3_v1_anchor_conditioned_hard_keep",
+    "strict_contract": "STRICT_ANCHOR_CONTRAST_PAIR_V1",
+    "hard_keep_contract": "ANCHOR_CONDITIONED_HARD_KEEP_V1",
+    "full100k_immutable": true
+  },
+  "optimizer": {
+    "name": "Adam",
+    "lr": 0.001,
+    "batch_size": 64,
+    "epochs": 8
+  },
+  "init": {
+    "mode": "random_from_scratch",
+    "forbid_finetune_from": [
+      "O3_winner",
+      "Strict_Reconstruction",
+      "Diet_B",
+      "Full100K_old",
+      "HardKeep_Broken"
+    ]
+  },
+  "seed_policy": {
+    "base_seed": 2026082520,
+    "seeds": [2026082520, 2026082521, 2026082522]
+  },
+  "gates": {
+    "model_visible_strong_rate_min": 0.95,
+    "strict_keep_retry_ratio_min": 0.7,
+    "strict_keep_retry_ratio_max": 1.3,
+    "exposure_abs_tol": 0.05
+  },
+  "paths": {
+    "integration_root": "training/model3_dataset/model3_v1_full100k_strict_integration",
+    "checkpoint_root": "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts",
+    "docs_root": "docs/user_correction/model3"
+  },
+  "runtime_freeze": {
+    "production_retry": false,
+    "tts": false,
+    "architecture_change": false,
+    "runtime_change": false
+  }
+}

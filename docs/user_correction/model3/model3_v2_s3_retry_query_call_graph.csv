@@ -1,0 +1,11 @@
+node,file,function,input,output,owner,ssotCompliant,altersGeometry
+Model3 decision output,model3-inference-client.ts / run-model3-path-step.ts,inferPath → Model3SpanDecision KEEP|RETRY,PathFineSpan + Anchor context,KEEP|RETRY per span,Model3,YES,YES_indirect
+Retry consumer entry,model3-retry-router.ts,routeModel3Retry,"decisions, anchors, pathFineSpans, candidates",mutated candidates + traces,RetryRouter,YES,YES
+RETRY span collection + merge,model3-retry-region.ts,deriveRetryRegions / buildRegionFromSpans,RETRY PathFineSpans,Model3RetryRegion[],RetryRegion,YES_barriers; PARTIAL_vs_frozen_widen_clause,YES
+Barrier enforcement,model3-retry-region.ts + run-model3-path-step.ts,isRetryEligible / maskAnchorDecisions,Anchor + KEEP decisions,RETRY eligibility mask,RetryRegion+Model3PathStep,YES,YES
+Regional lattice / FineSpan,model3-retry-region-resegment.ts + lattice-fine-span-runtime.ts,resegmentRetryRegionWithLattice / runLatticeFineSpanGeneration,region slice + acoustic/wordTime,pathFineSpanViews,RegionalResegment,YES_when_ok,YES
+Regional path retention,model3-retry-region-resegment.ts,collectLocalSpansFromRetainedPathViews + dedupRetryRegionLocalSpans,all pathFineSpanViews,RetryRegionLocalSpan[],RegionalResegment,YES_multipath,YES
+Fallback local spans,model3-retry-region-resegment.ts,fallbackRegionLocalSpans,region.sourceSpanIds,first-pass FineSpan bounds,RegionalResegment,NO_DRIFT_vs_sliding_window_SSOT,YES
+Query window enumeration (Stage-2),model3-retry-router.ts,for local of localSpans → one query,RetryRegionLocalSpan,windowText / pinyin / syllables,RetryRouter,NO_DRIFT_missing_sliding_reuse,YES
+Query key construction,model3-retry-router.ts,rawText.slice + syllables.join('|'),local offsets,"windowText, windowPinyinKey",RetryRouter,YES_formula,YES
+Recall API,recall-span-topk-v2.ts via run-model3-path-step recall closure,recallSpanTopKV2,query key + domains + tone,RAW_RECALL hits,Recall,YES,NO

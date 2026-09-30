@@ -1,0 +1,14 @@
+{
+  "modelId": "MODEL3_SYNTHETIC_V1",
+  "status": "MODEL3_SYNTHETIC_V1_FROZEN",
+  "frozenAt": "2026-08-26",
+  "authoritativeCheckpoint": "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082520",
+  "seed": 2026082520,
+  "weightsFile": "weights.pt",
+  "weightsSha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+  "configSsot": "training/model3_dataset/configs/model3_v1_training_config.json",
+  "configHash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+  "datasetManifest": "training/model3_dataset/model3_v1_full100k_strict_integration/integration_split_manifest.json",
+  "datasetManifestHash": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432",
+  "note": "Do not overwrite this checkpoint. Model3 remains TEXT_ONLY; do not invent acoustic/TTS Model3 identities without ACP."
+}

@@ -1,0 +1,74 @@
+{
+  "contract": "SINGLE_CHAR_COLLECTOR_TRACE_V1",
+  "tests": [
+    {
+      "id": "surface_exact_single_char",
+      "file": "recall-span-topk-v2-length1-collector-observability.sqlite.integration.test.ts",
+      "expect_terminal": "ACCEPT_SURFACE_EXACT",
+      "expect_hit": true
+    },
+    {
+      "id": "unique_tone_exact",
+      "expect_terminal": "ACCEPT_UNIQUE_TONE_EXACT",
+      "expect_hit": true
+    },
+    {
+      "id": "multiple_tone_exact",
+      "expect_terminal": "MULTIPLE_TONE_EXACT_CANDIDATES",
+      "expect_hit": false
+    },
+    {
+      "id": "no_tone_pattern",
+      "expect_terminal": "NO_TONE_PATTERN",
+      "expect_hit": false
+    },
+    {
+      "id": "tone_not_ready",
+      "expect_terminal": "TONE_READINESS_NOT_READY",
+      "expect_hit": false
+    },
+    {
+      "id": "sql_zero_hit",
+      "expect_terminal": "SQL_NO_HIT",
+      "expect_hit": false
+    },
+    {
+      "id": "traditional_raw_unique_accept",
+      "expect_terminal": "ACCEPT_UNIQUE_TONE_EXACT",
+      "expect_hit": true,
+      "notes": "canonical recorded; unique-tone does not require surface===windowText"
+    },
+    {
+      "id": "traditional_raw_multiple",
+      "expect_terminal": "NORMALIZATION_SURFACE_MISMATCH",
+      "expect_hit": false
+    },
+    {
+      "id": "score_below_threshold",
+      "expect_terminal": "MIN_SCORE_REJECT",
+      "expect_hit": false
+    },
+    {
+      "id": "limit_truncation",
+      "expect_terminal": "LIMIT_TRUNCATION_REJECT",
+      "expect_hit": false
+    },
+    {
+      "id": "valid_exact_accept_base_only",
+      "expect_terminal": "ACCEPT_UNIQUE_TONE_EXACT",
+      "expect_hit": true
+    },
+    {
+      "id": "fallback_after_reject",
+      "expect_terminal": "MULTIPLE_TONE_EXACT_CANDIDATES",
+      "expect_hit": false,
+      "boundCandidateCount": 0
+    }
+  ],
+  "taxonomy_unit_file": "single-char-collector-trace.test.ts",
+  "result": "PASS",
+  "suites": {
+    "single-char-collector-trace.test.ts": "13 passed",
+    "recall-span-topk-v2-length1-collector-observability.sqlite.integration.test.ts": "13 passed"
+  }
+}

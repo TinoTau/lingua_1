@@ -1,0 +1,40 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "Q1_Can_current_Model2_introduce_candidate_absent_from_input_pool": {
+    "answer": "NO",
+    "evidence": "missing_target_capability_test.json n=250 TargetIntroductionRate=0.0; model_v1.forward closed pool+NO_MATCH"
+  },
+  "Q2_Does_UserProfile_influence_retrieval_or_only_scoring": {
+    "answer": "NO",
+    "detail": "scoring/ranking only",
+    "evidence": "profile_influence_audit.json PROFILE_IS_RERANK_ONLY; fuzzy/pool.py no profile"
+  },
+  "Q3_Were_Stage_A_B_trained_on_target_already_present_data": {
+    "answer": "YES",
+    "evidence": "dataset_objective_audit.json term_positive target_in_pool rate=1.0; losses require positive_pool_index"
+  },
+  "Q4_Do_current_primary_metrics_measure_recall_expansion": {
+    "answer": "NO",
+    "evidence": "metric_semantics_audit.json ACCEPTANCE_METRIC_DRIFT; TargetIntroduction never a gate"
+  },
+  "Q5_Was_profile_conditioned_recall_ever_actually_implemented": {
+    "answer": "NO",
+    "evidence": "intent timeline + code path; Hybrid assigned expansion to FuzzyPool without profile"
+  },
+  "Q6_Which_existing_components_remain_useful": {
+    "answer": "PARTIAL",
+    "evidence": "UserProfile, FuzzyPool-as-base, CandidateRelation 16D, Stage B binding, PseudoUser CF generators, parts of TrainRow plumbing"
+  },
+  "Q7_Can_intended_behavior_be_achieved_without_two_competing_paths": {
+    "answer": "YES",
+    "evidence": "single path: base FuzzyPool → profile retrieval expansion → merge → optional StageB binding; archive dual StageA-as-primary-recall narrative"
+  },
+  "decision_rule_application": {
+    "Q1": "NO",
+    "Q2": "scoring only",
+    "Q3": "YES",
+    "Q4": "NO",
+    "forbidden": "KEEP_AND_ADJUST",
+    "preferred": "PARTIAL_REBUILD"
+  }
+}

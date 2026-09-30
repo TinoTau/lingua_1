@@ -1,0 +1,34 @@
+path,stage,change_class,action,kind,notes
+docs/user_correction/MODEL2_SINGLE_CHAR_CONTEXT_DISAMBIGUATION_ACP.md,A_ACP,DOC_RETIRE,retire_as_historical,documentation,Not production code
+docs/user_correction/Lingua_Model2_SingleChar_Context_Disambiguation_PreDevelopment_Audit_2026_08_19.md,A_ACP,DOC_RETIRE,retire_as_historical,documentation,Predev audit
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_single_char_context_disambiguation_predev_audit_2026_08_19/,A_ACP,ARTIFACT_RETIRE,archive,experiment_dir,documentation-only
+electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.ts,B_CANDIDATE_SET,DELETE,delete_file,production_add,Contract types + fail-closed Node helper
+electron_node/electron-node/main/src/model2-runtime/single-char-disambiguation-v1.test.ts,B_CANDIDATE_SET,TEST_RETIRE,delete_file,test,Only consumer of contract besides Recall hook
+electron_node/electron-node/main/src/lexicon-v2/single-char-candidate-set-v1.ts,B_CANDIDATE_SET,DELETE,delete_file,production_add,Builds Model2 candidate set; not collector
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,B_CANDIDATE_SET,RESTORE,reverse_delete_ambiguousSet_fields,production_modify,KEEP collector unique-only; remove Model2 set only
+electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts,B_CANDIDATE_SET,RESTORE,delete_materializeSelectedSingleCharCandidate,production_modify,Function only called from retired test
+electron_node/electron-node/main/src/model2-runtime/inference-host.ts,B_CANDIDATE_SET,RESTORE,delete_disambiguate_method,production_modify,infer path KEEP
+electron_node/services/model2_runtime/model2_inference_host.py,B_CANDIDATE_SET,RESTORE,delete_disambiguate_cmd_and_metadata,production_modify,load still RetrievalPolicyV3(with_domain_head=True)
+training/model2_v3/policy/model.py,B_CANDIDATE_SET,RESTORE,delete_optional_head_flags,production_modify,Additive kwargs only
+training/model2_v3/policy/ambiguity_head_v1.py,B_CANDIDATE_SET,DELETE,delete_file,production_add,Never registered in production load
+training/model2_v3/tests/test_ambiguity_head_skeleton.py,B_CANDIDATE_SET,TEST_RETIRE,delete_file,test,
+docs/user_correction/Lingua_Model2_SingleChar_CandidateSet_Interface_V1_Development_Report_2026_08_19.md,B_CANDIDATE_SET,DOC_RETIRE,retire,documentation,
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_single_char_candidate_set_interface_v1_2026_08_19/,B_CANDIDATE_SET,ARTIFACT_RETIRE,archive,experiment_dir,
+training/model2_v3/scripts/run_v3_single_char_ambiguity_head_train_v1.py,C_HEAD_V1,DELETE,delete_file,training_script,
+training/model2_v3/experiments/v3_single_char_ambiguity_head_v1/,C_HEAD_V1,EXPERIMENT_ONLY,ARTIFACT_RETIRE,experiment_dir,FAILED EXPERIMENT; includes v1.pt
+docs/user_correction/Lingua_Model2_SingleChar_Ambiguity_Head_Training_V1_Report_2026_08_19.md,C_HEAD_V1,DOC_RETIRE,retire,documentation,
+training/model2_v3/policy/minimal_context_encoder_v1.py,D_ENCODER,DELETE,delete_file,production_add,Only used by AmbiguityHeadV2
+training/model2_v3/policy/ambiguity_head_v2.py,E_HEAD_V2,DELETE,delete_file,production_add,
+training/model2_v3/tests/test_ambiguity_head_v2_isolation.py,E_HEAD_V2,TEST_RETIRE,delete_file,test,
+training/model2_v3/scripts/run_v3_single_char_minimal_context_v2_train.py,E_HEAD_V2,DELETE,delete_file,training_script,
+training/model2_v3/experiments/v3_single_char_minimal_context_v2/,E_HEAD_V2,EXPERIMENT_ONLY,ARTIFACT_RETIRE,experiment_dir,FAILED EXPERIMENT; includes v2.pt
+docs/user_correction/Lingua_Model2_SingleChar_Minimal_Context_V2_Development_and_Training_Report_2026_08_19.md,E_HEAD_V2,DOC_RETIRE,retire,documentation,
+docs/user_correction/single_char_minimal_context_design_v1.md,E_HEAD_V2,DOC_RETIRE,retire,documentation,
+docs/user_correction/single_char_context_feature_contract_v1.md,E_HEAD_V2,DOC_RETIRE,retire,documentation,
+docs/user_correction/Lingua_Model2_Invocation_Granularity_and_SingleChar_Batching_Audit_2026_08_19.md,F_BATCHING_AUDIT,DOC_RETIRE,retire,documentation,documentation-only; no production batch code
+training/model2_v3/experiments/v3_stage_j_live_dialog200/model2_invocation_granularity_single_char_batching_audit_2026_08_19/,F_BATCHING_AUDIT,ARTIFACT_RETIRE,archive,experiment_dir,documentation-only
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.ts,PREEXISTING_RECALL,KEEP,keep,lexicon_recall,Exists before Model2 single-char decision
+electron_node/electron-node/main/src/lexicon-v2/single-char-collector-trace.test.ts,PREEXISTING_RECALL,KEEP,keep,test,length1Collector unique-only/fail-closed
+electron_node/electron-node/main/src/fw-detector/pinyin-ime-v2/pinyin-ime-v2-single-char-roles.ts,PREEXISTING_IME,KEEP,keep,ime,Not Model2 decision
+electron_node/electron-node/main/src/model2-runtime/expand-active-candidates.ts,PREEXISTING_PD,KEEP,keep,production,P/D infer only; no disambiguate
+training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt,PREEXISTING_CKPT,KEEP,keep,checkpoint,Rollback identity anchor

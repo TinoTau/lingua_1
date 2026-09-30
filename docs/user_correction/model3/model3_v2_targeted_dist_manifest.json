@@ -1,0 +1,102 @@
+{
+  "datasetId": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "datasetBuildId": "tdist_build_20260830_v1",
+  "createdAt": "2026-08-29T17:26:50.882699+00:00",
+  "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+  "featureContractIdentity": "packModel3SpanInferFields",
+  "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "provenanceContractIdentity": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT",
+  "protectionRegistryIdentity": "model3_protection_registry",
+  "asrIdentity": "faster_whisper_vad_/utterance",
+  "asrEnvIdentity": "1",
+  "toneIdentity": "production_ToneModule",
+  "model2Identity": "STAGE_J expandActiveCandidatesWithModel2",
+  "sourcePoolIdentities": [
+    "model3_certified_base_pool_v2"
+  ],
+  "gate0ExclusionPolicy": "EXCLUDE_GATE0_ACCEPTANCE_SOURCES_FROM_TRAINING",
+  "gate0ExcludedCount": 48,
+  "sourceSeed": 2026083004,
+  "shards": [
+    {
+      "shardId": "s00",
+      "n": 56
+    },
+    {
+      "shardId": "s01",
+      "n": 56
+    },
+    {
+      "shardId": "s02",
+      "n": 56
+    },
+    {
+      "shardId": "s03",
+      "n": 56
+    },
+    {
+      "shardId": "s04",
+      "n": 56
+    }
+  ],
+  "retries": [],
+  "splitCounts": {
+    "train": 607,
+    "dev": 60,
+    "test": 182
+  },
+  "pathSampleCounts": {
+    "train": 607,
+    "dev": 60,
+    "test": 182
+  },
+  "funnel": {
+    "attempted": 280,
+    "SUPERVISED_ACCEPTED": 280,
+    "supervisedAccepted": 280
+  },
+  "rejectReasons": {},
+  "semanticExcludeReasons": {},
+  "families": 280,
+  "utterances": 280,
+  "paths": 849,
+  "spanPathSamples": 14632,
+  "labels": {
+    "KEEP": 13259,
+    "MASKED": 508,
+    "RETRY": 865
+  },
+  "candHist": {
+    "1": 9590,
+    "0": 4957,
+    "2": 85
+  },
+  "anchors": {
+    "NONE": 14124,
+    "DOMAIN_AND_MODEL2": 134,
+    "MODEL2": 345,
+    "DOMAIN": 29
+  },
+  "multipathUtterances": 189,
+  "retryCandGt0Utterances": 116,
+  "qa": {
+    "provenanceCoherence": "PASS",
+    "holdoutCollision": "PASS",
+    "semanticFamilySplitLeak": "PASS",
+    "candidateMissing": "PASS",
+    "packerMissing": "PASS",
+    "toneRecallInvalid": "PASS",
+    "anchorSourceValidity": "PASS",
+    "model2OwnerAvailability": "PASS",
+    "domainOwnerExecution": "PASS",
+    "multipathRetention": "PASS",
+    "labelCounts": "PASS",
+    "evidenceOrigin": "PASS",
+    "candidateNonCollapsed": "PASS",
+    "retryCandGt0": "PASS"
+  },
+  "verdict": "TARGETED_DIST_DATASET_BUILD_PASS_WITH_NONBLOCKING_DISTRIBUTION_WARNINGS",
+  "nextPhase": "MODEL3_V2_TARGETED_DIST_CORRECTED_TRAINING",
+  "pronunciationPerturbation": false,
+  "trainingExecuted": false
+}

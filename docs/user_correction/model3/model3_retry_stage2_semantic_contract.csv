@@ -1,0 +1,9 @@
+clauseId,clause,authority,implication
+S2-01,RETRY does NOT mean recall at frozen FineSpan boundaries,model3_retry_contract_v1.md §RETRY meaning,Stage-2 MUST NOT use retained PathFineSpan/localSpan boundaries as the sole query set
+S2-02,RETRY = one bounded local re-segmentation + re-recall inside RetryRegion,model3_retry_contract_v1.md; MODEL3_ARCHITECTURE_CONTRACT_V1,"After regional reinterpretation, Stage-2 performs re-recall on legal local lexical query units inside the region"
+S2-03,Reuse FineSpan/window generation; Recall APIs recallSpanTopKV2 and/or recallTopKForWindows(subset),model3_retry_contract_v1.md §Recall ownership; Historical SSOT audit 2026-08-29 (reuse window generation),"Legal query units are Lattice-style contiguous syllable windows, not only path FineSpans"
+S2-04,Window Generator owns contiguous syllable windows length 1..5,Lattice Architecture V1.0.0; window-construction-core LATTICE_WINDOW_MIN/MAX,N=5 owned by Lattice window SSOT; Stage-2 must not invent a different max
+S2-05,Path FineSpans are non-overlapping segmentations; windows may overlap,Lattice Architecture; assertPathFineSpansNonOverlapping,"Stage-2 must operate in WINDOW SPACE inside region, not PATH FINESPAN SPACE alone"
+S2-06,RetryRegion / Anchor / KEEP barriers are fixed inputs for Unit #1,Reconciliation + this phase control variable,Enumerate only inside already-legal RetryRegion; no widen
+S2-07,Historical intent classification,Derived from S2-01..05,NOT A. Required: B and/or C (re-enumerate region windows and/or consume regional lattice windows). Preferred Unit#1 isolation: B on successful resegment path only
+S2-08,"length=1 Recall: base-only, surface-exact, cap=1",Single-char freeze; recallSpanTopKV2 length-1 branch,Windows may include L=1; Recall owner enforces contract — do not bypass

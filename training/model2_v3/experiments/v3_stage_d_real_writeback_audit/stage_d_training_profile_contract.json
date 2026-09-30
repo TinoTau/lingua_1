@@ -1,0 +1,20 @@
+{
+  "provenance": "SYNTHETIC_USER_PROFILE",
+  "required_for_encode": [
+    "personal_terms",
+    "personal_term_evidence/term_evidence",
+    "long_term_domain_evidence as state.domain_evidence"
+  ],
+  "optional_unused_by_encoder": [
+    "session_domain_prior"
+  ],
+  "derivation": "derive_domain_evidence(terms, CandidateIndex/term_domain_tags, normalized_weighted_multitag)",
+  "max_lexical_items_in_forward": 32,
+  "domain_slots": 12,
+  "SYNTHETIC_ONLY": [
+    "persona",
+    "pseudo_user_id",
+    "materialized long_term_domain_evidence on rows",
+    "session_domain_prior on rows"
+  ]
+}

@@ -36,6 +36,13 @@ export interface ServerMessageHandlerContext {
   startTtsPlayback(): Promise<void>;
   ttsPlayer: TtsPlayer;
   config: Config;
+  getSessionId(): string | null;
+  /** Register immutable system_text for Manual Correction UI */
+  registerCorrectionUtterance?(
+    utteranceIndex: number,
+    systemText: string,
+    sessionId: string
+  ): void;
 }
 
 /**
@@ -180,14 +187,26 @@ export async function handleServerMessage(
         const originalText = hasAudio ? message.text_asr : (message.text_asr ? `${audioLossMark}${message.text_asr}` : message.text_asr);
         const translatedText = hasAudio ? message.text_translated : (message.text_translated ? `${audioLossMark}${message.text_translated}` : message.text_translated);
 
+        const sessionId =
+          (message as any).session_id ||
+          ctx.getSessionId() ||
+          undefined;
+        const systemText = (message.text_asr || '').trim();
         ctx.translationDisplay.saveTranslationResult(message.utterance_index, {
           originalText,
           translatedText,
+          sessionId,
+          utteranceIndex: message.utterance_index,
+          systemText: systemText || undefined,
           serviceTimings: message.service_timings,
           networkTimings: message.network_timings,
           schedulerSentAtMs: message.scheduler_sent_at_ms,
         });
         logger.info('App.MessageHandler', '翻译结果已保存到 Map', { utterance_index: message.utterance_index, has_audio: hasAudio });
+
+        if (systemText && sessionId && ctx.registerCorrectionUtterance) {
+          ctx.registerCorrectionUtterance(message.utterance_index, systemText, sessionId);
+        }
 
         if (ctx.translationDisplay.isDisplayed(message.utterance_index)) {
           logger.info('App.MessageHandler', '翻译结果已显示过，跳过重复显示', { utterance_index: message.utterance_index });
@@ -317,10 +336,19 @@ export async function handleServerMessage(
                 ctx.translationDisplay.saveTranslationResult(message.utterance_index, {
                   originalText: failedOriginalText,
                   translatedText: failedTranslatedText,
+                  sessionId: (message as any).session_id || ctx.getSessionId() || undefined,
+                  utteranceIndex: message.utterance_index,
+                  systemText: (message.text_asr || '').trim() || undefined,
                   serviceTimings: message.service_timings,
                   networkTimings: message.network_timings,
                   schedulerSentAtMs: message.scheduler_sent_at_ms,
                 });
+
+                const sys = (message.text_asr || '').trim();
+                const sid = (message as any).session_id || ctx.getSessionId();
+                if (sys && sid && ctx.registerCorrectionUtterance) {
+                  ctx.registerCorrectionUtterance(message.utterance_index, sys, sid);
+                }
 
                 if (!ctx.translationDisplay.isDisplayed(message.utterance_index)) {
                   const displayed = ctx.translationDisplay.displayTranslationResult(

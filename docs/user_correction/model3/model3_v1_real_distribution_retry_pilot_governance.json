@@ -1,0 +1,30 @@
+{
+  "phase": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT_DATASET",
+  "date": "2026-08-28",
+  "phaseResult": "PASS_WITH_LIMITATIONS",
+  "frozenV1Modified": false,
+  "runtimeCodeChanged": false,
+  "architectureChanged": false,
+  "trainingChanged": false,
+  "modelChanged": false,
+  "featureChanged": false,
+  "thresholdChanged": false,
+  "recommendedNextPhase": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT_TRAINING",
+  "largeScaleGenerationRecommended": false,
+  "reportArtifacts": [
+    "Lingua_Model3_V1_Real_Distribution_Retry_Pilot_Dataset_Report_2026_08_28.md",
+    "model3_v1_real_distribution_retry_pilot_manifest.json",
+    "model3_v1_real_distribution_retry_pilot_distribution.csv",
+    "model3_v1_real_distribution_retry_pilot_validation.json",
+    "model3_v1_real_eval_proxy_frozen_manifest.json",
+    "model3_v1_real_distribution_retry_pilot_governance.json"
+  ],
+  "reportArtifactCount": 6,
+  "hardStop": true,
+  "doNotTrain": true,
+  "limitations": [
+    "Frozen stage2_materialize FineSpan surfaces are length-1 only (same as Full100K Synthetic V1). MULTI_CHAR coverage is therefore at corruption-region / ERROR_SHAPE level (multi-char referenceSurface↔errorSurface), mapped onto overlapping 1-char FineSpans — not multi-char FineSpan.surface lengths.",
+    "hard_keep_near_in_pilot=0; balance relies on reused Hard KEEP / NATURAL / NO_ANCHOR pointers.",
+    "ERROR_RELATION is 100% PHONETIC by frozen RETRY label contract (phoneticCompatible required)."
+  ]
+}

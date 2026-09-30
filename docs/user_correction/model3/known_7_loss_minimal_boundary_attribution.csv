@@ -1,0 +1,8 @@
+caseId,isG2,targetTerm,TARGET_GEOMETRY,LOSS_STAGE,edge_exists_in_lattice,contested_outgoing_at_start,uncapped_complete_paths_with_geom,last_edge_preserve_8x8_complete_hit,contested_edge_cover_8x8_complete_hit,STRUCTURALLY_ADDRESSABLE_UNDER_8x8,notes
+p2_u001_003,YES,过拟合,11:14,ACTIVE_CAP,YES,YES,YES,0,1,YES,Active wipe at pos=14; cover keeps geom into completes
+p2_u004_033,YES,城门,9:11,COMPLETE_CAP,YES,YES,YES,0,0,NO,ContestedNeed>>8; target rank~11; ceiling race
+p2_u005_004,YES,水道,9:11,COMPLETE_CAP,YES,YES,YES,0,0,NO,lastEdge active + unlimited complete can hit; not under dual 8/8 cover diagnostic
+p2_u005_015,YES,提示符,6:9,ACTIVE_CAP,YES,YES,YES,0,0,NO,Survives early last-edge; dies on later active positions
+p2_u003_017,NO,护士长,10:13,ACTIVE_CAP,YES,YES,POLICY_SENSITIVE,0,1,YES,Cover active policy yields complete hit; baseline/lastEdge do not
+p2_u004_010,NO,行程图,5:8,ACTIVE_CAP,YES,YES,YES,0,0,NO,Chain attrition after mid-path under 8 slots
+p2_u004_036,NO,黄包车,3:6,ACTIVE_CAP,YES,YES,YES,0,0,NO,Long utterance; contestedNeed>>cap

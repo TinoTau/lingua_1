@@ -1,0 +1,24 @@
+{
+  "phase2_total": 39870,
+  "hard_any_recover_all_splits": 699,
+  "hard_heldout_variant_filtered": 439,
+  "freeze_eval_n_historical": 197,
+  "stage_j_eval_n": 439,
+  "DATASET_DRIFT": true,
+  "reasons": [
+    "freeze refine evaluated on all-split hard_any_recover (incl train), n=197 at freeze time",
+    "Stage J evaluates held-out variant-filtered hard, n=439 today",
+    "phase2 dataset grew since freeze (hard_any_recover now ~699)",
+    "Stage J P_ONLY subsampled max_p_train + added NEUTRAL/D/P+D families"
+  ],
+  "split_counts_phase2": {
+    "train": 18569,
+    "test": 18097,
+    "val": 3204
+  },
+  "hard_split_counts": {
+    "val": 41,
+    "train": 260,
+    "test": 398
+  }
+}

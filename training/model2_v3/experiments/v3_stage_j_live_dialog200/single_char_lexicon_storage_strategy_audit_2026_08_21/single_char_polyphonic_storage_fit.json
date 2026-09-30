@@ -1,0 +1,10 @@
+{
+  "primary_key": ["pinyin_key", "word"],
+  "different_syllable_heteronyms": "YES",
+  "same_syllable_different_tones_as_separate_rows": "NO",
+  "current_len1_polyphonic_surfaces_distinct_pinyin_key": 0,
+  "verdict": "PARTIAL",
+  "option_a_advantage": "New table could include tone in PK; only needed if product requires multiple tones per same pinyin_key+surface",
+  "option_b_blocked": false,
+  "note": "Limitation pre-exists for multi-char and current 2510 import alike."
+}

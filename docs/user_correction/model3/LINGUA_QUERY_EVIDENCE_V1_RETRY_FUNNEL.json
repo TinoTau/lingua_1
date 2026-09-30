@@ -1,0 +1,104 @@
+{
+  "phase": "LINGUA_STAGE2_QUERY_EVIDENCE_V1_POST_IMPLEMENTATION_PILOT200_REMEASURE",
+  "freezeId": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "global": {
+    "R1_retry_entered": 593,
+    "R2_stage2_mode": 593,
+    "R3_stage2_returned": 588,
+    "R3_target": 55,
+    "R5_target_survived_budget": 40,
+    "R8_final_correct_with_retry": 72
+  },
+  "stage2": {
+    "decisionUnits": 39513,
+    "anchorMasked": 565,
+    "actionable": 38948,
+    "keep": 30183,
+    "retry": 8765,
+    "retryRate": 0.2250436479408442,
+    "retryRegions": 6067,
+    "stage2Invocations": 33085,
+    "stage2Nonempty": 15749,
+    "stage2Useful": 15749,
+    "stage2TotalCandidates": 17651,
+    "stage2TargetHits": 55,
+    "stage2TargetHitInvocationCount": 190,
+    "retryDownstreamRecovery": 72,
+    "outOfBucketDomainRecallCount": 0,
+    "emptyRetainedDomainAllDomainFallbackCount": 0,
+    "crossPathDomainLeakCount": 0,
+    "retryStage2CandidateDropCount": 0,
+    "retryTargetCandidateDropCount": 9,
+    "perSpanCapSaturationRate": 0.7559612093553908,
+    "stage2CandidatesPerInvocation": {
+      "median": 0,
+      "p95": 1,
+      "max": 4
+    },
+    "previousStage2Useful": "NOT_COMPARABLE_OBSERVABILITY_DEFECT"
+  },
+  "domainSafety": {
+    "DOMAIN_ONLY_STAGE2_HITS": 2,
+    "BASE_STAGE2_HITS": 54,
+    "MULTI_DOMAIN_STAGE2_HITS": 0,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0
+  },
+  "e5": {
+    "E5_CASE_COUNT": 35,
+    "E5_MEASURED_RUNS": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 12,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 11,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 11,
+    "E5_REACHES_KENLM": 11,
+    "E5_FINAL_CORRECT": 6
+  },
+  "queryEvidence": {
+    "firstPassModel2ExecutedQueries": 0,
+    "recallQueryEvidenceProducedApprox": 0,
+    "stage2AsrQueryCount": 20618,
+    "stage2EvidenceQueryCount": 12467,
+    "stage2ExactMappingCount": 3953,
+    "stage2SubspanMappingCount": 8514,
+    "stage2RawConflictRejectCount": 0,
+    "stage2UnsupportedGeometryCount": 9724,
+    "stage2InvalidEvidenceCount": 0,
+    "stage2NoneMappingCount": 10894,
+    "stage2TraceOnlyEvidenceCount": 0,
+    "stage2EvidenceNonemptyCount": 5694,
+    "stage2EvidenceEmptyCount": 6773,
+    "stage2EvidenceTargetHitCount": 67,
+    "stage2EvidenceNonTargetOnlyCount": 5627,
+    "utterancesWithEvidence": 270,
+    "byCondition": {
+      "NO_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 0,
+        "stage2ExactMappingCount": 0,
+        "stage2SubspanMappingCount": 0,
+        "stage2EvidenceTargetHitCount": 0,
+        "finalCorrect": 22
+      },
+      "CORRECT_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 6246,
+        "stage2ExactMappingCount": 2058,
+        "stage2SubspanMappingCount": 4188,
+        "stage2EvidenceTargetHitCount": 64,
+        "finalCorrect": 31
+      },
+      "WRONG_PROFILE": {
+        "firstPassModel2ExecutedQueries": 0,
+        "stage2EvidenceQueryCount": 6221,
+        "stage2ExactMappingCount": 1895,
+        "stage2SubspanMappingCount": 4326,
+        "stage2EvidenceTargetHitCount": 3,
+        "finalCorrect": 19
+      }
+    },
+    "stage2EvidenceMappingRate": 0.3768172888015717
+  }
+}

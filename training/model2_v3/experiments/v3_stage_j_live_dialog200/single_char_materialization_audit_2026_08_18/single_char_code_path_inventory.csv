@@ -1,0 +1,12 @@
+file,function,condition,active,business_role,frozen_evidence
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/window-construction-core.ts,LATTICE_WINDOW_MIN_SYLLABLES,=1,YES,Lattice windows start at 1 syllable,Lattice CR 1.0.2
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/recall-topk-for-windows.ts,recallTopKForWindows,"syllables.length===1 → topK=1, domainIds=[], fuzzy=false",YES,length-1 window routing,CR 1.0.2
+electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts,collectBaseOnlySingleCharCandidate,syllables.length===1 independent branch,YES,SSOT length-1 recall,CR 1.0.2 / 1.0.3 / 1.1C
+electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,lookupBaseByPinyinAndToneKey,minTermLength=1,YES,open base 1–5,CR 1.0.3
+electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,lookupDomainsByPinyinKeyMulti,termLength<2 → [],YES,domain never length-1,CR 1.0.2 no domain
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/inject-fallback-edges.ts,injectFallbackEdges,i→i+1 candidates=[] if lexical graph incomplete,YES,"connectivity fallback, not recall",Lattice architecture fallback
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/generate-global-windows.ts,generateGlobalWindows,len from 2 to 5,TEST_ONLY,retired LTR windows,LTR MIN_SYLLABLES=2 unchanged
+electron_node/electron-node/main/src/lexicon/local-span-recall.ts,recallSpanTopK,MIN_SYLLABLES=2,DEPRECATED,legacy span recall,CR 1.0.2 LTR unchanged
+electron_node/electron-node/main/src/lexicon/pinyin-topk-lookup.ts,lookupTopKByPinyin,termLength<2 → [],YES_LEGACY,V1 lookup not lattice,legacy
+electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts,materializeDomainHits,hitSyl===spanSyl else drop,YES,D cannot bind 2-char to 1-char span,exact-align freeze
+electron_node/electron-node/main/src/pinyin-ime-v2-span-normalizer.ts,normalizePinyinImeV2Spans,charLen<minSpanChars drop single_char,YES_IME,"IME coarse spans, not lattice",IME minSpanChars=2

@@ -1,0 +1,54 @@
+{
+  "profileRef": "prof_u004_p1",
+  "userId": "U004",
+  "profileStage": "P1",
+  "constructionMethod": "CORRECTION_HISTORY_PROFILE_DELTA",
+  "dominantRelations": [
+    "ch_c",
+    "n_l"
+  ],
+  "profileBuildSetId": "pbs_u004_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e4baa7e593817c63",
+    "base-rebuild-term-e59083e9a5ad7c63",
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e"
+  ],
+  "profileBuildSurfaces": [
+    "产品",
+    "吃饭",
+    "电脑",
+    "男人"
+  ],
+  "historyEvents": [
+    {
+      "source_event_id": "U004_P1_ch_c_产品_0",
+      "feature_key": "ch_c",
+      "term": "产品",
+      "evidence": 1.0,
+      "weight": 0.7
+    },
+    {
+      "source_event_id": "U004_P1_ch_c_吃饭_0",
+      "feature_key": "ch_c",
+      "term": "吃饭",
+      "evidence": 1.0,
+      "weight": 0.7
+    },
+    {
+      "source_event_id": "U004_P1_n_l_电脑_0",
+      "feature_key": "n_l",
+      "term": "电脑",
+      "evidence": 1.0,
+      "weight": 0.4
+    },
+    {
+      "source_event_id": "U004_P1_n_l_男人_0",
+      "feature_key": "n_l",
+      "term": "男人",
+      "evidence": 1.0,
+      "weight": 0.4
+    }
+  ],
+  "userProfileV1Ref": "profiles/prof_u004_p1.userprofile.json"
+}

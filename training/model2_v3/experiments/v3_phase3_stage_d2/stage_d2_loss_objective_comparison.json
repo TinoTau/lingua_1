@@ -1,0 +1,85 @@
+{
+  "selected": "BCE + pairwise action-ranking + listwise soft + persona contrastive (Correct>Wrong/Swapped/Empty)",
+  "rejected_hardcoded_persona_bonus": true,
+  "train": {
+    "stage_p_params": 45533,
+    "combined_params": 47210,
+    "added": 1677,
+    "epochs": 14,
+    "epoch_metrics": [
+      {
+        "epoch": 1,
+        "loss": 3.172654628753662,
+        "contrast": 3.7610572004318237
+      },
+      {
+        "epoch": 2,
+        "loss": 3.178184304918562,
+        "contrast": 3.2759059715270995
+      },
+      {
+        "epoch": 3,
+        "loss": 3.128139019012451,
+        "contrast": 3.1482376432418824
+      },
+      {
+        "epoch": 4,
+        "loss": 3.0676110131399974,
+        "contrast": 3.092469501495361
+      },
+      {
+        "epoch": 5,
+        "loss": 3.0758029392787387,
+        "contrast": 2.9695977926254273
+      },
+      {
+        "epoch": 6,
+        "loss": 3.090093033654349,
+        "contrast": 2.9360836696624757
+      },
+      {
+        "epoch": 7,
+        "loss": 3.068868637084961,
+        "contrast": 2.878606023788452
+      },
+      {
+        "epoch": 8,
+        "loss": 3.067178181239537,
+        "contrast": 2.805066828727722
+      },
+      {
+        "epoch": 9,
+        "loss": 3.0310826982770647,
+        "contrast": 2.7928682565689087
+      },
+      {
+        "epoch": 10,
+        "loss": 3.0388224806104387,
+        "contrast": 2.7705371522903444
+      },
+      {
+        "epoch": 11,
+        "loss": 3.040163721357073,
+        "contrast": 2.7095788145065307
+      },
+      {
+        "epoch": 12,
+        "loss": 3.0313564709254672,
+        "contrast": 2.66791672706604
+      },
+      {
+        "epoch": 13,
+        "loss": 3.044066837855748,
+        "contrast": 2.6798368644714357
+      },
+      {
+        "epoch": 14,
+        "loss": 3.016568694795881,
+        "contrast": 2.582167387008667
+      }
+    ],
+    "freeze_shared": true,
+    "n_domain_actions": 13
+  },
+  "d1_weak_margin_hypothesis": "BCE-only + always-fill budget + forced domain pick"
+}

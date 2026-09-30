@@ -1,0 +1,15 @@
+{
+  "ssot": "extension_probe_perf_counters",
+  "previousDiscrepancy": {
+    "structured_harness_claimed_sec": 3.27,
+    "primary_report_claimed_sec": "25-30",
+    "resolution": "Previous primary report wall time included Electron cold start / lexicon load; structured harness_elapsed was lattice-only after warm process or mis-shared timer. This extension reports stage timers + total wall separately."
+  },
+  "tts_sec": 16.518,
+  "asr_fw_tone_sec": 137.723,
+  "recall_lattice_label_sec": 14.687,
+  "wall_sec": 170.197,
+  "per_utt_wall_sec": 3.094,
+  "asr_env": "TONE_P10_VAD_CPU=1 (authorized VAD CPU EP; ASR still CUDA)",
+  "note": "ASR/FW and Tone are measured together via /utterance client latency"
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model3_error_text_sample_v1",
+  "title": "ERROR_TEXT_SAMPLE_V1",
+  "type": "object",
+  "required": [
+    "sampleId",
+    "generatorVersion",
+    "generationSeed",
+    "sourceCorpus",
+    "sourceSentenceId",
+    "referenceText",
+    "errorText",
+    "corruptionCount",
+    "corruptions",
+    "evidenceLevel",
+    "splitGroupKey"
+  ],
+  "properties": {
+    "sampleId": { "type": "string" },
+    "generatorVersion": { "type": "string" },
+    "generationSeed": { "type": ["integer", "string"] },
+    "sourceCorpus": { "type": "string" },
+    "sourceSentenceId": { "type": "string" },
+    "referenceText": { "type": "string" },
+    "errorText": { "type": "string" },
+    "domainMetadata": {
+      "type": "object",
+      "properties": {
+        "domainIds": { "type": "array", "items": { "type": "string" } },
+        "carrierTemplateId": { "type": ["string", "null"] }
+      }
+    },
+    "corruptionCount": { "type": "integer", "minimum": 0, "maximum": 8 },
+    "corruptions": {
+      "type": "array",
+      "items": { "$ref": "model3_corruption_record_v1.json" }
+    },
+    "contrastGroupId": { "type": ["string", "null"] },
+    "splitGroupKey": { "type": "string" },
+    "evidenceLevel": {
+      "enum": ["SYNTHETIC_TEXT", "REAL_ASR_PAIR", "TTS_ASR", "HUMAN_ASR"]
+    },
+    "anchorPrep": {
+      "type": "object",
+      "description": "Offline prep only — not runtime-confirmed Anchor",
+      "properties": {
+        "anchorCandidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "spanStart": { "type": "integer" },
+              "spanEnd": { "type": "integer" },
+              "surface": { "type": "string" },
+              "kind": {
+                "enum": ["DOMAIN_CANDIDATE", "MODEL2_UNAVAILABLE", "NONE"]
+              }
+            }
+          }
+        },
+        "model2AnchorStatus": {
+          "enum": ["UNAVAILABLE", "OFFLINE_EVIDENCE", "RUNTIME_CONFIRMED"]
+        }
+      }
+    },
+    "expectedRepairClass": {
+      "enum": ["CLEAN", "PHONETIC_CANDIDATE", "NON_PHONETIC", "UNKNOWN"],
+      "description": "NOT final Model3 KEEP/RETRY — Stage2 label generator owns that"
+    },
+    "referenceReachable": {
+      "enum": ["YES", "NO", "UNKNOWN"]
+    }
+  }
+}

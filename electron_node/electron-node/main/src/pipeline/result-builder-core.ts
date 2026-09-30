@@ -10,6 +10,11 @@ import { resolveBusinessAsrText } from './post-asr-routing';
 import { projectCurrentTurnDomains } from '../fw-detector/domain-context-contract';
 import type { LlmDomainCalibration } from '../fw-detector/domain-context-contract';
 import { buildUtteranceToneFromSsot } from './utterance-tone-ssot';
+import {
+  finalizeCaptureV2Case,
+  getCaptureV2FinalizedArtifact,
+  isFrozenEvidenceCaptureV2Enabled,
+} from '../capture-v2';
 
 export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Record<string, unknown> {
   const spanV4 = ctx.fwDetectorResult?.spanAssemblyV4 as
@@ -46,6 +51,12 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
     ...(llmCalibration ? { llmCalibration } : {}),
     ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
     ...(ctx.rawAsrText ? { raw_asr_text: ctx.rawAsrText } : {}),
+    ...(ctx.fwRepairNormalizedText
+      ? {
+          fw_repair_normalized_text: ctx.fwRepairNormalizedText,
+          fw_repair_script_normalized: ctx.fwRepairScriptNormalized === true,
+        }
+      : {}),
     ...(ctx.asrMergeProbeText ? { asr_merge_probe_text: ctx.asrMergeProbeText } : {}),
     ...(ctx.asrDiagnostics ? { asr_diagnostics: ctx.asrDiagnostics } : {}),
     ...(ctx.fwDetectorStepMs != null ? { fw_detector_step_ms: ctx.fwDetectorStepMs } : {}),
@@ -57,10 +68,55 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
           },
         }
       : {}),
+    ...(process.env.MODEL2_DIALOG200_TRACE === '1'
+      ? {
+          dialog200_ids: {
+            job_id: job.job_id,
+            session_id: job.session_id,
+            utterance_index: job.utterance_index ?? null,
+          },
+          dialog200_path_trace: (ctx.fwDetectorResult?.spanAssemblyV4 as
+            | { model2PathTrace?: Record<string, unknown> }
+            | undefined)?.model2PathTrace ?? null,
+        }
+      : {}),
     ...sessionExtra,
     ...(utteranceTone ? { utterance_tone: utteranceTone } : {}),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
     ...(ctx.duplicateSanitizeTrace ? { duplicate_sanitize: ctx.duplicateSanitizeTrace } : {}),
+    ...(isFrozenEvidenceCaptureV2Enabled()
+      ? (() => {
+          const art = finalizeCaptureV2Case() ?? getCaptureV2FinalizedArtifact();
+          return art
+            ? {
+                // Diagnostic side-channel only — not a business JobResult core field.
+                frozen_evidence_capture_v2: art,
+              }
+            : {};
+        })()
+      : {}),
+    // TEST_ONLY: Phase A controlled-parity harness pin export. Default OFF.
+    // Not a Production API field; never invents Tone/alignment — mirrors JobContext post-ASR SSOT.
+    ...(process.env.LINGUA_TEST_EXPORT_POST_ASR_PIN === '1'
+      ? {
+          test_only_post_asr_pin: {
+            rawAsrText: ctx.rawAsrText ?? null,
+            segments: Array.isArray(ctx.asrSegments) ? ctx.asrSegments : [],
+            segmentTimeOffsetsSec: Array.isArray(ctx.segmentTimeOffsetsSec)
+              ? ctx.segmentTimeOffsetsSec
+              : [],
+            asrSegmentNodeBatchIndices: Array.isArray(ctx.asrSegmentNodeBatchIndices)
+              ? ctx.asrSegmentNodeBatchIndices
+              : [],
+            segmentCharOffsets: Array.isArray(ctx.segmentCharOffsets)
+              ? ctx.segmentCharOffsets
+              : [],
+            acousticToneSlices: Array.isArray(ctx.acousticToneSlices)
+              ? ctx.acousticToneSlices
+              : [],
+          },
+        }
+      : {}),
   };
 }
 

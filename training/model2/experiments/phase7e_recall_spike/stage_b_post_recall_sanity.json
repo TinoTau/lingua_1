@@ -1,0 +1,11 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "verdict": "KEEP_AS_POST_RECALL_BINDING",
+  "note": "Stage B binding remains valid post-merge if CandidateRelation features are computed for newly introduced slots. No Stage B retrain in 7E. Watch: POST_RECALL_BINDING_CONTRACT_NEEDS_ADAPTATION if online plumbing omits new candidates.",
+  "adaptation_flag": null
+}

@@ -106,14 +106,32 @@ function insertDomainRows(db: Database.Database, rows: readonly Length1DomainSee
   if (!rows.length) {
     return;
   }
+  const termStmt = db.prepare(
+    `INSERT OR REPLACE INTO term (
+      id, word, pinyin_key, tone_pinyin_key, prior_score, repair_target, enabled, source, tier
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'domain')`
+  );
   const stmt = db.prepare(
     `INSERT OR REPLACE INTO domain_lexicon (
       id, domain_id, pinyin_key, tone_pinyin_key, word, normalized, prior_score,
       repair_target, enabled, aliases, source, canonical_word, is_alias
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   );
+  const tagStmt = db.prepare(
+    `INSERT OR REPLACE INTO term_domain_tags (term_id, domain_id, weight) VALUES (?, ?, ?)`
+  );
   const tx = db.transaction((list: readonly Length1DomainSeedRow[]) => {
     for (const r of list) {
+      termStmt.run(
+        r.id,
+        r.word,
+        r.pinyinKey,
+        r.tonePinyinKey,
+        r.priorScore,
+        r.repairTarget === true ? 1 : 0,
+        r.enabled === false ? 0 : 1,
+        r.source ?? 'batch1_0b_domain_guard'
+      );
       stmt.run(
         r.id,
         r.domainId,
@@ -129,6 +147,7 @@ function insertDomainRows(db: Database.Database, rows: readonly Length1DomainSee
         r.word,
         r.isAlias === true ? 1 : 0
       );
+      tagStmt.run(r.id, r.domainId, 1.0);
     }
   });
   tx(rows);

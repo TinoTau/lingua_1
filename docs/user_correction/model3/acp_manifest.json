@@ -1,0 +1,54 @@
+{
+  "acp_id": "LINGUA-ACP-SEGMENTATION-RESOURCE-PRUNING-DIVERSITY-CONTRACT-V1",
+  "phase": "LINGUA_ACP_SEGMENTATION_RESOURCE_PRUNING_DIVERSITY_CONTRACT_V1",
+  "acp_status": "DRAFT / USER_APPROVAL_REQUIRED",
+  "mode": [
+    "ARCHITECTURE_DECISION_DRAFT_ONLY",
+    "NO_PRODUCT_CHANGE",
+    "NO_CONFIG_CHANGE",
+    "NO_IMPLEMENTATION",
+    "NO_PARAMETER_TUNING"
+  ],
+  "authority_inputs": [
+    "LINGUA_SEGMENTATION_PATH_BUDGET_SENSITIVITY_AUDIT_V1",
+    "LINGUA_CONTEXT_DOMAIN_GUIDED_PATH_SPACE_CONTROL_SSOT_AUDIT_V1",
+    "LINGUA_SEGMENTATION_HYPOTHESIS_DIVERSITY_RESOURCE_PRESERVATION_CONTRACT_AUDIT_V1"
+  ],
+  "root_cause": "SEGMENTATION_RESOURCE_PRUNING_CONTRACT_GAP",
+  "diversity_business_object": "SEGMENTATION / LEXICAL BOUNDARY AMBIGUITY",
+  "representative_hypothesis_class": {
+    "status": "DECISION_REQUIRED",
+    "recommended_abstract": "LOCAL_AMBIGUITY_CHOICE_CLASS",
+    "alternative_abstract": "BOUNDED_COVERED_LEXICAL_EDGE",
+    "rejected_as_sole_unit": "EXACT_BOUNDARYKEY_ONLY"
+  },
+  "structural_comparator_role": "WITHIN_REPRESENTATION_SELECTION",
+  "numeric_path_cap_role": "RESOURCE_SAFETY_CEILING",
+  "representation_exceeds_hard_cap_policy": "REPRESENTATION_ITSELF_MAY_BE_LOSSY_UNDER_HARD_CEILING_DETERMINISTIC_NON_LINGUISTIC",
+  "domain_to_segmentation_feedback": "FORBIDDEN",
+  "domain_vote_move": "NO",
+  "candidate_budget_change": "NO",
+  "module_changes": {
+    "MODEL2_CHANGE": "NO",
+    "MODEL3_CHANGE": "NO",
+    "QUERY_EVIDENCE_CHANGE": "NO",
+    "RETRY_REGION_CHANGE": "NO",
+    "SAMEDOMAIN_CHANGE": "NO",
+    "KENLM_CHANGE": "NO"
+  },
+  "acp_recommended_option": "Arch-Option_1_Local_Ambiguity_Representation",
+  "recommendation_confidence": "MEDIUM",
+  "architecture_decision_required": true,
+  "implementation_authorized": false,
+  "one_next_owner": "USER_ARCHITECTURE_DECISION",
+  "one_next_delta": "Approve / reject / amend ACP only",
+  "artifacts": [
+    "LINGUA_ACP_SEGMENTATION_RESOURCE_PRUNING_DIVERSITY_CONTRACT_V1.md",
+    "representative_hypothesis_option_matrix.csv",
+    "active_complete_preservation_contract_matrix.csv",
+    "acp_manifest.json"
+  ],
+  "product_runtime_code_changed": false,
+  "production_config_changed": false,
+  "stop": true
+}

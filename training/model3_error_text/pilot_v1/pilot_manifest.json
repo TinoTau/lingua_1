@@ -1,0 +1,50 @@
+{
+  "generatorVersion": "model3-error-text-generator-v1.0.0",
+  "seed": 20260823,
+  "source_corpus": "baseline_v1",
+  "base_sentence_count": 800,
+  "sample_count": 2072,
+  "unique_sample_count": 2072,
+  "split_counts": {
+    "train": 1668,
+    "dev": 179,
+    "test": 225
+  },
+  "family_counts": {
+    "z_zh": 164,
+    "eng_en": 264,
+    "sh_s": 380,
+    "in_ing": 215,
+    "ORTHOGRAPHIC_DE_DI_DE": 35,
+    "n_l": 124,
+    "h_f": 129,
+    "ch_c": 263
+  },
+  "sample_type_counts": {
+    "CLEAN": 800,
+    "CONTRAST_MEMBER": 2072,
+    "PHONETIC_SINGLE": 935,
+    "HARD_NEGATIVE_UNREACHABLE": 306,
+    "PHONETIC_DOUBLE": 302,
+    "NON_PHONETIC_ORTHOGRAPHIC": 35
+  },
+  "corruption_count_distribution": {
+    "0": 800,
+    "1": 970,
+    "2": 302
+  },
+  "schema_version": "ERROR_TEXT_SAMPLE_V1",
+  "generation_timestamp": "2026-08-23T09:54:54.607874+00:00",
+  "dialog_200_in_train": false,
+  "active_families": [
+    "n_l",
+    "z_zh",
+    "ch_c",
+    "sh_s",
+    "eng_en",
+    "in_ing",
+    "h_f"
+  ],
+  "pinyin_ssot": "training/model2/phonetic/node_syllables_cli.mjs → pinyin-pro",
+  "lexicon_ssot": "node_runtime/lexicon/v3/lexicon.sqlite"
+}

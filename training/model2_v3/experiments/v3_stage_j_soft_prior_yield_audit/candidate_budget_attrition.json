@@ -1,0 +1,33 @@
+{
+  "owners": [
+    {
+      "owner": "FuzzyPool max_pool_size base",
+      "value": 16,
+      "file": "finespan_retrieval.py:103"
+    },
+    {
+      "owner": "FuzzyPool max_pool_size domain",
+      "value": 32,
+      "file": "domain_actions.py:67,86"
+    },
+    {
+      "owner": "domain soft top-k / max_cands",
+      "value": 8,
+      "file": "domain_actions.py:66,99"
+    },
+    {
+      "owner": "ProfileRetrievalConfig.max_total_profile_candidates",
+      "value": 8,
+      "file": "spike_retriever.py:23"
+    },
+    {
+      "owner": "Node applyDomainPriorQuota prior slots",
+      "value": 2,
+      "file": "apply-domain-prior-quota.ts:65",
+      "in_python_stage_d": false
+    }
+  ],
+  "BUDGET_STACKING": true,
+  "stack": "phonetic distance filter → surface dedup → pool cap 32 → soft rerank top-8 (Python). Node later: per-span limit + prior quota 2.",
+  "no_sql_topk_on_python_path": true
+}

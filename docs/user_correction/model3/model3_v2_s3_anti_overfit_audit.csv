@@ -1,0 +1,9 @@
+finding,file,function,type,productionImpact,testSpecific,referenceAware,severity,actionRequired
+No production case-id branch,fw-detector-step.ts,resolveFwDetectorTraceCaseId,SAFE_DIAGNOSTIC,NONE,NO,NO,LOW,NONE
+No HIGH12/CLEAR_OOS production branch,main/src,n/a,NONE,NONE,NO,NO,INFO,NONE
+expectedText only in harness evaluation,run-dialog200-s3-class-weight-downstream-causal-audit.mjs,classifyFinalUtility,SAFE_DIAGNOSTIC,NONE,YES_AUDIT_ONLY,YES_EVAL_ONLY,INFO,NONE
+No candidate injection in production Retry/Recall/Assembly,model3-retry-router.ts,routeModel3Retry,NONE,NONE,NO,NO,INFO,NONE
+dialog_200/HIGH12 excluded from S3 and class-weight training,model3_v2_training_pipeline_trace_summary.json,heldout exact-text gate,NONE,NONE,NO,NO,INFO,NONE
+Prior RECALL_CHANGED_ASSEMBLY_SAME used as RECALL owner — invalid,model3_v2_s3_downstream_stage_decomposition.csv,boolean stage decomposition,SAFE_DIAGNOSTIC,ATTRIBUTION_ERROR,NO,NO,HIGH,INVALIDATE_OWNER_LABEL
+Assembly input candidate identity not traced in current dumps,model3_v2_retry_recall_query_trace.jsonl,missing preAssembly snapshot,SAFE_DIAGNOSTIC,EVIDENCE_GAP,NO,NO,HIGH,PROVENANCE_TRACE_COMPLETION
+"CLEAR_OOS lexicon gaps (私教课/次卡) are general coverage issues, not test patches",lexicon_terms,exact lookup,NONE,COVERAGE_GAP_HYPOTHESIS,NO,NO,MED,DO_NOT_ADD_CASE_SPECIFIC_ENTRIES

@@ -1,0 +1,21 @@
+{
+  "variant": "CF1_BIND_ACCEPTED_LENGTH1_WITHOUT_CHANGING_PRIOR",
+  "production_change": false,
+  "minPrior_unchanged": 0.5,
+  "priorScore_unchanged": true,
+  "if_accepted_length1_could_bind": 2331,
+  "edge_count_mean": 11.71356783919598,
+  "edge_count_p50": 11.0,
+  "edge_count_p95": 19.0,
+  "edge_count_max": 24,
+  "utterances_with_windows": 199,
+  "identity_edges": 1819,
+  "substitution_edges": 512,
+  "expected_correction_edges_upper_bound": 2,
+  "potential_wrong_substitution_opportunities": 510,
+  "candidate_explosion": false,
+  "candidate_explosion_reason": "Collector cap=1 already; CF1 adds at most 1 lexical edge per accepted 1-char window. Not a fuzzy TopK explosion. Path/sentence explosion not simulated (would require FineSpan/Assembly replay).",
+  "new_lattice_path_count": "NOT_SIMULATED",
+  "sentence_candidate_count": "NOT_SIMULATED",
+  "note": "Offline assumption only: collector-accepted length-1 hits skip generic minPrior. Not a production proposal."
+}

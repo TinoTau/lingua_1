@@ -1,0 +1,20 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "metrics": [
+    {"name": "Recall@1 / Recall@3 / Recall@K (pool)", "class": "RERANK_METRIC", "note": "TERMINOLOGY_DRIFT — measures rank of target already in pool"},
+    {"name": "MRR (pool)", "class": "RERANK_METRIC", "note": ""},
+    {"name": "FuzzyPool Recall@16 / visibility", "class": "RECALL_EXPANSION_METRIC", "note": "measures FuzzyPool base recall, NOT Model2+profile"},
+    {"name": "ConditionGain@K", "class": "BINDING_METRIC", "note": "Correct vs Empty/Unavailable ranking lift"},
+    {"name": "TargetRankDelta", "class": "BINDING_METRIC", "note": ""},
+    {"name": "MRRSwapDamage / profile swap", "class": "BINDING_METRIC", "note": ""},
+    {"name": "phonetic agreement (7C P2)", "class": "DIAGNOSTIC_METRIC", "note": ""},
+    {"name": "SEEN/UNSEEN Stage A R@1", "class": "RERANK_METRIC", "note": "generalization of ranking"},
+    {"name": "TargetIntroductionRate", "class": "RECALL_EXPANSION_METRIC", "note": "FIRST measured in Phase 7D diagnostic; was never primary gate; rate=0.0"},
+    {"name": "Model2NewRecall@K", "class": "RECALL_EXPANSION_METRIC", "note": "Phase 7D only; =0"},
+    {"name": "NewCandidatePrecision/Recall", "class": "RECALL_EXPANSION_METRIC", "note": "NEVER implemented as acceptance"},
+    {"name": "ProfileConditionalRecallGain", "class": "RECALL_EXPANSION_METRIC", "note": "NEVER implemented as acceptance"}
+  ],
+  "primary_acceptance_historically": ["FuzzyPool visibility", "Stage A pool Recall@K", "ConditionGain", "TargetRankDelta", "Binding PASS"],
+  "verdict": "ACCEPTANCE_METRIC_DRIFT",
+  "exists_true_model2_introduction_metric_as_primary_gate": false
+}

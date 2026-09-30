@@ -1,0 +1,9 @@
+{
+  "PROFILE_SELF_REINFORCEMENT_DEFECT": false,
+  "uncorrected_ASR_auto_write_personal_terms": false,
+  "manual_correction_is_primary_writer": true,
+  "SINGLE_CORRECTION_DOMINANCE_RISK": true,
+  "detail": "weight=1.0 additive; one correction can create evidence=1.0 immediately; no slow ramp",
+  "OVERLAPPING_TERM_DOUBLE_COUNT_RISK": true,
+  "detail_overlap": "span-level target_text + possible macro term without Lexicon longest-match policy"
+}

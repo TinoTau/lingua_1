@@ -1,0 +1,51 @@
+{
+  "markers": [
+    "PHASE7G",
+    "AUTHORITATIVE_PATH",
+    "NO_WHOLE_UTTERANCE",
+    "NOT_FROZEN"
+  ],
+  "NO_CHANGE": {
+    "slice": "D_NO_CHANGE",
+    "n": 120,
+    "AnyProfileExpansionRate": 0.25833333333333336,
+    "FalseCandidate_mean": 4.841666666666667,
+    "FalseCandidate_p95": 28.0
+  },
+  "PROFILE_NOT_APPLICABLE": {
+    "slice": "C_PROFILE_NOT_APPLICABLE",
+    "n": 0,
+    "AnyProfileExpansionRate": 0.0,
+    "FalseCandidate_mean": 0.0,
+    "FalseCandidate_p95": 0.0
+  },
+  "MULTI_PROFILE": {
+    "markers": [
+      "PHASE7G",
+      "AUTHORITATIVE_PATH",
+      "NO_WHOLE_UTTERANCE",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 80,
+    "TargetIntroductionRate": 0.3125,
+    "ProfileOnlyTargetRecovery": 0.3125,
+    "FalseExpansionRate": 0.525,
+    "NewCandidatePrecisionProxy": 0.0257201646090535,
+    "new_candidates_mean": 12.15,
+    "new_candidates_p95": 36.0,
+    "queries_mean": 7.4375,
+    "latency_ms_p50": 1809.7173999994993,
+    "latency_ms_p95": 3053.217599997879,
+    "funnel": {
+      "total": 80,
+      "lexicon_ok": 80,
+      "finespan_exists": 80,
+      "length_compatible": 80,
+      "profile_applicable_active": 80,
+      "miss_after_retrieval": 55,
+      "query_generated": 68,
+      "introduced": 25
+    }
+  }
+}

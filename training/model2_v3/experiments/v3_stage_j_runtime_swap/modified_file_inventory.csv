@@ -1,0 +1,18 @@
+path,change,purpose
+electron_node/services/model2_runtime/model2_inference_host.py,modified,Stage-J explicit sha256 load; with_domain_head; V1 pack; ONE infer; restored execute_domain_action
+electron_node/electron-node/main/src/model2-runtime/inference-host.ts,modified,Default Stage-J checkpoint; fail-fast hash; no Stage-P fallback
+electron_node/electron-node/main/src/model2-runtime/types.ts,modified,D action/hits + provenance PROFILE_PRONUNCIATION/PROFILE_DOMAIN
+electron_node/electron-node/main/src/model2-runtime/finespan-adapter.ts,modified,Pack personal_terms + domain evidence; empty profile still builds input
+electron_node/electron-node/main/src/model2-runtime/expand-active-candidates.ts,modified,Remove empty-phonetic skip gate; ONE infer; materialize D hits
+electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts,modified,P provenance + domain hit materialize adapter
+electron_node/electron-node/main/src/model2-runtime/merge-profile-candidates.ts,modified,Keep single identity; annotate multi-path
+electron_node/electron-node/main/src/model2-runtime/model2-runtime.test.ts,modified,Empty profile still invokes ONE Model2
+electron_node/electron-node/main/src/model2-runtime/model2-runtime-final-closure.e2e.test.ts,modified,Empty profile invokes; P 22-case regression on Stage J
+electron_node/electron-node/main/src/model2-runtime/model2-stage-j-runtime.e2e.test.ts,added,Node host identity / ONE inference / hash fail-fast
+electron_node/electron-node/main/src/lexicon-v2/lexicon-runtime-v2.ts,modified,getSqlitePath for sidecar index (not a new retrieval path)
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/v4-types.ts,modified,Provenance union PROFILE_DOMAIN
+electron_node/electron-node/main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,modified,Comment only — insert point unchanged
+training/model2_v3/scripts/run_v3_stage_j_runtime_swap_acceptance.py,added,Sidecar identity/parity/P/D/failure artifacts
+training/model2_v3/scripts/run_v3_stage_j_dialog200_audit.py,added,dialog_200 audit without rewriting cases
+docs/user_correction/Lingua_Model2_V3_StageJ_Runtime_Checkpoint_Swap_Development_Report_2026_08_18.md,added,Development report
+docs/user_correction/Lingua_Model2_V3_StageJ_Dialog200_Node_E2E_Acceptance_Report_2026_08_18.md,added,dialog_200 acceptance report

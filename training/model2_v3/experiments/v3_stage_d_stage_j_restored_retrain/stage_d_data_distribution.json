@@ -1,0 +1,27 @@
+{
+  "eligible_n": 404,
+  "REAL": 7,
+  "DERIVED_REAL": 57,
+  "SYNTHETIC": 340,
+  "synthetic_share": 0.8415841584158416,
+  "split": {
+    "train": 286,
+    "val": 46,
+    "test": 72
+  },
+  "trainset_diversity_train": {
+    "rows": 1430,
+    "unique_finespan": 286,
+    "unique_terms": 202,
+    "unique_carriers": 7,
+    "unique_profile_combinations": 1028,
+    "unique_domain_combinations": 24,
+    "source_class": {
+      "REAL": 6,
+      "DERIVED_REAL": 40,
+      "SYNTHETIC": 240,
+      "UNKNOWN": 1144
+    }
+  },
+  "note": "aggregate metrics must not hide synthetic dominance"
+}

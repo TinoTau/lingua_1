@@ -1,0 +1,8 @@
+{
+  "query_budget_head": "P-path; D eval unused",
+  "cand_budget_head": "P-path 4-way; D eval unused (fixed max_cands=8)",
+  "D_eval_domain_action_budget": 2,
+  "restored_reuse": "YES as unused D outputs; do not redefine heads. Downstream single per-span cap is executor/assembly, not a new model output.",
+  "Budget_output_semantics_change_for_D": false,
+  "Executor_budget_stack_change": true
+}

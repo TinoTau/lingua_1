@@ -1,0 +1,10 @@
+{
+  "runtime_encode_cap": 32,
+  "domain_evidence": "full personal_terms list at profile-update / dataset build time",
+  "per_FineSpan": "read compact domain_evidence + capped term hashes only",
+  "truncation_policy": "confidence/evidence order (list order proxy); not raw frequency-only",
+  "write_time_vs_runtime": {
+    "profile_update": "lexical stats + compact domain evidence",
+    "finespan_inference": "Model2 policy on compact profile"
+  }
+}

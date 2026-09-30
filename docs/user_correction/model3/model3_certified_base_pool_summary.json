@@ -1,0 +1,40 @@
+{
+  "normalization": "NFKC + OpenCC t→cn via electron_node opencc-js (normalizeForFwRepairInput equivalent)",
+  "baseline_unique_normalized": 9775,
+  "raw_union_accept_with_limit_unique": 14956,
+  "raw_union_shortfall_vs_15000": 44,
+  "near_duplicate_control": {
+    "method": "per carrier_id cap",
+    "max_per_carrier": 30,
+    "carrier_clusters": 170,
+    "pattern_clusters_gt1": 0,
+    "rejected_by_carrier_cap": 10524
+  },
+  "certified_spoken_like_unique": 4955,
+  "certified_metric_definition": "ACCEPT_WITH_LIMIT sources after exact dedup + max 30 unique texts per carrier_id",
+  "required_minimum": 15000,
+  "target_range": [15000, 25000],
+  "BASE_CORPUS_GAP": true,
+  "shortfall_certified": 10045,
+  "shortfall_even_uncapped_union": 44,
+  "contributions": {
+    "baseline_v1": 3300,
+    "training_scale_v1": 1655
+  },
+  "max_source_share": 0.6659939455095862,
+  "dialog_200_unique": 68,
+  "carrier_templates_v3_count": 115,
+  "exact_overlaps": {
+    "baseline_x_scale": 69,
+    "baseline_x_accent": 120,
+    "scale_x_accent": 184,
+    "baseline_x_dialog_200": 0
+  },
+  "notes": [
+    "Carrier slot expansions beyond max_per_carrier excluded from certified count",
+    "Uncapped exact union still 14956 < 15000",
+    "Wiki/news REJECT_PRIMARY — not counted",
+    "dialog_200 EVAL_ONLY — not counted",
+    "No pure ACCEPT free-dialogue corpus found beyond carrier-filled pipelines"
+  ]
+}

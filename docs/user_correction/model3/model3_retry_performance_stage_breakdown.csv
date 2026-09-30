@@ -1,0 +1,8 @@
+stage,count,totalMs,p50Ms,p95Ms,maxMs,meanMs,shareOfPipelinePercent
+utterance_pipeline_ms_production,198,1676848,7400,18003,30911,8468.9,100.0
+A_ASR_plus_nonFW_estimated,198,962978,3489,9916,24623,4863.5,57.43
+B_FW_detector_step_ms,198,713870,2661,7512,19493,3605.4,42.57
+B_FW_residual_ex_M3_Retry_KenLM,198,524466,1915,6452,14020,2648.8,31.28
+D_Model3_infer_sum_paths,198,5878,20,85,171,29.7,0.35
+H_Retry_path_latency_sum_paths,198,16433,44,285,656,83.0,0.98
+K_KenLM_subprocess_ms,198,167093,633,3658,4999,843.9,9.96

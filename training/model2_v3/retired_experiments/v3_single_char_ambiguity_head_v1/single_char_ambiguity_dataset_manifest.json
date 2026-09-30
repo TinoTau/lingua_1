@@ -1,0 +1,20 @@
+{
+  "sources": {
+    "news": "D:/Programs/github/lingua_1/kenLM/corpus/archive_legacy_news_v0/zh_sentences.raw.txt",
+    "wiki": "D:/Programs/github/lingua_1/kenLM/corpus/v1/corpus_v1.raw.txt",
+    "cld_csv_metadata_only": "D:/Programs/github/lingua_1/docs/user_correction/single_char/Lingua_single_char_repair_lexicon_CLD_audit_v1.csv",
+    "dialog_200": "NOT_USED"
+  },
+  "groups": 796,
+  "group_size_hist": {
+    "3": 176,
+    "8": 91,
+    "2": 215,
+    "4": 119,
+    "6": 65,
+    "7": 44,
+    "5": 86
+  },
+  "note": "CLD CSV is training-time candidate metadata only; not imported to production sqlite",
+  "seed": 20260819
+}

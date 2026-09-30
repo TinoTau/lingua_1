@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model3_training_dataset_manifest_schema",
+  "title": "Model3TrainingDatasetManifestV1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "datasetVersion",
+    "sampleCount",
+    "splitCounts",
+    "shards",
+    "sourceCorpora",
+    "evidenceLevelDistribution",
+    "labelDistribution",
+    "corruptionFamilyDistribution",
+    "anchorSourceDistribution",
+    "generationConfigIdentity",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "MODEL3_TRAINING_DATASET_MANIFEST_V1" },
+    "datasetVersion": { "type": "string" },
+    "sampleSchemaVersion": { "const": "MODEL3_TRAINING_SAMPLE_V1" },
+    "sampleCount": { "type": "integer", "minimum": 0 },
+    "uniqueBaseSentenceCount": { "type": "integer", "minimum": 0 },
+    "splitCounts": {
+      "type": "object",
+      "required": ["train", "dev", "test"],
+      "properties": {
+        "train": { "type": "integer" },
+        "dev": { "type": "integer" },
+        "test": { "type": "integer" }
+      }
+    },
+    "shards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["split", "path", "sampleCount", "sha256"],
+        "properties": {
+          "split": { "enum": ["train", "dev", "test"] },
+          "path": { "type": "string" },
+          "sampleCount": { "type": "integer" },
+          "sha256": { "type": "string", "minLength": 64, "maxLength": 64 }
+        }
+      }
+    },
+    "sourceCorpora": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidenceLevelDistribution": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "labelDistribution": {
+      "type": "object",
+      "description": "Counts of KEEP/RETRY/MASKED/EXCLUDE span labels or sample-level summaries",
+      "additionalProperties": { "type": "integer" }
+    },
+    "corruptionFamilyDistribution": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "anchorSourceDistribution": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "model2AnchorStatusDistribution": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "generationConfigIdentity": {
+      "type": "object",
+      "required": ["seed", "configHash"],
+      "properties": {
+        "seed": { "type": ["integer", "string"] },
+        "configHash": { "type": "string" },
+        "errorTextGeneratorVersion": { "type": ["string", "null"] },
+        "labelMaterializerVersion": { "type": ["string", "null"] }
+      }
+    },
+    "dialog200InTrainOrDev": { "const": false },
+    "datasetLimitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "createdAt": { "type": "string" }
+  }
+}

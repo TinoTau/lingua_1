@@ -1,0 +1,115 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "definition": "EASY: best_neg_syl_edit - pos_syl_edit >= 1; MEDIUM: ==0; HARD: <0",
+  "buckets": {
+    "EASY": {
+      "n": 888,
+      "StageA": {
+        "n": 888,
+        "Recall@1": 0.04391891891891892,
+        "Recall@3": 0.09797297297297297,
+        "Recall@4": 0.14301801801801803,
+        "MRR": 0.16546390140140144,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 8.54054054054054,
+        "median_target_rank": 9.0
+      },
+      "Phonetic": {
+        "n": 888,
+        "Recall@1": 1.0,
+        "Recall@3": 1.0,
+        "Recall@4": 1.0,
+        "MRR": 1.0,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 0.0,
+        "median_target_rank": 0.0
+      },
+      "FuzzyDistance": {
+        "n": 888,
+        "Recall@1": 1.0,
+        "Recall@3": 1.0,
+        "Recall@4": 1.0,
+        "MRR": 1.0,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "name": "B_pool_distance"
+      }
+    },
+    "MEDIUM": {
+      "n": 123,
+      "StageA": {
+        "n": 123,
+        "Recall@1": 0.04065040650406504,
+        "Recall@3": 0.0975609756097561,
+        "Recall@4": 0.12195121951219512,
+        "MRR": 0.15933576360405627,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 8.699186991869919,
+        "median_target_rank": 9.0
+      },
+      "Phonetic": {
+        "n": 123,
+        "Recall@1": 0.8292682926829268,
+        "Recall@3": 1.0,
+        "Recall@4": 1.0,
+        "MRR": 0.9146341463414634,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 0.17073170731707318,
+        "median_target_rank": 0.0
+      },
+      "FuzzyDistance": {
+        "n": 123,
+        "Recall@1": 0.8292682926829268,
+        "Recall@3": 1.0,
+        "Recall@4": 1.0,
+        "MRR": 0.9146341463414634,
+        "Positive_average_pool_size": 16.0,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "name": "B_pool_distance"
+      }
+    },
+    "HARD": {
+      "n": 0,
+      "StageA": {
+        "n": 0,
+        "Recall@1": 0.0,
+        "Recall@3": 0.0,
+        "Recall@4": 0.0,
+        "MRR": 0.0,
+        "Positive_average_pool_size": 0.0,
+        "FuzzyPool_Recall@16_ceiling": 0.0,
+        "mean_target_rank": null,
+        "median_target_rank": null
+      },
+      "Phonetic": {
+        "n": 0,
+        "Recall@1": 0.0,
+        "Recall@3": 0.0,
+        "Recall@4": 0.0,
+        "MRR": 0.0,
+        "Positive_average_pool_size": 0.0,
+        "FuzzyPool_Recall@16_ceiling": 0.0,
+        "mean_target_rank": null,
+        "median_target_rank": null
+      },
+      "FuzzyDistance": {
+        "n": 0,
+        "Recall@1": 0.0,
+        "Recall@3": 0.0,
+        "Recall@4": 0.0,
+        "MRR": 0.0,
+        "Positive_average_pool_size": 0.0,
+        "FuzzyPool_Recall@16_ceiling": 0.0,
+        "name": "B_pool_distance"
+      }
+    }
+  }
+}

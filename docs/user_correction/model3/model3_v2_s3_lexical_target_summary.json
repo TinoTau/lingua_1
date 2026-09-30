@@ -1,0 +1,319 @@
+{
+  "phase": "MODEL3_V2_S3_LEXICAL_REPAIR_TARGET_IDENTITY_CORRECTION",
+  "generatedAt": "2026-09-03T10:13:59Z",
+  "verdict": "MODEL3_S3_LEXICAL_TARGET_IDENTITY_PASS_PRIORITY_UNRESOLVED",
+  "nextPhase": "MODEL3_V2_S3_DOWNSTREAM_MECHANISM_PRIORITY_AUDIT",
+  "supersession": {
+    "LEXICON_COVERAGE_CASES_148": "SUPERSEDED_PENDING_LEXICAL_TARGET_REVALIDATION",
+    "LEXICON_ELIGIBLE_SHARE_0_8605": "SUPERSEDED_PENDING_LEXICAL_TARGET_REVALIDATION",
+    "RETRY_QUERY_GEOMETRY_CASES_14": "SUPERSEDED_PENDING_LEXICAL_TARGET_REVALIDATION",
+    "RETRY_QUERY_GEOMETRY_SHARE_0_0814": "SUPERSEDED_PENDING_LEXICAL_TARGET_REVALIDATION",
+    "MECHANISM_PRIORITY": "NOT_YET_RESOLVED"
+  },
+  "counts": {
+    "totalCases": 200,
+    "referenceDiffCases": 172,
+    "repairRegions": 483,
+    "derivedLexicalTargets": 476,
+    "highConfidenceLexicalTargets": 476,
+    "mediumConfidenceLexicalTargets": 0,
+    "unresolvedLexicalTargets": 0,
+    "normalizationEquivalentRegions": 0,
+    "outsideLexiconContractTargets": 0,
+    "eligibleLexicalTargets": 476,
+    "multiTargetCases": 125,
+    "prevalenceGatePct": 1.0,
+    "prevalenceValid": true
+  },
+  "lexiconPolicy": {
+    "authoritativeBundle": "node_runtime/lexicon/v3",
+    "schema": "lexicon-v3-runtime-v3",
+    "termLengthPolicy": "base/term lengths 1–4 observed; runtime base lookup allows 1–5; idiom fixed length 4",
+    "singleCharPolicy": "ALLOWED in base_lexicon by frozen design (IME fill; not sole repair owner)",
+    "domainTagging": "term_domain_tags multi-tag SSOT",
+    "phrasePolicy": "arbitrary syntactic phrases NOT required; Lexicon owns repairable lexical terms/idioms/domain terms",
+    "termLenHistogram": {
+      "1": 1125,
+      "2": 7553,
+      "3": 1696,
+      "4": 7
+    },
+    "domainLexiconCount": 655,
+    "idiomCount": 22192,
+    "termDomainTagRows": 655,
+    "legacyCurrentNotAuthoritative": true
+  },
+  "previousRevalidation": {
+    "PREVIOUS_LEXICON_148": {
+      "previousN": 148,
+      "valid": 79,
+      "normalization": 0,
+      "outsideContract": 0,
+      "unresolved": 4,
+      "reclassified": 65
+    },
+    "PREVIOUS_QUERY_14": {
+      "previousN": 14,
+      "valid": 13,
+      "normalization": 0,
+      "outsideContract": 0,
+      "unresolved": 0,
+      "reclassified": 1
+    },
+    "PREVIOUS_RECALL_10": {
+      "previousN": 10,
+      "valid": 10,
+      "normalization": 0,
+      "outsideContract": 0,
+      "unresolved": 0,
+      "reclassified": 0
+    }
+  },
+  "prevalence": [
+    {
+      "mechanism": "TARGET_NOT_IN_LEXICON",
+      "targetCount": 117,
+      "caseAffectedCount": 84,
+      "structuralFamilyCount": 56,
+      "targetShare": 0.2458,
+      "caseAffectedRate": 0.5,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "QUERY_NOT_REPAIR_CAPABLE",
+      "targetCount": 240,
+      "caseAffectedCount": 121,
+      "structuralFamilyCount": 89,
+      "targetShare": 0.5042,
+      "caseAffectedRate": 0.7202,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "RECALL_TARGET_MISS",
+      "targetCount": 114,
+      "caseAffectedCount": 75,
+      "structuralFamilyCount": 52,
+      "targetShare": 0.2395,
+      "caseAffectedRate": 0.4464,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "POST_RECALL_TARGET_DROP",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "ASSEMBLY_TARGET_DROP",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "CROSS_PATH_TARGET_DROP",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "KENLM_TARGET_NOT_SELECTED",
+      "targetCount": 3,
+      "caseAffectedCount": 3,
+      "structuralFamilyCount": 3,
+      "targetShare": 0.0063,
+      "caseAffectedRate": 0.0179,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "TARGET_SURVIVED_NO_FINAL_IMPROVEMENT",
+      "targetCount": 2,
+      "caseAffectedCount": 2,
+      "structuralFamilyCount": 2,
+      "targetShare": 0.0042,
+      "caseAffectedRate": 0.0119,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "OUTSIDE_LEXICON_CONTRACT",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "LEXICAL_TARGET_IDENTITY_UNRESOLVED",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    },
+    {
+      "mechanism": "NORMALIZATION_EQUIVALENT",
+      "targetCount": 0,
+      "caseAffectedCount": 0,
+      "structuralFamilyCount": 0,
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "targetDenominator": 476,
+      "caseDenominator": 168
+    }
+  ],
+  "developmentReadiness": {
+    "LEXICON_COVERAGE": {
+      "EXISTENCE_RELIABILITY": "PROVEN_GENERAL",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.2458,
+      "caseAffectedRate": 0.5,
+      "structuralFamilyCount": 56,
+      "OWNER_CLARITY": "YES",
+      "DEVELOPMENT_READY": "YES"
+    },
+    "RETRY_QUERY_GEOMETRY": {
+      "EXISTENCE_RELIABILITY": "PROVEN_GENERAL",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.5042,
+      "caseAffectedRate": 0.7202,
+      "structuralFamilyCount": 89,
+      "OWNER_CLARITY": "YES",
+      "DEVELOPMENT_READY": "YES"
+    },
+    "RECALL_MISS": {
+      "EXISTENCE_RELIABILITY": "PROVEN_GENERAL",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.2395,
+      "caseAffectedRate": 0.4464,
+      "structuralFamilyCount": 52,
+      "OWNER_CLARITY": "YES",
+      "DEVELOPMENT_READY": "YES"
+    },
+    "POST_RECALL": {
+      "EXISTENCE_RELIABILITY": "NOT_SUPPORTED_CURRENT_EVIDENCE",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "structuralFamilyCount": 0,
+      "OWNER_CLARITY": "NO",
+      "DEVELOPMENT_READY": "NO"
+    },
+    "ASSEMBLY": {
+      "EXISTENCE_RELIABILITY": "NOT_SUPPORTED_CURRENT_EVIDENCE",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.0,
+      "caseAffectedRate": 0.0,
+      "structuralFamilyCount": 0,
+      "OWNER_CLARITY": "NO",
+      "DEVELOPMENT_READY": "NO"
+    },
+    "CROSS_PATH": {
+      "EXISTENCE_RELIABILITY": "NOT_SUPPORTED_CURRENT_EVIDENCE",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0,
+      "caseAffectedRate": 0,
+      "structuralFamilyCount": 0,
+      "OWNER_CLARITY": "NO",
+      "DEVELOPMENT_READY": "NO"
+    },
+    "KENLM": {
+      "EXISTENCE_RELIABILITY": "NOT_SUPPORTED_CURRENT_EVIDENCE",
+      "PREVALENCE_RELIABILITY": "VALID",
+      "targetShare": 0.0063,
+      "caseAffectedRate": 0.0179,
+      "structuralFamilyCount": 3,
+      "OWNER_CLARITY": "NO",
+      "DEVELOPMENT_READY": "NO"
+    }
+  },
+  "FIRST_CAUSAL_OWNER": "NOT_YET_ISOLATED",
+  "A1_PROMOTION_READY": false,
+  "existenceFrozen": {
+    "LEXICON_COVERAGE_EXISTENCE": "PROVEN_GENERAL",
+    "RETRY_QUERY_GEOMETRY_EXISTENCE": "PROVEN_GENERAL",
+    "RECALL_MISS": "PROVEN_GENERAL"
+  },
+  "answers": {
+    "D1": "NO",
+    "D2": "NO",
+    "D3": "NO",
+    "D4": "NO",
+    "D5": "NO",
+    "D6": "NO",
+    "D7": "YES (frozen raw JSONL 200/200)",
+    "D8": "YES",
+    "D9": "NO",
+    "D10": "YES",
+    "D11": 0,
+    "D12": 483,
+    "D13": 476,
+    "D14": 476,
+    "D15": 0,
+    "D16": 0,
+    "D17": 125,
+    "D18": [
+      "EXISTING_LEXICON_TERM",
+      "STRUCTURAL_COMPOSITION_SUPPORTED",
+      "OUTSIDE_LEXICON_CONTRACT",
+      "NORMALIZATION_EQUIVALENT"
+    ],
+    "D19": "NO",
+    "D20": "NO",
+    "D21": "NO",
+    "D22": "NO",
+    "D23": 79,
+    "D24": 0,
+    "D25": 0,
+    "D26": 4,
+    "D27": 65,
+    "D28": 13,
+    "D29": {
+      "RETRY_REGION_PARTIAL_COVERAGE": 230,
+      "NO_RAW_RECALL_REGION": 10
+    },
+    "D30": 10,
+    "D31": "NO_NOW_PROVEN_GENERAL",
+    "D32": "NO",
+    "D33": "NO_NOT_SUPPORTED_CURRENT_EVIDENCE",
+    "D34": "NO_NOT_SUPPORTED_CURRENT_EVIDENCE",
+    "D35": "NO_NOT_SUPPORTED_CURRENT_EVIDENCE",
+    "D36": "YES",
+    "D37": 0.2458,
+    "D38": 0.5,
+    "D39": 56,
+    "D40": 0.5042,
+    "D41": 0.7202,
+    "D42": 0.2395,
+    "D43": "YES",
+    "D44": "YES",
+    "D45": "YES",
+    "D46": "YES",
+    "D47": "NO",
+    "D48": "NONE",
+    "D49": "NO",
+    "D50": "NO",
+    "D51": "MODEL3_S3_LEXICAL_TARGET_IDENTITY_PASS_PRIORITY_UNRESOLVED",
+    "D52": "MODEL3_V2_S3_DOWNSTREAM_MECHANISM_PRIORITY_AUDIT"
+  },
+  "testsOk": true
+}

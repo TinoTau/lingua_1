@@ -64,6 +64,26 @@ export type WindowCandidate = {
   isCovered?: boolean;
   coveredBy?: string;
   coveredChildren?: string[];
+  /**
+   * Model2 runtime provenance (contract delta — diagnostics only, non-gating).
+   * BASE_FUZZY = base FineSpan lexicon recall; PROFILE_RETRIEVAL = Model2-introduced.
+   */
+  retrievalProvenance?:
+    | 'BASE_FUZZY'
+    | 'PROFILE_PRONUNCIATION'
+    | 'PROFILE_DOMAIN'
+    | 'PROFILE_RETRIEVAL';
+  /** When term also recalled via Model2 after base hit (merge kept base). */
+  alsoProfileRetrieval?: boolean;
+  /** Model2 action id that introduced this candidate (diagnostics). */
+  model2ActionId?: string;
+  /**
+   * Observation-only: FineSpan that originated the retrieval query.
+   * Must not be used for ranking, budget, or Assembly eligibility.
+   */
+  originSpanId?: string;
+  /** Observation-only retrieval id (P or D). */
+  retrievalId?: string;
 };
 
 export type OverlapRelationType = 'COMPATIBLE' | 'COVERAGE' | 'CONFLICT';

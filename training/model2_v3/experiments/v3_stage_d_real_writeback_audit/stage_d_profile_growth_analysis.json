@@ -1,0 +1,15 @@
+{
+  "current_cap": {
+    "personal_terms_max": 100,
+    "serialized_soft": 32768
+  },
+  "estimates_serialized_bytes": {
+    "100_terms": "~5-15KB",
+    "500_terms": "would truncate to 100",
+    "1000": "truncate",
+    "10000": "truncate"
+  },
+  "COMPACT_PROFILE_MISSING": true,
+  "raw_vs_compact": "only TopK surface list — not Model2-ready compact domain evidence vector",
+  "SESSION_PAYLOAD_GROWTH_RISK": true
+}

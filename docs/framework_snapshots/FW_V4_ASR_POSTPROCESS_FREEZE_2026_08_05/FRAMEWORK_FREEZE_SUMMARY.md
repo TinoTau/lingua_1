@@ -19,19 +19,27 @@
 
 ## Production Chain（冻结）
 
+**CODE_REALITY (2026-08-23 sync — includes Model2 Stage-J):**
+
 ```text
 ASR Raw
-→ Syllable Coordinate
-→ Lattice Window 1–5
-→ Tone Evidence (Mandatory)
-→ Exact Recall (plain + tone Mode C)
+→ FW normalize
+→ Syllable Coordinate / CoarseSpan
+→ Lattice Window 1–5 + Exact Recall (plain + tone Mode C)
+→ Tone Rebind (Mandatory tone evidence)
+→ Compatibility
+→ Model2 P/D (Stage-J; before Domain Vote)
 → Domain Presence Vote
 → SameDomain Bucket (+ Base co-assembly)
 → Sentence Assembly (Interval Non-Overlap Repair-Subset DFS)
 → CrossPath (exact-text first-wins · ≤16)
 → KenLM (score / rank / pick · raw_log_delta · Gate 3.0)
 → Apply Writeback
+→ JobResult
 ```
+
+> Pre–2026-08-23 snapshot text omitted Model2. Runtime order is CODE_REALITY above.
+> Model3 (planned): insert after SameDomain / pre-assembly; before KenLM; ACP-gated.
 
 ---
 

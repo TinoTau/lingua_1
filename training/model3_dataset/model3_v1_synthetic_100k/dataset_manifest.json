@@ -1,0 +1,39 @@
+{
+  "datasetVersion": "model3_v1_synthetic_100k_20260824",
+  "schemaVersion": "MODEL3_TRAINING_SAMPLE_V1",
+  "generatorVersion": "model3-v1-synthetic-generator-1.0.0",
+  "seed": 2026082402,
+  "sampleCount": 100000,
+  "excludedCount": 0,
+  "splitCounts": {
+    "dev": 10042,
+    "train": 79912,
+    "test": 10046
+  },
+  "labelDistribution": {
+    "KEEP": 1896795,
+    "MASKED": 79227,
+    "RETRY": 27541
+  },
+  "anchorBuckets": {
+    "SIMULATED_TRAINING": 79227,
+    "NO_ANCHOR": 20773
+  },
+  "corruptionVariantKinds": {
+    "SINGLE_PHONETIC": 66391,
+    "DOUBLE_PHONETIC": 13413,
+    "CLEAN_KEEP": 18785,
+    "ORTHO_HARD_NEG": 1411
+  },
+  "anchorConditionedUtterances": 79227,
+  "noAnchorUtterances": 20773,
+  "realDomainUtterancesSidecar": 0,
+  "simulatedTrainingUtterancesSidecar": 79227,
+  "certifiedBasePool": 22177,
+  "createdAt": "2026-08-23T20:13:29.368754+00:00",
+  "sidecar": "anchor_provenance_sidecar.jsonl",
+  "dialog200Contamination": 0,
+  "model2AnchorStatus": "UNAVAILABLE",
+  "evidenceLevel": "SYNTHETIC_TEXT",
+  "splitFix": "sourceSentenceId_only_20260824"
+}

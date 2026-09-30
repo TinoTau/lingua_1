@@ -1,0 +1,42 @@
+{
+  "load_ok": true,
+  "error": null,
+  "MODEL2_FEATURE_HASH_V1": true,
+  "StageDProfileContractV1": true,
+  "with_domain_head": true,
+  "architecture": true,
+  "params": 47210,
+  "sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+  "domain_action_slot_ordering": [
+    "domain_none",
+    "domain_soft:tourism_pickup",
+    "domain_soft:tourism_hotel",
+    "domain_soft:tourism_route",
+    "domain_soft:tourism_transport",
+    "domain_soft:coffee",
+    "domain_soft:milk_tea",
+    "domain_soft:bakery",
+    "domain_soft:food_order",
+    "domain_soft:tech_ai",
+    "domain_soft:meeting",
+    "domain_soft:medical",
+    "domain_soft:transport"
+  ],
+  "n_domain_actions": 13,
+  "feature_hash_meta": {
+    "contract_id": "MODEL2_FEATURE_HASH_V1",
+    "algorithm": "fnv1a64",
+    "seed": 21728859121731633,
+    "encoding": "utf-8",
+    "normalization": "NFC+lower",
+    "span_dim": 64,
+    "phonetic_dim": 16,
+    "domain_dim": 12,
+    "stage_p_uses_v1": false,
+    "stage_p_feature_pack": "legacy_python_hash_via_training_pack_batch_inputs",
+    "checkpoint_compatibility_blocker": "Stage P checkpoint incompatible with MODEL2_FEATURE_HASH_V1 without retrain"
+  },
+  "hash_contract_id": "MODEL2_FEATURE_HASH_V1",
+  "silent_reshape": false,
+  "PASS": true
+}

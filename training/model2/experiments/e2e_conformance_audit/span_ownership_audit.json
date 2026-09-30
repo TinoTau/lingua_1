@@ -1,0 +1,13 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "Q1_where_generated": "electron_node/.../lattice-fine-span-runtime.ts runLatticeFineSpanGeneration; orchestrator span-assembly-v4",
+  "Q2_structure": "PathFineSpan (rawStart/End, syllableStart/End, candidates); GlobalWindowDescriptor.windowText/windowPinyinKey",
+  "Q3_span_text": "Training: Model2TrainRowV1.span_text = source_span; Prod: windowText on descriptor (not on PathFineSpan top-level)",
+  "Q4_span_pronunciation": "Prod: windowPinyinKey; Train: syllables_from_span / observed_syllables; 7E normalize_for_lexicon_lookup",
+  "Q5_Model2_consumes_span": "PARTIAL — trainrows use span_text/syllables; no PathFineSpan DTO; FuzzyPoolRequest often span_text=''",
+  "Q6_Phase7E_consumes_span": "PARTIAL — observed_syllables from trainrow spans, not Lattice FineSpan pipeline",
+  "Q7_Phase7F_REAL_ASR": "whole asr_hypothesis → text_to_syllables; span_text:=asr; NO FineSpan windows",
+  "Q8_whole_utterance_bypass": true,
+  "flag": "ARCHITECTURE_DRIFT_WHOLE_UTTERANCE_BYPASS",
+  "FineSpan_Is_Authoritative_Retrieval_Unit": "YES in original design; NO in Phase7F REAL_ASR test; PARTIAL in 7E spike"
+}

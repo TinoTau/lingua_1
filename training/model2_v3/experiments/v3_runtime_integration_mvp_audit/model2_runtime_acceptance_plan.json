@@ -1,0 +1,19 @@
+{
+  "tests": [
+    "A PROFILE_TARGET_ABSENT real Node path introduces target",
+    "B EMPTY_PROFILE no profile-specific introduction",
+    "C WRONG_PROFILE differs from Correct",
+    "D MULTI_RELATION",
+    "E PERSONAL_DOMAIN if real data",
+    "F MULTI_TAG_TERM via Node lexicon",
+    "G MODEL_LOAD_FAIL base continues",
+    "H NO_SHADOW_PATH"
+  ],
+  "must_use": [
+    "SessionBootstrap/profile loader",
+    "real FineSpan",
+    "real Lexicon",
+    "real merge"
+  ],
+  "forbid": "training Python harness as runtime PASS proof"
+}

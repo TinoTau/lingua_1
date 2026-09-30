@@ -1,0 +1,86 @@
+{
+  "phase": "MODEL3_V1_DIALOG_200_FULL_PIPELINE_ACCEPTANCE",
+  "timestamp": "2026-08-28T15:48:27.416Z",
+  "model": {
+    "modelId": "MODEL3_SYNTHETIC_V1",
+    "weightsSha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "configHash": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "hashVerified": true
+  },
+  "environment": {
+    "asr": "READY",
+    "node_5020": "READY",
+    "lexicon": "READY",
+    "model2": "READY",
+    "model3": "READY",
+    "kenlm": "READY"
+  },
+  "coverage": {
+    "total": 200,
+    "attempted": 53,
+    "completed": 53,
+    "failed": 0,
+    "skipped": 0,
+    "full_acceptance_dataset": false,
+    "wall_clock_sec": 647,
+    "max_minutes": 60
+  },
+  "invariants": {
+    "unit_tests": "12/12",
+    "second_vote_violations": 0,
+    "anchor_retry_rejections": 0,
+    "anchor_mutation_violations": 0,
+    "global_gt16": 0
+  },
+  "anchors": {
+    "utterances_with_anchor": 51,
+    "utterances_without_anchor": 2,
+    "domain_anchor_count": 112,
+    "model2_anchor_count": 65,
+    "dual_source_anchor_count": 65,
+    "rejected_prevote": 0,
+    "anchors_per_utterance": 2.1132075471698113
+  },
+  "model3": {
+    "paths_processed": 158,
+    "non_anchor_spans": 3733,
+    "keep": 3733,
+    "retry": 0,
+    "retry_rate": 0,
+    "retry_spans_per_utterance": 0
+  },
+  "recall": {
+    "retry_attempts": 0,
+    "returned": 0,
+    "zero_attempts": 0,
+    "candidate_yield": null,
+    "zero_candidate_rate": null
+  },
+  "final_text": {
+    "improved": 15,
+    "unchanged": 38,
+    "regressed": 0,
+    "undetermined": 0,
+    "improvement_rate": 0.2830188679245283,
+    "unchanged_rate": 0.7169811320754716,
+    "regression_rate": 0
+  },
+  "failure_ownership": {
+    "NONE": 53
+  },
+  "latency": {
+    "model3_p50": 8,
+    "model3_p95": 16,
+    "model3_p99": 22,
+    "retry_p50": 0,
+    "retry_p95": 1,
+    "keep_only_delta_p50": 20,
+    "keep_only_delta_p95": 79,
+    "post_asr_delta_p50": 20,
+    "post_asr_delta_p95": 80
+  },
+  "startInfo": {
+    "pid": 15524,
+    "stdout": "STARTED electron pid 15524\nLOG D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\logs\\storm-repro-electron.log\nROOT D:\\Programs\\github\\lingua_1\nELECTRON_RUN_AS_NODE_STRIPPED true"
+  }
+}

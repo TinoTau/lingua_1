@@ -1,0 +1,13 @@
+{
+  "definition": "RAW = identity present in FuzzyPool scored set (distance<=2, length±1) BEFORE surface dedup. There is NO domain-tag SQL query on the Python Stage D path.",
+  "base_absent_and_action_available": 38,
+  "RAW_QUERY_HIT": 38,
+  "RAW_QUERY_MISS": 0,
+  "hit_rate": 100.0,
+  "code": {
+    "file": "training/model2_v3/policy/domain_actions.py",
+    "function": "soft_domain_retrieve",
+    "lines": "59-108",
+    "actual_query": "build_fuzzy_pool(..., max_pool_size=32) — same phonetic universe as base"
+  }
+}

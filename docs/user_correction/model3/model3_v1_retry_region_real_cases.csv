@@ -1,0 +1,17 @@
+caseId,family,before_classification,after_classification,mechanism_note
+d179,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d142,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d099,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d131,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d160,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d176,MULTI_CHAR_REPLACEMENT,SEGMENTATION_LOCKED,PARTIALLY_SUFFICIENT,bounded retry region + local resegmentation unblocks frozen 1-char recall
+d195,INSERTION,PARTIALLY_SUFFICIENT,PARTIALLY_SUFFICIENT,extra text as FineSpan(s); independent recall; no resegment
+d181,INSERTION,PARTIALLY_SUFFICIENT,PARTIALLY_SUFFICIENT,extra text as FineSpan(s); independent recall; no resegment
+d139,INSERTION,PARTIALLY_SUFFICIENT,PARTIALLY_SUFFICIENT,extra text as FineSpan(s); independent recall; no resegment
+d049,INSERTION,PARTIALLY_SUFFICIENT,PARTIALLY_SUFFICIENT,extra text as FineSpan(s); independent recall; no resegment
+d133,DELETION,NO_REPAIRABLE_TARGET,NO_REPAIRABLE_TARGET,gap has no FineSpan; neighbors only
+d045,DELETION,NO_REPAIRABLE_TARGET,NO_REPAIRABLE_TARGET,gap has no FineSpan; neighbors only
+d110,DELETION,NO_REPAIRABLE_TARGET,NO_REPAIRABLE_TARGET,gap has no FineSpan; neighbors only
+d002,PHONETIC_SUBSTITUTION,SUFFICIENT,SUFFICIENT,1-char boundary matches; current recallSpanTopKV2 fits
+d003,PHONETIC_SUBSTITUTION,SUFFICIENT,SUFFICIENT,1-char boundary matches; current recallSpanTopKV2 fits
+d019,PHONETIC_SUBSTITUTION,SUFFICIENT,SUFFICIENT,1-char boundary matches; current recallSpanTopKV2 fits

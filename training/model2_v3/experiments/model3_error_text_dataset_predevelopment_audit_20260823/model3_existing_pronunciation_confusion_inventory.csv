@@ -1,0 +1,19 @@
+family_id,direction_meaning,status,source_path,reuse_for_error_text,notes
+n_l,intended_n→observed_l,ACTIVE,model2-runtime/relation-direction.ts ACTIVE_SET_V1,REUSE,Core initial
+z_zh,intended_z→observed_zh,ACTIVE,ACTIVE_SET_V1,REUSE,
+ch_c,intended_ch→observed_c,ACTIVE,ACTIVE_SET_V1,REUSE,
+sh_s,intended_sh→observed_s,ACTIVE,ACTIVE_SET_V1,REUSE,
+eng_en,intended_eng→observed_en,ACTIVE,ACTIVE_SET_V1,REUSE,Nasal
+in_ing,intended_in→observed_ing,ACTIVE,ACTIVE_SET_V1,REUSE,Nasal
+h_f,intended_h→observed_f,ACTIVE,ACTIVE_SET_V1,REUSE,
+l_n,l→n,REVERSED_SCHEMA,active_feature_mask REVERSED,DO_NOT_USE_V1,Unverified direction
+zh_z / c_ch / s_sh / ang_an / an_ang / ing_in / f_h,opposites,REVERSED_OR_SCHEMA,OPPOSITE_DIRECTION map,DO_NOT_USE_AS_PRIMARY_V1,May enable later after evidence
+s_sh / en_eng,weak,WEAK_FEATURES_V1,active_feature_mask,DO_NOT_USE_V1,Quality not passed
+tone_1_2…tone_*,tone pairs,DEFERRED_HOLD,contract TONE_FEATURE_KEYS,CREATE_LATER_IF_EVIDENCED,No ACTIVE tone confusion map
+d_t,d↔t,NOT_IMPLEMENTED,Model3 design text only,CREATE_ONLY_WITH_EVIDENCE,Do not invent in V1
+de_di_de_orthographic,的/地/得,ORTHOGRAPHIC,common Chinese ASR/OCR,OPTIONAL_TAGGED_NON_PHONETIC,Must mark isPhonetic=false
+PronunciationCorruptorV1,family→TTS surface,TRAINING_ONLY,training/model2/pronunciation/corruptor.py,MODIFY,Reuse family apply; replace surface resolve with sqlite
+syllable_substitution.py,apply family keep tone,TRAINING_ONLY,pronunciation/syllable_substitution.py,REUSE_LOGIC,Align with Node applyFamilyToSyllable
+tts_surface_resolver pypinyin,reverse hanzi,TRAINING_ONLY,tts_surface_resolver.py,DO_NOT_USE_AS_AUTHORITY,Prefer base_lexicon lookup
+FuzzyPool,sidecar retrieval,TRAINING_ONLY,training/model2/fuzzy/pool.py,DO_NOT_USE,Not Node production
+random_hanzi,N/A,FORBIDDEN,—,DO_NOT_USE,

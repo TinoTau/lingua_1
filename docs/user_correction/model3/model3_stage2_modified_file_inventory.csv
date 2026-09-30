@@ -1,0 +1,8 @@
+path,change_type,notes
+training/model3_dataset/offline_harness/stage2_materialize.cjs,CREATE,Node offline harness FineSpan+Vote+Recall
+training/model3_dataset/scripts/accept_spoken_base_supplement_v1.py,CREATE,corpus acceptance
+training/model3_dataset/scripts/run_stage2_labeled_pilot.py,CREATE,ERROR_TEXT→TRAINING_SAMPLE pilot
+training/model2_v3/experiments/model3_contract_and_training_design_20260823/model3_stage2_target_list.csv,UPDATE,authority ref → MODEL3_TRAINING_SAMPLE_V1_SCHEMA.json
+docs/user_correction/model3/model3_spoken_base_supplement_v1_*,CREATE,acceptance artifacts
+docs/user_correction/model3/model3_certified_base_pool_v2*,CREATE,certified pool v2
+training/model3_dataset/model3_training_sample_v1_pilot/**,CREATE,labeled pilot shards

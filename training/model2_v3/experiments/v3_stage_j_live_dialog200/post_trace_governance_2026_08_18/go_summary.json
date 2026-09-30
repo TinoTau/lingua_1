@@ -1,0 +1,57 @@
+{
+  "Post-Trace Freeze": "PASS",
+  "MATERIALIZABLE_TARGET_V1": "FROZEN",
+  "Model2": "FROZEN",
+  "Assembly": "FROZEN",
+  "FineSpan Architecture": "FROZEN",
+  "Candidate Budget": "FROZEN",
+  "KenLM": "FROZEN",
+  "Model2 D Wrong-Span Binding": "FIXED",
+  "Business Behavior Changed": "NO",
+  "Trace Observation Fields": "COMPLETE",
+  "Total Correction Units": 601,
+  "responsibility": {
+    "NORMALIZATION_RESPONSIBILITY": 145,
+    "LEXICAL_RECALL_RESPONSIBILITY": 405,
+    "ASR_SOURCE_UNRECOVERABLE": 5,
+    "FUNCTION_WORD_OR_SINGLE_CHAR_RESPONSIBILITY": 30,
+    "INSERT_DELETE_RESPONSIBILITY": 16
+  },
+  "TRUE_RECALL_RESPONSIBILITY_N": 405,
+  "true_recall_failures": 379,
+  "root_cause": {
+    "LEXICON_COVERAGE_GAP": 345,
+    "QUERY_GENERATION_GAP": 34
+  },
+  "outside": {
+    "SCRIPT_NORMALIZATION": 145,
+    "ASR_UNRECOVERABLE": 5,
+    "FUNCTION_WORD": 30,
+    "INSERT_DELETE": 16
+  },
+  "single_char": {
+    "n": 229,
+    "in_lexicon": 0,
+    "indexed": 0,
+    "raw": 0,
+    "gap": 229
+  },
+  "finespan_gap_before_units": 10,
+  "finespan_gap_after_units": 10,
+  "wrong_span_remaining": 1,
+  "FineSpan Design Change Required": "NO",
+  "Model2 Retraining Required": "NO",
+  "Assembly Work Required": "NO",
+  "lex": {
+    "term_n": 9259,
+    "term_enabled": 9259,
+    "term_len1_enabled": 0,
+    "base_n": 9259,
+    "base_enabled": 9259,
+    "base_len1_enabled": 0,
+    "domain_n": 655,
+    "domain_len1_enabled": 0
+  },
+  "dropped_inconsistent_d": 2972,
+  "assembly_used_dropped_n": 0
+}

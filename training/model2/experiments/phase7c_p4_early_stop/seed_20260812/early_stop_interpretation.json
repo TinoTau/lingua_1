@@ -1,0 +1,66 @@
+{
+  "best_unseen_epoch": {
+    "epoch": 0,
+    "SEEN_R1": 0.06271186440677966,
+    "UNSEEN_R1": 0.06627101879327399,
+    "shortcut_SEEN": {
+      "n": 256,
+      "normal": {
+        "n": 256,
+        "Recall@1": 0.0546875,
+        "Recall@3": 0.19140625,
+        "Recall@4": 0.26953125,
+        "MRR": 0.2112623487623493,
+        "Positive_average_pool_size": 15.9140625,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 6.828125
+      },
+      "null_query": {
+        "n": 256,
+        "Recall@1": 0.046875,
+        "Recall@3": 0.17578125,
+        "Recall@4": 0.3046875,
+        "MRR": 0.20802803966866515,
+        "Positive_average_pool_size": 15.9140625,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 6.9453125
+      },
+      "shuffle_query": {
+        "n": 256,
+        "Recall@1": 0.04296875,
+        "Recall@3": 0.1953125,
+        "Recall@4": 0.26953125,
+        "MRR": 0.20668156171085914,
+        "Positive_average_pool_size": 15.9140625,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 6.84765625
+      },
+      "candidate_only": {
+        "n": 256,
+        "Recall@1": 0.04296875,
+        "Recall@3": 0.18359375,
+        "Recall@4": 0.2734375,
+        "MRR": 0.2044833150790187,
+        "Positive_average_pool_size": 15.9140625,
+        "FuzzyPool_Recall@16_ceiling": 1.0,
+        "mean_target_rank": 6.87890625
+      }
+    }
+  },
+  "final_epoch": {
+    "epoch": 20,
+    "train_loss": 2.5289792634935733,
+    "val_loss": 2.6855731137821293,
+    "SEEN_R1": 0.7411016949152542,
+    "UNSEEN_R1": 0.032640949554896145
+  },
+  "epoch1": {
+    "epoch": 1,
+    "train_loss": 3.411357878541391,
+    "val_loss": 2.593970095540168,
+    "SEEN_R1": 0.4021186440677966,
+    "UNSEEN_R1": 0.050445103857566766
+  },
+  "interpretation": "AMPLIFIER",
+  "rationale": "Epoch1 UNSEEN already ~0.05 (near random). Later epochs raise SEEN 0.40\u21920.74 while UNSEEN stays flat/worse. Overtraining amplifies memorization; early-stop alone is not a repair."
+}

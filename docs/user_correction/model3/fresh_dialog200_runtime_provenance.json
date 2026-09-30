@@ -1,0 +1,76 @@
+{
+  "phase": "FULL_PIPELINE_FRESH_DIALOG200_CAUSAL_RECONCILIATION_AUDIT",
+  "run_id": "dialog200_full_pipeline_20260909_001141",
+  "git_commit": "63b25376",
+  "node_build": "build:main",
+  "model3": {
+    "runtime_default": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "selected_model": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weights_sha": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "config_sha": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "identity_valid": true
+  },
+  "lexicon_db_path": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "kenlm_candidates": [
+    "D:\\Programs\\github\\lingua_1\\electron_node\\services\\asr_sherpa_lm\\models\\kenLM\\zh_char_3gram.trie.bin"
+  ],
+  "health": {
+    "node": {
+      "ok": true,
+      "body": null
+    },
+    "asr": {
+      "ok": true,
+      "body": {
+        "status": "ok",
+        "device": "cuda",
+        "compute_type": "int8_float16",
+        "asr_model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+        "asr_model_loaded": true,
+        "vad_model_loaded": true,
+        "asr_worker": {
+          "is_running": true,
+          "worker_state": "running",
+          "worker_pid": 54116,
+          "queue_depth": 0,
+          "total_tasks": 2,
+          "completed_tasks": 2,
+          "failed_tasks": 0,
+          "worker_restarts": 0,
+          "avg_wait_ms": 13592.57,
+          "pending_results": 0
+        },
+        "readiness": {
+          "process_alive": true,
+          "worker_running": true,
+          "worker_accepting_tasks": true,
+          "queue_depth": 0,
+          "queue_max": 1,
+          "queue_full": false,
+          "utterance_ready": true,
+          "worker_restarting": false,
+          "last_error": null
+        }
+      }
+    }
+  },
+  "lexicon_runtime_status_smoke": "ok",
+  "lexicon_runtime_ready": true,
+  "corpus_path": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200",
+  "manifest_path": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200\\cases.manifest.json",
+  "node_entrypoint": "electron_node/electron-node (production)",
+  "dialog200_runner": "tests/run-fresh-dialog200-causal-reconciliation.mjs",
+  "service_startup_method": "tests/repro/start-node-detached.mjs",
+  "asr_endpoint": "http://127.0.0.1:6007",
+  "model3_endpoint": "model3_inference_host (spawned by Electron)",
+  "oracle_leak": "NONE",
+  "production_semantic_diff": false,
+  "dual_fork_active": false,
+  "cases_planned": 200,
+  "started_at": "2026-09-08T12:13:49.935Z",
+  "finished_at": "2026-09-08T12:41:52.100Z",
+  "cases_executed": 200,
+  "cases_failed": 0,
+  "analysis_run_id": "dialog200_full_pipeline_20260909_001141",
+  "quality_pointer": "fresh_dialog200_quality_summary.json"
+}

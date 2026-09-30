@@ -1,0 +1,23 @@
+{
+  "original_funnel": {
+    "after_budget": "hasTarget(candidate surfaces): any norm(surface) len>=2 where expected includes surface OR surface includes expected",
+    "assembly": "SAME hasTarget but applied to FULL assembled sentence texts (not ngram decomposition)",
+    "verdict": "INCONSISTENT — assembly layer uses different effective granularity than budget layer"
+  },
+  "materializable_target_v1": {
+    "target_correction_ngrams": "expected ngrams (2-4 CJK) absent from normalized raw ASR",
+    "lexical_recoverable": "union contains candidate whose surface matches target ngram with parseable span",
+    "path_recoverable": "eligible candidates (full finespan alignment) form non-overlapping set covering targets",
+    "sentence_recoverable": "path recoverable AND domain bucket allows base+sameDomain mixing per frozen design",
+    "actually_assembled": "correction ngrams (expected minus raw) appear in assembly/kenlm sentence — excludes raw-already-present ngrams"
+  },
+  "trace_contract_mismatch": {
+    "cases_where_fixed_assembly_differs_from_original_funnel": 37,
+    "verdict": "TRACE_ATTRIBUTION_CONTRACT_MISMATCH"
+  },
+  "example_d001": {
+    "original_target_in_assembly": false,
+    "fixed_target_in_assembly_correction": true,
+    "note": "d001 assembles 蓝莓 (correction) but original funnel marks assembly=false due to full-sentence hasTarget on loose ngrams"
+  }
+}

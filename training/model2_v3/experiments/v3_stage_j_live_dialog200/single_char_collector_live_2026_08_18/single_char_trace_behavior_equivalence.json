@@ -1,0 +1,12 @@
+{
+  "TRACE_OFF_vs_TRACE_ON": "YES",
+  "scope": "recallSpanTopKV2 length-1 hits surfaces, order, kind, domains, repairTarget",
+  "env": "MODEL2_DIALOG200_TRACE unset vs 1",
+  "notes": [
+    "Collector always classifies after the live decision.",
+    "TRACE_ON only attaches the snapshot to dialog200_path_trace.",
+    "No extra SQL, sort, or rematerialize for tracing."
+  ],
+  "test": "recall-span-topk-v2-length1-collector-observability.sqlite.integration.test.ts :: TRACE_ON vs TRACE_OFF",
+  "result": "PASS"
+}

@@ -1,0 +1,35 @@
+{
+  "ts": "2026-08-23",
+  "domain_anchor_ready": "PARTIAL",
+  "model2_anchor_ready": "PARTIAL",
+  "stable_span_provenance": "PARTIAL",
+  "gaps": [
+    {
+      "id": "ASSEMBLY_STRIPS_PROVENANCE",
+      "severity": "HIGH",
+      "location": "domainAwarePickToSpanReplacementPick → SpanReplacementPick",
+      "lost_fields": ["candidateId", "domains", "graphSource", "originSpanId", "retrievalProvenance", "fineSpanId"],
+      "impact": "Cannot reconstruct anchor mask from Assembly output alone"
+    },
+    {
+      "id": "NO_ANCHOR_SOURCE_ENUM",
+      "severity": "MEDIUM",
+      "location": "domain-assembly-types.ts / v4-types.ts",
+      "impact": "Anchor must be derived at assembly boundary via adapter; not persisted today"
+    },
+    {
+      "id": "ANCHOR_COARSE_SPAN_ID_MISUSE",
+      "severity": "LOW",
+      "location": "model2-runtime/candidate-materialize.ts",
+      "impact": "Model2 sets anchorCoarseSpanId from fine span id — naming confusion for audits"
+    },
+    {
+      "id": "FINE_SPAN_NO_TIMESTAMP",
+      "severity": "MEDIUM",
+      "location": "path-fine-span-types.ts",
+      "impact": "Acoustic evidence must be joined via acousticSlices + syllable range, not span-native timestamp"
+    }
+  ],
+  "span_provenance_gap_symbol_in_repo": false,
+  "recommended_closure": "Model3AnchorAdapter at post-Model2/post-DomainAssembly boundary; extend internal pick or parallel Model3SpanView before assembly strip"
+}

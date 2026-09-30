@@ -1,0 +1,172 @@
+{
+  "phase": "MODEL3_V2_S3_CLASS_WEIGHT_EXPERIMENT_DEVELOPMENT",
+  "generatedAt": "2026-09-02T12:39:32Z",
+  "g0": {
+    "status": "PASS",
+    "identity": {
+      "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+      "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+      "datasetBuildId": "prod_core_s3_build_20260830_v1",
+      "featureContract": "packModel3SpanInferFields",
+      "labelContractVersion": "MODEL3_LABEL_CONTRACT_V2_20260829",
+      "checkpointDir": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_s3_random_init_v1_ckpts\\seed_2026083013",
+      "datasetRoot": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_production_core_s3",
+      "trainDir": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_production_core_s3\\train",
+      "devDir": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_production_core_s3\\dev",
+      "testDir": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_production_core_s3\\test",
+      "datasetManifestPath": "D:\\Programs\\github\\lingua_1\\training\\model3_dataset\\model3_v2_production_core_s3\\dataset_manifest.json",
+      "checkpointManifestPath": "D:\\Programs\\github\\lingua_1\\docs\\user_correction\\model3\\model3_v2_s3_checkpoint_manifest.json"
+    }
+  },
+  "predeclaredGates": {
+    "gateA_devRetryF1_toleranceNeutral": 0.002,
+    "gateA_devRetryF1_improvedMinDelta": 0.002,
+    "gateA_devRetryF1_regressedMaxDelta": -0.002,
+    "gateB_precisionCollapseWarnDelta": -0.015,
+    "gateD_falseRetrySafeAbsoluteDeltaMax": 0.002,
+    "gateD_falseRetryTradeoffAbsoluteDeltaMax": 0.01,
+    "gateD_falseRetryUnsafeAbove": 0.01,
+    "tieBreakRule": "LOWER_CLASS_WEIGHT_IF_DEV_F1_WITHIN_TOLERANCE",
+    "baselineAllowedToWin": true,
+    "heldout12ExcludedFromSelection": true
+  },
+  "baselineDev": {
+    "retry_f1": 0.8500178126113288,
+    "retry_precision": 0.9187524066230266,
+    "retry_recall": 0.7908518395757375,
+    "keepFalseRetryRate": 0.005158671947582025
+  },
+  "baselineTrain": {
+    "retry_precision": 0.97319,
+    "retry_recall": 0.911757,
+    "retry_f1": 0.941473,
+    "keepFalseRetryRate": 0.001739
+  },
+  "comparison": [
+    {
+      "model": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "arm": "BASELINE",
+      "weight": 1.0,
+      "selectedEpoch": 8,
+      "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+      "trainRetryPrecision": 0.97319,
+      "trainRetryRecall": 0.911757,
+      "trainRetryF1": 0.941473,
+      "devRetryPrecision": 0.918752,
+      "devRetryRecall": 0.790852,
+      "devRetryF1": 0.850018,
+      "trainKeepFalseRetry": 0.001739,
+      "devKeepFalseRetry": 0.005159,
+      "generalizationGap": 0.120905,
+      "status": "BASELINE"
+    },
+    {
+      "model": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1",
+      "arm": "A1",
+      "weight": 2.0,
+      "selectedEpoch": 6,
+      "weightsSha256": "2d1c763249d5fca5c7586ea41868e391cc70e495069b5bab5f2e5905982e1bd0",
+      "trainRetryPrecision": 0.922043,
+      "trainRetryRecall": 0.940593,
+      "trainRetryF1": 0.931226,
+      "devRetryPrecision": 0.871725,
+      "devRetryRecall": 0.849188,
+      "devRetryF1": 0.860309,
+      "trainKeepFalseRetry": 0.005505,
+      "devKeepFalseRetry": 0.009217,
+      "generalizationGap": 0.091405,
+      "status": "PASS_TRADEOFF"
+    },
+    {
+      "model": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2",
+      "arm": "A2",
+      "weight": 4.0,
+      "selectedEpoch": 8,
+      "weightsSha256": "00b822a487b5a8f21a6555aef2a7ed21cf503a2d7d8393a63df105383fcbe868",
+      "trainRetryPrecision": 0.93356,
+      "trainRetryRecall": 0.952574,
+      "trainRetryF1": 0.942971,
+      "devRetryPrecision": 0.893587,
+      "devRetryRecall": 0.826649,
+      "devRetryF1": 0.858815,
+      "trainKeepFalseRetry": 0.004693,
+      "devKeepFalseRetry": 0.007261,
+      "generalizationGap": 0.125925,
+      "status": "PASS_TRADEOFF"
+    }
+  ],
+  "heldoutHigh12": [
+    {
+      "model": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "arm": "BASELINE",
+      "CLEAR_OOS_fixed": 0,
+      "CLEAR_OOS_total": 6,
+      "LOCAL_FIT_WEAK_fixed": 0,
+      "LOCAL_FIT_WEAK_total": 3,
+      "SURFACE_UNRESOLVED_fixed": 0,
+      "SURFACE_UNRESOLVED_total": 3,
+      "HIGH12_fixed": 0,
+      "HIGH12_regressed": 0,
+      "unresolved4_improved": 0,
+      "unresolved4_regressed": 0
+    },
+    {
+      "model": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1",
+      "arm": "A1",
+      "CLEAR_OOS_fixed": 4,
+      "CLEAR_OOS_total": 6,
+      "LOCAL_FIT_WEAK_fixed": 1,
+      "LOCAL_FIT_WEAK_total": 3,
+      "SURFACE_UNRESOLVED_fixed": 0,
+      "SURFACE_UNRESOLVED_total": 3,
+      "HIGH12_fixed": 5,
+      "HIGH12_regressed": 0,
+      "unresolved4_improved": 1,
+      "unresolved4_regressed": 0
+    },
+    {
+      "model": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2",
+      "arm": "A2",
+      "CLEAR_OOS_fixed": 3,
+      "CLEAR_OOS_total": 6,
+      "LOCAL_FIT_WEAK_fixed": 1,
+      "LOCAL_FIT_WEAK_total": 3,
+      "SURFACE_UNRESOLVED_fixed": 0,
+      "SURFACE_UNRESOLVED_total": 3,
+      "HIGH12_fixed": 4,
+      "HIGH12_regressed": 0,
+      "unresolved4_improved": 1,
+      "unresolved4_regressed": 0
+    }
+  ],
+  "selectionResult": "A1_WEIGHT_2_0_SELECTED",
+  "verdict": "MODEL3_S3_CLASS_WEIGHT_EXPERIMENT_A1_SELECTED",
+  "classWeightCausalitySupported": true,
+  "secondSeedRequired": false,
+  "nextPhase": "MODEL3_V2_S3_CLASS_WEIGHT_CAUSAL_MAINLINE_ACCEPTANCE",
+  "trainingCommands": [
+    "python training/model3_dataset/train/train_s3_random.py --experiment-id MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1 --class-weight-retry 2.0",
+    "python training/model3_dataset/train/train_s3_random.py --experiment-id MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2 --class-weight-retry 4.0"
+  ],
+  "trainingExecution": {
+    "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1": {
+      "skipped": true,
+      "reason": "checkpoint_exists"
+    },
+    "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A2": {
+      "skipped": true,
+      "reason": "checkpoint_exists"
+    }
+  },
+  "decisionAnswers": {
+    "D1_g0Pass": true,
+    "D28_classWeightImprovedDevF1": true,
+    "D35_heldout12ExcludedFromSelection": true,
+    "D41_causalitySupported": true,
+    "D43_baselineStillBest": false,
+    "D44_samplingJustifiedNext": false,
+    "D45_hardNegativeJustifiedNext": false,
+    "D46_architectureChangeJustified": false
+  }
+}

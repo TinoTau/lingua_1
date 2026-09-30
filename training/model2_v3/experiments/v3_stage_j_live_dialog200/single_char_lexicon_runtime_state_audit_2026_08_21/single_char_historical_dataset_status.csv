@@ -1,0 +1,6 @@
+dataset,classification,evidence
+IME_2510_TSV,ACTIVE_RUNTIME_SOURCE,manifest singleCharSource + exact set equality with runtime enabled length-1 chars
+CLD_FULL_CSV,GENERATED_ONLY / AUDIT_ONLY,present under docs/user_correction/single_char; not in rebuild sources; HOLD_NO_IMPORT
+CLD_STRICT_CSV,GENERATED_ONLY,recommended candidate only; never imported; overlap with runtime 927/1125 not equality
+CLD_BALANCED_CSV,GENERATED_ONLY,validation candidate only; never imported; overlap 1149/1420
+pre_2026_08_18_v3_length1,SUPERSEDED,reports: enabled length-1 was 0 before recall foundation

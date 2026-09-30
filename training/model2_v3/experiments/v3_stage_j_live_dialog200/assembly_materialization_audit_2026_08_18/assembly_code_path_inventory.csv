@@ -1,0 +1,25 @@
+module,file,function_or_symbol,role,classification
+Domain Vote,span-assembly-shared/utterance-domain-vote.ts,voteUtteranceDomainFromPool,presence vote + retainedDomains,ACTIVE PRODUCTION
+Domain Vote,span-assembly-shared/utterance-domain-vote.ts,DOMAIN_BUCKET_RETENTION_RATIO=0.75,runner-up retention threshold,FROZEN
+SameDomain,span-assembly-v4/assemble-domain-aware-span-sets.ts,filterDomainCandidatesPerSpan,bucket filter sameDomain+base,FROZEN ACTIVE
+SameDomain,span-assembly-v4/assemble-domain-aware-span-sets.ts,budgetPerSpanCandidates,per-span cap 8/6/4,FROZEN ACTIVE
+SameDomain,span-assembly-v4/assemble-domain-aware-span-sets.ts,runDomainAwareAssembly,orchestrate vote→bucket→spanSets,FROZEN ACTIVE
+Eligibility,span-assembly-v4/candidate-span-assembly-eligibility.ts,isCandidateEligibleForSpanAssembly,full FineSpan alignment gate,FROZEN ACTIVE
+Pick conversion,span-assembly-v4/window-candidate-to-pick.ts,windowCandidateToDomainAwarePickResult,eligible pick + dropReason,FROZEN ACTIVE
+Assembly DFS,build-sentence-candidates.ts,buildSentenceCandidates,interval non-overlap DFS,FROZEN ACTIVE
+Assembly DFS,build-sentence-candidates.ts,enumerateIntervalPaths,slot-wise subset enumeration,FROZEN ACTIVE
+Assembly DFS,build-sentence-candidates.ts,applyReplacementsRightToLeft,UTF-16 right-to-left replace,FROZEN ACTIVE
+Overlap,span-assembly-v4/classify-overlap-relation.ts,rawOverlap,overlap test for repair picks,FROZEN ACTIVE
+CrossPath,span-assembly-v4/merge-cross-path-sentence-candidates.ts,mergeCrossPathSentenceCandidates,dedup+cap≤16,FROZEN ACTIVE
+Orchestrator,span-assembly-v4/span-assembly-v4-orchestrator.ts,runSpanAssemblyV4Orchestrator,main production entry,ACTIVE PRODUCTION
+Orchestrator,span-assembly-v4/span-assembly-v4-orchestrator.ts,per-path bucket buildSentenceCandidates,path-local generation,FROZEN ACTIVE
+FineSpan,lattice-fine-span-runtime.ts,enumerateCompleteSegmentationPaths,path cap maxActivePaths=8,ACTIVE (lattice)
+FineSpan,path-fine-span-types.ts,assertPathFineSpansNonOverlapping,non-overlap invariant,FROZEN ACTIVE
+KenLM,kenlm/run-fw-sentence-rerank-from-prefilled.ts,runFwSentenceRerankFromPrefilled,prefilled only no rebuild,FROZEN ACTIVE
+Limits,span-assembly-v4/v4-limits.ts,maxIntervalEnumNodes=1024,FROZEN CAP
+Limits,span-assembly-v4/v4-limits.ts,maxIntervalRepairPicksPerPath=16,FROZEN CAP
+Config,fw-config.ts,maxSentenceCandidates=16,FROZEN DEFAULT
+Legacy pool,assemble-domain-aware-span-sets.ts,buildFineSpanCandidatePoolFromCoarseSpansForTests,TEST ONLY,UNREACHABLE PRODUCTION
+Legacy,phase1-window-edge-harness.ts,lattice harness,TEST ONLY,UNREACHABLE PRODUCTION
+Beam,freeze-contract.test.ts,beamEnabled:false,explicitly disabled,FROZEN OFF
+Trace,dialog200-path-trace.ts,compactCandidates,observation only,TRACE ONLY

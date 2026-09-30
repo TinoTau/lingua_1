@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u001_036",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U001",
+  "profileStage": "P1",
+  "domain": "food_cafe",
+  "difficulty": "multi_clause",
+  "referenceText": "我先确认贵宾证是否供应，正餐稍后决定；如果售罄就换成店员推荐。",
+  "audioId": "aud_p2_u001_036",
+  "audioPath": "audio/p2_u001_036.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "in_ing",
+  "relationDirection": "in_ing",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MILD",
+  "profileRef": "prof_u001_p1",
+  "profileBuildSetId": "pbs_u001_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e",
+    "base-rebuild-term-e5bf83e683857c78",
+    "base-rebuild-term-e4bfa1e5bf837c78"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e8b4b5e5aebee8af"
+  ],
+  "evaluationTargetSurface": "贵宾证",
+  "split": "DEV",
+  "holdoutClass": "NONE",
+  "seed": 987694910,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "WRONG_PROFILE_CONTROL",
+  "wrongProfileUserId": "U002",
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u001_036",
+    "byte_size": 185060,
+    "sha256": "d3cf69ac9e8f1f56f966e04452af7a734da8e00bd11641d7720231d07f2dba4e",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 5.782
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "我先确认贵鋲证是否供应，正餐稍后决定；如果售罄就换成店员推荐。"
+}

@@ -1,0 +1,75 @@
+{
+  "phase": "LINGUA_ANCHOR_DOMAIN_EVIDENCE_AUTHORITY_IMPLEMENTATION",
+  "acp": "LINGUA-ACP-ANCHOR-DOMAIN-EVIDENCE-AUTHORITY-V1",
+  "acpStatus": "APPROVED_IMPLEMENTED",
+  "date": "2026-09-14",
+  "baselineIdentity": "PASS",
+  "gitHeadShort": "63b25376",
+  "branch": "main",
+  "acpImplemented": "YES",
+  "finalAnchorPredicate": "hasEligibleProfilePronunciationEvidence(span) → Anchor(source=MODEL2) else nonAnchor",
+  "anchorSourceTaxonomy": "MODEL2_ONLY",
+  "deletedSymbols": [
+    "hasRetainedDomainEvidence",
+    "countRejectedPreVoteDomainAnchors",
+    "domainOk",
+    "DOMAIN",
+    "DOMAIN_AND_MODEL2",
+    "domain_anchor_count",
+    "dual_source_anchor_count",
+    "rejected_prevote_domain_anchor_count",
+    "broad_isModel2Provenance"
+  ],
+  "authorityMatrix": {
+    "DOMAIN_TERM_ANCHOR_AUTHORITY": "NONE",
+    "PASSIVE_DOMAIN_WEAK_ANCHOR_AUTHORITY": "NONE",
+    "SAMEDOMAIN_ANCHOR_AUTHORITY": "NONE",
+    "RETAINED_DOMAIN_ANCHOR_AUTHORITY": "NONE",
+    "PROFILE_DOMAIN_ANCHOR_AUTHORITY": "NONE",
+    "PROFILE_RETRIEVAL_ANCHOR_AUTHORITY": "NONE",
+    "PROFILE_PRONUNCIATION_ANCHOR_AUTHORITY": "AUTOMATIC"
+  },
+  "preservation": {
+    "PROFILE_DOMAIN_CANDIDATE_PIPELINE_PRESERVED": "YES",
+    "DOMAIN_VOTE_PRESERVED": "YES",
+    "SAMEDOMAIN_PRESERVED": "YES",
+    "PATH_LEVEL_DOMAIN_BUCKETS_PRESERVED": "YES",
+    "MODEL3_INPUT_UNCHANGED": "YES",
+    "MODEL3_MODEL_UNCHANGED": "YES",
+    "MODEL3_TRAINING_UNCHANGED": "YES",
+    "MODEL3_KEEP_RETRY_SEMANTICS_UNCHANGED": "YES",
+    "MODEL2_ON_MODEL3_RETRY": "NO",
+    "PIPELINE_REORDER_REQUIRED": "NO",
+    "SAMEDOMAIN_ANCHOR_APPROXIMATION_DRIFT": "OBSOLETE_BY_ACP",
+    "JOBRESULT_CHANGE": "NO",
+    "BROAD_DATA_CONTRACT_CHANGE": "NO"
+  },
+  "tests": {
+    "unitSuitesPassed": 36,
+    "suites": [
+      "model3-mainline.integration.test.ts",
+      "model3-acceptance-snapshot.test.ts",
+      "model3-retry-region.test.ts"
+    ],
+    "T1_DELUAN_NON_ANCHOR": "PASS",
+    "T2_DOMAIN_ONLY_NON_ANCHOR": "PASS",
+    "T3_PROFILE_PRONUNCIATION_ANCHOR": "PASS",
+    "T4_PROFILE_PRONUNCIATION_WITH_DOMAIN": "PASS",
+    "T5_PROFILE_RETRIEVAL_NON_ANCHOR": "PASS",
+    "T6_DOMAIN_VOTE_UNCHANGED": "PASS",
+    "T7_RETRY_EXPLICIT_DELETE_EXISTING_CANDIDATES": "NO",
+    "T7_EXISTING_CANDIDATE_SURVIVES_POST_BUDGET": "NO",
+    "T7_note": "行程-like low-score domain cand dropped by per-span score slice after merge; no explicit delete",
+    "T8_MODEL3_EXPOSURE_DELTA_MEASURED": "YES",
+    "FULL_PILOT200_RUN_THIS_ROUND": "NO"
+  },
+  "model3": {
+    "MODEL3_RETRAIN_REQUIRED": "NO",
+    "MODEL3_REVALIDATION_REQUIRED": "YES",
+    "PERFORMANCE_RISK_OBSERVED": "MEDIUM"
+  },
+  "productChangeScope": "ANCHOR_AUTHORITY_ONLY",
+  "acceptanceStatus": "PASS",
+  "oneNextOwner": "RETRY_BUDGET_BEHAVIOR_AUDIT",
+  "oneNextDelta": "Audit Retry merge + per-span budget effect on existing Domain/PROFILE_DOMAIN candidates after ACP unanchors them; then controlled Pilot200 remeasure."
+}

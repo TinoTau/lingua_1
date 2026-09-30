@@ -1,0 +1,13 @@
+Gap_ID,Class,Requirement,Description,Evidence,Required_next_action,Status
+G0-1,G0,R5/R11 historical,Closed-set Stage A treated as Model2 core,SUPERSEDED but code artifacts remain,Restore design authority; keep archived,DRIFT_RESOLVED_IN_CONTRACT
+G0-2,G0,R8,CandidateIndex builder first-tag-only vs term_domain_tags multi-tag,ACTIVE lossy transform,MODIFY index build to re-aggregate,OPEN
+G1-1,G1,R23,Model2 inference not in Node/runtime,MISSING entire hop,Runtime integration phase,OPEN
+G1-2,G1,R13,New candidates from Model2 not merged to assembly,MISSING,Wire policy->lexicon->merge,OPEN
+G1-3,G1,R2,UserProfile not consumed by any Model2 runtime path,cache unused,Connect bootstrap profile to Model2,OPEN
+G2-1,G2,R17/R18,Stage P and Stage D separate heads/checkpoints; no Stage J,PARTIAL ONE MODEL2,Stage J joint FT after D freeze,OPEN
+G3-1,G3,R4/R7,Train PASS; runtime NO,TRAIN_ONLY,Deploy ONE Model2,OPEN
+G3-2,G3,R9/R10,session_domain_prior train-only; not in UserProfileV1,SCHEMA/RUNTIME GAP,Define session prior ownership,OPEN
+G4-1,G4,R6/R20,Real common-term/domain writeback weak; Stage D synthetic,DATA,Accumulate real corrections,OPEN
+G4-2,G4,R19,speaking habits no data/schema,DEFERRED_BY_DATA,Hold until data,OPEN
+G5-1,G5,Stage D2,Wrong/Swapped candidate budget selectivity,KNOWN_SECONDARY,D2b selectivity,OPEN_DEFERRED
+G6-1,G6,metrics,Further RR/cost polish,secondary,after core loop,DEFERRED

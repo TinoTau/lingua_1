@@ -1,0 +1,207 @@
+{
+  "phase": "MODEL3_ARCHITECTURE_RECONCILIATION_AND_DRIFT_CLOSURE",
+  "generatedAt": "2026-09-03T19:59:06Z",
+  "verdict": "MODEL3_ARCHITECTURE_RECONCILIATION_PASS_WITH_ACTIVE_DELTAS",
+  "nextPhase": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DESIGN",
+  "authoritativeSsot": [
+    "docs/fw-detector/freeze/FROZEN.md (Lattice V1.0.0)",
+    "MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+    "MODEL3_SYNTHETIC_V1_FROZEN.md",
+    "model3_retry_contract_v1.md",
+    "companion anchor/input/output contracts"
+  ],
+  "activeProductionDeltas": [
+    {
+      "deltaId": "DELTA_RQ_STAGE2_NO_SLIDING",
+      "module": "Retry Stage-2 query enumeration",
+      "frozenExpected": "Inside bounded Retry region, reuse FineSpan/lattice sliding window enumeration (1..max) for legal RAW_RECALL queries",
+      "actualBehavior": "routeModel3Retry emits one query per RetryRegionLocalSpan only; never calls buildLexicalWindowQueries at Stage-2",
+      "exactCodeLocation": "electron_node/.../model3-retry-router.ts for(local of localSpans){ windowText=slice(local); recall(...) }",
+      "classification": "RUNTIME_ARCHITECTURE_DRIFT",
+      "severity": "HIGH",
+      "consumerImpact": "Multi-syllable lexical units spanning adjacent first-pass FineSpans cannot be expressed when Stage-2 only sees non-overlapping localSpans; regional lattice Stage-1 windows are discarded at Stage-2 boundary",
+      "minimalCorrectionDirection": "DELETE localSpan-only assumption; REUSE buildLexicalWindowQueries / buildWindowDescriptorForRange on region syllable slice; dedup via utterance cache; still ONE Retry operation; no KEEP widen",
+      "acpRequired": "NO",
+      "developmentUnit": 1
+    },
+    {
+      "deltaId": "DELTA_RQ_FALLBACK_BOUNDARY_LOCK",
+      "module": "Retry fallback local spans",
+      "frozenExpected": "On lattice failure, still reinterpret bounded region (not lock to original FineSpan boundaries)",
+      "actualBehavior": "fallbackRegionLocalSpans copies first-pass PathFineSpan raw/syllable bounds for region.sourceSpanIds",
+      "exactCodeLocation": "electron_node/.../model3-retry-region-resegment.ts fallbackRegionLocalSpans; used when resegment ok=false or empty",
+      "classification": "RUNTIME_ARCHITECTURE_DRIFT",
+      "severity": "HIGH",
+      "consumerImpact": "OLD_BOUNDARY_LOCK: same-boundary Recall when lattice fails — contradicts Retry purpose",
+      "minimalCorrectionDirection": "DELETE fallback as Stage-2 query authority; REUSE region-slice window enumeration (same helper as Unit #1) without requiring successful lattice paths",
+      "acpRequired": "NO",
+      "developmentUnit": 2
+    }
+  ],
+  "activeProductionDeltaCount": 2,
+  "driftCounts": {
+    "runtimeArchitectureDrift": 2,
+    "runtimeImplementationBug": 0,
+    "staleCode": 0,
+    "duplicatedProductionLogic": 2,
+    "auditSemanticDrift": 5,
+    "testMetricDrift": 1,
+    "documentSsotDrift": 3,
+    "modelQualityFailure": 1,
+    "unresolved": 1
+  },
+  "ownership": [
+    {
+      "responsibility": "span geometry",
+      "expectedOwner": "Lattice FineSpan",
+      "actualOwner": "runLatticeFineSpanGeneration",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "Anchor ownership",
+      "expectedOwner": "Domain/Model2 adapter",
+      "actualOwner": "materializeModel3Anchors",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "Model3 decision",
+      "expectedOwner": "Model3 inferPath",
+      "actualOwner": "model3-inference-client.inferPath",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "Retry eligibility",
+      "expectedOwner": "RetryRegion",
+      "actualOwner": "isRetryEligible + maskAnchorDecisions",
+      "class": "DUPLICATED_OWNERSHIP"
+    },
+    {
+      "responsibility": "Retry region",
+      "expectedOwner": "deriveRetryRegions",
+      "actualOwner": "deriveRetryRegions",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "barrier enforcement",
+      "expectedOwner": "RetryRegion",
+      "actualOwner": "deriveRetryRegions KEEP flush + maskAnchor",
+      "class": "DUPLICATED_OWNERSHIP"
+    },
+    {
+      "responsibility": "regional re-segmentation",
+      "expectedOwner": "resegmentRetryRegionWithLattice",
+      "actualOwner": "resegmentRetryRegionWithLattice",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "path retention",
+      "expectedOwner": "collectLocalSpansFromRetainedPathViews",
+      "actualOwner": "same",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "query enumeration",
+      "expectedOwner": "Reuse buildLexicalWindowQueries in Retry Stage-2",
+      "actualOwner": "routeModel3Retry localSpan loop ONLY",
+      "class": "WRONG_OWNER"
+    },
+    {
+      "responsibility": "query-key construction",
+      "expectedOwner": "window-construction-core",
+      "actualOwner": "router inline formula (copy)",
+      "class": "DUPLICATED_OWNERSHIP"
+    },
+    {
+      "responsibility": "Recall",
+      "expectedOwner": "recallSpanTopKV2",
+      "actualOwner": "recallSpanTopKV2",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "domain vote",
+      "expectedOwner": "voteUtteranceDomainFromPool path-local",
+      "actualOwner": "same once per path step",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "candidate budget",
+      "expectedOwner": "per-span limit + CrossPath<=16",
+      "actualOwner": "getPerSpanCandidateLimit + merge<=16",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "Assembly",
+      "expectedOwner": "completeDomainAwareAssemblyFromVote",
+      "actualOwner": "same",
+      "class": "MATCH"
+    },
+    {
+      "responsibility": "KenLM",
+      "expectedOwner": "sentence rerank",
+      "actualOwner": "same",
+      "class": "MATCH"
+    }
+  ],
+  "answers": {
+    "D1": "YES — KEEP|RETRY only",
+    "D2": "NO — does not query Lexicon/generate text/vote domain/create spans",
+    "D3": "NO — does not override KEEP; KEEP breaks merge",
+    "D4": "NO — Anchor masked + skipped",
+    "D5": "NO by default — KEEP flush",
+    "D6": "YES — one bounded Retry operation / path step",
+    "D7": "NO",
+    "D8": "NO",
+    "D9": "NO post-Retry Model3; one STAGE evaluates multipath via path loop",
+    "D10": "NO",
+    "D11": "YES — once per retained path",
+    "D12": "YES — multipath regional views unioned",
+    "D13": "YES upstream lattice windows; path FineSpans non-overlapping by design",
+    "D14": "First lost at Retry Stage-2 consumer: regional Stage-1 windows not re-enumerated for RAW_RECALL",
+    "D15": "NO",
+    "D16": "YES — fallbackRegionLocalSpans",
+    "D17": "YES — both RUNTIME_ARCHITECTURE_DRIFT",
+    "D18": "NO",
+    "D19": "MODEL_QUALITY_FAILURE (or EXPECTED_MODEL_ERROR)",
+    "D20": "NO evidence of packer/mapping SSOT violation",
+    "D21": "YES — Recall intact; do not retune to hide geometry",
+    "D22": "NO — not active causal owner for current Query Geometry cohort",
+    "D23": "NO — LIMITED only",
+    "D24": 2,
+    "D25": [
+      "DELTA_RQ_STAGE2_NO_SLIDING",
+      "DELTA_RQ_FALLBACK_BOUNDARY_LOCK"
+    ],
+    "D26": 12,
+    "D27": [
+      "KEEP_ON_LOCUS as architecture drift",
+      "KEEP barrier as bug",
+      "utterance singleton Domain Vote required",
+      "preferred-path active",
+      "second Domain Vote / Model3 / recursive / ASR",
+      "Lexicon prevalence=0",
+      "surface families as structural proof",
+      "Recall PROVEN_GENERAL from surfaces",
+      "70% as system prevalence",
+      "continue causal-localization as baseline next"
+    ],
+    "D28": "Lattice FROZEN + MODEL3_ARCHITECTURE_CONTRACT_V1 + SYNTHETIC_V1_FROZEN + retry/anchor/input/output contracts",
+    "D29": "retry 'not enabled' matrix note; ≤1 inference/utterance literal; TTS next-phase docs; many S3 audits as architecture SSOT",
+    "D30": "model3_v2_s3_*_freeze_state.csv / corrected_freeze_state / retry_query_freeze_state — evidence status only",
+    "D31": "YES — barrier split; query-key formula copy; Stage-1 vs Stage-2 enum divergence",
+    "D32": "YES — delete localSpan-only + fallback lock; reuse buildLexicalWindowQueries",
+    "D33": "NO for active deltas (SSOT restoration)",
+    "D34": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION (design then develop)",
+    "D35": "Stage-2 query enumeration source only",
+    "D36": "before: Stage-2 queries==localSpans; after: Stage-2 consumes region-slice sliding windows; barriers unchanged",
+    "D37": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_REMOVAL (unit2)",
+    "D38": "YES",
+    "D39": "NO",
+    "D40": "MODEL3_RETRY_STAGE2_SSOT_RESTORATION_DESIGN"
+  },
+  "callGraph": "ASR→FineSpan lattice(windows1..5)→pathFineSpanViews→Model2→path Domain Vote→Anchors→Model3 KEEP/RETRY→deriveRetryRegions→resegment(lattice|fallback)→Stage-2 localSpan queries→recallSpanTopKV2→merge→Assembly(same vote)→CrossPath≤16→KenLM→Apply→JobResult",
+  "semanticContinuityFirstLoss": "Retry Stage-2 (RAW_RECALL) discards sliding-window semantics present in regional lattice Stage-1",
+  "implementationAllowedThisPhase": false,
+  "acpRequired": false,
+  "a1PromotionReady": false,
+  "firstCausalOwner": "NOT_YET_ISOLATED — geometry deltas ≠ Model3 quality"
+}

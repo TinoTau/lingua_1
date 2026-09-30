@@ -1,0 +1,29 @@
+{
+  "P_only": {
+    "n": 80,
+    "TargetIntroductionRate": 0.8625,
+    "RecallHitRate": 0.8625,
+    "QueryCount_mean": 1.0,
+    "CandidateCount_mean": 2.9875,
+    "Latency_P50": 59.43890000344254,
+    "Latency_P95": 75.29979999526404
+  },
+  "D_only": {
+    "n": 363,
+    "TargetIntroductionRate": 0.0,
+    "RecallHitRate": 0.0,
+    "QueryCount_mean": 1.8292011019283747,
+    "CandidateCount_mean": 8.0,
+    "Latency_P50": 115.77009997563437,
+    "Latency_P95": 567.5527999992482
+  },
+  "P_plus_D": {
+    "n": 80,
+    "TargetIntroductionRate": 1.0,
+    "RecallHitRate": 1.0,
+    "QueryCount_mean": 3.0,
+    "CandidateCount_mean": 10.4125,
+    "Latency_P50": 176.070699992124,
+    "Latency_P95": 234.8393000138458
+  }
+}

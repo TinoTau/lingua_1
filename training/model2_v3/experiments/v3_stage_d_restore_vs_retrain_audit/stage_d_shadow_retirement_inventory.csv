@@ -1,0 +1,7 @@
+path,current_role,after_restore,reason
+training/model2_v3/policy/domain_actions.py:soft_domain_retrieve,Python Stage D authoritative executor,RETIRE_BODY_REPLACE,shared-pool rerank is the drift; keep function name/action catalog
+training/model2_v3/policy/domain_actions.py:execute_domain_action,focus weights + call soft_domain_retrieve,KEEP_ADAPTER,0.35 floor may be re-audited; do not keep as second recall
+electron_node/.../lexicon-runtime-v2.ts:queryDomainMultiRowsAtomic,Node exact domain SQL,KEEP_FOR_EXACT_LOOKUP_NOT_MODEL2_D,not Model2 FineSpan expansion SSOT; do not dual-wire
+electron_node/.../local-span-recall.ts,Node recall + enabledDomains,DO_NOT_WIRE_AS_MODEL2_D_FALLBACK,shadow/double recall risk
+training/model2/fuzzy/pool.py:build_fuzzy_pool,phonetic primitive,KEEP,reused by base and domain-filtered branch
+spike_retriever.merge_pools,P-path term_id merge,KEEP_P_ONLY,not a second D path

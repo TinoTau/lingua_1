@@ -1,0 +1,201 @@
+caseId,baselineWrong,repairabilityClass,confidence,baselineFinal,expected,outcome,firstFailOwner
+d001,true,MODEL3_RESCUABLE,HIGH,"你好,我想点一杯热拿铁中贝少糖 今天有蓝没马分吗?",你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d002,true,MODEL3_RESCUABLE,HIGH,麻烦帮我做一杯美式带走大背就行谢谢,麻烦帮我做一杯美式带走，大杯就行，谢谢。,UNCHANGED,LEXICON_COVERAGE
+d003,true,MODEL3_RESCUABLE,MEDIUM,"请问,这款烟麦拿铁可以烧病吗? 我赶时间小背",请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。,UNCHANGED,LEXICON_COVERAGE
+d004,true,MODEL3_RESCUABLE,HIGH,小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里,小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,UNCHANGED,LEXICON_COVERAGE
+d005,true,MODEL3_RESCUABLE,LOW,"今天德湛会现贵一下定,但中台 近都内存占用高折块需要先留保护大家看一下风险",今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d006,true,MODEL3_RESCUABLE,HIGH,跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下,跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,UNCHANGED,LOCAL_RESEGMENTATION
+d007,true,MODEL3_RESCUABLE,LOW,市副局仲官村软件远走机场告诉 我干 9点半的回药师赌车宁提前跟我说,师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。,UNCHANGED,LOCAL_RESEGMENTATION
+d008,true,MODEL3_RESCUABLE,MEDIUM,麻烦送我到国贸散清南门大该多久能到 我是点声 十分有隔电话会,麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。,UNCHANGED,LOCAL_RESEGMENTATION
+d009,true,MODEL3_RESCUABLE,MEDIUM,去望金色和不走私环可以吗?那贬现在赌不赌?,去望京SOHO，不走四环可以吗？那边现在堵不堵？,UNCHANGED,LOCAL_RESEGMENTATION
+d010,true,MODEL3_RESCUABLE,MEDIUM,"医生您好,我这两天头痛想开点,要并做个些常规",医生您好，我这两天头痛，想开点药并做个血常规。,UNCHANGED,LOCAL_RESEGMENTATION
+d011,true,MODEL3_RESCUABLE,HIGH,挂号出请问 内客还有号码 我微不舒服昨晚开始的,挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。,UNCHANGED,LOCAL_RESEGMENTATION
+d012,false,BASELINE_ALREADY_CORRECT,HIGH,这个检查报告什么时候能出 我过敏 发痒需要请假休息吗?,这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？,UNCHANGED,UNKNOWN
+d013,false,BASELINE_ALREADY_CORRECT,HIGH,"这件外套能试穿吗?我穿中码,买两件有没有折扣?",这件外套能试穿吗？我穿中码。买两件有没有折扣？,UNCHANGED,UNKNOWN
+d014,true,NO_REPAIRABLE_TARGET,MEDIUM,请问这双鞋有司时码吗? 不合适司时码 三天内可以退换吧,请问这双鞋有四十码吗？不合适三天内可以退换吧？,UNCHANGED,UNKNOWN
+d015,true,MODEL3_RESCUABLE,HIGH,"我想对比 这两款订单中台的价格会员日,能再减一点吗?",我想对比一下这两款订单中台的价格，会员日能再减一点吗？,UNCHANGED,RETRY_REGION
+d016,false,BASELINE_ALREADY_CORRECT,HIGH,"周末要不要去江边骑行? 天气预报说,周日多云 记得带水",周末要不要去江边骑行？天气预报说周日多云，记得带水。,UNCHANGED,UNKNOWN
+d017,true,MODEL3_RESCUABLE,HIGH,晚上一起吃饭嘛 我知道一家川菜 不错大概起点到,晚上一起吃饭吗？我知道一家川菜不错，大概七点到。,UNCHANGED,LEXICON_COVERAGE
+d018,true,MODEL3_RESCUABLE,HIGH,"你最近忙不忙,想找你看下手机备分怎么设置",你最近忙不忙？想找你看下手机备份怎么设置。,UNCHANGED,MODEL3_TRIGGER
+d019,true,MODEL3_RESCUABLE,MEDIUM,"今天,我们团体 要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。,UNCHANGED,LEXICON_COVERAGE
+d020,true,MODEL3_RESCUABLE,MEDIUM,"这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,UNCHANGED,LEXICON_COVERAGE
+d021,true,MODEL3_RESCUABLE,MEDIUM,会上提到候选生成连路 要加监控 通上限期画文当我下午更新一版,会上提到候选生成链路要加监控，上线计划文档我下午更新一版。,UNCHANGED,LEXICON_COVERAGE
+d022,true,MODEL3_RESCUABLE,MEDIUM,"您好我定,但显示已发货,但务留三天。 今天美更新能帮我查一下吗?",您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d023,false,BASELINE_ALREADY_CORRECT,HIGH,想改一下收货地址还来得及吗? 麻烦尽快处理谢谢,想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。,UNCHANGED,UNKNOWN
+d024,false,BASELINE_ALREADY_CORRECT,HIGH,发票抬头开错了能重新开具电子发票吗,发票抬头开错了，能重新开具电子发票吗？,UNCHANGED,UNKNOWN
+d025,true,NO_REPAIRABLE_TARGET,MEDIUM,请简单介绍一下 你上一段时间 一段项目里负责的核心模块和难点,请简单介绍一下你上一段项目里负责的核心模块和难点。,UNCHANGED,UNKNOWN
+d026,true,MODEL3_RESCUABLE,HIGH,"你如何看待夸团队协作,遇到需求边更一般怎么处理?",你如何看待跨团队协作？遇到需求变更一般怎么处理？,UNCHANGED,LEXICON_COVERAGE
+d027,true,NO_REPAIRABLE_TARGET,MEDIUM,期望性自这块我们可以再沟通你最快什么时候能入职,期望薪资这块我们可以再沟通，你最快什么时候能入职？,UNCHANGED,UNKNOWN
+d028,true,MODEL3_RESCUABLE,MEDIUM,"老师这道题的解题步,中能不能解解? 我没听懂第二点",老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。,UNCHANGED,LOCAL_RESEGMENTATION
+d029,true,MODEL3_RESCUABLE,LOW,"作业是狭州以下五叫码,可以电子板提叫码",作业是下周一下午交吗？可以电子版提交吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d030,true,MODEL3_RESCUABLE,HIGH,请问这门客期末是开卷还是闭卷? 终点会话吗?,请问这门课期末是开卷还是闭卷？重点会划吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d031,true,MODEL3_RESCUABLE,HIGH,我预定的十大床房能安排安静一点的楼层吗?,我预订的是大床房，能安排安静一点的楼层吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d032,true,NO_REPAIRABLE_TARGET,MEDIUM,早餐祭典开始 推广可以延迟到下午两点吗,早餐几点开始？退房可以延迟到下午两点吗？,UNCHANGED,UNKNOWN
+d033,true,MODEL3_RESCUABLE,HIGH,房间空调不太知冷能派人上来看一下吗?,房间空调不太制冷，能派人上来看一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d034,false,BASELINE_ALREADY_CORRECT,HIGH,"我想,开通短信提醒需要带什么证件",我想开通短信提醒，需要带什么证件？,UNCHANGED,UNKNOWN
+d035,false,BASELINE_ALREADY_CORRECT,HIGH,这笔转账显示处理中大概多久能到账,这笔转账显示处理中，大概多久能到账？,UNCHANGED,UNKNOWN
+d036,true,MODEL3_RESCUABLE,LOW,请问理财产品的风险等急在哪里查看,请问理财产品的风险等级在哪里查看？,UNCHANGED,MODEL3_TRIGGER
+d037,true,NO_REPAIRABLE_TARGET,MEDIUM,两位靠窗有位直麻 不要像蔡薇拉就行,两位，靠窗有位置吗？不要香菜，微辣就行。,UNCHANGED,UNKNOWN
+d038,false,BASELINE_ALREADY_CORRECT,HIGH,这道菜大概要等多久? 我们先点一份凉菜和一壶茶,这道菜大概要等多久？我们先点一份凉菜和一壶茶。,UNCHANGED,UNKNOWN
+d039,true,MODEL3_RESCUABLE,MEDIUM,可以打爆吗? 顺便解一下张能扫马支付吗?,可以打包吗？顺便结一下账，能扫码支付吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d040,true,MODEL3_RESCUABLE,MEDIUM,"自教课还剩几次,能帮我约明天晚上7点吗?",私教课还剩几次？能帮我约明天晚上七点吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d041,true,NO_REPAIRABLE_TARGET,MEDIUM,更易是龟仔钥匙找不到了前台 能帮忙开一下吗,更衣室柜子钥匙找不到了，前台能帮忙开一下吗？,UNCHANGED,UNKNOWN
+d042,true,MODEL3_RESCUABLE,MEDIUM,游泳自卡本月月底到期是非有优惠吗?,游泳次卡本月月底到期，续费有优惠吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d043,true,MODEL3_RESCUABLE,LOW,"我们下午讨论后,选生呈方安线吧! 成的借口文章补齐",我们下午讨论后选声城方案，先把候选生成的接口文档补齐。,UNCHANGED,LOCAL_RESEGMENTATION
+d044,true,MODEL3_RESCUABLE,MEDIUM,这周的上限计划已经全任上限计划评审安排在周四上午,这周的上线计花已经确认，上线计划评审安排在周四上午。,UNCHANGED,LOCAL_RESEGMENTATION
+d045,true,MODEL3_RESCUABLE,MEDIUM,"关于后,选生成为 和上限计划请安上限计划执行有问题群里说",关于后选生城和上线计化，请按上线计划执行，有问题群里说。,IMPROVED,LEXICON_COVERAGE
+d046,true,NO_REPAIRABLE_TARGET,MEDIUM,你好 我想点一杯卡布奇诺中贝珍长糖 顺便问一下 今天有知识蛋糕吗?,你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？,UNCHANGED,UNKNOWN
+d047,true,MODEL3_RESCUABLE,HIGH,麻烦帮我做一杯红茶带走大背就行谢谢,麻烦帮我做一杯红茶带走，大杯就行，谢谢。,UNCHANGED,LEXICON_COVERAGE
+d048,true,MODEL3_RESCUABLE,HIGH,"请问,这款热巧克力可以少病吗?我赶时间小杯",请问这款热巧克力可以少冰吗？我赶时间，小杯。,UNCHANGED,RETRY_REGION
+d049,true,MODEL3_RESCUABLE,MEDIUM,理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里,李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,UNCHANGED,LEXICON_COVERAGE
+d050,true,MODEL3_RESCUABLE,MEDIUM,今天的站会献过一下订单 中台 进度内存占用高着快 需要先留保护大家看一下风险,今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d051,true,MODEL3_RESCUABLE,LOW,跟会员系统相关的讯息 我整理了一版8点前请大家帮忙评审一下,跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,UNCHANGED,LOCAL_RESEGMENTATION
+d052,true,MODEL3_RESCUABLE,LOW,市府区浦东张江走沿岸路高架 涡干 9点半的回药师赌车宁提前跟我说,师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。,UNCHANGED,LEXICON_COVERAGE
+d053,true,MODEL3_RESCUABLE,HIGH,麻烦送我到深圳南山科技园南门大概多久能到 我十点十分有隔电话会,麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。,UNCHANGED,LOCAL_RESEGMENTATION
+d054,true,MODEL3_RESCUABLE,MEDIUM,去杭州戏戏不走三环 可以吗?那扁现在赌不赌?,去杭州西溪，不走三环可以吗？那边现在堵不堵？,UNCHANGED,LOCAL_RESEGMENTATION
+d055,true,NO_REPAIRABLE_TARGET,MEDIUM,一生您好我这两天嗓子疼想开店要并做各些常规,医生您好，我这两天嗓子疼，想开点药并做个血常规。,UNCHANGED,UNKNOWN
+d056,true,MODEL3_RESCUABLE,HIGH,挂号出请问 内刻还有号码 我低哨昨晚开始的,挂号处请问内科还有号吗？我低烧，昨晚开始的。,UNCHANGED,LOCAL_RESEGMENTATION
+d057,false,BASELINE_ALREADY_CORRECT,HIGH,这个检查报告什么时候能出 我咳嗽需要请假休息吗,这个检查报告什么时候能出？我咳嗽，需要请假休息吗？,UNCHANGED,UNKNOWN
+d058,false,BASELINE_ALREADY_CORRECT,HIGH,"这件外套能试穿吗?我穿中码,买两件有没有折扣?",这件外套能试穿吗？我穿中码。买两件有没有折扣？,UNCHANGED,UNKNOWN
+d059,true,MODEL3_RESCUABLE,MEDIUM,"请问,这双鞋有40码码,不合适在哪里? 三天内可以推换吧",请问这双鞋有四十码吗？不合适三天内可以退换吧？,UNCHANGED,MODEL3_TRIGGER
+d060,true,MODEL3_RESCUABLE,LOW,"我想对比一下,这两款定制的 平均单中台的加格会员日能再减一点吗?",我想对比一下这两款订单中台的价格，会员日能再减一点吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d061,true,MODEL3_RESCUABLE,MEDIUM,众莫要不要去降边骑行 天气预报 周日多云记得带水,周末要不要去江边骑行？天气预报说周日多云，记得带水。,UNCHANGED,LOCAL_RESEGMENTATION
+d062,true,MODEL3_RESCUABLE,HIGH,"晚上 一起吃饭嘛 我知道一家川菜,不错大概起点到",晚上一起吃饭吗？我知道一家川菜不错，大概七点到。,UNCHANGED,LOCAL_RESEGMENTATION
+d063,true,MODEL3_RESCUABLE,HIGH,"你最近忙不忙,想找你看下手机备分怎么设置",你最近忙不忙？想找你看下手机备份怎么设置。,UNCHANGED,RETRY_REGION
+d064,true,MODEL3_RESCUABLE,MEDIUM,"今天,我们团队要讨论候选生成相关的候选生成流程和商线计划安排请研发一起评估风险",今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。,UNCHANGED,LEXICON_COVERAGE
+d065,true,MODEL3_RESCUABLE,MEDIUM,"这次发布我们线,对其上述 当线计划窗口后学生,成模快需要连掉别漏掉回归",这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,UNCHANGED,LOCAL_RESEGMENTATION
+d066,true,MODEL3_RESCUABLE,LOW,"会上提到 候选生陈列露,要加件空上线即画文当我下午更新一版",会上提到候选生成链路要加监控，上线计划文档我下午更新一版。,UNCHANGED,LEXICON_COVERAGE
+d067,true,MODEL3_RESCUABLE,MEDIUM,"您好,我定位了 但显示已发货,但物流三天没更新能帮我查一下吗?",您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d068,false,BASELINE_ALREADY_CORRECT,HIGH,"想改一下收货地址还来得及吗? 麻烦尽快处理,谢谢!",想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。,UNCHANGED,UNKNOWN
+d069,false,BASELINE_ALREADY_CORRECT,HIGH,发票抬头开错了能重新开具电子发票吗,发票抬头开错了，能重新开具电子发票吗？,UNCHANGED,UNKNOWN
+d070,false,BASELINE_ALREADY_CORRECT,HIGH,请简单介绍一下你上一段项目里负责的核心模块和难点,请简单介绍一下你上一段项目里负责的核心模块和难点。,UNCHANGED,UNKNOWN
+d071,true,MODEL3_RESCUABLE,HIGH,"你如何看待夸团队写作,遇到需求边更一般怎么处理?",你如何看待跨团队协作？遇到需求变更一般怎么处理？,UNCHANGED,LEXICON_COVERAGE
+d072,true,NO_REPAIRABLE_TARGET,MEDIUM,"期望星,自这块我们可以再沟通你最快什么时候能入职",期望薪资这块我们可以再沟通，你最快什么时候能入职？,UNCHANGED,UNKNOWN
+d073,true,MODEL3_RESCUABLE,MEDIUM,"老是这道题的解题步,周能不能解解? 我没听懂第二点",老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。,UNCHANGED,LOCAL_RESEGMENTATION
+d074,true,NO_REPAIRABLE_TARGET,MEDIUM,"作业是下周一下午较码,可以电子版提较码",作业是下周一下午交吗？可以电子版提交吗？,UNCHANGED,UNKNOWN
+d075,true,MODEL3_RESCUABLE,HIGH,请问这门客期末是开卷还是闭卷? 终点汇化吗?,请问这门课期末是开卷还是闭卷？重点会划吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d076,true,MODEL3_RESCUABLE,HIGH,我预定的是搭床房能安排安静一点的楼层吗,我预订的是大床房，能安排安静一点的楼层吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d077,true,NO_REPAIRABLE_TARGET,MEDIUM,早餐几点开始?退房可以延迟到下午2点吗?,早餐几点开始？退房可以延迟到下午两点吗？,UNCHANGED,UNKNOWN
+d078,true,MODEL3_RESCUABLE,HIGH,房间空调不太知冷能派人上来看一下嘛,房间空调不太制冷，能派人上来看一下吗？,UNCHANGED,LEXICON_COVERAGE
+d079,false,BASELINE_ALREADY_CORRECT,HIGH,我想开通短信提醒需要带什么证件,我想开通短信提醒，需要带什么证件？,UNCHANGED,UNKNOWN
+d080,false,BASELINE_ALREADY_CORRECT,HIGH,这笔转账显示处理中大概 多久能到账,这笔转账显示处理中，大概多久能到账？,UNCHANGED,UNKNOWN
+d081,true,MODEL3_RESCUABLE,LOW,请问理财产品的风险等急在哪里查看,请问理财产品的风险等级在哪里查看？,UNCHANGED,MODEL3_TRIGGER
+d082,true,NO_REPAIRABLE_TARGET,MEDIUM,两位靠窗有位置吗? 不要像蔡薇娜就行,两位，靠窗有位置吗？不要香菜，微辣就行。,UNCHANGED,UNKNOWN
+d083,false,BASELINE_ALREADY_CORRECT,HIGH,这道菜大概要等多久 我们先点一份凉菜和一壶茶,这道菜大概要等多久？我们先点一份凉菜和一壶茶。,UNCHANGED,UNKNOWN
+d084,true,MODEL3_RESCUABLE,MEDIUM,可以打爆麻 顺便结一下张能扫码支付吗?,可以打包吗？顺便结一下账，能扫码支付吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d085,true,MODEL3_RESCUABLE,MEDIUM,"自教课还剩几次,能帮我约明天晚上7点吗?",私教课还剩几次？能帮我约明天晚上七点吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d086,true,NO_REPAIRABLE_TARGET,MEDIUM,更易是龟仔钥匙找不到了前台 能帮忙开一下吗?,更衣室柜子钥匙找不到了，前台能帮忙开一下吗？,UNCHANGED,UNKNOWN
+d087,true,MODEL3_RESCUABLE,MEDIUM,"游泳自卡本月月底到期续飞游,又会吗?",游泳次卡本月月底到期，续费有优惠吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d088,true,MODEL3_RESCUABLE,MEDIUM,"我们下午讨论后,选生成福 方安线把候选生成的借口文当补齐",我们下午讨论后选声城方案，先把候选生成的接口文档补齐。,UNCHANGED,LEXICON_COVERAGE
+d089,true,MODEL3_RESCUABLE,HIGH,这周的上限计划已经确认上限计划评审安排在周四上午,这周的上线计花已经确认，上线计划评审安排在周四上午。,UNCHANGED,LOCAL_RESEGMENTATION
+d090,true,MODEL3_RESCUABLE,LOW,关于后选生成为 和上限计划请按上限计划执行有问题 群里说,关于后选生城和上线计化，请按上线计划执行，有问题群里说。,UNCHANGED,LEXICON_COVERAGE
+d091,true,MODEL3_RESCUABLE,MEDIUM,"你好,我想点一杯烟麦拿铁中备无糖 今天有被裹吗?",你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d092,true,NO_REPAIRABLE_TARGET,MEDIUM,麻烦帮我做一杯抹茶拿铁带走大 北九行谢谢,麻烦帮我做一杯抹茶拿铁带走，大杯就行，谢谢。,UNCHANGED,UNKNOWN
+d093,true,MODEL3_RESCUABLE,HIGH,"请问,这款病美是可以少病吗?我赶时间小呗",请问这款冰美式可以少冰吗？我赶时间，小杯。,UNCHANGED,LOCAL_RESEGMENTATION
+d094,true,MODEL3_RESCUABLE,LOW,"小成客户反馈翻译引擎接口报错 我们能 不能加缓存下午,3点前把结论发群里",小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,UNCHANGED,LOCAL_RESEGMENTATION
+d095,true,MODEL3_RESCUABLE,MEDIUM,"今天,德湛会献过一下订单 中台,进都内 存占用高折块需要先留保护 大家看一下风险",今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d096,false,BASELINE_ALREADY_CORRECT,HIGH,跟会员系统相关的需求 我整理了一版八点前请大家帮忙评审一下,跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,UNCHANGED,UNKNOWN
+d097,true,MODEL3_RESCUABLE,MEDIUM,是付去中官村软件远走私环 我干 9点半的会要是堵车 您提前跟我说,师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。,UNCHANGED,LEXICON_COVERAGE
+d098,true,MODEL3_RESCUABLE,MEDIUM,麻烦送我到国贸三庆南门大概多久能到 我失点 十分有隔电话会,麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。,UNCHANGED,LOCAL_RESEGMENTATION
+d099,true,MODEL3_RESCUABLE,MEDIUM,去望京苏和步走机场高速可以吗?那变现在赌不赌?,去望京SOHO，不走机场高速可以吗？那边现在堵不堵？,UNCHANGED,LEXICON_COVERAGE
+d100,true,NO_REPAIRABLE_TARGET,MEDIUM,"医生您好,我这两天头痛想开点,咬病做隔斜常规",医生您好，我这两天头痛，想开点药并做个血常规。,UNCHANGED,UNKNOWN
+d101,true,MODEL3_RESCUABLE,MEDIUM,"刮号出请问,内客还在吗? 还有号码 我微不舒服昨晚开始的",挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。,UNCHANGED,LOCAL_RESEGMENTATION
+d102,true,MODEL3_RESCUABLE,MEDIUM,这个检查报告什么时候能出? 我过敏 需要请假休息吗?,这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d103,false,BASELINE_ALREADY_CORRECT,HIGH,"这件外套能试穿吗?我穿中码,买两件有没有折扣?",这件外套能试穿吗？我穿中码。买两件有没有折扣？,UNCHANGED,UNKNOWN
+d104,true,NO_REPAIRABLE_TARGET,MEDIUM,"请问,这双鞋有40码吗?不合适三天内可以退换吧?",请问这双鞋有四十码吗？不合适三天内可以退换吧？,UNCHANGED,UNKNOWN
+d105,true,MODEL3_RESCUABLE,MEDIUM,我想对比一下这两款 在名单中抬的加格会员日能再减一点吗?,我想对比一下这两款订单中台的价格，会员日能再减一点吗？,UNCHANGED,RETRY_REGION
+d106,true,MODEL3_RESCUABLE,MEDIUM,众默亚 就不要去降边骑行 天气预报说 周日多云记得带水,周末要不要去江边骑行？天气预报说周日多云，记得带水。,UNCHANGED,LEXICON_COVERAGE
+d107,true,MODEL3_RESCUABLE,HIGH,晚上一起吃饭嘛 我知道一家串菜 不错大概期点到,晚上一起吃饭吗？我知道一家川菜不错，大概七点到。,UNCHANGED,LOCAL_RESEGMENTATION
+d108,false,BASELINE_ALREADY_CORRECT,HIGH,"你最近忙不忙,想找你看下手机备份怎么设置?",你最近忙不忙？想找你看下手机备份怎么设置。,UNCHANGED,UNKNOWN
+d109,true,MODEL3_RESCUABLE,HIGH,"今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d110,true,MODEL3_RESCUABLE,MEDIUM,这次发布 我们线对其商线激化窗口后选生成模块需要连掉别漏掉回归,这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,UNCHANGED,LEXICON_COVERAGE
+d111,true,MODEL3_RESCUABLE,LOW,会上提到候选生陈恋禄 要加监控 空上限期画文当我下午更新一版,会上提到候选生成链路要加监控，上线计划文档我下午更新一版。,UNCHANGED,LEXICON_COVERAGE
+d112,true,NO_REPAIRABLE_TARGET,MEDIUM,您好我定但显示已发货 今天没更新能帮我查一下吗?,您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？,UNCHANGED,UNKNOWN
+d113,false,BASELINE_ALREADY_CORRECT,HIGH,想改一下收货地址还来得及吗? 麻烦尽快处理谢谢,想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。,UNCHANGED,UNKNOWN
+d114,true,MODEL3_RESCUABLE,MEDIUM,发票台头开错了能重新开具电子发票吗,发票抬头开错了，能重新开具电子发票吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d115,false,BASELINE_ALREADY_CORRECT,HIGH,请简单介绍一下你上一段项目里负责的核心模块和难点,请简单介绍一下你上一段项目里负责的核心模块和难点。,UNCHANGED,UNKNOWN
+d116,true,MODEL3_RESCUABLE,MEDIUM,"你如何看待夸团队写作? 遇到需求的夸团队,你会如何看待夸团队? 球边更一般怎么处理",你如何看待跨团队协作？遇到需求变更一般怎么处理？,UNCHANGED,LOCAL_RESEGMENTATION
+d117,true,MODEL3_RESCUABLE,MEDIUM,期望星字这块我们可以再沟通你最快什么时候能入职,期望薪资这块我们可以再沟通，你最快什么时候能入职？,UNCHANGED,LOCAL_RESEGMENTATION
+d118,true,MODEL3_RESCUABLE,MEDIUM,老是知道提的解题步 周能不能 我没听懂第二点,老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。,UNCHANGED,LOCAL_RESEGMENTATION
+d119,true,MODEL3_RESCUABLE,MEDIUM,作业时下周一下午叫码 可以电子板提叫码,作业是下周一下午交吗？可以电子版提交吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d120,true,MODEL3_RESCUABLE,MEDIUM,请问这门客期末是开卷还是闭卷? 终点汇化码,请问这门课期末是开卷还是闭卷？重点会划吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d121,true,MODEL3_RESCUABLE,MEDIUM,我预定的是搭床房能安排安静一点的楼层吗,我预订的是大床房，能安排安静一点的楼层吗？,UNCHANGED,LEXICON_COVERAGE
+d122,false,BASELINE_ALREADY_CORRECT,HIGH,早餐几点开始?退房可以延迟到下午两点吗?,早餐几点开始？退房可以延迟到下午两点吗？,UNCHANGED,UNKNOWN
+d123,true,MODEL3_RESCUABLE,HIGH,房间空调不太知冷能派人上来看一下吗?,房间空调不太制冷，能派人上来看一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d124,false,BASELINE_ALREADY_CORRECT,HIGH,"我想,开通短信提醒需要带什么证件",我想开通短信提醒，需要带什么证件？,UNCHANGED,UNKNOWN
+d125,false,BASELINE_ALREADY_CORRECT,HIGH,这笔转账显示处理中大概多久能到账,这笔转账显示处理中，大概多久能到账？,UNCHANGED,UNKNOWN
+d126,true,MODEL3_RESCUABLE,LOW,请问理财产品的风险等急在哪里查看,请问理财产品的风险等级在哪里查看？,UNCHANGED,MODEL3_TRIGGER
+d127,true,MODEL3_RESCUABLE,MEDIUM,两位靠窗有位置嘛 不要像蔡薇拉就行,两位，靠窗有位置吗？不要香菜，微辣就行。,UNCHANGED,LOCAL_RESEGMENTATION
+d128,false,BASELINE_ALREADY_CORRECT,HIGH,这道菜大概要等多久 我们先点一份凉菜和一壶茶,这道菜大概要等多久？我们先点一份凉菜和一壶茶。,UNCHANGED,UNKNOWN
+d129,true,MODEL3_RESCUABLE,MEDIUM,可以打爆马 顺便结一下账能扫马支付吗?,可以打包吗？顺便结一下账，能扫码支付吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d130,true,NO_REPAIRABLE_TARGET,MEDIUM,私教课还剩几次 能帮我约明天晚上7点吗?,私教课还剩几次？能帮我约明天晚上七点吗？,UNCHANGED,UNKNOWN
+d131,true,MODEL3_RESCUABLE,MEDIUM,"更意识规则要是找不到了前台,能帮忙看一下吗?",更衣室柜子钥匙找不到了，前台能帮忙开一下吗？,UNCHANGED,LEXICON_COVERAGE
+d132,true,MODEL3_RESCUABLE,MEDIUM,游泳自卡本月月底到期续飞游优惠吗?,游泳次卡本月月底到期，续费有优惠吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d133,true,MODEL3_RESCUABLE,LOW,我们下午讨论后选生成方安现吧 后选生成方安现吧 完成的借口文当补齐,我们下午讨论后选声城方案，先把候选生成的接口文档补齐。,UNCHANGED,LEXICON_COVERAGE
+d134,true,MODEL3_RESCUABLE,HIGH,这周的上限计划已经确认上限计划评审安排在周四上午,这周的上线计花已经确认，上线计划评审安排在周四上午。,UNCHANGED,LOCAL_RESEGMENTATION
+d135,true,MODEL3_RESCUABLE,LOW,"关于后,选生成 和上限计划请按上限计划执行有问题 群里说",关于后选生城和上线计化，请按上线计划执行，有问题群里说。,UNCHANGED,LOCAL_RESEGMENTATION
+d136,true,MODEL3_RESCUABLE,MEDIUM,"你好,我想点一杯热巧克力中备班糖 今天有趣奇吗?",你好，我想点一杯热巧克力，中杯，半糖。顺便问一下今天有曲奇吗？,UNCHANGED,RETRY_REGION
+d137,true,MODEL3_RESCUABLE,HIGH,麻烦帮我做一杯热拿铁带走大背就行谢谢,麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。,UNCHANGED,LEXICON_COVERAGE
+d138,true,MODEL3_RESCUABLE,HIGH,"请问,这款美式可以少病吗?我赶时间小背。",请问这款美式可以少冰吗？我赶时间，小杯。,UNCHANGED,LOCAL_RESEGMENTATION
+d139,true,MODEL3_RESCUABLE,MEDIUM,理工科互反规范易引擎接口包错 我们能不能 能加缓存下午3点前把结论发群里,李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,UNCHANGED,LEXICON_COVERAGE
+d140,true,MODEL3_RESCUABLE,MEDIUM,"今天,德站会先过一下顶蛋,中台,进都内存,占用高着快需要先留保护大家看一下风险",今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d141,true,NO_REPAIRABLE_TARGET,MEDIUM,"更会员 相关的需求,我整理了一版八点前请大家帮忙评审一下",跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,UNCHANGED,UNKNOWN
+d142,true,MODEL3_RESCUABLE,LOW,市府区浦洞张江走三环 我敢 九点半的回药师赌车您提前跟我说,师傅，去浦东张江，走三环。我赶九点半的会，要是堵车您提前跟我说。,UNCHANGED,LEXICON_COVERAGE
+d143,true,MODEL3_RESCUABLE,MEDIUM,麻烦送我到深圳南善科技园南门大概多久能到? 我是点心 十分有隔电话会,麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。,UNCHANGED,LEXICON_COVERAGE
+d144,true,MODEL3_RESCUABLE,MEDIUM,去杭州系 系不走沿岸路高架可以吗?那边现在赌不赌?,去杭州西溪，不走延安路高架可以吗？那边现在堵不堵？,UNCHANGED,RETRY_REGION
+d145,true,MODEL3_RESCUABLE,LOW,医生您好我这两天嗓子疼想开店要并做隔斜常规,医生您好，我这两天嗓子疼，想开点药并做个血常规。,UNCHANGED,LOCAL_RESEGMENTATION
+d146,true,MODEL3_RESCUABLE,HIGH,挂号出请问 内刻还有号码 我低哨昨晚开始的,挂号处请问内科还有号吗？我低烧，昨晚开始的。,UNCHANGED,LOCAL_RESEGMENTATION
+d147,false,BASELINE_ALREADY_CORRECT,HIGH,这个检查报告什么时候能出 我咳嗽需要请假休息吗,这个检查报告什么时候能出？我咳嗽，需要请假休息吗？,UNCHANGED,UNKNOWN
+d148,false,BASELINE_ALREADY_CORRECT,HIGH,"这件外套能试穿吗? 我穿中码,买两件有没有折扣?",这件外套能试穿吗？我穿中码。买两件有没有折扣？,UNCHANGED,UNKNOWN
+d149,true,MODEL3_RESCUABLE,MEDIUM,"请问,这双鞋 不合是三天内可以退换吧",请问这双鞋有四十码吗？不合适三天内可以退换吧？,UNCHANGED,MODEL3_TRIGGER
+d150,true,MODEL3_RESCUABLE,MEDIUM,我想对比一下这两款电脑 在订单中抬的价格会员日能再减一点吗?,我想对比一下这两款订单中台的价格，会员日能再减一点吗？,UNCHANGED,LEXICON_COVERAGE
+d151,false,BASELINE_ALREADY_CORRECT,HIGH,周末 要不要去江边骑行 天气预报说 周日多云记得带水,周末要不要去江边骑行？天气预报说周日多云，记得带水。,UNCHANGED,UNKNOWN
+d152,true,MODEL3_RESCUABLE,HIGH,"晚上一起吃饭吧 一家川菜,不错大概气点到",晚上一起吃饭吗？我知道一家川菜不错，大概七点到。,UNCHANGED,MODEL3_TRIGGER
+d153,true,MODEL3_RESCUABLE,HIGH,"你最近忙不忙,想找你看下手机备分怎么设置",你最近忙不忙？想找你看下手机备份怎么设置。,UNCHANGED,MODEL3_TRIGGER
+d154,true,MODEL3_RESCUABLE,HIGH,"今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。,UNCHANGED,LEXICON_COVERAGE
+d155,true,MODEL3_RESCUABLE,MEDIUM,这次发布我们现对其商量 线机画窗口后选生成模块需要连掉别漏掉回归,这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,UNCHANGED,LOCAL_RESEGMENTATION
+d156,true,MODEL3_RESCUABLE,MEDIUM,会上提到候选生成恋路 要加监控 控商县级画文档我下午更新一版,会上提到候选生成链路要加监控，上线计划文档我下午更新一版。,UNCHANGED,LOCAL_RESEGMENTATION
+d157,true,MODEL3_RESCUABLE,MEDIUM,"您好我定,但显示 但物流三天没更新能帮我查一下吗?",您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d158,false,BASELINE_ALREADY_CORRECT,HIGH,想改一下收货地址还来得及吗? 麻烦尽快处理谢谢,想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。,UNCHANGED,UNKNOWN
+d159,false,BASELINE_ALREADY_CORRECT,HIGH,发票抬头开错了能重新开具电子发票吗?,发票抬头开错了，能重新开具电子发票吗？,UNCHANGED,UNKNOWN
+d160,true,NO_REPAIRABLE_TARGET,MEDIUM,请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点,请简单介绍一下你上一段项目里负责的核心模块和难点。,UNCHANGED,UNKNOWN
+d161,true,MODEL3_RESCUABLE,MEDIUM,"你如何看待夸团队协作,遇到续成 球边更一般怎么处理",你如何看待跨团队协作？遇到需求变更一般怎么处理？,UNCHANGED,LOCAL_RESEGMENTATION
+d162,true,NO_REPAIRABLE_TARGET,MEDIUM,"期望性,自这块我们可以再沟通你最快什么时候能入职",期望薪资这块我们可以再沟通，你最快什么时候能入职？,UNCHANGED,UNKNOWN
+d163,true,MODEL3_RESCUABLE,LOW,"老是知道提的解题不,中能不能再讲一遍? 我没听懂 感谢观众第二点",老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。,UNCHANGED,LOCAL_RESEGMENTATION
+d164,true,MODEL3_RESCUABLE,MEDIUM,"作业时下周以下午叫码,可以电子版提叫码",作业是下周一下午交吗？可以电子版提交吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d165,true,MODEL3_RESCUABLE,HIGH,请问这门客期末是开卷还是闭卷? 终点会话吗?,请问这门课期末是开卷还是闭卷？重点会划吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d166,true,MODEL3_RESCUABLE,HIGH,我预定的是搭床房能安排安静一点的楼层吗?,我预订的是大床房，能安排安静一点的楼层吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d167,true,NO_REPAIRABLE_TARGET,MEDIUM,早餐几点开始?退房可以延迟到下午2点吗?,早餐几点开始？退房可以延迟到下午两点吗？,UNCHANGED,UNKNOWN
+d168,true,MODEL3_RESCUABLE,HIGH,房间空调不太知冷能派人上来看一下吗?,房间空调不太制冷，能派人上来看一下吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d169,false,BASELINE_ALREADY_CORRECT,HIGH,"我想,开通短信提醒需要带什么证件?",我想开通短信提醒，需要带什么证件？,UNCHANGED,UNKNOWN
+d170,false,BASELINE_ALREADY_CORRECT,HIGH,这笔转账显示处理中大概多久能到账,这笔转账显示处理中，大概多久能到账？,UNCHANGED,UNKNOWN
+d171,true,MODEL3_RESCUABLE,HIGH,请问理财产品的风险等急在哪里查看,请问理财产品的风险等级在哪里查看？,UNCHANGED,MODEL3_TRIGGER
+d172,true,MODEL3_RESCUABLE,MEDIUM,两位靠窗有位置嘛 不要像蔡薇娜就行,两位，靠窗有位置吗？不要香菜，微辣就行。,UNCHANGED,LOCAL_RESEGMENTATION
+d173,false,BASELINE_ALREADY_CORRECT,HIGH,这道菜大概要等多久 我们先点一份凉菜和一壶茶,这道菜大概要等多久？我们先点一份凉菜和一壶茶。,UNCHANGED,UNKNOWN
+d174,true,MODEL3_RESCUABLE,MEDIUM,可以打爆麻 顺便解一下张能扫马之腹吗,可以打包吗？顺便结一下账，能扫码支付吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d175,true,MODEL3_RESCUABLE,MEDIUM,"自教课还剩几次,能帮我约明天晚上7点吗?",私教课还剩几次？能帮我约明天晚上七点吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d176,true,MODEL3_RESCUABLE,MEDIUM,更意识规则要是找不到了前台 能帮忙开一下吗,更衣室柜子钥匙找不到了，前台能帮忙开一下吗？,UNCHANGED,LEXICON_COVERAGE
+d177,true,NO_REPAIRABLE_TARGET,MEDIUM,游泳次卡本月月底到期是非有优惠吗?,游泳次卡本月月底到期，续费有优惠吗？,UNCHANGED,UNKNOWN
+d178,true,MODEL3_RESCUABLE,LOW,"我们下午讨论后 选生成方安线吧,后选生成的接口文当补齐。",我们下午讨论后选声城方案，先把候选生成的接口文档补齐。,UNCHANGED,LOCAL_RESEGMENTATION
+d179,true,MODEL3_RESCUABLE,LOW,"这周的上限计划意境,确认上限计划评审安排在周四上午",这周的上线计花已经确认，上线计划评审安排在周四上午。,UNCHANGED,LEXICON_COVERAGE
+d180,true,NO_REPAIRABLE_TARGET,MEDIUM,"关于后,选生成功 请按上线计划执行有问题群里说",关于后选生城和上线计化，请按上线计划执行，有问题群里说。,UNCHANGED,UNKNOWN
+d181,true,MODEL3_RESCUABLE,MEDIUM,"你好,我想点一杯冰美式中贝少糖 顺便温习一下 今天有蓝莓马芬吗?",你好，我想点一杯冰美式，中杯，少糖。顺便问一下今天有蓝莓马芬吗？,UNCHANGED,LEXICON_COVERAGE
+d182,true,MODEL3_RESCUABLE,HIGH,"麻烦,帮我做一杯卡布其诺带走大背就行谢谢",麻烦帮我做一杯卡布奇诺带走，大杯就行，谢谢。,UNCHANGED,LEXICON_COVERAGE
+d183,true,MODEL3_RESCUABLE,HIGH,"请问,这款红茶可以少病吗?我敢时间小备",请问这款红茶可以少冰吗？我赶时间，小杯。,UNCHANGED,MODEL3_TRIGGER
+d184,true,MODEL3_RESCUABLE,MEDIUM,小乘客户反馈翻译引擎接口 包错我们能不能加换存下物 三点钱 在我们百节论发群里,小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,UNCHANGED,LOCAL_RESEGMENTATION
+d185,true,MODEL3_RESCUABLE,LOW,"今天,德湛会献过一下订单,中台。 京都内存占用高着快需要先留保护大家看一下风险",今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。,UNCHANGED,LOCAL_RESEGMENTATION
+d186,true,MODEL3_RESCUABLE,MEDIUM,跟会员系统相关的需求 我整理了一板8点钱请大家帮忙评审一下,跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,UNCHANGED,LOCAL_RESEGMENTATION
+d187,true,MODEL3_RESCUABLE,LOW,市副局仲观村软件远走机场告诉 我干 9点半的回药师堵车 您提前跟我说,师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。,UNCHANGED,LOCAL_RESEGMENTATION
+d188,true,MODEL3_RESCUABLE,HIGH,麻烦送我到国贸三清 南门大概多久能到? 我十点 点十分有个电话会,麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。,UNCHANGED,LEXICON_COVERAGE
+d189,true,MODEL3_RESCUABLE,MEDIUM,去往金苏赫布走私环可以吗?那扁现在赌不赌?,去望京SOHO，不走四环可以吗？那边现在堵不堵？,UNCHANGED,LOCAL_RESEGMENTATION
+d190,true,MODEL3_RESCUABLE,LOW,"医生您好,我这两天头通想开店,要病做个些常规",医生您好，我这两天头痛，想开点药并做个血常规。,UNCHANGED,LOCAL_RESEGMENTATION
+d191,true,MODEL3_RESCUABLE,HIGH,刮号出请问 内刻还有号码 我微不舒服昨晚开始的,挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。,UNCHANGED,LOCAL_RESEGMENTATION
+d192,true,MODEL3_RESCUABLE,LOW,这个检查报告什么时候能出 我过敏发炎 阿洋需要请假休息吗?,这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？,UNCHANGED,LOCAL_RESEGMENTATION
+d193,true,MODEL3_RESCUABLE,HIGH,"这件外套能试穿吗?我串中码,买两件有没有折扣?",这件外套能试穿吗？我穿中码。买两件有没有折扣？,UNCHANGED,MODEL3_TRIGGER
+d194,true,MODEL3_RESCUABLE,MEDIUM,"请问,这双鞋有40码吗?不合适三天内可以推换吧?",请问这双鞋有四十码吗？不合适三天内可以退换吧？,UNCHANGED,MODEL3_TRIGGER
+d195,true,MODEL3_RESCUABLE,MEDIUM,"我想对比一下,这两款 在这一定当中,台的加格会员日能再减一点吗?",我想对比一下这两款订单中台的价格，会员日能再减一点吗？,UNCHANGED,LEXICON_COVERAGE
+d196,true,NO_REPAIRABLE_TARGET,MEDIUM,周末要不要去江边骑行 天气预报 周日多云记得带水,周末要不要去江边骑行？天气预报说周日多云，记得带水。,UNCHANGED,UNKNOWN
+d197,true,MODEL3_RESCUABLE,MEDIUM,晚上一起吃饭嘛 我知道一家川菜 不错大概 17点到,晚上一起吃饭吗？我知道一家川菜不错，大概七点到。,UNCHANGED,LOCAL_RESEGMENTATION
+d198,false,BASELINE_ALREADY_CORRECT,HIGH,"你最近忙不忙,想找你看下手机备份怎么设置",你最近忙不忙？想找你看下手机备份怎么设置。,UNCHANGED,UNKNOWN
+d199,true,MODEL3_RESCUABLE,HIGH,"今天,我们团队要讨论后选生成相关的后选生成、流程和上线计划安排请研发一起评估风险",今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。,UNCHANGED,LEXICON_COVERAGE
+d200,true,MODEL3_RESCUABLE,MEDIUM,"这次发布我们线,对其商线计划窗口后选生成模快需要连掉别漏掉回归",这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,UNCHANGED,LOCAL_RESEGMENTATION

@@ -62,6 +62,54 @@ export function startTestServer(managers: ServiceManagers): void {
       path.replace(/\/$/, '').startsWith('/session-migration');
     const isRunAudio =
       req.method === 'POST' && (path === '/run-pipeline-with-audio' || path === '/run-pipeline-with-audio/');
+    const isSessionBootstrap =
+      req.method === 'POST' &&
+      (path === '/session-bootstrap' || path === '/session-bootstrap/');
+    if (isSessionBootstrap) {
+      let body = '';
+      req.on('data', (chunk) => {
+        body += chunk;
+      });
+      req.on('end', () => {
+        try {
+          if (!managers.nodeAgent) {
+            res.writeHead(503, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'NodeAgent not available' }));
+            return;
+          }
+          const parsed = JSON.parse(body || '{}');
+          const session_id =
+            typeof parsed.session_id === 'string' ? parsed.session_id.trim() : '';
+          if (!session_id) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'session_id required' }));
+            return;
+          }
+          managers.nodeAgent.applySessionBootstrap({
+            type: 'session_bootstrap',
+            session_id,
+            user_id: parsed.user_id ?? null,
+            profile_version: parsed.profile_version ?? parsed.user_profile?.profile_version ?? null,
+            user_profile: parsed.user_profile ?? null,
+            trace_id: parsed.trace_id ?? null,
+          });
+          const bound = managers.nodeAgent.getSessionUserProfile(session_id);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(
+            JSON.stringify({
+              ok: true,
+              session_id,
+              profile_version: bound?.profileVersion ?? null,
+              profile_present: !!bound?.profile,
+            })
+          );
+        } catch (e) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: String(e) }));
+        }
+      });
+      return;
+    }
     if (isSessionMigration) {
       let body = '';
       req.on('data', (chunk) => { body += chunk; });
@@ -128,11 +176,49 @@ export function startTestServer(managers: ServiceManagers): void {
           const utteranceIndex =
             typeof parsed.utterance_index === 'number' ? parsed.utterance_index : undefined;
           const isManualCut = parsed.is_manual_cut !== false;
-          if (!asrText.trim()) {
+          const pilot200Replay = parsed.pilot200_replay === true;
+          // Exact RAW replay may be empty (authoritative Block B empty merge).
+          if (!pilot200Replay && !asrText.trim()) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Missing asrText' }));
             return;
           }
+          // Frozen post-ASR evidence (production JobResult fields only — no invented Tone).
+          const asrSegments = Array.isArray(parsed.segments) ? parsed.segments : undefined;
+          const utteranceTone =
+            parsed.utterance_tone && typeof parsed.utterance_tone === 'object'
+              ? parsed.utterance_tone
+              : parsed.extra?.utterance_tone && typeof parsed.extra.utterance_tone === 'object'
+                ? parsed.extra.utterance_tone
+                : null;
+          const acousticToneSlices = Array.isArray(utteranceTone?.acousticToneSlices)
+            ? utteranceTone.acousticToneSlices
+            : Array.isArray(parsed.acousticToneSlices)
+              ? parsed.acousticToneSlices
+              : undefined;
+          // Replay-only: multi-batch alignment state restored from Frozen Evidence.
+          const segmentTimeOffsetsSec = Array.isArray(parsed.segmentTimeOffsetsSec)
+            ? parsed.segmentTimeOffsetsSec
+            : undefined;
+          const asrSegmentNodeBatchIndices = Array.isArray(parsed.asrSegmentNodeBatchIndices)
+            ? parsed.asrSegmentNodeBatchIndices
+            : undefined;
+          const segmentCharOffsets = Array.isArray(parsed.segmentCharOffsets)
+            ? parsed.segmentCharOffsets
+            : undefined;
+          const profileBinding =
+            sessionId && managers.nodeAgent
+              ? managers.nodeAgent.getSessionUserProfile(sessionId)
+              : null;
+          const profileRuntime = {
+            profile_present: !!profileBinding?.profile,
+            profile_version: profileBinding?.profileVersion ?? null,
+            phonetic_bias_keys: Object.keys(profileBinding?.profile?.phonetic_bias || {}).filter(
+              (k) => Number((profileBinding?.profile?.phonetic_bias || {})[k]) > 0
+            ),
+          };
+          const { getAsrStepInvocationCount } = await import('./pipeline/steps/asr-step');
+          const asrCountBefore = getAsrStepInvocationCount();
           const startMs = Date.now();
           const result = await managers.inferenceService.runPipelineWithMockAsr(asrText, srcLang, 'en', {
             useLexicon: true,
@@ -145,13 +231,46 @@ export function startTestServer(managers: ServiceManagers): void {
             enableKenLMGate,
             kenlmGateMode,
             kenlmVetoThreshold,
+            userProfile: profileBinding?.profile ?? null,
+            profileVersion: profileBinding?.profileVersion ?? null,
+            asrSegments,
+            acousticToneSlices,
+            segmentTimeOffsetsSec,
+            asrSegmentNodeBatchIndices,
+            segmentCharOffsets,
           });
+          const asrCountAfter = getAsrStepInvocationCount();
+          if (sessionId && managers.nodeAgent && sessionId.startsWith('pilot200-replay::')) {
+            managers.nodeAgent.removeSession(sessionId);
+          }
+          if (sessionId && managers.nodeAgent && sessionId.startsWith('pilot200-tone-replay::')) {
+            managers.nodeAgent.removeSession(sessionId);
+          }
+          // TEST_ONLY Phase A controlled-parity sessions — isolate request state between arms.
+          if (sessionId && managers.nodeAgent && sessionId.startsWith('capture-v2-phase-a::')) {
+            managers.nodeAgent.removeSession(sessionId);
+          }
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(
             JSON.stringify({
               text_asr: result.text_asr,
               text_translated: result.text_translated,
-              extra: { ...result.extra, pipeline_ms: Date.now() - startMs },
+              segments: result.segments,
+              extra: {
+                ...result.extra,
+                pipeline_ms: Date.now() - startMs,
+                session_id: sessionId,
+                profile_runtime: profileRuntime,
+                asr_step_skipped: true,
+                asr_step_invocation_delta: asrCountAfter - asrCountBefore,
+                asr_step_invocation_total: asrCountAfter,
+                tone_inference_skipped: true,
+                frozen_post_asr_evidence_injected: Boolean(asrSegments || acousticToneSlices),
+                frozen_segment_count: Array.isArray(asrSegments) ? asrSegments.length : 0,
+                frozen_tone_slice_count: Array.isArray(acousticToneSlices)
+                  ? acousticToneSlices.length
+                  : 0,
+              },
             })
           );
         } catch (err) {
@@ -232,6 +351,14 @@ export function startTestServer(managers: ServiceManagers): void {
           },
           'Test server: runPipelineWithAudio start'
         );
+        const profileBinding = managers.nodeAgent?.getSessionUserProfile(sessionId);
+        const profileRuntime = {
+          profile_present: !!profileBinding?.profile,
+          profile_version: profileBinding?.profileVersion ?? null,
+          phonetic_bias_keys: Object.keys(profileBinding?.profile?.phonetic_bias || {}).filter(
+            (k) => Number((profileBinding?.profile?.phonetic_bias || {})[k]) > 0
+          ),
+        };
         const result = await managers.inferenceService.runPipelineWithAudio(wavPath, {
           srcLang,
           tgtLang,
@@ -257,7 +384,13 @@ export function startTestServer(managers: ServiceManagers): void {
               ? domainPriors
               : []
             : undefined,
+          userProfile: profileBinding?.profile ?? null,
+          profileVersion: profileBinding?.profileVersion ?? null,
         });
+        // Isolated harness sessions: drop binding after run to prevent residue across executions
+        if (managers.nodeAgent && sessionId.startsWith('pilot200::')) {
+          managers.nodeAgent.removeSession(sessionId);
+        }
         const pipelineMs = Date.now() - pipelineStartMs;
         clearTimeout(timeoutId);
         if (sent) return;
@@ -269,7 +402,12 @@ export function startTestServer(managers: ServiceManagers): void {
             tts_audio_length: result.tts_audio?.length ?? 0,
             tts_format: result.tts_format,
             segments: result.segments,
-            extra: { ...result.extra, pipeline_ms: pipelineMs, session_id: sessionId },
+            extra: {
+              ...result.extra,
+              pipeline_ms: pipelineMs,
+              session_id: sessionId,
+              profile_runtime: profileRuntime,
+            },
           })
         );
         logger.info(
@@ -306,7 +444,7 @@ export function startTestServer(managers: ServiceManagers): void {
   server.listen(port, '127.0.0.1', () => {
     logger.info({ port }, 'Test server listening');
     console.log(
-      `\n✅ Test server 已启动: http://127.0.0.1:${port}\n   POST /run-pipeline-with-audio\n   POST /run-lexicon-mock (text repair, no ASR)\n   POST /lexicon/apply-patch (Lexicon V3.1 patch)\n`
+      `\n✅ Test server 已启动: http://127.0.0.1:${port}\n   POST /run-pipeline-with-audio\n   POST /session-bootstrap\n   POST /run-lexicon-mock (text repair, no ASR)\n   POST /lexicon/apply-patch (Lexicon V3.1 patch)\n`
     );
   });
   testServerInstance = server;

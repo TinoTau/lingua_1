@@ -1,0 +1,98 @@
+{
+  "phase": "LINGUA_MODEL2_GATE_E_LEXICON_RECALL_FAILURE_OWNERSHIP_AUDIT",
+  "population": "CORRECT_PROFILE Gate-D PASS",
+  "populationSize": 74,
+  "gateEPassInPopulation": 3,
+  "gateEFailInPopulation": 71,
+  "failClassMixInFunnelDrop": {
+    "E5_blocks_after_pinyin_reachable": 35,
+    "E7_returned_but_chosen_window_miss": 4,
+    "upstream_unreachable_E2_E3_E4": 32
+  },
+  "stages": [
+    {
+      "stage": "01_eligible_CORRECT_gateD_pass",
+      "applicable": 74,
+      "pass": 74,
+      "fail": 0,
+      "conversionRate": 1
+    },
+    {
+      "stage": "02_model2_action",
+      "applicable": 74,
+      "pass": 74,
+      "fail": 0,
+      "conversionRate": 1
+    },
+    {
+      "stage": "03_relation_transformed",
+      "applicable": 74,
+      "pass": 74,
+      "fail": 0,
+      "conversionRate": 1
+    },
+    {
+      "stage": "04_tone_ready",
+      "applicable": 74,
+      "pass": 74,
+      "fail": 0,
+      "conversionRate": 1
+    },
+    {
+      "stage": "05_target_reachable_from_transformed_pinyin",
+      "applicable": 74,
+      "pass": 42,
+      "fail": 32,
+      "conversionRate": 0.567568
+    },
+    {
+      "stage": "06_target_reachable_from_final_tone_query",
+      "applicable": 74,
+      "pass": 7,
+      "fail": 67,
+      "conversionRate": 0.094595
+    },
+    {
+      "stage": "07_target_exists_in_lexicon",
+      "applicable": 74,
+      "pass": 74,
+      "fail": 0,
+      "conversionRate": 1
+    },
+    {
+      "stage": "08_target_legally_matches_query",
+      "applicable": 74,
+      "pass": 7,
+      "fail": 67,
+      "conversionRate": 0.094595
+    },
+    {
+      "stage": "09_target_returned_any_window",
+      "applicable": 74,
+      "pass": 7,
+      "fail": 67,
+      "conversionRate": 0.094595
+    },
+    {
+      "stage": "10_target_returned_chosen_window_gateE",
+      "applicable": 74,
+      "pass": 3,
+      "fail": 71,
+      "conversionRate": 0.040541
+    },
+    {
+      "stage": "11_target_materialized",
+      "applicable": 74,
+      "pass": 3,
+      "fail": 71,
+      "conversionRate": 0.040541
+    },
+    {
+      "stage": "12_lexical_edge",
+      "applicable": 74,
+      "pass": 3,
+      "fail": 71,
+      "conversionRate": 0.040541
+    }
+  ]
+}

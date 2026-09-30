@@ -1,0 +1,108 @@
+{
+  "phase": "MODEL3_V2_LOCAL_RESEGMENTATION_TRACE_COMPLETENESS_AUDIT",
+  "timestamp": "2026-09-01T10:56:12.565Z",
+  "verdict": "LOCAL_RESEG_TRACE_AUDIT_PASS_RECALL_PRIMARY",
+  "nextPhase": "MODEL3_V2_RECALL_PRODUCTION_SIGNAL_LOSS_DESIGN_AUDIT",
+  "historicalUnknownPopulation": 65,
+  "resolvedCount": 65,
+  "remainingUnknown": 0,
+  "strictPrimaryOwner": "RECALL_TARGET_MISS",
+  "strictPrimaryOwnerCount": 65,
+  "oldBoundaryCausalCount": 0,
+  "recallCausalCount": 71,
+  "downstreamCausalCount": 13,
+  "historical84RetiredAs": "HISTORICAL_REGIONAL_LATTICE_FAILURE_COHORT=84",
+  "freshAsrReplay": false,
+  "instrumentationAdded": false,
+  "traceFieldsUsed": [
+    "retry_regions.resegmentOk",
+    "retry_regions.oldLocalSpanSurfaces",
+    "retry_regions.newLocalSpanSurfaces",
+    "retry_regions.recallCandidatesReturned",
+    "retry_regions.rawStart/rawEnd",
+    "retry_returned/retry_zero"
+  ],
+  "traceFieldsMissing": [
+    "retry_regions.latticeCode",
+    "retry_regions.latticePathViewCount",
+    "per_span recallSpanTopKV2 pinyin/tone inputs",
+    "per_invocation recall candidate surfaces"
+  ],
+  "unknown65OwnerDistribution": {
+    "RECALL_TARGET_MISS": 65
+  },
+  "latticeFailureInferred": {
+    "resegmentOkFalse": 71,
+    "inferredCodes": "NO_PATH_OR_EMPTY_PATH_VIEWS (latticeCode not in frozen trace; from production resegmentRetryRegionWithLattice contract)",
+    "fallbackUsed": 84
+  },
+  "strict6Reclass": {
+    "remainLocalReseg": 0,
+    "moveRecall": 6
+  },
+  "funnel": [
+    {
+      "stage": "UNKNOWN_NEEDS_TRACE",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P0_target_relevant_retry",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P1_retry_region_sufficient",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P2_repair_capable_geometry",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P4_fallback_exposes_query",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P5_recall_invoked",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P6_recall_returned_candidates",
+      "denom": 65,
+      "pass": 65,
+      "fail": 0,
+      "unknown": 0
+    },
+    {
+      "stage": "P6_target_relevant_return",
+      "denom": 65,
+      "pass": 0,
+      "fail": 65,
+      "unknown": 0
+    }
+  ],
+  "governance": {
+    "productionCodeModified": false,
+    "jobResultChanged": false,
+    "exactLexiconAsRecallProxy": false,
+    "pathLocalDomainVoteIntentional": true,
+    "noRetrySecondDomainVote": true
+  }
+}

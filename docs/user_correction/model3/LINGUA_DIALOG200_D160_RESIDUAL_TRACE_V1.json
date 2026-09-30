@@ -1,0 +1,179 @@
+{
+  "schema": "LINGUA_DIALOG200_D160_RESIDUAL_TRACE_V1",
+  "phase": "DIALOG200_RESIDUAL_DIVERGENCE_ROOT_CAUSE_AUDIT_V1",
+  "mode": "READ_ONLY",
+  "caseId": "d160",
+  "authority": {
+    "evaluation_ssot": "EVALUATION_SSOT_V1",
+    "frozen_evidence": "DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_V1.jsonl",
+    "alignment_repair": "VALIDATED",
+    "replay_equivalence_certified": false,
+    "score_tolerance": 1e-6
+  },
+  "finals": {
+    "capture": "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+    "replay": "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+    "identical": true
+  },
+  "alignment": {
+    "status": "OK",
+    "segmentTimeOffsetsSec": [0, 2.5],
+    "asrSegmentNodeBatchIndices": [0, 0, 1],
+    "segmentCharOffsets": [0, 17]
+  },
+  "pathCount": { "capture": 2, "replay": 2, "E7": "PASS" },
+  "evaluator_observed": {
+    "firstDivergence": "E14_KENLM_RANKING:EXPECTED_NONDETERMINISM",
+    "authoritative": false,
+    "E15_also_FAIL": true,
+    "E15_note": "gate decision inferred from top ranking identity when explicit gate not captured"
+  },
+  "kenlm_input": {
+    "capture": [
+      "请简单介绍一下 你商议视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上议视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你商一段视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点"
+    ],
+    "replay": [
+      "请简单介绍一下 你商议视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上议视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你商一段视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点"
+    ],
+    "E13_status": "PASS",
+    "KENLM_INPUT_SET_IDENTICAL": "YES",
+    "KENLM_INPUT_ORDER_IDENTICAL": "YES",
+    "pre_kenlm_combo_scores_are_assembly_priors_not_kenlm": true
+  },
+  "kenlm_top": {
+    "capture": [
+      "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你商议视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上议视频的时候 顺便向木李负责的核心模块和难点"
+    ],
+    "replay_live": [
+      "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+      "请简单介绍一下 你上议视频的时候 顺便向木李负责的核心模块和难点"
+    ],
+    "swaps": [
+      {
+        "rank": 2,
+        "capture": "请简单介绍一下 你商议视频的时候 顺便向木李负责的核心模块和难点",
+        "replay": "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点"
+      }
+    ],
+    "top1_same": true
+  },
+  "live_score_table": {
+    "source": "fw_detector.sentenceRerank.topCandidates (live frozen replay)",
+    "baselineRawScore": -60.280518,
+    "allCombinationDeltas": [-2.8175620000000023, -2.7776619999999994, -3.0276720000000026, 0],
+    "topCandidates": [
+      {
+        "rank": 1,
+        "candidateId": "raw",
+        "text": "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+        "kenlmScore": -60.280518,
+        "deltaVsRaw": 0,
+        "isRaw": true
+      },
+      {
+        "rank": 2,
+        "candidateId": "candidate:3",
+        "text": "请简单介绍一下 你上一段视频的时候 顺便向木李负责的核心模块和难点",
+        "kenlmScore": -60.280518,
+        "deltaVsRaw": 0,
+        "isRaw": false
+      },
+      {
+        "rank": 3,
+        "candidateId": "candidate:1",
+        "text": "请简单介绍一下 你上议视频的时候 顺便向木李负责的核心模块和难点",
+        "kenlmScore": -63.05818,
+        "deltaVsRaw": -2.7776619999999994,
+        "isRaw": false
+      }
+    ],
+    "exact_tie_raw_vs_candidate3": true,
+    "capture_scores_persisted": false,
+    "KENLM_SCORE_IDENTICAL_capture_vs_replay": "UNKNOWN"
+  },
+  "sort_contract": {
+    "implementation": "rerank-fw-sentences.ts: sort (b.kenlmScore - a.kenlmScore) || (b.deltaVsRaw - a.deltaVsRaw)",
+    "text_tie_break": "NONE",
+    "path_identity_tie_break": "NONE",
+    "stable_sort_preserves_input_order_when_comparator_zero": true,
+    "KENLM_EQUAL_SCORE_ORDER_CONTRACT": "UNDEFINED",
+    "note": "UNDEFINED ordering is not automatically a Production defect; evaluator cannot demand exact ordered identity unless contract requires it"
+  },
+  "gate": {
+    "minDeltaToReplace": 3,
+    "maxDelta_live": 0,
+    "pickedIsRaw_live": true,
+    "E15_EXPLICIT_CAPTURE_EVIDENCE": "NO",
+    "E15_measurable": "NO — NOT_EVALUABLE under EVALUATION_SSOT missing-evidence rule",
+    "evaluator_E15_logic": "when finals equal, E15 status == eqOrdered(kenlm_top) — duplicate of E14"
+  },
+  "semantic_impact": {
+    "D160_DIVERGENCE_SEMANTIC_IMPACT": "ORDER_ONLY",
+    "TOP1_AFFECTING": false,
+    "GATE_AFFECTING": false,
+    "FINAL_AFFECTING": false,
+    "support": "top1 identical; live maxDelta=0 < minDelta=3 keep-raw; E18 PASS"
+  },
+  "required_answers": {
+    "D160-Q1_KenLM_input_sets_identical": "YES",
+    "D160-Q2_KenLM_input_orders_identical": "YES",
+    "D160-Q3_per_candidate_scores_identical_within_1e-6": "UNKNOWN (capture scores not persisted; live-only table available)",
+    "D160-Q4_which_candidates_swap_rank": "rank2: capture 商议 vs replay duplicate 上一段 (raw-tied candidate:3)",
+    "D160-Q5_scores_tied_or_near_tied": "YES on live replay — raw and candidate:3 exact tie (absDelta=0); capture#2 商议 is NOT a live tied peer (delta≈-2.82)",
+    "D160-Q6_production_defines_tie_ordering": "UNDEFINED",
+    "D160-Q7_ranking_deterministic_under_identical_inputs": "PARTIAL — scores from trie should be deterministic; equal-score relative order only stable-sort/insertion-defined, not contractually total-ordered by text",
+    "D160-Q8_top1_differs": "NO",
+    "D160-Q9_explicit_gate_decision_differs": "NOT_EVALUABLE (not captured); live keep-raw consistent with Final",
+    "D160-Q10_explicit_gate_captured": "NO",
+    "D160-Q11_E15_currently_measurable": "NO",
+    "D160-Q12_semantic_impact": "ORDER_ONLY",
+    "D160-Q13_TRUE_PIPELINE_FIRST_DIVERGENCE": "E14 ordered top-list text identity (inputs identical; top1/gate/final preserved). Not a proven KenLM input divergence.",
+    "D160-Q14_production_defect_proven": "NO"
+  },
+  "result_enum": "D160-H",
+  "result_label": "MULTIPLE_INDEPENDENT_ROOT_CAUSES",
+  "components": [
+    {
+      "id": "EVALUATOR_ORDER_SEMANTICS",
+      "enum_ref": "D160-A",
+      "strength": "PROVEN",
+      "detail": "E14 demands ORDERED_IDENTITY on top texts without Frozen Production total-order contract; EXPECTED_NONDETERMINISM unsupported"
+    },
+    {
+      "id": "MISSING_GATE_EVIDENCE",
+      "enum_ref": "D160-F",
+      "strength": "PROVEN",
+      "detail": "E15 inferred from E14 tops; should be NOT_EVALUABLE"
+    },
+    {
+      "id": "KENLM_UNSPECIFIED_TIE_ORDER",
+      "enum_ref": "D160-D",
+      "strength": "PROVEN",
+      "detail": "live exact tie raw↔candidate:3; comparator has no text secondary key"
+    },
+    {
+      "id": "CAPTURE_SCORE_OBSERVABILITY",
+      "strength": "PROVEN_GAP",
+      "detail": "cannot verify why capture rank2 was 商议 without persisted KenLM scores"
+    }
+  ],
+  "failure_class": "2 TEST / EVALUATOR DEFECT",
+  "secondary_tags": [
+    "KENLM_TIE_ORDER",
+    "MISSING_GATE_EVIDENCE",
+    "KENLM_INPUT_ORDER"
+  ],
+  "evidence_strength": "PROVEN (evaluator/gate/tie-contract); PARTIAL (historical score equality)",
+  "production_defect": false,
+  "repair_owner": "EVALUATOR_REPAIR",
+  "hard_stop": "NO_IMPLEMENTATION"
+}

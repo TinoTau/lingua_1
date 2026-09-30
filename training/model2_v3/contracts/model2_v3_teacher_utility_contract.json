@@ -1,0 +1,14 @@
+{
+  "contract_id": "model2_v3_teacher_utility_contract",
+  "utility": {
+    "target_recovery_reward": 10.0,
+    "query_cost": 1.0,
+    "candidate_cost_per_new": 0.15,
+    "false_expansion_cost_per_extra": 0.25,
+    "pair_action_extra_cost": 0.5
+  },
+  "formula_note": "utility = 10*recovered - 1*n_queries - 0.15*n_new_cands - 0.25*max(0,n_new-1 if not recovered else n_new) - 0.5*is_pair",
+  "selection": "teacher_label = actions with utility >= 0.5 * max_utility among recovering actions; if none recover, label = empty/minimal",
+  "exhaustive_baseline_B1": "all applicable single (+ optional pairs) within budget caps",
+  "model_objective": "rank recovering high-utility actions above low-utility; predict sparse budget"
+}

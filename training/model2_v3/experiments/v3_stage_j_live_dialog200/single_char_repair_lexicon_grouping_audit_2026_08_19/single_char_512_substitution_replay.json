@@ -1,0 +1,49 @@
+{
+  "n": 512,
+  "by_dataset": {
+    "OLD2510": {
+      "old_substitution_n": 512,
+      "unique_substitution_remain": 512,
+      "expected_among_remain": 2,
+      "non_expected_remain": 510,
+      "unique_non_expected": 510,
+      "removed_or_ambiguous_or_empty": 0,
+      "became_ambiguous": 0,
+      "became_no_candidate": 0,
+      "still_unique": 512
+    },
+    "STRICT": {
+      "old_substitution_n": 512,
+      "unique_substitution_remain": 272,
+      "expected_among_remain": 0,
+      "non_expected_remain": 272,
+      "unique_non_expected": 272,
+      "removed_or_ambiguous_or_empty": 240,
+      "became_ambiguous": 66,
+      "became_no_candidate": 157,
+      "still_unique": 289
+    },
+    "BALANCED": {
+      "old_substitution_n": 512,
+      "unique_substitution_remain": 273,
+      "expected_among_remain": 0,
+      "non_expected_remain": 273,
+      "unique_non_expected": 273,
+      "removed_or_ambiguous_or_empty": 239,
+      "became_ambiguous": 83,
+      "became_no_candidate": 139,
+      "still_unique": 290
+    },
+    "FULL_CLD": {
+      "old_substitution_n": 512,
+      "unique_substitution_remain": 180,
+      "expected_among_remain": 0,
+      "non_expected_remain": 180,
+      "unique_non_expected": 180,
+      "removed_or_ambiguous_or_empty": 332,
+      "became_ambiguous": 305,
+      "became_no_candidate": 23,
+      "still_unique": 184
+    }
+  }
+}

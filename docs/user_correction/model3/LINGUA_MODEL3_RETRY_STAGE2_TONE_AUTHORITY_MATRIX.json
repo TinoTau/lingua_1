@@ -1,0 +1,90 @@
+{
+  "phase": "LINGUA_MODEL3_RETRY_STAGE2_TONE_CONSTRAINT_OWNERSHIP_AUDIT",
+  "date": "2026-09-14",
+  "HISTORICAL_RETRY_TONE_SSOT_FOUND": "YES",
+  "HISTORICAL_RETRY_TONE_POLICY": "CONFLICTING",
+  "HISTORICAL_SSOT_CONFLICT": "YES",
+  "ARCHITECTURE_CLASSIFICATION": "C_HISTORICAL_RETRY_TONE_POLICY_NOT_SPECIFIED",
+  "TONE_RETRY_AUTHORITY_GAP": "YES",
+  "IMPLEMENTATION_DRIFT": "NO",
+  "ACP_REQUIRED": "YES",
+  "documents": [
+    {
+      "path": "docs/user_correction/model3/model3_retry_contract_v1.md",
+      "authority": "AUTHORITATIVE_SSOT",
+      "role": "RETRY=bounded reseg+re-recall; Tone gates PARTIALLY_SUPPORTED; Stage6 relaxation named but not frozen"
+    },
+    {
+      "path": "docs/user_correction/model3/Lingua_Model3_Retry_Stage2_SSOT_Restoration_Design.md",
+      "authority": "AUTHORITATIVE_SSOT",
+      "role": "Stage2 MUST use existing tone attachment rules; MUST NOT change Recall algorithm"
+    },
+    {
+      "path": "docs/user_correction/model3/Lingua_Model3_Retry_Stage2_SSOT_Restoration_Acceptance.md",
+      "authority": "FROZEN_ACCEPTANCE",
+      "role": "Stage2 window enumeration accepted; no tone exact/relax decision"
+    },
+    {
+      "path": "docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+      "authority": "AUTHORITATIVE_SSOT",
+      "role": "Recall owns re-recall and tone relaxation ownership wording"
+    },
+    {
+      "path": "docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md",
+      "authority": "AUTHORITATIVE_SSOT",
+      "role": "Mandatory Tone exact; Fail Closed; no plain fallback"
+    },
+    {
+      "path": "docs/user_correction/model3/model3_training_label_contract_v1.md",
+      "authority": "AUTHORITATIVE_SSOT",
+      "role": "Label-side allowed acoustic relaxation wording (soft conflict)"
+    },
+    {
+      "path": "docs/user_correction/model3/LINGUA_GATE_E_LEXICON_RECALL_FAILURE_OWNERSHIP_AUDIT.md",
+      "authority": "OBSERVATION_ONLY",
+      "role": "E5 tone-key miss population motivating this audit"
+    }
+  ],
+  "quotes": [
+    {
+      "file": "model3_retry_contract_v1.md",
+      "text": "Tone gates / tone evidence on recall | PARTIALLY_SUPPORTED (existing recall tone path; retry relaxation policy Stage6)"
+    },
+    {
+      "file": "Lingua_Model3_Retry_Stage2_SSOT_Restoration_Design.md",
+      "text": "with correct global raw/syllable offsets, pinyin key, and existing tone attachment rules."
+    },
+    {
+      "file": "Lingua_Model3_Retry_Stage2_SSOT_Restoration_Design.md",
+      "text": "Stage-2 MUST NOT: ... change Domain Vote / Model3 / Recall algorithm"
+    }
+  ],
+  "currentCode": {
+    "CURRENT_STAGE2_ENTRY": "model3-retry-router.ts::routeModel3Retry (+ enumerateStage2SuccessPathQueryLocals)",
+    "CURRENT_STAGE2_RECALL_FUNCTION": "recallSpanTopKV2 via run-model3-path-step.ts recall closure",
+    "CURRENT_STAGE2_TONE_SOURCE": "owner PathFineSpan.toneRebindTrace.acousticTonePattern (first-pass FineSpan rebind)",
+    "CURRENT_STAGE2_TONE_REQUIRED": "YES",
+    "CURRENT_STAGE2_USES_FIRST_PASS_TONE": "YES",
+    "CURRENT_STAGE2_REBINDS_TONE": "NO",
+    "CURRENT_STAGE2_CAN_CALL_RECALL_WITHOUT_TONE": "YES",
+    "CURRENT_STAGE2_RECALL_MODE": "Mandatory tone_exact Fail Closed; fuzzy off; no plain fallback",
+    "STAGE2_RECOVERY_DIMENSIONS": "RESEGMENTATION_PLUS_NEW_WINDOW_GEOMETRY",
+    "STAGE2_CAN_RECOVER_FIRST_PASS_TONE_KEY_MISS": "NO"
+  },
+  "counterfactualSummary": {
+    "E5_COUNTERFACTUAL_CASE_COUNT": 35,
+    "E5_TARGET_RECOVERED_WITHOUT_TONE": 35,
+    "E5_TARGET_RECOVERY_RATE_WITHOUT_TONE": 1.0,
+    "CANDIDATE_COUNT_MULTIPLIER_MEDIAN": 1.0,
+    "CANDIDATE_COUNT_MULTIPLIER_MAX": 2.0,
+    "CONTROL_CASE_COUNT": 12,
+    "CONTROL_CANDIDATE_EXPANSION_MEDIAN": 1.0,
+    "CONTROL_CANDIDATE_EXPANSION_MAX": 3.0,
+    "CONTROL_EXISTING_USEFUL_CANDIDATE_DROP_COUNT": 0
+  },
+  "verdict": {
+    "ONE_NEXT_OWNER": "STAGE2_TONE_RELAXATION_ACP_OWNER",
+    "ONE_NEXT_DELTA": "Prepare one narrow ACP for Model3-triggered bounded local Stage2 Tone-relaxed recall only",
+    "AUDIT_STATUS": "PASS"
+  }
+}

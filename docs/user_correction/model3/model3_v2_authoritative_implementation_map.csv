@@ -1,0 +1,16 @@
+responsibility,authoritative_function,production_caller,acceptance_caller,audit_caller,duplicate_implementation,semantic_divergence,production_output_effect
+Model3 pack,packModel3SpanInferFields,inferPackedDecisions,inferPackedDecisions (fork prepare),none,no,no,yes
+Model3 inference,Model3InferenceHost.inferPath,inferPackedDecisions,inferPackedDecisions (once per path),none,no,no,yes
+Anchor mask,maskAnchorDecisions,completeModel3PathFromUpstream,completeModel3PathFromUpstream x2,no,no,no,yes
+Decision application,maskAnchorDecisions+effectiveDecisions,runModel3PathStep,runModel3PathStepCausalFork (KEEP vs S3),none,no,no,yes
+Retry routing,routeModel3Retry,completeModel3PathFromUpstream,completeModel3PathFromUpstream x2,no,no,no,yes
+Retry region,deriveRetryRegions,routeModel3Retry,routeModel3Retry,no,no,no,yes
+Local resegmentation,resegmentRetryRegionWithLattice,routeModel3Retry callback,routeModel3Retry callback,trace read only (resegmentOk),no,no,yes
+Retry Recall,recallSpanTopKV2,routeModel3Retry callback,routeModel3Retry callback,trace pool scan,no,no,yes
+Candidate eligibility,recall+retry merge rules,routeModel3Retry,routeModel3Retry,materializable-target-v1 eval,no,diagnostic only,no
+Candidate budget,perSpanCap+global KenLM cap,routeModel3Retry+mergeCrossPath,routeModel3Retry+mergeCrossPath,trace,no,no,yes
+Path binding,buildFineSpanCandidatePool,prepare+complete,prepare+complete,trace,no,no,yes
+Assembly,completeDomainAwareAssemblyFromVote+buildSentenceCandidates,completeModel3PathFromUpstream+orchestrator,completeModel3PathFromUpstream x2+orchestrator baseline branch,no,no,yes
+KenLM,runFwSentenceRerankFromPrefilled,fw-detector-v4-path,fw-detector-v4-path (S3+baseline trace),none,no,no,yes
+Snapshot hash,buildAcceptanceHashPayload+hashAcceptanceUpstream,prepareModel3PathUpstream (pathId set),prepareModel3PathUpstream (fork),none,no,no,no
+Lexicon target check,n/a (not production stage),n/a,n/a,LexiconRuntimeV2 exact lookup in audit,yes,yes (audit-only),no

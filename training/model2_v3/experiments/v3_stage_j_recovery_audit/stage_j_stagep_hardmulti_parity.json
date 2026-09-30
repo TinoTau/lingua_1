@@ -1,0 +1,21 @@
+{
+  "freeze_definition": "is_hard_multi && teacher.any_recover (NO variant filter, ALL splits)",
+  "stage_j_definition": "P_ONLY && is_hard_multi && any_recover && variant in HARD_VARIANTS && split in {test,val}",
+  "METRIC_CONTRACT_DRIFT": true,
+  "denominator_mismatch": {
+    "freeze_n": 197,
+    "stage_j_n": 439,
+    "today_freeze_def_n": 699
+  },
+  "B1_query_count": {
+    "stage_p": "sum execute_action.n_queries",
+    "stage_j": "len(actions) for B1 mode",
+    "DRIFT": true
+  },
+  "E2E_formula": {
+    "stage_p": "Q + 0.2C + 0.001*Latency_P50",
+    "stage_j": "Q + 0.2C",
+    "DRIFT": true
+  },
+  "RecallRetained_formula": "SAME: TIR_V3 / TIR_B1 with hit = tid in new_ids"
+}

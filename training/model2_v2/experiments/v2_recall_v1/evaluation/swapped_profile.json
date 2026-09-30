@@ -1,0 +1,44 @@
+{
+  "B1": {
+    "n": 120,
+    "TargetIntroductionRate": 0.0,
+    "ProfileOnlyTargetRecovery": 0.0,
+    "base_present_rate": 0.0,
+    "FalseExpansionRate_NO_CHANGE_slice": null,
+    "mean_candidate_count": 0.5583333333333333,
+    "mean_query_count": 0.225,
+    "mean_latency_ms": 517.21597249901,
+    "by_provenance": {
+      "REAL_ASR": {
+        "n": 120,
+        "TargetIntroductionRate": 0.0,
+        "ProfileOnlyTargetRecovery": 0.0
+      }
+    },
+    "mode": "deterministic",
+    "profile_key": "swapped",
+    "k": 8,
+    "failures_head": []
+  },
+  "B2": {
+    "n": 120,
+    "TargetIntroductionRate": 0.0,
+    "ProfileOnlyTargetRecovery": 0.0,
+    "base_present_rate": 0.0,
+    "FalseExpansionRate_NO_CHANGE_slice": null,
+    "mean_candidate_count": 0.0,
+    "mean_query_count": 0.0,
+    "mean_latency_ms": 507.30935999915044,
+    "by_provenance": {
+      "REAL_ASR": {
+        "n": 120,
+        "TargetIntroductionRate": 0.0,
+        "ProfileOnlyTargetRecovery": 0.0
+      }
+    },
+    "mode": "neural",
+    "profile_key": "swapped",
+    "k": 8,
+    "failures_head": []
+  }
+}

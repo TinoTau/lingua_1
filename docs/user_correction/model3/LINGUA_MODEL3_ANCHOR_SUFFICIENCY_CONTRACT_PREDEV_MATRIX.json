@@ -1,0 +1,2555 @@
+{
+  "phase": "LINGUA_MODEL3_ANCHOR_SUFFICIENCY_CONTRACT_PREDEV_AUDIT",
+  "falseCases": [
+    {
+      "caseId": "p2_u001_020",
+      "group": "FALSE",
+      "rawAsrText": "行程里关于理事员的部分请再确认一遍",
+      "targetSurface": "礼宾员",
+      "residualSpanSurface": "理事",
+      "residualRawStart": 5,
+      "residualRawEnd": 7,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "预订",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e9a284e8aea27c79",
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e585a5e59bad7c72",
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e587bae59bad7c63",
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 8,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 48,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u002_012",
+      "group": "FALSE",
+      "rawAsrText": "我们先确认出注册再决定是否该签 如果改迁请同步通,知思寄予前台",
+      "targetSurface": "出租车",
+      "residualSpanSurface": "注册",
+      "residualRawStart": 6,
+      "residualRawEnd": 8,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "ANCHOR",
+      "candidateContractC": "ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "注册",
+          "provenance": "BASE_FUZZY",
+          "source": "base_term",
+          "domains": [],
+          "termId": "base-rebuild-term-e6b3a8e5868c7c7a",
+          "model2ActionId": null
+        }
+      ],
+      "exactSurfaceFullGeomCount": 1,
+      "profilePronCount": 0,
+      "profileDomainCount": 6,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 92,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u003_017",
+      "group": "FALSE",
+      "rawAsrText": "如果厨房还来得急请,把副市场和主菜一起商并被注清单少盐。",
+      "targetSurface": "护士长",
+      "residualSpanSurface": "市场",
+      "residualRawStart": 12,
+      "residualRawEnd": 14,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "住院",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e4bd8fe999a27c7a",
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "儿科",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e584bfe7a7917c65",
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内科",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e58685e7a7917c6e",
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 8,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 52,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u003_024",
+      "group": "FALSE",
+      "rawAsrText": "我先和对方击听全任无误后,再把结果分开。 如果发给你这样两遍都省事",
+      "targetSurface": "候机厅",
+      "residualSpanSurface": "对方",
+      "residualRawStart": 3,
+      "residualRawEnd": 5,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "病房",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e79785e688bf7c62",
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "药房",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e88dafe688bf7c79",
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "住院",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "termId": "term-e4bd8fe999a27c7a",
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 7,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 89,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u004_005",
+      "group": "FALSE",
+      "rawAsrText": "如果方便的话请你把剪裁器 在说明一遍我好做最终确认",
+      "targetSurface": "检查法",
+      "residualSpanSurface": "把剪",
+      "residualRawStart": 8,
+      "residualRawEnd": 10,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 0,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 94,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u004_009",
+      "group": "FALSE",
+      "rawAsrText": "请把藏头灯的库存数量同步到系统",
+      "targetSurface": "床头灯",
+      "residualSpanSurface": "藏",
+      "residualRawStart": 2,
+      "residualRawEnd": 3,
+      "currentAnchor": true,
+      "currentAnchorSource": "MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "ANCHOR",
+      "candidateContractC": "ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "藏",
+          "provenance": "BASE_FUZZY",
+          "source": "base_term",
+          "domains": [],
+          "termId": "base-single-char-term-e8978f7c63616e67",
+          "model2ActionId": null
+        }
+      ],
+      "exactSurfaceFullGeomCount": 1,
+      "profilePronCount": 1,
+      "profileDomainCount": 0,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 42,
+      "afterModel2TraceItems": 24
+    },
+    {
+      "caseId": "p2_u004_019",
+      "group": "FALSE",
+      "rawAsrText": "请说明德鸾",
+      "targetSurface": "地暖",
+      "residualSpanSurface": "德鸾",
+      "residualRawStart": 3,
+      "residualRawEnd": 5,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "预订",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e9a284e8aea27c79",
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e585a5e59bad7c72",
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "termId": "term-e587bae59bad7c63",
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 8,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 17,
+      "afterModel2TraceItems": 17
+    },
+    {
+      "caseId": "p2_u005_019",
+      "group": "FALSE",
+      "rawAsrText": "或家有归病似",
+      "targetSurface": "贵宾室",
+      "residualSpanSurface": "归病",
+      "residualRawStart": 3,
+      "residualRawEnd": 5,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "接客",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e68ea5e5aea27c6a",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e98081e5aea27c73",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e4b8bee7898c7c6a",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 8,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 12,
+      "afterModel2TraceItems": 12
+    },
+    {
+      "caseId": "p2_u005_034",
+      "group": "FALSE",
+      "rawAsrText": "顾客,想了解锁条的保修与推换政策",
+      "targetSurface": "薯条",
+      "residualSpanSurface": "解锁",
+      "residualRawStart": 5,
+      "residualRawEnd": 7,
+      "currentAnchor": true,
+      "currentAnchorSource": "DOMAIN_AND_MODEL2",
+      "candidateContractA": "NON_ANCHOR",
+      "candidateContractB": "NON_ANCHOR",
+      "candidateContractC": "NON_ANCHOR",
+      "runtimeEvidenceUsed": [
+        {
+          "surface": "接机",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e68ea5e69cba7c6a",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接送",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e68ea5e980817c6a",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "provenance": "PROFILE_DOMAIN",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "termId": "term-e98081e5aea27c73",
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "exactSurfaceFullGeomCount": 0,
+      "profilePronCount": 0,
+      "profileDomainCount": 4,
+      "auditGroundTruthResidualPresent": true,
+      "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT",
+      "reason": "NO_EXACT_SURFACE_RETAINED_DOMAIN",
+      "afterModel2TotalCount": 46,
+      "afterModel2TraceItems": 24
+    }
+  ],
+  "controlCases": [
+    {
+      "caseId": "p2_u002_037",
+      "group": "CONTROL",
+      "rawAsrText": "请同步开慕斯状态",
+      "targetSurface": "开幕式",
+      "referenceText": "请同步开幕式状态。",
+      "runtimeAnchorCount": 4,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 33,
+      "spans": [
+        {
+          "spanSurface": "请同",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "步开",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "中杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e4b8ade69daf7c7a",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "大杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5a4a7e69daf7c64",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "小杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5b08fe69daf7c78",
+              "model2ActionId": "domain_soft:milk_tea"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "慕斯",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 7,
+          "profilePronCount": 1,
+          "boundSampleTop": [
+            {
+              "surface": "墓室",
+              "provenance": "PROFILE_PRONUNCIATION",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-rebuild-term-e5a293e5aea47c6d",
+              "model2ActionId": "single:sh_s"
+            },
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "状态",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u002_010",
+      "group": "CONTROL",
+      "rawAsrText": "顾客想了解工作制的保修与退换政策",
+      "targetSurface": "工作制",
+      "referenceText": "顾客想了解工作制的保修与退换政策。",
+      "runtimeAnchorCount": 8,
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "afterModel2TotalCount": 57,
+      "spans": [
+        {
+          "spanSurface": "顾客",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 5,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "接站",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e7ab997c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送站",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e7ab997c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "想了",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "解工",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 4,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接机",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e69cba7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "接送",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e980817c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "作制",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 7,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "的保",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "修与",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "退换",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "政策",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u005_020",
+      "group": "CONTROL",
+      "rawAsrText": "请把显示屏的库存数量同步到系统",
+      "targetSurface": "显示屏",
+      "referenceText": "请把显示屏的库存数量同步到系统。",
+      "runtimeAnchorCount": 5,
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "afterModel2TotalCount": 42,
+      "spans": [
+        {
+          "spanSurface": "显示",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "屏的",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "数量",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 4,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "同步",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "到系",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u001_018",
+      "group": "CONTROL",
+      "rawAsrText": "我先核对信息牌确认无误后,再把结果发送给他。 如果发给你这样两遍都省事",
+      "targetSurface": "信息牌",
+      "referenceText": "我先核对信息牌，确认无误后再把结果发给你，这样两边都省事。",
+      "runtimeAnchorCount": 12,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 102,
+      "spans": [
+        {
+          "spanSurface": "核对",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "息牌",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "确认",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 6,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "误后",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "再把",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "结果",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "发送",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "给他",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "给你",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "样两",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "遍都",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "省事",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u002_003",
+      "group": "CONTROL",
+      "rawAsrText": "麻烦你帮我核对这份关于自由行的说明",
+      "targetSurface": "自由行",
+      "referenceText": "麻烦你帮我核对这份关于自由行的说明。",
+      "runtimeAnchorCount": 5,
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "afterModel2TotalCount": 47,
+      "spans": [
+        {
+          "spanSurface": "你帮",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "核对",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "份关",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 4,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "接客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e68ea5e5aea27c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "送客",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e98081e5aea27c73",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            },
+            {
+              "surface": "举牌",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_pickup"
+              ],
+              "termId": "term-e4b8bee7898c7c6a",
+              "model2ActionId": "domain_soft:tourism_pickup"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "自由",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "的说",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u004_008",
+      "group": "CONTROL",
+      "rawAsrText": "今天想试试和检查和搭配的套餐",
+      "targetSurface": "检查和",
+      "referenceText": "今天想试试和检查和搭配的套餐。",
+      "runtimeAnchorCount": 5,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 44,
+      "spans": [
+        {
+          "spanSurface": "试和",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "检查",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "和搭",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 5,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "配的",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "套餐",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u001_025",
+      "group": "CONTROL",
+      "rawAsrText": "今天天气不错我们晚点见面吧",
+      "targetSurface": null,
+      "referenceText": "今天天气不错，我们晚点见面吧。",
+      "runtimeAnchorCount": 3,
+      "retainedDomains": [
+        "milk_tea"
+      ],
+      "afterModel2TotalCount": 25,
+      "spans": [
+        {
+          "spanSurface": "气不",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 7,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "会务",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "termId": "term-e4bc9ae58aa17c68",
+              "model2ActionId": "domain_soft:meeting"
+            },
+            {
+              "surface": "会场",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "termId": "term-e4bc9ae59cba7c68",
+              "model2ActionId": "domain_soft:meeting"
+            },
+            {
+              "surface": "会议",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "meeting"
+              ],
+              "termId": "term-e4bc9ae8aeae7c68",
+              "model2ActionId": "domain_soft:meeting"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "晚点",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "中杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e4b8ade69daf7c7a",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "大杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5a4a7e69daf7c64",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "小杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5b08fe69daf7c78",
+              "model2ActionId": "domain_soft:milk_tea"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "见面",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "中杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e4b8ade69daf7c7a",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "大杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5a4a7e69daf7c64",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "小杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5b08fe69daf7c78",
+              "model2ActionId": "domain_soft:milk_tea"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u001_029",
+      "group": "CONTROL",
+      "rawAsrText": "请大家打开 共享 文档 同步精度",
+      "targetSurface": null,
+      "referenceText": "请大家打开共享文档同步进度。",
+      "runtimeAnchorCount": 1,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 12,
+      "spans": [
+        {
+          "spanSurface": "请大",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u003_016",
+      "group": "CONTROL",
+      "rawAsrText": "今天,想试试和翻成大配的套餐",
+      "targetSurface": "换乘",
+      "referenceText": "今天想试试和换乘搭配的套餐。",
+      "runtimeAnchorCount": 5,
+      "retainedDomains": [
+        "medical"
+      ],
+      "afterModel2TotalCount": 43,
+      "spans": [
+        {
+          "spanSurface": "想试",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "护士",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e68aa4e5a3ab7c68",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "诊室",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e8af8ae5aea47c7a",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "医师",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e58cbbe5b8887c79",
+              "model2ActionId": "domain_soft:medical"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "试和",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "住院",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e4bd8fe999a27c7a",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "儿科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e584bfe7a7917c65",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "内科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e58685e7a7917c6e",
+              "model2ActionId": "domain_soft:medical"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "成大",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 5,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "住院",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e4bd8fe999a27c7a",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "儿科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e584bfe7a7917c65",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "内科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e58685e7a7917c6e",
+              "model2ActionId": "domain_soft:medical"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "配的",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "套餐",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u004_001",
+      "group": "CONTROL",
+      "rawAsrText": "我想确认一下升层",
+      "targetSurface": "生成",
+      "referenceText": "我想确认一下生成。",
+      "runtimeAnchorCount": 2,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 21,
+      "spans": [
+        {
+          "spanSurface": "确认",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "升层",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 1,
+          "boundSampleTop": [
+            {
+              "surface": "生成",
+              "provenance": "PROFILE_PRONUNCIATION",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-rebuild-exp-v1_1-alias-shengcheng",
+              "model2ActionId": "single:ch_c"
+            },
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u001_039",
+      "group": "CONTROL",
+      "rawAsrText": "顾客,想了解,刘若川的保修与推换政策",
+      "targetSurface": "牛肉串",
+      "referenceText": "顾客想了解牛肉串的保修与退换政策。",
+      "runtimeAnchorCount": 7,
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "afterModel2TotalCount": 50,
+      "spans": [
+        {
+          "spanSurface": "顾客",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 7,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "古桥",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e58fa4e6a1a57c67",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "古镇",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e58fa4e995877c67",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "古迹",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e58fa4e8bfb97c67",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "了解",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "刘",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 1,
+          "boundSampleTop": [
+            {
+              "surface": "牛",
+              "provenance": "PROFILE_PRONUNCIATION",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-single-char-term-e7899b7c6e6975",
+              "model2ActionId": "single:n_l"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "的保",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 7,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "预订",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e9a284e8aea27c79",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "入园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e585a5e59bad7c72",
+              "model2ActionId": "domain_soft:tourism_route"
+            },
+            {
+              "surface": "出园",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "tourism_route"
+              ],
+              "termId": "term-e587bae59bad7c63",
+              "model2ActionId": "domain_soft:tourism_route"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "修与",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "推换",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "政策",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    },
+    {
+      "caseId": "p2_u003_022",
+      "group": "CONTROL",
+      "rawAsrText": "麻烦你帮我核对这份关于集佛趣的说明",
+      "targetSurface": "集合区",
+      "referenceText": "麻烦你帮我核对这份关于集合区的说明。",
+      "runtimeAnchorCount": 5,
+      "retainedDomains": [
+        "medical"
+      ],
+      "afterModel2TotalCount": 40,
+      "spans": [
+        {
+          "spanSurface": "烦",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 1,
+          "boundSampleTop": [
+            {
+              "surface": "反",
+              "provenance": "BASE_FUZZY",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-single-char-term-e58f8d7c66616e",
+              "model2ActionId": null
+            },
+            {
+              "surface": "喊",
+              "provenance": "PROFILE_PRONUNCIATION",
+              "source": "base_term",
+              "domains": [],
+              "termId": "base-single-char-term-e5968a7c68616e",
+              "model2ActionId": "single:h_f"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "你帮",
+          "currentAnchorSource": "MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "中杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e4b8ade69daf7c7a",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "大杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5a4a7e69daf7c64",
+              "model2ActionId": "domain_soft:milk_tea"
+            },
+            {
+              "surface": "小杯",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "milk_tea"
+              ],
+              "termId": "term-e5b08fe69daf7c78",
+              "model2ActionId": "domain_soft:milk_tea"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "核对",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 8,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "住院",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e4bd8fe999a27c7a",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "儿科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e584bfe7a7917c65",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "内科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e58685e7a7917c6e",
+              "model2ActionId": "domain_soft:medical"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "份关",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 3,
+          "profilePronCount": 0,
+          "boundSampleTop": [
+            {
+              "surface": "住院",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e4bd8fe999a27c7a",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "儿科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e584bfe7a7917c65",
+              "model2ActionId": "domain_soft:medical"
+            },
+            {
+              "surface": "内科",
+              "provenance": "PROFILE_DOMAIN",
+              "source": "domain_term",
+              "domains": [
+                "medical"
+              ],
+              "termId": "term-e58685e7a7917c6e",
+              "model2ActionId": "domain_soft:medical"
+            }
+          ],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        },
+        {
+          "spanSurface": "的说",
+          "currentAnchorSource": "DOMAIN_AND_MODEL2",
+          "candidateContractA": "NON_ANCHOR",
+          "candidateContractB": "NON_ANCHOR",
+          "candidateContractC": "NON_ANCHOR",
+          "exactSurfaceFullGeomCount": 0,
+          "profileDomainCount": 0,
+          "profilePronCount": 0,
+          "boundSampleTop": [],
+          "protectionRiskClass": "CURRENT_ANCHOR_WAS_ACTUALLY_OVERPROTECTED",
+          "auditGroundTruthResidualPresent": false,
+          "expectedProtection_AUDIT_ONLY": "NOT_PROVEN_SUFFICIENT_MODEL3_MAY_KEEP"
+        }
+      ]
+    }
+  ],
+  "contractDefinitions": {
+    "CONTRACT_A": "FULL_GEOMETRY_EXACT_SURFACE_AND_RETAINED_DOMAIN",
+    "CONTRACT_B": "FULL_GEOMETRY_EXACT_SURFACE_NON_PROFILE_DOMAIN_PROVENANCE",
+    "CONTRACT_C": "FULL_GEOMETRY_EXACT_SURFACE_ANY"
+  },
+  "notes": {
+    "traceCandidateCap": 24,
+    "productionActiveCandidatesUncapped": true
+  },
+  "positiveExemplar": {
+    "caseId": "p2_u001_020",
+    "spanSurface": "行程",
+    "note": "off-residual span in FALSE utterance; exact surface + domain_term tourism_route ∩ retained → CONTRACT_A ANCHOR"
+  },
+  "stats": {
+    "FALSE_GROUP_COUNT": 9,
+    "CONTROL_GROUP_COUNT": 12,
+    "FALSE_ANCHOR_REJECTION_A": "9/9",
+    "FALSE_ANCHOR_REJECTION_B": "7/9",
+    "FALSE_ANCHOR_REJECTION_C": "7/9",
+    "CONTROL_CURRENT_ANCHOR_SPANS": 62,
+    "LEGITIMATE_OR_CURRENT_PRESERVATION_A": "0/62",
+    "OVERPROTECTED_DEMOTIONS_A": "62/62",
+    "CONTROL_VISIBLE_SUFFICIENCY_SPANS_A": 0
+  }
+}

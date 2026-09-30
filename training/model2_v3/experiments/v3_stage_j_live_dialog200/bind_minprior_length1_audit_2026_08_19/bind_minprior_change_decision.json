@@ -1,0 +1,19 @@
+{
+  "Change_minPrior": "NO / PROPOSAL_REQUIRED",
+  "Change_single_char_prior": "NO / PROPOSAL_REQUIRED",
+  "Restore_frozen_implementation": "NO",
+  "Architecture_Contract_Change_Proposal": "YES",
+  "Single_char_Collector_Change": "NO",
+  "FineSpan_Change": "NO",
+  "Lexicon_Inventory_Change": "NO",
+  "Model2_Change": "NO",
+  "Assembly_Change": "NO",
+  "Budget_Change": "NO",
+  "Training": "NO",
+  "Recommended_Next_Phase": "ARCHITECTURE_CONTRACT_CHANGE_PROPOSAL_BIND_MINPRIOR_LENGTH1",
+  "do_not": [
+    "Do not lower 0.5 this round",
+    "Do not raise 2510 priors this round (prior_score is also a Model2 feature if edges bind)",
+    "Do not ship if length==1 bypass without user confirmation"
+  ]
+}

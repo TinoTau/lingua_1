@@ -1,0 +1,45 @@
+{
+  "seed": 20260812,
+  "device": "cpu",
+  "runtime_device_target": "cpu",
+  "batch_size": 16,
+  "epochs": 40,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "max_pool": 16,
+  "lambda_neg": 0.5,
+  "lambda_hn": 0.5,
+  "hn_margin": 0.2,
+  "tiny_n": 48,
+  "tiny_epochs": 80,
+  "tiny_lr": 0.002,
+  "embed_dim": 64,
+  "char_dim": 24,
+  "syl_dim": 24,
+  "hidden": 96,
+  "char_hash_version": "char-hash-v1",
+  "candidate_index_version": "cand-index-v1",
+  "feature_schema_version": "user-feature-schema-v1",
+  "trainrow_schema_version": 1,
+  "markers": [
+    "PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "note": "Stage A learnability probe — not formal generalization acceptance.",
+  "env": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "torch": "2.13.0+cpu",
+    "cuda_available": false,
+    "train_device": "cpu",
+    "runtime_device_target": "cpu",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "seed": 20260812,
+    "syl_vocab": 377,
+    "markers": [
+      "PROBE_ONLY",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ]
+  }
+}

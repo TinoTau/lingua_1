@@ -1,0 +1,14 @@
+{
+  "lr": 0.001,
+  "epochs": 8,
+  "batch": 96,
+  "head": "AmbiguityHeadV2",
+  "encoder": "MinimalContextEncoderV1",
+  "frozen": [
+    "trunk",
+    "P",
+    "D"
+  ],
+  "dialog_200": false,
+  "v1_ckpt_used_as_init": false
+}

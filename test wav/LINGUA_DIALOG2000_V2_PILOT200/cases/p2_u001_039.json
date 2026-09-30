@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u001_039",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U001",
+  "profileStage": "P1",
+  "domain": "retail_service",
+  "difficulty": "medium",
+  "referenceText": "顾客想了解牛肉串的保修与退换政策。",
+  "audioId": "aud_p2_u001_039",
+  "audioPath": "audio/p2_u001_039.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "n_l",
+  "relationDirection": "n_l",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MODERATE",
+  "profileRef": "prof_u001_p1",
+  "profileBuildSetId": "pbs_u001_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e",
+    "base-rebuild-term-e5bf83e683857c78",
+    "base-rebuild-term-e4bfa1e5bf837c78"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e7899be88289e4b8"
+  ],
+  "evaluationTargetSurface": "牛肉串",
+  "split": "VALIDATION",
+  "holdoutClass": "NONE",
+  "seed": 1289674331,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "WRONG_PROFILE_CONTROL",
+  "wrongProfileUserId": "U002",
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u001_039",
+    "byte_size": 125246,
+    "sha256": "f3f795311443c24e5a57b3e30ffcce4b26956566a0d1dd9c68d98750a35c337b",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 3.913
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "顾客想了解嵧肉串的保修与退换政策。"
+}

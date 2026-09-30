@@ -1,0 +1,54 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_ANCHOR_DEPENDENT_DATASET_REDESIGN",
+    "verdict": "PASS",
+    "dataset_forces_anchor_use": "YES",
+    "bigru_suitable": true,
+    "ready_expand_100k": true,
+    "ready_tts": true,
+    "recommended_next_phase": "MODEL3_V1_ANCHOR_CONTRAST_FULL_100K_THEN_TTS"
+  },
+  "runtime_impact": {
+    "architecture_changed": false,
+    "domain_vote_changed": false,
+    "recall_changed": false,
+    "model2_changed": false,
+    "production_retry": false,
+    "tts": false,
+    "formal_anchor_enum_changed": false
+  },
+  "holdout_manifest": {
+    "unseen_surface_n": 1474,
+    "unseen_family_n": 3480,
+    "unseen_context_n": 134,
+    "hold_families": [
+      "h_f",
+      "eng_en"
+    ]
+  },
+  "cpu_latency": {
+    "p50_ms": 2.0040000090375543,
+    "p95_ms": 2.807380066951737,
+    "p99_ms": 3.252738971496001,
+    "n": 500
+  },
+  "artifact_layout": {
+    "report": "Lingua_Model3_V1_Anchor_Dependent_Dataset_Pilot_Report_2026_08_24.md",
+    "metrics_bundle": "model3_anchor_contrast_bundle.json",
+    "governance": "model3_anchor_contrast_governance.json",
+    "dataset": "training/model3_dataset/model3_v1_anchor_contrast_pilot/",
+    "model": "training/model3_dataset/model3_v1_anchor_contrast_pilot_bigru/"
+  },
+  "modified_file_inventory": [
+    "training/model3_dataset/scripts/run_anchor_contrast_pilot.py",
+    "training/model3_dataset/scripts/expand_contrast_seed_pairs.py",
+    "training/model3_dataset/scripts/expand_multichar_contrast_seeds.py",
+    "training/model3_dataset/scripts/extract_reachable_seed_pairs.py",
+    "training/model3_dataset/train/train_anchor_contrast_pilot.py",
+    "training/model3_dataset/model3_v1_anchor_contrast_pilot/",
+    "training/model3_dataset/model3_v1_anchor_contrast_pilot_bigru/",
+    "docs/user_correction/model3/Lingua_Model3_V1_Anchor_Dependent_Dataset_Pilot_Report_2026_08_24.md",
+    "docs/user_correction/model3/model3_anchor_contrast_bundle.json",
+    "docs/user_correction/model3/model3_anchor_contrast_governance.json"
+  ]
+}

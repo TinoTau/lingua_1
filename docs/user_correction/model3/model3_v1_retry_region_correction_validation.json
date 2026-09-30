@@ -1,0 +1,25 @@
+{
+  "phase": "MODEL3_V1_ASR_POSTPROCESS_RETRY_REGION_CORRECTION",
+  "auditedCaseCount": 16,
+  "before": {
+    "SEGMENTATION_LOCKED": 6,
+    "PARTIALLY_SUFFICIENT": 4,
+    "NO_REPAIRABLE_TARGET": 3,
+    "SUFFICIENT": 3
+  },
+  "after": {
+    "PARTIALLY_SUFFICIENT": 10,
+    "NO_REPAIRABLE_TARGET": 3,
+    "SUFFICIENT": 3
+  },
+  "segmentationLockedReduced": true,
+  "segmentationLockedBefore": 6,
+  "segmentationLockedAfter": 0,
+  "partiallySufficientAfter": 10,
+  "sufficientAfter": 3,
+  "noRepairableAfter": 3,
+  "unitTests": "model3-retry-region.test.ts + model3-mainline.integration.test.ts PASS",
+  "model3Changed": false,
+  "secondDomainVote": false,
+  "model3Reinvoked": false
+}

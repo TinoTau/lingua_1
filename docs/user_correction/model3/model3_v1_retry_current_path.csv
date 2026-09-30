@@ -1,0 +1,15 @@
+step,file,function,input_type,output_type,ownership,notes
+1_pre_retry_pool,fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,buildFineSpanCandidatePool,WindowCandidate[] + PathFineSpan[],FineSpanCandidatePool[],ASR_postprocess_lattice,PRE-RETRY pool
+2_domain_vote,fw-detector/span-assembly-shared/utterance-domain-vote.ts,voteUtteranceDomainFromPool,FineSpanCandidatePool[],UtteranceDomainVoteResult,Domain_Vote,ONCE frozen; not Model3
+3_anchors,model3-runtime/model3-anchor-adapter.ts,materializeModel3Anchors,pathFineSpans + vote + candidates,Model3AnchorMark[],Model3_adapter_read_only,DOMAIN/MODEL2/DOMAIN_AND_MODEL2 only
+4_feature_pack,model3-runtime/model3-feature-pack.ts,packModel3SpanInferFields,PathFineSpan + rawText + syllables,surface + first_pass_cand + pinyin bit,Model3_runtime,surface=rawText.slice(rawStart;rawEnd)
+5_infer,model3-runtime/model3-inference-client.ts + services/model3_runtime/model3_inference_host.py,inferPath / infer,Model3SpanInput sequence,Model3SpanDecision[] KEEP|RETRY,Model3,ONE infer per path; logit compare
+6_anchor_mask,model3-runtime/run-model3-path-step.ts,runModel3PathStep (inline),decisions + anchorIds,decisions with Anchor RETRY→KEEP,Model3_runtime_guard,independent of model output
+7_retry_route,model3-runtime/model3-retry-router.ts,routeModel3Retry,decisions + pathFineSpans + candidates + recall fn,mutated candidates + traces,ASR_postprocess_Model3_retry_router,max 1 attempt per spanId; PathFineSpan order; NO merge adjacent
+7a_recall_slice,model3-runtime/model3-retry-router.ts,routeModel3Retry (slice),span.rawStart/rawEnd + syllableStart/End,windowText + syllables,ASR_postprocess,USES CURRENT SPAN BOUNDARY — frozen
+7b_recall,lexicon-v2/recall-span-topk-v2.ts,recallSpanTopKV2,syllables + windowText + termLength + domains + topK,RecallSpanTopKV2Hit[],Recall,same API as first-pass span recall; NOT full lattice window enum
+7c_materialize_hits,model3-runtime/model3-retry-router.ts,materializeRetryHits,hits + PathFineSpan,WindowCandidate[] pinned to same raw/syl bounds,ASR_postprocess,does not change FineSpan boundaries
+7d_merge_cap,model3-runtime/model3-retry-router.ts,mergeSpanCandidates,existing ⊕ retry → slice(perSpanCap),WindowCandidate[],ASR_postprocess,getPerSpanCandidateLimit
+8_post_retry_pool,assemble-domain-aware-span-sets.ts,buildFineSpanCandidatePool,refreshed candidates + SAME pathFineSpans,FineSpanCandidatePool[],ASR_postprocess,pathFineSpans array unchanged
+9_assembly,assemble-domain-aware-span-sets.ts,completeDomainAwareAssemblyFromVote,pool + SAME vote,DomainAwareAssemblyResult,Assembly,NO second Domain Vote
+10_sentence_kenlm,span-assembly-v4-orchestrator.ts,buildSentenceCandidates / mergeCrossPath / KenLM,assembly results,sentence candidates ≤16,Assembly_KenLM,downstream of Model3

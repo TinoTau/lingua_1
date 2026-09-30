@@ -1,0 +1,14 @@
+step,probe_owner,formal_owner,parity,notes
+normalize,normalizeForFwRepairInput,normalizeForFwRepairInput,SAME_OWNER,
+ASR_FW,/utterance,/utterance,SAME_OWNER,orchestrator fresh path
+Tone,AcousticToneSlice same-run,AcousticToneSlice same-run,SAME_OWNER,empty slices fail-closed
+Mandatory_Tone_Recall,lattice+resolveToneRecallReadiness,same,SAME_OWNER,state||ready soft default P2
+FineSpan,runLatticeFineSpanGeneration,same,SAME_OWNER,
+multipath,all pathFineSpanViews,all pathFineSpanViews,SAME_OWNER,
+Model2,absent_in_legacy_probe_cjs,expandActiveCandidatesWithModel2,FORMAL_ADDITION_EXPECTED,required by plan
+Domain_Vote,voteUtteranceDomainFromPool,same+toVotePoolsFromActive,SAME_OWNER,adapter only
+Anchor,materializeModel3Anchors,same,SAME_OWNER,
+packer,packModel3SpanInferFields,same,SAME_OWNER,
+alignment_label,label_spans_v2,label_spans_v2,SAME_OWNER,no post mutation
+cand_count,model3FirstPassCandidateCount on FineSpan,same,SAME_OWNER,serializer or0 P1
+legacy_harness_reachable,N/A,probes redirected to formal,OK,legacy file remains for history

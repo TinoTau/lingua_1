@@ -1,0 +1,257 @@
+{
+  "schema": "LINGUA_DIALOG200_EVALUATOR_SSOT_COMPLIANCE_REPAIR_V1_VALIDATION",
+  "phase": "DIALOG200_EVALUATOR_SSOT_COMPLIANCE_REPAIR_V1",
+  "mode": "EVALUATOR_ONLY",
+  "evaluation_ssot": "EVALUATION_SSOT_V1",
+  "evaluation_ssot_delta": 0,
+  "frozen_evidence_delta": 0,
+  "production_delta": 0,
+  "replay_alignment_delta": 0,
+  "modified_files": [
+    {
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-evidence-replay-contract.mjs",
+      "class": "EVALUATOR_REPAIR"
+    },
+    {
+      "path": "electron_node/electron-node/tests/run-dialog200-frozen-evidence-replay-v1.mjs",
+      "class": "EVALUATOR_REPAIR"
+    },
+    {
+      "path": "electron_node/electron-node/tests/lib/dialog200-frozen-evidence-replay-ssot-compliance.test.mjs",
+      "class": "EVALUATOR_REPAIR_TEST"
+    }
+  ],
+  "unit_tests": {
+    "file": "dialog200-frozen-evidence-replay-ssot-compliance.test.mjs",
+    "pass": 15,
+    "fail": 0
+  },
+  "dialog200": {
+    "caseCount": 200,
+    "readyCount": 200,
+    "e18Pass": 200,
+    "e7Pass": 199,
+    "criticalFailCases": 0,
+    "stageFailCases": 1,
+    "notEvaluableCases": 200,
+    "diverge_case_ids": [
+      "d149"
+    ],
+    "firstDivergenceHist": {
+      "E3_BASE_RECALL:CONTRACT_FAIL": 1
+    }
+  },
+  "stageAgg": {
+    "E1_ASR_INPUT": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E2_TONE_INJECTION": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E3_BASE_RECALL": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E4_MODEL2_UNION": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E5_LEXICAL_EDGE": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E6_SEGMENTATION_PATH": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E7_PATH_COUNT": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E8_PATH_CAP": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E9_DOMAIN_VOTE": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E10_SAME_DOMAIN": {
+      "PASS": 199,
+      "FAIL": 1,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E11_ASSEMBLY": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E12_GLOBAL_BUDGET": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E13_KENLM_INPUT": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "E14_KENLM_RANKING": {
+      "PASS": 199,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 1
+    },
+    "E15_KENLM_GATE": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E16_MODEL3_INPUT_ANCHOR": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E17_MODEL3_DECISION": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    },
+    "E18_FINAL": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    },
+    "PROFILE_NO_PROFILE": {
+      "PASS": 200,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 0
+    }
+  },
+  "d149_regression": {
+    "status": "DIVERGE",
+    "firstDivergence": {
+      "stage": "E3_BASE_RECALL",
+      "classification": "CONTRACT_FAIL",
+      "kind": "FIRST_OBSERVED_DIVERGENCE"
+    },
+    "E3": {
+      "status": "FAIL",
+      "semantics": "SEMANTIC_SET_IDENTITY",
+      "capture_unique_n": 21,
+      "replay_unique_n": 21,
+      "set_equal": false,
+      "capture_flat_n": 50,
+      "replay_flat_n": 28,
+      "flat_n_authority": "DIAGNOSTIC_ONLY"
+    },
+    "E5": "NOT_EVALUABLE",
+    "EXPECTED_NONDETERMINISM": false
+  },
+  "d160_regression": {
+    "caseId": "d160",
+    "note": "PASS_WITH_NOT_EVALUABLE; E14=NOT_EVALUABLE (1/200); E15=NOT_EVALUABLE",
+    "E14": {
+      "PASS": 199,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 1
+    },
+    "E15": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNKNOWN": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUABLE": 200
+    }
+  },
+  "replay_equivalence_status": "NOT_CERTIFIED",
+  "evidence_ssot_authority": "FROZEN_ACOUSTIC_EVIDENCE_AUTHORITATIVE",
+  "ssot_mutated_this_run": false,
+  "result_enum": "B",
+  "result_label": "EVALUATOR_REPAIR_VALIDATED_WITH_REMAINING_NOT_EVALUABLE",
+  "next_owner": "D149_TARGETED_OBSERVABILITY_AUDIT",
+  "gates": {
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS",
+    "G7": "PASS",
+    "G8": "PASS",
+    "G9": "PASS",
+    "G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13": "PASS",
+    "G14": "PASS",
+    "G15": "PASS",
+    "G16": "PASS",
+    "G17": "PASS",
+    "G18": "PASS",
+    "G19": "PASS",
+    "G20": "PASS",
+    "G21": "PASS",
+    "G22": "PASS",
+    "G23": "PASS",
+    "G24": "PASS",
+    "G25": "PASS",
+    "G26": "PASS",
+    "G27": "PASS",
+    "G28": "PASS",
+    "G29": "PASS",
+    "G30": "PASS"
+  },
+  "source_replay_validation": "DIALOG200_FROZEN_EVIDENCE_REPLAY_V1_VALIDATION.json",
+  "stage_results_artifact": "LINGUA_DIALOG200_EVALUATOR_SSOT_COMPLIANCE_REPAIR_V1_STAGE_RESULTS.json"
+}

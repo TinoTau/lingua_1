@@ -1,0 +1,23 @@
+{
+  "audit": "ASSEMBLY_CANDIDATE_TO_SENTENCE_MATERIALIZATION_CONFORMANCE_AUDIT",
+  "date": "2026-08-18",
+  "verdict": "HOLD",
+  "original_funnel_valid": "NO",
+  "primary_root_cause": "TRACE_ATTRIBUTION_CONTRACT_MISMATCH + UPSTREAM_SPAN_PATH_GAP",
+  "reclassification": {
+    "TRACE_OVERATTRIBUTION": 82,
+    "TRUE_ASSEMBLY_DROP": 24,
+    "UPSTREAM_SPAN_PATH_GAP": 18,
+    "DOMAIN_BUCKET_EXCLUSION": 1,
+    "OVERLAP_CONFLICT": 1
+  },
+  "recomputed_funnel": {
+    "budget_target_visible": 46,
+    "lexical_recoverable": 97,
+    "path_recoverable": 59,
+    "sentence_recoverable": 58,
+    "actually_assembled": 63,
+    "kenlm_input": 63,
+    "final": 25
+  }
+}

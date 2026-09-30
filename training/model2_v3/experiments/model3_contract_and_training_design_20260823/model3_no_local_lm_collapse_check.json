@@ -1,0 +1,18 @@
+{
+  "ts": "2026-08-23",
+  "local_lm_collapse_guard": "FROZEN",
+  "required_input_channels": [
+    "anchor_mask",
+    "tone_or_acoustic_evidence",
+    "pinyin_with_provenance",
+    "model2_pronunciation_evidence_compressed"
+  ],
+  "forbidden_sole_features": [
+    "text_cooccurrence_only",
+    "ngram_probability_only",
+    "phrase_frequency_only"
+  ],
+  "hard_negatives_required": true,
+  "fail_flag": "MODEL3_ROLE_COLLAPSE_TO_LOCAL_LM",
+  "pass": true
+}

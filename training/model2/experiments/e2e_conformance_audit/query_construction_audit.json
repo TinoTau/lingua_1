@@ -1,0 +1,11 @@
+{
+  "markers": ["E2E_CONFORMANCE_AUDIT", "READ_ONLY"],
+  "paths": [
+    {"id": "A_span_trainrow", "desc": "trainrow observed/span syllables → profile queries → FuzzyPool", "status": "PRIMARY_SPIKE"},
+    {"id": "B_whole_utt_7F", "desc": "asr_hypothesis G2P → profile on full sequence", "status": "SHADOW_RETRIEVAL_PATH / TEST_ONLY"},
+    {"id": "C_family_synth", "desc": "family-synth observed_syllables", "status": "DIAGNOSTIC"},
+    {"id": "D_base_fuzzypool", "desc": "profile-agnostic FuzzyPool", "status": "BASE_RECALL"}
+  ],
+  "authoritative_proposal": "Path A on Lattice FineSpan windows only; delete Path B from architecture conclusions",
+  "SHADOW_RETRIEVAL_PATH": true
+}

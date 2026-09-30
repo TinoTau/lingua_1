@@ -1,0 +1,206 @@
+{
+  "schema": "DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_V1",
+  "phase": "DIALOG200_FROZEN_ACOUSTIC_EVIDENCE_CAPTURE_V1",
+  "runId": "dialog200_frozen_acoustic_v1_20260922_2305",
+  "gitCommit": "63b25376",
+  "evaluationSsot": "EVALUATION_SSOT_V1",
+  "old_baseline_untouched": "fresh_dialog200_raw_cases_dialog200_full_pipeline_20260909_001141.jsonl",
+  "audio_coordinate_policy": "SLICES_PRIMARY_PROCESSED_HASH_NOT_EXPOSED",
+  "corpus": {
+    "path": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200",
+    "manifest": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200\\cases.manifest.json",
+    "case_count": 200,
+    "inventory_sha256": "7af502df30ac873d06e70e87014ed233898ee72d671101b5d1d05d1bf76cee5a",
+    "note": "per-case sha256 also in evidence jsonl"
+  },
+  "asr": {
+    "identity_status": "AVAILABLE",
+    "identity_class": "IDENTITY_RECONSTRUCTABLE",
+    "model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+    "model_config_sha256": "3622a2ddc41ec0e0fd4e68c13c6830f03b90c38d89aaad184de02c8c642cf807",
+    "model_file_inventory": [
+      {
+        "name": ".gitattributes",
+        "bytes": 1477,
+        "sha256": "db7c0371f46f0840b8f25794c1e3321c9b5820a8cb6ba9694a46fc64b8fae5a6"
+      },
+      {
+        "name": "config.json",
+        "bytes": 2257,
+        "sha256": "3622a2ddc41ec0e0fd4e68c13c6830f03b90c38d89aaad184de02c8c642cf807"
+      },
+      {
+        "name": "model.bin",
+        "bytes": 1527906378,
+        "sha256": null
+      },
+      {
+        "name": "README.md",
+        "bytes": 2005,
+        "sha256": "a30144a6232423e5e4e9e17952b5a543a506dc0cb9de02fd9d875d7ec40fef83"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 2203239,
+        "sha256": "fb7b63191e9bb045082c79fd742a3106a12c99513ab30df4a0d47fa6cb6fd0ab"
+      },
+      {
+        "name": "vocabulary.txt",
+        "bytes": 459861,
+        "sha256": "34ce3fe1c5041027b3f8d42912270993f986dbc4bb34cf27f951e34a1e453913"
+      }
+    ],
+    "device": "cuda",
+    "compute_type": "int8_float16",
+    "decoder": {
+      "note": "FW detector path uses beam_size=1 temperature=0 use_context_buffer=false (faster-whisper-asr-strategy)",
+      "beam_size": 1,
+      "temperature": 0,
+      "use_context_buffer": false,
+      "use_text_context": false
+    },
+    "language_configuration": {
+      "srcLang": "zh",
+      "task": "transcribe"
+    },
+    "vad_configuration": {
+      "TONE_P10_VAD_CPU": "1",
+      "service_vad": "silero"
+    },
+    "hotword_configuration": {
+      "status": "NOT_APPLICABLE",
+      "note": "not used on FW dialog200 path"
+    },
+    "nbest_configuration": {
+      "status": "NOT_APPLICABLE",
+      "note": "best_of disabled on FW path"
+    },
+    "health": {
+      "ok": true,
+      "body": {
+        "status": "ok",
+        "device": "cuda",
+        "compute_type": "int8_float16",
+        "asr_model_path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+        "asr_model_loaded": true,
+        "vad_model_loaded": true,
+        "asr_worker": {
+          "is_running": true,
+          "worker_state": "running",
+          "worker_pid": 48124,
+          "queue_depth": 0,
+          "total_tasks": 2,
+          "completed_tasks": 2,
+          "failed_tasks": 0,
+          "worker_restarts": 0,
+          "avg_wait_ms": 8151.19,
+          "pending_results": 0
+        },
+        "readiness": {
+          "process_alive": true,
+          "worker_running": true,
+          "worker_accepting_tasks": true,
+          "queue_depth": 0,
+          "queue_max": 1,
+          "queue_full": false,
+          "utterance_ready": true,
+          "worker_restarting": false,
+          "last_error": null
+        }
+      }
+    }
+  },
+  "tone": {
+    "identity_status": "AVAILABLE",
+    "from_smoke_diagnostics": {
+      "status": "AVAILABLE",
+      "reason": "toneModule_from_asr_diagnostics",
+      "selected": {
+        "artifactPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\tone_module\\models\\candidate\\tone_cnn_production_v2_candidate_20260712.npz",
+        "artifactHash": "aade7b531049204fd7e8601944b3a3429bd3ec16015c550e2c6b3fd27b368723",
+        "backend": "numpy_p1",
+        "featureVersion": "p1-frame-mel-f0-v1",
+        "modelVersion": "tone_cnn_production_v2",
+        "formatVersion": "npz-p1-v1",
+        "trainingVersion": "production_cnn_v2_candidate_20260712",
+        "runtimeVersion": "p10-p1-direct-replacement-v1",
+        "loaderVersion": "ToneModelLoaderV1",
+        "toneSliceCount": 12,
+        "toneEnabled": true,
+        "skippedReason": null,
+        "tone_inference_ms": 65,
+        "loadError": null
+      }
+    },
+    "artifact_file": {
+      "path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\tone_module\\models\\candidate\\tone_cnn_production_v2_candidate_20260712.npz",
+      "relative": "electron_node/services/faster_whisper_vad/tone_module/models/candidate/tone_cnn_production_v2_candidate_20260712.npz",
+      "exists": true,
+      "sha256": "aade7b531049204fd7e8601944b3a3429bd3ec16015c550e2c6b3fd27b368723",
+      "bytes": 1274461
+    },
+    "env_override": null,
+    "selection_reason": "asr_diagnostics.toneModule.artifactPath"
+  },
+  "model2": {
+    "identity_status": "AVAILABLE",
+    "checkpoint_path": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt",
+    "checkpoint_sha256": "d66847be010f0953382243c7cc664a683e37bf6d112f33b463b68eb7fbeabeda",
+    "bytes": 195677,
+    "env_selection": "DEFAULT_resolveStageJCheckpoint",
+    "label": "STAGE_J_RUNTIME_CHECKPOINT_SWAP",
+    "profile_mode_at_capture": "NO_PROFILE"
+  },
+  "lexicon": {
+    "identity_status": "AVAILABLE",
+    "path": "node_runtime/lexicon/v3/lexicon.sqlite",
+    "sha256_before": "59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19",
+    "bytes": 10510336,
+    "sha256_after": "59de38904560ee239582b4a9c863f312accaab1751f18678ecf0d2b215527e19",
+    "drift": "NONE"
+  },
+  "kenlm": {
+    "identity_status": "AVAILABLE",
+    "path": "electron_node/services/asr_sherpa_lm/models/kenLM/zh_char_3gram.trie.bin",
+    "sha256": "532a335a09a006d1ba674f808814ee1d40c5b1d8f3527ca980e96723e7a62a4c",
+    "bytes": 34995949
+  },
+  "model3": {
+    "identity_status": "AVAILABLE",
+    "selected_model": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weights_sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "config_sha256": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "identity_valid": true
+  },
+  "runtime": {
+    "runner": "dialog200-frozen-acoustic-evidence-capture-v1",
+    "node_entrypoint": "electron_node/electron-node (production)",
+    "service_startup_method": "tests/repro/start-node-detached.mjs",
+    "asr_endpoint": "http://127.0.0.1:6007",
+    "test_server_port": 5020,
+    "node_version": "v24.15.0",
+    "python_version": "Python 3.10.11",
+    "os": "win32",
+    "git_dirty": true,
+    "cuda_probe": {
+      "available": false,
+      "cuda": null,
+      "gpu": null,
+      "error": null
+    },
+    "relevant_env": {
+      "TONE_P10_VAD_CPU": "1",
+      "MODEL3_CHECKPOINT_IDENTITY": "MODEL3_V2_S3_RANDOM_INIT_V1",
+      "MODEL2_DIALOG200_TRACE": "1",
+      "MODEL3_CANDIDATE_PROVENANCE_TRACE": "1"
+    },
+    "started_at": "2026-09-22T11:07:53.156Z",
+    "finished_at": "2026-09-22T11:26:20.006Z"
+  },
+  "production_files_touched": [],
+  "production_behavior_changed": false,
+  "replay_implemented": false,
+  "cases_planned": 200,
+  "cases_executed": 200,
+  "cases_failed": 0
+}

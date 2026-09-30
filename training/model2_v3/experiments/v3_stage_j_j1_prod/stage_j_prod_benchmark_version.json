@@ -1,0 +1,49 @@
+{
+  "benchmark_version": "STAGE_J_PRODUCTION_BENCHMARK_V1",
+  "feature_hash": "MODEL2_FEATURE_HASH_V1",
+  "feature_hash_contract": {
+    "contract_id": "MODEL2_FEATURE_HASH_V1",
+    "algorithm": "fnv1a64",
+    "seed": 21728859121731633,
+    "encoding": "utf-8",
+    "normalization": "NFC+lower",
+    "span_dim": 64,
+    "phonetic_dim": 16,
+    "domain_dim": 12,
+    "stage_p_uses_v1": false,
+    "stage_p_feature_pack": "legacy_python_hash_via_training_pack_batch_inputs",
+    "checkpoint_compatibility_blocker": "Stage P checkpoint incompatible with MODEL2_FEATURE_HASH_V1 without retrain"
+  },
+  "target_identity": "StageDRetrievalTargetIdentityV1",
+  "target_identity_contract": {
+    "contract_id": "StageDRetrievalTargetIdentityV1",
+    "lexical_identity": "normalized_surface + pinyin_key (CandidateRecord)",
+    "provenance_retained": [
+      "term_id",
+      "term_type",
+      "domain_ids"
+    ],
+    "not_a_second_lexicon_ssot": true,
+    "surface_alone_not_sufficient": true,
+    "note": "Same surface+pinyin_key => same lexical identity across base:/domain: siblings. term_id remains diagnostic provenance only."
+  },
+  "domain_slots": [
+    "tourism_pickup",
+    "tourism_hotel",
+    "tourism_route",
+    "tourism_transport",
+    "coffee",
+    "milk_tea",
+    "bakery",
+    "food_order",
+    "tech_ai",
+    "meeting",
+    "medical",
+    "transport"
+  ],
+  "lexicon_index": "training/model2_v3/dataset/policy_stage_d2/candidate_index_stage_d2.jsonl",
+  "lexicon_index_sha256": "8493dd4737e9ae87173973bce3c6e32b58cf0a0c8c0a8700bf341986ebb71960",
+  "lexicon_meta_sha256": "cd970249a5f2822b574310a9957aeabc3925c188c822f77765f280d7b0677b8d",
+  "frozen": true,
+  "note": "Do not mutate test splits after freeze"
+}

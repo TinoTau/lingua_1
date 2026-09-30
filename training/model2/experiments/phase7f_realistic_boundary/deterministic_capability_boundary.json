@@ -1,0 +1,66 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "patterns": [
+    {
+      "Error Pattern": "single substitution",
+      "Supported?": "YES",
+      "n": 100,
+      "TIR": 0.42,
+      "precision": 0.2413793103448276,
+      "Failure mode": "rare budget/distance"
+    },
+    {
+      "Error Pattern": "double substitution",
+      "Supported?": "PARTIAL",
+      "n": 100,
+      "TIR": 0.71,
+      "precision": 0.10230547550432277,
+      "Failure mode": "MULTI_RELATION_COMPOSITION_MISSING (single-query reverse)"
+    },
+    {
+      "Error Pattern": "deletion",
+      "Supported?": "NO/WEAK",
+      "n": 0,
+      "TIR": 0.0,
+      "precision": 0.0,
+      "Failure mode": "SYLLABLE_DELETION"
+    },
+    {
+      "Error Pattern": "insertion",
+      "Supported?": "NO/WEAK",
+      "n": 100,
+      "TIR": 0.0,
+      "precision": 0.0,
+      "Failure mode": "SYLLABLE_INSERTION"
+    },
+    {
+      "Error Pattern": "alignment shift",
+      "Supported?": "NO/WEAK",
+      "n": 16,
+      "TIR": 0.0,
+      "precision": 0.0,
+      "Failure mode": "SPAN_ALIGNMENT_SHIFT / OTHER"
+    },
+    {
+      "Error Pattern": "partial profile",
+      "Supported?": "PARTIAL",
+      "n": 0,
+      "TIR": 0.0,
+      "precision": 0.0,
+      "Failure mode": "OBSERVED_EVIDENCE_TOO_DAMAGED residual"
+    },
+    {
+      "Error Pattern": "non-profile",
+      "Supported?": "NO (by design)",
+      "n": 0,
+      "TIR": 0.0,
+      "precision": 0.0,
+      "Failure mode": "INFORMATION_NOT_AVAILABLE"
+    }
+  ],
+  "DETERMINISTIC_CAPABILITY_BOUNDARY": "Deterministic reverse-map retrieval is strong on single profile-substitutions with observable Y residue; weak on deletion/insertion/alignment and multi-edit composition; must not claim non-profile ASR errors."
+}

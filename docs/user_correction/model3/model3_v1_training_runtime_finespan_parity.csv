@@ -1,0 +1,12 @@
+Aspect,Training,Runtime,Parity,Evidence
+span_identity,PathFineSpan.spanId in MODEL3_TRAINING_SAMPLE_V1,PathFineSpan.spanId (fine:pathId:idx),PASS,stage2_materialize.cjs + path-fine-span-types.ts
+surface,current.slice(rawStart;rawEnd),rawText.slice(rawStart;rawEnd),PASS,same derivation rule
+surface_length,100% length-1 in Full100K/STRICT/pilot samples,96.97% len1 + 3.03% len2 (n=3733 dialog_200 Model3 decisions); anchors also show len2,FAIL,margin CSV vs training shards
+offsets,rawStart/rawEnd on sample spans,rawStart/rawEnd on PathFineSpan,PASS,shared lattice materialize
+sequence_ordering,pathFineSpanViews[0] order,selected SegmentationPath FineSpan order,PASS,stage2 takes views[0]
+Anchor_marking,force_anchor / Domain Vote SameDomain in harness,materializeModel3Anchors from Domain Vote + Model2,PASS,contract-aligned sources
+candidate_count_feature,recallEvidence.firstPassCandidateCount → first_pass_cand_log1p,PathFineSpan.candidates.filter(!isCovered).length,PASS,feature-contract correction 2026-08-27
+pinyin_availability,pinyinEvidence TEXT_DERIVED; feature pinyin_channel_avail,utterance globalSyllables.length>0,PASS,model3-feature-pack.ts
+retry_eligibility_label,label_spans requires phoneticCompatible AND referenceReachable=YES,runtime Model3 has no phoneticCompatible input; decision KEEP/RETRY from model logits,FAIL_LABEL_PLANE_ONLY,allowlist model_visible=false for phoneticCompatible
+phoneticCompatible_field,set from corruption.isPhonetic; gates RETRY label,NOT used in Model3 runtime features,N/A_TRAINING_ONLY,model3_v1_model_visible_feature_allowlist.json
+multi_char_error_regions,pilot ERROR_SHAPE MULTI_CHAR on 1-char FineSpans,EVAL_PROXY multi-char often PARTIAL_OVERLAP/MULTIPLE_FINESPANS,DISTINCT_CONCEPTS,audit mapping 2026-08-28

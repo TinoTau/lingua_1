@@ -1,0 +1,16 @@
+file_or_module,classification,rationale
+recall-span-topk-v2.ts,KEEP,Single-Char V1 frozen; reuse later
+model2-runtime/*,KEEP,P/D only
+utterance-domain-vote.ts,KEEP,Domain Vote SSOT
+assemble-domain-aware-span-sets.ts,KEEP,SameDomain source for Domain Anchor
+build-sentence-candidates.ts,KEEP,Assembly
+merge-cross-path-sentence-candidates.ts,KEEP,cap 16
+run-fw-sentence-rerank-from-prefilled.ts,KEEP,KenLM once
+single_char_repair_lexicon_v1.tsv,KEEP,DO_NOT_TOUCH data
+JobResult schema,KEEP,no Model3 fields
+span-assembly-v4-orchestrator.ts,MODIFY,comment already synced; Stage1: zero-behavior hook + provenance side structure + trace
+docs framework SSOT (01/02/04/SUMMARY + fw-detector ARCHITECTURE),MODIFY,order docs updated this round
+model3-runtime/types.ts,CREATE,Stage1
+model3-runtime/anchor-adapter.ts,CREATE,Stage1
+model3-runtime/model3-retry-trace.ts,CREATE,Stage1 MODEL3_RETRY_TRACE_V1 emitter
+legacy suspicious-span,DO_NOT_TOUCH,do not reintroduce

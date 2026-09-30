@@ -1,0 +1,57 @@
+{
+  "phase": "RETRY_MULTIHYPOTHESIS_CORRECTION_ACCEPTANCE",
+  "date": "2026-08-29",
+  "mainVerdict": "PASS",
+  "governance": {
+    "RetryArchitectureChanged": false,
+    "Model3Changed": false,
+    "FineSpanChanged": false,
+    "LatticeChanged": false,
+    "RecallChanged": false,
+    "LexiconChanged": false,
+    "DomainVoteChanged": false,
+    "Model2Changed": false,
+    "AssemblyChanged": false,
+    "KenLMChanged": false,
+    "JobResultChanged": false,
+    "NewConfig": false,
+    "NewRanking": false,
+    "NewFallback": false,
+    "NewCompatibilityPath": false,
+    "ProductionBusinessFilesModified": 0,
+    "HarnessOnlyChanges": 2
+  },
+  "harnessOnlyChanges": [
+    {
+      "file": "electron_node/electron-node/tests/repro/start-node-detached.mjs",
+      "why": "Strip ELECTRON_RUN_AS_NODE from real Electron app env so :5020 can bind"
+    },
+    {
+      "file": "electron_node/electron-node/tests/run-dialog200-model3-acceptance.mjs",
+      "why": "Restore servicePreferences from serviceLastRuntimeState so ASR auto-starts"
+    }
+  ],
+  "passConditions": {
+    "A_environmentRecovered": true,
+    "B_node5020Healthy": true,
+    "C_realSqliteRecall": true,
+    "D_casesExecutedGt0": true,
+    "E_pipelineCasesExecutedGt0": true,
+    "F_singlePathDriftRemoved": true,
+    "G_alternativeHypothesesReachRecall": true,
+    "H_model3Lifecycle": true,
+    "I_domainVoteOnce": true,
+    "J_retryOnce": true,
+    "K_recursiveRetry0": true,
+    "L_crossAnchor0": true,
+    "M_crossKeep0": true,
+    "N_outOfRegion0": true,
+    "O_globalCandidateLe16": true,
+    "P_noArchitectureRegression": true,
+    "Q_noNewFallback": true
+  },
+  "trainingGates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "OPEN"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "if_option_A_per_span": {
+    "additional_ipc_per_utterance_estimate": {
+      "mean": 5.23,
+      "note": "1046 MULTIPLE windows / 200 utt as upper proxy; FineSpan cover may be lower"
+    },
+    "p50_proxy": 5,
+    "p95_proxy": null,
+    "max_proxy": "unbounded by span count"
+  },
+  "if_option_B_utterance_batch": {
+    "additional_ipc_per_utterance": "0 if no N>1 else 1",
+    "p50": 1,
+    "p95": 1,
+    "max": 1
+  },
+  "if_option_C_merge": {
+    "additional_ipc": 0,
+    "uses_existing_per_span_infer": true
+  }
+}

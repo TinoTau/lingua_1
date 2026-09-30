@@ -1,0 +1,116 @@
+{
+  "phase": "MODEL3_V1_MAINLINE_INSERTION_POINT_CORRECTION_AUDIT",
+  "date": "2026-08-26",
+  "verdict": "READY_WITH_GAPS",
+  "mode": "READ_ONLY",
+  "ssot": {
+    "domainCandidateEqualsDomainAnchor": false,
+    "domainAnchorRequiresFinalVote": true,
+    "model2AcceptedHitAnchor": true,
+    "model3DiscoversAnchor": false,
+    "correctionReason": "implementation convenience must not redefine frozen Domain Anchor semantics"
+  },
+  "previousAudit": {
+    "phase": "MODEL3_V1_MAINLINE_INTEGRATION_PREDEVELOPMENT_AUDIT",
+    "insertionPointStatus": "SUPERSEDED",
+    "supersedeReason": "DOMAIN_ANCHOR_PRE_VOTE_SEMANTICS_INCORRECT",
+    "oldInsertion": "before runDomainAwareAssembly (after Model2)",
+    "otherFindingsPreserved": true
+  },
+  "domainVoteBoundary": {
+    "currentFunction": "assemble-domain-aware-span-sets.ts:runDomainAwareAssembly",
+    "stages": [
+      {"name": "pool", "fn": "buildFineSpanCandidatePool", "role": "A"},
+      {"name": "vote", "fn": "voteUtteranceDomainFromPool", "role": "B_VOTE_COMPLETE"},
+      {"name": "bucketKeys", "fn": "retainedDomains or [null]", "role": "C"},
+      {"name": "filter", "fn": "filterDomainCandidatesPerSpan", "role": "D"},
+      {"name": "budget", "fn": "budgetPerSpanCandidates", "role": "E"},
+      {"name": "assemble", "fn": "assembleDomainAwareSpanSets", "role": "F"}
+    ],
+    "voteCompletionPoint": "after voteUtteranceDomainFromPool(pool) — L343",
+    "existingResultType": "UtteranceDomainVoteResult",
+    "newInternalTypeNeeded": false,
+    "optionalThinCarrier": "{ pool, vote } plumbing only — not second domain SSOT",
+    "secondDomainVoteForbidden": true
+  },
+  "recommendedInternalStructure": {
+    "preferredOption": "A",
+    "newHelpers": [
+      "completeDomainAwareAssemblyFromVote(pool, vote, coarseSpans, rawText, pathFineSpans, domainPriors) — extract L345-394",
+      "materializeModel3Anchors(pathFineSpans, vote, activeCandidates) — read-only"
+    ],
+    "whySimplest": "reuse existing vote SSOT; one thin post-vote extract; no middleware/service; clear rollback; unit-testable",
+    "rejected": ["DomainVoteServiceV2", "callback middleware", "second orchestrator"]
+  },
+  "correctInsertionPoint": {
+    "file": "electron_node/electron-node/main/src/fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts",
+    "orchestratorCallSite": "span-assembly-v4-orchestrator.ts:runSpanAssemblyV4Orchestrator",
+    "function": "after voteUtteranceDomainFromPool / before completeDomainAwareAssemblyFromVote",
+    "before": "filterDomainCandidatesPerSpan / budgetPerSpanCandidates / assembleDomainAwareSpanSets / buildSentenceCandidates",
+    "after": "buildFineSpanCandidatePool + voteUtteranceDomainFromPool",
+    "domainVoteComplete": true,
+    "assemblyCommitted": false
+  },
+  "anchorAdapter": {
+    "domainSource": "non-covered domain_term/passive_domain_weak candidate whose domain ∈ vote.retainedDomains",
+    "model2Source": "accepted Model2 WindowCandidate with PROFILE_* provenance bound to FineSpan",
+    "dedupeKey": "PathFineSpan.spanId",
+    "domainAndModel2": "both signals on same spanId",
+    "rejectPreVote": "domain_term alone when domain not in retainedDomains"
+  },
+  "retryDomainContext": {
+    "retainedDomainsAvailable": true,
+    "existingRecallAcceptsDomainContext": true,
+    "api": "recallSpanTopKV2({ domainIds: vote.retainedDomains, ... })",
+    "secondDomainVoteRequired": false,
+    "domainReevaluationGapIfForced": "DOMAIN_REEVALUATION_GAP"
+  },
+  "retryPolicy": {
+    "perSpanRetryMax": 1,
+    "recursiveRetry": false,
+    "multipleRetry": "deterministic spanId order",
+    "perSpanBudgetIncreased": false,
+    "utteranceBudgetIncreased": false,
+    "perSpanLimits": "8/6/4",
+    "utteranceKenlmCap": 16
+  },
+  "anchorProtection": {
+    "targetLayer": "Model3 eligibility excludes Anchor spanIds",
+    "routerLayer": "retry router rejects Anchor spanIds",
+    "anchorMutationAllowed": false
+  },
+  "assembly": {
+    "existingAssemblyReused": true,
+    "newAssemblyPath": false,
+    "ownershipSplit": false,
+    "owner": "span-assembly-v4"
+  },
+  "types": {
+    "jobResultChange": false,
+    "parallelDomainState": false,
+    "parallelSpanRegistry": false,
+    "reuse": ["UtteranceDomainVoteResult", "FineSpanCandidatePool", "DomainAwareAssemblyResult"]
+  },
+  "rollback": {
+    "integrationId": "MODEL3_V1_MAINLINE_INTEGRATION",
+    "updatedModifiedFiles": [
+      "assemble-domain-aware-span-sets.ts",
+      "span-assembly-v4-orchestrator.ts"
+    ],
+    "boundaryRefactorIncluded": true,
+    "rollbackComplete": true
+  },
+  "decision": {
+    "ssotCorrected": true,
+    "safeToEnterDevelopment": true,
+    "architectureChangeRequired": false,
+    "remainingGaps": [
+      "completeDomainAwareAssemblyFromVote extract (dev)",
+      "materializeModel3Anchors using retainedDomains",
+      "Model3 loader/sidecar",
+      "retry merge within caps",
+      "Model3 trace + new anchor quality metrics"
+    ],
+    "recommendedNextPhase": "MODEL3_V1_MAINLINE_INTEGRATION_DEVELOPMENT"
+  }
+}

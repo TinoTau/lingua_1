@@ -1,0 +1,37 @@
+{
+  "$id": "SingleCharDisambiguationRequestV1",
+  "type": "object",
+  "required": [
+    "request_id",
+    "span_id",
+    "contract",
+    "span_surface",
+    "span_canonical_surface",
+    "acoustic_pinyin",
+    "acoustic_tone_pinyin_key",
+    "left_context",
+    "right_context",
+    "candidates"
+  ],
+  "properties": {
+    "request_id": { "type": "string" },
+    "span_id": { "type": "string" },
+    "contract": { "const": "SingleCharDisambiguationContractV1" },
+    "span_surface": { "type": "string" },
+    "span_canonical_surface": { "type": "string" },
+    "acoustic_pinyin": { "type": "string" },
+    "acoustic_tone_pinyin_key": { "type": "string" },
+    "left_context": { "type": "string", "description": "NFC slice of existing rawText, up to 16 chars before raw_start" },
+    "right_context": { "type": "string", "description": "NFC slice of existing rawText, up to 16 chars after raw_end" },
+    "candidates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8
+    },
+    "phonetic_bias": { "type": "object" },
+    "long_term_domain_evidence": { "type": "object" }
+  },
+  "not": {
+    "required": ["expectedText"]
+  }
+}

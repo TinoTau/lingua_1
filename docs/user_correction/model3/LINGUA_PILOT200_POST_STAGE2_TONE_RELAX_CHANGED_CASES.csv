@@ -1,0 +1,8 @@
+caseId,condition,previousFinalCorrect,currentFinalCorrect,change,before_output,after_output,Stage2_involved,target_Stage2_returned,target_survived_budget,target_reached_KenLM,regression_owner,reclassifiedOwner
+p2_u001_018,CORRECT_PROFILE,1,0,REGRESSED,"我先核对信息牌确认无误后,再把结果发送给他。 如果发给你这样两遍都省事","我先核对信息确认无误后,再把结果发送给他。 如果发给你这样两遍都省事",YES,YES,YES,YES,KENLM,KENLM
+p2_u001_018,WRONG_PROFILE,1,0,REGRESSED,"我先核对信息牌确认无误后,再把结果发送给他。 如果发给你这样两遍都省事","我先核对信息确认无误后,再把结果发送给他。 如果发给你这样两遍都省事",YES,YES,YES,YES,KENLM,KENLM
+p2_u001_037,CORRECT_PROFILE,1,0,REGRESSED,"太旦商有新景点","太旦上游新经典",YES,YES,YES,YES,KENLM,KENLM
+p2_u001_037,WRONG_PROFILE,1,0,REGRESSED,"太旦商有新景点","太旦上游新经典",YES,YES,YES,YES,KENLM,KENLM
+p2_u002_037,CORRECT_PROFILE,1,0,REGRESSED,"请同步开幕式状态","请同步开幕状态",YES,NO,NO,NO,STAGE2_FALSE_EXPANSION,DOWNSTREAM
+p2_u004_013,CORRECT_PROFILE,1,0,REGRESSED,"请核对法处理","请核发出",YES,YES,YES,YES,KENLM,KENLM
+p2_u004_013,WRONG_PROFILE,1,0,REGRESSED,"请核对法处理","请核发出",YES,YES,YES,YES,KENLM,KENLM

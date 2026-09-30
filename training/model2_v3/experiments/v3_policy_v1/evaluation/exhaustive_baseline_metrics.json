@@ -1,0 +1,44 @@
+{
+  "B0": {
+    "n": 29,
+    "TargetIntroductionRate": 0.0,
+    "QueryCount_mean": 0.0,
+    "QueryCount_P50": 0.0,
+    "QueryCount_P95": 0.0,
+    "CandidateCount_mean": 0.0,
+    "CandidateCount_P50": 0.0,
+    "CandidateCount_P95": 0.0,
+    "Latency_P50": 0.0012999807950109243,
+    "Latency_P95": 0.00200001522898674,
+    "RecallPerQuery": 0.0,
+    "RecallPerCandidate": 0.0
+  },
+  "B1": {
+    "n": 29,
+    "TargetIntroductionRate": 1.0,
+    "QueryCount_mean": 1.0,
+    "QueryCount_P50": 1.0,
+    "QueryCount_P95": 1.0,
+    "CandidateCount_mean": 3.2413793103448274,
+    "CandidateCount_P50": 3.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 46.732199989492074,
+    "Latency_P95": 72.81779998447746,
+    "RecallPerQuery": 1.0,
+    "RecallPerCandidate": 0.30851063829787234
+  },
+  "B1_cost_slice": {
+    "n": 69,
+    "TargetIntroductionRate": 1.0,
+    "QueryCount_mean": 1.0434782608695652,
+    "QueryCount_P50": 1.0,
+    "QueryCount_P95": 1.0,
+    "CandidateCount_mean": 3.1884057971014492,
+    "CandidateCount_P50": 2.0,
+    "CandidateCount_P95": 8.0,
+    "Latency_P50": 48.312900005839765,
+    "Latency_P95": 114.63140000705607,
+    "RecallPerQuery": 0.9583333333333334,
+    "RecallPerCandidate": 0.31363636363636366
+  }
+}

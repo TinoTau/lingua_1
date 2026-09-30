@@ -1,0 +1,81 @@
+{
+  "phase": "MODEL3_V2_TRAINING_DATA_IDENTITY_GUARD_DEVELOPMENT",
+  "verdict": "MODEL3_TRAINING_DATA_IDENTITY_GUARD_DEVELOPMENT_PASS",
+  "nextPhase": "MODEL3_V2_LOCALIZATION_TRAINING_CAUSALITY_AUDIT_S3",
+  "guard": {
+    "module": "training/model3_dataset/acoustic_training/dataset_identity.py",
+    "api": [
+      "assert_model3_dataset_identity",
+      "assert_authoritative_s3_identity"
+    ],
+    "metadataSources": [
+      "checkpoint/config.json",
+      "checkpoint/weights.pt sha256",
+      "checkpoint/training_metrics.json (if present)",
+      "docs/model3_v2_s3_checkpoint_manifest.json (if present)",
+      "dataset_manifest.json"
+    ],
+    "beforeSampleLoad": true,
+    "hardStop": true,
+    "newRegistry": false
+  },
+  "authoritative": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1"
+  },
+  "stalePathStatus": "REMOVED_FROM_S3_CAUSALITY_AND_GENERALIZATION_AUDITS",
+  "candidateMissingValueStatus": "TRAINING_SIDE_FAIL_CLOSED_IMPLEMENTED",
+  "duplicate6dUnchanged": true,
+  "testCommand": "python -m unittest training.model3_dataset.tests.test_dataset_identity_guard -v",
+  "testResult": "15/15 OK",
+  "cliEvidence": {
+    "positive": "dataset_identity.py --require-authoritative-s3 → exit 0",
+    "negativeLabeled": "… --dataset-path model3_v2_labeled/train → exit 2 MODEL3_DATASET_IDENTITY_MISMATCH"
+  },
+  "questions": {
+    "D1": "dataset_identity.assert_model3_dataset_identity",
+    "D2": "checkpoint config + weights hash + sidecar manifests + dataset_manifest.json",
+    "D3": "YES",
+    "D4": "YES",
+    "D5": "YES HARD STOP",
+    "D6": "YES",
+    "D7": "YES",
+    "D8": "YES",
+    "D9": "YES",
+    "D10": "NO",
+    "D11": "NO",
+    "D12": "NO",
+    "D13": "NO",
+    "D14": "NO",
+    "D15": "NO",
+    "D16": "NO",
+    "D17": "NO",
+    "D18": "NO",
+    "D19": "NO",
+    "D20": "NO",
+    "D21": "NO",
+    "D22": "YES training-side only fail-closed",
+    "D23": "YES zero still valid",
+    "D24": "YES duplicate 6D unchanged (inference host untouched)",
+    "D25": "YES retained",
+    "D26": "YES SUPERSEDED_BY_DATASET_IDENTITY_CORRECTION",
+    "D27": "YES",
+    "D28": "YES"
+  },
+  "governance": {
+    "productionCodeChanged": "NO",
+    "trainingExecuted": "NO",
+    "datasetRebuilt": "NO",
+    "modelChanged": "NO",
+    "thresholdChanged": "NO",
+    "featureContractChanged": "NO",
+    "fineSpanChanged": "NO",
+    "retryChanged": "NO",
+    "recallChanged": "NO",
+    "model2Changed": "NO",
+    "domainVoteChanged": "NO",
+    "jobResultChanged": "NO"
+  }
+}

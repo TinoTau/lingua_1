@@ -1,0 +1,42 @@
+{
+  "ran": true,
+  "n": 5,
+  "equivalent": 3,
+  "comparisons": [
+    {
+      "dialog_id": "d010",
+      "raw_same": true,
+      "final_same": true,
+      "asr_pair": "SAME_RAW_ASR",
+      "business_result_equivalent": true
+    },
+    {
+      "dialog_id": "d040",
+      "raw_same": true,
+      "final_same": true,
+      "asr_pair": "SAME_RAW_ASR",
+      "business_result_equivalent": true
+    },
+    {
+      "dialog_id": "d080",
+      "raw_same": false,
+      "final_same": false,
+      "asr_pair": "ASR_NONDETERMINISTIC_PAIR",
+      "business_result_equivalent": false
+    },
+    {
+      "dialog_id": "d120",
+      "raw_same": false,
+      "final_same": false,
+      "asr_pair": "ASR_NONDETERMINISTIC_PAIR",
+      "business_result_equivalent": false
+    },
+    {
+      "dialog_id": "d160",
+      "raw_same": true,
+      "final_same": true,
+      "asr_pair": "SAME_RAW_ASR",
+      "business_result_equivalent": true
+    }
+  ]
+}

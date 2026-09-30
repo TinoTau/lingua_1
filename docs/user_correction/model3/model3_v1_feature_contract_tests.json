@@ -1,0 +1,45 @@
+{
+  "tests": [
+    {
+      "id": 1,
+      "name": "pinyin_channel_avail semantic parity",
+      "pass": true
+    },
+    {
+      "id": 2,
+      "name": "first_pass_cand_log1p semantic parity",
+      "pass": true
+    },
+    {
+      "id": 3,
+      "name": "synthetic RETRY replay 100%",
+      "pass": true
+    },
+    {
+      "id": 4,
+      "name": "synthetic KEEP replay 100%",
+      "pass": true
+    },
+    {
+      "id": 5,
+      "name": "keep_logit/retry_logit exposed",
+      "pass": true
+    },
+    {
+      "id": 6,
+      "name": "margin equals retry-keep",
+      "pass": true
+    },
+    {
+      "id": 7,
+      "name": "logging does not alter decision",
+      "pass": true
+    },
+    {
+      "id": 8,
+      "name": "eligible subset invariant",
+      "pass": true
+    }
+  ],
+  "allPass": true
+}

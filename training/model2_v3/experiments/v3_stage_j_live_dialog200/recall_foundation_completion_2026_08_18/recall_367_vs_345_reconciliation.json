@@ -1,0 +1,228 @@
+{
+  "target_missing": 367,
+  "lexicon_coverage_gap_failures": 345,
+  "difference": 22,
+  "explanation": "22 units are target-missing (R1_exists=false) but terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY because MATERIALIZABLE_TARGET_V1 lexical_recoverable=true via an existing trace candidate surface. They are non-failures and must not be counted in LEXICON_COVERAGE_GAP failure numerator.",
+  "units": [
+    {
+      "dialog_id": "d001",
+      "stable_id": "cu:11:SUBSTITUTE:18-19:23-24",
+      "expected": "莓",
+      "source": "没",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d002",
+      "stable_id": "cu:1:SUBSTITUTE:12-13:12-13",
+      "expected": "杯",
+      "source": "背",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d009",
+      "stable_id": "cu:3:SUBSTITUTE:7-8:9-10",
+      "expected": "四",
+      "source": "私",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d021",
+      "stable_id": "cu:4:SUBSTITUTE:8-9:8-9",
+      "expected": "链",
+      "source": "連",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d030",
+      "stable_id": "cu:3:SUBSTITUTE:14-15:14-15",
+      "expected": "重",
+      "source": "终",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d031",
+      "stable_id": "cu:1:SUBSTITUTE:2-3:2-3",
+      "expected": "订",
+      "source": "定",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d047",
+      "stable_id": "cu:1:SUBSTITUTE:12-13:12-13",
+      "expected": "杯",
+      "source": "背",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d075",
+      "stable_id": "cu:3:SUBSTITUTE:14-15:14-15",
+      "expected": "重",
+      "source": "终",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d076",
+      "stable_id": "cu:1:SUBSTITUTE:2-3:2-3",
+      "expected": "订",
+      "source": "定",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d084",
+      "stable_id": "cu:5:SUBSTITUTE:13-14:13-14",
+      "expected": "码",
+      "source": "马",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d090",
+      "stable_id": "cu:4:SUBSTITUTE:9-10:8-9",
+      "expected": "线",
+      "source": "限",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d110",
+      "stable_id": "cu:8:SUBSTITUTE:9-10:8-9",
+      "expected": "齐",
+      "source": "其",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d114",
+      "stable_id": "cu:1:SUBSTITUTE:2-3:2-3",
+      "expected": "抬",
+      "source": "台",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d121",
+      "stable_id": "cu:1:SUBSTITUTE:2-3:2-3",
+      "expected": "订",
+      "source": "定",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d137",
+      "stable_id": "cu:1:SUBSTITUTE:13-14:13-14",
+      "expected": "杯",
+      "source": "背",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d149",
+      "stable_id": "cu:4:SUBSTITUTE:7-8:12-13",
+      "expected": "适",
+      "source": "是",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d156",
+      "stable_id": "cu:10:SUBSTITUTE:20-21:19-20",
+      "expected": "档",
+      "source": "當",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d166",
+      "stable_id": "cu:1:SUBSTITUTE:2-3:2-3",
+      "expected": "订",
+      "source": "定",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d182",
+      "stable_id": "cu:3:SUBSTITUTE:14-15:14-15",
+      "expected": "杯",
+      "source": "背",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d183",
+      "stable_id": "cu:1:SUBSTITUTE:9-10:9-10",
+      "expected": "冰",
+      "source": "病",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d183",
+      "stable_id": "cu:3:SUBSTITUTE:16-17:16-17",
+      "expected": "杯",
+      "source": "备",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    },
+    {
+      "dialog_id": "d184",
+      "stable_id": "cu:3:SUBSTITUTE:3-4:3-4",
+      "expected": "户",
+      "source": "互",
+      "terminal_state": "EXPECTED_NON_CANDIDATE_RECOVERY",
+      "lexical_recoverable": true,
+      "R8_materialized": false,
+      "explanation": "Target missing from lexicon but not counted as LEXICON_COVERAGE_GAP because terminal_state=EXPECTED_NON_CANDIDATE_RECOVERY: Trace already contains matching candidate surface for expected unit without correction-target lexicon membership or union materialization of the expected target itself"
+    }
+  ]
+}

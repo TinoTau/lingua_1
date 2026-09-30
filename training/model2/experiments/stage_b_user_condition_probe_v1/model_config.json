@@ -1,0 +1,11 @@
+{
+  "architecture": "Model2StageAV1",
+  "fusion": "condition_gate * einsum(condition, candidate) residual on scores",
+  "use_condition_in_score": true,
+  "note": "Same Stage A structure; Stage B trains previously masked condition path",
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ]
+}

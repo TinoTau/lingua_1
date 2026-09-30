@@ -1,0 +1,49 @@
+﻿=== RETRY_MULTIHYPOTHESIS_CORRECTION_ACCEPTANCE env diagnostics 2026-08-29 ===
+
+--- Initial port/health (pre-recovery) ---
+5020/health FAIL (nothing listening)
+testServer.port=5020 (from APPDATA config)
+
+--- Storm log evidence of prior failure ---
+[FATAL] uncaughtException: TypeError: Cannot read properties of undefined (reading 'whenReady')
+(at dist/main/.../index.js when Electron launched with ELECTRON_RUN_AS_NODE=1)
+
+--- Smoke after start-node-detached ELECTRON_RUN_AS_NODE strip ---
+post-smoke health=200
+
+--- ROOT CAUSE 1 (prior :5020 FAIL) ---
+Symptom: Node :5020 health FAIL after start-node-detached (pid printed, then 15min wait)
+Cause: ELECTRON_RUN_AS_NODE=1 inherited by real Electron app via start-node-detached env copy
+  → require('electron').app is undefined → whenReady crash → process exits → :5020 never binds
+Classification: A (process exited) + J (env leak into wrong process)
+Harness fix: tests/repro/start-node-detached.mjs deletes ELECTRON_RUN_AS_NODE from child env
+Evidence: ELECTRON_RUN_AS_NODE_STRIPPED true; Node READY
+
+--- ROOT CAUSE 2 (after :5020 recovered) ---
+Symptom: ASR FAIL "No available ASR service"; endpointCount=0; :6007 not listening
+Cause: servicePreferences.faster-whisper-vad=false (all prefs false)
+  while serviceLastRuntimeState.faster-whisper-vad=true
+  Auto-starting services by preference skipped ASR
+Classification: H (required ASR dependency not started due to preference)
+Harness fix: run-dialog200-model3-acceptance.mjs ensureServicePreferencesForAcceptance()
+  restores prefs from lastRuntimeState + forces faster-whisper-vad
+Evidence: ASR READY 78844 ms; asr_service_id=faster-whisper-vad
+
+--- WORKING_STARTUP_CONTRACT ---
+command: ELECTRON_RUN_AS_NODE=1 electron.exe tests/run-dialog200-model3-acceptance.mjs --anchored-only [--max-minutes 60]
+cwd: electron_node/electron-node
+environment: PROJECT_ROOT=<repo>; app gets NODE_ENV=production, TONE_P10_VAD_CPU=1, MODEL2_DIALOG200_TRACE=1; app MUST NOT get ELECTRON_RUN_AS_NODE
+expected ports: 5020 (test server), 6007 (faster-whisper-vad)
+health endpoint: GET http://127.0.0.1:5020/health
+startup readiness: Node health OK + waitAsrReady warmup (faster-whisper-vad + non-empty raw_asr_text)
+servicePreferences: faster-whisper-vad must be true for auto-start
+
+--- FAILED_RUN_DIFFERENCE (previous development phase) ---
+1. ELECTRON_RUN_AS_NODE leaked into app → whenReady crash
+2. ASR preference false → no ASR endpoints even if :5020 up
+3. --max-minutes 15 consumed by health wait alone → casesExecuted=0
+
+--- DIALOG_200 ACCEPTANCE RUN ---
+casesDiscovered=53 casesExecuted=53 pipelineCasesExecuted=53 failed=0 regressed=0
+maxKenlmPool=6 global_gt16=0 second_vote=0 decisions_retry=0
+wall_clock_sec=647

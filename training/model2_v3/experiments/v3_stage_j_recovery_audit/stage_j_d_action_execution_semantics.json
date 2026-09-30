@@ -1,0 +1,11 @@
+{
+  "soft_domain_retrieve": "Expand FuzzyPool then soft-rerank by domain prior (hard_filter=False)",
+  "DOMAIN_ACTION_EXECUTION_DRIFT_hard_filter": false,
+  "TRAIN_EVAL_RETRIEVAL_DRIFT": true,
+  "detail": [
+    "D2 train labels synthetic from target_domains — not execute-validated teacher",
+    "Stage D1 eval hit allows surface match; Stage J requires exact term_id",
+    "FuzzyPool dedup by surface drops domain: duplicate of base: surface"
+  ],
+  "DOMAIN_SOFT_ACTION": "SOFT PRIOR / rerank — not hard filter"
+}

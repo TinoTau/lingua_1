@@ -1,0 +1,21 @@
+{
+  "embed_dim": 64,
+  "hidden_dim": 128,
+  "feat_dim": 6,
+  "feat_names": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "max_surface_len": 8,
+  "batch_size": 64,
+  "epochs": 5,
+  "lr": 0.001,
+  "class_weight_retry": 8.286664676151805,
+  "seed": 2026082414,
+  "init": "random_from_scratch",
+  "predecessor_checkpoint_used": false
+}

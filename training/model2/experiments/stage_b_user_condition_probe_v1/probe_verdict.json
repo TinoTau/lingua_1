@@ -1,0 +1,24 @@
+{
+  "go": {
+    "tiny_overfit": true,
+    "mask_invariance": true,
+    "condition_gain_score_pos": true,
+    "condition_gain_recall3_pos": false,
+    "wrong_not_better_than_correct": true,
+    "wrong_damage_not_catastrophic": true,
+    "profile_swap_interpretable": false,
+    "profile_zeroing_ok": false,
+    "params_ok": true,
+    "unseen_user_not_random": true,
+    "unseen_term_not_random": true,
+    "primary_variant": "B1",
+    "stage_b_probe_pass": true
+  },
+  "env": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "torch": "2.13.0+cpu",
+    "cuda": false,
+    "platform": "Windows-10-10.0.26200-SP0",
+    "device": "cpu"
+  }
+}

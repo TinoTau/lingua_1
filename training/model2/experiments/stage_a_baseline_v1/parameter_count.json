@@ -1,0 +1,18 @@
+{
+  "trainable_total": 141728,
+  "by_module": {
+    "shared": 107352,
+    "query_encoder": 15712,
+    "candidate_encoder": 11200,
+    "condition_encoder": 6784,
+    "base_scorer": 0,
+    "weak_scorer": 5,
+    "condition_compat": 609,
+    "no_match_anchor_and_gates": 66
+  },
+  "root_params": [
+    "no_match_embed",
+    "condition_gate",
+    "relation_gate"
+  ]
+}

@@ -1,0 +1,13 @@
+gate,status,notes
+checkpoint_sha,PASS,54322a2670eabd1fbcb7c2b36f24ef62c6413c9bea57d64eda61f81fd04161d9
+protection_registry,PASS,MODEL3_V2_PROTECTION_REGISTRY
+eligible_cases,PASS,13
+case_level_any_retry,PASS,13
+target_retry,PASS,6/13
+legacy_unrelated_cases,PASS,"d131,d176,d181,d195"
+anchor_retry_violation,PASS,
+mapping_defect,PASS,
+keep_control_false_retry,PASS,0/6
+final_verdict,S2_LOCALIZATION_AUDIT_PASS_WITH_NONBLOCKING_FALSE_POSITIVES,S3_authorized
+s3_authorized,YES,MODEL3_V2_PRODUCTION_DATASET_EXPANSION_S3
+runtime_change_required,NO,

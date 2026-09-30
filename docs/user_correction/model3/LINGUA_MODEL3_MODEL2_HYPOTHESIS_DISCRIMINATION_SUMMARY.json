@@ -1,0 +1,63 @@
+{
+  "phase": "LINGUA_MODEL3_MODEL2_HYPOTHESIS_DISCRIMINATION_AUDIT",
+  "productCodeChange": false,
+  "BASELINE_IDENTITY": "PASS",
+  "PRIMARY_CASE_COUNT": 6,
+  "COUNTERFACTUAL_RECONSTRUCTION": "PARTIAL",
+  "COUNTERFACTUAL_NOTE": "CF-A mask-only on production full-path logits = PASS; CF-B standalone host reinfer with isAnchor=0 not logit-faithful to production pack",
+  "MODEL3_CURRENT_INPUT_CONTRACT": "BiGRU(ASR surface tokens) + 6D {isAnchor, span_len_log1p, span_rel_position, first_pass_cand_log1p, current_cjk_len_log1p, pinyin_channel_avail}",
+  "MODEL2_HYPOTHESIS_VISIBILITY": "NONE",
+  "PROFILE_EVIDENCE_TYPE_COLLAPSE": "YES",
+  "K1_R1_MODEL3_FEATURE_ISOMORPHISM": "PARTIAL",
+  "MODEL3_DISTINGUISHING_EVIDENCE_AVAILABLE": "NO",
+  "MODEL3_DISTINGUISHING_EVIDENCE_USED": "NOT_APPLICABLE",
+  "COUNTERFACTUAL_K_GROUP_KEEP": "0/2",
+  "COUNTERFACTUAL_R_GROUP_KEEP": "0/4",
+  "COUNTERFACTUAL_R_GROUP_RETRY": "4/4",
+  "FALSE_KEEP_COUNT": 0,
+  "FALSE_RETRY_COUNT": 2,
+  "PRIMARY_FIRST_FAILURE_MECHANISM": "MODEL3_INPUT_CONTRACT_BLIND_TO_MODEL2_HYPOTHESIS (+ false Anchor mask secondary)",
+  "ONE_NEXT_OWNER": "MODEL3_INPUT_CONTRACT_OWNER",
+  "MODEL2_EVIDENCE_TRANSPORT_REQUIRED": "YES",
+  "MODEL3_INPUT_CHANGE_REQUIRED": "YES",
+  "MODEL3_DECISION_CHANGE_REQUIRED": "UNKNOWN",
+  "MODEL3_TRAINING_READY": "NO",
+  "JOBRESULT_CHANGE_REQUIRED": "NO",
+  "ARCHITECTURE_CHANGE_PROPOSAL_REQUIRED": "NO",
+  "PATCH_FREE_LOCAL_REFACTOR_FEASIBLE": "UNKNOWN",
+  "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+  "ONE_NEXT_DELTA": "Specify Model3 input-contract fields for span-bound replacement + retrievalProvenance before any Anchor release / training / decision retune.",
+  "hypothesisStatements": {
+    "H1_evidence_enough_only_anchor_blocks": "NOT_SUPPORTED",
+    "H2_evidence_present_decision_wrong": "NOT_SUPPORTED_FOR_HYP_DISCRIMINATION",
+    "H3_evidence_missing": "SUPPORTED",
+    "H4_mixed": "Anchor_gate_and_input_gap_both_real_FIRST_is_input_contract"
+  },
+  "falseAnchorTiming": "MIXED_FEATURE_AND_POST_INFER_MASK",
+  "codeOwners": {
+    "featurePack": "model3-feature-pack.ts::packModel3SpanInferFields",
+    "infer": "model3-inference-client.ts + model3_inference_host.py",
+    "mask": "run-model3-path-step.ts::maskAnchorDecisions + host is_anchor gate",
+    "anchors": "model3-anchor-adapter.ts::materializeModel3Anchors"
+  },
+  "taxonomyCounts": {
+    "D3_MODEL3_INPUT_MISSING_MODEL2_HYPOTHESIS_DETAIL": 6,
+    "D1_FALSE_ANCHOR_BLOCKS_MODEL3_SECONDARY": 6,
+    "SUM_PRIMARY": 6
+  },
+  "acceptance": {
+    "K1_TRACE_COMPLETE": "YES",
+    "K2_TRACE_COMPLETE": "YES",
+    "R1_TRACE_COMPLETE": "YES",
+    "R2_TRACE_COMPLETE": "YES",
+    "R3_TRACE_COMPLETE": "YES",
+    "R4_TRACE_COMPLETE": "YES",
+    "MODEL3_INPUT_FIELDS_INVENTORIED": "YES",
+    "K1_R1_FEATURE_DIFF_MATRIX_COMPLETE": "YES",
+    "COUNTERFACTUAL_UNMASKED_EVALUATION_COMPLETE": "YES",
+    "EVIDENCE_VISIBILITY_SEPARATED_FROM_DECISION_QUALITY": "YES",
+    "NO_MODEL_CHANGE": "YES",
+    "NO_ANCHOR_CHANGE": "YES",
+    "EXACTLY_ONE_NEXT_OWNER": "YES"
+  }
+}

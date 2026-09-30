@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import type { LexicalEdge } from './build-lexical-edges';
 import type { WindowCandidate } from './v4-types';
-import { enumerateCompleteSegmentationPaths } from './enumerate-complete-segmentation-paths';
+import { enumerateCompleteSegmentationPaths, compareSegmentationPathBestFirst } from './enumerate-complete-segmentation-paths';
 import { derivePathId } from './build-boundary-key';
 
 function fakeCandidate(partial: Partial<WindowCandidate> & { candidateId: string }): WindowCandidate {
@@ -205,5 +205,25 @@ describe('enumerateCompleteSegmentationPaths', () => {
     expect(out.completePathCountBeforePrune).toBe(0);
     expect(out.retainedCompletePathCount).toBe(0);
     expect(out.paths).toHaveLength(0);
+  });
+
+  it('compareSegmentationPathBestFirst ranks best before boundaryKey-only sort order', () => {
+    const edges = [
+      edge({ start: 0, end: 2, evidence: { hasExact: true } }),
+      edge({ start: 0, end: 1, evidence: { hasFuzzy: true } }),
+      edge({ start: 1, end: 2, evidence: { hasFuzzy: true } }),
+    ];
+    const out = enumerateCompleteSegmentationPaths({
+      syllableCount: 2,
+      lexicalEdges: edges,
+      limits: { maxActivePathsPerPosition: 8, maxCompleteSegmentationPaths: 8 },
+    });
+    expect(out.paths).toHaveLength(2);
+    const boundaryKeyFirst = [...out.paths].sort((a, b) =>
+      a.boundaryKey.localeCompare(b.boundaryKey)
+    )[0]!;
+    const bestFirst = [...out.paths].sort(compareSegmentationPathBestFirst)[0]!;
+    expect(boundaryKeyFirst.boundaryKey).toBe('0-1|1-2');
+    expect(bestFirst.boundaryKey).toBe('0-2');
   });
 });

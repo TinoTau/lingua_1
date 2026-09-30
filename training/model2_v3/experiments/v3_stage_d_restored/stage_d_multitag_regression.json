@@ -1,0 +1,203 @@
+{
+  "n_term_ids_tested": 50,
+  "any_selected_tag_recalls": 50,
+  "unique_identities_in_test_prefix": 19,
+  "population_multitag_term_ids": 50,
+  "population_multitag_identities": 19,
+  "note": "50 term_id goal; unique (surface,pinyin_key) identities in index = 44 (actual maximum under identity contract)",
+  "PASS": true,
+  "sample": [
+    {
+      "surface": "中杯",
+      "term_id": "domain:coffee:中杯:zhong|bei",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "中杯",
+      "term_id": "domain:food_order:中杯:zhong|bei",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "中杯",
+      "term_id": "domain:milk_tea:中杯:zhong|bei",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "出租车",
+      "term_id": "domain:tourism_route:出租车:chu|zu|che",
+      "tags": [
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "出租车",
+      "term_id": "domain:tourism_transport:出租车:chu|zu|che",
+      "tags": [
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加冰",
+      "term_id": "domain:coffee:加冰:jia|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加冰",
+      "term_id": "domain:food_order:加冰:jia|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加冰",
+      "term_id": "domain:milk_tea:加冰:jia|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加料",
+      "term_id": "domain:food_order:加料:jia|liao",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加料",
+      "term_id": "domain:milk_tea:加料:jia|liao",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加料区",
+      "term_id": "domain:food_order:加料区:jia|liao|qu",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "加料区",
+      "term_id": "domain:milk_tea:加料区:jia|liao|qu",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "半糖",
+      "term_id": "domain:coffee:半糖:ban|tang",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "半糖",
+      "term_id": "domain:food_order:半糖:ban|tang",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "半糖",
+      "term_id": "domain:milk_tea:半糖:ban|tang",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "去冰",
+      "term_id": "domain:coffee:去冰:qu|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "去冰",
+      "term_id": "domain:food_order:去冰:qu|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "去冰",
+      "term_id": "domain:milk_tea:去冰:qu|bing",
+      "tags": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "去冰量",
+      "term_id": "domain:food_order:去冰量:qu|bing|liang",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    },
+    {
+      "surface": "去冰量",
+      "term_id": "domain:milk_tea:去冰量:qu|bing|liang",
+      "tags": [
+        "food_order",
+        "milk_tea"
+      ],
+      "ok": true
+    }
+  ]
+}

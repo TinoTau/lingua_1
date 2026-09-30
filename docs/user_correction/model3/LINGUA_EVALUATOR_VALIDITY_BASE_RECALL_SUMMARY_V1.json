@@ -1,0 +1,269 @@
+{
+  "phase": "LINGUA_EVALUATOR_VALIDITY_BASE_RECALL_ROOT_CAUSE_AUDIT_V1",
+  "result_enum": "RESULT F — MULTIPLE INDEPENDENT ROOT CAUSES",
+  "cohorts": {
+    "lexicon_absent_57": 57,
+    "base_recall_52": 52,
+    "model2_replay_59": 59
+  },
+  "table_a_lexicon_reclass": [
+    {
+      "class": "EVALUATOR_NON_LEXICAL_TARGET",
+      "count": 37,
+      "pct": 64.91
+    },
+    {
+      "class": "TRUE_LEXICON_COVERAGE",
+      "count": 20,
+      "pct": 35.09
+    }
+  ],
+  "table_b_lexical_validity": [
+    {
+      "target_type": "VALID_LEXICAL_TERM",
+      "count": 20,
+      "valid_lexicon_target": true
+    },
+    {
+      "target_type": "AMBIGUOUS",
+      "count": 19,
+      "valid_lexicon_target": false
+    },
+    {
+      "target_type": "ALIGNMENT_ARTIFACT",
+      "count": 19,
+      "valid_lexicon_target": false
+    },
+    {
+      "target_type": "MULTI_WORD_PHRASE",
+      "count": 10,
+      "valid_lexicon_target": false
+    },
+    {
+      "target_type": "SENTENCE_FRAGMENT",
+      "count": 7,
+      "valid_lexicon_target": false
+    },
+    {
+      "target_type": "NON_LEXICAL_DIFF_FRAGMENT",
+      "count": 7,
+      "valid_lexicon_target": false
+    },
+    {
+      "target_type": "NORMALIZATION_ARTIFACT",
+      "count": 4,
+      "valid_lexicon_target": false
+    }
+  ],
+  "validity_yes_no": {
+    "valid_yes": 20,
+    "valid_no": 66
+  },
+  "table_c_evaluator_contract": {
+    "checks": [
+      {
+        "check": "MATERIALIZABLE mode",
+        "frozen": "Lexicon terms only; diff region ≠ lexical target",
+        "actual": "expected/ASR string diff + alignment-derived substring (Needleman–Wunsch hunks)",
+        "match": false
+      },
+      {
+        "check": "requires_lexical ⇒ lexicon must contain whole unit",
+        "frozen": "NO",
+        "actual": "Prior audits treated unit.expected_text as required lexicon surface",
+        "match": false
+      },
+      {
+        "check": "Module self-description vs consumer",
+        "frozen": "diagnostics-only OK",
+        "actual": "Consumers over-promoted units to production MUST-HAVE",
+        "match": "PARTIAL"
+      }
+    ],
+    "materializable": {
+      "module": "tests/lib/materializable-target-v1.mjs",
+      "mode_enum": "B+C",
+      "mode": "expected/ASR string diff + alignment-derived substring (Needleman–Wunsch hunks)",
+      "not": "A lexical segmentation / D lexicon-aware extraction",
+      "evidence": [
+        "deriveCorrectionUnits: alignChars(norm(ASR), norm(expected))",
+        "requires_lexical = (SUBSTITUTE || INSERT) with no lexicon membership gate",
+        "File header: diagnostics-only recoverability; does not affect candidate selection"
+      ],
+      "frozen_conflict": "S3 FROZEN: REFERENCE_DIFF_REGION ≠ LEXICAL_TARGET. Lexicon recalls lexical candidates; must not store expected-diff fragments.",
+      "contract_defect": "YES",
+      "defect_scope": "Defect is consumer misuse: funnel/decomp treated correction units as production lexicon MUST-HAVE terms"
+    }
+  },
+  "table_d_base_funnel": {
+    "B0_PRESENT": 52,
+    "B1_COMPATIBLE": 0,
+    "B2_EXECUTED": 0,
+    "B2_NOT_EXECUTED_TONE_FAIL_CLOSED": 52,
+    "B9_RETURNED": 0
+  },
+  "table_e_base_first_loss": [
+    {
+      "first_loss_root": "TONE_CONTRACT_MISMATCH",
+      "count": 19,
+      "failure_class": "REPLAY / OBSERVABILITY LIMITATION"
+    },
+    {
+      "first_loss_root": "EVALUATOR_TARGET_OR_NONLEXICAL",
+      "count": 33,
+      "failure_class": "TEST / EVALUATOR DEFECT"
+    }
+  ],
+  "table_f_problem_origin": [
+    {
+      "origin": "REPLAY_OBSERVABILITY_LIMITATION",
+      "count": 78,
+      "pct": 46.43
+    },
+    {
+      "origin": "TEST_EVALUATOR_DEFECT",
+      "count": 70,
+      "pct": 41.67
+    },
+    {
+      "origin": "LEXICON_DATA_COVERAGE",
+      "count": 20,
+      "pct": 11.9
+    }
+  ],
+  "examples": {
+    "true_lexicon_coverage": [
+      "d008:三期",
+      "d014:四十",
+      "d015:一下",
+      "d027:薪资",
+      "d030:会划",
+      "d032:几点",
+      "d042:续费",
+      "d043:声城",
+      "d052:延安",
+      "d072:薪资",
+      "d075:会划",
+      "d088:声城",
+      "d092:谢谢",
+      "d133:声城",
+      "d162:薪资",
+      "d177:续费",
+      "d178:声城",
+      "d194:四十",
+      "d196:边骑",
+      "d197:七点"
+    ],
+    "evaluator_non_lexical": [
+      "d004:结论发",
+      "d009:京soho",
+      "d011:挂号处请问内科还",
+      "d011:号吗",
+      "d019:们团队",
+      "d029:下周一",
+      "d029:午交吗",
+      "d029:交吗",
+      "d037:位置吗",
+      "d037:香菜微辣",
+      "d041:衣室柜子",
+      "d059:四十",
+      "d082:香菜微辣",
+      "d084:包吗",
+      "d086:衣室柜子",
+      "d087:续费有优惠吗",
+      "d094:陈客户",
+      "d094:三点",
+      "d094:结论发",
+      "d099:soho不",
+      "d104:四十",
+      "d106:周末要",
+      "d111:成链路",
+      "d111:线计划",
+      "d112:订单显"
+    ],
+    "base_sample": [
+      {
+        "caseId": "d005",
+        "root": "TONE_CONTRACT_MISMATCH",
+        "targets": [
+          "的站",
+          "先过",
+          "订单",
+          "进度",
+          "限流"
+        ]
+      },
+      {
+        "caseId": "d006",
+        "root": "EVALUATOR_TARGET_OR_NONLEXICAL",
+        "targets": [
+          "版",
+          "前"
+        ]
+      },
+      {
+        "caseId": "d017",
+        "root": "EVALUATOR_TARGET_OR_NONLEXICAL",
+        "targets": [
+          "吗",
+          "七"
+        ]
+      },
+      {
+        "caseId": "d020",
+        "root": "TONE_CONTRACT_MISMATCH",
+        "targets": [
+          "齐上",
+          "联调"
+        ]
+      },
+      {
+        "caseId": "d024",
+        "root": "EVALUATOR_TARGET_OR_NONLEXICAL",
+        "targets": [
+          "吗"
+        ]
+      },
+      {
+        "caseId": "d026",
+        "root": "EVALUATOR_TARGET_OR_NONLEXICAL",
+        "targets": [
+          "跨",
+          "变"
+        ]
+      }
+    ]
+  },
+  "base_contract": {
+    "production_mode": "tone_exact Mandatory Tone Fail Closed",
+    "fuzzy_default": false,
+    "pinyin_only_fallback_first_pass": false,
+    "query_key_source": "ASR window syllables (not expected)",
+    "prior_R3_vs_production": "PRIOR_LOOSER (same-char-length ≠ pinyin+tone exact)",
+    "prior_R4_vs_correct_query": "QUERY_CALLED ≠ CORRECT_QUERY (toneSqlCount=0 under mock)",
+    "implementation_defect_count": 0,
+    "architecture_defect": "NO"
+  },
+  "model2_replay": {
+    "count": 59,
+    "MODEL2_CAPABILITY_STATUS": "NOT_EVALUABLE_UNDER_CURRENT_REPLAY",
+    "reason": "NO_P_ACTION / p_feature_presence=false / no acoustic slices under lexicon-mock",
+    "harness_limitation": true
+  },
+  "answers": {
+    "Q1": "20 / 57 = 35.09% case-level TRUE_LEXICON_COVERAGE",
+    "Q2": "37 / 57 = 64.91% EVALUATOR_NON_LEXICAL_TARGET (AMBIGUOUS 0)",
+    "Q3": "YES",
+    "Q3_detail": "Defect is consumer misuse: funnel/decomp treated correction units as production lexicon MUST-HAVE terms",
+    "Q4": 52,
+    "Q5": {
+      "TONE_CONTRACT_MISMATCH": 19,
+      "EVALUATOR_TARGET_OR_NONLEXICAL": 33
+    },
+    "Q6": "NO (Violation_demonstrated=NO; Fail Closed matches Frozen tone_exact)",
+    "Q7": "NO",
+    "Q8": "NO — NOT_EVALUABLE_UNDER_CURRENT_REPLAY",
+    "Q9": "MULTIPLE (EVALUATOR + REPLAY; residual DATA)",
+    "Q10": "EVALUATOR"
+  }
+}

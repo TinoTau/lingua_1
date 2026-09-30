@@ -1,0 +1,42 @@
+{
+  "datasetVersion": "model3_v1_anchor_contrast_pilot_20260824",
+  "schemaVersion": "MODEL3_TRAINING_SAMPLE_V1",
+  "generatorVersion": "model3-v1-anchor-contrast-pilot-1.2.0",
+  "seed": 2026082415,
+  "sampleCount": 13603,
+  "excludedCount": 0,
+  "splitCounts": {
+    "test": 6031,
+    "dev": 1078,
+    "train": 6494
+  },
+  "labelDistribution": {
+    "KEEP": 141448,
+    "MASKED": 13530,
+    "RETRY": 6765
+  },
+  "contrastStrengthUtterances": {
+    "STRONG": 9492,
+    "MEDIUM": 4038,
+    "NONE": 73
+  },
+  "strongPairs": 4746,
+  "mediumPairs": 2019,
+  "sameTargetDifferentLabelSurfaces": 79,
+  "anchorConditionedUtterances": 13530,
+  "noAnchorUtterances": 73,
+  "planMeta": {
+    "hold_surface_families": 12,
+    "hold_context_families": 8,
+    "hold_pronunciation_families": [
+      "eng_en",
+      "h_f"
+    ],
+    "n_ambiguous_targets": 116
+  },
+  "createdAt": "2026-08-24T06:17:38.243657+00:00",
+  "holdPronunciationFamilies": [
+    "eng_en",
+    "h_f"
+  ]
+}

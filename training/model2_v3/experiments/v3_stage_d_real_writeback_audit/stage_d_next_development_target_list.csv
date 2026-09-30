@@ -1,0 +1,11 @@
+Priority,Gap,Current,Expected,MinimalMod,Files
+P0,Define lexical observation semantics contract,undefined,correction-confirmed lexicon-backed terms,docs/contract only first,contracts
+P0,Lexicon term resolution on correction writeback,free text personal_terms,term_id references,Scheduler features / Gateway apply,"features.rs,profile_delta"
+P0,Write-time derive long_term_domain_evidence,missing,aggregate via term_domain_tags,Gateway apply or profile service,profile_delta/user_profile
+P0,Unknown-term / no-Lexicon-auto-insert policy,free text accept,UNRESOLVED observation,Scheduler+Gateway,features
+P1,Node TS personal_term_evidence + compact Stage D fields,TS gap / no consume,bounded Model2 profile,electron_node messages + future Stage J input,messages.ts
+P1,Session profile refresh after correction,stale bootstrap,versioned refresh minimal,session_proxy/bootstrap,session_bootstrap
+P1,Deprecate Correction domain_updates as domain knowledge writer,empty placeholder,derive-only path,profile_delta docs,profile_delta.rs
+P2,Overlapping term double-count policy,risk,single authoritative match,features matcher,features.rs
+P2,Single-correction dominance dampening,weight 1.0,bounded ramp,Gateway apply,profile_delta.rs
+P3,Stage J after real data ready,synthetic Stage D,unified P+D with V1 hash,training,DEFER until P0

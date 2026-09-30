@@ -1,0 +1,23 @@
+{
+  "phase": "LINGUA_MODEL2_WINDOW_ACTION_BINDING_BUG_AUDIT",
+  "expectedCases": 17,
+  "observedCases": 17,
+  "classificationCounts": {
+    "B1_TARGET_ALIGNED_COMPOUND_ASR_ERROR": 14,
+    "B2_TRUE_WINDOW_ACTION_BINDING_ERROR": 0,
+    "B3_TARGET_REGION_PRESENT_WRONG_WINDOW_SELECTED": 0,
+    "B4_TARGET_REGION_NOT_REPRESENTABLE": 3,
+    "B5_TRACE_INSUFFICIENT": 0
+  },
+  "strictWindowLocalOwnershipPass": true,
+  "crossWindowActionReuseDetected": false,
+  "batchIndexShiftDetected": false,
+  "actionWithoutWindowOwnershipDetected": false,
+  "compoundAsrErrorCount": 14,
+  "trueBindingBugCount": 0,
+  "actionRelevanceIssueCount": 0,
+  "windowLocalizationPrimaryBlocker": false,
+  "productCodeChange": false,
+  "outcome": "WINDOW_LOCALIZATION_NOT_PRIMARY_BLOCKER",
+  "oneNextOwner": "MODEL3_RESIDUAL_OWNER"
+}

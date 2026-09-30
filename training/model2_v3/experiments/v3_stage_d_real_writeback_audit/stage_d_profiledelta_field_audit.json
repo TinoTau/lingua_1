@@ -1,0 +1,33 @@
+{
+  "phonetic_updates": {
+    "DEFINED_IN_SCHEMA": true,
+    "ACTUALLY_POPULATED": true,
+    "producer": "conditional ASCII syllable pairs",
+    "consumer": "EMA phonetic_bias whitelist"
+  },
+  "tone_updates": {
+    "DEFINED_IN_SCHEMA": true,
+    "ACTUALLY_POPULATED": false,
+    "producer": "always []",
+    "reason": "NO_OBSERVED_ACOUSTIC_TONE"
+  },
+  "personal_term_updates": {
+    "DEFINED_IN_SCHEMA": true,
+    "ACTUALLY_POPULATED": true,
+    "producer": "Replace/Insert target_text >=2 chars OR macro term",
+    "consumer": "evidence sum + TopK 100 personal_terms",
+    "stores": "FREE_TEXT_SURFACE_NOT_TERM_ID"
+  },
+  "domain_updates": {
+    "DEFINED_IN_SCHEMA": true,
+    "ACTUALLY_POPULATED": false,
+    "producer": "always []",
+    "reason": "NO_DOMAIN_ON_CORRECTION_EVENT",
+    "ownership_verdict": "PLACEHOLDER_LIKELY_WRONG_OWNERSHIP — domain evidence should DERIVE from lexical+term_domain_tags not Correction→domain"
+  },
+  "FeatureUpdate.sample_count_delta": {
+    "DEFINED_IN_SCHEMA": true,
+    "ACTUALLY_POPULATED": true,
+    "apply_uses": false
+  }
+}

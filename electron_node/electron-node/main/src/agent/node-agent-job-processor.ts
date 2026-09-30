@@ -31,7 +31,11 @@ export class JobProcessor {
    */
   async processJob(
     job: JobAssignMessage,
-    startTime: number
+    startTime: number,
+    profileBinding?: {
+      userProfile?: import('../../../../shared/protocols/messages').UserProfileV1 | null;
+      profileVersion?: number | null;
+    }
   ): Promise<{ finalResult: JobResult; shouldSend: boolean; reason?: string }> {
     // 根据 features 启动所需的服务
     if (job.features?.speaker_identification && this.pythonServiceManager) {
@@ -73,7 +77,10 @@ export class JobProcessor {
       },
       'Processing job: received audio data'
     );
-    const result = await this.inferenceService.processJob(job, partialCallback);
+    const result = await this.inferenceService.processJob(job, partialCallback, {
+      userProfile: profileBinding?.userProfile ?? null,
+      profileVersion: profileBinding?.profileVersion ?? null,
+    });
 
     // 新架构：所有处理都在 JobPipeline 中完成，这里只需要处理 TTS 音频格式转换
     let finalResult = result;

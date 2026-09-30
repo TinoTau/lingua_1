@@ -1,0 +1,94 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_DATASET_EXPANSION_S1",
+  "verdict": "PRODUCTION_CORE_S1_BUILD_PASS_WITH_NONBLOCKING_WARNINGS",
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S1",
+  "datasetBuildId": "prod_core_s1_build_20260830_v1",
+  "buildComplete": true,
+  "uniqueSemanticFamilies": 999,
+  "frozenSemanticFamilies": 1000,
+  "readyForNextPhase": true,
+  "architectureDrift": false,
+  "nextPhase": "MODEL3_V2_PRODUCTION_CORE_S1_TRAINING_EXPERIMENT",
+  "architectureCorrection": {
+    "acousticVariationForModel3Dataset": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+    "normalAcousticVariationInfrastructureGap": "NON_BLOCKING_DEFERRED_UPSTREAM_DATA_GENERATION_OPTION",
+    "model3Role": "ASR_POSTPROCESSING_TEXT_REPAIR_TRIGGER",
+    "historicalReportsModified": false
+  },
+  "lineageStrategy": "V1_280_reuse_plus_720_new_materialization",
+  "parentDatasetId": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "sourcePoolId": "model3_certified_base_pool_v2",
+  "sourceSelectionSeed": 2026083006,
+  "ttsVoiceIdentity": "zh_CN-huayan-medium",
+  "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+  "materializationFunnel": {
+    "frozenNewReferences": 720,
+    "supervisedAcceptedNew": 719,
+    "hardRejectNew": 1,
+    "v1LineageReuse": 280,
+    "supervisedFamiliesTotal": 999
+  },
+  "missingSupervisedFamily": {
+    "referenceId": "f5212176ded1",
+    "semanticFamilyId": "sf_2d19c92929732e20cbfec0d9",
+    "disposition": "HARD_REJECT",
+    "shardId": "s10",
+    "reason": "infrastructure_materialization_failure_not_outcome_reselection"
+  },
+  "warnings": [
+    "many_one_sided_surfaces",
+    "families_999_vs_nominal_1000_one_hard_reject"
+  ],
+  "scale": {
+    "families": 999,
+    "utterances": 999,
+    "paths": 2757,
+    "spanPathSamples": 41392,
+    "labels": {
+      "KEEP": 36872,
+      "MASKED": 1600,
+      "RETRY": 2920
+    },
+    "splitFamilies": {
+      "train": 775,
+      "dev": 100,
+      "test": 124
+    }
+  },
+  "vocabulary": {
+    "s0_unique_cjk_chars": 395,
+    "s1_unique_cjk_chars": 680,
+    "pool_unique_cjk_chars": 1059,
+    "s0_bigrams": 1201,
+    "s1_bigrams": 2337,
+    "pool_bigrams": 6520,
+    "s0_trigrams": 1774,
+    "s1_trigrams": 3532,
+    "pool_trigrams": 11850
+  },
+  "qa": {
+    "provenanceCoherence": "PASS",
+    "holdoutCollision": "PASS",
+    "semanticFamilySplitLeak": "PASS",
+    "candidateMissing": "PASS",
+    "packerMissing": "PASS",
+    "toneRecallInvalid": "PASS",
+    "anchorSourceValidity": "PASS",
+    "model2OwnerAvailability": "PASS",
+    "domainOwnerExecution": "PASS",
+    "multipathRetention": "PASS",
+    "labelCounts": "PASS",
+    "evidenceOrigin": "PASS",
+    "candidateNonCollapsed": "PASS",
+    "retryCandGt0": "PASS"
+  },
+  "governance": {
+    "model3Changed": false,
+    "asrChanged": false,
+    "asrTraining": false,
+    "acousticVariationDevelopment": false,
+    "featureChanged": false,
+    "labelChanged": false,
+    "model3Training": false
+  }
+}

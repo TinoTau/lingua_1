@@ -1,0 +1,38 @@
+{
+  "phase": "LINGUA_PILOT200_POST_ANCHOR_ACP_CONTROLLED_REMEASURE",
+  "current": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "LEXICON_RECALL": 158,
+    "MODEL2_ACTION": 53,
+    "SUCCESS": 150,
+    "MODEL3_RETRY_NO_USEFUL_STAGE2": 1
+  },
+  "previous": {
+    "ASR_EMPTY": 3,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 135,
+    "TONE_QUERY": 65,
+    "RELATION_TRANSFORM": 35,
+    "LEXICON_RECALL": 158,
+    "MODEL2_ACTION": 53,
+    "SUCCESS": 150,
+    "DOWNSTREAM": 1
+  },
+  "dominantFailureOwner": "LEXICON_RECALL",
+  "deltas": {
+    "ASR_EMPTY": 0,
+    "NO_PROFILE_BASE_REPAIR_FAIL": 0,
+    "TONE_QUERY": 0,
+    "RELATION_TRANSFORM": 0,
+    "LEXICON_RECALL": 0,
+    "MODEL2_ACTION": 0,
+    "SUCCESS": 0,
+    "MODEL3_RETRY_NO_USEFUL_STAGE2": 1,
+    "DOWNSTREAM": -1
+  },
+  "oneNextOwner": "LEXICON_RECALL_OWNER",
+  "oneNextDelta": "Investigate lexicon recall key/coverage blocking CORRECT_PROFILE P→hit conversion; no Anchor/Retry redesign.",
+  "note": "Dominant first causal boundary remains LEXICON_RECALL; Anchor ACP raised Model3/Retry exposure without changing Gate A-I or finalCorrect."
+}

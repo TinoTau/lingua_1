@@ -1,0 +1,25 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "path": [
+    "UserProfile / phonetic_condition / phonetic_mask / relation features",
+    "Model2StageAV1.condition_vector + score(..., relation_features=...) → delta",
+    "scores = score_base + delta (Stage B) or optional condition gate (Stage A cfg)",
+    "argsort scores over fixed pool → rank change only"
+  ],
+  "influence_table": {
+    "Span": "NO",
+    "Recall_query": "NO",
+    "Lexicon_lookup": "NO",
+    "Candidate_generation": "NO",
+    "Candidate_filtering": "NO",
+    "Candidate_score": "YES",
+    "Candidate_rank": "YES"
+  },
+  "fuzzy_pool_comment": "training/model2/fuzzy/pool.py explicitly: UserProfile does NOT affect generation",
+  "verdict": "PROFILE_IS_RERANK_ONLY",
+  "evidence": [
+    "fuzzy/pool.py generation independent of profile",
+    "model/model_v1.py forward: cat pool + no_match only",
+    "Phase 6C/7A CF: same fuzzy_pool_term_ids across Correct/Empty/Wrong/Swapped; only scores change"
+  ]
+}

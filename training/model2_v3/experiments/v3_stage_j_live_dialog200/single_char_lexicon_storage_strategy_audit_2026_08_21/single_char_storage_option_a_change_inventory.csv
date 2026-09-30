@@ -1,0 +1,11 @@
+change_id,area,required,notes
+A1,schema new table,YES,dedicated single_char_repair_lexicon or equivalent
+A2,schemaVersion / migration,YES,bundle identity change
+A3,LexiconRuntimeV2 new lookup,YES,or fork of lookupBase*
+A4,collectBaseOnlySingleCharCandidate,YES,retarget query
+A5,full-rebuild import path,YES,stop writing IME TSV into base length1; write curated into new table
+A6,IME TSV,NO_CHANGE,preserve
+A7,Model2,NO,unchanged P/D only
+A8,tests length1,YES,retarget fixtures
+A9,ops docs SSOT,YES,document two storages carefully to avoid dual Repair SSOT
+A10,IME export hygiene,RECOMMENDED,exclude or clarify length1 from base export

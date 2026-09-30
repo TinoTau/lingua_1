@@ -1,0 +1,20 @@
+{
+  "name": "RESTORED_STAGE_D_CONTROLLED",
+  "architecture": "RetrievalPolicyV3(with_domain_head=True) UNCHANGED",
+  "freeze_shared": true,
+  "init": "P1_PLUS_FRESH_DOMAIN_HEAD",
+  "feature_hash": "MODEL2_FEATURE_HASH_V1",
+  "teacher": "EXECUTE_VALIDATED",
+  "old_teacher": "EXCLUDED",
+  "dataset": "STAGE_D_RESTORED_TRAINSET_V1",
+  "epochs_max": 12,
+  "lr": 0.001,
+  "batch": 32,
+  "empty_profile_external_gate": false,
+  "d_none_negative": true,
+  "hard_mining": "TRAIN split only; top1 miss / empty-expansion / REAL boost",
+  "fixed_38": "EXCLUDED",
+  "n_train": 1430,
+  "n_val": 230,
+  "n_test_held_out_of_training": 72
+}

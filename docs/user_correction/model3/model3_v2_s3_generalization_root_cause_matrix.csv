@@ -1,0 +1,8 @@
+CAUSE,EVIDENCE_FOR,EVIDENCE_AGAINST,CONFIDENCE,BLOCKING,NEXT_ACTION_IF_CONFIRMED
+DATA_DISTRIBUTION_LIMIT,S3 lexical/context growth modest; unused pool large but unmapped to FN/FP clusters,localization L2 already 13/13; some residual n-grams remain,HIGH,NO,targeted distribution audit only if cluster proven
+FEATURE_SEPARABILITY_LIMIT,mixed-surface KEEP/RETRY conflicts n=170,frozen 6 features still separate majority cases (F1~0.87),HIGH,NO,feature separability audit (no add yet)
+TRAINING_DYNAMICS_LIMIT,TRAINING_DYNAMICS_POSSIBLE,bestEpoch=8 with stable high F1; not underfit,LOW,NO,none
+MODEL_CAPACITY_LIMIT,none strong,same-state label conflicts; train converges,LOW,NO,none
+LABEL_OR_EVALUATION_LIMIT,historical L3 10vs11,reconciled by evaluator SSOT,LOW,NO,none
+PATH_WEIGHTING_LIMIT,topPathShare=0.264,scale still added 5006 families,MEDIUM,NO,optional path-weight audit later
+PROTECTED_SET_LIMIT,n=13/6 sentinel,not a training blocker,MEDIUM,NO,keep as regression sentinel

@@ -1,0 +1,161 @@
+{
+  "phase": "MODEL3_V2_FINAL_ACCEPTANCE_AND_FREEZE",
+  "freezeVersion": "MODEL3_V2_FREEZE_20260907_V1",
+  "date": "2026-09-07",
+  "verdict": "MODEL3_V2_FINAL_ACCEPTANCE_PASS_FROZEN",
+  "status": {
+    "MODEL3_V2": "FROZEN",
+    "MODEL3_RETRY_SUBCHAIN": "ACTIVE_AND_FROZEN",
+    "PRODUCTION_RETRY_ENABLED": true,
+    "MODEL3_DEVELOPMENT_PHASE_CLOSED": true,
+    "MODEL3_RUNTIME_DEFAULT": "MODEL3_V2_S3_RANDOM_INIT_V1"
+  },
+  "authoritativeModelArtifact": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "configSha256": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "seed": 2026083013,
+    "checkpointDirRelative": "training/model3_dataset/model3_v2_s3_random_init_v1_ckpts/seed_2026083013",
+    "class_weight_retry": 1.0,
+    "a1Promoted": false,
+    "a1Identity": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1_RERUN1",
+    "a1Status": "REJECTED_NON_PROMOTED_CANDIDATE_ONLY"
+  },
+  "authoritativeModel": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "configSha256": "8c181cb95ab159f5c35c47dc417e527946bf5d0f9614cb83b37a62ab7f01f221",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "seed": 2026083013,
+    "checkpointDirRelative": "training/model3_dataset/model3_v2_s3_random_init_v1_ckpts/seed_2026083013",
+    "class_weight_retry": 1.0,
+    "a1Promoted": false,
+    "a1Identity": "MODEL3_V2_S3_EXP_CLASS_WEIGHT_A1_RERUN1",
+    "a1Status": "REJECTED_NON_PROMOTED_CANDIDATE_ONLY",
+    "note": "legacy key; prefer authoritativeModelArtifact + runtimeDefaultModel"
+  },
+  "runtimeDefaultModel": "MODEL3_V2_S3_RANDOM_INIT_V1",
+  "explicitRollbackModel": "MODEL3_SYNTHETIC_V1",
+  "runtimeWiringNote": {
+    "electronDefaultWithoutEnv": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "s3RegistryRole": "PRODUCTION",
+    "syntheticRole": "CANDIDATE_EXPLICIT_ROLLBACK",
+    "interpretation": "Runtime default promotion COMPLETE 2026-09-08; AUTHORITATIVE_MODEL_ARTIFACT == RUNTIME_DEFAULT_MODEL",
+    "deferredItem": null,
+    "promotionAcceptanceRef": "model3_v2_runtime_promotion_acceptance.json",
+    "loadFailurePolicy": "FAIL_CLOSED"
+  },  "model3ResponsibilityContract": {
+    "role": "Anchor-conditioned Text Repair Trigger (TEXT_ONLY KEEP/RETRY)",
+    "outputOnly": ["KEEP", "RETRY"],
+    "mustNot": [
+      "createOrModifyAnchor",
+      "createOrModifyFineSpan",
+      "queryLexicon",
+      "generateLexicalCandidates",
+      "decideDomain",
+      "secondDomainVote",
+      "repairText",
+      "assemble",
+      "invokeKenLM",
+      "rerunASR"
+    ],
+    "acceptance": "PASS",
+    "staleRoleWording": "Acoustic-Linguistic Repair Trigger — SUPERSEDED (TEXT_ONLY)"
+  },
+  "retryResponsibilityContract": {
+    "role": "bounded local reinterpretation",
+    "mustNot": [
+      "rerunASR",
+      "recursiveRetry",
+      "secondModel3",
+      "secondDomainVote",
+      "crossAnchor",
+      "bypassRecallOwnership"
+    ],
+    "barrierCountersEvidence": {
+      "secondDomainVoteCount": 0,
+      "model3ReinvokedCount": 0,
+      "source": "model3_retry_fallback_acceptance_summary.json + typed traces"
+    },
+    "acceptance": "PASS"
+  },
+  "deltas": {
+    "DELTA_RQ_STAGE2_NO_SLIDING": "RESOLVED_ACCEPTED_CLOSED",
+    "DELTA_RQ_FALLBACK_BOUNDARY_LOCK": "RESOLVED_ACCEPTED_CLOSED"
+  },
+  "candidateCap": {
+    "maxSentenceCandidates": 16,
+    "crossPathOver16Cases": 0,
+    "status": "PASS"
+  },
+  "gates": {
+    "architectureDrift": "NONE",
+    "antiTestGaming": "PASS",
+    "productionBuild": "PASS",
+    "targetedTests": {
+      "suites": 8,
+      "run": 56,
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "causalAudit": {
+    "phase": "MODEL3_V2_END_TO_END_CAUSAL_EFFECTIVENESS_AUDIT",
+    "verdict": "MODEL3_CAUSAL_AUDIT_PASS_MODEL3_DOWNSTREAM_BLOCKED",
+    "MODEL3_RESPONSIBILITY_ACCEPTANCE": "PASS",
+    "RETRY_RESPONSIBILITY_ACCEPTANCE": "PASS",
+    "MODEL3_FINAL_UTILITY": "DOWNSTREAM_BLOCKED",
+    "PRIMARY_ELIGIBLE_DOWNSTREAM_BREAKPOINT": "LEXICON_COVERAGE",
+    "FINAL_IMPROVED": 0,
+    "note": "final improvement 0 is not Model3 responsibility failure"
+  },
+  "decisions": {
+    "CAN_MODEL3_V2_BE_FROZEN": "YES",
+    "CAN_RETRY_BE_FROZEN_WITH_MODEL3": "YES",
+    "MODEL3_DEVELOPMENT_PHASE_CLOSED": "YES",
+    "MODEL3_RETRAIN_REQUIRED": "NO",
+    "RETRY_REDESIGN_REQUIRED": "NO",
+    "DELTA1_REOPEN_REQUIRED": "NO",
+    "DELTA2_REOPEN_REQUIRED": "NO"
+  },
+  "knownDeferredItemsRef": "model3_v2_known_deferred_items.csv",
+  "postFreezeRule": "ARCHITECTURE_CHANGE_PROPOSAL_REQUIRED for ownership/semantics changes; PROVEN_MODEL3_OWNED_BREAKPOINT required to reopen Model3",
+  "recommendedNextPhase": "PARTIAL_IMPROVEMENT_TO_FULL_RESCUE_AUDIT",
+  "doNotExecuteInThisPhase": true,
+  "runtimeDefaultPromotion": {
+    "phase": "MODEL3_V2_RUNTIME_DEFAULT_PROMOTION_DELTA",
+    "date": "2026-09-08",
+    "status": "COMPLETE",
+    "acceptanceRef": "model3_v2_runtime_promotion_acceptance.json"
+  },
+  "fullPipelineFreeze": {
+    "phase": "MODEL3_FULL_ASR_PIPELINE_FREEZE_AND_NEXT_OPTIMIZATION_AUDIT",
+    "date": "2026-09-10",
+    "verdict": "MODEL3_FULL_ASR_PIPELINE_FREEZE_PASS_NEXT_AUDIT_SELECTED",
+    "FULL_MAINLINE_ARCHITECTURE_FROZEN": true,
+    "FINESPAN_RESPONSIBILITY_FROZEN": true,
+    "DOMAIN_FLOW_FROZEN": true,
+    "KENLM_RESPONSIBILITY_FROZEN": true,
+    "CANDIDATE_CAP_16_RETAINED": true,
+    "JOBRESULT_OWNERSHIP_FROZEN": true,
+    "DIALOG200_BASELINE_ID": "LINGUA_DIALOG200_BASELINE_V1",
+    "DIALOG200_BASELINE_RUN_ID": "dialog200_full_pipeline_20260909_001141",
+    "staleAttributions": [
+      "LEXICON_COVERAGE_MISSING=143",
+      "QUERY_NOT_REPAIR_CAPABLE=100",
+      "NO_LOCAL_LEXICAL_TARGET=59",
+      "RECALL_MATCHING_FAILED=14",
+      "ASSEMBLY_CANDIDATE_LOSS=2"
+    ],
+    "refs": [
+      "Model3_Full_ASR_Pipeline_Final_Freeze_Audit.md",
+      "Lingua_Dialog200_Baseline_V1.json",
+      "Lingua_Remaining_Optimization_Inventory.csv",
+      "Lingua_Next_Optimization_Decision.md"
+    ]
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "train": {
+    "n": 13752,
+    "select": 11442,
+    "abstain": 2310,
+    "unique_chars": 2836,
+    "unique_combos": 4371,
+    "unique_families": 7746,
+    "contrast": 6276,
+    "cand_n": {
+      "4": 5472,
+      "3": 3568,
+      "2": 3833,
+      "7": 32,
+      "6": 253,
+      "5": 522,
+      "8": 72
+    },
+    "sources": {
+      "template": 3719,
+      "contrast": 6276,
+      "corpus_abstain": 286,
+      "corpus": 1447,
+      "contrast_abstain": 1354,
+      "template_abstain": 670
+    }
+  },
+  "dev": {
+    "n": 1719,
+    "select": 1451,
+    "abstain": 268,
+    "unique_chars": 2255,
+    "unique_combos": 1153,
+    "unique_families": 1078,
+    "contrast": 788,
+    "cand_n": {
+      "2": 501,
+      "4": 663,
+      "3": 462,
+      "5": 40,
+      "6": 32,
+      "7": 7,
+      "8": 14
+    },
+    "sources": {
+      "template": 459,
+      "contrast": 788,
+      "corpus": 204,
+      "corpus_abstain": 40,
+      "contrast_abstain": 161,
+      "template_abstain": 67
+    }
+  },
+  "test": {
+    "n": 1719,
+    "select": 1435,
+    "abstain": 284,
+    "unique_chars": 2224,
+    "unique_combos": 1150,
+    "unique_families": 1067,
+    "contrast": 793,
+    "cand_n": {
+      "4": 691,
+      "3": 458,
+      "2": 462,
+      "5": 61,
+      "6": 35,
+      "8": 9,
+      "7": 3
+    },
+    "sources": {
+      "contrast": 793,
+      "template": 465,
+      "contrast_abstain": 168,
+      "corpus": 177,
+      "corpus_abstain": 31,
+      "template_abstain": 85
+    }
+  },
+  "held_char": {
+    "n": 8096,
+    "select": 6550,
+    "abstain": 1546,
+    "unique_chars": 1174,
+    "unique_combos": 2085,
+    "unique_families": 4474,
+    "contrast": 3779,
+    "cand_n": {
+      "4": 4072,
+      "2": 1282,
+      "3": 1780,
+      "5": 495,
+      "6": 296,
+      "7": 74,
+      "8": 97
+    },
+    "sources": {
+      "template": 1938,
+      "contrast_abstain": 894,
+      "contrast": 3779,
+      "template_abstain": 445,
+      "corpus": 833,
+      "corpus_abstain": 207
+    }
+  },
+  "held_combo": {
+    "n": 2746,
+    "select": 2191,
+    "abstain": 555,
+    "unique_chars": 1515,
+    "unique_combos": 733,
+    "unique_families": 1606,
+    "contrast": 1205,
+    "cand_n": {
+      "3": 542,
+      "4": 1127,
+      "2": 892,
+      "5": 100,
+      "6": 64,
+      "8": 16,
+      "7": 5
+    },
+    "sources": {
+      "contrast": 1205,
+      "corpus": 294,
+      "template": 692,
+      "template_abstain": 180,
+      "corpus_abstain": 54,
+      "contrast_abstain": 321
+    }
+  },
+  "held_ctx": {
+    "n": 3345,
+    "select": 2101,
+    "abstain": 1244,
+    "unique_chars": 2670,
+    "unique_combos": 1959,
+    "unique_families": 1526,
+    "contrast": 1245,
+    "cand_n": {
+      "4": 1429,
+      "6": 70,
+      "3": 783,
+      "2": 890,
+      "5": 146,
+      "8": 19,
+      "7": 8
+    },
+    "sources": {
+      "template": 534,
+      "contrast": 1245,
+      "template_abstain": 372,
+      "corpus": 322,
+      "contrast_abstain": 715,
+      "corpus_abstain": 157
+    }
+  },
+  "unseen_char_known_ctx": {
+    "n": 2815,
+    "select": 1932,
+    "abstain": 883,
+    "unique_chars": 1173,
+    "unique_combos": 1267,
+    "unique_families": 199,
+    "contrast": 178,
+    "cand_n": {
+      "4": 929,
+      "2": 641,
+      "3": 668,
+      "7": 44,
+      "5": 306,
+      "6": 169,
+      "8": 58
+    },
+    "sources": {
+      "template": 1741,
+      "contrast_abstain": 439,
+      "template_abstain": 326,
+      "corpus_abstain": 118,
+      "contrast": 178,
+      "corpus": 13
+    }
+  },
+  "known_char_unseen_ctx": {
+    "n": 3198,
+    "select": 1997,
+    "abstain": 1201,
+    "unique_chars": 2555,
+    "unique_combos": 1901,
+    "unique_families": 1452,
+    "contrast": 1185,
+    "cand_n": {
+      "4": 1411,
+      "6": 70,
+      "3": 758,
+      "2": 786,
+      "5": 146,
+      "8": 19,
+      "7": 8
+    },
+    "sources": {
+      "template": 501,
+      "contrast": 1185,
+      "template_abstain": 352,
+      "corpus": 311,
+      "contrast_abstain": 693,
+      "corpus_abstain": 156
+    }
+  },
+  "perm": {
+    "n": 1435,
+    "select": 1435,
+    "abstain": 0,
+    "unique_chars": 2076,
+    "unique_combos": 955,
+    "unique_families": 991,
+    "contrast": 793,
+    "cand_n": {
+      "4": 612,
+      "3": 354,
+      "2": 383,
+      "5": 46,
+      "6": 30,
+      "8": 8,
+      "7": 2
+    },
+    "sources": {
+      "contrast": 793,
+      "template": 465,
+      "corpus": 177
+    }
+  },
+  "all": {
+    "n": 30977,
+    "select": 24911,
+    "abstain": 6066,
+    "unique_chars": 3290,
+    "unique_combos": 7952,
+    "unique_families": 16462,
+    "contrast": 13936,
+    "cand_n": {
+      "4": 13286,
+      "3": 7516,
+      "2": 7732,
+      "6": 742,
+      "5": 1349,
+      "7": 128,
+      "8": 224
+    },
+    "sources": {
+      "template": 7744,
+      "contrast": 13936,
+      "corpus": 3231,
+      "contrast_abstain": 3525,
+      "template_abstain": 1773,
+      "corpus_abstain": 768
+    }
+  },
+  "meta": {
+    "n_hold_chars": 274,
+    "n_hold_combos": 733,
+    "n_hold_fams": 1526,
+    "hold_chars": [
+      "为",
+      "乞",
+      "亏",
+      "仟",
+      "仲",
+      "休",
+      "但",
+      "佐",
+      "侣",
+      "俄",
+      "俚",
+      "倦",
+      "偿",
+      "催",
+      "允",
+      "共",
+      "兵",
+      "农",
+      "凤",
+      "出",
+      "利",
+      "到",
+      "副",
+      "办",
+      "勋",
+      "勺",
+      "勾",
+      "包",
+      "匠",
+      "匡",
+      "升",
+      "午",
+      "协",
+      "卖",
+      "卦",
+      "压",
+      "友",
+      "双",
+      "反",
+      "叮"
+    ]
+  }
+}

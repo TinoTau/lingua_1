@@ -1,0 +1,258 @@
+{
+  "formalRunId": "gate0_accept_20260830_v1",
+  "sourceBatchId": "gate0_src_20260830_v1",
+  "gate0Checker": {
+    "gate0Id": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_GATE0",
+    "readyForGate0AcceptanceRun": true,
+    "acceptanceVerdict": "PASS",
+    "acceptancePassed": true,
+    "model2PathStatus": "PASS_OWNER_PARITY",
+    "domainPathStatus": "PASS_OWNER_PARITY",
+    "checkStatuses": {
+      "evidence_trust": "PASS",
+      "batch_sufficiency": "PASS",
+      "semantic_exclude_distinguished": "NOT_EXERCISED",
+      "hard_reject_distinguished": "NOT_EXERCISED",
+      "cand_state_integrity": "PASS",
+      "cand_0_natural": "PASS",
+      "cand_gt0_natural": "PASS",
+      "retry_cand_gt0_present": "PASS",
+      "multipath_retention": "PASS",
+      "model2_path": "PASS",
+      "domain_path": "PASS",
+      "anchor_histogram": "PASS",
+      "semanticFamily_split_lock": "PASS"
+    },
+    "checks": {
+      "formal_harness_exists": true,
+      "MODEL2_OWNER_WIRED": true,
+      "DOMAIN_OWNER_WIRED": true,
+      "MODEL2_ANCHOR_OWNER_WIRED": true,
+      "DOMAIN_ANCHOR_OWNER_WIRED": true,
+      "readyForGate0AcceptanceRun": true,
+      "evidence_origin_histogram": {
+        "FORMAL_FRESH_MATERIALIZATION": 48
+      },
+      "evidence_trust_failure": null,
+      "empty_formal_batch": false,
+      "semantic_exclude_distinguished": false,
+      "semantic_exclude_contract": "CONTRACT_IMPLEMENTED",
+      "hard_reject_distinguished": false,
+      "hard_reject_contract": "CONTRACT_IMPLEMENTED",
+      "cand0SpanCount": 943,
+      "candGt0SpanCount": 1573,
+      "retryCandGt0SpanCount": 72,
+      "retryCandGt0UtteranceCount": 17,
+      "candMissingSpanCount": 0,
+      "anchorSourceHistogram": {
+        "NONE": 2516,
+        "MODEL2": 32,
+        "DOMAIN_AND_MODEL2": 32,
+        "DOMAIN": 2
+      },
+      "multipathUtteranceCount": 30,
+      "cand_state_integrity": true,
+      "cand_0_natural": true,
+      "cand_gt0_natural": true,
+      "retry_cand_gt0_present": true,
+      "MULTIPATH_CODEPATH_PRESENT": true,
+      "multipath_retention": true,
+      "MULTIPATH_EXERCISED_IN_BATCH": true,
+      "MODEL2_OWNER_ATTEMPTED": true,
+      "MODEL2_OWNER_COMPLETED": true,
+      "MODEL2_HOST_AVAILABLE_ANY": true,
+      "MODEL2_HIT_OBSERVED": true,
+      "MODEL2_HIT_DIAG_OBSERVED": true,
+      "MODEL2_ANCHOR_OWNER_EXECUTED": true,
+      "MODEL2_ANCHOR_HIT_OBSERVED": true,
+      "DOMAIN_OWNER_ATTEMPTED": true,
+      "DOMAIN_OWNER_COMPLETED": true,
+      "DOMAIN_ANCHOR_HIT_OBSERVED": true,
+      "DOMAIN_ANCHOR_OWNER_EXECUTED": true,
+      "ANCHOR_HIT_OBSERVED": true,
+      "semanticFamily_split_lock": true,
+      "split_leak_errors": []
+    },
+    "semanticFailures": [],
+    "nonblockingWarnings": [
+      "SEMANTIC_EXCLUDE_NOT_EXERCISED",
+      "HARD_REJECT_NOT_EXERCISED"
+    ],
+    "batchSummary": {
+      "hardRejected": 0,
+      "semanticExcluded": 0,
+      "supervisedAccepted": 48,
+      "formalSupervisedAccepted": 48,
+      "formalSemanticExcluded": 0,
+      "formalHardRejected": 0,
+      "cand0SpanCount": 943,
+      "candGt0SpanCount": 1573,
+      "retryCandGt0SpanCount": 72,
+      "retryCandGt0UtteranceCount": 17,
+      "multipathUtterances": 30,
+      "anchorSourceHistogram": {
+        "NONE": 2516,
+        "MODEL2": 32,
+        "DOMAIN_AND_MODEL2": 32,
+        "DOMAIN": 2
+      }
+    },
+    "formalRunIdentity": {
+      "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+      "sourcePoolId": "model3_certified_base_pool_v2",
+      "featureContractIdentity": "packModel3SpanInferFields",
+      "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+      "provenanceContractIdentity": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT",
+      "asrEnvIdentity": "1",
+      "toneIdentity": "production_ToneModule",
+      "runId": "gate0_accept_20260830_v1"
+    },
+    "note": "Independent evidence checker — readyForGate0AcceptanceRun is structural only; do not treat it as Gate0 PASS. Do not assign MODEL3_V2_TARGETED_DIST_CORRECTED_V1 here."
+  },
+  "gateMatrix": {
+    "G1_formal_evidence_origin": "PASS",
+    "G2_nonempty_accepted": "PASS",
+    "G3_text_identity": "PASS",
+    "G4_same_run_provenance": "PASS",
+    "G5_production_tone": "PASS",
+    "G6_mandatory_tone_recall": "PASS",
+    "G7_cand_gt0": "PASS",
+    "G8_retry_cand_gt0": "PASS",
+    "G9_multipath": "PASS",
+    "G10_model2_host": "PASS",
+    "G11_domain_owner": "PASS",
+    "G12_exact_packer": "PASS",
+    "G13_v2_labels": "PASS",
+    "G14_holdout": "PASS",
+    "G15_family_split": "PASS",
+    "G16_no_fixture_legacy_probe": "PASS",
+    "G17_source_frozen": "PASS",
+    "G18_no_architecture_drift": "PASS"
+  },
+  "verdict": "GATE0_ACCEPTANCE_PASS",
+  "nextPhase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "funnel": {
+    "attempted": 48,
+    "hardRejected": 0,
+    "semanticExcluded": 0,
+    "supervisedAccepted": 48,
+    "formalSupervisedAccepted": 48,
+    "rejectReasons": {},
+    "semanticExcludeReasons": {}
+  },
+  "candidate": {
+    "cand0": 943,
+    "candGt0": 1573,
+    "missing": 0,
+    "histogram": {
+      "0": 943,
+      "1": 1625,
+      "2": 14
+    }
+  },
+  "retry": {
+    "RETRY": 112,
+    "RETRY_cand0": 40,
+    "RETRY_candGt0": 72,
+    "RETRY_candGt0_utterances": 17,
+    "KEEP": 2404
+  },
+  "multipath": {
+    "singlePathUtterances": 18,
+    "multipathUtterances": 30,
+    "pathHistogram": {
+      "1": 18,
+      "2": 5,
+      "3": 11,
+      "4": 3,
+      "6": 4,
+      "8": 7
+    }
+  },
+  "model2": {
+    "attempted": 48,
+    "completed": 48,
+    "hostAvailable": 48,
+    "anchors": 64
+  },
+  "domain": {
+    "attempted": 48,
+    "completed": 48,
+    "anchors": 34
+  },
+  "anchors": {
+    "NONE": 2516,
+    "MODEL2": 32,
+    "DOMAIN_AND_MODEL2": 32,
+    "DOMAIN": 2
+  },
+  "tone": {
+    "readySpans": 2582,
+    "invalidSpans": 0
+  },
+  "packer": {
+    "ok": 2582,
+    "missing": 0
+  },
+  "features": {
+    "first_pass_cand_log1p": {
+      "n": 2582,
+      "mean": 0.4422,
+      "max": 1.0986
+    },
+    "span_rel_position": {
+      "n": 2582,
+      "mean": 0.5
+    }
+  },
+  "holdoutAccepted": 0,
+  "splitLeak": [],
+  "historicalComparison": {
+    "priorCandGt0Present": true,
+    "priorRetryCandGt0Utt": 29,
+    "priorMultipathUtt": 40,
+    "priorN": 55,
+    "freshCandGt0": 1573,
+    "freshRetryCandGt0Utt": 17,
+    "freshMultipathUtt": 30,
+    "freshN": 48,
+    "classification": "CONSISTENT"
+  },
+  "sourceFreeze": {
+    "frozenBeforeOutcomes": true,
+    "sourceBatchId": "gate0_src_20260830_v1",
+    "sourceCount": 48,
+    "seed": 2026083003,
+    "outcomeDrivenAdditions": 0,
+    "outcomeDrivenRemovals": 0,
+    "frozenAt": "2026-08-29T16:38:07.950778+00:00",
+    "manifestPath": "D:\\Programs\\github\\lingua_1\\docs\\user_correction\\model3\\model3_v2_gate0_source_batch_manifest.csv",
+    "sourcesAddedAfterOutcomes": 0,
+    "sourcesRemovedAfterOutcomes": 0,
+    "sourceCountAfterRun": 48
+  },
+  "requiredFail": [],
+  "identities": {
+    "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+    "featureContractIdentity": "packModel3SpanInferFields",
+    "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "provenanceContractIdentity": "MODEL3_V2_TRAINING_PROVENANCE_CONTRACT",
+    "asrEnvIdentity": "1",
+    "toneIdentity": "production_ToneModule"
+  },
+  "datasetId": "NOT_ASSIGNED",
+  "preflight": {
+    "formalHarnessExists": true,
+    "gate0ContractActive": true,
+    "model2RuntimeDisabled": null,
+    "toneVadCpu": "1",
+    "datasetIdAssigned": false,
+    "trainingStarted": false,
+    "fixtureInputDisabledForAcceptance": true,
+    "legacyProbeInputDisabledForAcceptance": true,
+    "holdoutRegistryActive": true
+  },
+  "elapsedSec": 230.91,
+  "runAttempts": 1,
+  "infrastructureRetries": 0
+}

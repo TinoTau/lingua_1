@@ -1,0 +1,19 @@
+{
+  "markers": [
+    "PHASE7E_RECALL_SPIKE",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN",
+    "SPIKE_ONLY"
+  ],
+  "natural_slice": {
+    "n": 500,
+    "base_only_hits": 0,
+    "profile_only_hits": 500,
+    "both_hit": 0,
+    "neither_hit": 0,
+    "ProfileOnlyTargetRecovery_count": 500,
+    "ProfileOnlyTargetRecovery_rate": 1.0
+  },
+  "artificial_correct_TIR": 0.988,
+  "note": "Natural slice uses natural base membership; profile query ignores base exclusion for both_hit analysis"
+}

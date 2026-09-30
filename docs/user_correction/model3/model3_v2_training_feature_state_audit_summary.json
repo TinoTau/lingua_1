@@ -1,0 +1,83 @@
+{
+  "phase": "MODEL3_V2_TRAINING_FEATURE_STATE_PIPELINE_AUDIT",
+  "date": "2026-08-29",
+  "mode": "READ_ONLY",
+  "primaryClassification": "TRAINING_UPSTREAM_STATE_PROVENANCE_GAP",
+  "candidateStateProvenanceResolved": true,
+  "datasetBuildCanResume": false,
+  "architectureChangeRequired": "USER_DECISION_REQUIRED",
+  "architectureChangeScope": "training_upstream_materialization_policy_not_model3_runtime",
+  "model3InputModality": "TEXT_ONLY",
+  "featureProvenanceNote": "first_pass_cand_log1p encodes acoustic-dependent Recall state",
+  "minimumUpstreamState": {
+    "required": [
+      "toneTimestampOnlyEnabled",
+      "AcousticToneSlice[]",
+      "WordTimeSpan[]",
+      "derived acousticTonePattern per window",
+      "resolveToneRecallReadiness=ready",
+      "text syllables + lexicon tone SQL"
+    ],
+    "notUsed": [
+      "text-derived dictionary tone as Plain fill",
+      "compatibility isCovered writeback to PathFineSpan",
+      "Model2 expanded candidates for first_pass count"
+    ]
+  },
+  "mandatoryToneRecall": {
+    "plainFallbackRemoved": true,
+    "states": ["caller_disabled", "runtime_unsupported", "no_pattern", "invalid_pattern", "ready"]
+  },
+  "toneArchitectureDrift": false,
+  "routes": {
+    "A_real_state": "PARTIAL",
+    "B_acoustic_materialization": "PARTIAL_UNAUTHORIZED",
+    "C_frozen_simulator": "NOT_CURRENTLY_AUTHORIZED"
+  },
+  "ttsAuthorization": "NEW_TRAINING_DATA_GENERATION_DECISION_REQUIRED",
+  "frozenToneSimulator": "DOES_NOT_EXIST",
+  "anchorParity": {
+    "DOMAIN_ANCHOR_OWNER_PARITY": "PASS",
+    "MODEL2_ANCHOR_PARITY": "FAIL_NOT_EXERCISED_OFFLINE",
+    "FULL_ANCHOR_DISTRIBUTION_PARITY": "FAIL"
+  },
+  "multipath": {
+    "PATH_OWNER_PARITY": "PASS",
+    "MULTIPATH_MATERIALIZATION_EXERCISED": false,
+    "nonHoldoutMultipathExampleCount": 27
+  },
+  "featureRemovalJustified": false,
+  "recallRollbackJustified": false,
+  "answers": {
+    "A": "AcousticToneSlice[] + WordTimeSpan[] + enabled tone channel → valid acousticTonePattern → Tone Recall ready",
+    "B": "Live has audio/Tone unlock; Gate0 text-only → no_pattern → fallback cand=0",
+    "C": "Pieces exist (audio/ToneModule/lattice); no authorized training contract wiring them to Model3 cand",
+    "D": "No — text-only cannot without violating Mandatory Tone Recall",
+    "E": "Traces OK for reference/validation; not supervised train-scale",
+    "F": "Technically yes via re-pipeline; not authorized now",
+    "G": "DOES_NOT_EXIST",
+    "H": "YES — new training data generation decision",
+    "I": "NO",
+    "J": "NO"
+  },
+  "nextPhase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_ARCHITECTURE_PROPOSAL",
+  "nextPhaseExecuted": false,
+  "governance": {
+    "Model3Changed": false,
+    "featureContractChanged": false,
+    "RecallChanged": false,
+    "ToneChanged": false,
+    "FineSpanChanged": false,
+    "AnchorChanged": false,
+    "JobResultChanged": false,
+    "datasetGenerated": false,
+    "trainingExecuted": false
+  },
+  "artifacts": [
+    "docs/user_correction/model3/Lingua_Model3_V2_Training_Feature_State_Pipeline_Audit_2026_08_29.md",
+    "docs/user_correction/model3/model3_v2_training_feature_provenance_matrix.csv",
+    "docs/user_correction/model3/model3_v2_upstream_training_asset_inventory.csv",
+    "docs/user_correction/model3/model3_v2_feature_state_route_comparison.csv",
+    "docs/user_correction/model3/model3_v2_training_feature_state_audit_summary.json"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "contractId": "MODEL3_V2_GATE0_CORRECTED_EVIDENCE_CONTRACT",
+  "date": "2026-08-30",
+  "trustedAcceptanceOrigins": ["FORMAL_FRESH_MATERIALIZATION"],
+  "rejectedAcceptanceOrigins": [
+    "TEST_FIXTURE",
+    "LEGACY",
+    "PROBE_ONLY",
+    "HISTORICAL_NON_PARITY_INPUT",
+    "MISSING_EVIDENCE_SOURCE"
+  ],
+  "checkOutcomeVocabulary": [
+    "PASS",
+    "FAIL",
+    "NOT_EXERCISED",
+    "INSUFFICIENT_EVIDENCE",
+    "BLOCKED"
+  ],
+  "readinessVsAcceptance": {
+    "readyForGate0AcceptanceRun": "structural_only_harness_and_owner_wiring",
+    "acceptancePassed": "requires_fresh_formal_evidence_and_independent_derivation"
+  },
+  "model2Statuses": [
+    "MODEL2_OWNER_WIRED",
+    "MODEL2_OWNER_ATTEMPTED",
+    "MODEL2_OWNER_COMPLETED",
+    "MODEL2_HOST_AVAILABLE",
+    "MODEL2_HIT_OBSERVED"
+  ],
+  "domainStatuses": [
+    "DOMAIN_OWNER_WIRED",
+    "DOMAIN_OWNER_ATTEMPTED",
+    "DOMAIN_OWNER_COMPLETED",
+    "DOMAIN_HIT_OBSERVED"
+  ],
+  "candidatePolicy": {
+    "missing": "HARD_REJECT RECALL_STATE_INVALID",
+    "trueZero": "valid cand=0",
+    "owner": "model3FirstPassCandidateCount / packModel3SpanInferFields"
+  },
+  "toneReadinessPolicy": {
+    "missingState": "RECALL_STATE_INVALID",
+    "forbiddenFallback": "readiness.state || \"ready\""
+  },
+  "emptyBatchPolicy": "INSUFFICIENT_FORMAL_EVIDENCE",
+  "fixtureIsolation": {
+    "api": "materialize_utterance_from_parts(lattice=...)",
+    "mark": "TEST_FIXTURE",
+    "gate0RejectCode": "NON_FORMAL_GATE0_EVIDENCE"
+  }
+}

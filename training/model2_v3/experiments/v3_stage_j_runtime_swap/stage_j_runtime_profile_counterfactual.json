@@ -1,0 +1,34 @@
+{
+  "span": [
+    "qing"
+  ],
+  "target": "domain:tourism_route:包车:bao|che",
+  "variants": {
+    "Correct": {
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "p_actions": [],
+      "n_new": 8
+    },
+    "Empty": {
+      "domain_action": "domain_soft:transport",
+      "domain_none": false,
+      "p_actions": [],
+      "n_new": 2
+    },
+    "Wrong": {
+      "domain_action": "domain_soft:tourism_route",
+      "domain_none": false,
+      "p_actions": [],
+      "n_new": 8
+    },
+    "Swapped": {
+      "domain_action": "domain_soft:meeting",
+      "domain_none": false,
+      "p_actions": [],
+      "n_new": 8
+    }
+  },
+  "profile_value": "MODERATE",
+  "PASS": true
+}

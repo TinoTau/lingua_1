@@ -1,0 +1,18 @@
+{
+  "ts": "2026-08-23",
+  "user_profile_v1_fields": {
+    "phonetic_bias": "Record<string,number> — pronunciation relation weights",
+    "tone_bias": "Record<string,number> — tone tendency",
+    "personal_terms": "canonical surfaces for lexical hash",
+    "personal_term_evidence": "term_id keyed evidence",
+    "resolved_lexical_terms": "term stats",
+    "confusion_bias": "confusion pairs",
+    "domain_bias": "domain preference",
+    "long_term_domain_evidence": "Stage-D domain evidence"
+  },
+  "model2_consumption": "buildModel2PolicyInput reads phonetic_bias; infer uses phoneticBias + personal_terms; P actions encode pronunciation relations",
+  "model3_should_read_full_profile": false,
+  "recommended": "Reuse Model2-compressed pronunciation evidence: selectedActions, actionProbsTop, relation-lexicon transforms already applied in P path",
+  "avoid": "Duplicate user-profile parsing in Model3",
+  "gap": "No single exported Model3PronunciationFeature blob today — adapter should snapshot per-span Model2InferResult + policy input"
+}

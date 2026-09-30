@@ -1,0 +1,65 @@
+{
+  "phase": "MODEL3_V2_RETRY_REINTERPRETATION_SIGNAL_LOSS_AUDIT",
+  "timestamp": "2026-09-01T07:28:00.018Z",
+  "verdict": "RETRY_SIGNAL_LOSS_AUDIT_PASS_PRIMARY_LOCAL_RESEGMENTATION",
+  "nextPhase": "MODEL3_V2_LOCAL_RESEGMENTATION_CORRECTION_DESIGN_AUDIT",
+  "primaryOwner": "LOCAL_RESEGMENTATION",
+  "s3Identity": {
+    "verified": true,
+    "sha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1"
+  },
+  "harnessVersion": "MODEL3_ACCEPTANCE_HARNESS_V1_20260831",
+  "populations": {
+    "P0_all": 200,
+    "P1_baselineWrong": 166,
+    "P2_provenRescuable": 141,
+    "P3_targetRelevantRetry": 129,
+    "P4_regionCovers": 123,
+    "P5_targetReachable": 21,
+    "P6_targetReturned": 21,
+    "P7_assemblyViable": 19,
+    "P8_kenlmViable": 0
+  },
+  "repairability": {
+    "BASELINE_ALREADY_CORRECT": 34,
+    "BASELINE_WRONG": 166,
+    "MODEL3_RESCUABLE": 141,
+    "NO_REPAIRABLE_TARGET": 25,
+    "OUTSIDE_MODEL3_SCOPE": 0,
+    "REFERENCE_OR_ALIGNMENT_AMBIGUOUS": 0,
+    "INSUFFICIENT_EVIDENCE": 0
+  },
+  "previousClassificationCorrection": {
+    "priorRescuable170": "NOT_FROZEN_RECOMPUTED",
+    "priorRetryRegion131": "NOT_FROZEN_RECOMPUTED",
+    "priorAssembly17": {
+      "total": 17,
+      "confirmedAssemblyLoss": 11,
+      "notAssemblyLoss": 2,
+      "traceClassificationError": 4
+    }
+  },
+  "firstFailOwnerDistribution": {
+    "LOCAL_RESEGMENTATION": 84,
+    "LEXICON_COVERAGE": 39,
+    "RETRY_REGION": 6,
+    "MODEL3_TRIGGER": 12
+  },
+  "unchangedDecomposition": {
+    "IMPROVED": 1,
+    "REGRESSED": 0,
+    "UNCHANGED": 199
+  },
+  "governance": {
+    "model3Changed": false,
+    "retryChanged": false,
+    "recallChanged": false,
+    "lexiconChanged": false,
+    "assemblyChanged": false,
+    "kenlmChanged": false,
+    "jobResultChanged": false,
+    "asrChanged": false,
+    "training": false
+  }
+}

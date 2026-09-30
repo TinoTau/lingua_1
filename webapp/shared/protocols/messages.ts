@@ -390,6 +390,36 @@ export interface JobCancelMessage {
   reason?: string;
 }
 
+/** Scheduler → Node: once per session↔node assignment. */
+export interface SessionBootstrapMessage {
+  type: 'session_bootstrap';
+  session_id: string;
+  user_id?: string | null;
+  profile_version?: number | null;
+  user_profile?: {
+    schema_version: number;
+    profile_version: number;
+    phonetic_bias?: Record<string, number>;
+    tone_bias?: Record<string, number>;
+    personal_terms?: string[];
+    personal_term_evidence?: Record<string, number>;
+    resolved_lexical_terms?: Record<
+      string,
+      { term_id: string; surface: string; evidence: number; confirm_count: number }
+    >;
+    unresolved_lexical_observations?: Array<{
+      surface: string;
+      reason: string;
+      last_event_id?: string | null;
+    }>;
+    legacy_free_text_personal_terms?: string[];
+    confusion_bias?: Record<string, number>;
+    domain_bias?: Record<string, number>;
+    long_term_domain_evidence?: Record<string, number>;
+  } | null;
+  trace_id?: string | null;
+}
+
 export interface JobResultMessage {
   type: 'job_result';
   job_id: string;

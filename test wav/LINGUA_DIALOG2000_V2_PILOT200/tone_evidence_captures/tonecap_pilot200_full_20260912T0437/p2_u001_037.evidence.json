@@ -1,0 +1,322 @@
+{
+  "caseId": "p2_u001_037",
+  "captureBatchId": "tonecap_pilot200_full_20260912T0437",
+  "datasetBuildId": "build_20260911_091806",
+  "split": "DEV",
+  "userId": "U001",
+  "domain": "food_cafe",
+  "audioId": "aud_p2_u001_037",
+  "audioPath": "audio/p2_u001_037.wav",
+  "audioSha256": "d1e0b3e3fa111267e4324c973352be6429e60f0118eb9f7498d3d01338fccc8c",
+  "profileConditionAtCapture": "NO_PROFILE",
+  "rawMergedAsrText": "太旦商有新景点",
+  "rawAsrHash": "af09766330f3d00eb01473c0c8d4a71f38f5f574be104bd83b6263de1a8c10db",
+  "segments": [
+    {
+      "text": "太旦商有新景点",
+      "start": 0,
+      "end": 1.46,
+      "no_speech_prob": 0.2156982421875,
+      "avg_logprob": -0.42085799303921784,
+      "compression_ratio": 0.65625,
+      "words": [
+        {
+          "word": "太",
+          "start": 0,
+          "end": 0.26,
+          "probability": 0.473388671875
+        },
+        {
+          "word": "旦",
+          "start": 0.26,
+          "end": 0.42,
+          "probability": 0.749755859375
+        },
+        {
+          "word": "商",
+          "start": 0.42,
+          "end": 0.68,
+          "probability": 0.9775390625
+        },
+        {
+          "word": "有",
+          "start": 0.68,
+          "end": 0.94,
+          "probability": 0.978515625
+        },
+        {
+          "word": "新",
+          "start": 0.94,
+          "end": 1.12,
+          "probability": 0.87109375
+        },
+        {
+          "word": "景",
+          "start": 1.12,
+          "end": 1.36,
+          "probability": 0.990234375
+        },
+        {
+          "word": "点",
+          "start": 1.36,
+          "end": 1.46,
+          "probability": 0.64990234375
+        }
+      ]
+    }
+  ],
+  "segmentEvidenceHash": "86b054d445623085ddf5345e93e539ea840f8e01e3724f2c59a6557f67861761",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "acousticToneSlices": [
+      {
+        "start": 0,
+        "end": 0.26,
+        "tonePosterior": {
+          "t1": 0.0001128991789300926,
+          "t2": 0.00007433419523295015,
+          "t3": 0.0004125578561797738,
+          "t4": 0.9993999004364014,
+          "t5": 3.387659432974033e-7
+        },
+        "confidence": 0.9993999004364014
+      },
+      {
+        "start": 0.26,
+        "end": 0.42,
+        "tonePosterior": {
+          "t1": 0.0009395675151608884,
+          "t2": 0.03907096013426781,
+          "t3": 0.21100753545761108,
+          "t4": 0.7462987899780273,
+          "t5": 0.002683080267161131
+        },
+        "confidence": 0.7462987899780273
+      },
+      {
+        "start": 0.42,
+        "end": 0.68,
+        "tonePosterior": {
+          "t1": 0.9920670986175537,
+          "t2": 0.0020383023656904697,
+          "t3": 0.000433527457062155,
+          "t4": 0.005432961508631706,
+          "t5": 0.00002816448250086978
+        },
+        "confidence": 0.9920670986175537
+      },
+      {
+        "start": 0.68,
+        "end": 0.94,
+        "tonePosterior": {
+          "t1": 0.0009212566073983908,
+          "t2": 0.01207153033465147,
+          "t3": 0.9738361239433289,
+          "t4": 0.01240033283829689,
+          "t5": 0.000770772632677108
+        },
+        "confidence": 0.9738361239433289
+      },
+      {
+        "start": 0.94,
+        "end": 1.12,
+        "tonePosterior": {
+          "t1": 0.8846285343170166,
+          "t2": 0.10809781402349472,
+          "t3": 0.002695513656362891,
+          "t4": 0.004319415893405676,
+          "t5": 0.00025866678333841264
+        },
+        "confidence": 0.8846285343170166
+      },
+      {
+        "start": 1.12,
+        "end": 1.36,
+        "tonePosterior": {
+          "t1": 0.0005456198123283684,
+          "t2": 0.006580785848200321,
+          "t3": 0.787470817565918,
+          "t4": 0.2039739340543747,
+          "t5": 0.0014288036618381739
+        },
+        "confidence": 0.787470817565918
+      },
+      {
+        "start": 1.36,
+        "end": 1.46,
+        "tonePosterior": {
+          "t1": 0.00046829116763547063,
+          "t2": 0.598465085029602,
+          "t3": 0.3892100751399994,
+          "t4": 0.010969273746013641,
+          "t5": 0.000887224217876792
+        },
+        "confidence": 0.598465085029602
+      }
+    ],
+    "sliceCount": 7,
+    "toneConfidenceAvg": 0.8545951928411212,
+    "evidenceProduction": [
+      {
+        "word": "太",
+        "startSec": 0,
+        "endSec": 0.26,
+        "durationSec": 0.26,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "旦",
+        "startSec": 0.26,
+        "endSec": 0.42,
+        "durationSec": 0.15999999999999998,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "商",
+        "startSec": 0.42,
+        "endSec": 0.68,
+        "durationSec": 0.26000000000000006,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "有",
+        "startSec": 0.68,
+        "endSec": 0.94,
+        "durationSec": 0.2599999999999999,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "新",
+        "startSec": 0.94,
+        "endSec": 1.12,
+        "durationSec": 0.18000000000000016,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "景",
+        "startSec": 1.12,
+        "endSec": 1.36,
+        "durationSec": 0.24,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "点",
+        "startSec": 1.36,
+        "endSec": 1.46,
+        "durationSec": 0.09999999999999987,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      }
+    ],
+    "model": "tone_cnn_production_v2",
+    "version": "p10-p1-direct-replacement-v1"
+  },
+  "acousticToneSlices": [
+    {
+      "start": 0,
+      "end": 0.26,
+      "tonePosterior": {
+        "t1": 0.0001128991789300926,
+        "t2": 0.00007433419523295015,
+        "t3": 0.0004125578561797738,
+        "t4": 0.9993999004364014,
+        "t5": 3.387659432974033e-7
+      },
+      "confidence": 0.9993999004364014
+    },
+    {
+      "start": 0.26,
+      "end": 0.42,
+      "tonePosterior": {
+        "t1": 0.0009395675151608884,
+        "t2": 0.03907096013426781,
+        "t3": 0.21100753545761108,
+        "t4": 0.7462987899780273,
+        "t5": 0.002683080267161131
+      },
+      "confidence": 0.7462987899780273
+    },
+    {
+      "start": 0.42,
+      "end": 0.68,
+      "tonePosterior": {
+        "t1": 0.9920670986175537,
+        "t2": 0.0020383023656904697,
+        "t3": 0.000433527457062155,
+        "t4": 0.005432961508631706,
+        "t5": 0.00002816448250086978
+      },
+      "confidence": 0.9920670986175537
+    },
+    {
+      "start": 0.68,
+      "end": 0.94,
+      "tonePosterior": {
+        "t1": 0.0009212566073983908,
+        "t2": 0.01207153033465147,
+        "t3": 0.9738361239433289,
+        "t4": 0.01240033283829689,
+        "t5": 0.000770772632677108
+      },
+      "confidence": 0.9738361239433289
+    },
+    {
+      "start": 0.94,
+      "end": 1.12,
+      "tonePosterior": {
+        "t1": 0.8846285343170166,
+        "t2": 0.10809781402349472,
+        "t3": 0.002695513656362891,
+        "t4": 0.004319415893405676,
+        "t5": 0.00025866678333841264
+      },
+      "confidence": 0.8846285343170166
+    },
+    {
+      "start": 1.12,
+      "end": 1.36,
+      "tonePosterior": {
+        "t1": 0.0005456198123283684,
+        "t2": 0.006580785848200321,
+        "t3": 0.787470817565918,
+        "t4": 0.2039739340543747,
+        "t5": 0.0014288036618381739
+      },
+      "confidence": 0.787470817565918
+    },
+    {
+      "start": 1.36,
+      "end": 1.46,
+      "tonePosterior": {
+        "t1": 0.00046829116763547063,
+        "t2": 0.598465085029602,
+        "t3": 0.3892100751399994,
+        "t4": 0.010969273746013641,
+        "t5": 0.000887224217876792
+      },
+      "confidence": 0.598465085029602
+    }
+  ],
+  "toneEvidenceHash": "e12183f80d987de50399329b9c4204033cf6cd221b598808da3de8c15cc0e2f7",
+  "toneSliceCount": 7,
+  "toneSkippedReason": null,
+  "toneEvidencePresent": true,
+  "sessionId": "pilot200-tonecap::p2_u001_037::tonecap_pilot200_full_20260912T0437",
+  "captureTimestamp": "2026-09-12T04:47:12.369Z",
+  "runnerVersion": "pilot200-frozen-tone-evidence-full-capture-v1",
+  "asrExecutedForCapture": true,
+  "status": "OK"
+}

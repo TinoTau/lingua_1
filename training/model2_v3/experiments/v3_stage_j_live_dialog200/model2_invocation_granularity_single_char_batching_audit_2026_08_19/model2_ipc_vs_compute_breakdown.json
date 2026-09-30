@@ -1,0 +1,8 @@
+{
+  "evidence_quality": "PARTIAL",
+  "model": "RetrievalPolicyV3 47210 params CPU",
+  "compute": "likely 1-5ms per infer (jest warm p50 3ms)",
+  "ipc": "JSONL roundtrip per span; sequential; profile re-serialized",
+  "domain_executor": "extra after forward when not domain_none; 1008/4181 infers executed D retrieval",
+  "batching_benefit": "primarily IPC/serialization reduction, not GPU vectorization"
+}

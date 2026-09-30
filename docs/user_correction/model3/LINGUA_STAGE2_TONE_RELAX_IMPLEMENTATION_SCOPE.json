@@ -1,0 +1,124 @@
+{
+  "phase": "LINGUA_MODEL3_RETRY_STAGE2_TONE_RELAX_DOMAIN_PRESERVATION_PREDEV_AUDIT",
+  "date": "2026-09-14",
+  "acpId": "LINGUA-ACP-MODEL3-RETRY-STAGE2-TONE-RELAXATION-V1",
+  "ACP_DRAFT_STATUS": "APPROVE",
+  "IMPLEMENTATION_FEASIBLE": "YES",
+  "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+  "targetRecoveryMode": "PINYIN_ONLY_WITH_DOMAIN_CONTEXT",
+  "toneRelaxationDelta": "REMOVE_TONE_HARD_GATE_ONLY",
+  "domainContract": {
+    "reuseRetainedDomains": true,
+    "recomputeDomainVote": false,
+    "basePlusRetainedDomainTiers": true,
+    "domainAsAnchor": false
+  },
+  "MINIMUM_PRODUCT_FILES_TO_CHANGE": 2,
+  "MINIMUM_TEST_FILES_TO_CHANGE": 3,
+  "NEW_CONFIG_REQUIRED": "NO",
+  "NEW_MODEL_REQUIRED": "NO",
+  "DB_SCHEMA_CHANGE_REQUIRED": "NO",
+  "LEXICON_DATA_CHANGE_REQUIRED": "NO",
+  "JOBRESULT_CHANGE_REQUIRED": "NO",
+  "NEW_PROVENANCE_REQUIRED": "NO",
+  "productFiles": [
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/tone-first-tier-collector.ts",
+      "why": "Stage2 Tone-exact collector Fail-Closes before any pinyin-only / domain pinyin lookup",
+      "exactSemanticDelta": "When Stage2 recovery mode flag is set: skip Tone readiness Fail-Closed; collect via lookupBaseByPinyinKey + lookupDomainsByPinyinKeyMulti(retained domainIds) (+ legal idiom pinyin path if already allowed); preserve merge/eligibility limits",
+      "mustNotChange": "Default/first-pass Mandatory Tone exact path; fuzzy policy; domain eligibility rules; scoring formulas beyond Tone gate",
+      "testRequired": "Unit/integration: recovery mode returns domain+base by pinyin; default mode unchanged"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/model3-runtime/run-model3-path-step.ts",
+      "why": "Stage2 recall closure is the only caller that may enable recovery mode",
+      "exactSemanticDelta": "Pass recovery-mode option into recallSpanTopKV2 only from Model3 RETRY Stage2 recall closure; keep domainIds=retainedDomains; do not pass option from first-pass lattice recall",
+      "mustNotChange": "prepareModel3PathUpstream Domain Vote; Anchor; Model3 infer; Model2; merge budget args",
+      "testRequired": "Integration: RETRY Stage2 sets mode; non-retry recall does not"
+    }
+  ],
+  "optionalProductFiles": [
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/recall-span-topk-v2.ts",
+      "why": "May only need a thin option plumb-through to collectTierCandidatesToneFirst",
+      "exactSemanticDelta": "Thread recovery-mode flag; no first-pass behavior change",
+      "mustNotChange": "Length-1 collector first-pass contracts; public JobResult",
+      "testRequired": "Existing Batch1.1C mandatory Tone tests remain PASS"
+    }
+  ],
+  "testFiles": [
+    {
+      "path": "electron_node/electron-node/main/src/lexicon-v2/batch1-1c-mandatory-tone-recall.sqlite.integration.test.ts",
+      "why": "Guard first-pass exact Tone frozen",
+      "exactSemanticDelta": "No production semantic change; assert default path still Fail Closed / tone_exact",
+      "mustNotChange": "First-pass expectations",
+      "testRequired": "Regression green"
+    },
+    {
+      "path": "electron_node/electron-node/main/src/model3-runtime/model3-mainline.integration.test.ts",
+      "why": "End-to-end RETRY Stage2 with retainedDomains",
+      "exactSemanticDelta": "Add assertion Tone-relaxed Stage2 can return pinyin hit under retained domain while Domain Vote not rerun",
+      "mustNotChange": "Anchor / KEEP-RETRY semantics",
+      "testRequired": "New focused case + existing cases PASS"
+    },
+    {
+      "path": "electron_node/electron-node/tests/run-pilot200-post-anchor-acp-remeasure.mjs",
+      "why": "Stage2 useful metric field-name mismatch blocks acceptance measurement",
+      "exactSemanticDelta": "Also read candidateCount/candidates; business logic unchanged",
+      "mustNotChange": "Gate semantics; owner labels beyond observability",
+      "testRequired": "Smoke: Stage2 nonempty tracks candidateCount"
+    }
+  ],
+  "acceptancePlan": {
+    "populations": [
+      "A_E5_CORRECT_35",
+      "B_CORRECT_TONE_CONTROLS_12",
+      "C_DOMAIN_SENSITIVE",
+      "D_WRONG_DOMAIN_CONTROLS",
+      "E_EXISTING_PILOT_SUCCESS"
+    ],
+    "gates": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+    "metrics": [
+      "stage2TargetHit",
+      "candidateCount",
+      "targetRank",
+      "domainCompatibility",
+      "sameDomainSurvival",
+      "sharedBudgetSurvival",
+      "assemblyPresence",
+      "kenlmPresence",
+      "finalCorrectness",
+      "falseExpansion",
+      "crossPathLeak"
+    ]
+  },
+  "counterfactualSummary": {
+    "E5_CASE_COUNT": 35,
+    "E5_GLOBAL_PINYIN_TARGET_RECOVERY": 35,
+    "E5_DOMAIN_BOUNDED_TARGET_RECOVERY": 35,
+    "E5_DOMAIN_BOUNDED_RECOVERY_RATE": 1.0,
+    "GLOBAL_CANDIDATE_COUNT_MEDIAN": 1,
+    "DOMAIN_BOUNDED_CANDIDATE_COUNT_MEDIAN": 1,
+    "GLOBAL_CANDIDATE_COUNT_MAX": 4,
+    "DOMAIN_BOUNDED_CANDIDATE_COUNT_MAX": 2,
+    "TARGET_LOST_DUE_TO_DOMAIN_BOUNDING_COUNT": 0,
+    "DOMAIN_BOUNDING_FALSE_NEGATIVE_RISK": "LOW",
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 35,
+    "CONTROL_EXISTING_USEFUL_DROP_COUNT": 0,
+    "DOMAIN_BOUNDED_BUDGET_PRESSURE": "LOW",
+    "retainedDomainsProxyNote": "PROXY_NOT_RUNTIME from case.domain coarse→fine map; all E5 targets inBase so base tier preserves recovery"
+  },
+  "frozenGuarantees": {
+    "MODEL3_CHANGE_REQUIRED": "NO",
+    "MODEL2_ON_RETRY": "NO",
+    "MODEL2_CHANGE_REQUIRED": "NO",
+    "DOMAIN_VOTE_CHANGE_REQUIRED": "NO",
+    "ANCHOR_CHANGE_REQUIRED": "NO",
+    "RETRY_BUDGET_CHANGE_REQUIRED": "NO",
+    "NORMAL_FIRST_PASS_TONE_POLICY_CHANGE_REQUIRED": "NO",
+    "OBSERVABILITY_FIX_BUSINESS_LOGIC_CHANGE": "NO"
+  },
+  "ONE_NEXT_OWNER": "STAGE2_TONE_RELAXATION_IMPLEMENTATION_OWNER",
+  "ONE_NEXT_DELTA": "Implement only the ACP-approved Model3-triggered bounded local pinyin-only Stage2 recall while preserving retained domain context, existing source eligibility, path-level domain buckets, shared budget, SameDomain, Assembly, and KenLM",
+  "AUDIT_STATUS": "PASS"
+}

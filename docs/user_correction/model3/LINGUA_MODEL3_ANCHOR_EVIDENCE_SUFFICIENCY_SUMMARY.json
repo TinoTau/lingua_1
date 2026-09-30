@@ -1,0 +1,78 @@
+{
+  "phase": "LINGUA_MODEL3_ANCHOR_EVIDENCE_SUFFICIENCY_AUDIT",
+  "expectedCases": 9,
+  "observedCases": 9,
+  "baselineIdentity": "PASS",
+  "previousPhase": "LINGUA_MODEL3_COMPOUND_RESIDUAL_TRACE_AUDIT",
+  "TOTAL_CASES": 9,
+  "MODEL2_EVIDENCE_PRESENT": 9,
+  "DOMAIN_EVIDENCE_PRESENT": 8,
+  "BOTH_EVIDENCE_PRESENT": 8,
+  "MODEL2_PARTIAL_EXPLANATION": 9,
+  "DOMAIN_PARTIAL_OR_NON_SUFFICIENT": 8,
+  "A1_MODEL2_ANY_EVIDENCE_WHOLE_SPAN_ANCHOR": 1,
+  "A2_DOMAIN_ANY_EVIDENCE_WHOLE_SPAN_ANCHOR": 0,
+  "A3_BOTH_INSUFFICIENT_OR_RULE": 8,
+  "A4_ANCHOR_GRANULARITY_LOSS": 0,
+  "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": 0,
+  "A6_TRACE_INSUFFICIENT": 0,
+  "A7_OTHER_VERIFIED": 0,
+  "SUM": 9,
+  "DOMAIN_ONLY_CAN_FALSE_ANCHOR": "YES",
+  "MODEL2_ONLY_CAN_FALSE_ANCHOR": "YES",
+  "DOMAIN_ONLY_OBSERVED_IN_DENOMINATOR": "NO",
+  "MODEL2_ONLY_OBSERVED_IN_DENOMINATOR": "YES",
+  "CURRENT_EXPLICIT_SUFFICIENCY_CONTRACT": "NO",
+  "DOES_CURRENT_RUNTIME_HAVE_EXPLICIT_EVIDENCE_SUFFICIENCY_CONTRACT": "NO",
+  "ANCHOR_COVERAGE_GRANULARITY": "LOST",
+  "FALSE_ANCHOR_REPRODUCED": "YES",
+  "MODEL2_ONLY_FALSE_ANCHOR": "YES",
+  "DOMAIN_ONLY_FALSE_ANCHOR": "PARTIAL",
+  "ANCHOR_EVIDENCE_SUFFICIENCY_CONTRACT": "ABSENT",
+  "PRIMARY_FIRST_FAILURE_MECHANISM": "ANY_DOMAIN_EVIDENCE OR ANY_MODEL2_EVIDENCE (including PROFILE_DOMAIN soft hits) → WHOLE_PATHFINESPAN_ANCHOR without evidence-sufficiency or phonetic-coverage check; granularity collapsed to boolean",
+  "oneNextOwner": "ANCHOR_EVIDENCE_SUFFICIENCY_OWNER",
+  "PATCH_FREE_LOCAL_REFACTOR_FEASIBLE": "YES",
+  "ARCHITECTURE_CHANGE_PROPOSAL_REQUIRED": "NO",
+  "PRODUCT_CODE_CHANGE_THIS_ROUND": "NO",
+  "ONE_NEXT_DELTA": "Modify only Anchor materialization (model3-anchor-adapter.ts / evidence-sufficiency contract) so Anchor requires span-level sufficient explanation, not boolean ANY domain/model2 evidence; do not change Model2 transforms, Domain Vote, FineSpan, Model3 weights, Retry, or Stage-2.",
+  "codeChain": {
+    "uniqueProductionEntry": {
+      "file": "electron_node/electron-node/main/src/model3-runtime/model3-anchor-adapter.ts",
+      "function": "materializeModel3Anchors",
+      "calledFrom": [
+        "run-model3-path-step.ts::prepareModel3PathUpstream",
+        "run-model3-path-step.ts::prepareModel3PathUpstreamWithoutInfer"
+      ]
+    },
+    "predicate": "domainOk OR model2Ok → whole PathFineSpan Anchor",
+    "domainOk": {
+      "function": "hasRetainedDomainEvidence",
+      "reads": [
+        "candidate.source ∈ {domain_term,passive_domain_weak}",
+        "candidate.domains ∩ vote.retainedDomains",
+        "candidateBoundToSpan"
+      ],
+      "producer": "base lexicon domain_term recall AND/OR Model2 materializeDomainHits (PROFILE_DOMAIN with source=domain_term)",
+      "semanticMeaning": "ANY geometrically bound retained-domain domain candidate exists",
+      "NOT": "span surface lexically/acoustically fully explained"
+    },
+    "model2Ok": {
+      "function": "hasModel2Evidence",
+      "reads": [
+        "candidate.retrievalProvenance ∈ {PROFILE_RETRIEVAL, PROFILE_PRONUNCIATION, PROFILE_DOMAIN}"
+      ],
+      "producer": "expand-windows-with-model2 / candidate-materialize (P hits + D soft hits)",
+      "semanticMeaning": "ANY Model2-provenance candidate bound to span",
+      "NOT": "Model2 pronunciation transform fully explains span"
+    },
+    "profileDomainDualTrigger": {
+      "file": "electron_node/electron-node/main/src/model2-runtime/candidate-materialize.ts",
+      "function": "materializeDomainHits",
+      "effect": "sets source=domain_term AND retrievalProvenance=PROFILE_DOMAIN → same candidate flips domainOk and model2Ok"
+    },
+    "sufficiencyCheck": "ABSENT",
+    "phoneticCoverageCheck": "ABSENT",
+    "hiddenAnchorSources": "NONE beyond DOMAIN / MODEL2 / DOMAIN_AND_MODEL2 in this adapter"
+  },
+  "productCodeChange": false
+}

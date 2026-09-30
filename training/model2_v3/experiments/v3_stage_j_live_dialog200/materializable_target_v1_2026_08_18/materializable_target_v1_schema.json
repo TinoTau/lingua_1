@@ -1,0 +1,31 @@
+{
+  "$id": "materializable_target_v1_schema",
+  "trace_contract": "MATERIALIZABLE_TARGET_V1",
+  "correction_unit": {
+    "stable_id": "string",
+    "operation": ["UNCHANGED", "SUBSTITUTE", "INSERT", "DELETE"],
+    "source_text": "string",
+    "expected_text": "string",
+    "source_range": { "normStart": "int", "normEnd": "int", "rawStart": "int|null", "rawEnd": "int|null" },
+    "expected_range": { "normStart": "int", "normEnd": "int", "rawStart": "int|null", "rawEnd": "int|null" },
+    "requires_lexical": "boolean",
+    "lexical_recoverable": "boolean",
+    "path_recoverable": "boolean",
+    "sentence_recoverable": "boolean",
+    "actually_assembled": "boolean",
+    "kenlm_available": "boolean",
+    "path_failure_reason": "string|null",
+    "gap_class": "string|null"
+  },
+  "dialog": {
+    "trace_contract": "MATERIALIZABLE_TARGET_V1",
+    "requires_correction": "boolean",
+    "lexical_recoverable": "all required SUBSTITUTE/INSERT units",
+    "path_recoverable": "all required units",
+    "sentence_recoverable": "all required units + domain bucket",
+    "actually_assembled": "all required units",
+    "kenlm_available": "all required units",
+    "final_correct": "existing dialog_200 correctness",
+    "first_divergence": { "class": "string|null", "stage": "string|null", "trace_contract": "MATERIALIZABLE_TARGET_V1" }
+  }
+}

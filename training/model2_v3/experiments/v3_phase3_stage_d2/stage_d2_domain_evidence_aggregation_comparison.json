@@ -1,0 +1,98 @@
+{
+  "preferred": "normalized_weighted_multitag",
+  "modes": {
+    "first_tag_only": {
+      "evidence_top": [
+        [
+          "coffee",
+          0.6
+        ],
+        [
+          "food_order",
+          0.26666666666666666
+        ],
+        [
+          "tourism_route",
+          0.13333333333333333
+        ],
+        [
+          "tourism_pickup",
+          0.0
+        ],
+        [
+          "tourism_hotel",
+          0.0
+        ]
+      ],
+      "concentration": {
+        "top1": 0.6,
+        "top2": 0.26666666666666666,
+        "entropy": 0.9276173343241816,
+        "n_nonzero": 3,
+        "SINGLE_TERM_DOMINANCE_RISK": false
+      }
+    },
+    "uniform_multitag": {
+      "evidence_top": [
+        [
+          "milk_tea",
+          0.33333333333333326
+        ],
+        [
+          "food_order",
+          0.33333333333333326
+        ],
+        [
+          "coffee",
+          0.2
+        ],
+        [
+          "tourism_route",
+          0.06666666666666667
+        ],
+        [
+          "tourism_transport",
+          0.06666666666666667
+        ]
+      ],
+      "concentration": {
+        "top1": 0.3333333333333333,
+        "top2": 0.3333333333333333,
+        "entropy": 1.4153691350741877,
+        "n_nonzero": 5,
+        "SINGLE_TERM_DOMINANCE_RISK": false
+      }
+    },
+    "normalized_weighted_multitag": {
+      "evidence_top": [
+        [
+          "milk_tea",
+          0.33333333333333326
+        ],
+        [
+          "food_order",
+          0.33333333333333326
+        ],
+        [
+          "coffee",
+          0.2
+        ],
+        [
+          "tourism_route",
+          0.06666666666666667
+        ],
+        [
+          "tourism_transport",
+          0.06666666666666667
+        ]
+      ],
+      "concentration": {
+        "top1": 0.3333333333333333,
+        "top2": 0.3333333333333333,
+        "entropy": 1.4153691350741877,
+        "n_nonzero": 5,
+        "SINGLE_TERM_DOMINANCE_RISK": false
+      }
+    }
+  }
+}

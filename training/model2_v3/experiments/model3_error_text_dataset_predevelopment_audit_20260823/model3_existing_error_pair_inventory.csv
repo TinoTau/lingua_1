@@ -1,0 +1,13 @@
+path,format,approx_count,pair_type,fields,has_audio,usable_for,notes
+training/model2/dataset/baseline_v1/results.jsonl,jsonl,10000,~8761_gt_ne_asr,REAL_ASR_SENTENCE,ground_truth_text↔asr_hypothesis,PARTIAL,error_pattern_mining+optional_contrast,Primary REAL ASR pool (TTS→ASR)
+training/model2/dataset/training_scale_v1/results.jsonl,jsonl,3000,REAL_ASR_SENTENCE,gt↔asr,PARTIAL,pattern_mining,
+training/model2/dataset/pseudo_user_accent_scale_v1/results.jsonl,jsonl,2999,REAL_ASR_SENTENCE,gt↔asr,NO,pattern_mining,
+training/model2/dataset/pronunciation_corrupted_probe_v1/results.jsonl,jsonl,350,CORRUPTED_TTS_ASR,gt↔asr+corruption_family,PARTIAL,corruption_family_evidence,Probe NOT_FOR_RUNTIME
+training/model2/dataset/probe_v1/probe_results.jsonl,jsonl,320,PROBE,gt↔asr,PARTIAL,historical,
+training/model2/dataset/accent_generator_probe_v1/paired_results.jsonl,jsonl,64,ACCENT_PROBE,paired,NO,historical,
+.../dialog200_bundle14/dialog200_stagej_per_utterance.jsonl,jsonl,200,~175_ne,REAL_ASR_SENTENCE,expectedText↔asr.raw_text,YES,EVAL_ONLY,Do not put in train by default
+training/model2_v3/dataset/policy_phase2/rows.jsonl,jsonl,39870,SPAN_WINDOW_TARGET,window_text↔target_term,NO,pronunciation_pattern_research,Model2 P labels — NOT Model3 KEEP/RETRY
+training/model2_v3/dataset/policy_stage_j/rows.jsonl,jsonl,33557,SPAN_WINDOW_TARGET,window↔target,NO,research,NOT Model3 labels
+training/model2_v3/dataset/policy_stage_d_restored_v1/rows.jsonl,jsonl,1732,DOMAIN_SPAN,window↔target,NO,research,D-head only
+training/model2/dataset/baseline_v1/stage_b_trainrows/model2_train_rows.jsonl,jsonl,17930,SPAN_CONTEXT,span↔target_term_id,NO,research,
+training/model2/dataset/pronunciation_corrupted_probe_v1/surface_map.json,json,33,SURFACE_MAP,pinyin→surfaces,NO,MODIFY_surface_resolve,Prefer sqlite over this map long-term

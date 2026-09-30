@@ -1,0 +1,62 @@
+{
+  "phase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DESIGN",
+  "generatedAt": "2026-09-04T07:46:27Z",
+  "delta1Closure": {
+    "DELTA_RQ_STAGE2_NO_SLIDING": "RESOLVED_ACCEPTED_CLOSED",
+    "RETRY_STAGE2_SUCCESS_PATH_QUERY_ENUMERATION": "LEGAL_BOUNDED_WINDOW_SPACE_1_TO_5",
+    "acceptedBaseline": {
+      "successfulRetryRegionCount": 164,
+      "expectedWindowCount": 877,
+      "actualWindowCount": 877,
+      "missingWindowCount": 0,
+      "extraWindowCount": 0,
+      "outOfRegionWindowCount": 0,
+      "coordinateMismatch": 0,
+      "previousValidQueriesMissing": 0,
+      "crossFineSpanExpected": 400,
+      "crossFineSpanQueried": 400,
+      "preferredPathCollapse": 0,
+      "anchorCrossing": 0,
+      "keepCrossing": 0,
+      "singleCharViolations": 0,
+      "secondDomainVote": 0,
+      "secondModel3": 0,
+      "recursiveRetry": 0,
+      "asrRerun": 0,
+      "maxCrossPathSentencePool": 8
+    }
+  },
+  "controlVariable": "RETRY_FALLBACK_GEOMETRY_SOURCE",
+  "fallbackGeometryOwner": "SHARED_LEXICAL_WINDOW_OWNER",
+  "hardBoundOwner": "RETRY_REGION",
+  "candidateOwner": "OVERLAP_ORIGINAL_PATH_FINESPAN",
+  "delta1Reuse": "DIRECT_REUSE_SAFE",
+  "fallbackSemantics": "A_BOUNDED_LEXICAL_QUERY_WITHOUT_REGIONAL_PATH",
+  "preferredDesign": "OPT_A_REGION_DIRECT_WINDOW_ENUM",
+  "fallbackRegionLocalSpansFate": "RETAIN_FOR_NON_GEOMETRY_PURPOSE_OR_SUPPORTING_TRACE",
+  "DECISION_REQUIRED_BEFORE_DEVELOPMENT": "EMPTY",
+  "implementationReady": true,
+  "verdict": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DESIGN_PASS_IMPLEMENTATION_READY",
+  "nextPhase": "MODEL3_RETRY_FALLBACK_BOUNDARY_LOCK_DEVELOPMENT",
+  "workload": {
+    "fallbackRegions": 400,
+    "successRegions": 164,
+    "failRHist": {
+      "4": 92,
+      "3": 94,
+      "2": 131,
+      "5": 31,
+      "1": 42,
+      "6": 10
+    },
+    "expectedWindowQueriesIfOptA": 2584,
+    "approxCurrentFallbackQueries": 1074,
+    "crossFineSpanPotential": 267,
+    "multipathCases": 101
+  },
+  "antiOverfit": {
+    "OVERFITTING_DETECTED": "NO",
+    "REFERENCE_LEAKAGE": "NO",
+    "TEST_GAMING": "NO"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "n": 38,
+  "domain_raw_hit": 38,
+  "final_introduced": 38,
+  "raw_to_final_retention": 1.0,
+  "implementation_safety_cap": 256,
+  "implementation_safety_cap_hit_n": 0,
+  "max_domain_raw_n": 60,
+  "safety_cap_is_bottleneck": false,
+  "sample": [
+    {
+      "surface": "香菜",
+      "relation": "ch_c",
+      "oracle": "food_order",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 44,
+      "union_n": 60,
+      "n_new": 8,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "加冰",
+      "relation": "in_ing",
+      "oracle": "coffee",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 32,
+      "union_n": 48,
+      "n_new": 8,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "加料",
+      "relation": "n_l",
+      "oracle": "food_order",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 46,
+      "union_n": 61,
+      "n_new": 7,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "医师",
+      "relation": "sh_s",
+      "oracle": "medical",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 56,
+      "union_n": 70,
+      "n_new": 6,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "医生",
+      "relation": "sh_s",
+      "oracle": "medical",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 56,
+      "union_n": 70,
+      "n_new": 6,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "医生",
+      "relation": "eng_en",
+      "oracle": "medical",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 56,
+      "union_n": 70,
+      "n_new": 6,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "可颂",
+      "relation": "sh_s",
+      "oracle": "bakery",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 20,
+      "union_n": 36,
+      "n_new": 8,
+      "nested_32_8": false,
+      "hard_filter": false
+    },
+    {
+      "surface": "司康",
+      "relation": "sh_s",
+      "oracle": "bakery",
+      "raw_hit": true,
+      "final_introduced": true,
+      "domain_raw_n": 18,
+      "union_n": 34,
+      "n_new": 8,
+      "nested_32_8": false,
+      "hard_filter": false
+    }
+  ]
+}

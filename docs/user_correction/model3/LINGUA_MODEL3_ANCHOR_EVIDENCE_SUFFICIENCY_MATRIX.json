@@ -1,0 +1,1547 @@
+{
+  "phase": "LINGUA_MODEL3_ANCHOR_EVIDENCE_SUFFICIENCY_AUDIT",
+  "totalCases": 9,
+  "cases": [
+    {
+      "caseId": "p2_u001_020",
+      "rawAsrText": "行程里关于理事员的部分请再确认一遍",
+      "targetSurface": "礼宾员",
+      "targetRegionText": "理事员",
+      "pathFineSpanId": "fine:77e6ae42cacb360262b14a1af69222b45657cd52771c4297fe5a06c199c5f9ab:3",
+      "spanSurface": "理事",
+      "rawStart": 5,
+      "rawEnd": 7,
+      "spanPronunciation": "li|shi",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "预订",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e9a284e8aea27c79",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e585a5e59bad7c72",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae59bad7c63",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "包车",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c85e8bda67c62",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古桥",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e6a1a57c67",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古镇",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e995877c67",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "预订",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e9a284e8aea27c79",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e585a5e59bad7c72",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae59bad7c63",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "包车",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c85e8bda67c62",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古桥",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e6a1a57c67",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古镇",
+          "pinyin": "li|shi",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e995877c67",
+          "originSpanId": "5:7",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "none_profile_match",
+      "knownUnexplainedResidual_AUDIT_GT": "li|shi|yuan vs li|bin|yuan (shi!=bin)",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "DOMAIN_AND_MODEL2。domain/model2 cands 同为 PROFILE_DOMAIN soft hits（预订/入园…）绑定到 span 几何，surface≠理事；无 phonetic sufficiency。cf DomOnly=YES M2Only=YES。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "n_l",
+      "Model2TransformedPronunciation": "ni|shi|yuan"
+    },
+    {
+      "caseId": "p2_u002_012",
+      "rawAsrText": "我们先确认出注册再决定是否该签 如果改迁请同步通,知思寄予前台",
+      "targetSurface": "出租车",
+      "targetRegionText": "出注册",
+      "pathFineSpanId": "fine:6c07cbd3b50e2bbde8a21f69f111a209a9e514c343960c95e72585e8bb399449:4",
+      "spanSurface": "注册",
+      "rawStart": 6,
+      "rawEnd": 8,
+      "spanPronunciation": "zhu|ce",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "接客",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e5aea27c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接站",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e7ab997c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送站",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e7ab997c73",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接机",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "接客",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e5aea27c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接站",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e7ab997c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送站",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e7ab997c73",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接机",
+          "pinyin": "zhu|ce",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "6:8",
+          "rawStart": 6,
+          "rawEnd": 8,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "zhu→zu via z_zh on 注",
+      "knownUnexplainedResidual_AUDIT_GT": "ce vs che",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "册 residual 锁在「注册」。Domain/Model2 cands 为 tourism_pickup soft list（接客/送客…），非「注册」表面解释。cf 双 YES。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "z_zh",
+      "Model2TransformedPronunciation": "chu|zu|ce"
+    },
+    {
+      "caseId": "p2_u003_017",
+      "rawAsrText": "如果厨房还来得急请,把副市场和主菜一起商并被注清单少盐。",
+      "targetSurface": "护士长",
+      "targetRegionText": "副市场",
+      "pathFineSpanId": "fine:508b15fd75e13c156037f3e857c7800f33368cc2b93faafe2037d00f09be7b7a:10",
+      "spanSurface": "市场",
+      "rawStart": 12,
+      "rawEnd": 14,
+      "spanPronunciation": "shi|chang",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "住院",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4bd8fe999a27c7a",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "儿科",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e584bfe7a7917c65",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内科",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e7a7917c6e",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内镜",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e9959c7c6e",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "出院",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae999a27c63",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "化验",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c96e9aa8c7c68",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "住院",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4bd8fe999a27c7a",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "儿科",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e584bfe7a7917c65",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内科",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e7a7917c6e",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内镜",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e9959c7c6e",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "出院",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae999a27c63",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "化验",
+          "pinyin": "shi|chang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c96e9aa8c7c68",
+          "originSpanId": "11:13",
+          "rawStart": 12,
+          "rawEnd": 14,
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "retainedDomains": [
+        "medical"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "fu→hu via h_f",
+      "knownUnexplainedResidual_AUDIT_GT": "chang vs zhang",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "场 residual 锁在「市场」。medical DOMAIN soft hits（住院/儿科…）几何绑定；非 span surface lexical proof。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "hu|shi|chang"
+    },
+    {
+      "caseId": "p2_u003_024",
+      "rawAsrText": "我先和对方击听全任无误后,再把结果分开。 如果发给你这样两遍都省事",
+      "targetSurface": "候机厅",
+      "targetRegionText": "方击听",
+      "pathFineSpanId": "fine:4a6e44e7e6d744507e23ea91504958bdc2d79e605800c149017a873b2e0352d5:2",
+      "spanSurface": "对方",
+      "rawStart": 3,
+      "rawEnd": 5,
+      "spanPronunciation": "dui|fang",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "病房",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e79785e688bf7c62",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "药房",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e88dafe688bf7c79",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "住院",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4bd8fe999a27c7a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "儿科",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e584bfe7a7917c65",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内科",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e7a7917c6e",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内镜",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e9959c7c6e",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "病房",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e79785e688bf7c62",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "药房",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e88dafe688bf7c79",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "住院",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4bd8fe999a27c7a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "儿科",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e584bfe7a7917c65",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内科",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e7a7917c6e",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        },
+        {
+          "surface": "内镜",
+          "pinyin": "dui|fang",
+          "source": "domain_term",
+          "domains": [
+            "medical"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58685e9959c7c6e",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:medical"
+        }
+      ],
+      "retainedDomains": [
+        "medical"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "fang→hang via h_f",
+      "knownUnexplainedResidual_AUDIT_GT": "hang vs hou",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "方 residual 在「对方」。medical soft hits 几何绑定。击听同理。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "h_f",
+      "Model2TransformedPronunciation": "hang|ji|ting"
+    },
+    {
+      "caseId": "p2_u004_005",
+      "rawAsrText": "如果方便的话请你把剪裁器 在说明一遍我好做最终确认",
+      "targetSurface": "检查法",
+      "targetRegionText": "剪裁器",
+      "pathFineSpanId": "fine:a28eb51774413dfb4db07411bae4e483d7429e8c5d944174d1ab557719ac5347:4",
+      "spanSurface": "把剪",
+      "rawStart": 8,
+      "rawEnd": 10,
+      "spanPronunciation": "ba|jian",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN_OR_PROFILE_PRONUNCIATION_INFERRED_FROM_ANCHOR_SOURCE"
+      ],
+      "model2EvidenceCoverage": "MODEL2_EVIDENCE_PRESENT_BUT_COVERAGE_UNKNOWN",
+      "model2EvidenceCandidates": [],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [],
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "cai→chai via ch_c",
+      "knownUnexplainedResidual_AUDIT_GT": "chai!=cha, qi!=fa",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "权威 decisions/anchors=DOMAIN_AND_MODEL2（上轮与本轮 path 一致）。本轮 capped after_model2_candidates 未导出绑定 cand（bound=0）→ 具体 cand 列表 TRACE 部分不足，但 source 标签证明 materialization 时 domainOk∧model2Ok。previous model2ProvCandCount=0 反映探针绑定失败，非 runtime 无 Model2。",
+      "evidenceTraceQuality": "ANCHOR_SOURCE_AUTHORITATIVE_CANDIDATE_LIST_TRUNCATED",
+      "Model2RelationFamily": "ch_c",
+      "Model2TransformedPronunciation": "jian|chai|qi"
+    },
+    {
+      "caseId": "p2_u004_009",
+      "rawAsrText": "请把藏头灯的库存数量同步到系统",
+      "targetSurface": "床头灯",
+      "targetRegionText": "藏头灯",
+      "pathFineSpanId": "fine:f6c423144e6965a8e0538e456f46c72f1ceb8b9e1f594d2b140ae64c4627080d:2",
+      "spanSurface": "藏",
+      "rawStart": 2,
+      "rawEnd": 3,
+      "spanPronunciation": "cang",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_PRONUNCIATION"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "常",
+          "pinyin": "cang",
+          "source": "base_term",
+          "domains": [],
+          "provenance": "PROFILE_PRONUNCIATION",
+          "termId": "base-single-char-term-e5b8b87c6368616e",
+          "originSpanId": "2:3",
+          "rawStart": 2,
+          "rawEnd": 3,
+          "model2ActionId": "single:ch_c"
+        }
+      ],
+      "domainEvidencePresent": false,
+      "domainEvidenceType": [],
+      "domainEvidenceCoverage": "DOMAIN_NONE",
+      "domainEvidenceCandidates": [],
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "anchorSource": "MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "cang→chang via ch_c",
+      "knownUnexplainedResidual_AUDIT_GT": "chang vs chuang",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": false,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A1_MODEL2_ANY_EVIDENCE_WHOLE_SPAN_ANCHOR",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": false
+      },
+      "adjudicationNote": "纯 MODEL2：PROFILE_PRONUNCIATION single:ch_c → 常/cang。domainOk=False。cang→chang 仍缺介音 u。ANY PROFILE provenance → whole-span Anchor。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "ch_c",
+      "Model2TransformedPronunciation": "chang|tou|deng"
+    },
+    {
+      "caseId": "p2_u004_019",
+      "rawAsrText": "请说明德鸾",
+      "targetSurface": "地暖",
+      "targetRegionText": "德鸾",
+      "pathFineSpanId": "fine:ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b:2",
+      "spanSurface": "德鸾",
+      "rawStart": 3,
+      "rawEnd": 5,
+      "spanPronunciation": "de|luan",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "预订",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e9a284e8aea27c79",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e585a5e59bad7c72",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae59bad7c63",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "包车",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c85e8bda67c62",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古桥",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e6a1a57c67",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古镇",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e995877c67",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "预订",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e9a284e8aea27c79",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "入园",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e585a5e59bad7c72",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "出园",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e587bae59bad7c63",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "包车",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58c85e8bda67c62",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古桥",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e6a1a57c67",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        },
+        {
+          "surface": "古镇",
+          "pinyin": "de|luan",
+          "source": "domain_term",
+          "domains": [
+            "tourism_route"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e58fa4e995877c67",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_route"
+        }
+      ],
+      "retainedDomains": [
+        "tourism_route"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "luan→nuan via n_l",
+      "knownUnexplainedResidual_AUDIT_GT": "de vs di",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "德鸾 whole span。n_l 只解释 luan→nuan；de≠di。Domain soft tourism_route hits 几何绑定。cf DomOnly=YES M2Only=YES。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "n_l",
+      "Model2TransformedPronunciation": "de|nuan"
+    },
+    {
+      "caseId": "p2_u005_019",
+      "rawAsrText": "或家有归病似",
+      "targetSurface": "贵宾室",
+      "targetRegionText": "归病似",
+      "pathFineSpanId": "fine:44a12e60b56c12abcdffc4a9f8a092c5268f247b69b550f69b877decb2045302:3",
+      "spanSurface": "归病",
+      "rawStart": 3,
+      "rawEnd": 5,
+      "spanPronunciation": "gui|bing",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "接客",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e5aea27c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接站",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e7ab997c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送站",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e7ab997c73",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接机",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "接客",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e5aea27c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接站",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e7ab997c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送站",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e7ab997c73",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接机",
+          "pinyin": "gui|bing",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "3:5",
+          "rawStart": 3,
+          "rawEnd": 5,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "si→shi via sh_s",
+      "knownUnexplainedResidual_AUDIT_GT": "bing vs bin",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "病 residual 锁在「归病」。pickup soft hits；sh_s 不解释 bing。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "sh_s",
+      "Model2TransformedPronunciation": "gui|bing|shi"
+    },
+    {
+      "caseId": "p2_u005_034",
+      "rawAsrText": "顾客,想了解锁条的保修与推换政策",
+      "targetSurface": "薯条",
+      "targetRegionText": "锁条",
+      "pathFineSpanId": "fine:842e07483b49227dfa36ec8cd0001760315006390719aa2bb27fbd375e4a5953:3",
+      "spanSurface": "解锁",
+      "rawStart": 5,
+      "rawEnd": 7,
+      "spanPronunciation": "jie|suo",
+      "model2EvidencePresent": true,
+      "model2EvidenceType": [
+        "PROFILE_DOMAIN"
+      ],
+      "model2EvidenceCoverage": "MODEL2_PARTIAL_EXPLANATION",
+      "model2EvidenceCandidates": [
+        {
+          "surface": "接机",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接送",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e980817c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "domainEvidencePresent": true,
+      "domainEvidenceType": [
+        "domain_term"
+      ],
+      "domainEvidenceCoverage": "DOMAIN_ANY_RETAINED_DOMAIN_CANDIDATE_NOT_SURFACE_PROOF",
+      "domainEvidenceCandidates": [
+        {
+          "surface": "接机",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e69cba7c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "接送",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e68ea5e980817c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "送客",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e98081e5aea27c73",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        },
+        {
+          "surface": "举牌",
+          "pinyin": "jie|suo",
+          "source": "domain_term",
+          "domains": [
+            "tourism_pickup"
+          ],
+          "provenance": "PROFILE_DOMAIN",
+          "termId": "term-e4b8bee7898c7c6a",
+          "originSpanId": "4:6",
+          "rawStart": 5,
+          "rawEnd": 7,
+          "model2ActionId": "domain_soft:tourism_pickup"
+        }
+      ],
+      "retainedDomains": [
+        "tourism_pickup"
+      ],
+      "anchorSource": "DOMAIN_AND_MODEL2",
+      "isAnchor": true,
+      "knownExplainedPart_AUDIT_GT": "suo→shuo via sh_s",
+      "knownUnexplainedResidual_AUDIT_GT": "shuo vs shu",
+      "wholeSpanSufficientlyExplained": "NO",
+      "RUNTIME_AVAILABLE_EVIDENCE_NOTE": "domainOk=hasRetainedDomainEvidence(ANY domain_term|passive_domain_weak bound to span with retainedDomains); model2Ok=hasModel2Evidence(ANY PROFILE_* provenance). No phonetic coverage / sufficiency check.",
+      "anchorWithDomainOnly": true,
+      "anchorWithModel2Only": true,
+      "anchorWithNeither": false,
+      "firstCause": "A3_BOTH_INSUFFICIENT_OR_RULE",
+      "secondaryMechanisms": {
+        "A4_ANCHOR_GRANULARITY_LOSS": true,
+        "A5_DOMAIN_EVIDENCE_SEMANTIC_MISUSE": true
+      },
+      "adjudicationNote": "锁 residual 在「解锁」。pickup soft hits。sh_s 将 suo→shuo 仍≠shu。",
+      "evidenceTraceQuality": "FULL",
+      "Model2RelationFamily": "sh_s",
+      "Model2TransformedPronunciation": "shuo|tiao"
+    }
+  ]
+}

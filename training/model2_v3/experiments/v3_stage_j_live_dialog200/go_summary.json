@@ -1,0 +1,50 @@
+{
+  "baseline": {
+    "n": 198,
+    "correct": 25,
+    "incorrect": 173,
+    "accuracy": 0.12626262626262627
+  },
+  "stagej": {
+    "n": 200,
+    "correct": 25,
+    "incorrect": 175,
+    "accuracy": 0.125
+  },
+  "paired": {
+    "cc": 22,
+    "cw": 3,
+    "wc": 3,
+    "ww": 170,
+    "net": 0,
+    "retention": 0.88,
+    "asr_nondeterministic_pairs": 62,
+    "infrastructure_excluded_pairs": 2
+  },
+  "same_raw_asr": {
+    "n": 138,
+    "cc": 22,
+    "cw": 0,
+    "wc": 0,
+    "ww": 116,
+    "net": 0,
+    "retention": 1.0,
+    "note": "Authoritative Model2 attribution. Unadjusted cw/wc are all ASR_NONDETERMINISTIC_PAIR."
+  },
+  "model2_liveness": {
+    "invoked": 200,
+    "load_failed": 0,
+    "valid_measurement": true
+  },
+  "highest_failure_class": "ASSEMBLY_DROP",
+  "recommended_next_step": "AUDIT ASSEMBLY",
+  "production": {
+    "runtime_integration": "PASS",
+    "neutral_safety": "PASS",
+    "neutral_safety_basis": "same_raw_asr_retention_1.000",
+    "model2_main_chain": "PASS",
+    "p_runtime_quality": "PARTIAL",
+    "d_runtime_quality": "INSUFFICIENT",
+    "production_quality_proven": "NO"
+  }
+}

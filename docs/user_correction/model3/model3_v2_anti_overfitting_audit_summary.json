@@ -1,0 +1,35 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_ANTI_TEST_OVERFITTING_AUDIT",
+  "date": "2026-08-30",
+  "mode": "READ_ONLY",
+  "auditVerdict": "SELF_FULFILLING_GATE_FOUND",
+  "businessLogicTestOverfitted": "PARTIAL",
+  "knownCaseBusinessLogic": false,
+  "protectedHoldoutLeakage": false,
+  "selfFulfillingGateRisk": true,
+  "formalRuntimeOwnerParity": "MOSTLY_SAME_OWNER",
+  "architectureDrift": false,
+  "primaryBlockers": [
+    "Gate0 hardcoded semantic_exclude_distinguished/hard_reject_distinguished=True",
+    "Gate0 trusts injectable ownerExecution from lattice fixtures",
+    "Gate0 WIRED check tautologically searches for MODEL2_ANCHOR_OWNER_WIRED string",
+    "Empty-batch soft-pass for multipath/EXECUTED"
+  ],
+  "p0": [],
+  "p1": [
+    "SELF_FULFILLING_GATE_FOUND",
+    "INJECTABLE_OWNER_EXECUTION_FLAGS",
+    "SERIALIZER_CAND_OR_ZERO_FALLBACK"
+  ],
+  "p2": [
+    "NO_REAL_PATH_UNITTEST",
+    "READINESS_DEFAULT_READY",
+    "NEAR_DUP_FAMILY_POLICY_UNUSED"
+  ],
+  "nextPhase": "MODEL3_V2_GATE0_EVIDENCE_INDEPENDENCE_CORRECTION",
+  "nextPhaseExecuted": false,
+  "codeModified": false,
+  "testsModified": false,
+  "gate0AcceptanceExecuted": false,
+  "primaryReport": "docs/user_correction/model3/Lingua_Model3_V2_Anti_Test_Overfitting_Audit_2026_08_30.md"
+}

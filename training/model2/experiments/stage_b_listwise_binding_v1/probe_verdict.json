@@ -1,0 +1,28 @@
+{
+  "go": {
+    "metric_contract": true,
+    "base_preservation": true,
+    "tiny_listwise": true,
+    "tiny_interaction": true,
+    "tiny_swap": true,
+    "target_rank_delta_pos": true,
+    "condition_gain3_pos": true,
+    "condition_gain3_nonneg": true,
+    "probability_gain_pos": true,
+    "profile_swap": true,
+    "wrong_direction": true,
+    "interaction_ablation": true,
+    "selectivity": true,
+    "nochange_safe": true,
+    "params_ok": true,
+    "phase6c_pass": true
+  },
+  "verdict": "PASS",
+  "failure_classes": [],
+  "env": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "torch": "2.13.0+cpu",
+    "device": "cpu",
+    "platform": "Windows-10-10.0.26200-SP0"
+  }
+}

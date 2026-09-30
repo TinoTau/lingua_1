@@ -1,0 +1,37 @@
+{
+  "REAL": {
+    "n": 0,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": null
+  },
+  "DERIVED_REAL": {
+    "n": 9,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.3333333333333333,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.3333333333333333,
+    "TIR_CI95": [
+      0.12058159868274292,
+      0.6458026525009103
+    ],
+    "hits": 3,
+    "UnnecessaryExpansion": 1.0,
+    "Latency_P50": 3.039599978365004,
+    "source_class": "DERIVED_REAL"
+  },
+  "SYNTHETIC": {
+    "n": 63,
+    "support": "LOW_SUPPORT",
+    "TIR": 0.47619047619047616,
+    "Oracle_TIR": 1.0,
+    "RecallRetained": 0.47619047619047616,
+    "TIR_CI95": [
+      0.35781921387369653,
+      0.5972985570952808
+    ],
+    "hits": 30,
+    "UnnecessaryExpansion": 0.9365079365079365,
+    "Latency_P50": 3.247600019676611,
+    "source_class": "SYNTHETIC"
+  }
+}

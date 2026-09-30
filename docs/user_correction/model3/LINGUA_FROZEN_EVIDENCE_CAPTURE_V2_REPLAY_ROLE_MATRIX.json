@@ -1,0 +1,205 @@
+{
+  "schema": "LINGUA_FROZEN_EVIDENCE_CAPTURE_V2_REPLAY_ROLE_MATRIX",
+  "version": "V2_FROZEN",
+  "status": "FROZEN",
+  "authority": "LINGUA_FROZEN_EVIDENCE_CAPTURE_CONTRACT_V2.md",
+  "anti_cheat_rule": "Replay injects only minimum upstream frozen state. Replay recomputes every downstream stage under validation. Capture downstream answers MUST NOT be injected to force equivalence.",
+  "roles": ["INJECTION_STATE", "COMPARISON_ONLY", "IDENTITY_GUARD", "DIAGNOSTIC_ONLY", "VALIDATION_CROSS_CHECK"],
+  "rows": [
+    {
+      "boundary_id": "B1",
+      "parts": [
+        {
+          "part": "rawAsrText_segments_words",
+          "role": "INJECTION_STATE",
+          "INPUT_TO_REPLAY": "frozen rawAsrText + segments.words",
+          "EXPECTED_OUTPUT_FOR_COMPARISON": null
+        },
+        {
+          "part": "repairText_scriptNormalized",
+          "role": "COMPARISON_ONLY",
+          "INPUT_TO_REPLAY": null,
+          "EXPECTED_OUTPUT_FOR_COMPARISON": "Capture repairText + scriptNormalized"
+        }
+      ]
+    },
+    {
+      "boundary_id": "B2",
+      "parts": [
+        {
+          "part": "alignment_fields",
+          "role": "INJECTION_STATE",
+          "INPUT_TO_REPLAY": "segmentTimeOffsetsSec + asrSegmentNodeBatchIndices + segmentCharOffsets",
+          "EXPECTED_OUTPUT_FOR_COMPARISON": "Capture FULL snapshot for inject parity"
+        },
+        {
+          "part": "alignment_reconstruction",
+          "role": "VALIDATION_CROSS_CHECK",
+          "INPUT_TO_REPLAY": null,
+          "EXPECTED_OUTPUT_FOR_COMPARISON": null,
+          "notes": "Not authoritative evidence"
+        },
+        {
+          "part": "acousticToneSlices",
+          "role": "INJECTION_STATE",
+          "INPUT_TO_REPLAY": "frozen acousticToneSlices",
+          "EXPECTED_OUTPUT_FOR_COMPARISON": null
+        }
+      ]
+    },
+    {
+      "boundary_id": "B3",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "Capture WordTimeSpan[]",
+      "forbidden": "inject Capture WTS"
+    },
+    {
+      "boundary_id": "B4",
+      "parts": [
+        {
+          "part": "acousticToneSlices",
+          "role": "INJECTION_STATE",
+          "INPUT_TO_REPLAY": "frozen slices",
+          "EXPECTED_OUTPUT_FOR_COMPARISON": null
+        },
+        {
+          "part": "mapped_tone_toneNorm",
+          "role": "COMPARISON_ONLY",
+          "INPUT_TO_REPLAY": null,
+          "EXPECTED_OUTPUT_FOR_COMPARISON": "per-window MapToneEvidenceResult + toneNorm"
+        }
+      ]
+    },
+    {
+      "boundary_id": "B5",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "untruncated finespans per path"
+    },
+    {
+      "boundary_id": "B6",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "logical recall windows + counts"
+    },
+    {
+      "boundary_id": "B7",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "canonical queries + serialized keys",
+      "forbidden": "inject Capture queries"
+    },
+    {
+      "boundary_id": "B8",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "bound params + ordered semantic row identities + hashes",
+      "lexicon": "IDENTITY_GUARD"
+    },
+    {
+      "boundary_id": "B9",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "FULL occurrence list + unique set + multiset + provenance",
+      "forbidden": "inject Capture base set"
+    },
+    {
+      "boundary_id": "B10",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "WindowEvidence identity/hash",
+      "model2_weights": "IDENTITY_GUARD"
+    },
+    {
+      "boundary_id": "B11",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "selected_actions + after_model2 candidate set"
+    },
+    {
+      "boundary_id": "B12",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "LexicalEdge graph identity"
+    },
+    {
+      "boundary_id": "B13",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "pre-cap count + path identity hash"
+    },
+    {
+      "boundary_id": "B14",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "retained path_ids + pathCapEvents"
+    },
+    {
+      "boundary_id": "B15",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "domain vote + SameDomain + assembly sentences"
+    },
+    {
+      "boundary_id": "B16",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "full pool + scores + pick + gate",
+      "kenlm": "IDENTITY_GUARD",
+      "forbidden": "invent_tiebreak_for_equal_scores"
+    },
+    {
+      "boundary_id": "B17",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "anchors + inference_input_trace + decisions + retry_regions",
+      "model3": "IDENTITY_GUARD",
+      "forbidden": "inject Capture Model3 decisions"
+    },
+    {
+      "boundary_id": "B18",
+      "role": "COMPARISON_ONLY",
+      "INPUT_TO_REPLAY": null,
+      "EXPECTED_OUTPUT_FOR_COMPARISON": "finalPostprocessText"
+    },
+    {
+      "boundary_id": "PROFILE",
+      "role": "INJECTION_STATE",
+      "INPUT_TO_REPLAY": "frozen profile snapshot when Capture-bound",
+      "EXPECTED_OUTPUT_FOR_COMPARISON": null
+    },
+    {
+      "boundary_id": "IDENTITY_GUARDS",
+      "role": "IDENTITY_GUARD",
+      "covers": [
+        "lexicon_sha",
+        "model2_checkpoint_config",
+        "model3_checkpoint_config",
+        "kenlm_model_config",
+        "git_commit_runtime_identity"
+      ]
+    },
+    {
+      "boundary_id": "LATENCY_DIAG_COUNTS",
+      "role": "DIAGNOSTIC_ONLY",
+      "notes": "Not used for equivalence certification"
+    },
+    {
+      "boundary_id": "DISPLAY_CAPS",
+      "role": "DIAGNOSTIC_ONLY",
+      "covers": ["DIALOG200_CANDIDATE_CAP=24", "any .slice display truncation"],
+      "notes": "Must not participate in authoritative comparison"
+    }
+  ],
+  "injection_state_minimum": [
+    "rawAsrText",
+    "segments (+ words)",
+    "acousticToneSlices",
+    "segmentTimeOffsetsSec",
+    "asrSegmentNodeBatchIndices",
+    "segmentCharOffsets",
+    "profile snapshot",
+    "IDENTITY_GUARD pins"
+  ]
+}

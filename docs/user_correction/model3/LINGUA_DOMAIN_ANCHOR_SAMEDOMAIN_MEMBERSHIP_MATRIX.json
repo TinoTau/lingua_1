@@ -1,0 +1,156 @@
+{
+  "phase": "LINGUA_DOMAIN_ANCHOR_SAMEDOMAIN_MEMBERSHIP_OWNERSHIP_AUDIT",
+  "date": "2026-09-14",
+  "historical_predicates": [
+    {
+      "id": 1,
+      "predicate": "member_of_retained_SameDomain_result_set",
+      "source": "model3_anchor_contract_v1.md::Domain Anchor",
+      "exact_semantic": "DomainFilteredSpanSet.sameDomainCandidates for bucketDomain",
+      "current_implementation_site": "NONE_at_adapter",
+      "currently_enforced": "NO"
+    },
+    {
+      "id": 2,
+      "predicate": "bucketDomain_in_retainedDomains",
+      "source": "model3_anchor_contract_v1.md::Domain Anchor",
+      "exact_semantic": "vote.retainedDomains contains bucketDomain",
+      "current_implementation_site": "hasRetainedDomainEvidence domains∩retained",
+      "currently_enforced": "PARTIAL"
+    },
+    {
+      "id": 3,
+      "predicate": "active_eligible_candidate",
+      "source": "model3_anchor_contract_v1.md::Domain Anchor",
+      "exact_semantic": "not Vote-eliminated / not covered-out",
+      "current_implementation_site": "activeCandidates && !isCovered",
+      "currently_enforced": "PARTIAL"
+    },
+    {
+      "id": 4,
+      "predicate": "domain_term_or_passive_domain_weak",
+      "source": "model3_anchor_contract_v1.md::Domain Anchor",
+      "exact_semantic": "SameDomain-eligible graph source",
+      "current_implementation_site": "isDomainEvidenceSource",
+      "currently_enforced": "YES"
+    }
+  ],
+  "transitions_A_to_E": [
+    { "id": "A", "meaning": "candidate_has_domain_tag", "frozen_required": "necessary_not_sufficient", "current_domainOk": "necessary" },
+    { "id": "B", "meaning": "domains_intersect_retainedDomains", "frozen_required": "necessary_via_bucket", "current_domainOk": "treated_as_sufficient_with_A_source_bound" },
+    { "id": "C", "meaning": "candidate_in_sameDomainCandidates", "frozen_required": "REQUIRED", "current_domainOk": "NOT_CHECKED" },
+    { "id": "D", "meaning": "PathFineSpan_participates_via_filtered_set", "frozen_required": "implied_by_C", "current_domainOk": "geometry_bind_only" },
+    { "id": "E", "meaning": "Domain_Anchor", "frozen_required": "C+B+active+source", "current_domainOk": "B+source+bound" }
+  ],
+  "adapter_inputs": {
+    "retainedDomains": "AVAILABLE",
+    "activeCandidates": "AVAILABLE",
+    "pathFineSpans": "AVAILABLE",
+    "candidate_source_domains_provenance": "AVAILABLE",
+    "sameDomainCandidates": "NOT_AVAILABLE",
+    "DomainFilteredSpanSet": "NOT_AVAILABLE",
+    "bucket_ids": "NOT_AVAILABLE",
+    "SameDomain_membership": "DERIVABLE_after_Assembly_filter_not_at_Anchor"
+  },
+  "cases": [
+    {
+      "caseId": "p2_u004_019",
+      "role": "PRIMARY",
+      "pathId": "ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b",
+      "spanId": "fine:ab0e1e8db9e761c4c200059c0763a86e2e5b0fa278cd220102d34aec78c4380b:2",
+      "surface": "德鸾",
+      "candidateId": "m2d:… (example term-e9a284e8aea27c79)",
+      "replacement": "预订",
+      "source": "domain_term",
+      "retrievalProvenance": "PROFILE_DOMAIN",
+      "candidateDomains": ["tourism_route"],
+      "activeCandidate": true,
+      "candidateBoundToSpan": true,
+      "domainVoteContribution": "soft_domain_term_tourism_route",
+      "retainedDomains": ["tourism_route"],
+      "sameDomainBucket": "tourism_route",
+      "sameDomainMember": true,
+      "sameDomainMembershipIdentity": "reconstructed_isSameDomainCandidate",
+      "sameDomainMembershipProof": "RECONSTRUCTED_NOT_LITERAL_AT_ANCHOR",
+      "currentDomainOk": true,
+      "frozenDomainAnchorEligible": true,
+      "model2Ok": true,
+      "finalAnchorSource": "DOMAIN_AND_MODEL2",
+      "currentVsFrozenDomainRule": "DRIFT_PREDICATE_MATCH_OUTCOME",
+      "classes": {
+        "DOMAIN_TAG_ONLY": false,
+        "DOMAIN_RETAINED_ONLY": false,
+        "TRUE_SAMEDOMAIN_MEMBER": true,
+        "DOMAIN_ANCHOR": true,
+        "MODEL2_ANCHOR": true,
+        "DUAL_ANCHOR": true
+      }
+    },
+    {
+      "caseId": "p2_u001_020",
+      "role": "C1",
+      "spanId": "off-residual span 行程",
+      "surface": "行程",
+      "replacement": "行程",
+      "source": "domain_term",
+      "retrievalProvenance": "unknown_or_base",
+      "candidateDomains": ["tourism_route"],
+      "activeCandidate": true,
+      "candidateBoundToSpan": true,
+      "retainedDomains": ["tourism_route"],
+      "sameDomainMember": true,
+      "sameDomainMembershipIdentity": "exact_surface_domain_term_in_bucket",
+      "currentDomainOk": true,
+      "frozenDomainAnchorEligible": true,
+      "model2Ok": "varies",
+      "finalAnchorSource": "DOMAIN_or_DUAL",
+      "currentVsFrozenDomainRule": "MATCH_OUTCOME_EXPECTED",
+      "note": "legitimate Domain exemplar from prior predev; not Contract A revival"
+    },
+    {
+      "caseId": "p2_u004_001",
+      "role": "C2",
+      "surface": "升层",
+      "replacement_profile_p": "生成",
+      "source_soft": "domain_term",
+      "retrievalProvenance_p": "PROFILE_PRONUNCIATION",
+      "retrievalProvenance_soft": "PROFILE_DOMAIN",
+      "activeCandidate": true,
+      "retainedDomains": "typically_present",
+      "sameDomainMember": "YES_if_soft_domain_term",
+      "currentDomainOk": "typically_YES",
+      "frozenDomainAnchorEligible": "typically_YES",
+      "model2Ok": true,
+      "finalAnchorSource": "DOMAIN_AND_MODEL2",
+      "currentVsFrozenDomainRule": "DRIFT_PREDICATE_MATCH_OUTCOME",
+      "note": "PROFILE_PRONUNCIATION authority out of scope; Domain/SameDomain observation only"
+    },
+    {
+      "caseId": "mainline_integration_milk_tea_vs_coffee",
+      "role": "C3",
+      "surface": "少糖/中杯 style",
+      "candidateDomains_losing": ["coffee"],
+      "retainedDomains": ["milk_tea"],
+      "sameDomainMember_losing": false,
+      "currentDomainOk_losing_domain": false,
+      "frozenDomainAnchorEligible_losing": false,
+      "finalAnchorSource": "DOMAIN_via_retained_only",
+      "currentVsFrozenDomainRule": "MATCH_on_non_retained_exclusion",
+      "classes": {
+        "DOMAIN_TAG_ONLY": true,
+        "DOMAIN_RETAINED_ONLY": false,
+        "TRUE_SAMEDOMAIN_MEMBER": false,
+        "DOMAIN_ANCHOR": false
+      }
+    }
+  ],
+  "deluan_Q1_to_Q7": {
+    "Q1_surface_is_domain_term": "NO",
+    "Q2_domain_tagged_candidates": "YES",
+    "Q3_intersect_retained": "YES",
+    "Q4_in_samedomain_bucket": "YES_reconstructed",
+    "Q5_PFS_frozen_membership": "YES",
+    "Q6_domainOk_even_if_Q4_Q5_false": "YES",
+    "Q7_domainOk_candidate": "预订 / PROFILE_DOMAIN / domain_term / tourism_route / raw[3,5)"
+  }
+}

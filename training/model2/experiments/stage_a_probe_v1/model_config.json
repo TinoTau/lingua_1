@@ -1,0 +1,14 @@
+{
+  "architecture": "shared_char_syl_tables + separate_projection_heads",
+  "shared_decision": "Chose shared bottom char/syllable embeddings with separate query/candidate projection heads (option B) for parameter efficiency and representation alignment.",
+  "candidate_representation": "surface char-hash-v1 + syllables + term_type metadata — NOT term_id embedding table",
+  "score": "dot(Qbase, C) [+ weak personal/domain for M1]",
+  "stage_a_masks": "phonetic/tone/domain masked; condition MLP present but unused in score",
+  "no_match": "learnable NO_MATCH anchor (option A)",
+  "embed_dim": 64,
+  "markers": [
+    "PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ]
+}

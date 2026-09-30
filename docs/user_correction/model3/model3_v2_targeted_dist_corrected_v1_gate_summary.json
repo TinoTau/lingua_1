@@ -1,0 +1,48 @@
+{
+  "phase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "date": "2026-08-29",
+  "acceptanceVerdict": "TRAINING_FEATURE_STATE_PIPELINE_BLOCKED",
+  "gate0": "FAIL",
+  "datasetId": null,
+  "datasetIdReserved": "MODEL3_V2_TARGETED_DIST_CORRECTED_V1",
+  "readyForControlledTraining": false,
+  "bulkBuildExecuted": false,
+  "trainingExecuted": false,
+  "gate0Summary": {
+    "FineSpan": "PASS",
+    "candidateState": "FAIL_CONSTANT_0",
+    "anchor": "PASS_PRODUCTION_EQUIVALENT_ANCHOR",
+    "featurePacking": "PASS",
+    "multipathSource": "PASS",
+    "holdoutLeakage": "PASS",
+    "duplicatedBusinessLogic": false,
+    "rootCause": "MANDATORY_TONE_RECALL_BLOCKS_TEXT_ONLY_CANDIDATE_STATE",
+    "probeCandExactHistogram": { "0": 90 },
+    "probeCandGt0": 0,
+    "artifact": "docs/user_correction/model3/model3_v2_targeted_dist_gate0_probe.json"
+  },
+  "semanticFailClosed": {
+    "productionCandOwnerWired": true,
+    "naturalTwoSidedCandSupport": false,
+    "noApproximateCand": true,
+    "noTokenOrCasePatch": true,
+    "noArchitectureChange": true
+  },
+  "provisionalNumericTargets": "SKIPPED_NOT_BLOCKING",
+  "governance": {
+    "Model3Changed": false,
+    "featuresChanged": false,
+    "thresholdChanged": false,
+    "FineSpanChanged": false,
+    "AnchorOwnershipChanged": false,
+    "RetryChanged": false,
+    "RecallChanged": false,
+    "JobResultChanged": false,
+    "priorRealDistDatasetOverwritten": false
+  },
+  "d160": "STALE_TARGET_NOT_COMPARABLE",
+  "d131_d176": "PROTECTED",
+  "nextPhase": "MODEL3_V2_TRAINING_FEATURE_STATE_PIPELINE_AUDIT",
+  "nextPhaseExecuted": false,
+  "primaryReport": "docs/user_correction/model3/Lingua_Model3_V2_Targeted_Distribution_Dataset_Build_2026_08_29.md"
+}

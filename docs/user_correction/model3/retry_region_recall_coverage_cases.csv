@@ -1,0 +1,9 @@
+caseId,family,regionText,selectedRetryPath,proxyReference,recallHitCount,lossPoint,primaryClassification,unitsChecked,notes
+d099,MULTI_CHAR_REPLACEMENT,苏和步,苏|和|步,SOHO，不,3,NOT_PRODUCED_BY_RECALL,EXPECTED_UNREPAIRABLE,3,Latin SOHO + 苏和步 phonetics cannot derive reference repair
+d131,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,衣室柜子钥匙,4,NOT_PRODUCED_BY_RECALL,LEXICON_MISSING,6,更衣室/柜子/衣室 absent from Lexicon; 钥匙 exists but no 钥匙 window
+d160,MULTI_CHAR_REPLACEMENT,顺便向木李,顺|便|向|木|李,项目里,5,NOT_PRODUCED_BY_RECALL,WINDOW_BOUNDARY,4,项目 exists; all-single-char path never exposes 2-char 向木 span for 项目 recall
+d176,MULTI_CHAR_REPLACEMENT,意识规则要是,意识|规|则|要是,衣室柜子钥匙,4,NOT_PRODUCED_BY_RECALL,LEXICON_MISSING,6,Same as d131
+d049,INSERTION,理,理,够,1,NOT_PRODUCED_BY_RECALL,EXPECTED_UNREPAIRABLE,3,Reference 李工 is utterance-start insertion; Retry window 理 cannot expose it
+d002,PHONETIC_SUBSTITUTION,背,背,杯,1,NOT_PRODUCED_BY_RECALL,TONE_MISMATCH,1,杯 exists bei1; acoustic window 背 bei4; recall returns 背 only
+d003,PHONETIC_SUBSTITUTION,烟,烟,燕,0,NOT_PRODUCED_BY_RECALL,LEXICON_MISSING,2,燕 absent; 烟 absent; 燕麦 exists but needs 烟麦 2-char window outside Retry span
+d019,PHONETIC_SUBSTITUTION,成,成,城,1,NOT_PRODUCED_BY_RECALL,PHONETIC_RECALL_MISS,1,城 exists cheng2 homophone; recall from 成 returns exact surface 成 only

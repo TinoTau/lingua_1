@@ -1,0 +1,42 @@
+{
+  "n": 3,
+  "first_tag_only": false,
+  "domain_ids_array_used": true,
+  "rows": [
+    {
+      "target_domains": [
+        "coffee",
+        "food_order"
+      ],
+      "allowed": [
+        "tourism_route"
+      ],
+      "domain_action": "domain_soft:tourism_route",
+      "first_tag_only": false
+    },
+    {
+      "target_domains": [
+        "tourism_pickup",
+        "tourism_transport"
+      ],
+      "allowed": [
+        "tourism_route"
+      ],
+      "domain_action": "domain_soft:tourism_route",
+      "first_tag_only": false
+    },
+    {
+      "target_domains": [
+        "coffee",
+        "food_order",
+        "milk_tea"
+      ],
+      "allowed": [
+        "tourism_route"
+      ],
+      "domain_action": "domain_soft:tourism_route",
+      "first_tag_only": false
+    }
+  ],
+  "PASS": true
+}

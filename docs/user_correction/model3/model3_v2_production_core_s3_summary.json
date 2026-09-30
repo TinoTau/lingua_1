@@ -1,0 +1,430 @@
+{
+  "phase": "MODEL3_V2_PRODUCTION_CORE_S3",
+  "precheck": {
+    "passed": true,
+    "conflicts": [],
+    "contracts": {
+      "labelContract": "MODEL3_LABEL_CONTRACT_V2_20260829",
+      "featureContract": "packModel3SpanInferFields",
+      "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+      "protectionRegistry": "MODEL3_V2_PROTECTION_REGISTRY"
+    },
+    "s2Baseline": {
+      "datasetId": "MODEL3_V2_PRODUCTION_CORE_S2",
+      "families": 4994,
+      "modelId": "MODEL3_V2_S2_RANDOM_INIT_V1",
+      "weightsSha256": "54322a2670eabd1fbcb7c2b36f24ef62c6413c9bea57d64eda61f81fd04161d9",
+      "shaVerified": true
+    },
+    "ownershipFilesPresent": {
+      "feature_pack": true,
+      "path_step": true,
+      "formal_harness": true,
+      "holdout_registry": true,
+      "family_split": true,
+      "v2_label": true,
+      "serializer": true,
+      "protection_registry": true
+    },
+    "architectureDrift": false,
+    "ssotConflict": false
+  },
+  "anchorSemantics": {
+    "passed": true,
+    "definitions": {
+      "isAnchor": "ownership flag — Anchor FineSpan; Model3 must not own effective RETRY",
+      "anchorRelation": "audit-only spatial relation (inside/adjacent/between/far); NOT ownership"
+    },
+    "runtimePostMaskPresent": true,
+    "s2Supervised": {
+      "spansChecked": 208073,
+      "isAnchorSpans": 7267,
+      "isAnchorRetryLabels": 0
+    },
+    "liveTraceEffectiveAnchorRetry": 0,
+    "isAnchorTrueReachesEffectiveRetry": false,
+    "note": "Sequence packing may include isAnchor feature for BiGRU context; ownership enforced at effective decision.",
+    "verdict": "PASS"
+  },
+  "poolAudit": {
+    "remainingAfterS2": 14000,
+    "sourceComposition": {
+      "prior_certified_v1": 152,
+      "MODEL3_SPOKEN_BASE_SUPPLEMENT_V1": 13848
+    },
+    "lengthDistribution": {
+      "short": 84,
+      "medium": 6259,
+      "long": 7657
+    },
+    "feasible": true
+  },
+  "datasetBuilt": true,
+  "trainingAuthorized": true,
+  "families": 10000,
+  "verdict": "S3_BUILD_AND_TRAIN_PASS_DIMINISHING_RETURNS",
+  "manifest": {
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1",
+    "createdAt": "2026-08-30T13:59:14.902121+00:00",
+    "parentDatasets": [
+      "MODEL3_V2_PRODUCTION_CORE_S2"
+    ],
+    "lineageStrategy": "S2_4994_reuse_plus_5006_new_materialization",
+    "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+    "featureContractIdentity": "packModel3SpanInferFields",
+    "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+    "ttsVoiceIdentity": "zh_CN-huayan-medium",
+    "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+    "acousticVariationForModel3": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+    "sourceSelectionSeed": 2026083012,
+    "sourcePoolIdentities": [
+      "model3_certified_base_pool_v2"
+    ],
+    "s2ReuseFamilies": 4994,
+    "newMaterializationFamiliesFrozen": 5006,
+    "newMaterializationDispositions": {
+      "SUPERVISED_ACCEPTED": 5006
+    },
+    "splitCounts": {
+      "train": 24296,
+      "dev": 2877,
+      "test": 3181
+    },
+    "families": 10000,
+    "utterances": 10000,
+    "paths": 30354,
+    "spanPathSamples": 483957,
+    "labels": {
+      "KEEP": 437146,
+      "MASKED": 16401,
+      "RETRY": 30410
+    },
+    "trainingAuthorized": true,
+    "verdict": "S3_DATASET_PASS_TRAINING_PENDING",
+    "localizationMetricSsot": {
+      "L1": "EXACT_TARGET_OVERLAP",
+      "L2": "LOCAL_ERROR_REGION_RETRY",
+      "L3": "CLEAR_DISTANT_FALSE_RETRY",
+      "L4": "KEEP_CONTROL_FALSE_RETRY",
+      "primary": "L2"
+    }
+  },
+  "qa": {
+    "gates": {
+      "datasetIdentity": "PASS",
+      "familyScale": "PASS",
+      "s2LineageIntact": "PASS",
+      "sourceFrozenBeforeOutcomes": "PASS",
+      "protectedCollision": "PASS",
+      "gate0Collision": "PASS",
+      "semanticFamilySplitLeak": "PASS",
+      "provenanceCoherence": "PASS",
+      "candidateMissing": "PASS",
+      "packerIdentity": "PASS",
+      "labelContract": "PASS",
+      "labelReprojection": "PASS",
+      "toneRecall": "PASS",
+      "model2Owner": "PASS",
+      "domainOwner": "PASS",
+      "anchorSource": "PASS",
+      "multipathRetention": "PASS",
+      "evidenceOrigin": "PASS",
+      "candidateNonCollapsed": "PASS",
+      "architectureDrift": "PASS",
+      "anchorOwnership": "PASS"
+    },
+    "criticalFailures": [],
+    "authorized": true,
+    "familyCount": 10000,
+    "reprojection": {
+      "checked": 483957,
+      "mismatch": 0,
+      "pass": true
+    }
+  },
+  "vocabulary": {
+    "s1": {
+      "chars": 680,
+      "bigrams": 2337,
+      "trigrams": 3532
+    },
+    "s2": {
+      "chars": 1034,
+      "bigrams": 5717,
+      "trigrams": 9507
+    },
+    "s3": {
+      "chars": 1059,
+      "bigrams": 6303,
+      "trigrams": 11128
+    }
+  },
+  "auditLabels": {
+    "KEEP": 437146,
+    "MASKED": 16401,
+    "RETRY": 30410
+  },
+  "anchors": {
+    "NONE": 467556,
+    "DOMAIN_AND_MODEL2": 4811,
+    "MODEL2": 9647,
+    "DOMAIN": 1943
+  },
+  "multipathUtterances": 6437,
+  "candHist": {
+    "1": 316730,
+    "0": 163904,
+    "2": 3323
+  },
+  "s2Mutation": false,
+  "trainingCompleted": true,
+  "s3Model": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "bestEpoch": 8
+  },
+  "learningCurve": {
+    "s1": {
+      "formal": {
+        "keep_precision": 0.9532506702412868,
+        "keep_recall": 0.9977200982111539,
+        "retry_precision": 0.9139072847682119,
+        "retry_recall": 0.33093525179856115,
+        "retry_f1": 0.48591549295774655,
+        "tp": 138,
+        "fp": 13,
+        "fn": 279,
+        "tn": 5689,
+        "pred_keep": 5968,
+        "pred_retry": 151,
+        "true_retry_rate": 0.06814839025984638,
+        "pred_retry_rate": 0.024677234842294494
+      },
+      "families": 999
+    },
+    "s2": {
+      "formal": {
+        "keep_precision": 0.9864476582702806,
+        "keep_recall": 0.9911943027620056,
+        "retry_precision": 0.8837357052096569,
+        "retry_recall": 0.8309438470728794,
+        "retry_f1": 0.856527093596059,
+        "tp": 1391,
+        "fp": 183,
+        "fn": 283,
+        "tn": 20599,
+        "pred_keep": 20882,
+        "pred_retry": 1574,
+        "true_retry_rate": 0.07454577841111507,
+        "pred_retry_rate": 0.07009262557890987
+      },
+      "families": 4994,
+      "localization": {
+        "eligible": 13,
+        "anyRetryCases": 13,
+        "L1_exactTargetOverlapCases": 6,
+        "L2_localErrorRegionCases": 13,
+        "L3": {
+          "affectedCases": 12,
+          "logicalUniqueSpans": 24,
+          "STRONG": 11,
+          "MODERATE": 9,
+          "WEAK": 4,
+          "meanMargin": 3.337160721886903,
+          "medianMargin": 2.777118444442749,
+          "maxMargin": 7.750890731811523,
+          "systematicPattern": "broad_over_retry",
+          "topStrongSurfaces": [
+            [
+              "擎接",
+              1
+            ],
+            [
+              "浦",
+              1
+            ],
+            [
+              "江",
+              1
+            ],
+            [
+              "介",
+              1
+            ],
+            [
+              "绍",
+              1
+            ],
+            [
+              "心",
+              1
+            ],
+            [
+              "和",
+              1
+            ],
+            [
+              "忙",
+              1
+            ],
+            [
+              "周",
+              1
+            ],
+            [
+              "四",
+              1
+            ]
+          ]
+        },
+        "L4": {
+          "falseRetryCases": 0,
+          "controls": 6,
+          "logicalSpans": 0,
+          "maxMargin": null
+        },
+        "anchorRetryViolation": 0
+      }
+    },
+    "s3": {
+      "formal": {
+        "keep_precision": 0.9865255462041996,
+        "keep_recall": 0.9969287601211314,
+        "retry_precision": 0.9469584569732937,
+        "retry_recall": 0.8010668340131786,
+        "retry_f1": 0.8679245283018868,
+        "tp": 2553,
+        "fp": 143,
+        "fn": 634,
+        "tn": 46418,
+        "pred_keep": 47052,
+        "pred_retry": 2696,
+        "true_retry_rate": 0.06406287689957385,
+        "pred_retry_rate": 0.05419313339229718
+      },
+      "families": 10000,
+      "localization": {
+        "eligible": 13,
+        "anyRetryCases": 13,
+        "L1_exactTargetOverlapCases": 6,
+        "L2_localErrorRegionCases": 13,
+        "L3": {
+          "affectedCases": 8,
+          "logicalUniqueSpans": 17,
+          "STRONG": 12,
+          "MODERATE": 3,
+          "WEAK": 2,
+          "meanMargin": 5.837132639744702,
+          "medianMargin": 5.264155864715576,
+          "maxMargin": 13.26422119140625,
+          "systematicPattern": "broad_over_retry",
+          "topStrongSurfaces": [
+            [
+              "赶",
+              1
+            ],
+            [
+              "速",
+              1
+            ],
+            [
+              "简",
+              1
+            ],
+            [
+              "介",
+              1
+            ],
+            [
+              "绍",
+              1
+            ],
+            [
+              "核",
+              1
+            ],
+            [
+              "心",
+              1
+            ],
+            [
+              "难",
+              1
+            ],
+            [
+              "周",
+              1
+            ],
+            [
+              "四",
+              1
+            ]
+          ]
+        },
+        "L4": {
+          "falseRetryCases": 0,
+          "controls": 6,
+          "logicalSpans": 0,
+          "maxMargin": null
+        },
+        "anchorRetryViolation": 0
+      }
+    }
+  },
+  "nextPhase": "MODEL3_V2_S3_GENERALIZATION_LIMIT_AUDIT",
+  "diminishingReturns": true,
+  "runtimeLogicChanged": false,
+  "featureChanged": false,
+  "thresholdTuned": false,
+  "decisions": {
+    "D1": "PASS",
+    "D2": "YES_DISTINCT",
+    "D3": "NO",
+    "D4": "YES",
+    "D5": 5006,
+    "D6": 5006,
+    "D7": 10000,
+    "D8": "YES",
+    "D9": "YES",
+    "D10": "YES",
+    "D11": "YES",
+    "D12": "YES",
+    "D13": "YES",
+    "D14": "MODEL3_V2_S3_RANDOM_INIT_V1/f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "D15": "F1_0.857_to_0.868_P_up_R_slight_down",
+    "D16": "6/13",
+    "D17": "13/13",
+    "D18": 17,
+    "D19": 12,
+    "D20": "0/6",
+    "D21": "NO_REPEATED_SURFACE_SHORTCUT",
+    "D22": "STABLE_OR_IMPROVED",
+    "D23": "WEAKLY_PRODUCTIVE",
+    "D24": "YES",
+    "D25": "NO",
+    "D26": "NO",
+    "D27": "NO",
+    "D28": "NO",
+    "D29": "NO",
+    "D30": "MODEL3_V2_S3_GENERALIZATION_LIMIT_AUDIT"
+  },
+  "complexity": {
+    "runtimeLogic": "NONE",
+    "feature": "NONE",
+    "filter": "NONE",
+    "threshold": "NONE",
+    "classWeight": "NONE",
+    "unnecessaryComplexity": false
+  },
+  "governance": {
+    "asrChanged": false,
+    "model3ArchChanged": false,
+    "featureChanged": false,
+    "labelChanged": false,
+    "s2Mutated": false,
+    "protectedRegistryChanged": false,
+    "thresholdTuned": false,
+    "hardCaseMining": false
+  }
+}

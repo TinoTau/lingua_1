@@ -1,0 +1,26 @@
+{
+  "primary_cause": "DIRECT_LABEL_LEAKAGE",
+  "secondary_causes": [
+    "REPAIRABILITY_LABEL_SHORTCUT",
+    "ANCHOR_NOT_USED"
+  ],
+  "classification": "H",
+  "codes": {
+    "A_DIRECT_LABEL_LEAKAGE": true,
+    "B_REPAIRABILITY_LABEL_SHORTCUT": true,
+    "C_SURFACE_PAIR_MEMORIZATION": false,
+    "D_CORRUPTION_FAMILY_MEMORIZATION": false,
+    "E_TEXT_ONLY_SYNTHETIC_SHORTCUT": false,
+    "F_ANCHOR_NOT_USED": true,
+    "G_TASK_GENUINELY_EASY_BUT_VALID": false,
+    "H_MIXED": true
+  },
+  "evidence_summary": [
+    "span_features packs referenceSurface!=surface and referenceReachable into model input",
+    "decision-table reconstruction coverage RETRY=1.0",
+    "anchor zero flip_rate=0.0",
+    "removing leak trio F1\u21920.0",
+    "shuffled-label control F1=0.0",
+    "linear with leak feats F1=1.0; without leak F1=0.0"
+  ]
+}

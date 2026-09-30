@@ -89,9 +89,9 @@ describe('Domain Recall Scope Wiring (CFG-01)', () => {
 });
 
 describe('SpanAssemblyV4Orchestrator recallDomainScope contract', () => {
-  it('rejects empty recallDomainScope (no Base-only silent fallback)', () => {
+  it('rejects empty recallDomainScope (no Base-only silent fallback)', async () => {
     const runtime = new LexiconRuntimeV2();
-    expect(() =>
+    await expect(
       runSpanAssemblyV4Orchestrator({
         rawText: '我想要中杯拿铁',
         runtime,
@@ -101,7 +101,7 @@ describe('SpanAssemblyV4Orchestrator recallDomainScope contract', () => {
         imeConfig: loadPinyinImeV2RuntimeConfig(),
         dict: { tokens: [], byPinyin: new Map() } as never,
       })
-    ).toThrow(/recallDomainScope is empty/);
+    ).rejects.toThrow(/recallDomainScope is empty/);
   });
 });
 
@@ -128,7 +128,7 @@ describe('Domain Lookup with resolved scope (integration)', () => {
     }
   });
 
-  it('Case E/F/G/H: domain lookup runs; domain-only terms reach Vote; sameDomain can form; base preserved', () => {
+  it('Case E/F/G/H: domain lookup runs; domain-only terms reach Vote; sameDomain can form; base preserved', async () => {
     if (!fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
       return;
     }
@@ -159,7 +159,7 @@ describe('Domain Lookup with resolved scope (integration)', () => {
     }
 
     const rawText = '你好我想点一杯热拿铁中杯少糖';
-    const result = runSpanAssemblyV4Orchestrator({
+    const result = await runSpanAssemblyV4Orchestrator({
       rawText,
       runtime: runtime!,
       profile: defaultGeneralProfile(),
@@ -167,6 +167,7 @@ describe('Domain Lookup with resolved scope (integration)', () => {
       minPrior: 0.5,
       imeConfig,
       dict,
+      model3KeepAll: true,
     });
 
     expect(result.metrics.domainLookupExecuted).toBe(true);

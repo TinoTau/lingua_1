@@ -1,0 +1,25 @@
+{
+  "phase": "MODEL3_V1_RETRY_REGION_AND_POSTPROCESS_OWNERSHIP_AUDIT",
+  "date": "2026-08-28",
+  "phaseResult": "MULTIPLE_GAPS",
+  "mode": "READ_ONLY",
+  "runtimeChanged": false,
+  "modelChanged": false,
+  "fineSpanChanged": false,
+  "trainingChanged": false,
+  "datasetChanged": false,
+  "architectureChanged": false,
+  "retryChanged": false,
+  "hardStop": true,
+  "doNotDevelop": true,
+  "doNotTrain": true,
+  "reportArtifacts": [
+    "Lingua_Model3_V1_Retry_Region_Postprocess_Ownership_Audit_2026_08_28.md",
+    "model3_v1_retry_current_path.csv",
+    "model3_v1_retry_region_case_audit.csv",
+    "model3_v1_retry_ownership_summary.json",
+    "model3_v1_retry_region_governance.json"
+  ],
+  "reportArtifactCount": 5,
+  "recommendedNextPhase": "MODEL3_V1_ASR_POSTPROCESS_RETRY_REGION_CORRECTION"
+}

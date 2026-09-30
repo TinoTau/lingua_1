@@ -1,0 +1,37 @@
+{
+  "dataset": "MODEL3_ANCHOR_CONTEXT_SEED_V1",
+  "purpose": "candidate seed corpus for full 100k Anchor-dependent dataset generation",
+  "notFinalTrainingData": true,
+  "finalLabelAuthority": "existing Stage2/Recall materializer",
+  "seed": 2026082402,
+  "recordCount": 16000,
+  "typeCounts": {
+    "NO_ANCHOR_CONTROL": 1370,
+    "ANCHOR_CONTRAST_KEEP_CANDIDATE": 5364,
+    "ANCHOR_CONTRAST_RETRY_CANDIDATE": 5359,
+    "NATURAL_ANCHOR_CONTEXT": 2433,
+    "HARD_KEEP_CANDIDATE": 1474
+  },
+  "shards": [
+    {
+      "file": "model3_anchor_context_seed_v1_01.jsonl",
+      "rows": 4000,
+      "sha256": "263759e46548c4d42a9260ef0a680d152dc817acf06f48b319e556deb15000a5"
+    },
+    {
+      "file": "model3_anchor_context_seed_v1_02.jsonl",
+      "rows": 4000,
+      "sha256": "356f063676f95f02ddeba56a9a8b185bc69a27fa60f588296053f91089164bf8"
+    },
+    {
+      "file": "model3_anchor_context_seed_v1_03.jsonl",
+      "rows": 4000,
+      "sha256": "8bbff38b54b86bf71064c59d959253e10a98e45dc1d542dd7f9c92d9adec68fe"
+    },
+    {
+      "file": "model3_anchor_context_seed_v1_04.jsonl",
+      "rows": 4000,
+      "sha256": "972f04724da267912d3ad0e0ce3dd122e570fe701de6d259bef22cb8e0fcbd08"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+feature,training_source,runtime_source,dtype,parity,notes
+surface char tokens,encode_surface(surface[:8]) from sample span,encode_surface(surface[:8]) same vocab in host,int64[8],YES,max_len=8; pad=0; unk=1
+isAnchor,bool(sp.isAnchor),bool(sp.isAnchor) from host input,float,YES,Anchor forced KEEP in host+Node
+span_len_log1p,log1p(len(surface)),log1p(len(surface)),float,YES,
+span_rel_position,"span_index / max(n_spans-1,1)","index / max(n-1,1) in sequence order",float,YES,Depends on PathFineSpan order match
+first_pass_cand_log1p,log1p(recallEvidence.firstPassCandidateCount),log1p(first_pass_cand_count) from bound candidates,float,PARTIAL,Same formula; value differs when runtime recall count != training snapshot
+current_cjk_len_log1p,log1p(CJK count in surface),log1p(CJK count in surface),float,YES,
+pinyin_channel_avail,featureAvailability.pinyinTextDerived,syllables.length > 0 (Node proxy),float avail mask,PARTIAL,Semantic mismatch: training text-derived flag vs runtime syllable-presence proxy
+vocabulary,checkpoint vocab.json,same checkpoint vocab.json,dict,YES,sha=8a9d7089d29a65c0
+label mapping,class 0=KEEP class 1=RETRY,"logits[:,0]=KEEP logits[:,1]=RETRY argmax",2-class,YES,argmax; no threshold
+silent KEEP fallback,N/A (fail-fast integration),Node client throws; host returns ok:false,policy,YES,No silent KEEP on load/infer failure in mainline

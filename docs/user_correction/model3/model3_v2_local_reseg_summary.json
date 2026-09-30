@@ -1,0 +1,65 @@
+{
+  "phase": "MODEL3_V2_LOCAL_RESEGMENTATION_CAUSAL_EVIDENCE_AUDIT",
+  "timestamp": "2026-09-01T09:13:38.218Z",
+  "verdict": "LOCAL_RESEGMENTATION_CAUSAL_AUDIT_PARTIAL_FLAG_SEMANTICS_PROBLEM",
+  "nextPhase": "MODEL3_V2_LOCAL_RESEGMENTATION_TRACE_COMPLETENESS_AUDIT",
+  "secondaryNextPhase": "MODEL3_V2_LOCAL_RESEGMENTATION_ARCHITECTURE_RESTORATION_DESIGN_AUDIT",
+  "historicalLocalResegFirstFail": 84,
+  "auditedCount": 84,
+  "confirmedStrictLocalResegFailures": 6,
+  "reclassified": {
+    "downstreamTargetInPool": 13,
+    "recallNonTargetOnlyNeedsTrace": 65,
+    "retryRegion": 0
+  },
+  "funnel": {
+    "historicalLocalResegFirstFail": 84,
+    "regionValidDenominator84": 84,
+    "latticeFailedResegmentOkFalse": 84,
+    "recallBoundaryReachedDespiteLatticeFail": 78,
+    "strictConfirmedBeforeRecallReturns": 6
+  },
+  "resegmentOkSemantics": {
+    "codeLocation": "model3-retry-router.ts:430 resegmentOk: resegmentResult.ok",
+    "definition": "resegmentRetryRegionWithLattice ResegmentRetryRegionResult.ok",
+    "trueMeans": "runLatticeFineSpanGeneration ok=true AND pathFineSpanViews.length>0",
+    "falseMeans": "lattice failed/empty; fallbackRegionLocalSpans supplies original FineSpan boundaries; Retry+Recall still proceed",
+    "includesRecallOutcome": false,
+    "includesSurfaceChange": false,
+    "canFalseDespiteRecallCandidates": true,
+    "previous84CountValidity": "PARTIALLY_VALID"
+  },
+  "implementationDrift": {
+    "detected": true,
+    "classification": "IMPLEMENTATION_DRIFT_FROM_FROZEN_ARCHITECTURE",
+    "detail": "fallbackRegionLocalSpans reuses first-pass FineSpan boundaries (OLD_BOUNDARY_LOCK) when lattice fails",
+    "frozenArchitectureExpects": "sliding overlapping local windows with soft coarse boundaries"
+  },
+  "traceSufficiency": {
+    "perRegionOldNewSurfaces": "NOT_PRESERVED_IN_SIGNAL_LOSS_ARTIFACTS",
+    "generatedWindowIntervals": "INSUFFICIENT",
+    "retainedPathFineSpanViews": "INSUFFICIENT",
+    "proposalNextPhaseFields": [
+      "retry_regions.latticeCode",
+      "retry_regions.pathViewCount",
+      "retry_regions.generatedWindowCount",
+      "retry_regions.fallbackUsed"
+    ]
+  },
+  "primaryBlocker": {
+    "latticeFailureRateAmongRescuable": "84/141",
+    "strictCausalFirstFailConfirmed": "6/84",
+    "stillDominantPhenomenon": true,
+    "stillDominantStrictFirstFail": false
+  },
+  "domainVote": {
+    "prepareCallsVoteOncePerPath": true,
+    "retrySecondDomainVote": false,
+    "utteranceLevelSingleVote": "NO_IF_MULTIPATH"
+  },
+  "governance": {
+    "productionCodeModified": false,
+    "jobResultChanged": false,
+    "exactLexiconAsRecallProxy": false
+  }
+}

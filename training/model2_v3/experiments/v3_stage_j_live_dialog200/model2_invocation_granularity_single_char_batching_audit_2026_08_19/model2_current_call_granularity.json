@@ -1,0 +1,19 @@
+{
+  "source": "electron_node/electron-node/main/src/model2-runtime/expand-active-candidates.ts for-loop over pathFineSpans",
+  "p": "PER_SPAN_SAME_FORWARD",
+  "d": "PER_SPAN_SAME_FORWARD",
+  "ipc": "PER_SPAN",
+  "host_cmd": "infer",
+  "one_inference_flag": true,
+  "p_and_d_share_forward": true,
+  "batch_in_production_infer": false,
+  "pack_batch_inputs_supports_batch_dim": true,
+  "production_batch_size": 1,
+  "paths": "PER_PATH then PER_SPAN (orchestrator loops lattice.pathFineSpanViews)",
+  "dialog200_path_count": {
+    "1": 170,
+    "2": 21,
+    "4": 9
+  },
+  "path_count_source": "docs/tone-v2/_audit_scratch/step7_final_freeze/dialog_200_summary.json"
+}

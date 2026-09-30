@@ -1,0 +1,30 @@
+{
+  "modelName": "MODEL3_V1_DIET_WINNER_SEED_2026084423",
+  "architecture": "Small BiGRU",
+  "config": {
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "feat_dim": 6,
+    "diet": {
+      "NATURAL": 0.525,
+      "CONTRAST": 0.25,
+      "NO_ANCHOR": 0.15,
+      "HARD_KEEP": 0.075
+    },
+    "diet_name": "B",
+    "seed": 2026084423,
+    "epochs": 6
+  },
+  "vocabSize": 1371,
+  "featNames": [
+    "isAnchor",
+    "span_len_log1p",
+    "span_rel_position",
+    "first_pass_cand_log1p",
+    "current_cjk_len_log1p",
+    "pinyin_channel_avail"
+  ],
+  "featDim": 6,
+  "leakedPredecessor": "MODEL3_V1_SYNTHETIC_BASELINE",
+  "status": "ACTIVE_NOLEAK"
+}

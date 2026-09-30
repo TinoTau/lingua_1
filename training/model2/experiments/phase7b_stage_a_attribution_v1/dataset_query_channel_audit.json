@@ -1,0 +1,14 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "span_syllables_eq_target_pinyin_rate": 1.0,
+  "span_text_eq_target_surface_rate": 0.0,
+  "positive_pool_index_eq_0_rate": 0.973701955495617,
+  "positive_fuzzy_distance_eq_0_rate": 1.0,
+  "n_term_positives_checked_for_index": 10381,
+  "implication": "Query syllable channel is oracle-aligned to the target; ASR char channel conflicts. FuzzyPool places the target at distance 0 / mostly index 0. Deterministic syllable/fuzzy rankers therefore approach ceiling on UNSEEN; Stage A does not transfer this signal and instead depends on SEEN-term candidate/query memorization.",
+  "note_on_case_A": "Case A (deterministic ≫ Stage A on UNSEEN) remains valid as evidence that a term-independent rule exists and Stage A fails to learn it; baselines must not be misread as ASR-only phonetic skill."
+}

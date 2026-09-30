@@ -1,0 +1,12 @@
+{
+  "model2_inference_fail": "log + skip profile expansion + continue base recall",
+  "model_load_fail": "log + disable Model2 for process/session + base recall only",
+  "profile_missing": "Model2 no-op (not shadow path)",
+  "forbidden": [
+    "abort ASR",
+    "fallback Stage A/B",
+    "deterministic-only Model2",
+    "dual path"
+  ],
+  "classification": "graceful optional expansion failure"
+}

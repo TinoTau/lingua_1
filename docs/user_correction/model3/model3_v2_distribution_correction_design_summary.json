@@ -1,0 +1,53 @@
+{
+  "phase": "MODEL3_V2_TARGETED_DISTRIBUTION_CORRECTION_DESIGN",
+  "designStatus": "READY",
+  "primaryCorrectionStrategy": "PRODUCTION_EQUIVALENT_FEATURE_STATE + SAME_SURFACE_LABEL_CONTRAST + MULTIPATH_SEQUENCE_COVERAGE",
+  "featureCapacityChangeRequired": false,
+  "modelChangeRequired": false,
+  "architectureChangeRequired": false,
+  "priorities": {
+    "P0": ["CANDIDATE_FEATURE_CHANNEL_COLLAPSE", "SURFACE_LABEL_SHORTCUT"],
+    "P1": ["SINGLE_PATH_TRAINING", "SEQUENCE_DISTRIBUTION_GAP"],
+    "P2": ["POSITION_COVERAGE_PARTIAL", "UNEXPLAINED_STRONG_KEEP"]
+  },
+  "d160Correction": {
+    "previous": "CURRENT_TARGET_CHANGED_BUT_ALIGNABLE",
+    "corrected": "STALE_TARGET_NOT_COMPARABLE",
+    "reason": "Historical 向木李 absent; current 顺便看看项目里 is semantically normal — must not count as missed RETRY or train RETRY on 顺/便 from stale inventory"
+  },
+  "candidateStateOwner": {
+    "runtimeSSOT": "PathFineSpan.candidates filtered !isCovered via packModel3SpanInferFields / model3FirstPassCandidateCount",
+    "trainingBug": "build_v2_realdist_expanded.py hardcodes firstPassCandidateCount=0",
+    "preferredGeneration": "Pass texts through production-equivalent FineSpan+lattice candidate materialization; persist raw count + packed log1p; forbid silent default 0",
+    "noDuplication": "Reuse shared pack semantics / existing span-assembly path; do not reimplement candidate counting"
+  },
+  "liveFrequencyHints": {
+    "nonAnchorCand0": 466,
+    "nonAnchorCandGt0": 489,
+    "retryCand0": 11,
+    "retryCandGt0": 15,
+    "pinyinAlways1InCurrentTrace": true,
+    "note": "Hints for floors only — not production population estimates"
+  },
+  "dataVolumeEstimateSpans": {
+    "KEEP_cand0": 2400,
+    "KEEP_candGt0": 3000,
+    "RETRY_cand0": 1700,
+    "RETRY_candGt0": 2200,
+    "multipath_subset_utterances": ">=200 (>=15% multipath)",
+    "estimatedNewUtterancesOrder": "1100-1600 structural families after dedupe — NOT an arbitrary +100k",
+    "basis": "coverage matrix min_support_spans summed with overlap discount ~0.4"
+  },
+  "futureTrainingExperiment": {
+    "baseline": "MODEL3_V2_REALDIST_V1",
+    "candidate": "one MODEL3_V2_TARGETED_DIST_CORRECTED_V1 checkpoint",
+    "independentVariable": "DATA_DISTRIBUTION_ONLY",
+    "fixed": ["architecture", "six features", "threshold", "optimizer family", "eval harness", "checkpoint identity rules"]
+  },
+  "recommendedNextPhase": "MODEL3_V2_TARGETED_DISTRIBUTION_DATASET_BUILD",
+  "blockedAlternatives": {
+    "MODEL3_V2_TRAINING_FEATURE_STATE_PIPELINE_AUDIT": "Not required — owner and reuse path identified",
+    "MODEL3_V2_TRAIN_LIVE_PATH_STRUCTURE_AUDIT": "Not blocking — multipath source is production PathFineSpan logic",
+    "STOP_AND_REVIEW": "No frozen architecture change required"
+  }
+}

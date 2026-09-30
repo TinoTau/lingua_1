@@ -1,0 +1,30 @@
+{
+  "definition": "is_hard_multi && any_recover ALL splits (same as freeze)",
+  "historical_n": 197,
+  "historical_row_id_snapshot": "NOT_PRESERVED",
+  "current_n_under_same_definition": 699,
+  "reason_n_differs": "policy_phase2 grew since Stage P freeze (hard any_recover 197→699)",
+  "metrics_on_current_same_definition": {
+    "RecallRetained": 0.9552906110283158,
+    "QueryReduction": 0.5292929292929293,
+    "CandidateReduction": 0.37717864923747274,
+    "E2ECostReduction": 0.4788077378741025,
+    "B1": {
+      "n": 699,
+      "TargetIntroductionRate": 0.9599427753934192,
+      "QueryCount_mean": 2.124463519313305,
+      "QueryCount_P50": 2.0,
+      "CandidateCount_mean": 5.253218884120171,
+      "Latency_P50": 99.87239999463782
+    },
+    "V3": {
+      "n": 699,
+      "TargetIntroductionRate": 0.9170243204577968,
+      "QueryCount_mean": 1.0,
+      "QueryCount_P50": 1.0,
+      "CandidateCount_mean": 3.271816881258941,
+      "Latency_P50": 52.53069999162108
+    }
+  },
+  "NOTE": "Do not forge historical 197 denominator; primary gate uses current frozen-definition RR"
+}

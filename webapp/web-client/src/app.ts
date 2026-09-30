@@ -19,6 +19,7 @@ import { AppPlayback } from './app/playback';
 import { handleStateChange } from './app/state_callbacks';
 import { addTtsAudioToMixer } from './app/room_tts';
 import { createAndAttachAudioMixerOutput, setupAppCallbacks } from './app/init_callbacks';
+import { CorrectionPanel } from './correction_ui';
 
 /**
  * 涓诲簲鐢ㄧ被
@@ -47,6 +48,7 @@ export class App {
   private roomManager: RoomManager;
   private webrtcManager: WebRTCManager;
   private appPlayback: AppPlayback;
+  private correctionPanel: CorrectionPanel;
 
   // Pipeline 閰嶇疆锛堢敱鐢ㄦ埛閫夋嫨锛?
   public pipelineConfig?: {
@@ -133,6 +135,8 @@ export class App {
       displayPendingTranslationResults: () => this.translationDisplay.displayPendingTranslationResults(),
     });
 
+    this.correctionPanel = new CorrectionPanel(this.config.schedulerUrl);
+
     // 鍒濆鍖栭煶棰戞贩鎺у櫒杈撳嚭
     this.audioMixerOutput = createAndAttachAudioMixerOutput(this.audioMixer);
     setupAppCallbacks(this.getCallbacksContext());
@@ -213,6 +217,12 @@ export class App {
       startTtsPlayback: () => this.appPlayback.startTtsPlayback(),
       ttsPlayer: this.ttsPlayer,
       config: this.config,
+      getSessionId: () => this.wsClient.getSessionId(),
+      registerCorrectionUtterance: (utteranceIndex, systemText, sessionId) => {
+        this.correctionPanel.setSessionId(sessionId);
+        this.correctionPanel.setSchedulerWsUrl(this.config.schedulerUrl);
+        this.correctionPanel.registerUtterance(utteranceIndex, systemText, sessionId);
+      },
     };
   }
 
@@ -340,7 +350,10 @@ export class App {
    * 寮€濮嬫暣涓細璇濓紙鎸佺画杈撳叆+杈撳嚭妯″紡锛?
    */
   async startSession(): Promise<void> {
+    this.correctionPanel.clear();
+    this.correctionPanel.setSchedulerWsUrl(this.config.schedulerUrl);
     await this.sessionManager.startSession();
+    this.correctionPanel.setSessionId(this.wsClient.getSessionId());
   }
 
   /**
@@ -348,6 +361,9 @@ export class App {
    */
   async endSession(): Promise<void> {
     await this.sessionManager.endSession();
+    // Keep correction cards visible after session end so user can still submit;
+    // clear on next startSession. Sync session id for any late binding.
+    this.correctionPanel.setSessionId(this.wsClient.getSessionId());
   }
 
   /**

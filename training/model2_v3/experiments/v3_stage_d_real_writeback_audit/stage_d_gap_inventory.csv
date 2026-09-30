@@ -1,0 +1,13 @@
+Class,Gap,Current,ExpectedNext
+G0,none detected for frozen runtime skeleton,—,KEEP frozen
+G1,MISSING CORE WRITEBACK,no Lexicon term_id resolve; no derive long_term_domain_evidence; Node Stage D unused,ADD write-time resolve+derive; Node Stage D input after Stage J
+G1,personal_terms free-text not lexicon-backed,stores arbitrary corrected strings,MODIFY extract to lexicon-backed observation
+G2,TRAIN/PRODUCTION MISMATCH,train long_term_domain_evidence vs prod domain_bias/absence,ALIGN prod derive to train formula
+G2,session_domain_prior train-only unused by encoder,—,DEFER or wire separately
+G3,personal_term_evidence missing on Node TS,messages.ts,MODIFY protocol type
+G3,stale SessionBootstrap after correction,no push,MODIFY refresh contract minimal
+G4,SESSION_PAYLOAD_GROWTH_RISK,full profile to Node,ADD compact Model2 payload later
+G5,LEXICAL_PROFILE_SEMANTICS_UNDEFINED,what common term means,ADD contract before dev
+G5,unknown term / overlapping policies undefined,—,ADD contracts
+G6,INCREMENTAL domain evidence missing,—,ADD incremental derive at write-time
+G7,Wrong/Swapped selectivity; SameDomain interaction,known secondary,DEFER

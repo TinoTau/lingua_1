@@ -1,0 +1,10 @@
+path,role,status,notes
+docs/pinyin-v2/import/single_char_dictionary.tsv,IME_2510_inventory,ACTIVE_RUNTIME_SOURCE,Imported 2026-08-18 into base_lexicon via full-rebuild
+electron_node/electron-node/scripts/lexicon/lib/full-rebuild-from-csv.mjs,rebuild_pipeline,ACTIVE,loadSingleCharRows() inserts TSV into term+base_lexicon
+node_runtime/lexicon/v3/lexicon.sqlite,runtime_db,ACTIVE,bundleVersion 13
+docs/user_correction/single_char/Lingua_single_char_repair_lexicon_strict_v1.csv,CLD_STRICT_candidate,GENERATED_ONLY,HOLD_NO_IMPORT 2026-08-19
+docs/user_correction/single_char/Lingua_single_char_repair_lexicon_balanced_v1.csv,CLD_BALANCED_candidate,GENERATED_ONLY,HOLD_NO_IMPORT
+docs/user_correction/single_char/Lingua_single_char_repair_lexicon_CLD_audit_v1.csv,CLD_FULL_audit,AUDIT_ONLY,Never imported as repair SSOT
+docs/user_correction/scripts/single_char_repair_lexicon_lexical_validity_audit.py,audit_script,AUDIT_ONLY,
+docs/user_correction/scripts/single_char_repair_lexicon_grouping_audit.py,audit_script,AUDIT_ONLY,
+docs/user_correction/scripts/recall_foundation_completion.py,foundation_import_orchestration,HISTORICAL_EXECUTED,Drove 0→2510 import 2026-08-18

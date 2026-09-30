@@ -1,0 +1,22 @@
+stage_order,stage,file,function,input_type_key_fields,output_type_key_fields,next_consumer
+0,Entry,inference/inference-service.ts,runPipelineWithAudio,JobAssignMessage+audio; domainPriors; userProfile,Promise<JobResult>,processJob
+1,Pipeline,pipeline/job-pipeline.ts,runJobPipeline,JobPipelineOptions{job,services,ctx},JobResult via buildJobResult,buildJobResult
+2,ASR,pipeline/steps/asr-step.ts,runAsrStep,JobAssignMessage+audio; ServicesBundle,JobContext{rawAsrText,asrResult,asrSegments,acousticToneSlices,toneEvidenceProduction},runFwDetectorStep
+3,FW_Step,pipeline/steps/fw-detector-step.ts,runFwDetectorStep,JobContext; domainPriors; userProfileV1,ctx.fwDetectorResult; ctx.segmentForJobResult,runFwDetectorOrchestrator
+4,FW_Normalize,fw-detector/fw-detector-orchestrator.ts,normalizeForFwRepairInput,rawAsrText,FwRepairNormalizedText,runFwDetectorV4Path
+5,CoarseSpan,fw-detector/span-assembly-shared/coarse-span-partition.ts,partitionCoarseSpans,rawText; imeConfig; dict; asrSegments,CoarseSpan[],runLatticeFineSpanGeneration
+6,FineSpan_Lattice,fw-detector/span-assembly-v4/lattice-fine-span-runtime.ts,runLatticeFineSpanGeneration,rawText; LexiconRuntimeV2; recallDomainScope; coarseSpans,LatticeFineSpanSuccess{pathFineSpanViews},span-assembly-v4-orchestrator path loop
+6a,Recall,fw-detector/span-assembly-v4/recall-topk-for-windows.ts,recallTopKForWindows,windows[]; syllables; runtime; domainIds; acousticSlices,WindowCandidate[],buildLexicalEdges
+6b,Recall_SQL,lexicon-v2/recall-span-topk-v2.ts,recallSpanTopKV2,syllables; windowText; domainIds; acousticTonePattern,RecallSpanTopKV2Hit[],bindLexiconHitsToWindow
+7,Tone_Rebind,fw-detector/span-assembly-v4/tone-fine-span-rebind.ts,rebindToneForFineSpan,PathFineSpan; acousticSlices; wordTimeSpans,mutated candidate tone fields,buildCandidateCompatibilityGraph
+8,Compatibility,fw-detector/span-assembly-v4/candidate-compatibility-graph.ts,resolveCompatibilityRelations,WindowCandidate[],activeCandidates WindowCandidate[],expandActiveCandidatesWithModel2
+9,Model2_P_D,model2-runtime/expand-active-candidates.ts,expandActiveCandidatesWithModel2,activeCandidates; pathFineSpans; userProfile; runtime; domainIds,expanded WindowCandidate[]; Model2ExpandDiagnostics,runDomainAwareAssembly
+9a,Model2_Infer,model2-runtime/inference-host.ts,Model2InferenceHost.infer,Model2InferInput{spanSyllables; phoneticBias; basePool},Model2InferResult{selectedActions; domainHits},materializeProfileHits / materializeDomainHits
+10,Domain_Vote,fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,runDomainAwareAssembly → voteUtteranceDomainFromPool,FineSpanCandidatePool[],UtteranceDomainVoteResult{retainedDomains; domainScores},filterDomainCandidatesPerSpan
+11,SameDomain,fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,filterDomainCandidatesPerSpan,pool; vote; bucketDomain,DomainFilteredSpanSet[]{sameDomainCandidates},budgetPerSpanCandidates
+12,Assembly_Budget,fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,budgetPerSpanCandidates,filteredSets; perSpanLimit,selectedCandidates[],assembleDomainAwareSpanSets
+13,Assembly_Sentences,fw-detector/build-sentence-candidates.ts,buildSentenceCandidates,rawText; spanSets[][]; maxSentenceCandidates,SentenceCombination[],mergeCrossPathSentenceCandidates
+14,CrossPath_Merge,fw-detector/span-assembly-v4/merge-cross-path-sentence-candidates.ts,mergeCrossPathSentenceCandidates,PathAssemblyResult[],combinations[] dedup cap≤16,runFwSentenceRerankFromPrefilled
+15,KenLM,fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts,runFwSentenceRerankFromPrefilled,prefilled SentenceCombination[]; kenlmScorer,FwApprovedReplacement[]; sentenceRerank,applyFwSpanReplacements
+16,Apply,fw-detector/apply-span-replacements.ts,applyFwSpanReplacements,rawText; FwApprovedReplacement[],repaired string,ctx.segmentForJobResult
+17,JobResult,pipeline/result-builder-fw.ts,buildFwJobResult,JobContext,JobResult{text_asr; extra.fw_detector},NMT/TTS consumers

@@ -440,6 +440,48 @@ export interface JobCancelMessage {
   reason?: string;
 }
 
+/** Scheduler → Node: once per session↔node assignment. Not JobResult. */
+export interface SessionBootstrapMessage {
+  type: 'session_bootstrap';
+  session_id: string;
+  user_id?: string | null;
+  profile_version?: number | null;
+  user_profile?: UserProfileV1 | null;
+  trace_id?: string | null;
+}
+
+/** Bounded Runtime UserProfile (session cache only on Node). */
+export interface ResolvedLexicalTermStat {
+  term_id: string;
+  surface: string;
+  evidence: number;
+  confirm_count: number;
+}
+
+export interface UnresolvedLexicalRecord {
+  surface: string;
+  reason: string;
+  last_event_id?: string | null;
+}
+
+export interface UserProfileV1 {
+  schema_version: number;
+  profile_version: number;
+  phonetic_bias?: Record<string, number>;
+  tone_bias?: Record<string, number>;
+  /** Top-K canonical surfaces (Stage D lexical hash input). */
+  personal_terms?: string[];
+  /** Evidence keyed by term_id (authoritative). */
+  personal_term_evidence?: Record<string, number>;
+  resolved_lexical_terms?: Record<string, ResolvedLexicalTermStat>;
+  unresolved_lexical_observations?: UnresolvedLexicalRecord[];
+  legacy_free_text_personal_terms?: string[];
+  confusion_bias?: Record<string, number>;
+  domain_bias?: Record<string, number>;
+  /** Compact Stage-D-compatible long-term domain evidence (derived user state). */
+  long_term_domain_evidence?: Record<string, number>;
+}
+
 export interface JobResultMessage {
   type: 'job_result';
   job_id: string;

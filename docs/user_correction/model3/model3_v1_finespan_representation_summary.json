@@ -1,0 +1,72 @@
+{
+  "phase": "MODEL3_V1_TRAINING_RUNTIME_FINESPAN_REPRESENTATION_AUDIT",
+  "date": "2026-08-28",
+  "mode": "READ_ONLY",
+  "phaseResult": "TRAINING_REPRESENTATION_GAP",
+  "rootRepresentationFinding": "RUNTIME_MULTI_CHAR_AND_TRAINING_GENERATOR_LIMITED",
+  "production": {
+    "source": "model3_v1_runtime_margin_analysis.csv (dialog_200 Model3 span decisions)",
+    "totalModel3FineSpans": 3733,
+    "length": {"1": 3620, "2": 113, "3": 0, "4+": 0},
+    "percent": {"1": 96.97, "2": 3.03, "3": 0.0, "4+": 0.0},
+    "nonAnchor": {"1": 3620, "2": 113, "3": 0, "4+": 0},
+    "anchorInDecisionExport": {"note": "margin CSV isAnchor=False for all 3733 decision rows"},
+    "anchorAdapterSurfaces": {
+      "source": "model3_v1_feature_contract_dialog200_anchored.jsonl anchors[]",
+      "length": {"2": 112},
+      "note": "Anchor surfaces also include multi-char (len=2); Model3 masks anchors from RETRY loss"
+    },
+    "supportsMultiCharFineSpan": true
+  },
+  "evalProxyMapping": {
+    "frozenCount": 153,
+    "EXACT_ONE_FINESPAN": 56,
+    "PARTIAL_OVERLAP": 54,
+    "MULTIPLE_FINESPANS": 20,
+    "NO_RETRYABLE_FINESPAN": 23,
+    "byFamily": {
+      "PHONETIC_SUBSTITUTION": {"EXACT_ONE_FINESPAN": 51, "PARTIAL_OVERLAP": 3, "NO_RETRYABLE_FINESPAN": 10},
+      "MULTI_CHAR_REPLACEMENT": {"PARTIAL_OVERLAP": 45, "MULTIPLE_FINESPANS": 18, "EXACT_ONE_FINESPAN": 5},
+      "INSERTION": {"MULTIPLE_FINESPANS": 2, "PARTIAL_OVERLAP": 3},
+      "DELETION": {"PARTIAL_OVERLAP": 3},
+      "CHARACTER_FORM_VARIANT": {"NO_RETRYABLE_FINESPAN": 13}
+    },
+    "criticalDistinction": "EVAL_PROXY multi-char char-diff regions mostly map to PARTIAL_OVERLAP / MULTIPLE_FINESPANS of shorter production FineSpans — not proof that Model3 receives one multi-char FineSpan.surface per error region."
+  },
+  "training": {
+    "full100k_sample": {"RETRY_1char": 679, "RETRY_2plus": 0, "KEEP_1char": 160886, "KEEP_2plus": 0},
+    "strict_reconstruction_sample": {"RETRY_1char": 2500, "RETRY_2plus": 0, "KEEP_1char": 58790, "KEEP_2plus": 0},
+    "hardKeep": "Pointers into Full100K/STRICT KEEP sides — same length-1 FineSpan universe (sidecar has no independent span surfaces)",
+    "naturalKeep_noAnchor_proxy": {"KEEP_LIKE_1char": 184965, "NO_ANCHOR_1char": 43137, "2plus": 0},
+    "pilot": {"RETRY_1char": 4512, "RETRY_2plus": 0},
+    "whyLength1": "Synthetic training texts + historical 1-char phonetic corruption + stage2 pathFineSpanViews[0] path ranking (prefer more lexical edges) rarely materialize multi-syllable lexical edges as PathFineSpans. stage2 uses production runLatticeFineSpanGeneration; length-1 is not a business ban on multi-char FineSpans.",
+    "classification": "DATA_GENERATOR_LIMITATION",
+    "secondaryFactors": ["STAGE2_PATH0_FRAGMENTATION_BIAS", "HISTORICAL_SYNTHETIC_V1_1CHAR_RETRY"]
+  },
+  "parity": {
+    "spanIdentity": "PASS",
+    "surfaceSemantics": "PASS",
+    "lengthSemantics": "FAIL",
+    "offsets": "PASS",
+    "ordering": "PASS",
+    "anchor": "PASS",
+    "overall": "FAIL"
+  },
+  "phoneticCompatible": {
+    "ownership": "MIXED",
+    "businessRetryRequiresPhoneticClassBySSOT": true,
+    "booleanFieldIsRuntimeModel3Feature": false,
+    "classificationDetail": "TRAINING_DATA_CONSTRAINT + RECALL_REACHABILITY_PROXY under phonetic-class business SSOT"
+  },
+  "pilotStatus": {
+    "datasetId": "MODEL3_V1_REAL_DISTRIBUTION_RETRY_PILOT",
+    "integrity": "PASS",
+    "trainingReadiness": "HOLD_REPRESENTATION_GAP"
+  },
+  "decision": {
+    "trainPilotNow": false,
+    "primaryBlockingIssue": "Training FineSpan.surface length distribution (100% 1-char) does not match production Model3 inputs (≈3% 2-char FineSpans present; multi-char error regions often compose across multiple FineSpans).",
+    "smallestNextCorrection": "Dataset/path-selection only: construct training utterances so stage2 path[0] emits multi-char PathFineSpans matching production length mix — without changing production FineSpan runtime or Model3 architecture.",
+    "recommendedNextPhase": "MODEL3_V1_TRAINING_FINESPAN_LENGTH_PARITY_CORRECTION"
+  }
+}

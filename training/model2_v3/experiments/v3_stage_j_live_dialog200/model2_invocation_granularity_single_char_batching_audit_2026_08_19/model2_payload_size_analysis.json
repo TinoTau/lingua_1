@@ -1,0 +1,7 @@
+{
+  "pd_infer_payload": "span_syllables + phonetic_bias + personal_terms[] + domain evidence + base_hits",
+  "profile_repeated_per_span": true,
+  "times_profile_serialized_p50": 20,
+  "single_char_request": "candidates<=8 + left/right hashes + span id; small vs profile",
+  "batch_vs_per_span": "batch sends profile once; per-span repeats profile 5+ extra times"
+}

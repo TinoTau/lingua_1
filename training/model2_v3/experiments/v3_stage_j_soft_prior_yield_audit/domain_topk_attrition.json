@@ -1,0 +1,15 @@
+{
+  "base_absent_n": 38,
+  "rank_histogram_after_soft_rerank_on_pool32": {
+    "not_returned": 25,
+    "rank_1": 3,
+    "rank_2": 1,
+    "rank_gt_8": 9
+  },
+  "max_cands": 8,
+  "pool_size": 32,
+  "score": "distance - 2.5 * domain_match - 1e-4 * prior",
+  "file": "training/model2_v3/policy/domain_actions.py",
+  "function": "soft_domain_retrieve",
+  "lines": "88-99"
+}

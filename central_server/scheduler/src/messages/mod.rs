@@ -6,10 +6,9 @@ pub mod error;
 pub mod ui_event;
 pub mod session;
 pub mod node;
+pub mod user_profile;
 
-// 重新导出所有公共类型
-// 注意：GpuInfo, ResourceUsage, JobError 在测试中被使用，所以保留导出
-#[allow(unused_imports)]  // These are used in tests
+#[allow(unused_imports)]
 pub use common::{
     FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ServiceType, DeviceType, ServiceStatus,
     HardwareInfo, NodeStatus, GpuInfo, ResourceUsage, ServiceTimings, NetworkTimings,
@@ -17,6 +16,7 @@ pub use common::{
 pub use error::{ErrorCode, get_error_hint};
 pub use ui_event::{UiEventType, UiEventStatus};
 pub use session::SessionMessage;
-#[allow(unused_imports)]  // Used in tests
+#[allow(unused_imports)]
 pub use node::{NodeMessage, JobError};
+pub use user_profile::{UserProfileV1, USER_PROFILE_MAX_BYTES};
 

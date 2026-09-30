@@ -1,0 +1,11 @@
+{
+  "ts": "2026-08-23",
+  "global_sentence_cap": 16,
+  "frozen_in": "fw-config.ts maxSentenceCandidates; freeze-contract.test.ts",
+  "merge_owner": "mergeCrossPathSentenceCandidates",
+  "retry_must_not_double_pool": true,
+  "recommended_policy": "Single global pool ≤16 after retry re-assembly; do not accumulate 16+16",
+  "per_span_budget": "budgetPerSpanCandidates in assemble-domain-aware-span-sets.ts",
+  "length1_recall": "unique-only fail-closed; topK≤1 — unchanged by Model3",
+  "verdict": "CAP_16_MAINTAINABLE with single merge after retry"
+}

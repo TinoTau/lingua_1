@@ -1,0 +1,343 @@
+{
+  "n": 145,
+  "examples": [
+    {
+      "dialog_id": "d001",
+      "stable_id": "cu:1:SUBSTITUTE:4-5:4-5",
+      "scenario": "cafe",
+      "operation": "SUBSTITUTE",
+      "source_text": "點",
+      "expected_text": "点",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d001",
+      "stable_id": "cu:3:SUBSTITUTE:7-8:7-8",
+      "scenario": "cafe",
+      "operation": "SUBSTITUTE",
+      "source_text": "熱",
+      "expected_text": "热",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d001",
+      "stable_id": "cu:5:SUBSTITUTE:9-10:9-10",
+      "scenario": "cafe",
+      "operation": "SUBSTITUTE",
+      "source_text": "鐵",
+      "expected_text": "铁",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d004",
+      "stable_id": "cu:3:SUBSTITUTE:28-31:28-31",
+      "scenario": "meeting",
+      "operation": "SUBSTITUTE",
+      "source_text": "結論發",
+      "expected_text": "结论发",
+      "source_len": 3,
+      "expected_len": 3,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d004",
+      "stable_id": "cu:5:SUBSTITUTE:32-33:32-33",
+      "scenario": "meeting",
+      "operation": "SUBSTITUTE",
+      "source_text": "裡",
+      "expected_text": "里",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d007",
+      "stable_id": "cu:2:SUBSTITUTE:6-7:6-7",
+      "scenario": "taxi",
+      "operation": "SUBSTITUTE",
+      "source_text": "軟",
+      "expected_text": "软",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d010",
+      "stable_id": "cu:0:SUBSTITUTE:0-1:0-1",
+      "scenario": "hospital",
+      "operation": "SUBSTITUTE",
+      "source_text": "醫",
+      "expected_text": "医",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d010",
+      "stable_id": "cu:2:SUBSTITUTE:5-7:5-7",
+      "scenario": "hospital",
+      "operation": "SUBSTITUTE",
+      "source_text": "這兩",
+      "expected_text": "这两",
+      "source_len": 2,
+      "expected_len": 2,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d010",
+      "stable_id": "cu:4:SUBSTITUTE:8-9:8-9",
+      "scenario": "hospital",
+      "operation": "SUBSTITUTE",
+      "source_text": "頭",
+      "expected_text": "头",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d010",
+      "stable_id": "cu:10:SUBSTITUTE:19-20:19-20",
+      "scenario": "hospital",
+      "operation": "SUBSTITUTE",
+      "source_text": "規",
+      "expected_text": "规",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d011",
+      "stable_id": "cu:6:SUBSTITUTE:18-19:18-19",
+      "scenario": "hospital",
+      "operation": "SUBSTITUTE",
+      "source_text": "開",
+      "expected_text": "开",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d021",
+      "stable_id": "cu:0:SUBSTITUTE:0-1:0-1",
+      "scenario": "tech_deploy",
+      "operation": "SUBSTITUTE",
+      "source_text": "會",
+      "expected_text": "会",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": true,
+      "path_recoverable": true,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d021",
+      "stable_id": "cu:2:SUBSTITUTE:5-6:5-6",
+      "scenario": "tech_deploy",
+      "operation": "SUBSTITUTE",
+      "source_text": "選",
+      "expected_text": "选",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": true,
+      "path_recoverable": true,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d021",
+      "stable_id": "cu:6:SUBSTITUTE:12-13:12-13",
+      "scenario": "tech_deploy",
+      "operation": "SUBSTITUTE",
+      "source_text": "監",
+      "expected_text": "监",
+      "source_len": 1,
+      "expected_len": 1,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    },
+    {
+      "dialog_id": "d022",
+      "stable_id": "cu:3:SUBSTITUTE:8-10:8-10",
+      "scenario": "customer_service",
+      "operation": "SUBSTITUTE",
+      "source_text": "發貨",
+      "expected_text": "发货",
+      "source_len": 2,
+      "expected_len": 2,
+      "requires_lexical": true,
+      "lexical_recoverable": false,
+      "path_recoverable": false,
+      "profile_present": false,
+      "responsibility": "NORMALIZATION_RESPONSIBILITY",
+      "outside_class": "SCRIPT_NORMALIZATION",
+      "script_variant": true,
+      "notes": [
+        "traditional_simplified_or_opencc_t2cn"
+      ],
+      "ownership_gap": true,
+      "ownership_gap_reason": "IME alignment OpenCC is ACTIVE but not on ASR/lexicon/repair surfaces"
+    }
+  ],
+  "current_owner": {
+    "status": "ACTIVE_BUT_NOT_ON_BUSINESS_TEXT",
+    "owner": "opencc-js/t2cn in pinyin-ime-v2/normalize-for-ime-alignment.ts",
+    "dead_for_repair": true
+  },
+  "verdict": "NORMALIZATION_OWNERSHIP_GAP",
+  "implementation_restore_required": "Wire existing IME OpenCC to ASR/repair surfaces IF next phase authorizes; NOT this round",
+  "do_not_add_opencc_module_this_round": true
+}

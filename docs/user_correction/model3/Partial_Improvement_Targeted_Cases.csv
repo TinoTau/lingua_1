@@ -1,0 +1,16 @@
+﻿caseId,raw,final,reference,raw_error_complexity,what_postprocess_fixed,remaining_error,primary_residual_class,raw_error_regions_estimate,fixed_regions_estimate,remaining_regions_estimate,kenlm_input_count,single_candidate_before_kenlm,better_complete_candidate_present,trace_note,confidence
+d001,"你好,我想點一杯熱拿鐵中貝少糖 今天有蓝没马分吗?","你好,我想点一杯热拿铁中贝少糖 今天有蓝没马分吗?",你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？,multi-error,繁简转换；未修复中杯/蓝莓马芬区域,中贝→中杯；蓝没马分→蓝莓马芬,MULTI_ERROR_SENTENCE,3+,1,2,3,NO,YES,KenLM inputs含更接近参考的完整句(蓝莓马分)但仍含中贝；BETTER_COMPLETE=YES非全对,HIGH
+d011,括號出請問內客還有號碼 我微不舒服昨晚開始的,括号出请问内客还有号码 我微不舒服昨晚开始的,挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。,multi-error,繁简转换,括号出→挂号处；内客→内科；号码→号吗；微→胃,MULTI_ERROR_SENTENCE,3+,1,3+,2,NO,NO,多候选但均远离reference；NOT_OBSERVED module owner,HIGH
+d028,"老師這道題的解題步,中能不能解解? 我没听懂第二点","老师这道题的解题步,中能不能解解? 我没听懂第二点",老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。,multi-error,繁简转换,"解题步,中能不能解解→解题步骤能不能再讲一遍",MULTI_ERROR_SENTENCE,2,1,2,1,YES,NOT_APPLICABLE,SINGLE_CANDIDATE_BEFORE_KENLM,MEDIUM
+d045,"關於後,選生成為 和上限计划请安上限计划执行有问题群里说","关于后,选生成为 和上限计划请安上限计划执行有问题群里说",关于后选生城和上线计化，请按上线计划执行，有问题群里说。,multi-error,繁简转换,后选生成为→后选生城；上限计划→上线计划；请安→请按,MULTI_ERROR_SENTENCE,3+,1,3+,2,NO,NO,多候选均差；领域词簇多错,HIGH
+d065,"這次發布我們線對其上述 当线即化窗口后学生,成模块需要连掉别漏掉回归","这次发布我们线对其上述 当线即化窗口后学生,成模块需要连掉别漏掉回归",这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,heavy-ASR-corruption,繁简转换,上线计划/后选生城/联调等大段仍严重偏离,ASR_INFORMATION_LOSS,3+,1,3+,2,NO,NO,重损坏；文本后处理合理恢复空间很有限,HIGH
+d084,可以打爆麻 顺便结一下张能扫马支付吗?,可以打爆麻 顺便结一下张能扫码支付吗?,可以打包吗？顺便结一下账，能扫码支付吗？,multi-error,繁简转换；扫马→扫码（局部修复）,打爆麻→打包吗；结一下张→结一下账,INCOMPLETE_LOCAL_REPAIR,3+,2,2,2,NO,NO,同一句内修了一处支付相关错误，另两处仍错；非KenLM多选问题,HIGH
+d092,麻煩幫我做一杯抹茶拿鐵帶走大 北周行謝謝,麻烦帮我做一杯抹茶拿铁带走大 北周行谢谢,麻烦帮我做一杯抹茶拿铁带走，大杯就行，谢谢。,multi-error,繁简转换,大北周行→大杯就行,REMAINING_PHONETIC_ERROR,2,1,1,2,NO,NO,前段基本正确；尾部近音残留；多候选未更接近,MEDIUM
+d102,這個檢查報告什麼時候能出? 我過敏 需要請假休息嗎?,这个检查报告什么时候能出? 我过敏 需要请假休息吗?,这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？,single-error,繁简转换,缺失「发痒」；其余已接近,ASR_INFORMATION_LOSS,1,1,1,1,YES,NOT_APPLICABLE,raw未含发痒信息；SINGLE_CANDIDATE,MEDIUM
+d126,請問理財產品的風險等急在哪裡查看,请问理财产品的风险等急在哪里查看,请问理财产品的风险等级在哪里查看？,single-error,繁简转换,等急→等级,REMAINING_LEXICAL_ERROR,1,1,1,2,NO,NO,单点词面残留；不据此判Lexicon missing,HIGH
+d133,我们下午讨论后选生成方安现吧 后选生成方安现吧 完成的借口文當補齊,我们下午讨论后选生成方安现吧 后选生成方安现吧 完成的借口文当补齐,我们下午讨论后选声城方案，先把候选生成的接口文档补齐。,heavy-ASR-corruption,繁简转换；轻微候选替换未达正确,后选声城/候选生成接口文档等大段仍错且有重复,MULTI_ERROR_SENTENCE,3+,1,3+,2,NO,YES,BETTER_COMPLETE=YES(候选生成)仍远非reference,HIGH
+d141,"更會員 相關的需求,我整理了一版八點前請大家幫忙評審一下","更会员 相关的需求,我整理了一版八点前请大家帮忙评审一下",跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。,multi-error,繁简转换,更→跟；缺「系统」,MULTI_ERROR_SENTENCE,2,1,2,1,YES,NOT_APPLICABLE,SINGLE_CANDIDATE,MEDIUM
+d155,這次發布我們現對其商業 建基化窗口后选生成模块需要连掉别漏掉回归,这次发布我们现对其商业 建基化窗口后选生成模块需要连掉别漏掉回归,这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。,heavy-ASR-corruption,繁简转换,对齐上线计划/后选生城/联调等仍严重错,ASR_INFORMATION_LOSS,3+,1,3+,2,NO,NO,与d065同类重损坏,HIGH
+d176,更意識規則要是找不到了前台 能幫忙開一下嗎,更意识规则要是找不到了前台 能帮忙开一下吗,更衣室柜子钥匙找不到了，前台能帮忙开一下吗？,heavy-ASR-corruption,繁简转换,更意识规则要是→更衣室柜子钥匙,ASR_INFORMATION_LOSS,1,1,1,1,YES,NOT_APPLICABLE,单区域但声学信息严重偏离；SINGLE_CANDIDATE,HIGH
+d184,小乘客互反馈翻译引擎接口 包错我们能不能加换存下物 三点钱 在我們百結論法群裡,小乘客户反馈翻译引擎接口 包错我们能不能加换存下物 三点钱 在我们百结论法群里,小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？,multi-error,繁简转换；局部客互→客户类改善有限,小乘→小陈；包错→报错；换存→缓存；三点钱→三点前；百结论法→把结论发,MULTI_ERROR_SENTENCE,3+,1,3+,4,NO,NO,4候选均远；BETTER_COMPLETE=NO相对final,HIGH
+d190,"醫生您好,我這兩天頭通想開店,要病做個些常規","医生您好,我这两天头通想开店,要病做个些常规",医生您好，我这两天头痛，想开点药并做个血常规。,multi-error,繁简转换,头通→头痛；开店要病→开点药并；些常规→血常规,MULTI_ERROR_SENTENCE,3+,1,3+,1,YES,NOT_APPLICABLE,SINGLE_CANDIDATE,HIGH

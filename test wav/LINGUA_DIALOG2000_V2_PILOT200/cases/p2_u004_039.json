@@ -1,0 +1,53 @@
+{
+  "caseId": "p2_u004_039",
+  "datasetId": "LINGUA_DIALOG2000_V2_PILOT200",
+  "datasetVersion": "V1",
+  "userId": "U004",
+  "profileStage": "P1",
+  "domain": "software_meeting",
+  "difficulty": "medium",
+  "referenceText": "请在纪要里写清楚纪念品的负责人和截止时间。",
+  "audioId": "aud_p2_u004_039",
+  "audioPath": "audio/p2_u004_039.wav",
+  "ttsEngine": "piper",
+  "voiceId": "zh_CN-huayan-medium",
+  "speakerId": "piper_huayan_medium_01",
+  "relationFamily": "n_l",
+  "relationDirection": "n_l",
+  "perturbationApplied": true,
+  "perturbationSeverity": "MILD",
+  "profileRef": "prof_u004_p1",
+  "profileBuildSetId": "pbs_u004_p1",
+  "profileBuildTermIds": [
+    "base-rebuild-term-e4baa7e593817c63",
+    "base-rebuild-term-e59083e9a5ad7c63",
+    "base-rebuild-term-e794b5e884917c64",
+    "base-rebuild-term-e794b7e4baba7c6e"
+  ],
+  "evaluationTargetTermIds": [
+    "base-rebuild-term-e7baaae5bfb5e593"
+  ],
+  "evaluationTargetSurface": "纪念品",
+  "split": "VALIDATION",
+  "holdoutClass": "NONE",
+  "seed": 2664398491,
+  "generatorVersion": "pilot200-builder-v1.1-freeze-correction",
+  "expectedBehaviorClass": "WRONG_PROFILE_CONTROL",
+  "wrongProfileUserId": "U002",
+  "wrongProfileStatus": null,
+  "targetInLexicon": true,
+  "targetNotInLexicon": false,
+  "isModel2TargetCase": true,
+  "lexiconCoverageControl": false,
+  "model2LexiconEligible": true,
+  "audioIdentity": {
+    "audioId": "aud_p2_u004_039",
+    "byte_size": 137134,
+    "sha256": "4ee159d7352891738ff015bd5331d55651bcc748413bbde64ba2e0e1d1d2ace6",
+    "sample_rate": 16000,
+    "channels": 1,
+    "duration": 4.284
+  },
+  "ttsBackend": "CORRUPTOR_SURFACE_PIPER",
+  "ttsInputText": "请在纪要里写清楚纪戀品的负责人和截止时间。"
+}

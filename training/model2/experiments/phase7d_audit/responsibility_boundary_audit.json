@@ -1,0 +1,19 @@
+{
+  "markers": ["PHASE7D_AUDIT", "NOT_FOR_RUNTIME", "NOT_FROZEN"],
+  "CURRENT": {
+    "pipeline": "ASR → FuzzyPool(=base recall, no profile) → Model2 StageA/B(=rerank/binding) → (downstream not wired)",
+    "who_introduces_missing_lexicon_target": "FuzzyPool only (if phonetic distance hits)",
+    "who_uses_UserProfile_for_introduction": "NONE"
+  },
+  "INTENDED_PRIMARY_CONTRACT": {
+    "pipeline": "ASR → base recall → Model2 profile-conditioned recall expansion → merge/dedup → ranking/sentence assembly",
+    "who_introduces_missing_lexicon_target": "Model2 under UserProfile + observed evidence"
+  },
+  "gap": "Intended introduction capability is missing from Model2. Current system can only introduce via profile-agnostic FuzzyPool.",
+  "model1_fuzzy_model2_boundary": {
+    "Exact_or_ASR": "observed text / exact hits",
+    "FuzzyPool": "deterministic phonetic base recall",
+    "Model2_actual": "closed-set profile-conditioned ranker",
+    "Model2_intended": "profile-conditioned recall expansion (+ optional light ranking)"
+  }
+}

@@ -36,6 +36,9 @@ pub(crate) async fn handle_session_message(
             enable_streaming_asr: _,
             partial_update_interval_ms: _,
             trace_id,
+            user_id,
+            user_profile,
+            profile_version,
         } => {
             core::handle_session_init(
                 state,
@@ -54,6 +57,9 @@ pub(crate) async fn handle_session_message(
                 lang_b,
                 auto_langs,
                 trace_id,
+                user_id,
+                user_profile,
+                profile_version,
             )
             .await?;
         }

@@ -1,0 +1,18 @@
+{
+  "formula": "score_final = score_base + softplus(relation_gate) * delta_v2(interaction, base, base_margin)",
+  "interaction": "user * relation * mask",
+  "unavailable": "delta_condition = 0 → score_final == score_base",
+  "frozen": [
+    "shared",
+    "query_encoder",
+    "candidate_encoder",
+    "base_scorer",
+    "no_match"
+  ],
+  "trainable": [
+    "condition_compat_v2",
+    "relation_gate"
+  ],
+  "primary_loss": "listwise_CE_correct + CF_prob_margin(empty/wrong)",
+  "retired_primary": "C0_pairwise_margin"
+}

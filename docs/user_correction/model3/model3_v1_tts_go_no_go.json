@@ -1,0 +1,12 @@
+{
+  "safe_to_start_tts_asr_enhancement": false,
+  "reason": "Input packing leaks label-defining fields; BiGRU F1=1.0 is not evidence of Anchor-conditioned learning",
+  "required_fix_before_tts": "FIX_DATASET_INPUT_CONTRACT \u2014 remove referenceSurface inequality, repairability/reachability, and label-table markers from model-visible features; retrain BiGRU under corrected loader",
+  "recommended_next_phase": "FIX_MODEL3_V1_FEATURE_PACKING_AND_RETRAIN",
+  "synthetic_model_actually_uses_anchor": "NO",
+  "synthetic_generalization_credible": "NO",
+  "safe_to_continue_same_bigru": true,
+  "architecture_problem": false,
+  "dataset_construction_problem": true,
+  "input_contract_problem": true
+}

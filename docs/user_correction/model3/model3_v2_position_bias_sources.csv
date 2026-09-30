@@ -1,0 +1,7 @@
+funnelStage,retryTailShare,datasetMeasured,biasPresent,ownerCandidate,isFirstFailingOwner,notes
+prior_audit_histogram,0.6438,model3_v2_labeled (WRONG),YES,PRIOR_AUDIT_DATASET_IDENTITY_MISMATCH,YES,Causality audit TRAIN_DIR pointed at labeled; not MODEL3_V2_PRODUCTION_CORE_S3
+authoritative_S3_final_shard,0.0585,model3_v2_production_core_s3/train,NO,NONE,NO,"[0.9,1.0)=5.85%; early bins 14.1/12.2/11.9% — no catastrophic tail concentration"
+S3_malformed_region_placement,,stage2_v2_label.derive_malformed_regions,NO_SYNTHETIC_TAIL_INJECTION,ASR_NATURAL_ERROR_PLACEMENT,NO,"corruptions=[]; regions from SequenceMatcher(current ASR, reference)"
+S3_label_projection,,label_spans_v2,NOT_PROVEN,NONE,NO,REGION_BOUNDED_FULL_COVERAGE; projects RETRY onto overlapping FineSpans
+S3_filtering_merge,0.0585,finalize_phase write_split_shards,NO,NONE,NO,Final train shard already non-tail-biased
+labeled_alt_pipeline,0.1118,model3_v2_labeled sample,YES_MID_DOMINATED,CORRUPTION_PLACEMENT_BIAS / SOURCE_TEMPLATE_POSITION_BIAS,YES_FOR_LABELED_ONLY,Synthetic phonetic + template wrap; NOT used by train_s3_random

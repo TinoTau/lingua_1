@@ -1,0 +1,13 @@
+{
+  "ts": "2026-08-23",
+  "jobresult_change_required": false,
+  "rationale": "Model3 is node-internal ASR post-processing; Model2 precedent keeps internals out of JobResult",
+  "consumers_of_jobresult": [
+    "Web client / scheduler (text_asr, text_translated, tts)",
+    "NMT handoff",
+    "Optional extra.fw_detector diagnostics"
+  ],
+  "proposed_fields_if_changed": [],
+  "recommendation": "Use internal trace + optional env-gated extra.dialog200_path_trace pattern; NO schema change",
+  "architecture_change_proposal_required_for_jobresult": true
+}

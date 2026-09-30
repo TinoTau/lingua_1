@@ -1,0 +1,47 @@
+{
+  "CORRECT": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 1.0,
+    "hits": 20,
+    "CI95": [
+      0.8388698745050667,
+      0.9999999999999998
+    ]
+  },
+  "EMPTY": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.4,
+    "hits": 8,
+    "CI95": [
+      0.21880396741419272,
+      0.613422057684794
+    ]
+  },
+  "WRONG": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.65,
+    "hits": 13,
+    "CI95": [
+      0.43285051021946475,
+      0.8188104521320554
+    ]
+  },
+  "SWAPPED": {
+    "n": 20,
+    "support": "VERY_LOW_SUPPORT",
+    "TIR": 0.5,
+    "hits": 10,
+    "CI95": [
+      0.2992949144298199,
+      0.70070508557018
+    ]
+  },
+  "Correct_Empty": 0.6,
+  "Correct_Wrong": 0.35,
+  "Correct_Swapped": 0.5,
+  "PROFILE_VALUE_DELTA": 0.6,
+  "Profile_Value": "STRONG"
+}

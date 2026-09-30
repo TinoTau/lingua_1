@@ -1,0 +1,61 @@
+{
+  "go_summary": {
+    "phase": "MODEL3_V1_SYNTHETIC_FREEZE_AND_TTS_READINESS_AUDIT",
+    "verdict": "PASS_WITH_TTS_GAPS",
+    "freezeStatus": "FROZEN",
+    "freezeGate": "PASS",
+    "ttsReadiness": "READY_WITH_GAPS",
+    "recommendedNextPhase": "MODEL3_V1_TTS_ASR_PILOT_DATASET_DEVELOPMENT",
+    "architectureChanged": false,
+    "runtimeChanged": false,
+    "runtimeCoreChanged": false,
+    "syntheticV1ChangedAfterFreeze": false,
+    "productionRetry": false,
+    "ttsGenerated": false,
+    "modelRetrained": false
+  },
+  "hashes": {
+    "model_sha256": "9d25234a5be81aa7281687e90612c6aa17322e23ec4c8be6861c72999524b815",
+    "config_sha256": "f32e3de456696798e71a1b28287a19beed7ff0905ec2056282c9b65c16222830",
+    "dataset_manifest_sha256": "b028a8f63385d04331186369f47d6cfaed9ca07474a7137d2b4bf0b96c395432",
+    "code_identity_sha256": "63e7c7be86caa3bf70b9123695dd52d06f025e947a57056e8829fb237a735926"
+  },
+  "modifiedFileInventory": [
+    "docs/user_correction/model3/MODEL3_SYNTHETIC_V1_FROZEN.md",
+    "docs/user_correction/model3/MODEL3_SYNTHETIC_V1_ACCEPTANCE_SEAL.json",
+    "docs/user_correction/model3/MODEL3_TTS_READINESS_AUDIT_2026_08_26.md",
+    "docs/user_correction/model3/model3_freeze_tts_audit_bundle.json",
+    "docs/user_correction/model3/model3_freeze_governance.json",
+    "docs/user_correction/model3/documentation_authority_matrix.csv",
+    "docs/user_correction/model3/README.md",
+    "docs/user_correction/model3/RECOVERY.md",
+    "docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+    "docs/user_correction/model3/MODEL3_TRAINING_DATASET_V1_CONTRACT.md",
+    "training/model3_dataset/model3_v1_synthetic_v1_frozen/POINTER.json",
+    "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082520/model_manifest.json",
+    "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082521/model_manifest.json",
+    "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/seed_2026082522/model_manifest.json",
+    "training/model3_dataset/model3_v1_full100k_strict_integration_ckpts/freeze_seed_eval.json",
+    "training/model3_dataset/train/test_synthetic_v1_freeze_governance.py",
+    "training/model3_dataset/train/eval_freeze_seed_selection.py",
+    "training/model3_dataset/train/train_full100k_strict_integration.py",
+    "training/model3_dataset/train/train_v1_bigru.py",
+    "training/model3_dataset/train/train_full100k.py",
+    "training/model3_dataset/train/train_v1_noleak.py",
+    "training/model3_dataset/train/train_objective_rebalance.py",
+    "training/model3_dataset/train/train_strict_contrast_reconstruction.py",
+    "training/model3_dataset/train/train_anchor_contrast_pilot.py",
+    "training/model3_dataset/train/train_diet_rebalance.py",
+    "training/model3_dataset/train/train_strict_hardkeep_balance.py"
+  ],
+  "reportArtifactCount": 6,
+  "reportArtifactCountLe10": true,
+  "reportArtifacts": [
+    "MODEL3_SYNTHETIC_V1_FROZEN.md",
+    "MODEL3_SYNTHETIC_V1_ACCEPTANCE_SEAL.json",
+    "MODEL3_TTS_READINESS_AUDIT_2026_08_26.md",
+    "model3_freeze_tts_audit_bundle.json",
+    "model3_freeze_governance.json",
+    "documentation_authority_matrix.csv"
+  ]
+}

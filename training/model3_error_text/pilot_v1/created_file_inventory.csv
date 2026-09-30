@@ -1,0 +1,33 @@
+path,kind,notes
+training/model3_error_text/__init__.py,package,offline package root
+training/model3_error_text/generator/__init__.py,package,generator package
+training/model3_error_text/generator/run_pilot.py,orchestrator,pilot generation entrypoint
+training/model3_error_text/generator/corrupt.py,module,annotate + corruption
+training/model3_error_text/generator/families.py,module,ACTIVE_SET_V1 thin reuse
+training/model3_error_text/generator/lexicon_resolve.py,module,readonly lexicon resolve
+training/model3_error_text/generator/validate.py,module,validators
+training/model3_error_text/generator/split.py,module,group split + leakage
+training/model3_error_text/tests/__init__.py,tests,tests package
+training/model3_error_text/tests/test_generator_unit.py,tests,unit tests
+training/model3_error_text/tests/run_unittest.py,tests,unittest runner (no pytest)
+training/model3_error_text/_smoke_tools.py,util,smoke helpers
+training/model3_error_text/pilot_v1/error_text_pilot_v1.jsonl,data,full pilot
+training/model3_error_text/pilot_v1/error_text_pilot_v1_train.jsonl,data,train split
+training/model3_error_text/pilot_v1/error_text_pilot_v1_dev.jsonl,data,dev split
+training/model3_error_text/pilot_v1/error_text_pilot_v1_test.jsonl,data,test split
+training/model3_error_text/pilot_v1/pilot_manifest.json,meta,manifest
+training/model3_error_text/pilot_v1/pilot_validation_report.json,qa,validation summary
+training/model3_error_text/pilot_v1/pilot_validation_failures.jsonl,qa,empty on pass
+training/model3_error_text/pilot_v1/pilot_human_review_200.csv,qa,human review package
+training/model3_error_text/pilot_v1/pilot_duplicate_report.json,qa,dedup stats
+training/model3_error_text/pilot_v1/pilot_split_leakage_report.json,qa,leakage
+training/model3_error_text/pilot_v1/pilot_vs_real_asr_error_comparison.md,qa,ASR compare
+training/model3_error_text/pilot_v1/pilot_vs_real_asr_error_stats.json,qa,ASR stats
+training/model3_error_text/pilot_v1/pilot_deterministic_check.json,qa,determinism
+training/model3_error_text/pilot_v1/future_candidate_families.json,meta,no unverified families in V1
+training/model3_error_text/pilot_v1/modified_file_inventory.csv,gov,inventory
+training/model3_error_text/pilot_v1/created_file_inventory.csv,gov,inventory
+training/model3_error_text/pilot_v1/generator_reuse_evidence.csv,gov,reuse evidence
+training/model3_error_text/pilot_v1/runtime_impact_check.json,gov,runtime check
+training/model3_error_text/pilot_v1/go_summary.json,gov,go summary
+docs/user_correction/model3/Lingua_Model3_Error_Text_Generator_Pilot_Development_Report_2026_08_23.md,report,development report

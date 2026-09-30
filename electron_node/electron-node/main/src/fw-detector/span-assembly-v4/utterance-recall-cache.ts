@@ -5,6 +5,7 @@
  */
 
 import type { RecallSpanTopKV2Hit } from '../../lexicon-v2/recall-span-topk-v2';
+import type { Length1CollectorDiagnostic } from '../../lexicon-v2/single-char-collector-trace';
 
 export type RecallQueryKind = 'span_v3_bundle';
 
@@ -61,6 +62,8 @@ export type UtteranceRecallContext = {
   stats: UtteranceRecallCacheStats;
   lexiconVersion: string;
   seenKeys: Set<string>;
+  /** Observation-only; populated when length-1 collector diagnostics are stored. */
+  length1CollectorByKey: Map<string, Length1CollectorDiagnostic>;
 };
 
 export function createUtteranceRecallContext(lexiconVersion: string): UtteranceRecallContext {
@@ -68,6 +71,7 @@ export function createUtteranceRecallContext(lexiconVersion: string): UtteranceR
     cache: new Map(),
     seenKeys: new Set(),
     lexiconVersion,
+    length1CollectorByKey: new Map(),
     stats: {
       requestCount: 0,
       uniqueKeyCount: 0,
@@ -189,6 +193,7 @@ export function lexiconFactsFromExactHits(hits: readonly RecallSpanTopKV2Hit[]):
 export function releaseUtteranceRecallContext(ctx: UtteranceRecallContext): void {
   ctx.cache.clear();
   ctx.seenKeys.clear();
+  ctx.length1CollectorByKey.clear();
 }
 
 export function utteranceCacheGet(

@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "input": "點",
+      "output": "点",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "熱",
+      "output": "热",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "鐵",
+      "output": "铁",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "點熱鐵",
+      "output": "点热铁",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "已经简化",
+      "output": "已经简化",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "Hello123",
+      "output": "Hello123",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "123",
+      "output": "123",
+      "idempotent": true,
+      "opencc_ok": true
+    },
+    {
+      "input": "，。",
+      "output": "，。",
+      "idempotent": true,
+      "opencc_ok": true
+    }
+  ],
+  "all_idempotent": true
+}

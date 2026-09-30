@@ -1,0 +1,291 @@
+{
+  "phase": "MODEL3_V2_ACOUSTIC_MATERIALIZATION_YIELD_PROBE",
+  "date": "2026-08-30",
+  "probeVerdict": "B2_YIELD_PROMISING_MORE_PROBE_NEEDED",
+  "yieldClassification": "INSUFFICIENT_SAMPLE",
+  "architectureSignal": "POSITIVE",
+  "primaryReport": "docs/user_correction/model3/Lingua_Model3_V2_Acoustic_Materialization_Yield_Probe_2026_08_30.md",
+  "N": 12,
+  "b2ArchitectureTechnicallyValid": true,
+  "readyForImplementationPlan": false,
+  "datasetBuildCanResume": false,
+  "sampleSource": "EXISTING_NON_HOLDOUT_DIALOG200_FW_DUMPS",
+  "sampleSourceNote": "Live ASR service failed to start (cuDNN). Probe used existing production-equivalent Piper→ASR→Tone dumps for non-protected dialog_200 cases. No pronunciation perturbation. No new TTS generation in this run.",
+  "pronunciationPerturbationEnabled": false,
+  "protectedCollisions": [],
+  "funnel": {
+    "N0": 12,
+    "N1": 12,
+    "N2": 12,
+    "N3": 12,
+    "N4": 10,
+    "N5": 8,
+    "N6": 8,
+    "N7": 10,
+    "N8": 10,
+    "N9": 8,
+    "N10": 8
+  },
+  "yields": {
+    "USABLE_MODEL3_RETRY_YIELD": 0.6666666666666666,
+    "N9_over_N0": 0.6666666666666666,
+    "N8_over_N0": 0.8333333333333334,
+    "N5_over_N0": 0.6666666666666666,
+    "ASR_mismatch_rate": 1.0,
+    "retry_plus_cand_gt0_utterances": 8
+  },
+  "cand_cells": {
+    "KEEP_cand_gt0": 461,
+    "KEEP_cand_0": 171,
+    "RETRY_cand_gt0": 78,
+    "RETRY_cand_0": 25
+  },
+  "cand_hist": {
+    "0": 196,
+    "1": 539
+  },
+  "label_hist": {
+    "KEEP": 632,
+    "RETRY": 103,
+    "MASKED": 12
+  },
+  "family_hist": {
+    "SUBSTITUTION": 29,
+    "MULTI_CHAR_REPLACEMENT": 13,
+    "DELETION": 4
+  },
+  "readiness": {
+    "ready": 747
+  },
+  "readiness_retry": {
+    "ready": 103
+  },
+  "anchor_src": {
+    "NONE": 735,
+    "DOMAIN": 12
+  },
+  "multipath": {
+    "path_count_hist": {
+      "1": 6,
+      "8": 2,
+      "3": 1,
+      "4": 1
+    },
+    "multipath_utterances": 4
+  },
+  "same_surface": [
+    {
+      "surface": "站",
+      "KEEP": 11,
+      "RETRY": 2
+    },
+    {
+      "surface": "要",
+      "KEEP": 11,
+      "RETRY": 1
+    },
+    {
+      "surface": "先",
+      "KEEP": 8,
+      "RETRY": 3
+    }
+  ],
+  "retry_examples": [
+    {
+      "id": "d001",
+      "pathId": "f972b007eebb06037093f120738a292668eda0e4280f550b48e7b26ca936a2ba",
+      "surface": "钟",
+      "rawStart": 11,
+      "rawEnd": 12,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "钟"
+    },
+    {
+      "id": "d001",
+      "pathId": "f972b007eebb06037093f120738a292668eda0e4280f550b48e7b26ca936a2ba",
+      "surface": "贝",
+      "rawStart": 12,
+      "rawEnd": 13,
+      "cand": 0,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "贝"
+    },
+    {
+      "id": "d001",
+      "pathId": "f972b007eebb06037093f120738a292668eda0e4280f550b48e7b26ca936a2ba",
+      "surface": "身",
+      "rawStart": 16,
+      "rawEnd": 17,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "身"
+    },
+    {
+      "id": "d001",
+      "pathId": "f972b007eebb06037093f120738a292668eda0e4280f550b48e7b26ca936a2ba",
+      "surface": "边",
+      "rawStart": 17,
+      "rawEnd": 18,
+      "cand": 0,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "边"
+    },
+    {
+      "id": "d001",
+      "pathId": "f972b007eebb06037093f120738a292668eda0e4280f550b48e7b26ca936a2ba",
+      "surface": "以",
+      "rawStart": 19,
+      "rawEnd": 20,
+      "cand": 0,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "以"
+    },
+    {
+      "id": "d004",
+      "pathId": "13435ee8d00c377c6084c08c61ba24491ea1495fe87109284ab74a090d4d8433",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "58ac5e26012f75ec1ae13bb973a28ee0ba74b729786369e7bd7ce90784f191bd",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "cc681e92eb32653af8dd0e365b50d7f01ddd100f408abef70647f1bff009f835",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "1ca2b0dc3e750a499a249b4aef44be1cf9cdcf32c42f8b02b06f4115506fdfe9",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "71b3f77204abed05434b0d180d5d43a53d48fed1e8a9d70e48af5a6b9759ce19",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "9c0ade4d22d0db74732c1066813cfbd5fc1d00f57e0a4c00c5b9a938dd9a104e",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    },
+    {
+      "id": "d004",
+      "pathId": "9c25b330aa80b45242cac92f5d1232d3ff6e8057e3ac567ff8649987a6c9b13d",
+      "surface": "城",
+      "rawStart": 1,
+      "rawEnd": 2,
+      "cand": 1,
+      "toneReadiness": "ready",
+      "anchorSource": "NONE",
+      "labelReason": "NON_ANCHOR_ERROR_RETRY",
+      "refSlice": null,
+      "asrSlice": "城"
+    }
+  ],
+  "provenance": {
+    "coherent_ok": 10,
+    "coherent_fail": 2,
+    "rejects": [
+      {
+        "id": "d055",
+        "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+      },
+      {
+        "id": "d190",
+        "reason": "CROSS_SAMPLE_PROVENANCE_MISMATCH_TEXT"
+      }
+    ]
+  },
+  "compute": {
+    "harness_elapsed_sec": 3.27,
+    "harness_per_utt_sec": 0.27,
+    "wall_sec": 3.34,
+    "tts_elapsed": "N/A_EXISTING_AUDIO",
+    "asr_elapsed": "N/A_EXISTING_DUMP"
+  },
+  "pipelineParity": {
+    "audio": "EXISTING_PIPER_WAV",
+    "asr_fw": "HISTORICAL_PRODUCTION_DUMP",
+    "tone": "HISTORICAL_AcousticToneSlice",
+    "recall": "MandatoryToneRecall_via_lattice",
+    "fineSpan": "runLatticeFineSpanGeneration",
+    "featurePacking": "model3FirstPassCandidateCount+pack",
+    "lexical_utt_with_edges": 12
+  },
+  "nextPhase": "MODEL3_V2_ACOUSTIC_MATERIALIZATION_YIELD_PROBE_EXTENSION",
+  "nextPhaseExecuted": false,
+  "governance": {
+    "Model3Changed": false,
+    "featureContractChanged": false,
+    "RecallChanged": false,
+    "ToneChanged": false,
+    "formalDatasetBuilt": false,
+    "trainingExecuted": false
+  }
+}

@@ -1,0 +1,12 @@
+stage,count,notes
+attempted,48,frozen source batch
+audio_ok,48,piper TTS
+asr_ok,48,faster_whisper_vad /utterance
+tone_ok,48,AcousticToneSlice from same ASR run
+formal_lattice_ok,48,acoustic_b2_formal_materialize.cjs
+hardRejected,0,
+semanticExcluded,0,NOT_EXERCISED in this batch
+supervisedAccepted,48,all FORMAL_FRESH_MATERIALIZATION
+formalSupervisedAccepted,48,
+missing_candidate_rejects,0,
+elapsed_sec,230.91,

@@ -1,0 +1,113 @@
+section,source_id,path,raw_rows,unique_normalized,language,average_length,length_dist,domain_top,source_type,dialogue_likeness,spoken_like_class,template_ratio,duplicate_ratio,eval_contamination,has_asr_pair,notes
+inventory,baseline_v1,training/model2/dataset/baseline_v1/results.jsonl,10000,9775,zh,8.98,"{""6-12"": 9297, ""1-5"": 144, ""13-24"": 334}","{""general"": 8113, ""medical"": 404, ""coffee"": 256, ""tourism_hotel"": 165, ""meeting"": 164, ""tourism_route"": 150, ""food_order"": 146, ""tourism_pickup"": 143}",tts_asr_pipeline_gt,dialog_carrier_filled,ACCEPT_WITH_LIMIT,1.0,0.0225,False,True,Primary prior certified pool; carrier_templates_v3 filled; ~81% domain=general
+inventory,training_scale_v1,training/model2/dataset/training_scale_v1/results.jsonl,3000,2723,zh,9.2,"{""6-12"": 2488, ""1-5"": 52, ""13-24"": 183}","{""medical"": 596, ""coffee"": 378, ""tourism_route"": 279, ""tech_ai"": 249, ""food_order"": 211, ""tourism_hotel"": 208, ""meeting"": 187, ""bakery"": 181}",tts_asr_pipeline_gt,dialog_carrier_filled,ACCEPT_WITH_LIMIT,1.0,0.0923,False,True,Sibling of baseline; carrier_v2 filled; expect high overlap with baseline patterns
+inventory,pseudo_user_accent_scale_v1,training/model2/dataset/pseudo_user_accent_scale_v1/results.jsonl,2999,2826,zh,9.15,"{""6-12"": 2600, ""1-5"": 57, ""13-24"": 169}","{""general"": 629, ""medical"": 530, ""coffee"": 323, ""tourism_transport"": 251, ""tourism_route"": 222, ""tourism_pickup"": 196, ""meeting"": 168, ""food_order"": 154}",tts_asr_pipeline_gt,dialog_carrier_filled_accent,ACCEPT_WITH_LIMIT,1.0,0.0577,False,True,Accent scale clean GT; carrier filled; limited share in certified pool
+inventory,pronunciation_corrupted_probe_v1,training/model2/dataset/pronunciation_corrupted_probe_v1/results.jsonl,350,344,zh,9.23,"{""6-12"": 316, ""1-5"": 5, ""13-24"": 23}",{},probe,carrier_probe,REJECT_PRIMARY,0.0,0.0171,False,False,Small probe; research/coverage only — not primary spoken-like capacity
+inventory,carrier_templates_v1,training/model2/corpus/carrier_templates_v1.jsonl,20,20,zh,12.6,"{""6-12"": 10, ""13-24"": 10}",{},template_skeleton,dialog_inspired_skeleton,REJECT_PRIMARY,1.0,0.0,False,False,Template skeletons only; slot expansions must not each count as independent high-value bases
+inventory,carrier_templates_v2,training/model2/corpus/carrier_templates_v2.jsonl,60,60,zh,12.33,"{""6-12"": 34, ""13-24"": 26}",{},template_skeleton,dialog_inspired_skeleton,REJECT_PRIMARY,1.0,0.0,False,False,Template skeletons only; slot expansions must not each count as independent high-value bases
+inventory,carrier_templates_v3,training/model2/corpus/carrier_templates_v3.jsonl,115,115,zh,12.42,"{""6-12"": 65, ""13-24"": 50}",{},template_skeleton,dialog_inspired_skeleton,REJECT_PRIMARY,1.0,0.0,False,False,Template skeletons only; slot expansions must not each count as independent high-value bases
+inventory,dialog_200,test wav/dialog_200/cases.manifest.json,200,68,zh,25.44,"{""13-24"": 36, ""25+"": 32}",{},acceptance_benchmark,multi_scenario_dialog,EVAL_ONLY,0.0,0.66,True,False,EVALUATION ONLY — never train/dev
+inventory,kenlm_wikipedia_sentences,kenLM/corpus/v1_raw/wikipedia_sentences.txt,500,500,zh,42.53,"{""13-24"": 89, ""25+"": 404, ""6-12"": 6, ""1-5"": 1}",{},wikipedia,written_encyclopedia,REJECT_PRIMARY,0.0,0.0,False,False,"Written wiki; ~17675362 lines scanned/estimated — scale-only, not spoken primary"
+inventory,char_lm_zh_sentences_large,addons/char-lm/data/zh_sentences_large.txt,300,299,zh,50.72,"{""25+"": 239, ""13-24"": 49, ""6-12"": 11}",{},news,written_news,REJECT_PRIMARY,0.0,0.0,False,False,News-like written; ~445518 estimated — REJECT_PRIMARY for spoken base gap
+overlap,baseline_v1,,,9775,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,baseline_v1,,,69,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,baseline_v1,,,120,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,baseline_v1,,,25,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,baseline_v1,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,training_scale_v1,,,69,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,training_scale_v1,,,2723,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,training_scale_v1,,,184,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,training_scale_v1,,,31,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,training_scale_v1,,,1,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,training_scale_v1,,,5,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,training_scale_v1,,,5,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,training_scale_v1,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,training_scale_v1,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,training_scale_v1,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,pseudo_user_accent_scale_v1,,,120,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,pseudo_user_accent_scale_v1,,,184,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,pseudo_user_accent_scale_v1,,,2826,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,pseudo_user_accent_scale_v1,,,30,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,pseudo_user_accent_scale_v1,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,pronunciation_corrupted_probe_v1,,,25,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,pronunciation_corrupted_probe_v1,,,31,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,pronunciation_corrupted_probe_v1,,,30,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,pronunciation_corrupted_probe_v1,,,344,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,pronunciation_corrupted_probe_v1,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,carrier_templates_v1,,,1,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,carrier_templates_v1,,,20,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,carrier_templates_v1,,,18,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,carrier_templates_v1,,,18,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,carrier_templates_v1,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,carrier_templates_v2,,,5,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,carrier_templates_v2,,,18,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,carrier_templates_v2,,,60,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,carrier_templates_v2,,,60,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,carrier_templates_v2,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,carrier_templates_v3,,,5,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,carrier_templates_v3,,,18,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,carrier_templates_v3,,,60,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,carrier_templates_v3,,,115,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,carrier_templates_v3,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,dialog_200,,,68,,,,,,,,,,,,overlap_with=dialog_200
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,dialog_200,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,kenlm_wikipedia_sentences,,,500,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,kenlm_wikipedia_sentences,,,0,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=baseline_v1
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=training_scale_v1
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=pseudo_user_accent_scale_v1
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=pronunciation_corrupted_probe_v1
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v1
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v2
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=carrier_templates_v3
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=dialog_200
+overlap,char_lm_zh_sentences_large,,,0,,,,,,,,,,,,overlap_with=kenlm_wikipedia_sentences
+overlap,char_lm_zh_sentences_large,,,299,,,,,,,,,,,,overlap_with=char_lm_zh_sentences_large
+certified_contribution,baseline_v1,,,3300,,,,,,,,,,,,share=0.666
+certified_contribution,training_scale_v1,,,1655,,,,,,,,,,,,share=0.334

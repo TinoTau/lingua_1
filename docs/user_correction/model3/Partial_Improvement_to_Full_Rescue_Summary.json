@@ -1,0 +1,63 @@
+{
+  "phase": "PARTIAL_IMPROVEMENT_TO_FULL_RESCUE_AUDIT",
+  "run_id": "dialog200_full_pipeline_20260909_001141",
+  "baseline_id": "LINGUA_DIALOG200_BASELINE_V1",
+  "sample_method": "sort PARTIAL caseId ascending; equal-interval indices floor(i*60/15) for i=0..14",
+  "partial_sample_count": 15,
+  "partial_sample_ids": [
+    "d001",
+    "d011",
+    "d028",
+    "d045",
+    "d065",
+    "d084",
+    "d092",
+    "d102",
+    "d126",
+    "d133",
+    "d141",
+    "d155",
+    "d176",
+    "d184",
+    "d190"
+  ],
+  "full_rescue_count": 6,
+  "full_rescue_ids": [
+    "d079",
+    "d083",
+    "d124",
+    "d151",
+    "d159",
+    "d173"
+  ],
+  "residual_class_counts": {
+    "MULTI_ERROR_SENTENCE": 8,
+    "ASR_INFORMATION_LOSS": 4,
+    "INCOMPLETE_LOCAL_REPAIR": 1,
+    "REMAINING_PHONETIC_ERROR": 1,
+    "REMAINING_LEXICAL_ERROR": 1
+  },
+  "single_error_partial_count": 2,
+  "multi_error_partial_count": 13,
+  "single_candidate_before_kenlm_count": 5,
+  "better_complete_candidate_present_count": 2,
+  "asr_information_loss_count": 4,
+  "unknown_count": 0,
+  "incomplete_local_repair_count": 1,
+  "dominant_pattern": "MULTI_ERROR_SENTENCE",
+  "dominant_pattern_count": "8/15",
+  "hypotheses": {
+    "H1_multi_error_dominant": true,
+    "H2_better_complete_candidate_often": false,
+    "H3_single_candidate_before_kenlm_often": false,
+    "H4_asr_information_loss_dominant": false,
+    "H5_no_single_pattern": false
+  },
+  "full_rescue_contrast_note": "6/6 FULL_RESCUE are essentially Traditional→Simplified script normalization of already-correct content; not multi-error ASR repairs",
+  "MODEL3_REOPEN_REQUIRED": "NO",
+  "RETRY_ARCHITECTURE_REOPEN_REQUIRED": "NO",
+  "PRODUCTION_CODE_CHANGE": "NONE",
+  "KNOWN_DEFERRED_PERFORMANCE_ISSUE": "FW_UNATTRIBUTED_REMAINDER timing",
+  "ONE_NEXT_AUDIT": "MULTI_ERROR_REPAIR_COVERAGE_TARGETED_AUDIT",
+  "verdict": "PARTIAL_TO_FULL_AUDIT_PASS_DOMINANT_PATTERN_FOUND"
+}

@@ -1,0 +1,95 @@
+{
+  "phase": "MODEL3_V1_TARGETED_TRAINING_DATA_REDESIGN",
+  "date": "2026-08-29",
+  "mode": "DESIGN_SSOT_FREEZE_ONLY",
+  "redesignVerdict": "REDESIGN_READY_FOR_IMPLEMENTATION",
+  "architectureVerdict": "FROZEN_ARCHITECTURE_STILL_VALID",
+  "trainingExecutionGate": "OPEN",
+  "doNotTrainInThisPhase": true,
+  "recommendedNextPhase": "MODEL3_V1_TRAINING_DATA_REDESIGN_IMPLEMENTATION",
+  "labelContractV2": {
+    "keep": "Non-Anchor plausible interpretation; no justified bounded local Retry",
+    "retry": "Non-Anchor suspicious; bounded local Retry structurally applicable; NOT exact-span Recall required",
+    "exclude": "AMBIGUOUS_EXCLUDE and unrepairable unknown; never silent KEEP",
+    "trainingClasses": [
+      "NON_ANCHOR_VALID_KEEP",
+      "NON_ANCHOR_ERROR_RETRY",
+      "ANCHOR_KEEP",
+      "HARD_KEEP",
+      "UNREPAIRABLE_KEEP",
+      "AMBIGUOUS_EXCLUDE",
+      "UNREPAIRABLE_EXCLUDE"
+    ]
+  },
+  "regionProjection": {
+    "malformedRegionSource": "reference-current alignment + corruption bounds",
+    "anchorStopsExpansion": true,
+    "retryTriggerDensityPolicy": "REGION_BOUNDED_FULL_COVERAGE",
+    "multiCharRegionUsesExistingFineSpans": true,
+    "doNotForceMultiCharFineSpan": true
+  },
+  "phoneticCompatible": {
+    "oldRole": "TRAINING_ONLY_HARD_RETRI_LABEL_GATE",
+    "newRole": "DEMOTE_TO_SAMPLE_EVIDENCE"
+  },
+  "referenceReachable": {
+    "oldRole": "HARD_RETRI_LABEL_GATE",
+    "newRole": "RETIRE_FROM_RETRY_LABEL",
+    "replacementTrainingField": "regionRetryApplicable"
+  },
+  "classBalance": {
+    "currentEligible": { "keepRatio": 0.985, "retryRatio": 0.0145 },
+    "estimatedPostRelabelEligible": { "keepRatioMin": 0.92, "keepRatioMax": 0.96, "retryRatioMin": 0.04, "retryRatioMax": 0.08 },
+    "recommendedStrategy": "BOTH",
+    "samplingRebalance": true,
+    "classWeighting": "after_v2_baseline_measurement_modest_2_to_4x",
+    "force5050": false
+  },
+  "targetFineSpanLengthDistribution": {
+    "1charPctMin": 94,
+    "1charPctMax": 98,
+    "2charPctMin": 2,
+    "2charPctMax": 5,
+    "3plusPctMax": 1
+  },
+  "realEvalV1": {
+    "id": "MODEL3_REAL_RETRY_EVAL_V1",
+    "heldOutFromTraining": true,
+    "dialog200ExcludedFromTrain": true,
+    "buckets": [
+      "R-REAL-HIGH",
+      "R-REAL-KEEP",
+      "R-REGION",
+      "R-ANCH-ADJ",
+      "R-LEN2",
+      "R-FALSE-RETRY",
+      "R-OUT-SCOPE",
+      "R-UNKNOWN-HOLD"
+    ],
+    "highConfidenceRetryCasesMin": 13
+  },
+  "validationPolicy": {
+    "requireSyntheticAndReal": true,
+    "syntheticOnlyInsufficient": true
+  },
+  "dataRegenerationScope": "PARTIALLY_REGENERATED",
+  "dataRegenerationDetail": {
+    "relabelExistingJsonl": true,
+    "partialNewGeneration": true,
+    "fullRegenerationRequired": false
+  },
+  "oldModelStatus": "KEEP_AS_BASELINE",
+  "oldCheckpoint": "MODEL3_SYNTHETIC_V1 seed_2026082520",
+  "featureCapacityReviewRequired": false,
+  "textOnly": true,
+  "ttsRevived": false,
+  "unknownDialog200Classification": {
+    "autoLabelForbidden": true,
+    "outcomes": ["HIGH_RETRY", "HIGH_KEEP", "OUT_OF_SCOPE", "AMBIGUOUS"],
+    "inventorySource": "model3_real_retry_target_inventory.csv"
+  },
+  "productionModified": false,
+  "trainingCodeModified": false,
+  "trainingDataModified": false,
+  "modelTrained": false
+}

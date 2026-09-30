@@ -1,0 +1,72 @@
+{
+  "phase": "LINGUA_ANCHOR_PROTECTION_AUTHORITY_PREDEVELOPMENT_AUDIT",
+  "date": "2026-09-14",
+  "mode": "READ_ONLY_HISTORICAL_SSOT_FIRST",
+  "baseline_identity": "PASS",
+  "historical_anchor_ssot_found": "YES",
+  "historical_anchor_ssot_conflict": "NO",
+  "current_or_rule_authority": "DERIVED_BUT_SUPPORTED",
+  "authorities": {
+    "BASE_EXACT": "NONE",
+    "BASE_FUZZY": "NONE",
+    "DOMAIN_TERM": "CONDITIONAL",
+    "PASSIVE_DOMAIN_WEAK": "CONDITIONAL",
+    "RETAINED_DOMAIN": "SUPPORT_ONLY",
+    "PROFILE_DOMAIN": "AUTOMATIC",
+    "PROFILE_RETRIEVAL": "NONE",
+    "PROFILE_PRONUNCIATION": "AUTOMATIC"
+  },
+  "profile_domain_counts_as_model2_repair_evidence": "NO",
+  "profile_domain_counts_as_domain_evidence": "YES",
+  "profile_domain_automatic_anchor_authority": "YES",
+  "profile_pronunciation_automatic_anchor_authority": "YES",
+  "profile_domain_double_role": "INTENTIONAL",
+  "direct_boolean_effect": "YES",
+  "semantic_classification_effect": "YES",
+  "model2_evidence_boolean_is_business_valid": "PARTIAL",
+  "evidence_independence_required": "NOT_SPECIFIED",
+  "a1_a3_first_proven_drift": "NONE",
+  "a4_c1_authority_resolved": "YES",
+  "model2_changed_position_coverage": "CONFIRMED_INFORMATION_LOSS_DEFERRED",
+  "partial_anchor_acp_required_now": "NO",
+  "model3_change_required": "NO",
+  "model2_semantic_change_required": "NO",
+  "jobresult_change_required": "NO",
+  "product_code_change_this_round": "NO",
+  "user_decision_required": "YES",
+  "user_decision_items": [
+    "Keep frozen PROFILE_DOMAIN (+ Domain soft Conditional) automatic Anchor authority (O1) OR revise Anchor SSOT via ACP to demote PROFILE_DOMAIN and/or soft Domain protection (O2/O3)"
+  ],
+  "user_decision_options_item1": [
+    {
+      "id": "O1",
+      "name": "KEEP_FROZEN",
+      "recommended_by_this_audit": false,
+      "note": "Frozen SSOT currently supports O1; audit does not pick"
+    },
+    {
+      "id": "O2",
+      "name": "DEMOTE_PROFILE_DOMAIN_MODEL2_ANCHOR",
+      "requires_acp": true
+    },
+    {
+      "id": "O3",
+      "name": "DEMOTE_SOFT_MISMATCHED_DOMAIN_AND_PROFILE_DOMAIN",
+      "requires_acp": true,
+      "note": "Prior CONTRACT_A rejected — do not silently revive"
+    }
+  ],
+  "secondary_impl_drift_non_blocking_a1_a3": {
+    "item": "PROFILE_RETRIEVAL included in hasModel2Evidence",
+    "ssot": "PROFILE_RETRIEVAL alone are not Model2 Anchors",
+    "class": "ADAPTER_RESTORE_CANDIDATE"
+  },
+  "one_next_owner": "USER_ARCHITECTURE_DECISION_REQUIRED",
+  "one_next_delta": "Explicit user architecture decision on whether PROFILE_DOMAIN / soft Domain automatic Model3-RETRY suppression remains frozen as written in model3_anchor_contract_v1.md; do not treat A1–A3 as unauthorized-adapter drift. Secondary (non-blocking A1–A3): note PROFILE_RETRIEVAL inclusion in hasModel2Evidence contradicts SSOT for later restore-only delta.",
+  "primary_ssot": "docs/user_correction/model3/model3_anchor_contract_v1.md",
+  "artifacts": [
+    "LINGUA_ANCHOR_PROTECTION_AUTHORITY_AUDIT.md",
+    "LINGUA_ANCHOR_PROTECTION_AUTHORITY_SUMMARY.json",
+    "LINGUA_ANCHOR_PROTECTION_AUTHORITY_MATRIX.json"
+  ]
+}

@@ -1,0 +1,8 @@
+path,change_type,notes
+training/model2_v3/scripts/run_v3_stage_j_prod_benchmark_expand.py,ADD,Phase A benchmark expand
+training/model2_v3/scripts/run_v3_stage_j_prod_pd_postexpand.py,ADD,P+D post-expand from D FineSpans
+training/model2_v3/scripts/run_v3_stage_j_j1_controlled_joint.py,ADD,J1 controlled joint train+eval
+training/model2_v3/policy/stage_d_target_identity_v1.py,KEEP,identity contract from D1
+training/model2_v3/experiments/v3_stage_j_j1_prod/,ADD,artifacts+checkpoint
+docs/user_correction/Lingua_Model2_V3_StageJ_Production_Benchmark_Expansion_Report_2026_08_17.md,ADD,report
+docs/user_correction/Lingua_Model2_V3_StageJ_J1_Controlled_Joint_Training_Acceptance_Report_2026_08_17.md,ADD,report

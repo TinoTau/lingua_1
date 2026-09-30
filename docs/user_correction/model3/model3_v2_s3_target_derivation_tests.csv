@@ -1,0 +1,19 @@
+testsRun,failures,errors,wasSuccessful,detail
+10,0,0,True,"test_emit_script_does_not_map_no_primary_to_no_repairable (training.model3_dataset.scripts.test_s3_target_scope_derivation.EvaluatorSemanticGuardTests)
+New authoritative emit must not use the old bug path as primary class. ... ok
+test_ambiguous_long_rewrite (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_anchor_barrier_outside_contract (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_deletion_no_finespan_is_no_repairable (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_derivation_has_no_case_id_branch (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_final_already_equivalent_punct (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_no_primary_map_is_not_no_repairable (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests)
+Missing map must NOT become NO_REPAIRABLE_TARGET — derivation decides. ... ok
+test_reference_diff_valid_local_alignment_eligible (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_trad_simp_folds_to_equivalent (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+test_unequal_length_and_multi_region (training.model3_dataset.scripts.test_s3_target_scope_derivation.TargetScopeSemanticsTests) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+OK
+"

@@ -1,0 +1,6 @@
+stage,ownerFunction,ownerFile,inputContract,outputContract,failureMechanism,casesAffected
+deriveRetryRegions,deriveRetryRegions,model3-retry-region.ts,RETRY decisions + PathFineSpans,Model3RetryRegion[],Region excludes repair interval,34
+resegmentRetryRegionWithLattice,resegmentRetryRegionWithLattice,model3-retry-region-resegment.ts,region slice + SSOT acoustic,ResegmentRetryRegionResult,Lattice no path / empty slice,0
+fallbackRegionLocalSpans,fallbackRegionLocalSpans,model3-retry-region-resegment.ts,region.sourceSpanIds + pathFineSpans,RetryRegionLocalSpan[],First-pass boundary lock,0
+mapLocalSpansToGlobal,mapLocalSpansToGlobal,model3-retry-region-resegment.ts,local pathFineSpans + region offset,global RetryRegionLocalSpan[],Wrong global raw/syllable coords,0
+routeModel3Retry,routeModel3Retry,model3-retry-router.ts,local span bounds,recallSpanTopKV2 args,Wrong windowText / span selection,0

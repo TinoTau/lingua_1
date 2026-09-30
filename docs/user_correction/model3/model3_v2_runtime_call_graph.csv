@@ -1,0 +1,27 @@
+graph,node_order,node,function,file,scope,shared_production_impl,affects_runtime_text
+production,1,ASR,asr-step pipeline,main/src/pipeline/steps/asr-step.ts,production,yes,yes
+production,2,FW orchestrator,runFwDetectorOrchestrator,main/src/fw-detector/fw-detector-orchestrator.ts,production,yes,yes
+production,3,FW v4 path,runFwDetectorV4Path,main/src/fw-detector/fw-detector-v4-path.ts,production,yes,yes
+production,4,Span assembly,runSpanAssemblyV4Orchestrator,main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,production,yes,yes
+production,5,Recall windows,recallSpanTopKV2 (via lattice),main/src/lexicon-v2/recall-span-topk-v2.ts,production,yes,indirect
+production,6,Model2,runModel2PathStep (orchestrator),main/src/fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts,production,yes,indirect
+production,7,Model3 path step,runModel3PathStep,main/src/model3-runtime/run-model3-path-step.ts,production,yes,yes
+production,7a,Model3 prepare,prepareModel3PathUpstream,main/src/model3-runtime/run-model3-path-step.ts,production,yes,yes
+production,7b,Domain Vote,voteUtteranceDomainFromPool,main/src/fw-detector/span-assembly-shared/utterance-domain-vote.ts,production,yes,yes
+production,7c,Model3 pack/infer,inferPackedDecisions+packModel3SpanInferFields,main/src/model3-runtime/run-model3-path-step.ts,production,yes,yes
+production,7d,Model3 complete,completeModel3PathFromUpstream,main/src/model3-runtime/run-model3-path-step.ts,production,yes,yes
+production,8,Retry router,routeModel3Retry,main/src/model3-runtime/model3-retry-router.ts,production,yes,yes
+production,9,Local resegment,resegmentRetryRegionWithLattice,main/src/model3-runtime/model3-retry-region-resegment.ts,production,yes,yes
+production,10,Retry Recall,recallSpanTopKV2 (callback),main/src/lexicon-v2/recall-span-topk-v2.ts,production,yes,yes
+production,11,Assembly,completeDomainAwareAssemblyFromVote+buildSentenceCandidates,main/src/fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts,production,yes,yes
+production,12,Cross-path merge,mergeCrossPathSentenceCandidates,main/src/fw-detector/span-assembly-v4/merge-cross-path-sentence-candidates.ts,production,yes,yes
+production,13,KenLM,runFwSentenceRerankFromPrefilled,main/src/fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts,production,yes,yes
+acceptance_fork,1,same as production through Model3 prepare,same nodes,same files,test-gated (MODEL3_ACCEPTANCE_CAUSAL_FORK=1),yes,no (S3 branch only for output)
+acceptance_fork,2,causal fork,runModel3PathStepCausalFork,main/src/model3-runtime/run-model3-path-step.ts,test-gated,yes,no
+acceptance_fork,3,baseline complete,completeModel3PathFromUpstream+keepOverrideFromPacked,main/src/model3-runtime/run-model3-path-step.ts,test-gated,yes,no
+acceptance_fork,4,S3 complete,completeModel3PathFromUpstream+s3Decisions,main/src/model3-runtime/run-model3-path-step.ts,test-gated,yes,yes
+acceptance_fork,5,baseline KenLM trace,runFwSentenceRerankFromPrefilled (baseline pool),main/src/fw-detector/fw-detector-v4-path.ts,test-gated,yes,no
+signal_loss_audit,1,pipeline replay,/run-pipeline-with-audio,tests/run-retry-reinterpretation-signal-loss-audit.mjs,audit,yes,no
+signal_loss_audit,2,trace read,retry_regions.resegmentOk from dialog200_path_trace,tests/run-retry-reinterpretation-signal-loss-audit.mjs,audit,PRODUCTION_TRACE,yes,no
+signal_loss_audit,3,lexicon diagnostic,LexiconRuntimeV2.lookupBaseByExactSurfaceAndPinyin,tests/run-retry-reinterpretation-signal-loss-audit.mjs,audit,AUDIT_SEMANTIC_MISMATCH,no,no
+signal_loss_audit,4,materializable eval,evaluateMaterializableTargetV1,tests/lib/materializable-target-v1.mjs,audit,DIAGNOSTIC_ON_TRACE,no,no

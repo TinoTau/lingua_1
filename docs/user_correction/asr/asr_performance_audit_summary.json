@@ -1,0 +1,73 @@
+{
+  "phase": "ASR_FASTER_WHISPER_CONTROLLABLE_PERFORMANCE_SURFACE_AUDIT",
+  "generatedAt": "2026-09-05T08:10:00Z",
+  "verdict": "ASR_CONTROLLABLE_PERFORMANCE_AUDIT_PASS_MEDIUM_VALUE_OPTIMIZATION_FOUND",
+  "MODE": "READ_ONLY",
+  "PRODUCTION_CHANGE": false,
+  "MODEL_INTERNAL_MODIFICATION": false,
+  "PRIMARY_QUESTION_ANSWER": {
+    "is_latency_mostly_unavoidable_model_inference": "PARTIALLY_YES_WITHIN_EACH_CALL",
+    "meaningful_Lingua_controlled_portion": "YES — multi-batch energy-split ASR HTTP calls (~34% of recent jobs ×2) + unused main-process WhisperModel load + unattributed HTTP/VAD/Tone envelope; prior 57.4% is NOT pure Faster-Whisper",
+    "what_Lingua_can_remove_safely_without_quality_decision": "Primarily startup/VRAM duplicate model load and likely logging IO; steady-state utterance savings from safe-only changes are NOT proven large",
+    "what_requires_decision": "Energy-split / stream-batch merge policy; compute_type; VAD params; any timestamp/language/beam change"
+  },
+  "MODEL_LOAD_PER_UTTERANCE": "NO",
+  "ASR_INFERENCE_CALLS_PER_UTTERANCE": {
+    "expected": 1,
+    "observed_recent_log_jobs": { "n": 87, "calls_1": 57, "calls_2": 30, "multi_rate": 0.345 },
+    "causal_owner_when_gt_1": "Node AudioAggregator.splitAudioByEnergy + stream batcher (NOT ASR rerun; disableAsrRerun=true)",
+    "production_rerun": false
+  },
+  "blackBox": {
+    "inside": ["Faster-Whisper neural inference", "CTranslate2", "CUDA kernels", "decoder internals", "list(segments) compute"],
+    "outside_eligible": ["service lifecycle", "config", "audio prep", "Silero VAD", "HTTP/IPC", "queue", "Node energy split", "response formatting", "logging"]
+  },
+  "timingEvidence": {
+    "prior_pipeline_p50_ms": 7400,
+    "prior_A_ASR_residual_p50_ms": 3489,
+    "prior_A_share_percent": 57.43,
+    "prior_A_definition": "pipeline_ms - fw_detector_step_ms — NOT pure FW inference",
+    "perform_asr_warning_cohort": { "n": 94, "p50_s": 1.59, "p95_s": 7.23, "max_s": 21.82 },
+    "list_segments_cohort": { "n": 187, "p50_s": 0.916, "p95_s": 6.814, "max_s": 9.286 },
+    "audio_duration_warning_cohort_s": { "p50": 4.0, "p95": 5.92, "max": 7.72 },
+    "RTF_warning_cohort": { "p50": 0.32, "p95": 3.53, "max": 4.11 },
+    "T0_T10_complete": false
+  },
+  "DECISION_REQUIRED_BEFORE_OPTIMIZATION": [
+    {
+      "item": "Reduce or disable Node energy-split multi-batch ASR for complete utterances",
+      "required": true,
+      "bucket": "B",
+      "value": "MEDIUM_VALUE_TO_HIGH_BOUNDED"
+    },
+    {
+      "item": "compute_type / beam / VAD semantic params",
+      "required": true,
+      "bucket": "B",
+      "value": "UNPROVEN"
+    },
+    {
+      "item": "Split models.py so main loads VAD only (remove unused WhisperModel)",
+      "required": false,
+      "bucket": "A",
+      "value": "MEDIUM_VALUE_STARTUP_VRAM_LOW_STEADY_STATE"
+    },
+    {
+      "item": "Hot-path logging reduction",
+      "required": false,
+      "bucket": "A",
+      "value": "LOW_VALUE_UNTIL_MEASURED"
+    }
+  ],
+  "recommendation": {
+    "immediate_ASR_engineering": "NO blind latency surgery on Faster-Whisper params",
+    "next_phase": "ASR_BOUNDARY_TIMER_ISOLATION_AND_MULTI_BATCH_COST_QUANTIFICATION",
+    "if_inference_dominates_after_instrumentation": "ASR_INTEGRATION_ALREADY_EFFICIENT / FUTURE_MODEL_REPLACEMENT — no model-internal work"
+  },
+  "artifacts": [
+    "Lingua_ASR_FasterWhisper_Controllable_Performance_Surface_Audit.md",
+    "asr_performance_surface_inventory.csv",
+    "asr_runtime_configuration.json",
+    "asr_performance_audit_summary.json"
+  ]
+}

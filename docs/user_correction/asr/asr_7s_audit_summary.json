@@ -1,0 +1,64 @@
+{
+  "phase": "ASR_7S_LATENCY_CASE_LEVEL_CAUSAL_AUDIT",
+  "generatedAt": "2026-09-05T09:40:00Z",
+  "verdict": "ASR_7S_CAUSAL_AUDIT_PASS_MIXED_OWNERS",
+  "MODE": "READ_ONLY",
+  "CASE_LEVEL_CAUSAL_JOIN_timing_dump_to_list_segments": "FAILED",
+  "CASE_LEVEL_CAUSAL_JOIN_service_log_jobs": "OK",
+  "join_failure_reason": [
+    "runPipelineWithAudio overwrites caller jobId with audio-test-${Date.now()}",
+    "timing dump stores caseId but not ASR job_id / asr_latency_ms / list(segments) ms",
+    "asr_est_ms = pipeline_ms - fw_detector_step_ms is NOT ASR boundary latency"
+  ],
+  "cohorts": {
+    "timing_dump_asr_est_ge7_excl_d094": 52,
+    "service_log_list_segments_band_6_to_12s_all_history": 996,
+    "service_log_list_segments_band_6_to_12s_2026_09": 29,
+    "service_log_multi_sum_ge6_max_lt6_all_history": 975,
+    "service_log_multi_sum_ge6_max_lt6_2026_09": 180
+  },
+  "primary_owners": {
+    "A_single_list_segments_ge6_on_short_audio": {
+      "proven": true,
+      "recent_sep_band_n": 29,
+      "classification_majority": "SINGLE_CALL_MODEL_INFERENCE_SLOW",
+      "audio_p50_s": 3.82,
+      "rtf_p50": 1.842,
+      "audio_lt_4s": 19,
+      "audio_ge_5s": 2,
+      "non_model_within_perform_asr_ms": "typically 20-120ms (NOT the 7s)"
+    },
+    "B_self_serialized_multi_segment_sum_ge6_without_single_ge6": {
+      "proven": true,
+      "sep_2026_n": 180,
+      "classification": "SELF_SERIALIZED_MULTI_SEGMENT / EXPECTED_LONG_AUDIO_MULTI_SEGMENT",
+      "example": "lists=[5.479, 3.827] sum=9.31s auds=[5.9s, 1.1s]"
+    },
+    "C_cross_job_queue_contention": {
+      "proven": false,
+      "note": "no other worker starts observed during list(segments); QUEUE_MAX=1 self-serialization only for multi-segment call2+"
+    },
+    "D_non_model_envelope_dominant": {
+      "proven": false,
+      "note": "perform_asr - list(segments) usually tens of ms"
+    }
+  },
+  "seven_second_answers": {
+    "1_was_audio_long": "Often NO for list>=6 band (p50 audio 3.82s). Fixture max in dialog_200 is 8.034s.",
+    "2_exact_duration": "Per-row audioMs in asr_7s_slow_cases.csv / segment audio_len/16000",
+    "3_split_by_AudioAggregator": "Sometimes (multi HTTP same job_id). Not required to create a ~7s list(segments).",
+    "4_asr_call_count": "Recent band: 18 single / 11 multi-job rows",
+    "5_each_call_duration": "See inferenceMs[] / thisCallInferenceMs",
+    "6_multi_explains_7s": "Sometimes YES via sum of <6s calls (180 Sep jobs). NO for the list>=6 band itself (call already >=6s).",
+    "7_single_FW_took_7s": "YES — primary for list(segments) in [6,12]s",
+    "8_queue": "No cross-job contention proven; multi-segment call2+ is self-serialization",
+    "9_unexplained": "Root cause of RTF>>1 (cold GPU / driver / thermal / other process) NOT isolated"
+  },
+  "artifacts": [
+    "Lingua_ASR_7s_Latency_Case_Level_Causal_Audit.md",
+    "asr_7s_slow_cases.csv",
+    "asr_7s_audit_summary.json",
+    "asr_7s_case_timing_raw.jsonl",
+    "asr_7s_case_identity_join.csv"
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "$schema_name": "LINGUA_DIALOG2000_V2_PILOT200_Schema",
+  "dataset_family": "LINGUA_DIALOG2000_V2",
+  "dataset_stage": "PILOT200",
+  "dataset_version": "V1",
+  "status": "DESIGN_FROZEN",
+  "frozen_date": "2026-09-11",
+  "notes": [
+    "Does NOT extend production UserProfileV1 schema.",
+    "Profile injection must use existing SessionBootstrap + UserProfileV1.",
+    "200 cases = unique audio/reference identities; profile conditions are evaluation runs."
+  ],
+  "production_profile_contract": {
+    "type": "UserProfileV1",
+    "construction_preferred": "synthetic_correction_history → ProfileDelta → UserProfileV1",
+    "construction_allowed_for_unit_only": "direct_fixture",
+    "forbidden_overrides": [
+      "testOnlyModel2Profile",
+      "model2ProfileOverride"
+    ]
+  },
+  "active_phonetic_relations": [
+    "n_l",
+    "z_zh",
+    "ch_c",
+    "sh_s",
+    "eng_en",
+    "in_ing",
+    "h_f"
+  ],
+  "case_manifest_schema": {
+    "required_fields": {
+      "caseId": { "type": "string", "pattern": "^p2_[uU][0-9]{3}_[0-9]{3}$", "example": "p2_u001_001" },
+      "datasetId": { "type": "string", "const": "LINGUA_DIALOG2000_V2_PILOT200" },
+      "datasetVersion": { "type": "string", "const": "V1" },
+      "userId": { "type": "string", "enum": ["U001", "U002", "U003", "U004", "U005"] },
+      "profileStage": {
+        "type": "string",
+        "enum": ["P0", "P1", "P2", "P3"],
+        "description": "Intended CORRECT_PROFILE maturity for primary evaluation of this case; NO_PROFILE/WRONG still runnable."
+      },
+      "domain": {
+        "type": "string",
+        "enum": [
+          "general_daily",
+          "software_meeting",
+          "travel_hotel",
+          "food_cafe",
+          "medical",
+          "retail_service"
+        ]
+      },
+      "difficulty": { "type": "string", "enum": ["short", "medium", "long", "multi_clause"] },
+      "referenceText": {
+        "type": "string",
+        "description": "Canonical intended utterance; frozen before any ASR run."
+      },
+      "audioId": { "type": "string" },
+      "audioPath": { "type": "string" },
+      "ttsEngine": { "type": "string", "example": "piper" },
+      "voiceId": { "type": "string" },
+      "speakerId": { "type": "string" },
+      "relationFamily": {
+        "type": ["string", "null"],
+        "enum": ["n_l", "z_zh", "ch_c", "sh_s", "eng_en", "in_ing", "h_f", null],
+        "description": "null for CLEAN cases"
+      },
+      "relationDirection": {
+        "type": ["string", "null"],
+        "description": "Authoritative ACTIVE_SET / OPPOSITE_DIRECTION label; null if clean"
+      },
+      "perturbationApplied": { "type": "boolean" },
+      "perturbationSeverity": {
+        "type": ["string", "null"],
+        "enum": ["MILD", "MODERATE", "STRONG", null]
+      },
+      "profileRef": {
+        "type": "string",
+        "description": "Pointer to profile artifact / build set for CORRECT_PROFILE"
+      },
+      "profileBuildSetId": { "type": "string" },
+      "split": { "type": "string", "enum": ["DEV", "VALIDATION", "HOLDOUT"] },
+      "holdoutClass": {
+        "type": ["string", "null"],
+        "enum": [
+          "NONE",
+          "UNSEEN_LEXICAL",
+          "WRONG_PROFILE_CTRL",
+          "CLEAN_CTRL",
+          "MULTI_RELATION",
+          "USER_PATTERN_CTRL",
+          null
+        ]
+      },
+      "seed": { "type": "integer" },
+      "generatorVersion": { "type": "string" },
+      "expectedBehaviorClass": {
+        "type": "string",
+        "enum": [
+          "CLEAN_PRESERVE",
+          "PROFILE_TARGET",
+          "WRONG_PROFILE_CONTROL",
+          "ASR_RESILIENCE_CONTROL"
+        ]
+      }
+    },
+    "forbidden_fields": [
+      "expectedWrongAsrText",
+      "expectedReplacement",
+      "expectedFinalText",
+      "knownAnswerMap",
+      "lexiconPatch"
+    ],
+    "recommended_optional_fields": {
+      "profileBuildTermIds": { "type": "array", "items": { "type": "string" } },
+      "evaluationTargetTermIds": { "type": "array", "items": { "type": "string" } },
+      "secondaryRelationFamily": { "type": ["string", "null"] },
+      "notes": { "type": "string" }
+    }
+  },
+  "dataset_manifest_schema": {
+    "required_fields": [
+      "dataset_id",
+      "version",
+      "build_id",
+      "generator_version",
+      "seed",
+      "case_count",
+      "relation_distribution",
+      "domain_distribution",
+      "profile_distribution",
+      "split_distribution",
+      "voice_distribution",
+      "user_assignment"
+    ],
+    "case_count_const": 200,
+    "split_targets": { "DEV": 120, "VALIDATION": 60, "HOLDOUT": 20 },
+    "clean_target_min": 40
+  },
+  "audio_identity_schema": {
+    "required_fields": [
+      "audioId",
+      "byte_size",
+      "sha256",
+      "sample_rate",
+      "channels",
+      "duration"
+    ]
+  },
+  "profile_metadata_schema": {
+    "description": "Dataset-side metadata wrapping production UserProfileV1; does not alter UserProfileV1.",
+    "required_fields": {
+      "profileRef": { "type": "string" },
+      "userId": { "type": "string" },
+      "profileStage": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] },
+      "constructionMethod": {
+        "type": "string",
+        "enum": ["CORRECTION_HISTORY_PROFILE_DELTA", "DIRECT_FIXTURE_UNIT_ONLY"]
+      },
+      "dominantRelations": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 0,
+        "maxItems": 3
+      },
+      "profileBuildSetId": { "type": "string" },
+      "profileBuildTermIds": { "type": "array", "items": { "type": "string" } },
+      "userProfileV1Ref": {
+        "type": "string",
+        "description": "Path/id of serialized UserProfileV1 blob used at SessionBootstrap"
+      }
+    }
+  },
+  "run_identity_schema": {
+    "description": "One evaluation execution of a case under a profile condition.",
+    "required_fields": {
+      "caseId": { "type": "string" },
+      "profileCondition": {
+        "type": "string",
+        "enum": ["NO_PROFILE", "CORRECT_PROFILE", "WRONG_PROFILE"]
+      },
+      "profileStageUsed": {
+        "type": ["string", "null"],
+        "enum": ["P0", "P1", "P2", "P3", null]
+      },
+      "wrongProfileUserId": { "type": ["string", "null"] },
+      "runId": { "type": "string" },
+      "rawMergedAsrText": { "type": "string" },
+      "rawAsrHash": { "type": "string" },
+      "finalPostprocessText": { "type": "string" },
+      "asrReplayVarianceFlag": {
+        "type": "string",
+        "enum": ["NONE", "ASR_REPLAY_VARIANCE", "PROFILE_ATTRIBUTION_AMBIGUOUS"]
+      }
+    }
+  },
+  "validators_required_before_baseline": [
+    "MANIFEST_VALID",
+    "PROFILE_LEXICAL_ISOLATION_PASS",
+    "RELATION_DISTRIBUTION_PASS",
+    "DOMAIN_DECONFOUND_PASS",
+    "NO_KNOWN_TEST_LEAK",
+    "AUDIO_IDENTITY_COMPLETE",
+    "REFERENCE_FROZEN"
+  ]
+}

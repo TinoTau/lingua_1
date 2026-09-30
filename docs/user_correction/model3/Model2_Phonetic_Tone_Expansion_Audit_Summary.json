@@ -1,0 +1,68 @@
+{
+  "PHASE": "MODEL2_PHONETIC_TONE_EXPANSION_EFFECTIVENESS_AUDIT",
+  "RUN_ID": "dialog200_full_pipeline_20260909_001141",
+  "PROBE_TOTAL": 12,
+  "PROBE_ACCEPTED": 12,
+  "PROBE_REJECTED": 0,
+  "PROBE_ACCEPTED_FAILURE": 10,
+  "PROBE_ACCEPTED_CONTROL": 2,
+  "LEXICON_TERM_PRESENT_COUNT": 7,
+  "LEXICON_TERM_ABSENT_COUNT": 3,
+  "BASE_RECALL_CORRECT_PRESENT_COUNT": 1,
+  "MODEL2_INVOKED_COUNT": 10,
+  "MODEL2_INPUT_SPAN_PRESENT_COUNT": 0,
+  "MODEL2_TONE_FEATURE_PRESENT_COUNT": 0,
+  "MODEL2_USER_PROFILE_PRESENT_COUNT": "NOT_OBSERVABLE_IN_DUMP",
+  "MODEL2_ADDED_CORRECT_TERM_COUNT": 0,
+  "PRIMARY_FINDING_COUNTS": {
+    "LEXICON_TERM_ABSENT": 3,
+    "MODEL2_REQUIRED_FEATURE_NOT_SUPPLIED": 6,
+    "BASE_RECALL_ALREADY_HAS_CORRECT_CANDIDATE": 1
+  },
+  "DOMINANT_FINDING": "MODEL2_REQUIRED_FEATURE_NOT_SUPPLIED",
+  "DOMINANT_FINDING_COUNT": 6,
+  "DOMINANT_FINDING_RATIO": 0.6,
+  "DOMINANT_MODEL2_FINDING_FOUND": true,
+  "control_success": [
+    {
+      "caseId": "d084",
+      "raw_span": "扫马",
+      "correct_term": "扫码",
+      "base_has": "YES",
+      "model2_added": "NO",
+      "note": "SUCCESS_NOT_ATTRIBUTABLE_TO_MODEL2"
+    },
+    {
+      "caseId": "d184",
+      "raw_span": "客互",
+      "correct_term": "客户",
+      "base_has": "YES",
+      "model2_added": "NO",
+      "note": "SUCCESS_NOT_ATTRIBUTABLE_TO_MODEL2"
+    }
+  ],
+  "code_audit": {
+    "model2_is": "user-conditioned candidate expansion via P/D retrieval ACTIONS",
+    "model2_is_not": "text correction / final selector / lexicon owner",
+    "tone_bias_consumed": false,
+    "phonetic_bias_consumed": true,
+    "empty_phonetic_bias_gates_P": true,
+    "neural_receives_tone_tensor": false,
+    "neural_receives_surface_correction_pairs": false,
+    "architecture_drift_hardcoded_typo_map": false,
+    "stage_j_checkpoint": "training/model2_v3/experiments/v3_stage_j_p_preservation/training/expA_frozen_trunk.pt"
+  },
+  "MODEL2_ARCHITECTURE_ALIGNED": "PARTIAL",
+  "MODEL2_RETRAIN_REQUIRED": "NO_THIS_PHASE",
+  "MODEL2_INTEGRATION_CHANGE_REQUIRED": "EVIDENCE_SUGGESTS_YES",
+  "MODEL3_REOPEN_REQUIRED": "NO",
+  "RETRY_ARCHITECTURE_REOPEN_REQUIRED": "NO",
+  "LEXICON_EXPANSION_REQUIRED": "DOES_NOT_SUGGEST",
+  "ONE_NEXT_AUDIT": "MODEL2_INTEGRATION_CONTRACT_REPAIR_AUDIT",
+  "PRODUCTION_CODE_CHANGE": "NONE",
+  "MODEL2_WEIGHT_CHANGE": "NONE",
+  "MODEL2_RETRAIN": "NONE",
+  "verdict": "MODEL2_EXPANSION_AUDIT_PASS_INTEGRATION_GAP_FOUND",
+  "model2OwnerSupported": false,
+  "architectureDrift": false
+}

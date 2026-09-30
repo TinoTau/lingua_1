@@ -1,0 +1,7 @@
+{
+  "frozen_design": "SameDomain is bucket grouping for parallel sentence generation — NOT hard admission filter for all candidates",
+  "implementation": "runDomainAwareAssembly generates one bucketSpanSets[] per retained domain; cross-domain domain_term excluded from non-matching buckets by design",
+  "insufficient_evidence_mode": "bucketDomain=null → base + fallback only",
+  "verdict": "PASS — multi-bucket generation matches frozen design; cross-domain exclusion is intentional not drift",
+  "samedomain_hard_filter_drift": false
+}

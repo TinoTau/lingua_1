@@ -1,0 +1,334 @@
+{
+  "phase": "MODEL3_V2_LOCALIZATION_TRAINING_CAUSALITY_AUDIT",
+  "verdict": "MODEL3_LOCALIZATION_CAUSALITY_PASS_TRAINING_POSITION_BIAS_PRIMARY",
+  "nextPhase": "MODEL3_V2_LOCALIZATION_TRAINING_DATA_CORRECTION_DESIGN_AUDIT",
+  "checkpoint": {
+    "modelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+    "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1",
+    "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+    "datasetBuildId": "prod_core_s3_build_20260830_v1"
+  },
+  "population16": {
+    "d008": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d022": "MODEL3_TARGET_PARTIAL_COVERAGE",
+    "d040": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d042": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d051": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d054": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d065": "MODEL3_TARGET_FALSE_NEGATIVE",
+    "d085": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d094": "MODEL3_TARGET_PARTIAL_COVERAGE",
+    "d102": "MODEL3_TARGET_PARTIAL_COVERAGE",
+    "d109": "MODEL3_TARGET_FALSE_NEGATIVE",
+    "d114": "MODEL3_TARGET_FALSE_NEGATIVE",
+    "d129": "MODEL3_TARGET_PARTIAL_COVERAGE",
+    "d138": "MODEL3_TARGET_FALSE_NEGATIVE",
+    "d172": "MODEL3_RETRY_SHIFTED_NEARBY",
+    "d175": "MODEL3_RETRY_SHIFTED_NEARBY"
+  },
+  "featureReplayParity": {
+    "totalSpans": 30,
+    "failures": 0,
+    "passRate": 1.0
+  },
+  "trainingSpanCount": 1517309,
+  "trainingLabelCounts": {
+    "KEEP": 1505118,
+    "RETRY": 12191
+  },
+  "trainingFirstPassCandNonzero": 0,
+  "firstPassCand": {
+    "productionNonzeroSpans": 14,
+    "productionTotalSpans": 30,
+    "trainingNonzeroFraction": 0.0,
+    "note": "captured from rawFirstPassCandidateCount in inference_input_traces; not margin CSV default"
+  },
+  "featureContractMismatchCount": 0,
+  "rootCauseDistribution16": {
+    "TRAIN_RUNTIME_FEATURE_DISTRIBUTION_MISMATCH": 3,
+    "TRAINING_COVERAGE_GAP": 8,
+    "MODEL_GENERALIZATION_FAILURE": 5
+  },
+  "provisional11141": {
+    "MODEL_GENERALIZATION_FAILURE": 11,
+    "TRAIN_RUNTIME_FEATURE_DISTRIBUTION_MISMATCH": 4,
+    "TRAINING_COVERAGE_GAP": 1
+  },
+  "provisionalDelta": {
+    "MODEL_GENERALIZATION_FAILURE": -6,
+    "TRAIN_RUNTIME_FEATURE_DISTRIBUTION_MISMATCH": -1,
+    "TRAINING_COVERAGE_GAP": 7
+  },
+  "positionShortcut": [
+    {
+      "bin": "[0.0,0.1)",
+      "p_retry": 7.352580755845302e-05,
+      "p_keep": 0.9999264741924415,
+      "retry_share": 0.0009843327044541054
+    },
+    {
+      "bin": "[0.1,0.2)",
+      "p_retry": 3.0245517992302517e-05,
+      "p_keep": 0.9999697544820076,
+      "retry_share": 0.00032811090148470183
+    },
+    {
+      "bin": "[0.2,0.3)",
+      "p_retry": 1.4616250347135946e-05,
+      "p_keep": 0.9999853837496528,
+      "retry_share": 0.00016405545074235091
+    },
+    {
+      "bin": "[0.3,0.4)",
+      "p_retry": 0.000686875766602418,
+      "p_keep": 0.9993131242333976,
+      "retry_share": 0.008038717086375194
+    },
+    {
+      "bin": "[0.4,0.5)",
+      "p_retry": 0.013464778740134204,
+      "p_keep": 0.9865352212598658,
+      "retry_share": 0.14945451562628168
+    },
+    {
+      "bin": "[0.5,0.6)",
+      "p_retry": 0.010037956021205182,
+      "p_keep": 0.9899620439787948,
+      "retry_share": 0.13124436059388073
+    },
+    {
+      "bin": "[0.6,0.7)",
+      "p_retry": 0.0002449309228599988,
+      "p_keep": 0.99975506907714,
+      "retry_share": 0.0030350258387334917
+    },
+    {
+      "bin": "[0.7,0.8)",
+      "p_retry": 0.0009626293533193523,
+      "p_keep": 0.9990373706466806,
+      "retry_share": 0.011483881551964564
+    },
+    {
+      "bin": "[0.8,0.9)",
+      "p_retry": 0.004093552003754596,
+      "p_keep": 0.9959064479962454,
+      "retry_share": 0.051513411533098186
+    },
+    {
+      "bin": "[0.9,1.0)",
+      "p_retry": 0.03969249443657698,
+      "p_keep": 0.960307505563423,
+      "retry_share": 0.6437535887129849
+    }
+  ],
+  "shiftedPairs": [
+    {
+      "caseId": "d008",
+      "targetSpanId": "fine:1f78d5b31f8081f1298f70e10d85ff837bc08d16d8416f17d70ce71d983b3cd9:7",
+      "targetSurface": "散",
+      "targetFeatureVector": "0.0000|0.6931|0.2692|0.6931|0.6931|1.0000",
+      "targetMargin": -2.0715925097465515,
+      "targetPositionBin": "[0.2,0.3)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:1f78d5b31f8081f1298f70e10d85ff837bc08d16d8416f17d70ce71d983b3cd9:11",
+      "wrongSurface": "大",
+      "wrongFeatureVector": "0.0000|0.6931|0.4231|0.6931|0.6931|1.0000",
+      "wrongMargin": 1.3244482576847076,
+      "wrongPositionBin": "[0.4,0.5)",
+      "wrongTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "dominantFeatureDelta": "span_rel_position",
+      "rootCause": "TRAIN_RUNTIME_FEATURE_DISTRIBUTION_MISMATCH",
+      "confidence": "HIGH"
+    },
+    {
+      "caseId": "d040",
+      "targetSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:0",
+      "targetSurface": "自",
+      "targetFeatureVector": "0.0000|0.6931|0.0000|0.6931|0.6931|1.0000",
+      "targetMargin": -2.2487412095069885,
+      "targetPositionBin": "[0.0,0.1)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:1",
+      "wrongSurface": "教",
+      "wrongFeatureVector": "0.0000|0.6931|0.0625|0.0000|0.6931|1.0000",
+      "wrongMargin": 1.4178304076194763,
+      "wrongPositionBin": "[0.0,0.1)",
+      "wrongTrainingRetrySupport": "TRAIN_SUPPORT_WEAK",
+      "dominantFeatureDelta": "first_pass_cand_log1p",
+      "rootCause": "TRAINING_COVERAGE_GAP",
+      "confidence": "HIGH"
+    },
+    {
+      "caseId": "d042",
+      "targetSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:2",
+      "targetSurface": "自",
+      "targetFeatureVector": "0.0000|0.6931|0.1333|0.6931|0.6931|1.0000",
+      "targetMargin": -5.117133617401123,
+      "targetPositionBin": "[0.1,0.2)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:5",
+      "wrongSurface": "月",
+      "wrongFeatureVector": "0.0000|0.6931|0.3333|0.6931|0.6931|1.0000",
+      "wrongMargin": 6.768301248550415,
+      "wrongPositionBin": "[0.3,0.4)",
+      "wrongTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "dominantFeatureDelta": "span_rel_position",
+      "rootCause": "MODEL_GENERALIZATION_FAILURE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "caseId": "d051",
+      "targetSpanId": "fine:d939c26b8b99bb6adcb9654d4c8068b0b59da0593704a315d88d410f95eaef95:1",
+      "targetSurface": "会",
+      "targetFeatureVector": "0.0000|0.6931|0.0400|0.0000|0.6931|1.0000",
+      "targetMargin": -14.770958423614502,
+      "targetPositionBin": "[0.0,0.1)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:d939c26b8b99bb6adcb9654d4c8068b0b59da0593704a315d88d410f95eaef95:5",
+      "wrongSurface": "相",
+      "wrongFeatureVector": "0.0000|0.6931|0.2000|0.0000|0.6931|1.0000",
+      "wrongMargin": 4.527172803878784,
+      "wrongPositionBin": "[0.2,0.3)",
+      "wrongTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "dominantFeatureDelta": "span_rel_position",
+      "rootCause": "MODEL_GENERALIZATION_FAILURE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "caseId": "d054",
+      "targetSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:3",
+      "targetSurface": "戏",
+      "targetFeatureVector": "0.0000|0.6931|0.1667|0.0000|0.6931|1.0000",
+      "targetMargin": -0.29076846316456795,
+      "targetPositionBin": "[0.1,0.2)",
+      "targetTrainingRetrySupport": "TRAIN_SUPPORT_WEAK",
+      "wrongSpanId": "fine:8abbc76111de7c632d7d17362fe9a7cda58f3c9572ab70bc308648553237b238:2",
+      "wrongSurface": "州",
+      "wrongFeatureVector": "0.0000|0.6931|0.1111|0.0000|0.6931|1.0000",
+      "wrongMargin": 7.605762004852295,
+      "wrongPositionBin": "[0.1,0.2)",
+      "wrongTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "dominantFeatureDelta": "span_rel_position",
+      "rootCause": "MODEL_GENERALIZATION_FAILURE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "caseId": "d085",
+      "targetSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:0",
+      "targetSurface": "自",
+      "targetFeatureVector": "0.0000|0.6931|0.0000|0.6931|0.6931|1.0000",
+      "targetMargin": -2.107160210609436,
+      "targetPositionBin": "[0.0,0.1)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:1",
+      "wrongSurface": "教",
+      "wrongFeatureVector": "0.0000|0.6931|0.0625|0.0000|0.6931|1.0000",
+      "wrongMargin": 1.6179108023643494,
+      "wrongPositionBin": "[0.0,0.1)",
+      "wrongTrainingRetrySupport": "TRAIN_SUPPORT_WEAK",
+      "dominantFeatureDelta": "first_pass_cand_log1p",
+      "rootCause": "TRAINING_COVERAGE_GAP",
+      "confidence": "HIGH"
+    },
+    {
+      "caseId": "d172",
+      "targetSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:0",
+      "targetSurface": "两",
+      "targetFeatureVector": "0.0000|0.6931|0.0000|0.0000|0.6931|1.0000",
+      "targetMargin": -11.076408386230469,
+      "targetPositionBin": "[0.0,0.1)",
+      "targetTrainingRetrySupport": "TRAIN_SUPPORT_MODERATE",
+      "wrongSpanId": "fine:a11519a0a6b805c16c3242918d0e30f13d8a99cebe7578a68fe2fabb883c6c96:3",
+      "wrongSurface": "窗",
+      "wrongFeatureVector": "0.0000|0.6931|0.2000|0.6931|0.6931|1.0000",
+      "wrongMargin": 7.6177942752838135,
+      "wrongPositionBin": "[0.2,0.3)",
+      "wrongTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "dominantFeatureDelta": "first_pass_cand_log1p",
+      "rootCause": "MODEL_GENERALIZATION_FAILURE",
+      "confidence": "HIGH"
+    },
+    {
+      "caseId": "d175",
+      "targetSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:0",
+      "targetSurface": "自",
+      "targetFeatureVector": "0.0000|0.6931|0.0000|0.6931|0.6931|1.0000",
+      "targetMargin": -2.027155339717865,
+      "targetPositionBin": "[0.0,0.1)",
+      "targetTrainingRetrySupport": "TRAIN_COMBINATION_MISSING",
+      "wrongSpanId": "fine:d193928a9af449ee16fe1c194b21bf986da9b308803bfbf0f69de6d97c1a5899:1",
+      "wrongSurface": "教",
+      "wrongFeatureVector": "0.0000|0.6931|0.0625|0.0000|0.6931|1.0000",
+      "wrongMargin": 1.7246553301811218,
+      "wrongPositionBin": "[0.0,0.1)",
+      "wrongTrainingRetrySupport": "TRAIN_SUPPORT_WEAK",
+      "dominantFeatureDelta": "first_pass_cand_log1p",
+      "rootCause": "TRAINING_COVERAGE_GAP",
+      "confidence": "HIGH"
+    }
+  ],
+  "supportThresholds": {
+    "strong_min_retry_topk": 5,
+    "strong_max_norm_dist": 1.5,
+    "moderate_min_retry_topk": 2,
+    "moderate_max_norm_dist": 2.5,
+    "moderate_tuple_retry": 3,
+    "weak_min_retry_topk": 1,
+    "weak_max_norm_dist": 3.0
+  },
+  "positionBias": {
+    "trainingRetryTailShareBin09": 0.643754,
+    "productionEarlyPositionShareBins00to02": 0.9411764705882353,
+    "positionShortcutProven": true,
+    "biasScope": "GLOBAL",
+    "cause": "S3 V2 labeling concentrates RETRY at utterance tail (span_rel_position>=0.9)"
+  },
+  "fn4Recheck": {
+    "strongOrModerateSupport": 2,
+    "weakOrMissing": 2,
+    "perCase": {
+      "d065": "TRAIN_SUPPORT_MODERATE",
+      "d109": "TRAIN_COMBINATION_MISSING",
+      "d114": "TRAIN_SUPPORT_MODERATE",
+      "d138": "TRAIN_COMBINATION_MISSING"
+    },
+    "prior44ClaimSurvives": false
+  },
+  "governance": {
+    "productionCodeChanged": "NO",
+    "model3Retrained": "NO",
+    "trainingDataChanged": "NO",
+    "thresholdChanged": "NO",
+    "featuresChanged": "NO",
+    "fineSpanChanged": "NO",
+    "retryChanged": "NO",
+    "recallChanged": "NO",
+    "domainVoteChanged": "NO",
+    "jobResultChanged": "NO"
+  },
+  "questions": {
+    "D1_all16Recovered": true,
+    "D5_productionNonzeroCandSpans": 14,
+    "D8_replayParity": true,
+    "D9_replayFailures": 0,
+    "D11_featureContractMismatch": false,
+    "D21_fn4StrongSupport": 2,
+    "D22_fn4WeakMissing": 2,
+    "D23_prior44ClaimSurvives": false,
+    "D36_finalDistribution": {
+      "TRAIN_RUNTIME_FEATURE_DISTRIBUTION_MISMATCH": 3,
+      "TRAINING_COVERAGE_GAP": 8,
+      "MODEL_GENERALIZATION_FAILURE": 5
+    },
+    "D43_thresholdJustified": "NO",
+    "D44_modelExpansionJustified": "NO",
+    "D45_addFeaturesJustified": "NO",
+    "D46_removeSpanRelPosition": "NO",
+    "D47_retryExpansion": "NO",
+    "D48_fineSpanRedesign": "NO",
+    "D49_otherPathFineSpan5NonArch": "YES",
+    "D50_deriveRetryRegionsFrozen": "YES"
+  },
+  "s3CausalConclusionsStatus": "SUPERSEDED_BY_DATASET_IDENTITY_CORRECTION",
+  "s3CausalConclusionsReason": "prior audit used model3_v2_labeled; not MODEL3_V2_PRODUCTION_CORE_S3"
+}

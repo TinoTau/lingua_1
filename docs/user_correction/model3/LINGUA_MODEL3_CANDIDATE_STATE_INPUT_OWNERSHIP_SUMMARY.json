@@ -1,0 +1,78 @@
+{
+  "phase": "LINGUA_MODEL3_CANDIDATE_STATE_INPUT_OWNERSHIP_AUDIT",
+  "date": "2026-09-13",
+  "mode": "READ_ONLY_HISTORICAL_SSOT_FIRST",
+  "baseline_identity": "PASS",
+  "historical_ssot_found": "YES",
+  "historical_ssot_conflict": "NO",
+  "authoritative_model3_decision_unit": "PathFineSpan KEEP/RETRY within one path-level Model3 inference (non-Anchor eligible)",
+  "authoritative_model3_evaluation_object": "ASR-derived PathFineSpan surface text sequence conditioned by upstream Anchor mask (TEXT_ONLY Text Repair Trigger)",
+  "model3_candidate_awareness": {
+    "count": "REQUIRED",
+    "identity_replacement": "NOT_REQUIRED",
+    "overall_label": "ALLOWED_COUNT_ONLY"
+  },
+  "model3_model2_internal_awareness": "NOT_REQUIRED",
+  "candidate_replacement_visibility": "NOT_REQUIRED",
+  "retrieval_provenance_visibility": "NOT_REQUIRED",
+  "model2_action_visibility": "NOT_REQUIRED",
+  "candidate_substituted_context": "CONTRADICTS_SSOT",
+  "anchor_as_model_feature": "INTENDED",
+  "anchor_as_action_mask": "INTENDED",
+  "acoustic_evidence_contract": "V1 model-visible acoustic count = 0; pinyin_channel_avail is availability bit only",
+  "linguistic_evidence_contract": "ASR/FineSpan surface character tokens via BiGRU; not candidate-substituted sentence; not KenLM",
+  "current_model3_input_matches_ssot": "YES",
+  "implementation_drift": "NO",
+  "drift_first_boundary": "NONE",
+  "model2_to_model3_semantic_coupling_required": "NO",
+  "model3_input_contract_repair_required": "NO",
+  "jobresult_change_required": "NO",
+  "architecture_change_proposal_required": "YES",
+  "architecture_change_proposal_note": "ACP required only if expanding Model3 to candidate-identity / Model2-internal / acoustic tensors; reaffirming surface-only SSOT needs no ACP",
+  "product_code_change_this_round": "NO",
+  "selected_interpretation": "OPTION_A_ASR_SURFACE_TEXT_REPAIR_TRIGGER",
+  "model3_input_ssot": "OPTION_A",
+  "options": [
+    {
+      "id": "OPTION_A",
+      "name": "ASR_SURFACE_TEXT_REPAIR_TRIGGER",
+      "historical_support": "STRONG",
+      "selected": true
+    },
+    {
+      "id": "OPTION_B",
+      "name": "CANDIDATE_COUNT_AWARE_SURFACE_TRIGGER",
+      "historical_support": "SUBSET_OF_A",
+      "selected": false
+    },
+    {
+      "id": "OPTION_C",
+      "name": "CANDIDATE_RESOLVED_LOCAL_HYPOTHESIS_TRIGGER",
+      "historical_support": "CONTRADICTS_SSOT",
+      "selected": false
+    }
+  ],
+  "pipeline_position": "Domain Vote / SameDomain → Anchor Adapter → Model3 KEEP/RETRY → [RETRY] bounded reseg+recall → Assembly → KenLM",
+  "keep_semantics": "Do not schedule retry; leave current FineSpan/candidate lattice as-is for Assembly — not accept replacement identity",
+  "retry_semantics": "Request one bounded local resegmentation + re-recall — not emit replacement",
+  "prior_discrimination_audit": {
+    "status": "EVIDENCE_ONLY",
+    "must_not_authorize": "candidate-identity or Model2-internal Model3 feature development without ACP"
+  },
+  "one_next_owner": "MODEL3_INPUT_SSOT_OWNER",
+  "one_next_delta": "Seal frozen finding: Model3 V1/V2 business input = ASR PathFineSpan surface + Anchor mask + allowlisted structural/count features only; any candidate-identity / Model2-internal / acoustic Model3 input expansion is ACP-gated and must not treat prior discrimination-audit feature wishlists as authorized development.",
+  "primary_ssot_refs": [
+    "docs/user_correction/model3/MODEL3_ARCHITECTURE_CONTRACT_V1.md",
+    "docs/user_correction/model3/MODEL3_SYNTHETIC_V1_FROZEN.md",
+    "docs/user_correction/model3/MODEL3_V1_TEXT_ONLY_ROLE_CORRECTION_REPORT_2026_08_26.md",
+    "docs/user_correction/model3/model3_input_contract_v1.md",
+    "docs/user_correction/model3/model3_output_contract_v1.md",
+    "docs/user_correction/model3/model3_v1_model_visible_feature_allowlist.json",
+    "docs/user_correction/model3/model3_anchor_contract_v1.md"
+  ],
+  "artifacts": [
+    "LINGUA_MODEL3_CANDIDATE_STATE_INPUT_OWNERSHIP_AUDIT.md",
+    "LINGUA_MODEL3_CANDIDATE_STATE_INPUT_OWNERSHIP_SUMMARY.json",
+    "LINGUA_MODEL3_CANDIDATE_STATE_INPUT_OWNERSHIP_MATRIX.json"
+  ]
+}

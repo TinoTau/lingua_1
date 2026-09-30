@@ -1,0 +1,171 @@
+{
+  "version": "phonetic-relation-direction-contract-v1",
+  "schema": "user-feature-schema-v1",
+  "index": "PHONETIC_FEATURE_INDEX_V1",
+  "semantics": {
+    "user_feature_X_Y": "User tends to produce Y when canonical is X (canonical→observed confusion).",
+    "candidate_relation_match": "Observed source has Y and candidate has X → matches user feature X_Y.",
+    "example": {
+      "user_feature": "n_l",
+      "canonical": "nai3",
+      "observed": "lai3",
+      "candidate": "nai3",
+      "boosts_feature": "n_l",
+      "not_feature": "l_n"
+    }
+  },
+  "component_type": {
+    "n_l": "initial",
+    "l_n": "initial",
+    "zh_z": "initial",
+    "z_zh": "initial",
+    "ch_c": "initial",
+    "c_ch": "initial",
+    "sh_s": "initial",
+    "s_sh": "initial",
+    "f_h": "initial",
+    "h_f": "initial",
+    "an_ang": "final",
+    "ang_an": "final",
+    "en_eng": "final",
+    "eng_en": "final",
+    "in_ing": "final",
+    "ing_in": "final"
+  },
+  "features": [
+    {
+      "user_feature": "n_l",
+      "index": 0,
+      "canonical_component": "n",
+      "observed_component": "l",
+      "match_rule": "source.initial==l AND candidate.initial==n",
+      "opposite_feature": "l_n"
+    },
+    {
+      "user_feature": "l_n",
+      "index": 1,
+      "canonical_component": "l",
+      "observed_component": "n",
+      "match_rule": "source.initial==n AND candidate.initial==l",
+      "opposite_feature": "n_l"
+    },
+    {
+      "user_feature": "zh_z",
+      "index": 2,
+      "canonical_component": "zh",
+      "observed_component": "z",
+      "match_rule": "source.initial==z AND candidate.initial==zh",
+      "opposite_feature": "z_zh"
+    },
+    {
+      "user_feature": "z_zh",
+      "index": 3,
+      "canonical_component": "z",
+      "observed_component": "zh",
+      "match_rule": "source.initial==zh AND candidate.initial==z",
+      "opposite_feature": "zh_z"
+    },
+    {
+      "user_feature": "ch_c",
+      "index": 4,
+      "canonical_component": "ch",
+      "observed_component": "c",
+      "match_rule": "source.initial==c AND candidate.initial==ch",
+      "opposite_feature": "c_ch"
+    },
+    {
+      "user_feature": "c_ch",
+      "index": 5,
+      "canonical_component": "c",
+      "observed_component": "ch",
+      "match_rule": "source.initial==ch AND candidate.initial==c",
+      "opposite_feature": "ch_c"
+    },
+    {
+      "user_feature": "sh_s",
+      "index": 6,
+      "canonical_component": "sh",
+      "observed_component": "s",
+      "match_rule": "source.initial==s AND candidate.initial==sh",
+      "opposite_feature": "s_sh"
+    },
+    {
+      "user_feature": "s_sh",
+      "index": 7,
+      "canonical_component": "s",
+      "observed_component": "sh",
+      "match_rule": "source.initial==sh AND candidate.initial==s",
+      "opposite_feature": "sh_s"
+    },
+    {
+      "user_feature": "an_ang",
+      "index": 8,
+      "canonical_component": "an",
+      "observed_component": "ang",
+      "match_rule": "source.final==ang AND candidate.final==an",
+      "opposite_feature": "ang_an"
+    },
+    {
+      "user_feature": "ang_an",
+      "index": 9,
+      "canonical_component": "ang",
+      "observed_component": "an",
+      "match_rule": "source.final==an AND candidate.final==ang",
+      "opposite_feature": "an_ang"
+    },
+    {
+      "user_feature": "en_eng",
+      "index": 10,
+      "canonical_component": "en",
+      "observed_component": "eng",
+      "match_rule": "source.final==eng AND candidate.final==en",
+      "opposite_feature": "eng_en"
+    },
+    {
+      "user_feature": "eng_en",
+      "index": 11,
+      "canonical_component": "eng",
+      "observed_component": "en",
+      "match_rule": "source.final==en AND candidate.final==eng",
+      "opposite_feature": "en_eng"
+    },
+    {
+      "user_feature": "in_ing",
+      "index": 12,
+      "canonical_component": "in",
+      "observed_component": "ing",
+      "match_rule": "source.final==ing AND candidate.final==in",
+      "opposite_feature": "ing_in"
+    },
+    {
+      "user_feature": "ing_in",
+      "index": 13,
+      "canonical_component": "ing",
+      "observed_component": "in",
+      "match_rule": "source.final==in AND candidate.final==ing",
+      "opposite_feature": "in_ing"
+    },
+    {
+      "user_feature": "f_h",
+      "index": 14,
+      "canonical_component": "f",
+      "observed_component": "h",
+      "match_rule": "source.initial==h AND candidate.initial==f",
+      "opposite_feature": "h_f"
+    },
+    {
+      "user_feature": "h_f",
+      "index": 15,
+      "canonical_component": "h",
+      "observed_component": "f",
+      "match_rule": "source.initial==f AND candidate.initial==h",
+      "opposite_feature": "f_h"
+    }
+  ],
+  "relation_strength": "normalized_count = matched_pairs / max(1, aligned_syllable_count)",
+  "markers": [
+    "STAGE_B_PROBE_ONLY",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ]
+}

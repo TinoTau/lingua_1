@@ -1,0 +1,9 @@
+layer,artifact,owner,generated_by,filtered_by,expanded_by,context_domain_role,reads_domain_at_decision,authority_source
+A_Candidate_Space,FineSpan_window_candidate,Recall + Model2 merge,recall-topk-for-windows + expand-windows-with-model2,compatibility graph / caps / exactTopK,Model2 P/D candBudget,candidate.domains[] from lexicon tags; Context Prior NOT applied,YES_tags_NO_context_prior,FROZEN_SSOT
+A_Candidate_Space,sentence_candidate_cap_le_16,mergeCrossPathSentenceCandidates,per-path assembly,global cap 16 after cross-path merge,n/a (cap),none as domain selector,NO,FROZEN_SSOT
+B_Segmentation_Path_Space,LexicalEdge,buildLexicalEdges,recalled windows with ≥1 candidate,skip empty windows,n/a,stores candidates with domains but edge eligibility is non-empty candidates,NO,FROZEN_SSOT
+B_Segmentation_Path_Space,partial_and_complete_paths,enumerateCompleteSegmentationPaths,DAG enumeration,maxActivePathsPerPosition + maxCompleteSegmentationPaths + structural comparator,n/a (no domain expand),NONE — resource safety prune only,NO,FROZEN_SSOT + PROBE values
+B_Segmentation_Path_Space,boundaryKey_pathId,build-boundary-key / derivePathId,edge sequence,dedup by geometry/boundaryKey,n/a,identity only,NO,FROZEN_SSOT
+C_Domain_Hypothesis_Space,Domain_Vote_retainedDomains,voteUtteranceDomainFromPool (per path),PathFineSpan candidate pool (non-base),retainedDomains rules 0.75 / ties / unique max,no-domain → base-only/insufficientEvidence (NOT path widen),PRIMARY domain hypothesis formation,YES,FROZEN_SSOT (Runtime formula + Lattice caller)
+C_Domain_Hypothesis_Space,SameDomain_bucket,assemble-domain-aware-span-sets,retainedDomains × Base,exclude non-matching domain_terms for bucket,base-only mode when insufficientEvidence,bucket membership filter,YES,FROZEN_SSOT
+C_Domain_Hypothesis_Space,DOMAIN_TO_SEGMENTATION_FEEDBACK,n/a (forbidden),n/a,n/a,n/a,Architecture forbids Domain Vote/SameDomain pruning SegmentationPath,FORBIDDEN,FROZEN_SSOT Architecture §8

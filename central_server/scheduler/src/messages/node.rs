@@ -143,6 +143,20 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         reason: Option<String>,
     },
+    /// Scheduler -> Node: once per session↔node assignment (UserProfile session cache).
+    /// NOT sent every utterance. NOT part of JobResult.
+    #[serde(rename = "session_bootstrap")]
+    SessionBootstrap {
+        session_id: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        user_id: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        profile_version: Option<u64>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        user_profile: Option<crate::messages::user_profile::UserProfileV1>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        trace_id: Option<String>,
+    },
     /// Node -> Scheduler：确认已接收并开始执行 job（Phase 2：用于 Job FSM 的 RUNNING 语义）
     #[serde(rename = "job_ack")]
     JobAck {

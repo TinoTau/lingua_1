@@ -1,0 +1,35 @@
+{
+  "trace_contract": "MATERIALIZABLE_TARGET_V1",
+  "n_failures": 175,
+  "by_dialog": [
+    {
+      "class": "LEXICAL_RECALL_MISS",
+      "count": 169,
+      "percentage": 0.9657142857142857
+    },
+    {
+      "class": "FINESPAN_NO_COVERAGE",
+      "count": 5,
+      "percentage": 0.02857142857142857
+    },
+    {
+      "class": "KENLM_RANK_ERROR",
+      "count": 1,
+      "percentage": 0.005714285714285714
+    }
+  ],
+  "by_correction_unit_reason": [
+    {
+      "class": "LEXICAL_RECALL_MISS",
+      "count": 552
+    },
+    {
+      "class": "FINESPAN_NO_COVERAGE",
+      "count": 15
+    },
+    {
+      "class": "CANDIDATE_SPAN_BINDING_MISMATCH",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+source_id,path,has_audio,has_asr_raw,has_reference,has_tone_trace,has_span_trace,has_model2_trace,suitable_for_model3
+dialog_200,test wav/dialog_200/,YES,YES,YES (cases.manifest expectedText),YES (trace runs),YES (per_span/per_utterance jsonl),YES (Stage-J inference jsonl),PRIMARY_MEASUREMENT
+dialog200_bundle14,training/.../single_char_repair_v1_final_acceptance_freeze_20260823/dialog200_bundle14/,YES,YES,YES,YES,YES,YES,MEASUREMENT_ONLY
+model2_p_rows,training/model2_v3/dataset/policy_phase2/rows.jsonl,NO,span-level text,action labels,partial,YES,training metadata,P/D only not Model3
+model2_d_rows,training/model2_v3/dataset/policy_stage_d_restored_v1/rows.jsonl,NO,partial,domain labels,partial,YES,training metadata,D head only
+single_char_v1_ssot,docs/user_correction/single_char/single_char_repair_lexicon_v1.tsv,NO,NO,NO,NO,NO,NO,DO_NOT_USE for Model3 lexicon

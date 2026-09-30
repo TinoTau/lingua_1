@@ -1,0 +1,3689 @@
+{
+  "markers": [
+    "PHASE7F_AUDIT",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "mode": "correct",
+  "n": 100,
+  "TargetIntroductionRate": 0.0,
+  "ProfileOnlyTargetRecovery": 0.0,
+  "FalseExpansionRate": 0.0,
+  "NewCandidatePrecision_proxy": 0.0,
+  "TargetPerExpansion": 0.0,
+  "new_candidates_mean": 0,
+  "new_candidates_p95": 0.0,
+  "queries_mean": 0.19,
+  "queries_p95": 1.0,
+  "latency_ms_p50": 0.010799994925037026,
+  "latency_ms_p95": 0.22840000747237355,
+  "failures": [
+    {
+      "utterance_id": "real-acc-a5686f7a8795e316495b",
+      "observed_text": "聲明一下,我們只用衝刀",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "chong",
+        "dao"
+      ],
+      "target": "base:_:充当:chong|dang",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-21615d24eeeeda2ad27c",
+      "observed_text": "这个损失怎么收费?",
+      "observed_syllables": [
+        "zhe",
+        "ge",
+        "sun",
+        "shi",
+        "zen",
+        "me",
+        "shou",
+        "fei"
+      ],
+      "target": "base:_:损失:sun|shi",
+      "user_profile": {
+        "s_sh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4e2795e37515c0534c75",
+      "observed_text": "太招打 卡就在机存牌门口",
+      "observed_syllables": [
+        "tai",
+        "zhao",
+        "da",
+        "ka",
+        "jiu",
+        "zai",
+        "ji",
+        "cun",
+        "pai",
+        "men",
+        "kou"
+      ],
+      "target": "base:_:寄存牌:ji|cun|pai",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-c189d6be5057cbd798c8",
+      "observed_text": "零售歸台 有沒有學生",
+      "observed_syllables": [
+        "ling",
+        "shou",
+        "gui",
+        "tai",
+        "you",
+        "mei",
+        "you",
+        "xue",
+        "sheng"
+      ],
+      "target": "base:_:学生:xue|sheng",
+      "user_profile": {
+        "sh_s": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-706744080c431446f6c1",
+      "observed_text": "聲明一下,我們只用烤雞翅",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "kao",
+        "ji",
+        "chi"
+      ],
+      "target": "base:_:烤鸡翅:kao|ji|chi",
+      "user_profile": {
+        "ch_c": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-3bdc6eb4446584f9aa2d",
+      "observed_text": "收后政策覆盖自始吗?",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "zi",
+        "shi",
+        "ma"
+      ],
+      "target": "base:_:刺史:ci|shi",
+      "user_profile": {
+        "sh_s": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-5c06c2f9111f301d86ba",
+      "observed_text": "少糖少,并来一分处境",
+      "observed_syllables": [
+        "shao",
+        "tang",
+        "shao",
+        "bing",
+        "lai",
+        "yi",
+        "fen",
+        "chu",
+        "jing"
+      ],
+      "target": "base:_:促进:cu|jin",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-039838e94126b92be7b1",
+      "observed_text": "请求安排一次,浓缩油",
+      "observed_syllables": [
+        "qing",
+        "qiu",
+        "an",
+        "pai",
+        "yi",
+        "ci",
+        "nong",
+        "suo",
+        "you"
+      ],
+      "target": "domain:coffee:浓缩铀:nong|suo|you",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-75657afea2e1bf268778",
+      "observed_text": "再述你今天 还有吗?",
+      "observed_syllables": [
+        "zai",
+        "shu",
+        "ni",
+        "jin",
+        "tian",
+        "hai",
+        "you",
+        "ma"
+      ],
+      "target": "base:_:紫薯泥:zi|shu|ni",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-13f8df4f2e3562ac8df6",
+      "observed_text": "菜单上还有影香客吗?",
+      "observed_syllables": [
+        "cai",
+        "dan",
+        "shang",
+        "hai",
+        "you",
+        "ying",
+        "xiang",
+        "ke",
+        "ma"
+      ],
+      "target": "base:_:影像科:ying|xiang|ke",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-8345c5533acb82b3f0cc",
+      "observed_text": "發票抬頭不要寫錯成別的,只要累在",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "lei",
+        "zai"
+      ],
+      "target": "base:_:内在:nei|zai",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "fa",
+          "piao",
+          "tai",
+          "tou",
+          "bu",
+          "yao",
+          "xie",
+          "cuo",
+          "cheng",
+          "bie",
+          "de",
+          "zhi",
+          "yao",
+          "nei",
+          "zai"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-95b5fb66047c63319572",
+      "observed_text": "面包归里的全明卖完了吗?",
+      "observed_syllables": [
+        "mian",
+        "bao",
+        "gui",
+        "li",
+        "de",
+        "quan",
+        "ming",
+        "mai",
+        "wan",
+        "le",
+        "ma"
+      ],
+      "target": "base:_:全民:quan|min",
+      "user_profile": {
+        "in_ing": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "mian",
+          "bao",
+          "gui",
+          "li",
+          "de",
+          "quan",
+          "min",
+          "mai",
+          "wan",
+          "le",
+          "ma"
+        ]
+      ],
+      "relations_used": [
+        "in_ing"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-b370a351b10033d46840",
+      "observed_text": "聲明一下,我們只用佔領",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "zhan",
+        "ling"
+      ],
+      "target": "base:_:占领:zhan|ling",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d2951cac1e9d06477c11",
+      "observed_text": "请问客房胡在哪里?",
+      "observed_syllables": [
+        "qing",
+        "wen",
+        "ke",
+        "fang",
+        "hu",
+        "zai",
+        "na",
+        "li"
+      ],
+      "target": "domain:tourism_hotel:客房服:ke|fang|fu",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-72bb36ce9f64f8449cdf",
+      "observed_text": "聲明一下,我們只用雨傘。",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "yu",
+        "san"
+      ],
+      "target": "base:_:雨伞:yu|san",
+      "user_profile": {
+        "s_sh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-fd31774f5fe6abea8df0",
+      "observed_text": "超盛素晋天 還有嗎?",
+      "observed_syllables": [
+        "chao",
+        "sheng",
+        "su",
+        "jin",
+        "tian",
+        "huan",
+        "you",
+        "ma"
+      ],
+      "target": "domain:medical:超声速:chao|sheng|su",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-cab579d053ee14767638",
+      "observed_text": "发票抬头不要写错成别的,只要景趣",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "jing",
+        "qu"
+      ],
+      "target": "domain:tourism_route:景区:jing|qu",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e669cbda5dd12ad59676",
+      "observed_text": "發票抬頭不要寫錯成別的 只要後處理",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "hou",
+        "chu",
+        "li"
+      ],
+      "target": "base:_:后处理:hou|chu|li",
+      "user_profile": {
+        "ch_c": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "fa",
+          "piao",
+          "tai",
+          "tou",
+          "bu",
+          "yao",
+          "xie",
+          "chuo",
+          "cheng",
+          "bie",
+          "de",
+          "zhi",
+          "yao",
+          "hou",
+          "chu",
+          "li"
+        ]
+      ],
+      "relations_used": [
+        "ch_c"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f3c2865b02886ac42ac0",
+      "observed_text": "请问治疗室在哪里?",
+      "observed_syllables": [
+        "qing",
+        "wen",
+        "zhi",
+        "liao",
+        "shi",
+        "zai",
+        "na",
+        "li"
+      ],
+      "target": "base:_:治疗室:zhi|liao|shi",
+      "user_profile": {
+        "sh_s": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-857df9a4bb40412f2eb0",
+      "observed_text": "司令今天,還有嗎?",
+      "observed_syllables": [
+        "si",
+        "ling",
+        "jin",
+        "tian",
+        "huan",
+        "you",
+        "ma"
+      ],
+      "target": "base:_:司令:si|ling",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-95a823447349cacc8a71",
+      "observed_text": "刚才说的是写作对吗?",
+      "observed_syllables": [
+        "gang",
+        "cai",
+        "shuo",
+        "de",
+        "shi",
+        "xie",
+        "zuo",
+        "dui",
+        "ma"
+      ],
+      "target": "base:_:写作:xie|zuo",
+      "user_profile": {
+        "z_zh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-55b592d5e53a0fcfcb62",
+      "observed_text": "声明一下,我们只用展家",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "zhan",
+        "jia"
+      ],
+      "target": "base:_:展架:zhan|jia",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-b37964908819c3735e41",
+      "observed_text": "新版本上线前线侧,小浓抱",
+      "observed_syllables": [
+        "xin",
+        "ban",
+        "ben",
+        "shang",
+        "xian",
+        "qian",
+        "xian",
+        "ce",
+        "xiao",
+        "nong",
+        "bao"
+      ],
+      "target": "base:_:小笼包:xiao|long|bao",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-eec59fd730f3a3a25b2e",
+      "observed_text": "公教站牌,写着复戏机",
+      "observed_syllables": [
+        "gong",
+        "jiao",
+        "zhan",
+        "pai",
+        "xie",
+        "zhe",
+        "fu",
+        "xi",
+        "ji"
+      ],
+      "target": "base:_:呼吸机:hu|xi|ji",
+      "user_profile": {
+        "h_f": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "gong",
+          "jiao",
+          "zhan",
+          "pai",
+          "xie",
+          "zhe",
+          "hu",
+          "xi",
+          "ji"
+        ]
+      ],
+      "relations_used": [
+        "h_f"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-638c17d855ad53d6a9c0",
+      "observed_text": "面包规里的丧年卖完了吗?",
+      "observed_syllables": [
+        "mian",
+        "bao",
+        "gui",
+        "li",
+        "de",
+        "sang",
+        "nian",
+        "mai",
+        "wan",
+        "le",
+        "ma"
+      ],
+      "target": "base:_:上年:shang|nian",
+      "user_profile": {
+        "sh_s": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "mian",
+          "bao",
+          "gui",
+          "li",
+          "de",
+          "shang",
+          "nian",
+          "mai",
+          "wan",
+          "le",
+          "ma"
+        ]
+      ],
+      "relations_used": [
+        "sh_s"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-8a3c8aa51bc235e8afa9",
+      "observed_text": "下奶今天 還有嗎?",
+      "observed_syllables": [
+        "xia",
+        "nai",
+        "jin",
+        "tian",
+        "huan",
+        "you",
+        "ma"
+      ],
+      "target": "base:_:下来:xia|lai",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-6873d02316ba4e740cdb",
+      "observed_text": "天氣不錯,我們去撿票停走走",
+      "observed_syllables": [
+        "tian",
+        "qi",
+        "bu",
+        "cuo",
+        "wo",
+        "men",
+        "qu",
+        "jian",
+        "piao",
+        "ting",
+        "zou",
+        "zou"
+      ],
+      "target": "domain:tourism_transport:检票亭:jian|piao|ting",
+      "user_profile": {
+        "ing_in": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-abc832633c80d361b0d0",
+      "observed_text": "附近有没有病发?",
+      "observed_syllables": [
+        "fu",
+        "jin",
+        "you",
+        "mei",
+        "you",
+        "bing",
+        "fa"
+      ],
+      "target": "base:_:并发:bing|fa",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-5dbd9d337c16ec2177c0",
+      "observed_text": "发票抬头不要写错成别的 只要转折",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "zhuan",
+        "zhe"
+      ],
+      "target": "base:_:准则:zhun|ze",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "fa",
+          "piao",
+          "tai",
+          "tou",
+          "bu",
+          "yao",
+          "xie",
+          "cuo",
+          "cheng",
+          "bie",
+          "de",
+          "zi",
+          "yao",
+          "zuan",
+          "ze"
+        ]
+      ],
+      "relations_used": [
+        "z_zh"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-8ec948c6f5ff18707b52",
+      "observed_text": "天氣不錯,我們去人蔬走走",
+      "observed_syllables": [
+        "tian",
+        "qi",
+        "bu",
+        "cuo",
+        "wo",
+        "men",
+        "qu",
+        "ren",
+        "shu",
+        "zou",
+        "zou"
+      ],
+      "target": "base:_:人数:ren|shu",
+      "user_profile": {
+        "en_eng": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-9b87475dbfb19cbaf111",
+      "observed_text": "刚才说的室温控服对吗?",
+      "observed_syllables": [
+        "gang",
+        "cai",
+        "shuo",
+        "de",
+        "shi",
+        "wen",
+        "kong",
+        "fu",
+        "dui",
+        "ma"
+      ],
+      "target": "base:_:温控壶:wen|kong|hu",
+      "user_profile": {
+        "h_f": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "gang",
+          "cai",
+          "shuo",
+          "de",
+          "shi",
+          "wen",
+          "kong",
+          "hu",
+          "dui",
+          "ma"
+        ]
+      ],
+      "relations_used": [
+        "h_f"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d29df1a3549f40406e2f",
+      "observed_text": "收后政策覆盖公分吗?",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "gong",
+        "fen",
+        "ma"
+      ],
+      "target": "base:_:供奉:gong|feng",
+      "user_profile": {
+        "eng_en": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "shou",
+          "hou",
+          "zheng",
+          "ce",
+          "fu",
+          "gai",
+          "gong",
+          "feng",
+          "ma"
+        ]
+      ],
+      "relations_used": [
+        "eng_en"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-b3ed07e0d99ebecfccb6",
+      "observed_text": "藥店问,有没有作物?",
+      "observed_syllables": [
+        "yao",
+        "dian",
+        "wen",
+        "you",
+        "mei",
+        "you",
+        "zuo",
+        "wu"
+      ],
+      "target": "base:_:作物:zuo|wu",
+      "user_profile": {
+        "z_zh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4e85a945d54bfcb1ac06",
+      "observed_text": "中午一起吃平条可以吗?",
+      "observed_syllables": [
+        "zhong",
+        "wu",
+        "yi",
+        "qi",
+        "chi",
+        "ping",
+        "tiao",
+        "ke",
+        "yi",
+        "ma"
+      ],
+      "target": "base:_:凭条:ping|tiao",
+      "user_profile": {
+        "ing_in": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e3724f512b19dda78cfe",
+      "observed_text": "菜單上還有助成嗎?",
+      "observed_syllables": [
+        "cai",
+        "dan",
+        "shang",
+        "huan",
+        "you",
+        "zhu",
+        "cheng",
+        "ma"
+      ],
+      "target": "base:_:主场:zhu|chang",
+      "user_profile": {
+        "ang_an": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-3e74baec3e6cc9364f44",
+      "observed_text": "这有名词是值得吗?",
+      "observed_syllables": [
+        "zhe",
+        "you",
+        "ming",
+        "ci",
+        "shi",
+        "zhi",
+        "de",
+        "ma"
+      ],
+      "target": "base:_:值得:zhi|de",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4658913cd78fb56d939a",
+      "observed_text": "派招打 卡就在掐痰中门口",
+      "observed_syllables": [
+        "pai",
+        "zhao",
+        "da",
+        "ka",
+        "jiu",
+        "zai",
+        "qia",
+        "tan",
+        "zhong",
+        "men",
+        "kou"
+      ],
+      "target": "base:_:洽谈桌:qia|tan|zhuo",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f3249d47e93b05429978",
+      "observed_text": "我想確認一下定,但理的不鬧",
+      "observed_syllables": [
+        "wo",
+        "xiang",
+        "que",
+        "ren",
+        "yi",
+        "xia",
+        "ding",
+        "dan",
+        "li",
+        "de",
+        "bu",
+        "nao"
+      ],
+      "target": "base:_:不料:bu|liao",
+      "user_profile": {
+        "l_n": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-0f1629a496833041f17c",
+      "observed_text": "天氣不錯,我們去口包走走",
+      "observed_syllables": [
+        "tian",
+        "qi",
+        "bu",
+        "cuo",
+        "wo",
+        "men",
+        "qu",
+        "kou",
+        "bao",
+        "zou",
+        "zou"
+      ],
+      "target": "base:_:口号:kou|hao",
+      "user_profile": {
+        "h_f": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e0f2b07d77be25e701f4",
+      "observed_text": "软件设置里,找到口感",
+      "observed_syllables": [
+        "ruan",
+        "jian",
+        "she",
+        "zhi",
+        "li",
+        "zhao",
+        "dao",
+        "kou",
+        "gan"
+      ],
+      "target": "base:_:口感:kou|gan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-dadc309afcbff3e5b1c3",
+      "observed_text": "零售櫃檯有沒有主題房?",
+      "observed_syllables": [
+        "ling",
+        "shou",
+        "gui",
+        "tai",
+        "you",
+        "mei",
+        "you",
+        "zhu",
+        "ti",
+        "fang"
+      ],
+      "target": "base:_:主题房:zhu|ti|fang",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-7c2e8d948f5e7c0e0913",
+      "observed_text": "软件设置里找到不能。",
+      "observed_syllables": [
+        "ruan",
+        "jian",
+        "she",
+        "zhi",
+        "li",
+        "zhao",
+        "dao",
+        "bu",
+        "neng"
+      ],
+      "target": "base:_:不能:bu|neng",
+      "user_profile": {
+        "eng_en": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-9602be0f4adcb34db843",
+      "observed_text": "幫我打開伺服器",
+      "observed_syllables": [
+        "bang",
+        "wo",
+        "da",
+        "kai",
+        "si",
+        "fu",
+        "qi"
+      ],
+      "target": "base:_:似乎:si|hu",
+      "user_profile": {
+        "s_sh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-bada7d4d77c84419b6ea",
+      "observed_text": "学校门口间,我拿着钟脑",
+      "observed_syllables": [
+        "xue",
+        "xiao",
+        "men",
+        "kou",
+        "jian",
+        "wo",
+        "na",
+        "zhe",
+        "zhong",
+        "nao"
+      ],
+      "target": "base:_:钟楼:zhong|lou",
+      "user_profile": {
+        "l_n": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-b00cd8794f78e533e132",
+      "observed_text": "發票抬頭不要寫錯成別的 只要有纜車",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "you",
+        "lan",
+        "ju"
+      ],
+      "target": "base:_:游览车:you|lan|che",
+      "user_profile": {
+        "ch_c": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "fa",
+          "piao",
+          "tai",
+          "tou",
+          "bu",
+          "yao",
+          "xie",
+          "chuo",
+          "cheng",
+          "bie",
+          "de",
+          "zhi",
+          "yao",
+          "you",
+          "lan",
+          "ju"
+        ]
+      ],
+      "relations_used": [
+        "ch_c"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f8ff52678e25780b2008",
+      "observed_text": "别和纳哥搞混我们,要的是龙奴",
+      "observed_syllables": [
+        "bie",
+        "he",
+        "na",
+        "ge",
+        "gao",
+        "hun",
+        "wo",
+        "men",
+        "yao",
+        "de",
+        "shi",
+        "long",
+        "nu"
+      ],
+      "target": "base:_:农奴:nong|nu",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "bie",
+          "he",
+          "na",
+          "ge",
+          "gao",
+          "hun",
+          "wo",
+          "men",
+          "yao",
+          "de",
+          "shi",
+          "nong",
+          "nu"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-822b2918b35de3ac2b47",
+      "observed_text": "请问不行者在哪里?",
+      "observed_syllables": [
+        "qing",
+        "wen",
+        "bu",
+        "xing",
+        "zhe",
+        "zai",
+        "na",
+        "li"
+      ],
+      "target": "base:_:步行者:bu|xing|zhe",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-7b5618084feca462f0b9",
+      "observed_text": "會議機邀禮,請寫傷喜一旦",
+      "observed_syllables": [
+        "hui",
+        "yi",
+        "ji",
+        "yao",
+        "li",
+        "qing",
+        "xie",
+        "shang",
+        "xi",
+        "yi",
+        "dan"
+      ],
+      "target": "base:_:洗衣单:xi|yi|dan",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-00e7de88c1d27420563c",
+      "observed_text": "明天的行程理由居汉吗?",
+      "observed_syllables": [
+        "ming",
+        "tian",
+        "de",
+        "xing",
+        "cheng",
+        "li",
+        "you",
+        "ju",
+        "han",
+        "ma"
+      ],
+      "target": "base:_:焗饭:ju|fan",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-0ccd2e9163a0782ead8c",
+      "observed_text": "请不要换成别的,只要人事",
+      "observed_syllables": [
+        "qing",
+        "bu",
+        "yao",
+        "huan",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "ren",
+        "shi"
+      ],
+      "target": "base:_:人事:ren|shi",
+      "user_profile": {
+        "sh_s": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-e1794feda5bcf63e2a86",
+      "observed_text": "航班今天,還有嗎?",
+      "observed_syllables": [
+        "hang",
+        "ban",
+        "jin",
+        "tian",
+        "huan",
+        "you",
+        "ma"
+      ],
+      "target": "base:_:航班:hang|ban",
+      "user_profile": {
+        "h_f": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d57b12814eeaa6d19316",
+      "observed_text": "请记录到订单被助理 写后侧听",
+      "observed_syllables": [
+        "qing",
+        "ji",
+        "lu",
+        "dao",
+        "ding",
+        "dan",
+        "bei",
+        "zhu",
+        "li",
+        "xie",
+        "hou",
+        "ce",
+        "ting"
+      ],
+      "target": "domain:tourism_transport:候车厅:hou|che|ting",
+      "user_profile": {
+        "ch_c": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "ji",
+          "lu",
+          "dao",
+          "ding",
+          "dan",
+          "bei",
+          "zhu",
+          "li",
+          "xie",
+          "hou",
+          "che",
+          "ting"
+        ]
+      ],
+      "relations_used": [
+        "ch_c"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-6bd78871844e5941b50e",
+      "observed_text": "面包规理的光明麦完了吗?",
+      "observed_syllables": [
+        "mian",
+        "bao",
+        "gui",
+        "li",
+        "de",
+        "guang",
+        "ming",
+        "mai",
+        "wan",
+        "le",
+        "ma"
+      ],
+      "target": "base:_:光明:guang|ming",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4ceb15ab9fdbbb729449",
+      "observed_text": "火车改迁到Henpei",
+      "observed_syllables": [
+        "huo",
+        "che",
+        "gai",
+        "qian",
+        "dao",
+        "h",
+        "e",
+        "n",
+        "p",
+        "e",
+        "i"
+      ],
+      "target": "base:_:分配:fen|pei",
+      "user_profile": {
+        "f_h": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-48a14bfa8a3da8d1364e",
+      "observed_text": "菜單上還有餐會正嗎?",
+      "observed_syllables": [
+        "cai",
+        "dan",
+        "shang",
+        "huan",
+        "you",
+        "can",
+        "hui",
+        "zheng",
+        "ma"
+      ],
+      "target": "domain:meeting:参会证:can|hui|zheng",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-52fb56b08bf93218a94c",
+      "observed_text": "請問保險絲在哪裡?",
+      "observed_syllables": [
+        "qing",
+        "wen",
+        "bao",
+        "xian",
+        "si",
+        "zai",
+        "na",
+        "li"
+      ],
+      "target": "base:_:保险丝:bao|xian|si",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-2b704a80920548656853",
+      "observed_text": "请吧 只能送过来",
+      "observed_syllables": [
+        "qing",
+        "ba",
+        "zhi",
+        "neng",
+        "song",
+        "guo",
+        "lai"
+      ],
+      "target": "base:_:只能:zhi|neng",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "ba",
+          "zhi",
+          "neng",
+          "song",
+          "guo",
+          "nai"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d977a924e97af1799720",
+      "observed_text": "给,我来一倍军飞",
+      "observed_syllables": [
+        "gei",
+        "wo",
+        "lai",
+        "yi",
+        "bei",
+        "jun",
+        "fei"
+      ],
+      "target": "base:_:军费:jun|fei",
+      "user_profile": {
+        "f_h": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f6343a9d4c5582301edc",
+      "observed_text": "请记录到定,但被助理斜热拿铁",
+      "observed_syllables": [
+        "qing",
+        "ji",
+        "lu",
+        "dao",
+        "ding",
+        "dan",
+        "bei",
+        "zhu",
+        "li",
+        "xie",
+        "re",
+        "na",
+        "tie"
+      ],
+      "target": "domain:coffee:热拿铁:re|na|tie",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "ji",
+          "nu",
+          "dao",
+          "ding",
+          "dan",
+          "bei",
+          "zhu",
+          "ni",
+          "xie",
+          "re",
+          "na",
+          "tie"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-16aacbe2489326997e14",
+      "observed_text": "聲明以下,我們只用衛兵",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "wei",
+        "bing"
+      ],
+      "target": "base:_:卫兵:wei|bing",
+      "user_profile": {
+        "ing_in": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-83a0d186e6dfa87ecae2",
+      "observed_text": "面包柜里的幻城站卖完了吗?",
+      "observed_syllables": [
+        "mian",
+        "bao",
+        "gui",
+        "li",
+        "de",
+        "huan",
+        "cheng",
+        "zhan",
+        "mai",
+        "wan",
+        "le",
+        "ma"
+      ],
+      "target": "base:_:换乘站:huan|cheng|zhan",
+      "user_profile": {
+        "ch_c": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-3dbb0059958103324eab",
+      "observed_text": "學校門口間,我拿著成景",
+      "observed_syllables": [
+        "xue",
+        "xiao",
+        "men",
+        "kou",
+        "jian",
+        "wo",
+        "na",
+        "zhu",
+        "cheng",
+        "jing"
+      ],
+      "target": "base:_:城景:cheng|jing",
+      "user_profile": {
+        "eng_en": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "xue",
+          "xiao",
+          "meng",
+          "kou",
+          "jian",
+          "wo",
+          "na",
+          "zhu",
+          "cheng",
+          "jing"
+        ]
+      ],
+      "relations_used": [
+        "eng_en"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1ffbcc3f0e5599f04404",
+      "observed_text": "声明以下,我们只用能资",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "neng",
+        "zi"
+      ],
+      "target": "base:_:轮次:lun|ci",
+      "user_profile": {
+        "l_n": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1b455729776e3cd8de92",
+      "observed_text": "菜單上還有冷萃葉嗎?",
+      "observed_syllables": [
+        "cai",
+        "dan",
+        "shang",
+        "huan",
+        "you",
+        "leng",
+        "cui",
+        "ye",
+        "ma"
+      ],
+      "target": "domain:coffee:冷萃液:leng|cui|ye",
+      "user_profile": {
+        "eng_en": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4f721e6b9e25793c91a0",
+      "observed_text": "请记录到订单被助理 写之曲",
+      "observed_syllables": [
+        "qing",
+        "ji",
+        "lu",
+        "dao",
+        "ding",
+        "dan",
+        "bei",
+        "zhu",
+        "li",
+        "xie",
+        "zhi",
+        "qu"
+      ],
+      "target": "domain:food_order:自取:zi|qu",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "ji",
+          "lu",
+          "dao",
+          "ding",
+          "dan",
+          "bei",
+          "zu",
+          "li",
+          "xie",
+          "zi",
+          "qu"
+        ]
+      ],
+      "relations_used": [
+        "z_zh"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-268b1c9d7083c752a1f2",
+      "observed_text": "庫存,只剩创新",
+      "observed_syllables": [
+        "ku",
+        "cun",
+        "zhi",
+        "sheng",
+        "chuang",
+        "xin"
+      ],
+      "target": "base:_:创新:chuang|xin",
+      "user_profile": {
+        "in_ing": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1a5b175df36cc3813e49",
+      "observed_text": "学校门口间,我拿着决定",
+      "observed_syllables": [
+        "xue",
+        "xiao",
+        "men",
+        "kou",
+        "jian",
+        "wo",
+        "na",
+        "zhe",
+        "jue",
+        "ding"
+      ],
+      "target": "base:_:决定:jue|ding",
+      "user_profile": {
+        "ing_in": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-25a3706e9187feb0a470",
+      "observed_text": "景点门票包 韩朝没塔吗?",
+      "observed_syllables": [
+        "jing",
+        "dian",
+        "men",
+        "piao",
+        "bao",
+        "han",
+        "chao",
+        "mei",
+        "ta",
+        "ma"
+      ],
+      "target": "base:_:草莓塔:cao|mei|ta",
+      "user_profile": {
+        "c_ch": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-2c6ea2f45a04d48f502d",
+      "observed_text": "明天的行程 理由批出黎马",
+      "observed_syllables": [
+        "ming",
+        "tian",
+        "de",
+        "xing",
+        "cheng",
+        "li",
+        "you",
+        "pi",
+        "chu",
+        "li",
+        "ma"
+      ],
+      "target": "base:_:批处理:pi|chu|li",
+      "user_profile": {
+        "l_n": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-92a216380e360608d42f",
+      "observed_text": "请不要换成别的,只要特产品",
+      "observed_syllables": [
+        "qing",
+        "bu",
+        "yao",
+        "huan",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "te",
+        "chan",
+        "pin"
+      ],
+      "target": "base:_:特产品:te|chan|pin",
+      "user_profile": {
+        "ch_c": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1e85fbdafef1bf78359a",
+      "observed_text": "你确定要选轻略者吗?",
+      "observed_syllables": [
+        "ni",
+        "que",
+        "ding",
+        "yao",
+        "xuan",
+        "qing",
+        "le",
+        "zhe",
+        "ma"
+      ],
+      "target": "base:_:侵略者:qin|le|zhe",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4738760f865e0b3015d8",
+      "observed_text": "收后政策覆盖改淡吗?",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "gai",
+        "dan",
+        "ma"
+      ],
+      "target": "domain:food_order:改单:gai|dan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-83770b1debe4012242fb",
+      "observed_text": "我想确认一下定,但理得会无足",
+      "observed_syllables": [
+        "wo",
+        "xiang",
+        "que",
+        "ren",
+        "yi",
+        "xia",
+        "ding",
+        "dan",
+        "li",
+        "de",
+        "hui",
+        "wu",
+        "zu"
+      ],
+      "target": "domain:meeting:会务组:hui|wu|zu",
+      "user_profile": {
+        "z_zh": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d841b3ae4f90138e9eb1",
+      "observed_text": "进店门票包含股真趣吗?",
+      "observed_syllables": [
+        "jin",
+        "dian",
+        "men",
+        "piao",
+        "bao",
+        "han",
+        "gu",
+        "zhen",
+        "qu",
+        "ma"
+      ],
+      "target": "domain:tourism_route:古镇区:gu|zhen|qu",
+      "user_profile": {
+        "en_eng": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-bf48031676ca3ac36bbf",
+      "observed_text": "零售櫃檯有沒有類隔?",
+      "observed_syllables": [
+        "ling",
+        "shou",
+        "gui",
+        "tai",
+        "you",
+        "mei",
+        "you",
+        "lei",
+        "ge"
+      ],
+      "target": "base:_:内阁:nei|ge",
+      "user_profile": {
+        "n_l": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "ning",
+          "shou",
+          "gui",
+          "tai",
+          "you",
+          "mei",
+          "you",
+          "nei",
+          "ge"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-7ef5d5f1b96c0a78d078",
+      "observed_text": "请问航班评在哪里?",
+      "observed_syllables": [
+        "qing",
+        "wen",
+        "hang",
+        "ban",
+        "ping",
+        "zai",
+        "na",
+        "li"
+      ],
+      "target": "base:_:航班屏:hang|ban|ping",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-89be4757e648ac28e03b",
+      "observed_text": "給,我來一杯指能。",
+      "observed_syllables": [
+        "gei",
+        "wo",
+        "lai",
+        "yi",
+        "bei",
+        "zhi",
+        "neng"
+      ],
+      "target": "base:_:只能:zhi|neng",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "gei",
+          "wo",
+          "nai",
+          "yi",
+          "bei",
+          "zhi",
+          "neng"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-f44282791c34f0a5830a",
+      "observed_text": "聲明以下,我們只用發展",
+      "observed_syllables": [
+        "sheng",
+        "ming",
+        "yi",
+        "xia",
+        "wo",
+        "men",
+        "zhi",
+        "yong",
+        "fa",
+        "zhan"
+      ],
+      "target": "base:_:发展:fa|zhan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-4af2dcb148306cfa3ee9",
+      "observed_text": "发票抬头不要写错成别的,只要纪念日",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "ji",
+        "nian",
+        "ri"
+      ],
+      "target": "base:_:纪念日:ji|nian|ri",
+      "user_profile": {
+        "n_l": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-cc06da530c361ee0f494",
+      "observed_text": "麻烦安排后,寄厅借送",
+      "observed_syllables": [
+        "ma",
+        "fan",
+        "an",
+        "pai",
+        "hou",
+        "ji",
+        "ting",
+        "jie",
+        "song"
+      ],
+      "target": "domain:tourism_pickup:候机厅:hou|ji|ting",
+      "user_profile": {
+        "ing_in": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-aa7a26f3a7abd8cd5acb",
+      "observed_text": "收后政策,覆盖吹出马。",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "chui",
+        "chu",
+        "ma"
+      ],
+      "target": "base:_:催促:cui|cu",
+      "user_profile": {
+        "c_ch": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-a2d61455da40ccd5fca9",
+      "observed_text": "酒店、早餐、暴寒、轉運蛋",
+      "observed_syllables": [
+        "jiu",
+        "dian",
+        "zao",
+        "can",
+        "bao",
+        "han",
+        "zhuan",
+        "yun",
+        "dan"
+      ],
+      "target": "base:_:转运单:zhuan|yun|dan",
+      "user_profile": {
+        "zh_z": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d36b06cd8645cfae52a2",
+      "observed_text": "刚才说的是倡议对吗?",
+      "observed_syllables": [
+        "gang",
+        "cai",
+        "shuo",
+        "de",
+        "shi",
+        "chang",
+        "yi",
+        "dui",
+        "ma"
+      ],
+      "target": "base:_:倡议:chang|yi",
+      "user_profile": {
+        "ch_c": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "gang",
+          "chai",
+          "shuo",
+          "de",
+          "shi",
+          "chang",
+          "yi",
+          "dui",
+          "ma"
+        ]
+      ],
+      "relations_used": [
+        "ch_c"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-3ef49aee6ad015fb8369",
+      "observed_text": "请不要换成别的,只要产棱",
+      "observed_syllables": [
+        "qing",
+        "bu",
+        "yao",
+        "huan",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "chan",
+        "leng"
+      ],
+      "target": "base:_:产能:chan|neng",
+      "user_profile": {
+        "n_l": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [
+        [
+          "qing",
+          "bu",
+          "yao",
+          "huan",
+          "cheng",
+          "bie",
+          "de",
+          "zhi",
+          "yao",
+          "chan",
+          "neng"
+        ]
+      ],
+      "relations_used": [
+        "n_l"
+      ],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OTHER",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-40c462d717b4a0eecc03",
+      "observed_text": "健身房课程教 波罗报",
+      "observed_syllables": [
+        "jian",
+        "shen",
+        "fang",
+        "ke",
+        "cheng",
+        "jiao",
+        "bo",
+        "luo",
+        "bao"
+      ],
+      "target": "base:_:菠萝包:bo|luo|bao",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1a01a06ddda5eb104df2",
+      "observed_text": "拍招打,卡就在座汉门口",
+      "observed_syllables": [
+        "pai",
+        "zhao",
+        "da",
+        "ka",
+        "jiu",
+        "zai",
+        "zuo",
+        "han",
+        "men",
+        "kou"
+      ],
+      "target": "base:_:做饭:zuo|fan",
+      "user_profile": {
+        "f_h": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-a015de5e82e7c5ce39e7",
+      "observed_text": "翠化季今天 還有嗎?",
+      "observed_syllables": [
+        "cui",
+        "hua",
+        "ji",
+        "jin",
+        "tian",
+        "huan",
+        "you",
+        "ma"
+      ],
+      "target": "base:_:催化剂:cui|hua|ji",
+      "user_profile": {
+        "c_ch": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-5cc8fb074235afd3880e",
+      "observed_text": "这个持表怎么收费?",
+      "observed_syllables": [
+        "zhe",
+        "ge",
+        "chi",
+        "biao",
+        "zen",
+        "me",
+        "shou",
+        "fei"
+      ],
+      "target": "base:_:词表:ci|biao",
+      "user_profile": {
+        "c_ch": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-aa7eed2429c6ae937452",
+      "observed_text": "面包归里的不仅卖完了吗?",
+      "observed_syllables": [
+        "mian",
+        "bao",
+        "gui",
+        "li",
+        "de",
+        "bu",
+        "jin",
+        "mai",
+        "wan",
+        "le",
+        "ma"
+      ],
+      "target": "base:_:不仅:bu|jin",
+      "user_profile": {
+        "in_ing": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-d2c3b98167590e09f764",
+      "observed_text": "你确定要选南松吗?",
+      "observed_syllables": [
+        "ni",
+        "que",
+        "ding",
+        "yao",
+        "xuan",
+        "nan",
+        "song",
+        "ma"
+      ],
+      "target": "base:_:南宋:nan|song",
+      "user_profile": {
+        "s_sh": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-00bd3d56fa73a5a81437",
+      "observed_text": "时间改到与回值,但同一天。",
+      "observed_syllables": [
+        "shi",
+        "jian",
+        "gai",
+        "dao",
+        "yu",
+        "hui",
+        "zhi",
+        "dan",
+        "tong",
+        "yi",
+        "tian"
+      ],
+      "target": "base:_:回执单:hui|zhi|dan",
+      "user_profile": {
+        "an_ang": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-808dd12b241a615bc54d",
+      "observed_text": "会议机要里,请写上导函点",
+      "observed_syllables": [
+        "hui",
+        "yi",
+        "ji",
+        "yao",
+        "li",
+        "qing",
+        "xie",
+        "shang",
+        "dao",
+        "han",
+        "dian"
+      ],
+      "target": "domain:tourism_transport:导航点:dao|hang|dian",
+      "user_profile": {
+        "ang_an": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "QUERY_NOT_GENERATED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-9ea04574fb9d1bb5974c",
+      "observed_text": "收后政策覆盖信息牌吗?",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "xin",
+        "xi",
+        "pai",
+        "ma"
+      ],
+      "target": "base:_:信息牌:xin|xi|pai",
+      "user_profile": {
+        "in_ing": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-aee3ae2ddee3536dc900",
+      "observed_text": "进点门票报韩车行吗?",
+      "observed_syllables": [
+        "jin",
+        "dian",
+        "men",
+        "piao",
+        "bao",
+        "han",
+        "che",
+        "xing",
+        "ma"
+      ],
+      "target": "base:_:车型:che|xing",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-842ade447208859a3503",
+      "observed_text": "软件设置里,找到勤劳。",
+      "observed_syllables": [
+        "ruan",
+        "jian",
+        "she",
+        "zhi",
+        "li",
+        "zhao",
+        "dao",
+        "qin",
+        "lao"
+      ],
+      "target": "base:_:勤劳:qin|lao",
+      "user_profile": {
+        "l_n": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-1910631e9990f58927e0",
+      "observed_text": "法务审查 关注观众证",
+      "observed_syllables": [
+        "fa",
+        "wu",
+        "shen",
+        "cha",
+        "guan",
+        "zhu",
+        "guan",
+        "zhong",
+        "zheng"
+      ],
+      "target": "base:_:观众证:guan|zhong|zheng",
+      "user_profile": {},
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "NO_PROFILE_RELATION_MATCH",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-0e77d7bb116f6e0997b7",
+      "observed_text": "收后政策覆盖引导线吗?",
+      "observed_syllables": [
+        "shou",
+        "hou",
+        "zheng",
+        "ce",
+        "fu",
+        "gai",
+        "yin",
+        "dao",
+        "xian",
+        "ma"
+      ],
+      "target": "base:_:引导线:yin|dao|xian",
+      "user_profile": {
+        "in_ing": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-423e860a750067573e0d",
+      "observed_text": "发票抬头不要写错成别的,只要故障率",
+      "observed_syllables": [
+        "fa",
+        "piao",
+        "tai",
+        "tou",
+        "bu",
+        "yao",
+        "xie",
+        "cuo",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "gu",
+        "zhang",
+        "l"
+      ],
+      "target": "base:_:故障率:gu|zhang|l",
+      "user_profile": {
+        "zh_z": 0.8
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-5eef4382587726982bb6",
+      "observed_text": "零售櫃台有沒有紫蘇泥?",
+      "observed_syllables": [
+        "ling",
+        "shou",
+        "gui",
+        "tai",
+        "you",
+        "mei",
+        "you",
+        "zi",
+        "su",
+        "ni"
+      ],
+      "target": "base:_:紫薯泥:zi|shu|ni",
+      "user_profile": {
+        "z_zh": 0.2
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    },
+    {
+      "utterance_id": "real-acc-0a1b8380121f5612ae8e",
+      "observed_text": "请不要换成别的,只要任何人。",
+      "observed_syllables": [
+        "qing",
+        "bu",
+        "yao",
+        "huan",
+        "cheng",
+        "bie",
+        "de",
+        "zhi",
+        "yao",
+        "ren",
+        "he",
+        "ren"
+      ],
+      "target": "base:_:任何人:ren|he|ren",
+      "user_profile": {
+        "h_f": 0.5
+      },
+      "base_candidates": [],
+      "generated_queries": [],
+      "relations_used": [],
+      "profile_candidates": [],
+      "target_present_before": false,
+      "target_present_after": false,
+      "failure_class": "OBSERVED_EVIDENCE_TOO_DAMAGED",
+      "slices": [
+        "S11_NATURAL_BASE_MISS",
+        "S12_NO_CHANGE",
+        "S5_ASR_SYLLABLE_INSERTION",
+        "S1_SINGLE_PROFILE_CLEAN"
+      ],
+      "provenance_class": "REAL_ASR_OBSERVED"
+    }
+  ],
+  "slice": "S5_ASR_SYLLABLE_INSERTION",
+  "n_eval": 100,
+  "complementarity": {
+    "BASE_ONLY": 0,
+    "PROFILE_ONLY": 0,
+    "BOTH": 0,
+    "NEITHER": 100,
+    "PROFILE_ONLY_RECOVERY": 0.0
+  },
+  "metrics_REAL_ASR_OBSERVED": {
+    "markers": [
+      "PHASE7F_AUDIT",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "mode": "correct",
+    "n": 100,
+    "TargetIntroductionRate": 0.0,
+    "ProfileOnlyTargetRecovery": 0.0,
+    "FalseExpansionRate": 0.0,
+    "NewCandidatePrecision_proxy": 0.0,
+    "TargetPerExpansion": 0.0,
+    "new_candidates_mean": 0,
+    "new_candidates_p95": 0.0,
+    "queries_mean": 0.19,
+    "queries_p95": 1.0,
+    "latency_ms_p50": 0.008999995770864189,
+    "latency_ms_p95": 0.24850000045262277
+  }
+}

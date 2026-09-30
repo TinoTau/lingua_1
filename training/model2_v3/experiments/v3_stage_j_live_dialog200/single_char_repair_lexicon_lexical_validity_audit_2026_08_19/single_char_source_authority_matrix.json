@@ -1,0 +1,111 @@
+{
+  "lexical_dictionary_available": false,
+  "pos_evidence_available": "DERIVED_ONLY_JIEBA_REJECTED_SNAPSHOT",
+  "standalone_token_evidence_available": false,
+  "standalone_frequency_available": false,
+  "sources_sufficient_for_rebuild": false,
+  "tokenized_corpus_required": true,
+  "jieba_reauthorization_would_be_contract_change": true,
+  "rows": [
+    {
+      "source": "docs/pinyin-v2/import/single_char_dictionary.tsv",
+      "kind": "IME common-character inventory",
+      "authority": "AUTHORITATIVE_FOR_IME",
+      "production_lexicon_allowed": "YES_FOR_IME; NOT_A_WORD_DICTIONARY",
+      "wordhood": "NO",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "General Standard level-1 + pinyin-data; IME role/weight policy"
+    },
+    {
+      "source": "docs/pinyin-v1/archive/import/pinyin-ime-v1_single_char_dictionary_v2_2500.*",
+      "kind": "historical IME spike copy",
+      "authority": "LEGACY",
+      "production_lexicon_allowed": "NO (archive)",
+      "wordhood": "NO",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "same 2510; generated 2026-06-02 for pinyin-ime-v1"
+    },
+    {
+      "source": "jieba dict.txt (fxsjy/jieba MIT) via rejected.jsonl",
+      "kind": "segmentation dictionary seed",
+      "authority": "DERIVED",
+      "production_lexicon_allowed": "NO for length-1 (banSingleChar / reject one_char)",
+      "wordhood": "PARTIAL (jieba token weights, not linguistic wordhood proof)",
+      "standalone_token_freq": "DERIVED dict weight, not corpus token count",
+      "pos": "YES (jieba POS tags on rejected 1-char rows)",
+      "notes": "lexicon_sources/jieba_dict.txt missing from repo; snapshot is rejected.jsonl"
+    },
+    {
+      "source": "p1_3 base_zh_v2 entries.jsonl",
+      "kind": "generic 2–3 char lexicon seed",
+      "authority": "AUTHORITATIVE for 2–3 char base seed",
+      "production_lexicon_allowed": "YES (2–3 only)",
+      "wordhood": "N/A length>=2",
+      "standalone_token_freq": "NO length-1",
+      "pos": "filtered out",
+      "notes": "lengthDistribution 2/3 only"
+    },
+    {
+      "source": "electron_node/docs/lexicon-assets/full_rebuild_v1/*.csv",
+      "kind": "Lexicon V3 SSOT multi-char",
+      "authority": "AUTHORITATIVE",
+      "production_lexicon_allowed": "YES",
+      "wordhood": "multi-char terms",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "v2-classify-row rejects one_char"
+    },
+    {
+      "source": "kenLM/corpus/v1/corpus_v1.char.txt + zh_char_3gram.arpa",
+      "kind": "character language model corpus",
+      "authority": "AUTHORITATIVE for KenLM char scoring",
+      "production_lexicon_allowed": "NO as word list",
+      "wordhood": "NO (character-separated)",
+      "standalone_token_freq": "NO — character frequency only",
+      "pos": "NO",
+      "notes": "TOKENIZED_CORPUS_REQUIRED for length=1 word frequency"
+    },
+    {
+      "source": "kenLM/corpus/v1/corpus_v1.raw.txt / wikipedia_sentences.txt",
+      "kind": "raw Chinese text",
+      "authority": "AUTHORITATIVE as KenLM source text",
+      "production_lexicon_allowed": "NO without new NLP pipeline",
+      "wordhood": "NO (untokenized)",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "this round forbids introducing a new segmenter"
+    },
+    {
+      "source": "post_trace_governance_audit.py FUNCTION_WORDS",
+      "kind": "audit heuristic set",
+      "authority": "TEST_ONLY",
+      "production_lexicon_allowed": "NO",
+      "wordhood": "heuristic",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "unit classification only"
+    },
+    {
+      "source": "node_runtime/lexicon/v3/lexicon.sqlite length-1 rows",
+      "kind": "runtime copy of TSV import",
+      "authority": "CIRCULAR",
+      "production_lexicon_allowed": "YES as current FW recall inventory",
+      "wordhood": "NO additional",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "cannot prove wordhood; it IS the 2510 import"
+    },
+    {
+      "source": "dialog_200 expectedText",
+      "kind": "evaluation set",
+      "authority": "EVALUATION_ONLY",
+      "production_lexicon_allowed": "NO",
+      "wordhood": "NO",
+      "standalone_token_freq": "NO",
+      "pos": "NO",
+      "notes": "forbidden as vocabulary source this round"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "status": "DEFER_COMPUTE",
+  "reason": "Full LORO requires 7× Stage A retrain on CPU (~hours). Substituted with per-relation seen/unseen gap analysis in relation_generalization.json. Gaps are globally large → relation-specific memorization NOT primary."
+}

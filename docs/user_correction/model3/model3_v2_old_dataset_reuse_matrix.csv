@@ -1,0 +1,5 @@
+dataset,classification,reason
+MODEL3_V2_TARGETED_DIST_CORRECTED_V1,SAFE_FOR_FORMAL_TRAINING,current formal B2 baseline
+MODEL3_V2_REALDIST_EXPANDED_V1,SAFE_ONLY_FOR_PRETRAIN_OR_AB_INITIO_COMPARE,synthetic cand collapse risk; useful init compare only
+MODEL3_V2_LABELED,DIAGNOSTIC_ONLY,text-only relabel of V1; no acoustic provenance
+MODEL3_V1_SYNTHETIC_100K,REJECT_FOR_FORMAL_TRAINING,planned corruption / non-B2

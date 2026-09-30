@@ -1,0 +1,439 @@
+{
+  "caseId": "p2_u005_024",
+  "captureBatchId": "tonecap_pilot200_full_20260912T0437",
+  "datasetBuildId": "build_20260911_091806",
+  "split": "DEV",
+  "userId": "U005",
+  "domain": "general_daily",
+  "audioId": "aud_p2_u005_024",
+  "audioPath": "audio/p2_u005_024.wav",
+  "audioSha256": "654fe798e5f4b814deefeb8e7c38c39383a12450c522855f1072b435e8626771",
+  "profileConditionAtCapture": "NO_PROFILE",
+  "rawMergedAsrText": "今天天气不错,我们晚点见面吧!",
+  "rawAsrHash": "f89c961af90847a5b3d524196f488b421ac24c1d71db403de044fb3f6be08e96",
+  "segments": [
+    {
+      "text": "今天天氣不錯,我們晚點見面吧!",
+      "start": 0,
+      "end": 2.76,
+      "no_speech_prob": 0.0382080078125,
+      "avg_logprob": -0.31378724972407024,
+      "compression_ratio": 0.7884615384615384,
+      "words": [
+        {
+          "word": "今天",
+          "start": 0,
+          "end": 0.4,
+          "probability": 0.99267578125
+        },
+        {
+          "word": "天",
+          "start": 0.4,
+          "end": 0.62,
+          "probability": 0.998046875
+        },
+        {
+          "word": "氣",
+          "start": 0.62,
+          "end": 0.92,
+          "probability": 0.69921875
+        },
+        {
+          "word": "不錯,",
+          "start": 0.92,
+          "end": 1.38,
+          "probability": 0.95068359375
+        },
+        {
+          "word": "我們",
+          "start": 1.66,
+          "end": 1.8,
+          "probability": 0.98681640625
+        },
+        {
+          "word": "晚",
+          "start": 1.8,
+          "end": 1.98,
+          "probability": 0.99951171875
+        },
+        {
+          "word": "點",
+          "start": 1.98,
+          "end": 2.14,
+          "probability": 0.99560546875
+        },
+        {
+          "word": "見",
+          "start": 2.14,
+          "end": 2.38,
+          "probability": 0.99853515625
+        },
+        {
+          "word": "面",
+          "start": 2.38,
+          "end": 2.58,
+          "probability": 0.9990234375
+        },
+        {
+          "word": "吧!",
+          "start": 2.58,
+          "end": 2.76,
+          "probability": 0.998046875
+        }
+      ]
+    }
+  ],
+  "segmentEvidenceHash": "137feeac7dfbe6721cabfde1fabddf00758a6ea145889d0ce5b1a93ac5bd6a91",
+  "utterance_tone": {
+    "toneEnabled": true,
+    "acousticToneSlices": [
+      {
+        "start": 0,
+        "end": 0.4,
+        "tonePosterior": {
+          "t1": 0.982957124710083,
+          "t2": 0.0001941788796102628,
+          "t3": 0.00010719832789618522,
+          "t4": 0.016720829531550407,
+          "t5": 0.000020729563402710482
+        },
+        "confidence": 0.982957124710083
+      },
+      {
+        "start": 0.4,
+        "end": 0.62,
+        "tonePosterior": {
+          "t1": 0.9873594641685486,
+          "t2": 0.0008216820424422622,
+          "t3": 0.000012864452401117887,
+          "t4": 0.011783401481807232,
+          "t5": 0.00002255388790217694
+        },
+        "confidence": 0.9873594641685486
+      },
+      {
+        "start": 0.62,
+        "end": 0.92,
+        "tonePosterior": {
+          "t1": 0.011051745153963566,
+          "t2": 0.0054049924947321415,
+          "t3": 0.0014046167489141226,
+          "t4": 0.9818514585494995,
+          "t5": 0.00028717704117298126
+        },
+        "confidence": 0.9818514585494995
+      },
+      {
+        "start": 0.92,
+        "end": 1.38,
+        "tonePosterior": {
+          "t1": 0.0000020902784854115453,
+          "t2": 0.000018885451936512254,
+          "t3": 0.00012042259186273441,
+          "t4": 0.9998582601547241,
+          "t5": 3.333157678753196e-7
+        },
+        "confidence": 0.9998582601547241
+      },
+      {
+        "start": 1.66,
+        "end": 1.8,
+        "tonePosterior": {
+          "t1": 0.00657130079343915,
+          "t2": 0.017537597566843033,
+          "t3": 0.0009859107667580247,
+          "t4": 0.003192540490999818,
+          "t5": 0.9717126488685608
+        },
+        "confidence": 0.9717126488685608
+      },
+      {
+        "start": 1.8,
+        "end": 1.98,
+        "tonePosterior": {
+          "t1": 0.006284390110522509,
+          "t2": 0.9230407476425171,
+          "t3": 0.06336919218301773,
+          "t4": 0.0016299426788464189,
+          "t5": 0.005675738677382469
+        },
+        "confidence": 0.9230407476425171
+      },
+      {
+        "start": 1.98,
+        "end": 2.14,
+        "tonePosterior": {
+          "t1": 0.00003838474731310271,
+          "t2": 0.0037545657251030207,
+          "t3": 0.9463585019111633,
+          "t4": 0.03938479349017143,
+          "t5": 0.010463771410286427
+        },
+        "confidence": 0.9463585019111633
+      },
+      {
+        "start": 2.14,
+        "end": 2.38,
+        "tonePosterior": {
+          "t1": 0.02748318761587143,
+          "t2": 0.9241899847984314,
+          "t3": 0.047539547085762024,
+          "t4": 0.000626777415163815,
+          "t5": 0.0001604726567165926
+        },
+        "confidence": 0.9241899847984314
+      },
+      {
+        "start": 2.38,
+        "end": 2.58,
+        "tonePosterior": {
+          "t1": 0.000550365075469017,
+          "t2": 0.0012514686677604914,
+          "t3": 0.06273321062326431,
+          "t4": 0.9354315996170044,
+          "t5": 0.00003332947744638659
+        },
+        "confidence": 0.9354315996170044
+      },
+      {
+        "start": 2.58,
+        "end": 2.76,
+        "tonePosterior": {
+          "t1": 0.5281506776809692,
+          "t2": 0.007948224432766438,
+          "t3": 0.0007243378786370158,
+          "t4": 0.3571086525917053,
+          "t5": 0.1060679703950882
+        },
+        "confidence": 0.5281506776809692
+      }
+    ],
+    "sliceCount": 10,
+    "toneConfidenceAvg": 0.9180910468101502,
+    "evidenceProduction": [
+      {
+        "word": "今天",
+        "startSec": 0,
+        "endSec": 0.4,
+        "durationSec": 0.4,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "天",
+        "startSec": 0.4,
+        "endSec": 0.62,
+        "durationSec": 0.21999999999999997,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "氣",
+        "startSec": 0.62,
+        "endSec": 0.92,
+        "durationSec": 0.30000000000000004,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "不錯,",
+        "startSec": 0.92,
+        "endSec": 1.38,
+        "durationSec": 0.45999999999999985,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "我們",
+        "startSec": 1.66,
+        "endSec": 1.8,
+        "durationSec": 0.14000000000000012,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "晚",
+        "startSec": 1.8,
+        "endSec": 1.98,
+        "durationSec": 0.17999999999999994,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "點",
+        "startSec": 1.98,
+        "endSec": 2.14,
+        "durationSec": 0.16000000000000014,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "見",
+        "startSec": 2.14,
+        "endSec": 2.38,
+        "durationSec": 0.23999999999999977,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "面",
+        "startSec": 2.38,
+        "endSec": 2.58,
+        "durationSec": 0.20000000000000018,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      },
+      {
+        "word": "吧!",
+        "startSec": 2.58,
+        "endSec": 2.76,
+        "durationSec": 0.17999999999999972,
+        "segmentIndex": 0,
+        "batchIndex": 0,
+        "status": "slice_created"
+      }
+    ],
+    "model": "tone_cnn_production_v2",
+    "version": "p10-p1-direct-replacement-v1"
+  },
+  "acousticToneSlices": [
+    {
+      "start": 0,
+      "end": 0.4,
+      "tonePosterior": {
+        "t1": 0.982957124710083,
+        "t2": 0.0001941788796102628,
+        "t3": 0.00010719832789618522,
+        "t4": 0.016720829531550407,
+        "t5": 0.000020729563402710482
+      },
+      "confidence": 0.982957124710083
+    },
+    {
+      "start": 0.4,
+      "end": 0.62,
+      "tonePosterior": {
+        "t1": 0.9873594641685486,
+        "t2": 0.0008216820424422622,
+        "t3": 0.000012864452401117887,
+        "t4": 0.011783401481807232,
+        "t5": 0.00002255388790217694
+      },
+      "confidence": 0.9873594641685486
+    },
+    {
+      "start": 0.62,
+      "end": 0.92,
+      "tonePosterior": {
+        "t1": 0.011051745153963566,
+        "t2": 0.0054049924947321415,
+        "t3": 0.0014046167489141226,
+        "t4": 0.9818514585494995,
+        "t5": 0.00028717704117298126
+      },
+      "confidence": 0.9818514585494995
+    },
+    {
+      "start": 0.92,
+      "end": 1.38,
+      "tonePosterior": {
+        "t1": 0.0000020902784854115453,
+        "t2": 0.000018885451936512254,
+        "t3": 0.00012042259186273441,
+        "t4": 0.9998582601547241,
+        "t5": 3.333157678753196e-7
+      },
+      "confidence": 0.9998582601547241
+    },
+    {
+      "start": 1.66,
+      "end": 1.8,
+      "tonePosterior": {
+        "t1": 0.00657130079343915,
+        "t2": 0.017537597566843033,
+        "t3": 0.0009859107667580247,
+        "t4": 0.003192540490999818,
+        "t5": 0.9717126488685608
+      },
+      "confidence": 0.9717126488685608
+    },
+    {
+      "start": 1.8,
+      "end": 1.98,
+      "tonePosterior": {
+        "t1": 0.006284390110522509,
+        "t2": 0.9230407476425171,
+        "t3": 0.06336919218301773,
+        "t4": 0.0016299426788464189,
+        "t5": 0.005675738677382469
+      },
+      "confidence": 0.9230407476425171
+    },
+    {
+      "start": 1.98,
+      "end": 2.14,
+      "tonePosterior": {
+        "t1": 0.00003838474731310271,
+        "t2": 0.0037545657251030207,
+        "t3": 0.9463585019111633,
+        "t4": 0.03938479349017143,
+        "t5": 0.010463771410286427
+      },
+      "confidence": 0.9463585019111633
+    },
+    {
+      "start": 2.14,
+      "end": 2.38,
+      "tonePosterior": {
+        "t1": 0.02748318761587143,
+        "t2": 0.9241899847984314,
+        "t3": 0.047539547085762024,
+        "t4": 0.000626777415163815,
+        "t5": 0.0001604726567165926
+      },
+      "confidence": 0.9241899847984314
+    },
+    {
+      "start": 2.38,
+      "end": 2.58,
+      "tonePosterior": {
+        "t1": 0.000550365075469017,
+        "t2": 0.0012514686677604914,
+        "t3": 0.06273321062326431,
+        "t4": 0.9354315996170044,
+        "t5": 0.00003332947744638659
+      },
+      "confidence": 0.9354315996170044
+    },
+    {
+      "start": 2.58,
+      "end": 2.76,
+      "tonePosterior": {
+        "t1": 0.5281506776809692,
+        "t2": 0.007948224432766438,
+        "t3": 0.0007243378786370158,
+        "t4": 0.3571086525917053,
+        "t5": 0.1060679703950882
+      },
+      "confidence": 0.5281506776809692
+    }
+  ],
+  "toneEvidenceHash": "1b4c9d7a1a6f11b42d6342601bad8d0c78a96ea8ad3b4d3c8057005d7b1ee28a",
+  "toneSliceCount": 10,
+  "toneSkippedReason": null,
+  "toneEvidencePresent": true,
+  "sessionId": "pilot200-tonecap::p2_u005_024::tonecap_pilot200_full_20260912T0437",
+  "captureTimestamp": "2026-09-12T04:58:26.697Z",
+  "runnerVersion": "pilot200-frozen-tone-evidence-full-capture-v1",
+  "asrExecutedForCapture": true,
+  "status": "OK"
+}

@@ -1,0 +1,66 @@
+{
+  "phase": "LINGUA_PILOT200_POST_STAGE2_TONE_RELAX_REMEASURE",
+  "freezeId": "LINGUA_RUNTIME_FREEZE_POST_STAGE2_TONE_RELAX_V1",
+  "global": {
+    "R1_retry_entered": 593,
+    "R2_stage2_mode": 593,
+    "R3_stage2_returned": 589,
+    "R3_target": 39,
+    "R5_target_survived_budget": 27,
+    "R8_final_correct_with_retry": 63
+  },
+  "stage2": {
+    "decisionUnits": 39513,
+    "anchorMasked": 565,
+    "actionable": 38948,
+    "keep": 30183,
+    "retry": 8765,
+    "retryRate": 0.2250436479408442,
+    "retryRegions": 6067,
+    "stage2Invocations": 33085,
+    "stage2Nonempty": 16702,
+    "stage2Useful": 16702,
+    "stage2TotalCandidates": 18669,
+    "stage2TargetHits": 39,
+    "stage2TargetHitInvocationCount": 157,
+    "retryDownstreamRecovery": 63,
+    "outOfBucketDomainRecallCount": 0,
+    "emptyRetainedDomainAllDomainFallbackCount": 0,
+    "crossPathDomainLeakCount": 0,
+    "retryStage2CandidateDropCount": 0,
+    "retryTargetCandidateDropCount": 9,
+    "perSpanCapSaturationRate": 0.7581289218482601,
+    "stage2CandidatesPerInvocation": {
+      "median": 1,
+      "p95": 1,
+      "max": 4
+    },
+    "previousStage2Useful": "NOT_COMPARABLE_OBSERVABILITY_DEFECT"
+  },
+  "domainSafety": {
+    "DOMAIN_ONLY_STAGE2_HITS": 2,
+    "BASE_STAGE2_HITS": 38,
+    "MULTI_DOMAIN_STAGE2_HITS": 0,
+    "OUT_OF_BUCKET_DOMAIN_RECALL_COUNT": 0,
+    "EMPTY_RETAINED_DOMAIN_ALL_DOMAIN_FALLBACK_COUNT": 0,
+    "CROSS_PATH_DOMAIN_LEAK_COUNT": 0
+  },
+  "e5": {
+    "E5_CASE_COUNT": 35,
+    "E5_MEASURED_RUNS": 35,
+    "E5_MODEL3_RETRY_ENTERED": 35,
+    "E5_STAGE2_RECOVERY_MODE": 35,
+    "E5_STAGE2_TARGET_HIT": 0,
+    "E5_TARGET_SURVIVES_SHARED_BUDGET": 0,
+    "E5_REACHES_SAMEDOMAIN_ASSEMBLY": 0,
+    "E5_REACHES_KENLM": 0,
+    "E5_FINAL_CORRECT": 2
+  },
+  "e5_first_failure_boundary": "MODEL3_RETRY_STAGE2_QUERY (ASR-space Stage2 windows lack first-pass Model2-conditioned target pinyin)",
+  "conversion": {
+    "R1_to_R2": 1,
+    "R2_to_R3": 0.9932546374367622,
+    "R3_to_R3T": 0.06621392190152801,
+    "R3T_to_R5": 0.6923076923076923
+  }
+}

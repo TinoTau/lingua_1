@@ -1,0 +1,15 @@
+hook,location,production_called,rollback
+cmd=disambiguate,model2_inference_host.py main loop,only if client sends cmd; Node product never does,DELETE
+Host.disambiguate,model2_inference_host.py,same,DELETE
+Model2InferenceHost.disambiguate,inference-host.ts,no product caller,DELETE
+load() metadata with_ambiguity_head/ambiguity_contract,host contract JSON,ping/stats consumers Stage-J tests do not require these keys,DELETE keys
+stats().ambiguity_head_available,host,DELETE
+RetrievalPolicyV3(with_ambiguity_head),model.py / tests / train scripts,host never passes True,DELETE flag
+singleCharAmbiguousSet,RecallSpanTopKV2Result,attached but unused by Assembly/expandActiveCandidates,DELETE field
+buildSingleCharCandidateSetV1,recall-span-topk-v2 collectBaseOnlySingleCharCandidate,builds unused set when N>=2 fail-closed,DELETE call
+materializeSelectedSingleCharCandidate,candidate-materialize.ts,test-only,DELETE
+createTestAmbiguityDeciderV1,single-char-disambiguation-v1.ts,test-only,DELETE with file
+judgeSingleChar,no Node/Python production symbol,docs/training only,N/A
+disambiguateBatch,not implemented,docs only,N/A
+length1Collector,recall + assembly observability,YES pre-existing,KEEP
+host.infer,expand-active-candidates,YES,KEEP

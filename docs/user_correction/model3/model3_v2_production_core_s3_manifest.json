@@ -1,0 +1,51 @@
+{
+  "datasetId": "MODEL3_V2_PRODUCTION_CORE_S3",
+  "datasetBuildId": "prod_core_s3_build_20260830_v1",
+  "createdAt": "2026-08-30T13:59:14.902121+00:00",
+  "parentDatasets": [
+    "MODEL3_V2_PRODUCTION_CORE_S2"
+  ],
+  "lineageStrategy": "S2_4994_reuse_plus_5006_new_materialization",
+  "pipelineVersion": "MODEL3_V2_ACOUSTIC_TRAINING_STATE_V1",
+  "featureContractIdentity": "packModel3SpanInferFields",
+  "labelContractIdentity": "MODEL3_LABEL_CONTRACT_V2_20260829",
+  "ttsVoiceIdentity": "zh_CN-huayan-medium",
+  "ttsPolicy": "FIXED_DATA_MATERIALIZATION_INFRASTRUCTURE",
+  "acousticVariationForModel3": "DEFERRED_NOT_REQUIRED_FOR_CURRENT_MODEL3_DEVELOPMENT",
+  "sourceSelectionSeed": 2026083012,
+  "sourcePoolIdentities": [
+    "model3_certified_base_pool_v2"
+  ],
+  "s2ReuseFamilies": 4994,
+  "newMaterializationFamiliesFrozen": 5006,
+  "newMaterializationDispositions": {
+    "SUPERVISED_ACCEPTED": 5006
+  },
+  "splitCounts": {
+    "train": 24296,
+    "dev": 2877,
+    "test": 3181
+  },
+  "families": 10000,
+  "utterances": 10000,
+  "paths": 30354,
+  "spanPathSamples": 483957,
+  "labels": {
+    "KEEP": 437146,
+    "MASKED": 16401,
+    "RETRY": 30410
+  },
+  "trainingAuthorized": true,
+  "verdict": "S3_BUILD_AND_TRAIN_PASS_DIMINISHING_RETURNS",
+  "localizationMetricSsot": {
+    "L1": "EXACT_TARGET_OVERLAP",
+    "L2": "LOCAL_ERROR_REGION_RETRY",
+    "L3": "CLEAR_DISTANT_FALSE_RETRY",
+    "L4": "KEEP_CONTROL_FALSE_RETRY",
+    "primary": "L2"
+  },
+  "trainingCompleted": true,
+  "nextPhase": "MODEL3_V2_S3_GENERALIZATION_LIMIT_AUDIT",
+  "s3ModelId": "MODEL3_V2_S3_RANDOM_INIT_V1",
+  "weightsSha256": "f1e4196933a66bbea73fdd8f17fa460f52696656208ff05c41f2dc9ff81cbbb1"
+}

@@ -1,0 +1,75 @@
+{
+  "markers": [
+    "PHASE7B_DIAGNOSTIC",
+    "NOT_FOR_RUNTIME",
+    "NOT_FROZEN"
+  ],
+  "verdict": "PASS",
+  "baseline_reproduction": "PASS",
+  "stage_a_generalization_failure": "CONFIRMED",
+  "primary_root_cause": "Term memorization (implicit)",
+  "secondary_root_causes": [
+    "Lexical embedding shortcut",
+    "Loss misalignment",
+    "Dataset query-channel artifact (oracle syllables + ASR char conflict)"
+  ],
+  "category_primary": "REPRESENTATION",
+  "categories": [
+    "REPRESENTATION",
+    "OBJECTIVE"
+  ],
+  "case": "A_deterministic_beats_stageA_on_UNSEEN",
+  "slice_ambiguity_explained": true,
+  "combo_status": "DEFER_INSUFFICIENT_DATA",
+  "loro_status": "DEFER_COMPUTE",
+  "failure_cases": {
+    "markers": [
+      "PHASE7B_DIAGNOSTIC",
+      "NOT_FOR_RUNTIME",
+      "NOT_FROZEN"
+    ],
+    "n_exported": 100,
+    "bucket_counts": {
+      "stageA_bad_phonetic_ok": 100
+    },
+    "path": "D:\\Programs\\github\\lingua_1\\training\\model2\\experiments\\phase7b_stage_a_attribution_v1\\failure_cases_unseen.jsonl"
+  },
+  "architecture_drift": {
+    "KEEP": [
+      "Stage A/B architecture",
+      "FuzzyPool",
+      "Stage B checkpoint"
+    ],
+    "ADD": [
+      "phase7b diagnostic artifacts/scripts"
+    ],
+    "MODIFY": [],
+    "DELETE": [],
+    "DEFER": [
+      "LORO full retrain",
+      "Tone",
+      "Node",
+      "50k"
+    ]
+  },
+  "stage_a_architecture": "MODIFY_NEXT_PHASE",
+  "stage_b_binding_architecture": "KEEP",
+  "dataset": "KEEP",
+  "tone": "HOLD",
+  "node": "HOLD",
+  "scale_50k": "HOLD",
+  "recommended_next_phase": "Phase 7C — Stage A representation/objective fix candidates (phonetic-inductive bias, hard-negative mining, early-stop policy) as CAUSAL probes — do not silently replace baseline.",
+  "no_match_fp": {
+    "NO_MATCH_FP_rate": 0.28745179471966775,
+    "n": 3371,
+    "fp": 969
+  },
+  "primary_mechanism": "Stage A query fuses conflicting ASR char evidence with oracle syllables; training minimizes pool CE largely via SEEN-term candidate lexical geometry; UNSEEN terms lose that geometry and the model does not fall back to syllable-identity matching.",
+  "dataset_construction": {
+    "span_syllables_eq_target_pinyin_rate": 1.0,
+    "span_text_eq_surface_rate": 0.0,
+    "positive_pool_index_eq_0_rate": 0.9737,
+    "positive_fuzzy_distance_eq_0_rate": 1.0,
+    "implication": "Phonetic/Fuzzy baselines are near-oracle on syllable identity; Case A still shows Stage A fails to exploit this transferable signal and instead memorizes SEEN candidate/query patterns."
+  }
+}

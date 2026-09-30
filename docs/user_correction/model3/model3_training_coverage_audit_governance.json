@@ -1,0 +1,41 @@
+{
+  "phase": "MODEL3_V1_TRAINING_COVERAGE_AUDIT",
+  "date": "2026-08-29",
+  "mainVerdict": "MULTI_FACTOR",
+  "architectureVerdict": "FROZEN_ARCHITECTURE_STILL_VALID",
+  "trainingReadiness": "TRAINING_DATA_REDESIGN_REQUIRED",
+  "governance": {
+    "Model3ArchitectureChanged": false,
+    "FineSpanChanged": false,
+    "RetryChanged": false,
+    "RecallChanged": false,
+    "DomainVoteChanged": false,
+    "AssemblyChanged": false,
+    "JobResultChanged": false,
+    "TrainingChanged": false,
+    "ModelWeightsChanged": false,
+    "ConfigChanged": false,
+    "ProductionBusinessFilesModified": 0,
+    "ReadOnlyProbes": [
+      "electron_node/electron-node/tests/_probe-model3-zero-retry-audit.mjs"
+    ]
+  },
+  "closedTopics": [
+    "preferredPathFineSpanView",
+    "Retry multi-hypothesis consumer",
+    "path ranking reopen",
+    "Retry region derivation architecture"
+  ],
+  "harnessDebt": {
+    "ensureServicePreferencesForAcceptance": "PERSISTENT_WRITE_NO_RESTORE",
+    "path": "%APPDATA%/lingua-electron-node/electron-node-config.json",
+    "blockingForModel3": false
+  },
+  "gates": {
+    "ARCHITECTURE_TRAINING_GATE": "OPEN",
+    "DEVELOPMENT_SEQUENCE_GATE": "OPEN",
+    "TRAINING_EXECUTION_GATE": "HOLD"
+  },
+  "recommendedNextPhase": "MODEL3_V1_TARGETED_TRAINING_DATA_REDESIGN",
+  "doNotExecuteNextPhase": true
+}
